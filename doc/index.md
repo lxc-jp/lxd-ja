@@ -209,19 +209,29 @@ ip addr
 lxc config set core.https_address 192.168.1.15
 ```
 
-#### When I do a `lxc remote add` over https, it asks for a password?
+#### https 越しに `lxc remote add` を実行したとき、パスワードを聞かれますか? <!-- When I do a `lxc remote add` over https, it asks for a password? -->
+<!--
 By default, LXD has no password for security reasons, so you can't do a remote
 add this way. In order to set a password, do:
+-->
+デフォルトではセキュリティー上の理由から、LXD にはパスワードはありません。
+ですのでこの方法でリモートから追加できません。パスワードを設定するには、LXD を実行中のホスト上で次のコマンドを実行します:
 
 ```bash
 lxc config set core.trust_password SECRET
 ```
 
+<!--
 on the host LXD is running on. This will set the remote password that you can
 then use to do `lxc remote add`.
+-->
+これで、`lxc remote add` を使えるように、リモートのパスワードを設定します。
 
+<!--
 You can also access the server without setting a password by copying the client
 certificate from `.config/lxc/client.crt` to the server and adding it with:
+-->
+クライアント上の `.config/lxc/client.crt` にある証明書を次のコマンドでサーバにコピーすることで、パスワードを設定しなくてもサーバにアクセスできます。
 
 ```bash
 lxc config trust add client.crt
