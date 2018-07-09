@@ -147,17 +147,23 @@ group to talk to LXD; you can create your own group if you want):
 sudo -E $GOPATH/bin/lxd --group sudo
 ```
 
-## Getting started with LXD
+## LXD を使い始める <!-- Getting started with LXD -->
 <!--
 Now that you have LXD running on your system you can read the [getting started guide](https://linuxcontainers.org/lxd/getting-started-cli/) or go through more examples and configurations in [our documentation](https://github.com/lxc/lxd/tree/master/doc).
 -->
 ここまでで、システム上で LXD が実行されているでしょうから、[はじめに](https://linuxcontainers.org/lxd/getting-started-cli/) という文書を読んだり、[ドキュメント](https://github.com/lxc/lxd/tree/master/doc) の例や設定を見たりできます。
 
-## Bug reports
+## バグレポート <!-- Bug reports -->
+<!--
 Bug reports can be filed at: <https://github.com/lxc/lxd/issues/new>
+-->
+バグ報告はこちらから行えます: <https://github.com/lxc/lxd/issues/new>
 
-## Contributing
+## コントリビュート <!-- Contributing -->
+<!--
 Fixes and new features are greatly appreciated but please read our [contributing guidelines](contributing.md) first.
+-->
+修正や新機能の追加は歓迎です。最初に [contributing guidelines](contributing.md) を読んでください。
 
 ## Support and discussions
 ### Forum
