@@ -165,7 +165,7 @@ Fixes and new features are greatly appreciated but please read our [contributing
 -->
 修正や新機能の追加は歓迎です。最初に [contributing guidelines](contributing.md) を読んでください。
 
-## Support and discussions
+## サポートとディスカッション <!-- Support and discussions -->
 ### Forum
 A discussion forum is available at: <https://discuss.linuxcontainers.org>
 
@@ -178,20 +178,31 @@ If you prefer live discussions, some of us also hang out in
 [#lxcontainers](http://webchat.freenode.net/?channels=#lxcontainers) on irc.freenode.net.
 
 ## FAQ
-#### How to enable LXD server for remote access?
+#### LXD サーバにリモートからアクセスできるようにするには? <!-- How to enable LXD server for remote access? -->
+<!--
 By default LXD server is not accessible from the networks as it only listens
 on a local unix socket. You can make LXD available from the network by specifying
 additional addresses to listen to. This is done with the `core.https_address`
 config variable.
+-->
+デフォルトでは、LXD サーバーはネットワークからのアクセスを許可せず、ローカルの unix ソケットのみで待ち受けます。
+待ち受ける追加のアドレスを指定して、ネットワーク経由で利用できるように設定できます。
+これには `core.https_address` を使用します。
 
+<!--
 To see the current server configuration, run:
+-->
+現在のサーバーの設定を確認するには次のように実行します:
 
 ```bash
 lxc config show
 ```
 
+<!--
 To set the address to listen to, find out what addresses are available and use
 the `config set` command on the server:
+-->
+待ち受けるアドレスを設定するには、どのアドレスが使用できるかを調べ、`config set` コマンドをサーバー上で実行します:
 
 ```bash
 ip addr
