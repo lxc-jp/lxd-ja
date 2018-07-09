@@ -1,18 +1,33 @@
 [![LXD](https://linuxcontainers.org/static/img/containers.png)](https://linuxcontainers.org/lxd)
 # LXD
-LXD is a next generation system container manager.  
+<!--
+LXD is a next generation system container manager.
 It offers a user experience similar to virtual machines but using Linux containers instead.
+-->
+LXD は次世代のシステムコンテナマネージャーです。
+仮想マシンと同様のユーザーエクスペリエンスを提供しますが、仮想マシンの代わりに Linux コンテナを使用します。
 
+<!--
 It's image based with pre-made images available for a [wide number of Linux distributions](https://images.linuxcontainers.org)  
 and is built around a very powerful, yet pretty simple, REST API.
+-->
+いろいろな [Linux ディストリビューション](https://images.linuxcontainers.org) のあらかじめビルドされたイメージを使ったイメージベースのマネージャーであり、非常に強力でありながら、非常にシンプルに、REST API を使って構築されます。
 
+<!--
 To get a better idea of what LXD is and what it does, you can [try it online](https://linuxcontainers.org/lxd/try-it/)!  
 Then if you want to run it locally, take a look at our [getting started guide](https://linuxcontainers.org/lxd/getting-started-cli/).
+-->
+LXD がどういうものであり、何をするのかをよく理解するために、[オンラインでの試用](https://linuxcontainers.org/lxd/try-it/) を使えます。
+そして、ローカルで実行してみたい場合は、[はじめに](https://linuxcontainers.org/lxd/getting-started-cli/) という文書をご覧ください。
 
+<!--
 Release announcements can be found here: <https://linuxcontainers.org/lxd/news/>  
 And the release tarballs here: <https://linuxcontainers.org/lxd/downloads/>
+-->
+リリースアナウンスはこちらでご覧になれます: <https://linuxcontainers.org/lxd/news/>
+リリース tarball はこちらから取得できます: <https://linuxcontainers.org/lxd/downloads/>
 
-## Status
+## ステータス <!-- Status -->
 Type            | Service               | Status
 ---             | ---                   | ---
 CI (Linux)      | Jenkins               | [![Build Status](https://jenkins.linuxcontainers.org/job/lxd-github-commit/badge/icon)](https://jenkins.linuxcontainers.org/job/lxd-github-commit/)
@@ -23,54 +38,81 @@ Static analysis | GoReport              | [![Go Report Card](https://goreportcar
 Translations    | Weblate               | [![Translation status](https://hosted.weblate.org/widgets/linux-containers/-/svg-badge.svg)](https://hosted.weblate.org/projects/linux-containers/lxd/)
 Project status  | CII Best Practices    | [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/1086/badge)](https://bestpractices.coreinfrastructure.org/projects/1086)
 
-## Installing LXD from packages
+## LXD のパッケージからのインストール <!-- Installing LXD from packages -->
+<!--
 Instructions on installing LXD for a wide variety of Linux distributions and operating systems [can be found on our website](https://linuxcontainers.org/lxd/getting-started-cli/).
+-->
+さまざまな Linux ディストリビューションとオペレーティングシステムで LXD をインストールする方法は、[公式サイト](https://linuxcontainers.org/lxd/getting-started-cli/) をご覧ください。
 
-## Installing LXD from source
+## LXD のソースからのインストール <!-- Installing LXD from source -->
+<!--
 We recommend having the latest versions of liblxc (>= 2.0.0 required)
 available for LXD development. Additionally, LXD requires Golang 1.9 or
 later to work. On ubuntu, you can get those with:
+-->
+LXD の開発には liblxc の最新バージョン（2.0.0 以上が必要）を使用することをおすすめします。さらに Golang 1.9 以上が動作する必要があります。
+Ubuntu では次のようにインストールできます:
 
 ```bash
 sudo apt update
 sudo apt install acl dnsmasq-base git golang liblxc1 lxc-dev libacl1-dev make pkg-config rsync squashfs-tools tar xz-utils
 ```
 
+<!--
 Note that when building LXC yourself, ensure to build it with the appropriate
 security related libraries installed which our testsuite tests. Again, on
 ubuntu, you can get those with:
+-->
+LXC を自分でビルドする場合は、テストスイートがテストする、関連する適切なセキュリティ関連のライブラリがインストールされていることを確認してください。
+Ubuntu であれば次のようにインストールできます:
 
 ```bash
 sudo apt install libapparmor-dev libseccomp-dev libcap-dev
 ```
 
+<!--
 There are a few storage backends for LXD besides the default "directory" backend.
 Installing these tools adds a bit to initramfs and may slow down your
 host boot, but are needed if you'd like to use a particular backend:
+-->
+デフォルトのストレージバックエンドである "directory" に加えて、LXD ではいくつかのストレージバックエンドが使えます。
+これらのツールをインストールすると、initramfs への追加が行われ、ホストのブートが少しだけ遅くなるかもしれませんが、特定のバックエンドを使いたい場合には必要です:
 
 ```bash
 sudo apt install lvm2 thin-provisioning-tools
 sudo apt install btrfs-tools
 ```
 
+<!--
 To run the testsuite, you'll also need:
+-->
+テストスイートを実行するには、次のパッケージも必要です:
 
 ```bash
 sudo apt install curl gettext jq sqlite3 uuid-runtime bzr
 ```
 
 
-### Building the tools
+### ツールのビルド <!-- Building the tools -->
+<!--
 LXD consists of two binaries, a client called `lxc` and a server called `lxd`.
 These live in the source tree in the `lxc/` and `lxd/` dirs, respectively.
 To get the code, set up your go environment:
+-->
+LXD にはふたつのバイナリが含まれます。クライアントである `lxc` と、サーバである `lxd` です。
+これらはソースツリーのそれぞれ `lxc/`、`lxd/` に含まれます。
+コードを取得するには、Go 環境をセットアップします:
 
 ```bash
 mkdir -p ~/go
 export GOPATH=~/go
 ```
 
+<!--
 And then download it as usual:
+-->
+そして次のようにダウンロードしてください:
+
 
 ```bash
 go get -d -v github.com/lxc/lxd/lxd
@@ -78,26 +120,38 @@ cd $GOPATH/src/github.com/lxc/lxd
 make
 ```
 
+<!--
 ...which will give you two binaries in `$GOPATH/bin`, `lxd` the daemon binary,
 and `lxc` a command line client to that daemon.
+-->
+すると、ふたつのバイナリは `$GOPATH/bin` から取得できます。`lxd` はデーモンバイナリであり、このデーモンに接続するためのコマンドラインクライアントは `lxc` です。
 
-### Machine Setup
+### マシンセットアップ <!-- Machine Setup -->
+<!--
 You'll need sub{u,g}ids for root, so that LXD can create the unprivileged
 containers:
+-->
+LXD が非特権コンテナを作成できるように、root ユーザに対する sub{u,g}id の設定が必要です:
 
 ```bash
 echo "root:1000000:65536" | sudo tee -a /etc/subuid /etc/subgid
 ```
 
+<!--
 Now you can run the daemon (the `--group` sudo bit allows everyone in the sudo
 group to talk to LXD; you can create your own group if you want):
+-->
+これでデーモンを実行できます（sudo グループに属する全員が LXD とやりとりできるように `--group sudo` を指定します。別に指定したいグループを作ることもできます）:
 
 ```bash
 sudo -E $GOPATH/bin/lxd --group sudo
 ```
 
 ## Getting started with LXD
+<!--
 Now that you have LXD running on your system you can read the [getting started guide](https://linuxcontainers.org/lxd/getting-started-cli/) or go through more examples and configurations in [our documentation](https://github.com/lxc/lxd/tree/master/doc).
+-->
+ここまでで、システム上で LXD が実行されているでしょうから、[はじめに](https://linuxcontainers.org/lxd/getting-started-cli/) という文書を読んだり、[ドキュメント](https://github.com/lxc/lxd/tree/master/doc) の例や設定を見たりできます。
 
 ## Bug reports
 Bug reports can be filed at: <https://github.com/lxc/lxd/issues/new>
