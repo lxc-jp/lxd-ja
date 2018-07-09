@@ -305,52 +305,83 @@ lxc pull file xenial/etc/hosts .
 
 のように操作できます。
 
-## Storage pools
+## ストレージプール <!-- Storage pools -->
 
+<!--
 As mentioned above, all nodes must have identical storage pools. The
 only difference between pools on different nodes might be their
 `source`, `size` or `zfs.pool_name` configuration keys.
+-->
+先に述べたように、すべてのノードは同一のストレージプールを持たなければなりません。異なるノード上のプール間の違いは、設定項目、`source`、`size`、`zfs.pool_name` のみです。
 
+<!--
 To create a new storage pool, you first have to define it across all
 nodes, for example:
+-->
+新たにストレージプールを作成するためには、すべてのノードでストレージプールをを定義する必要があります。例えば:
 
 ```bash
 lxc storage create --target node1 data zfs source=/dev/vdb1
 lxc storage create --target node2 data zfs source=/dev/vdc1
 ```
+のようにします。
 
+<!--
 Note that when defining a new storage pool on a node the only valid
 configuration keys you can pass are the node-specific ones mentioned above.
+-->
+新しいストレージプールをノード上に定義する際、ノード固有で与えることのできる設定項目は上記設定のみです。
 
+<!--
 At this point the pool hasn't been actually created yet, but just
 defined (it's state is marked as Pending if you run `lxc storage list`).
+-->
+この時点ではプールはまだ実際には作られていませんが、定義はされています（`lxc storage list` を実行すると、状態が Pending とマークされています）。
 
+<!--
 Now run:
+-->
+次のように実行しましょう:
 
 ```bash
 lxc storage create data zfs
 ```
 
+<!--
 and the storage will be instantiated on all nodes. If you didn't
 define it on a particular node, or a node is down, an error will be
 returned.
+-->
+するとストレージがすべてのノードでインスタンス化されます。特定のノードで定義を行っていない場合、もしくはノードがダウンしている場合は、エラーが返ります。
 
+<!--
 You can pass to this final ``storage create`` command any configuration key
 which is not node-specific (see above).
+-->
+この最後の ``storage create`` コマンドには、ノード固有ではない（上記参照）任意の設定項目を与えることができます。
 
-## Storage volumes
+## ストレージボリューム <!-- Storage volumes -->
 
+<!--
 Each volume lives on a specific node. The `lxc storage volume list`
 includes a `NODE` column to indicate on which node a certain volume
 resides.
+-->
+各ボリュームは特定のノード上に存在しています。`lxc storage volume list` は、特定のボリュームがどのノードにあるかを示す `NODE` 列を表示します。
 
+<!--
 Different volumes can have the same name as long as they live on
 different nodes (for example image volumes). You can manage storage
 volumes in the same way you do in non-clustered deployments, except
 that you'll have to pass a `--target <node name>` parameter to volume
 commands if more than one node has a volume with the given name.
+-->
+異なるボリュームは、異なるノード（例えば image volumes）上に存在する限りは同じ名前を持てます。複数のノードが与えた名前のボリュームを持つ場合には、ボリュームコマンドに `--target <node name>` を与える必要がある点を除いて、ストレージボリュームはクラスタ化されていない場合と同じ方法で管理できます。
 
+<!--
 For example:
+-->
+例えば:
 
 ```bash
 # Create a volume on the node this client is pointing at
@@ -364,36 +395,57 @@ lxc storage volume show default web --target node1
 lxc storage volume show default web --target node2
 ```
 
-## Networks
+## ネットワーク <!-- Networks -->
 
+<!--
 As mentioned above, all nodes must have identical networks defined. The only
 difference between networks on different nodes might be their
 `bridge.external_interfaces` optional configuration key (see also documentation
 about [network configuration](networks.md)).
+-->
+先に述べたように、すべてのノードは同じネットワークを定義しなければなりません。異なるノード間のネットワークで異なっても良い設定は、`bridge.external_interfaces` というオプショナルの設定項目です（[ネットワーク設定](networks.md)の文書を参照してください）
 
+<!--
 To create a new network, you first have to define it across all
 nodes, for example:
+-->
+新しいネットワークを作成するには、最初にすべてのノードで以下のように定義を行う必要があります:
 
 ```bash
 lxc network create --target node1 my-network
 lxc network create --target node2 my-network
 ```
 
+<!--
 Note that when defining a new network on a node the only valid configuration
 key you can pass is `bridge.external_interfaces`, as mentioned above.
+-->
+ノード上に新しいネットワークを定義する場合、先に述べたように `bridge.external_interfaces` のみ有効な設定として与えることができます。
 
+<!--
 At this point the network hasn't been actually created yet, but just
 defined (it's state is marked as Pending if you run `lxc network list`).
+-->
+この時点では、ネットワークはまだ実際には作成されていません。しかし定義はされています（`lxc network list` を実行すると、状態が Pending とマークされています）。
 
+<!--
 Now run:
+-->
+次のように実行しましょう:
 
 ```bash
 lxc network create my-network
 ```
 
+<!--
 and the network will be instantiated on all nodes. If you didn't
 define it on a particular node, or a node is down, an error will be
 returned.
+-->
+するとネットワークがすべてのノード上でインスタンス化されます。特定のノードで定義していない場合、もしくはノードがダウンしている場合は、エラーが返ります。
 
+<!--
 You can pass to this final ``network create`` command any configuration key
 which is not node-specific (see above).
+-->
+この最後の ``network create`` コマンドには、ノード固有ではない（上記参照）任意の設定項目を与えることができます。
