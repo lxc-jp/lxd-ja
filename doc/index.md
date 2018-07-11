@@ -288,15 +288,22 @@ instead both for performance and reliability reasons.
 -->
 プロダクション環境では、パフォーマンスと信頼性を確保するために、loop ベースではなく、ブロックストレージを使うべきです。
 
-#### How can I live migrate a container using LXD?
+#### LXD を使ってコンテナのライブマイグレーションはできますか? <!-- How can I live migrate a container using LXD? -->
+<!--
 Live migration requires a tool installed on both hosts called
 [CRIU](http://criu.org), which is available in Ubuntu via:
+-->
+ライブマイグレーションには、送受信それぞれのホスト上に [CRIU](http://criu.org) というツールが必要です。
+Ubuntu では次のようにインストールできます:
 
 ```bash
 sudo apt-get install criu
 ```
 
+<!--
 Then, launch your container with the following,
+-->
+そして、次のようにコンテナを起動します。
 
 ```bash
 lxc launch ubuntu $somename
@@ -304,9 +311,14 @@ sleep 5s # let the container get to an interesting state
 lxc move host1:$somename host2:$somename
 ```
 
+<!--
 And with luck you'll have migrated the container :). Migration is still in
 experimental stages and may not work for all workloads. Please report bugs on
 lxc-devel, and we can escalate to CRIU lists as necessary.
+-->
+運が良ければ、コンテナがマイグレーションされるでしょう :)
+マイグレーションはまだ実験段階のステージで、すべてのケースで動作しないかもしれません。
+そういう場合は lxc-devel にバグレポートをしてください。必要であれば CRIU にもエスカレーションします。
 
 #### Can I bind mount my home directory in a container?
 Yes. The easiest way to do that is using a privileged container to avoid file ownership issues:
