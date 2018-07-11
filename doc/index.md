@@ -237,33 +237,56 @@ certificate from `.config/lxc/client.crt` to the server and adding it with:
 lxc config trust add client.crt
 ```
 
-#### How do I configure LXD storage?
+#### どのように LXD のストレージを設定するのですか? <!-- How do I configure LXD storage? -->
+<!--
 LXD supports btrfs, ceph, directory, lvm and zfs based storage.
+-->
+LXD は btrfs、ceph、ディレクトリ、lvm、zfs を使ったストーレジをサポートします。
 
+<!--
 First make sure you have the relevant tools for your filesystem of
 choice installed on the machine (btrfs-progs, lvm2 or zfsutils-linux).
+-->
+まず、選択したファイルシステムを扱うツールをマシンにインストールしてください（btrfs-progs, lvm2, zfsutils-linux）。
 
+<!--
 By default, LXD comes with no configured network or storage.
 You can get a basic configuration done with:
+-->
+デフォルトでは、LXD ではネットワークとストレージが設定されていません。
+基本的な設定は次のコマンドで設定できます:
 
 ```bash
     lxd init
 ```
 
+<!--
 `lxd init` supports both directory based storage and ZFS.
 If you want something else, you'll need to use the `lxc storage` command:
+-->
+`lxd init` はディレクトリと ZFS ベースのストレージの両方をサポートします。
+他のファイルシステムを使いたい場合は、`lxc storage` コマンドを使う必要があります:
 
 ```bash
 lxc storage create default BACKEND [OPTIONS...]
 lxc profile device add default root disk path=/ pool=default
 ```
 
+<!--
 BACKEND is one of `btrfs`, `ceph`, `dir`, `lvm` or `zfs`.
+-->
+`BACKEND` は `btrfs`、`ceph`、`dir`、`lvm`、`zfs` のどれかです。
 
+<!--
 Unless specified otherwise, LXD will setup loop based storage with a sane default size.
+-->
+特に指定しないと、LXD はデフォルトサイズの loop ベースのストレージをセットアップします。
 
+<!--
 For production environments, you should be using block backed storage
 instead both for performance and reliability reasons.
+-->
+プロダクション環境では、パフォーマンスと信頼性を確保するために、loop ベースではなく、ブロックストレージを使うべきです。
 
 #### How can I live migrate a container using LXD?
 Live migration requires a tool installed on both hosts called
