@@ -19,12 +19,12 @@ btrfs.mount\_options            | string    | btrfs driver                      
 ceph.cluster\_name              | string    | ceph driver                       | ceph                       | storage\_driver\_ceph              | ストレージプールを作る対象の Ceph クラスタ名 <!-- Name of the ceph cluster in which to create new storage pools. -->
 ceph.osd.force\_reuse           | bool      | ceph driver                       | false                      | storage\_ceph\_force\_osd\_reuse   | 他の LXD インスタンスが使用中の OSD ストレージプールを強制的に使う <!-- Force using an osd storage pool that is already in use by another LXD instance. -->
 ceph.osd.pg\_num                | string    | ceph driver                       | 32                         | storage\_driver\_ceph              | OSD ストレージプールの Placement group 数 <!-- Number of placement groups for the osd storage pool. -->
-ceph.osd.pool\_name             | string    | ceph driver                       | name of the pool           | storage\_driver\_ceph              | OSD ストレージプール名 <!-- Name of the osd storage pool. -->
+ceph.osd.pool\_name             | string    | ceph driver                       | プール名 <!-- name of the pool --> | storage\_driver\_ceph              | OSD ストレージプール名 <!-- Name of the osd storage pool. -->
 ceph.rbd.clone\_copy            | string    | ceph driver                       | true                       | storage\_driver\_ceph              | フルデータセットのコピーの代わりに RBD Lightweight Clone を使うかどうか <!-- Whether to use RBD lightweight clones rather than full dataset copies. -->
 ceph.user.name                  | string    | ceph driver                       | admin                      | storage\_ceph\_user\_name          | ストレージプールやボリュームを作成する際に使用する Ceph ユーザ名 <!-- The ceph user to use when creating storage pools and volumes. -->
 lvm.thinpool\_name              | string    | lvm driver                        | LXDThinPool                | storage                            | イメージとコンテナを作る Thin pool 名 <!-- Thin pool where images and containers are created. -->
 lvm.use\_thinpool               | bool      | lvm driver                        | true                       | storage\_lvm\_use\_thinpool        | ストレージプールは論理ボリュームに Thinpool を使うかどうか <!-- Whether the storage pool uses a thinpool for logical volumes. -->
-lvm.vg\_name                    | string    | lvm driver                        | name of the pool           | storage                            | 作成するボリュームグループ名 <!-- Name of the volume group to create. -->
+lvm.vg\_name                    | string    | lvm driver                        | プール名 <!-- name of the pool --> | storage                            | 作成するボリュームグループ名 <!-- Name of the volume group to create. -->
 rsync.bwlimit                   | string    | -                                 | 0 (no limit)               | storage\_rsync\_bwlimit            | ストレージエンティティーの転送にrsyncを使う場合、I/Oソケットに設定する制限を指定 <!-- Specifies the upper limit to be placed on the socket I/O whenever rsync has to be used to transfer storage entities. -->
 volatile.initial\_source        | string    | -                                 | -                          | storage\_volatile\_initial\_source | 作成時に与える実際のソースを記録 <!-- Records the actual source passed during creating -->(e.g. /dev/sdb).
 volatile.pool.pristine          | string    | -                                 | true                       | storage\_driver\_ceph              | プールが作成時に空かどうか <!-- Whether the pool has been empty on creation time. -->
@@ -34,7 +34,7 @@ volume.size                     | string    | appropriate driver                
 volume.zfs.remove\_snapshots    | bool      | zfs driver                        | false                      | storage                            | 必要に応じてスナップショットを削除するかどうか <!-- Remove snapshots as needed -->
 volume.zfs.use\_refquota        | bool      | zfs driver                        | false                      | storage                            | 領域の quota の代わりに refquota を使うかどうか <!-- Use refquota instead of quota for space. -->
 zfs.clone\_copy                 | bool      | zfs driver                        | true                       | storage\_zfs\_clone\_copy          | ZFS のフルデータセットコピーの代わりに軽量なクローンを使うかどうか <!-- Whether to use ZFS lightweight clones rather than full dataset copies. -->
-zfs.pool\_name                  | string    | zfs driver                        | name of the pool           | storage                            | Zpool 名 <!-- Name of the zpool -->
+zfs.pool\_name                  | string    | zfs driver                        | プール名 <!-- name of the pool --> | storage                            | Zpool 名 <!-- Name of the zpool -->
 
 <!--
 Storage pool configuration keys can be set using the lxc tool with:
@@ -45,16 +45,19 @@ Storage pool configuration keys can be set using the lxc tool with:
 lxc storage set [<remote>:]<pool> <key> <value>
 ```
 
-## Storage volume configuration
-Key                     | Type      | Condition                 | Default                               | API Extension | Description
-:--                     | :---      | :--------                 | :------                               | :------------ | :----------
-size                    | string    | appropriate driver        | same as volume.size                   | storage       | Size of the storage volume
-block.filesystem        | string    | block based driver (lvm)  | same as volume.block.filesystem       | storage       | Filesystem of the storage volume
-block.mount\_options    | string    | block based driver (lvm)  | same as volume.block.mount\_options   | storage       | Mount options for block devices
-zfs.remove\_snapshots   | string    | zfs driver                | same as volume.zfs.remove\_snapshots  | storage       | Remove snapshots as needed
-zfs.use\_refquota       | string    | zfs driver                | same as volume.zfs.zfs\_requota       | storage       | Use refquota instead of quota for space.
+## ストレージボリュームの設定 <!-- Storage volume configuration -->
+Key                     | Type      | Condition                 | Default                                            | API Extension | Description
+:--                     | :---      | :--------                 | :------                                            | :------------ | :----------
+size                    | string    | appropriate driver        | <!-- same as -->volume.size と同じ                  | storage       | ストレージボリュームのサイズ <!-- Size of the storage volume -->
+block.filesystem        | string    | block based driver (lvm)  | <!-- same as -->volume.block.filesystem と同じ      | storage       | ストレージボリュームのファイルシステム <!-- Filesystem of the storage volume -->
+block.mount\_options    | string    | block based driver (lvm)  | <!-- same as -->volume.block.mount\_options と同じ  | storage       | ブロックデバイスのマウントオプション <!-- Mount options for block devices -->
+zfs.remove\_snapshots   | string    | zfs driver                | <!-- same as -->volume.zfs.remove\_snapshots と同じ | storage       | 必要に応じてスナップショットを削除するかどうか <!-- Remove snapshots as needed -->
+zfs.use\_refquota       | string    | zfs driver                | <!-- same as -->volume.zfs.zfs\_requota と同じ      | storage       | 領域の quota の代わりに refquota を使うかどうか <!-- Use refquota instead of quota for space. -->
 
+<!--
 Storage volume configuration keys can be set using the lxc tool with:
+-->
+ストレージボリュームの設定は lxc ツールを使って次のように設定できます:
 
 ```bash
 lxc storage volume set [<remote>:]<pool> <volume> <key> <value>
