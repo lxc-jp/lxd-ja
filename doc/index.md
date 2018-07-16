@@ -166,16 +166,24 @@ Fixes and new features are greatly appreciated but please read our [contributing
 修正や新機能の追加は歓迎です。最初に [contributing guidelines](contributing.md) を読んでください。
 
 ## サポートとディスカッション <!-- Support and discussions -->
-### Forum
+### フォーラム <!-- Forum -->
+<!--
 A discussion forum is available at: <https://discuss.linuxcontainers.org>
+-->
+ディスカッションフォーラムを使えます: <https://discuss.linuxcontainers.org>
 
-### Mailing-lists
+### メーリングリスト <!-- Mailing-lists -->
+<!--
 We use the LXC mailing-lists for developer and user discussions, you can
 find and subscribe to those at: <https://lists.linuxcontainers.org>
+-->
+開発者向けとユーザ向けのディスカッションに LXC のメーリングリストを使っています。次の URL から見つけられますし、購読もできます: <https://lists.linuxcontainers.org>
 
 ### IRC
+<!--
 If you prefer live discussions, some of us also hang out in
-[#lxcontainers](http://webchat.freenode.net/?channels=#lxcontainers) on irc.freenode.net.
+-->
+ライブのディスカッションがお好みなら、irc.freenode.net の [#lxcontainers](http://webchat.freenode.net/?channels=#lxcontainers) に参加している開発者もいます:
 
 ## FAQ
 #### LXD サーバにリモートからアクセスできるようにするには? <!-- How to enable LXD server for remote access? -->
@@ -320,53 +328,71 @@ lxc-devel, and we can escalate to CRIU lists as necessary.
 マイグレーションはまだ実験段階のステージで、すべてのケースで動作しないかもしれません。
 そういう場合は lxc-devel にバグレポートをしてください。必要であれば CRIU にもエスカレーションします。
 
-#### Can I bind mount my home directory in a container?
+#### 私のホームディレクトリをコンテナ内にバインドマウントできますか? <!-- Can I bind mount my home directory in a container? -->
+<!--
 Yes. The easiest way to do that is using a privileged container to avoid file ownership issues:
+-->
+はい。もっとも簡単に行うには、特権コンテナを使って、ファイルの所有権の問題を回避します:
 
-1.a) create a container.
+1.a) コンテナを作成します <!-- create a container. -->
 
 ```bash
 lxc launch ubuntu privilegedContainerName -c security.privileged=true
 ```
 
-1.b) or, if your container already exists.
+1.b) もしくは既存のコンテナがある場合には以下のように実行します: <!-- or, if your container already exists. -->
 
 ```bash
 lxc config set privilegedContainerName security.privileged true
 ```
 
-2) then.
+2) それから次のように実行します。 <!-- then. -->
 
 ```bash
 lxc config device add privilegedContainerName shareName disk source=/home/$USER path=/home/ubuntu
 ```
 
-#### How can I run docker inside a LXD container?
+#### LXD コンテナ内で docker を実行できますか? <!-- How can I run docker inside a LXD container? -->
+<!--
 In order to run Docker inside a LXD container the `security.nesting` property of the container should be set to `true`. 
+-->
+LXD コンテナ内で Docker を実行するには、コンテナの `security.nesting` プロパティを `true` に設定します。
 
 ```bash
 lxc config set <container> security.nesting true
 ```
 
+<!--
 Note that LXD containers cannot load kernel modules, so depending on your
 Docker configuration you may need to have the needed extra kernel modules
 loaded by the host.
+-->
+LXD コンテナ内ではカーネルモジュールはロードできませんので、Docker の設定に従って、ホスト側で必要なカーネルモジュールをロードしておく必要があることに注意してください。
 
+<!--
 You can do so by setting a comma separate list of kernel modules that your container needs with:
+-->
+コンテナで必要なカーネルモジュールをカンマ区切りのリストで次のように設定しておけます:
 
 ```bash
 lxc config set <container> linux.kernel_modules <modules>
 ```
 
+<!--
 We have also received some reports that creating a `/.dockerenv` file in your
 container can help Docker ignore some errors it's getting due to running in a
 nested environment.
+-->
+コンテナ内に `/.dockerenv` ファイルを作ることで、ネストされた環境内で実行することによりおこるエラーのいくつかを Docker に無視させることができるというレポートをいくつか受け取っています。
 
-## Hacking on LXD
-### Directly using the REST API
+## LXD のハック <!-- Hacking on LXD -->
+### 直接 REST API を使って <!-- Directly using the REST API -->
+<!--
 The LXD REST API can be used locally via unauthenticated Unix socket or remotely via SSL encapsulated TCP.
+-->
+LXD の REST API は、認証不要なローカルの Unix ソケット経由でも、SSL で暗号化された TCP 経由でも使えます。
 
-#### Via Unix socket
+#### UNIX ソケット経由 <!-- Via Unix socket -->
 
 ```bash
 curl --unix-socket /var/lib/lxd/unix.socket \
@@ -376,8 +402,11 @@ curl --unix-socket /var/lib/lxd/unix.socket \
     lxd/1.0/containers
 ```
 
-#### Via TCP
+#### TCP 経由 <!-- Via TCP -->
+<!--
 TCP requires some additional configuration and is not enabled by default.
+-->
+TCP 経由では、デフォルトでは有効ではない追加の設定が必要です。
 
 ```bash
 lxc config set core.https_address "[::]:8443"
@@ -393,8 +422,11 @@ curl -k -L \
     "https://127.0.0.1:8443/1.0/containers"
 ```
 
-#### JSON payload
+#### 事前に用意する JSON ファイル <!-- JSON payload -->
+<!--
 The `hello-ubuntu.json` file referenced above could contain something like:
+-->
+上記の `hello-ubuntu.json` ファイルは以下のような内容です。
 
 ```json
 {
