@@ -392,7 +392,7 @@ The LXD REST API can be used locally via unauthenticated Unix socket or remotely
 -->
 LXD の REST API は、認証不要なローカルの Unix ソケット経由でも、SSL で暗号化された TCP 経由でも使えます。
 
-#### Via Unix socket
+#### UNIX ソケット経由 <!-- Via Unix socket -->
 
 ```bash
 curl --unix-socket /var/lib/lxd/unix.socket \
@@ -402,7 +402,7 @@ curl --unix-socket /var/lib/lxd/unix.socket \
     lxd/1.0/containers
 ```
 
-#### Via TCP
+#### TCP 経由 <!-- Via TCP -->
 <!--
 TCP requires some additional configuration and is not enabled by default.
 -->
@@ -422,7 +422,7 @@ curl -k -L \
     "https://127.0.0.1:8443/1.0/containers"
 ```
 
-#### JSON payload
+#### 事前に用意する JSON ファイル <!-- JSON payload -->
 <!--
 The `hello-ubuntu.json` file referenced above could contain something like:
 -->
