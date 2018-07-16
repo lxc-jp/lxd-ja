@@ -1,4 +1,4 @@
-# 必要条件 <!-- Requirements -->
+# 動作環境 <!-- Requirements -->
 ## Go
 
 <!--
@@ -8,7 +8,7 @@ Both the golang and gccgo compilers are supported.
 LXD は Go 1.9 以上を必要とします。
 golang と gccgo の両方のコンパイラがサポートされます。
 
-## カーネルの必要条件 <!-- Kernel requirements -->
+## 必要なカーネルバージョン <!-- Kernel requirements -->
 <!--
 The minimum supported kernel version is 3.13.
 -->
