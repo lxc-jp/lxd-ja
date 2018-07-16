@@ -45,10 +45,7 @@ group.
 上記の `--group lxd` は非特権ユーザにアクセス権限を与えるために必要です。
 
 
-<!--
-### REST API through local socket
--->
-### ローカルソケット経由でのREST API
+### ローカルソケット経由でのREST API <!-- REST API through local socket -->
 
 <!--
 On server side the most easy way is to communicate with LXD through
@@ -71,10 +68,7 @@ See the [RESTful API](rest-api.md) for available API.
 利用可能なAPIについては [RESTful API](rest-api.md) をご参照ください。
 
 
-<!--
-### REST API through HTTPS
--->
-### HTTPS経由でのREST API
+### HTTPS経由でのREST API <!-- REST API through HTTPS -->
 
 <!--
 [HTTPS connection to LXD](security.md) requires valid
@@ -103,19 +97,14 @@ Among the lines you should see:
     Certificate purposes:
     SSL client : Yes
 
-<!--
-#### with command line tools
--->
-#### コマンドラインツールを使う
+
+#### コマンドラインツールを使う <!-- with command line tools -->
 
 ```bash
 wget --no-check-certificate https://127.0.0.1:8443/1.0 --certificate=$HOME/.config/lxc/client.crt --private-key=$HOME/.config/lxc/client.key -O - -q
 ```
 
-<!--
-#### with browser
--->
-#### ブラウザを使う
+#### ブラウザを使う <!-- with browser -->
 
 <!--
 Some browser plugins provide convenient interface to create, modify
