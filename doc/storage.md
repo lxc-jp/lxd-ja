@@ -72,7 +72,7 @@ Where possible, LXD tries to use the advanced features of each system to optimiz
 LXD では、イメージやコンテナ用のストレージとして ZFS、btrfs、LVM、単なるディレクトリが使えます。
 可能であれば、各システムの高度な機能を使って、LXD は操作を最適化しようとします。
 
-機能 <!-- Feature -->                        | Directory | Btrfs | LVM   | ZFS  | CEPH
+機能 <!-- Feature -->                        | ディレクトリ <!-- Directory --> | Btrfs | LVM   | ZFS  | CEPH
 :---                                        | :---      | :---  | :---  | :--- | :---
 最適化されたイメージストレージ <!-- Optimized image storage -->   | no | yes | yes | yes | yes
 最適化されたコンテナの作成 <!-- Optimized container creation --> | no | yes | yes | yes | yes
