@@ -12,9 +12,8 @@ This requires that the whole `/var/lib/lxd` or
 Additionally, it is necessary to backup all storage pools as well.
 -->
 これは `/var/lib/lxd` か（snap でインストールした LXD の場合は）
-`/var/snap/lxd/common/lxd` フォルダー全体がバックアップされることを
-必要とします。さらに、全てのストレージプールもバックアップする必要が
-あります。
+`/var/snap/lxd/common/lxd` フォルダー全体をバックアップする必要があります。
+さらに、全てのストレージプールもバックアップする必要があります。
 
 <!--
 In order to restore the LXD instance the old `lxd` folder needs to be
@@ -22,8 +21,8 @@ removed and replaced with the `lxd` snapshot. All storage pools need to
 be restored as well.
 -->
 LXD インスタンスをリストアするためには古い `lxd` のフォルダーは削除して
-`lxd` のスナップショットで置き換えられる必要があります。全てのストレージ
-プールもリストアされる必要があります。
+`lxd` のスナップショットで置き換える必要があります。
+全てのストレージプールもリストアする必要があります。
 
 ## セカンダリの LXD <!-- Secondary LXD -->
 <!--
@@ -85,8 +84,8 @@ The container must be available under
 in the case of the LXD snap.
 -->
 コンテナは
-`/var/lib/lxd/storage-pools/POOL-NAME/containers/NAME` か
-snap でインストールした LXD の場合は
+`/var/lib/lxd/storage-pools/POOL-NAME/containers/NAME` か、snap でインストールした
+LXD の場合は
 `/var/snap/lxd/common/lxd/storage-pools/POOL-NAME/containers/NAME` の下に
 存在する必要があります。
 
