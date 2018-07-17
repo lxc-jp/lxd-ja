@@ -63,24 +63,28 @@ Storage volume configuration keys can be set using the lxc tool with:
 lxc storage volume set [<remote>:]<pool> <volume> <key> <value>
 ```
 
-# Storage Backends and supported functions
-## Feature comparison
+# ストレージバックエンドとサポートされる機能 <!-- Storage Backends and supported functions -->
+## 機能比較 <!-- Feature comparison -->
+<!--
 LXD supports using ZFS, btrfs, LVM or just plain directories for storage of images and containers.  
 Where possible, LXD tries to use the advanced features of each system to optimize operations.
+-->
+LXD では、イメージやコンテナ用のストレージとして ZFS、btrfs、LVM、単なるディレクトリが使えます。
+可能であれば、各システムの高度な機能を使って、LXD は操作を最適化しようとします。
 
-Feature                                     | Directory | Btrfs | LVM   | ZFS  | CEPH
+機能 <!-- Feature -->                        | Directory | Btrfs | LVM   | ZFS  | CEPH
 :---                                        | :---      | :---  | :---  | :--- | :---
-Optimized image storage                     | no        | yes   | yes   | yes  | yes
-Optimized container creation                | no        | yes   | yes   | yes  | yes
-Optimized snapshot creation                 | no        | yes   | yes   | yes  | yes
-Optimized image transfer                    | no        | yes   | no    | yes  | yes
-Optimized container transfer                | no        | yes   | no    | yes  | yes
-Copy on write                               | no        | yes   | yes   | yes  | yes
-Block based                                 | no        | no    | yes   | no   | yes
-Instant cloning                             | no        | yes   | yes   | yes  | yes
-Storage driver usable inside a container    | yes       | yes   | no    | no   | no
-Restore from older snapshots (not latest)   | yes       | yes   | yes   | no   | yes
-Storage quotas                              | no        | yes   | no    | yes  | no
+最適化されたイメージストレージ <!-- Optimized image storage -->   | no | yes | yes | yes | yes
+最適化されたコンテナの作成 <!-- Optimized container creation --> | no | yes | yes | yes | yes
+最適化されたスナップショットの作成 <!-- Optimized snapshot creation --> | no | yes | yes | yes | yes
+最適化されたイメージの転送 <!-- Optimized image transfer --> | no | yes | no | yes | yes
+最適化されたコンテナの転送 <!-- Optimized container transfer --> | no | yes | no | yes | yes
+コピーオンライト <!-- Copy on write --> | no | yes | yes | yes | yes
+ブロックデバイスベース <!-- Block based --> | no | no    | yes   | no   | yes
+インスタントクローン <!-- Instant cloning --> | no | yes | yes | yes | yes
+コンテナ内でストレージドライバの使用 <!-- Storage driver usable inside a container --> | yes | yes | no | no | no
+古い（最新ではない）スナップショットからのリストア <!-- Restore from older snapshots (not latest) --> | yes | yes | yes | no | yes
+ストレージクオータ <!-- Storage quotas --> | no | yes | no | yes | no
 
 ## Recommended setup
 The two best options for use with LXD are ZFS and btrfs.  
