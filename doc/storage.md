@@ -86,24 +86,44 @@ LXD では、イメージやコンテナ用のストレージとして ZFS、btr
 古い（最新ではない）スナップショットからのリストア <!-- Restore from older snapshots (not latest) --> | yes | yes | yes | no | yes
 ストレージクオータ <!-- Storage quotas --> | no | yes | no | yes | no
 
-## Recommended setup
+## おすすめのセットアップ <!-- Recommended setup -->
+<!--
 The two best options for use with LXD are ZFS and btrfs.  
 They have about similar functionalities but ZFS is more reliable if available on your particular platform.
+-->
+LXD から使う場合のベストなオプションは ZFS と btrfs を使うことです。  
+このふたつは同様の機能を持ちますが、お使いのプラットフォームで使えるのであれば、ZFS のほうがより信頼性が上です。
 
+<!--
 Whenever possible, you should dedicate a full disk or partition to your LXD storage pool.  
 While LXD will let you create loop based storage, this isn't a recommended for production use.
+-->
+可能であれば、LXD のストレージプールにディスクかパーティション全体を与えるのが良いでしょう。  
+LXD で loop ベースのストレージを作れますが、プロダクション環境ではおすすめしません。
 
+<!--
 Similarly, the directory backend is to be considered as a last resort option.  
 It does support all main LXD features, but is terribly slow and inefficient as it can't perform  
 instant copies or snapshots and so needs to copy the entirety of the container's filesystem every time.
+-->
+同様に、ディレクトリバックエンドも最後の手段として考えるべきでしょう。  
+LXD の主な機能すべてが使えますが、インスタンスコピーやスナップショットが使えないので、毎回コンテナのファイルシステム全体をコピーする必要があり、恐ろしく遅くて役に立たないでしょう。
 
-## Optimized image storage
+## 最適化されたイメージストレージ <!-- Optimized image storage -->
+<!--
 All backends but the directory backend have some kind of optimized image storage format.  
 This is used by LXD to make container creation near instantaneous by simply cloning a pre-made  
 image volume rather than unpack the image tarball from scratch.
+-->
+ディレクトリ以外のすべてのバックエンドには、ある種の最適化されたイメージ格納フォーマットがあります。  
+これは、一からイメージの tarball を展開するのではなく、あらかじめ作られたイメージボリュームから単にクローンして、瞬間的にコンテナを作るのに使われます。  
 
+<!--
 As it would be wasteful to prepare such a volume on a storage pool that may never be used with that image,  
 the volume is generated on demand, causing the first container to take longer to create than subsequent ones.
+-->
+そのイメージで使えないストレージプールの上にそのようなボリュームを準備することは無駄なので、ボリュームはオンデマンドで作成されます。  
+したがって、最初のコンテナはあとで作るコンテナよりは作成に時間がかかります。
 
 ## Optimized container transfer
 ZFS, btrfs and CEPH RBD have an internal send/receive mechanisms which allow for optimized volume transfer.  
