@@ -12,8 +12,8 @@ against all containers configuration.
 -->
 従来 LXC で行われていたように設定と状態をそれぞれのコンテナのディレクトリに
 保存するのではなく、 LXD ではそれら全ての情報を保管する内部的なデータベースを
-持っています。これにより全てのコンテナの設定に対して非常に素早く問い合わせを
-することができます。
+持っています。これによりすべてのコンテナの設定に対する問い合わせをとても
+高速に行えます。
 
 
 <!--
@@ -25,7 +25,7 @@ then look at what network devices are defined in there.
 例えば、 「どのコンテナが br0 を使っているのか」というかなり分かりやすい問いが
 あります。この問いにデータベース無しで答えるとすると、 LXD は一つ一つの
 コンテナに対して、設定を読み込んでパースし、そこにどのネットワークデバイスが
-定義されているかを見るということを繰り返し行わなければならなかったでしょう。
+定義されているかを見るということを繰り返し行わなければなりません。
 
 <!--
 While that may be quick with a few containers, imagine how many
@@ -34,8 +34,7 @@ database, it's only a matter of accessing the already cached database
 with a pretty simple query.
 -->
 コンテナの数が少なければ、その処理は速いかもしれませんが、2000 個のコンテナに
-対してどれだけ多くのファイルシステムへのアクセスが必要になっていたかを
-想像してみてください。
+対してどれだけ多くのファイルシステムへのアクセスが必要かを想像してみてください。
 代わりにデータベースを使うことで、非常に単純なクエリでキャッシュ済みの
 データベースにアクセスするだけで良くなるのです。
 
@@ -62,7 +61,7 @@ be used, although in that case it effectively behaves like a regular SQLite
 database.
 -->
 単一の非クラスターノードとして LXD を使う場合であっても、やはりグローバル
-データベースは使用されます。ただし、その場合は実質的には通常の SQLite
+データベースを使用します。ただし、その場合は実質的には通常の SQLite
 データベースとして振る舞います。
 
 <!--
@@ -89,8 +88,7 @@ you need to revert the state as it was before the upgrade.
 -->
 アップグレードの前にはグローバルデータベースのディレクトリとローカルデータベースの
 ファイルのバックアップが作成され、 ``.bak`` のサフィックス付きでタグ付けされます。
-アップグレード前の状態にリバートする必要がある場合は、このバックアップを使うことが
-できます。
+アップグレード前の状態に戻す必要がある場合は、このバックアップを使うことができます。
 
 # データベースのデータとスキーマをダンプする <!-- Dumping the database content or schema -->
 <!--
@@ -102,7 +100,7 @@ command line tool.
 データベースのデータまたはスキーマの SQL テキスト形式でのダンプを取得したい場合は、
 ``lxd sql <local|global> [.dump|.schema]`` コマンドを使ってください。これにより
 sqlite3 コマンドラインツールの ``.dump`` または ``.schema`` ディレクティブと同じ出力を
-生成することができます。
+生成できます。
 
 # コンソールからカスタムクエリを実行する <!-- Running custom queries from the console -->
 <!--
@@ -134,7 +132,7 @@ creating ``.sql`` files containing queries that repair the broken update.
 SQL のデータマイグレーションのバグあるいは関連する問題のために
 アップグレード後に LXD デーモンが起動に失敗する場合、
 壊れたアップデートを修復するクエリを含んだ ``.sql`` ファイルを
-作成することで、その状況からリカバーすることが可能です。
+作成することで、その状況からリカバーできます。
 
 <!--
 To perform repairs against the local database, write a
