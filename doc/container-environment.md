@@ -39,7 +39,8 @@ PID1 の初期環境は `container=lxc` 以外は空です。 init システム�
 <!--
 All file descriptors above the default 3 are closed prior to PID1 being spawned.
 -->
-デフォルトの 3 以上の全てのファイルディスクリプタは PID1 が起動される前に閉じられます。
+デフォルトの 3 個 (訳注: stdin, stdout, stderr) より上の全てのファイルディスクリプタは
+PID1 が起動される前に閉じられます。
 
 ## ファイルシステム <!-- Filesystem -->
 <!--
@@ -125,8 +126,8 @@ The following paths will also be automatically mounted if present on the host:
 The reason for passing all of those is legacy init systems which require
 those to be mounted or be mountabled inside the container.
 -->
-これらを引き渡す理由はレガシーな init システムがこれらがマウントされているか
-コンテナ内でマウント可能になっていることを必要とするからです。
+これらを引き渡す理由は、これらがマウントされているか、コンテナ内でマウント
+できるようになっているかが必要とされているレガシーな init システムのためです。
 
 <!--
 The majority of those will not be writable (or even readable) from inside an
@@ -167,6 +168,6 @@ If LXCFS is present on the host, it will automatically be setup for the containe
 This normally results in a number of `/proc` files being overridden through bind-mounts.
 On older kernels a virtual version of `/sys/fs/cgroup` may also be setup by LXCFS.
 -->
-これは通常いくつかの `/proc` ファイルになり、それらは bind-mount を通してオーバーライド
+これは通常いくつかの `/proc` ファイルになり、それらは bind mount を通してオーバーライド
 されます。古いカーネルでは `/sys/fs/cgroup` の仮想バージョンも LXCFS によりセットアップ
 されるかもしれません。
