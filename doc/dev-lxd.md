@@ -33,8 +33,8 @@ connections on it.
 This socket is then bind-mounted into every single container started by
 LXD at `/dev/lxd/sock`.
 -->
-このソケットは LXD によって `/dev/lxd/sock` で開始された各々のコンテナに
-その後 bind mount されます。
+このソケットは、LXD が開始させたすべてのコンテナ内の `/dev/lxd/sock` に
+bind mount されます。
 
 <!--
 The bind-mount is required so we can exceed 4096 containers, otherwise,
@@ -235,7 +235,7 @@ This never returns. Each notification is sent as a separate JSON dict:
  * Return: raw image or error
  * Access: Requires security.devlxd.images set to true
 -->
- * 説明: ホストから公開されたあるいはキャッシュされたイメージをダウンロードする
+ * 説明: 公開されたあるいはキャッシュされたイメージをホストからダウンロードする
  * 出力: 生のイメージあるいはエラー
  * アクセス権: security.devlxd.images を true に設定する必要があります
 
