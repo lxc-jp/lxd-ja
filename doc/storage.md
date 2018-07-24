@@ -138,7 +138,7 @@ When such capabilities aren't available, either because the storage driver doesn
 or because the storage backend of the source and target servers differ,  
 LXD will fallback to using rsync to transfer the individual files instead.
 -->
-ストレージドライバーがこのような機能をサポートしていない場合や、転送元と転送先のサーバのストレージバックエンドが違う場合で、このような機能が使えない場合は、__
+ストレージドライバーがこのような機能をサポートしていない場合や、転送元と転送先のサーバのストレージバックエンドが違う場合で、このような機能が使えない場合は、  
 LXD は代わりに rsync を使った転送にフォールバックし、個々のファイルを転送します。
 
 <!--
@@ -153,7 +153,7 @@ rsync を使う必要がある場合、LXD ではストレージプールのプ�
 There is no concept of a default storage pool in LXD.  
 Instead, the pool to use for the container's root is treated as just another "disk" device in LXD.
 -->
-LXD にはデフォルトののストレージプールの概念はありません。__
+LXD にはデフォルトののストレージプールの概念はありません。  
 代わりに、コンテナのルートに使用するプールは、LXD 内で別の「ディスク」デバイスとして扱われます。
 
 <!--
@@ -178,7 +178,7 @@ or it can be set through LXD profiles.
 That latter option is what the default LXD setup (through "lxd init") will do for you.  
 The same can be done manually against any profile using (for the "default" profile):
 -->
-後者のオプションは、デフォルトの LXD セットアップ（"lxd init" で実行します）が設定するものです。__
+後者のオプションは、デフォルトの LXD セットアップ（"lxd init" で実行します）が設定するものです。  
 同じことを次のように任意のプロファイルに対してマニュアルで実行できます:
 
 ```bash
