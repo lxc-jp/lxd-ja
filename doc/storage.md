@@ -125,23 +125,41 @@ the volume is generated on demand, causing the first container to take longer to
 そのイメージで使えないストレージプールの上にそのようなボリュームを準備することは無駄なので、ボリュームはオンデマンドで作成されます。  
 したがって、最初のコンテナはあとで作るコンテナよりは作成に時間がかかります。
 
-## Optimized container transfer
+## 最適化されたコンテナの転送 <!-- Optimized container transfer -->
+<!--
 ZFS, btrfs and CEPH RBD have an internal send/receive mechanisms which allow for optimized volume transfer.  
 LXD uses those features to transfer containers and snapshots between servers.
+-->
+ZFS、btrfs、Ceph RBD は内部で send/receive メカニズムを持っており、最適化されたボリュームの転送ができます。
+LXD はこのような機能を使い、サーバ間でコンテナやスナップショットを転送します。
 
+<!--
 When such capabilities aren't available, either because the storage driver doesn't support it  
 or because the storage backend of the source and target servers differ,  
 LXD will fallback to using rsync to transfer the individual files instead.
+-->
+ストレージドライバーがこのような機能をサポートしていない場合や、転送元と転送先のサーバのストレージバックエンドが違う場合で、このような機能が使えない場合は、  
+LXD は代わりに rsync を使った転送にフォールバックし、個々のファイルを転送します。
 
+<!--
 When rsync has to be used LXD allows to specify an upper limit on the amount of
 socket I/O by setting the `rsync.bwlimit` storage pool property to a non-zero
 value.
+-->
+rsync を使う必要がある場合、LXD ではストレージプールのプロパティーである `rsync.bwlimit` を 0 以外の値に設定することで、ソケット I/O の流量の上限を設定できます。
 
-## Default storage pool
+## デフォルトのストレージプール <!-- Default storage pool -->
+<!--
 There is no concept of a default storage pool in LXD.  
 Instead, the pool to use for the container's root is treated as just another "disk" device in LXD.
+-->
+LXD にはデフォルトののストレージプールの概念はありません。  
+代わりに、コンテナのルートに使用するプールは、LXD 内で別の「ディスク」デバイスとして扱われます。
 
+<!--
 The device entry looks like:
+-->
+デバイスエントリーは次のようになります。
 
 ```yaml
   root:
@@ -150,11 +168,18 @@ The device entry looks like:
     pool: default
 ```
 
+<!--
 And it can be directly set on a container ("-s" option to "lxc launch" and "lxc init")  
 or it can be set through LXD profiles.
+-->
+この設定はコンテナに直接指定できますし（"-s"オプションを "lxc launch" と "lxc init" に与えて）、LXD プロファイル経由でも設定できます。
 
+<!--
 That latter option is what the default LXD setup (through "lxd init") will do for you.  
 The same can be done manually against any profile using (for the "default" profile):
+-->
+後者のオプションは、デフォルトの LXD セットアップ（"lxd init" で実行します）が設定するものです。  
+同じことを次のように任意のプロファイルに対してマニュアルで実行できます:
 
 ```bash
 lxc profile device add default root disk path=/ pool=default
