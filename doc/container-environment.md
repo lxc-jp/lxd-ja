@@ -45,19 +45,14 @@ PID1 が起動される前に閉じられます。
 ## ファイルシステム <!-- Filesystem -->
 <!--
 LXD assumes that any image it uses to create a new container from will come with at least:
-
- - `/dev` (empty)
- - `/proc` (empty)
- - `/sbin/init` (executable)
- - `/sys` (empty)
 -->
 LXD は使用するどのイメージから生成する新規のコンテナは少なくとも以下のファイルシステムを
 含むことを前提とします。
 
- - `/dev` (空のディレクトリ)
- - `/proc` (空のディレクトリ)
- - `/sbin/init` (実行ファイル)
- - `/sys` (空のディレクトリ)
+ - `/dev` (空のディレクトリ) <!-- (empty) -->
+ - `/proc` (空のディレクトリ) <!-- (empty) -->
+ - `/sbin/init` (実行ファイル) <!-- (executable) -->
+ - `/sys` (空のディレクトリ) <!-- (empty) -->
 
 ## デバイス <!-- Devices -->
 <!--
@@ -99,16 +94,12 @@ On top of the standard set of devices, the following are also setup for convenie
 ## マウント <!-- Mounts -->
 <!--
 The following mounts are setup by default under LXD:
-
- - `/proc` (proc)
- - `/sys` (sysfs)
- - `/sys/fs/cgroup/*` (cgroupfs) (only on kernels lacking cgroup namespace support)
 -->
 LXD では以下のマウントがデフォルトでセットアップされます。
 
  - `/proc` (proc)
  - `/sys` (sysfs)
- - `/sys/fs/cgroup/*` (cgroupfs) (cgroup namespace サポートを欠くカーネルの場合のみ)
+ - `/sys/fs/cgroup/*` (cgroupfs) (cgroup namespace サポートを欠くカーネルの場合のみ) <!-- (only on kernels lacking cgroup namespace support) -->
 
 <!--
 The following paths will also be automatically mounted if present on the host:
