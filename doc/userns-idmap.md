@@ -22,14 +22,14 @@ For example, we can define that the host uids and gids from 100000 to
 65535 in the container.
 -->
 例えば、 100000 から 165535 までのホストの uid と gid を LXD が使用できる
-ようにし、コンテナで 0 から 65535 までの uid/gid にマッッピングするように
+ようにし、コンテナで 0 から 65535 までの uid/gid にマッピングするように
 設定できます。
 
 <!--
 As a result a process running as uid 0 in the container will actually be
 running as uid 100000.
 -->
-この結果、コンテナで 0 の uid で動くプロセスが実際には uid 100000 で動く
+この結果、コンテナ内で 0 の uid で動くプロセスが実際には uid 100000 で動く
 ことになります。
 
 <!--
@@ -73,7 +73,7 @@ broken shadow setup.
 -->
 `/etc/subuid` 、 `/etc/subgid` 、 `newuidmap` (パスを検索)、 `newgidmap`
 (パスを検索) のいくつか (ただし全部ではない) がシステムに存在する場合、
-これはシャドーの設定が間違っていることを示しているので、これが修正されるまで
+これは shadow の設定が間違っていることを示しているので、これが修正されるまで
 LXD はコンテナの起動に失敗します。
 
 <!--
@@ -83,7 +83,7 @@ it can use any uids and gids above 65535 and will take the first 65536
 as its default map.
 -->
 これらの 4 つのファイルが 1 つも無い場合、 LXD はホストが古いバージョンの
-シャドーの上で稼働していると想定します。このモードでは LXD は 65535 より
+shadow の上で稼働していると想定します。このモードでは LXD は 65535 より
 上のどんな uid と gid も使用可能と想定し、最初の 65536 個をデフォルトの
 マッピングに使用します。
 
