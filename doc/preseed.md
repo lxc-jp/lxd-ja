@@ -110,7 +110,7 @@ although rarely (typically due to backend bugs or limitations). Thus
 care must be taken when trying to reconfigure an LXD daemon via
 preseed.
 -->
-ただし、まれにではありますが (典型的にはバックエンドのバグが制限により)、
+ただし、まれにではありますが (典型的にはバックエンドのバグか制限により)、
 ロールバック自体も失敗する可能性があることにご注意ください。ですので
 LXD デーモンを preseed で再構成しようとするときは注意が必要です。
 
