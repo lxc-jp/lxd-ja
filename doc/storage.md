@@ -196,7 +196,7 @@ container (see [Containers](containers.md)).
 Those are applied through the Linux `blkio` cgroup controller which makes it possible  
 to restrict I/O at the disk level (but nothing finer grained than that).
 -->
-この制限は `blkio` cgroup コントローラーを使って適用します。ディスクレベルで I/O の制限ができます（それより粒度の細かい制限はできません）。
+この制限は Linux の `blkio` cgroup コントローラーを使って適用します。ディスクレベルで I/O の制限ができます（それより粒度の細かい制限はできません）。
 
 <!--
 Because those apply to a whole physical disk rather than a partition or path, the following restrictions apply:
