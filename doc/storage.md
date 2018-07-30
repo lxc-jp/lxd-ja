@@ -185,23 +185,36 @@ The same can be done manually against any profile using (for the "default" profi
 lxc profile device add default root disk path=/ pool=default
 ```
 
-## I/O limits
+## I/O 制限 <!-- I/O limits -->
+<!--
 I/O limits in IOp/s or MB/s can be set on storage devices when attached to a
 container (see [Containers](containers.md)).
+-->
+ストレージデバイスをコンテナにアタッチする際に、IOPS や MB/s による I/O 制限を、ストレージデバイスに対して設定できます（詳しくは [Containers](containers.md) をご覧ください）。
 
+<!--
 Those are applied through the Linux `blkio` cgroup controller which makes it possible  
 to restrict I/O at the disk level (but nothing finer grained than that).
+-->
+この制限は `blkio` cgroup コントローラーを使って適用します。ディスクレベルで I/O の制限ができます（それより粒度の細かい制限はできません）。
 
+<!--
 Because those apply to a whole physical disk rather than a partition or path, the following restrictions apply:
+-->
+この制限は、パーティションやパスではなく、全物理ディスクに対して適用されるので、次のような制限があります:
 
- - Limits will not apply to filesystems that are backed by virtual devices (e.g. device mapper).
- - If a fileystem is backed by multiple block devices, each device will get the same limit.
- - If the container is passed two disk devices that are each backed by the same disk,  
-   the limits of the two devices will be averaged.
+ - 制限は仮想デバイス（例えば device mapper）によって実現しているファイルシステムには適用されません <!-- Limits will not apply to filesystems that are backed by virtual devices (e.g. device mapper). -->
+ - 複数のブロックデバイス上に存在するファイルシステムの場合、それぞれのデバイスは同じ制限が適用されます <!-- If a fileystem is backed by multiple block devices, each device will get the same limit. -->
+ - 同じディスク上に存在するふたつのディスクデバイスをコンテナに与えた場合、ふたつのデバイスの制限は平均化されます <!-- If the container is passed two disk devices that are each backed by the same disk,  
+   the limits of the two devices will be averaged. -->
 
+<!--
 It's also worth noting that all I/O limits only apply to actual block device access,  
 so you will need to consider the filesystem's own overhead when setting limits.  
 This also means that access to cached data will not be affected by the limit.
+-->
+すべての I/O 制限は、実際のブロックデバイスにのみ適用されるので、制限を設定する際には、ファイルシステム自身のオーバーヘッドを考慮する必要があるでしょう。  
+このことは、キャッシュされたデータへのアクセスは、制限の影響を受けないことも意味します。
 
 ## Notes and examples
 ### Directory
