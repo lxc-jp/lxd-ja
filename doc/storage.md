@@ -216,7 +216,7 @@ This also means that access to cached data will not be affected by the limit.
 すべての I/O 制限は、実際のブロックデバイスにのみ適用されるので、制限を設定する際には、ファイルシステム自身のオーバーヘッドを考慮する必要があるでしょう。  
 このことは、キャッシュされたデータへのアクセスは、制限の影響を受けないことも意味します。
 
-## 注意と例 <!-- Notes and examples -->
+## 各ストレージバックエンドに対する注意と例 <!-- Notes and examples -->
 ### ディレクトリ <!-- Directory -->
 
  - このバックエンドでは全ての機能を使えますが、他のバックエンドに比べて非常に時間がかかります。
@@ -257,7 +257,7 @@ lxc storage create pool2 dir source=/data/lxd
   <!-- Note that LXD will assume it has full control over the osd storage pool.
   It is recommended to not maintain any non-LXD owned filesystem entities in
   a LXD OSD storage pool since LXD might delete them. -->
-- 複数の LXD インスタンス間で同じストレージプールを共有することはサポートしないことに注意してください。
+- 複数の LXD インスタンス間で、同じストレージプールを共有することはサポートしないことに注意してください。
   `lxd import` を使って既存コンテナをバックアップする目的のときのみ、OSD ストレージプールを複数の LXD インスタンスで共有できます。
   このような場合には、`ceph.osd.force_reuse` プロパティを true に設定する必要があります。
   設定しない場合、LXD は他の LXD インスタンスが OSD ストレージプールを使っていることを検出した場合には、OSD ストレージプールの再利用を拒否します
