@@ -216,10 +216,10 @@ This also means that access to cached data will not be affected by the limit.
 すべての I/O 制限は、実際のブロックデバイスにのみ適用されるので、制限を設定する際には、ファイルシステム自身のオーバーヘッドを考慮する必要があるでしょう。  
 このことは、キャッシュされたデータへのアクセスは、制限の影響を受けないことも意味します。
 
-## 注釈と例 <!-- Notes and examples -->
+## 注意と例 <!-- Notes and examples -->
 ### ディレクトリ <!-- Directory -->
 
- - このバックエンドでは全機能が使えますが、他のバックエンドに比べて非常に時間がかかります。
+ - このバックエンドでは全ての機能を使えますが、他のバックエンドに比べて非常に時間がかかります。
    これは、イメージを展開したり、コンテナやスナップショットやイメージのその時点のコピーを作成する必要があるからです。
    <!-- While this backend is fully functional, it's also much slower than
    all the others due to it having to unpack images or do instant copies of
@@ -241,48 +241,62 @@ lxc storage create pool2 dir source=/data/lxd
 
 ### CEPH
 
-- Uses RBD images for images, then snapshots and clones to create containers
-  and snapshots.
-- Due to the way copy-on-write works in RBD, parent filesystems can't be
+- イメージとして RBD イメージを使い、コンテナやスナップショットを作成するためにスナップショットやクローンを実行します
+  <!-- Uses RBD images for images, then snapshots and clones to create containers
+  and snapshots. -->
+- RBD でコピーオンライトが動作するため、すべての子がなくなるまでは、親のファイルシステムは削除できません。
+  その結果、LXD は削除されたにもかかわらずまだ参照されているオブジェクトに、自動的に `zonbie_` というプレフィックスを付与します。
+  そして、参照されなくなるまでそれを保持します。そして安全に削除します
+  <!-- Due to the way copy-on-write works in RBD, parent filesystems can't be
   removed until all children are gone. As a result, LXD will automatically
   prefix any removed but still referenced object with "zombie_" and keep it
-  until such time the references are gone and it can safely be removed.
-- Note that LXD will assume it has full control over the osd storage pool.
+  until such time the references are gone and it can safely be removed. -->
+- LXD は OSD ストレージプールを完全にコントロールできると仮定します。
+  LXD OSD ストレージプール内に、LXD が所有しないファイルシステムエンティティを維持し続けないことをおすすめします。
+  LXD がそれらを削除する可能性があるからです
+  <!-- Note that LXD will assume it has full control over the osd storage pool.
   It is recommended to not maintain any non-LXD owned filesystem entities in
-  a LXD OSD storage pool since LXD might delete them.
-- Note that sharing the same osd storage pool between multiple LXD instances is
+  a LXD OSD storage pool since LXD might delete them. -->
+- 複数の LXD インスタンス間で同じストレージプールを共有することはサポートしないことに注意してください。
+  `lxd import` を使って既存コンテナをバックアップする目的のときのみ、OSD ストレージプールを複数の LXD インスタンスで共有できます。
+  このような場合には、`ceph.osd.force_reuse` プロパティを true に設定する必要があります。
+  設定しない場合、LXD は他の LXD インスタンスが OSD ストレージプールを使っていることを検出した場合には、OSD ストレージプールの再利用を拒否します
+  <!-- Note that sharing the same osd storage pool between multiple LXD instances is
   not supported. LXD only allows sharing of an OSD storage pool between
   multiple LXD instances only for backup purposes of existing containers via
   `lxd import`. In line with this, LXD requires the "ceph.osd.force_reuse"
   property to be set to true. If not set, LXD will refuse to reuse an osd
-  storage pool it detected as being in use by another LXD instance.
-- When setting up a ceph cluster that LXD is going to use we recommend using
+  storage pool it detected as being in use by another LXD instance. -->
+- LXD が使う Ceph クラスターを設定するときは、OSD ストレージプールを保持するために使うストレージエンティティ用のファイルシステムとして `xfs` の使用をおすすめします。
+  ストレージエンティティ用のファイルシステムとして ext4 を使用することは、Ceph の開発元では推奨していません。
+  LXD と関係ない予期しない不規則な障害が発生するかもしれません
+  <!-- When setting up a ceph cluster that LXD is going to use we recommend using
   `xfs` as the underlying filesystem for the storage entities that are used to
   hold OSD storage pools. Using `ext4` as the underlying filesystem for the
   storage entities is not recommended by Ceph upstream. You may see unexpected
-  and erratic failures which are unrelated to LXD itself.
+  and erratic failures which are unrelated to LXD itself. -->
 
-#### The following commands can be used to create Ceph storage pools
+#### Ceph ストレージプールを作成するコマンド <!-- The following commands can be used to create Ceph storage pools -->
 
-- Create a osd storage pool named "pool1" in the CEPH cluster "ceph".
+- Ceph クラスター "ceph" 内に "pool1" という OSD ストレージプールを作成する <!-- Create a osd storage pool named "pool1" in the CEPH cluster "ceph". -->
 
 ```bash
 lxc storage create pool1 ceph
 ```
 
-- Create a osd storage pool named "pool1" in the CEPH cluster "my-cluster".
+- Ceph クラスター "my-cluster" 内に "pool1" という OSD ストレージプールを作成する <!-- Create a osd storage pool named "pool1" in the CEPH cluster "my-cluster". -->
 
 ```bash
 lxc storage create pool1 ceph ceph.cluster\_name=my-cluster
 ```
 
-- Create a osd storage pool named "pool1" with the on-disk name "my-osd".
+- ディスク上の名前を "my-osd" で "pool1" という名前の OSD ストレージプールを作成する <!-- Create a osd storage pool named "pool1" with the on-disk name "my-osd". -->
 
 ```bash
 lxc storage create pool1 ceph ceph.osd.pool\_name=my-osd
 ```
 
-- Use the existing osd storage pool "my-already-existing-osd".
+- 既存の OSD ストレージプール "my-already-existing-osd" を使用する <!-- Use the existing osd storage pool "my-already-existing-osd". -->
 
 ```bash
 lxc storage create pool1 ceph source=my-already-existing-osd
