@@ -216,22 +216,24 @@ This also means that access to cached data will not be affected by the limit.
 すべての I/O 制限は、実際のブロックデバイスにのみ適用されるので、制限を設定する際には、ファイルシステム自身のオーバーヘッドを考慮する必要があるでしょう。  
 このことは、キャッシュされたデータへのアクセスは、制限の影響を受けないことも意味します。
 
-## Notes and examples
-### Directory
+## 注釈と例 <!-- Notes and examples -->
+### ディレクトリ <!-- Directory -->
 
- - While this backend is fully functional, it's also much slower than
+ - このバックエンドでは全機能が使えますが、他のバックエンドに比べて非常に時間がかかります。
+   これは、イメージを展開したり、コンテナやスナップショットやイメージのその時点のコピーを作成する必要があるからです。
+   <!-- While this backend is fully functional, it's also much slower than
    all the others due to it having to unpack images or do instant copies of
-   containers, snapshots and images.
+   containers, snapshots and images. -->
 
-#### The following commands can be used to create directory storage pools
+#### ディレクトリストレージプールを作成するコマンド <!-- The following commands can be used to create directory storage pools -->
 
- - Create a new directory pool called "pool1".
+ - "pool1" という新しいディレクトリプールを作成します <!-- Create a new directory pool called "pool1". -->
 
 ```bash
 lxc storage create pool1 dir
 ```
 
- - Use an existing directory for "pool2".
+ - 既存のディレクトリ "pool2" を使います <!-- Use an existing directory for "pool2". -->
 
 ```bash
 lxc storage create pool2 dir source=/data/lxd
