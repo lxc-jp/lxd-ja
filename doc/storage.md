@@ -245,7 +245,7 @@ lxc storage create pool2 dir source=/data/lxd
   <!-- Uses RBD images for images, then snapshots and clones to create containers
   and snapshots. -->
 - RBD でコピーオンライトが動作するため、すべての子がなくなるまでは、親のファイルシステムは削除できません。
-  その結果、LXD は削除されたにもかかわらずまだ参照されているオブジェクトに、自動的に `zonbie_` というプレフィックスを付与します。
+  その結果、LXD は削除されたにもかかわらずまだ参照されているオブジェクトに、自動的に `zombie_` というプレフィックスを付与します。
   そして、参照されなくなるまでそれを保持します。そして安全に削除します
   <!-- Due to the way copy-on-write works in RBD, parent filesystems can't be
   removed until all children are gone. As a result, LXD will automatically
