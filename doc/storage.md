@@ -304,30 +304,33 @@ lxc storage create pool1 ceph source=my-already-existing-osd
 
 ### Btrfs
 
- - Uses a subvolume per container, image and snapshot, creating btrfs snapshots when creating a new object.
- - btrfs can be used as a storage backend inside a container (nesting), so long as the parent container is itself on btrfs. (But see notes about btrfs quota via qgroups.)
- - btrfs supports storage quotas via qgroups. While btrfs qgroups are
+ - コンテナ、イメージ、スナップショットごとにサブボリュームを使い、新しいオブジェクトを作成する際に btrfs スナップショットを作成します <!-- Uses a subvolume per container, image and snapshot, creating btrfs snapshots when creating a new object. -->
+ - btrfs は、親コンテナ自身が btrfs 上に作成されているときには、コンテナ内のストレージバックエンドとして使えます（ネストコンテナ）（qgroup を使った btrfs クオータについての注意を参照してください） <!-- btrfs can be used as a storage backend inside a container (nesting), so long as the parent container is itself on btrfs. (But see notes about btrfs quota via qgroups.) -->
+ - btrfs では qgroup を使ったストレージクオータが使えます。btrfs qgroup は階層構造ですが、新しいサブボリュームは自動的には親のサブボリュームの qgroup には追加されません。
+   このことは、ユーザが設定されたクオータをエスケープできるということです。
+   もし、クオータを厳格に遵守させたいときは、ユーザはこのことに留意し、refquota を使った zfs ストレージを使うことを検討してください。
+ 　<!-- btrfs supports storage quotas via qgroups. While btrfs qgroups are
    hierarchical, new subvolumes will not automatically be added to the qgroups
    of their parent subvolumes. This means that users can trivially escape any
    quotas that are set. If adherence to strict quotas is a necessity users
    should be mindful of this and maybe consider using a zfs storage pool with
-   refquotas.
+   refquotas. -->
 
-#### The following commands can be used to create BTRFS storage pools
+#### Btrfs ストレージプールを作成するコマンド <!-- The following commands can be used to create BTRFS storage pools -->
 
- - Create loop-backed pool named "pool1".
+ - "pool1" という名前の loop を使ったプールを作成する <!-- Create loop-backed pool named "pool1". -->
 
 ```bash
 lxc storage create pool1 btrfs
 ```
 
- - Create a btrfs subvolume named "pool1" on the btrfs filesystem `/some/path` and use as pool.
+ - btrfs ファイルシステムである `/some/path` 上に "pool1" という btrfs サブボリュームを作成し、プールとして使う <!-- Create a btrfs subvolume named "pool1" on the btrfs filesystem `/some/path` and use as pool. -->
 
 ```bash
 lxc storage create pool1 btrfs source=/some/path
 ```
 
- - Create a new pool called "pool1" on `/dev/sdX`.
+ - `/dev/sdX` 上に "pool1" という新しいプールを作成する <!-- Create a new pool called "pool1" on `/dev/sdX`. -->
 
 ```bash
 lxc storage create pool1 btrfs source=/dev/sdX
