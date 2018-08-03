@@ -338,9 +338,16 @@ lxc storage create pool1 btrfs source=/dev/sdX
 
 ### LVM
 
- - Uses LVs for images, then LV snapshots for containers and container snapshots.
- - The filesystem used for the LVs is ext4 (can be configured to use xfs instead).
- - By default, all LVM storage pools use an LVM thinpool in which logical
+ - イメージ用に LV を使えば、コンテナとコンテナスナップショット用に LV のスナップショットを使います <!-- Uses LVs for images, then LV snapshots for containers and container snapshots. -->
+ - LV で使われるファイルシステムは ext4 です（代わりに xfs を使うように設定できます） <!-- The filesystem used for the LVs is ext4 (can be configured to use xfs instead). -->
+ - デフォルトでは、すべての LVM ストレージプールは LVM thinpool を使います。すべての LXD ストレージエンティティ（イメージやコンテナなど）のための論理ボリュームは、その LVM thinpool 内に作られます。
+   この動作は、`lvm.use_thinpool` を "false" に設定して変更できます。
+   この場合、LXD はコンテナスナップショットではないすべてのストレージエンティティ（イメージやコンテナなど）に、通常の論理ボリュームを使います。
+   Thinpool 以外の論理ボリュームは、スナップショットのスナップショットをサポートしていないので、ほとんどのストレージ操作を rsync にフォールバックする必要があります。
+   これは、LVM ドライバがスピードとストレージ操作の両面で DIR ドライバに近づくため、必然的にパフォーマンスに重大な影響を与えることに注意してください。
+   このオプションは、必要な場合のみに選択してください。
+   <!--
+   By default, all LVM storage pools use an LVM thinpool in which logical
    volumes for all LXD storage entities (images, containers, etc.) are created.
    This behavior can be changed by setting "lvm.use\_thinpool" to "false". In
    this case, LXD will use normal logical volumes for all non-container
@@ -350,38 +357,42 @@ lxc storage create pool1 btrfs source=/dev/sdX
    serious performance impacts for the LVM driver causing it to be close to the
    fallback DIR driver both in speed and storage usage. This option should only
    be chosen if the use-case renders it necessary.
- - For environments with high container turn over (e.g continuous integration)
+   -->
+ - 頻繁にコンテナとのやりとりが発生する環境（例えば継続的インテグレーション）では、`/etc/lvm/lvm.conf` 内の `retain_min` と `retain_days` を調整して、LXD とのやりとりが遅くならないようにすることが重要です。
+   <!--
+   For environments with high container turn over (e.g continuous integration)
    it may be important to tweak the archival `retain_min` and `retain_days`
    settings in `/etc/lvm/lvm.conf` to avoid slowdowns when interacting with
    LXD.
+   -->
 
-#### The following commands can be used to create LVM storage pools
+#### LVM ストレージプールを作成するコマンド <!-- The following commands can be used to create LVM storage pools -->
 
- - Create a loop-backed pool named "pool1". The LVM Volume Group will also be called "pool1".
+ - "pool1" というループバックプールを作成する。LVM ボリュームグループの名前も "pool1" になります <!-- Create a loop-backed pool named "pool1". The LVM Volume Group will also be called "pool1". -->
 
 ```bash
 lxc storage create pool1 lvm
 ```
 
- - Use the existing LVM Volume Group called "my-pool"
+ - "my-pool" という既存の LVM ボリュームグループを使う <!-- Use the existing LVM Volume Group called "my-pool" -->
 
 ```bash
 lxc storage create pool1 lvm source=my-pool
 ```
 
- - Use the existing LVM Thinpool called "my-pool" in Volume Group "my-vg".
+ - ボリュームグループ "my-vg" 内の "my-pool" という既存の LVM thinpool を使う <!-- Use the existing LVM Thinpool called "my-pool" in Volume Group "my-vg". -->
 
 ```bash
 lxc storage create pool1 lvm source=my-vg lvm.thinpool_name=my-pool
 ```
 
- - Create a new pool named "pool1" on `/dev/sdX`. The LVM Volume Group will also be called "pool1".
+ - `/dev/sdX` に "pool1" という新しいプールを作成する。LVM ボリュームグループの名前も "pool1" になります <!-- Create a new pool named "pool1" on `/dev/sdX`. The LVM Volume Group will also be called "pool1". -->
 
 ```bash
 lxc storage create pool1 lvm source=/dev/sdX
 ```
 
- - Create a new pool called "pool1" using `/dev/sdX` with the LVM Volume Group called "my-pool".
+ - LVM ボリュームグループ名を "my-pool" と名付け `/dev/sdX` を使って "pool1" というプールを新たに作成する <!-- Create a new pool called "pool1" using `/dev/sdX` with the LVM Volume Group called "my-pool". -->
 
 ```bash
 lxc storage create pool1 lvm source=/dev/sdX lvm.vg_name=my-pool
