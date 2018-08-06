@@ -134,7 +134,7 @@ non-LXD rootfs tarballs already available today.
 -->
 
 ## 統合された tarball <!-- Unified tarball -->
-tarball は圧縮してもよく、以下のものを含みます。
+tarball は圧縮できます。そして次のものを含みます。
 <!--
 Tarball, can be compressed and contains:
 -->
