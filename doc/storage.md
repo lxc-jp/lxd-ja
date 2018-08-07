@@ -338,7 +338,7 @@ lxc storage create pool1 btrfs source=/dev/sdX
 
 ### LVM
 
- - イメージ用に LV を使えば、コンテナとコンテナスナップショット用に LV のスナップショットを使います <!-- Uses LVs for images, then LV snapshots for containers and container snapshots. -->
+ - イメージ用に LV を使うと、コンテナとコンテナスナップショット用に LV のスナップショットを使います <!-- Uses LVs for images, then LV snapshots for containers and container snapshots. -->
  - LV で使われるファイルシステムは ext4 です（代わりに xfs を使うように設定できます） <!-- The filesystem used for the LVs is ext4 (can be configured to use xfs instead). -->
  - デフォルトでは、すべての LVM ストレージプールは LVM thinpool を使います。すべての LXD ストレージエンティティ（イメージやコンテナなど）のための論理ボリュームは、その LVM thinpool 内に作られます。
    この動作は、`lvm.use_thinpool` を "false" に設定して変更できます。
@@ -400,80 +400,117 @@ lxc storage create pool1 lvm source=/dev/sdX lvm.vg_name=my-pool
 
 ### ZFS
 
- - Uses ZFS filesystems for images, then snapshots and clones to create containers and snapshots.
- - Due to the way copy-on-write works in ZFS, parent filesystems can't
+ - イメージ用に ZFS を使うと、コンテナとスナップショットの作成にスナップショットとクローンを使います <!-- Uses ZFS filesystems for images, then snapshots and clones to create containers and snapshots. -->
+ - ZFS でコピーオンライトが動作するため、すべての子のファイルシステムがなくなるまで、親のファイルシステムを削除できません。
+   ですので、LXD は削除されたけれども、まだ参照されているオブジェクトを、ランダムな `deleted/` なパスに自動的にリネームし、参照がなくなるまでそのオブジェクトを保持し、オブジェクトを安全に削除します。
+   <!--
+   Due to the way copy-on-write works in ZFS, parent filesystems can't
    be removed until all children are gone. As a result, LXD will
    automatically rename any removed but still referenced object to a random
    deleted/ path and keep it until such time the references are gone and it
    can safely be removed.
- - ZFS as it is today doesn't support delegating part of a pool to a
+   -->
+ - 現時点では、ZFS では、プールの一部をコンテナユーザに権限委譲できません。開発元では、この問題に積極的に取り組んでいます。
+   <!--
+   ZFS as it is today doesn't support delegating part of a pool to a
    container user. Upstream is actively working on this.
- - ZFS doesn't support restoring from snapshots other than the latest
+   -->
+ - ZFS では最新のスナップショット以外からのリストアはできません。
+   しかし、古いスナップショットからコンテナを作成することはできます。
+   これにより、新しいスナップショットを削除する前に、スナップショットが確実にリストアしたいものかどうか確認できます。
+   <!--
+   ZFS doesn't support restoring from snapshots other than the latest
    one. You can however create new containers from older snapshots which
    makes it possible to confirm the snapshots is indeed what you want to
    restore before you remove the newer snapshots.
+   -->
 
+   また、コンテナのコピーにスナップショットを使うので、コンテナのコピーを削除することなく、最後のコピーの前に取得したスナップショットにコンテナをリストアできないことにも注意が必要です。
+   <!--
    Also note that container copies use ZFS snapshots, so you also cannot
    restore a container to a snapshot taken before the last copy without
    having to also delete container copies.
+   -->
 
+   必要なスナップショットを新しいコンテナにコピーし、その後の古いコンテナの削除は動作しますが、コンテナが持っているかもしれない他のスナップショットを失ってしまいます。
+   <!--
    Copying the wanted snapshot into a new container and then deleting
    the old container does however work, at the cost of losing any other
    snapshot the container may have had.
- - Note that LXD will assume it has full control over the ZFS pool or dataset.
+   -->
+ - LXD は ZFS プールとデータセットがフルコントロールできると仮定していることに注意してください。
+   LXD の ZFS プールやデータセット内に LXD と関係ないファイルシステムエンティティを維持しないことをおすすめします。そうでなければ、LXD がそれらを消してしまう恐れがあります。
+   <!--
+   Note that LXD will assume it has full control over the ZFS pool or dataset.
    It is recommended to not maintain any non-LXD owned filesystem entities in
    a LXD zfs pool or dataset since LXD might delete them.
- - When quotas are used on a ZFS dataset LXD will set the ZFS "quota" property.
+   -->
+ - ZFS データセットでクオータを使った場合、LXD は ZFS の "quota" プロパティを設定します。
+   LXD に "refquota" プロパティを設定させるには、与えられたデータセットに対して "zfs.use\_refquota" を "true" に設定するか、
+   ストレージプール上で "volume.zfs.use\_refquota" を "true" に設定するかします。
+   前者のオプションは、与えられたストレージプールだけに refquota を設定します。
+   後者のオプションは、ストレージプール内のストレージボリュームすべてに refquota を使うようにします。
+   <!--
+   When quotas are used on a ZFS dataset LXD will set the ZFS "quota" property.
    In order to have LXD set the ZFS "refquota" property, either set
    "zfs.use\_refquota" to "true" for the given dataset or set
    "volume.zfs.use\_refquota" to true on the storage pool. The former option
    will make LXD use refquota only for the given storage volume the latter will
    make LXD use refquota for all storage volumes in the storage pool.
- - I/O quotas (IOps/MBs) are unlikely to affect ZFS filesystems very
+   -->
+ - I/O クオータ（IOps/MBs）は ZFS ファイルシステムにはあまり影響を及ぼさないでしょう。
+   これは、ZFS が（SPL を使った）Solaris モジュールの移植であり、
+   I/O に対する制限が適用される Linux の VFS API を使ったネイティブな Linux ファイルシステムではないからです。
+   <!--
+   I/O quotas (IOps/MBs) are unlikely to affect ZFS filesystems very
    much. That's because of ZFS being a port of a Solaris module (using SPL)
    and not a native Linux filesystem using the Linux VFS API which is where
    I/O limits are applied.
+   -->
 
-#### The following commands can be used to create ZFS storage pools
+#### ZFS ストレージプールを作成するコマンド <!-- The following commands can be used to create ZFS storage pools -->
 
- - Create a loop-backed pool named "pool1". The ZFS Zpool will also be called "pool1".
+ - "pool1" というループバックプールを作成する。ZFS の Zpool 名も "pool1" となります <!-- Create a loop-backed pool named "pool1". The ZFS Zpool will also be called "pool1". -->
 
 ```bash
 lxc storage create pool1 zfs
 ```
 
- - Create a loop-backed pool named "pool1" with the ZFS Zpool called "my-tank".
+ - ZFS Zpool 名を "my-tank" とし、"pool1" というループバックプールを作成する <!-- Create a loop-backed pool named "pool1" with the ZFS Zpool called "my-tank". -->
 
 ```bash
 lxc storage create pool1 zfs zfs.pool\_name=my-tank
 ```
 
- - Use the existing ZFS Zpool "my-tank".
+ - 既存の ZFS Zpool "my-tank" を使う <!-- Use the existing ZFS Zpool "my-tank". -->
 
 ```bash
 lxc storage create pool1 zfs source=my-tank
 ```
 
- - Use the existing ZFS dataset "my-tank/slice".
+ - 既存の ZFS データセット "my-tank/slice" を使う <!-- Use the existing ZFS dataset "my-tank/slice". -->
 
 ```bash
 lxc storage create pool1 zfs source=my-tank/slice
 ```
 
- - Create a new pool called "pool1" on `/dev/sdX`. The ZFS Zpool will also be called "pool1".
+ - `/dev/sdX` 上に "pool1" という新しいプールを作成する。ZFS Zpool 名も "pool1" となります <!-- Create a new pool called "pool1" on `/dev/sdX`. The ZFS Zpool will also be called "pool1". -->
 
 ```bash
 lxc storage create pool1 zfs source=/dev/sdX
 ```
 
- - Create a new pool on `/dev/sdX` with the ZFS Zpool called "my-tank".
+ - `/dev/sdX` 上に "my-tank" という ZFS Zpool 名で新しいプールを作成する <!-- Create a new pool on `/dev/sdX` with the ZFS Zpool called "my-tank". -->
 
 ```bash
 lxc storage create pool1 zfs source=/dev/sdX zfs.pool_name=my-tank
 ```
 
-#### Growing a loop backed ZFS pool
+#### ループバックの ZFS プールの拡張 <!-- Growing a loop backed ZFS pool -->
+<!--
 LXD doesn't let you directly grow a loop backed ZFS pool, but you can do so with:
+-->
+LXD からは直接はループバックの ZFS プールを拡張できません。しかし、次のようにすればできます:
 
 ```bash
 sudo truncate -s +5G /var/lib/lxd/disks/<POOL>.img
