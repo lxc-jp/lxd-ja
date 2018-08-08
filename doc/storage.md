@@ -402,7 +402,7 @@ lxc storage create pool1 lvm source=/dev/sdX lvm.vg_name=my-pool
 
  - イメージ用に ZFS を使うと、コンテナとスナップショットの作成にスナップショットとクローンを使います <!-- Uses ZFS filesystems for images, then snapshots and clones to create containers and snapshots. -->
  - ZFS でコピーオンライトが動作するため、すべての子のファイルシステムがなくなるまで、親のファイルシステムを削除できません。
-   ですので、LXD は削除されたけれども、まだ参照されているオブジェクトを、ランダムな `deleted/` なパスに自動的にリネームし、参照がなくなるまでそのオブジェクトを保持し、オブジェクトを安全に削除します。
+   ですので、削除されたけれども、まだ参照されているオブジェクトを、LXD はランダムな `deleted/` なパスに自動的にリネームし、参照がなくなりオブジェクトを安全に削除できるようになるまで、そのオブジェクトを保持します。
    <!--
    Due to the way copy-on-write works in ZFS, parent filesystems can't
    be removed until all children are gone. As a result, LXD will
@@ -432,14 +432,14 @@ lxc storage create pool1 lvm source=/dev/sdX lvm.vg_name=my-pool
    having to also delete container copies.
    -->
 
-   必要なスナップショットを新しいコンテナにコピーし、その後の古いコンテナの削除は動作しますが、コンテナが持っているかもしれない他のスナップショットを失ってしまいます。
+   必要なスナップショットを新しいコンテナにコピーした後に古いコンテナを削除できますが、コンテナが持っているかもしれない他のスナップショットを失ってしまいます。
    <!--
    Copying the wanted snapshot into a new container and then deleting
    the old container does however work, at the cost of losing any other
    snapshot the container may have had.
    -->
  - LXD は ZFS プールとデータセットがフルコントロールできると仮定していることに注意してください。
-   LXD の ZFS プールやデータセット内に LXD と関係ないファイルシステムエンティティを維持しないことをおすすめします。そうでなければ、LXD がそれらを消してしまう恐れがあります。
+   LXD の ZFS プールやデータセット内に LXD と関係ないファイルシステムエンティティを維持しないことをおすすめします。LXD がそれらを消してしまう恐れがあるからです。
    <!--
    Note that LXD will assume it has full control over the ZFS pool or dataset.
    It is recommended to not maintain any non-LXD owned filesystem entities in
