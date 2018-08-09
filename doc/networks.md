@@ -1,5 +1,5 @@
 # ネットワーク設定 <!-- Network configuration -->
-LXD はネットワークの作成と管理をサポートしています。サポートされている
+LXD はネットワークの作成と管理をサポートしています。サポートしている
 ブリッジの設定オプションは以下の一覧の通りです。
 <!--
 LXD supports creating and managing bridges, below is a list of the
