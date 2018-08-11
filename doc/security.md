@@ -59,7 +59,7 @@ the server will be contacted over HTTPs, its certificate downloaded and the
 fingerprint will be shown to the user.
 -->
 
-ユーザはこれが本当にサーバのフィンガープリントかを確認されます。
+ユーザは、これが本当にサーバのフィンガープリントなのかの確認を求められます。
 これは接続してみて手動で確認するか、既にそのサーバに接続可能になっている
 別のユーザに info コマンドを実行してもらい、表示されたフィンガープリント
 と比較することで確認できます。
@@ -70,10 +70,11 @@ someone with access to the server to run the info command and compare
 the fingerprints.
 -->
 
-その後ユーザはそのサーバのトラスト・パスワード (trust password) を
+その後ユーザはそのサーバのトラスト・パスワード
+(訳注: サーバに接続できる権限があることを確認するためのパスワード) を
 入力する必要があります。正しいパスワードを入力すると、クライアント証明書が
-サーバのトラスト・ストア (trust store) に追加され、今後はクライアントは
-追加の機密情報を提供することなく、サーバに接続できます。
+サーバのトラスト・ストア (訳注: 信頼済みクライアントストア) に追加され、
+今後はクライアントは追加の機密情報を提供することなく、サーバに接続できます。
 <!--
 After that, the user must enter the trust password for that server, if
 it matches, the client certificate is added to the server's trust store
@@ -141,11 +142,10 @@ If the server certificate is valid and signed by the CA, then the
 connection continues without prompting the user for the certificate.
 -->
 
-その後、ユーザはそのサーバのトラスト・パスワード (trust password)
+その後、ユーザはそのサーバのトラスト・パスワード
 を入力する必要があります。
-正しいパスワードを入力すると、クライアント証明書がサーバのトラスト・ストア
-(trust store) に追加され、今後はクライアントは追加の機密情報を提供することなく、
-サーバに接続できます。
+正しいパスワードを入力すると、クライアント証明書がサーバのトラスト・ストアに追加され、
+今後はクライアントは追加の機密情報を提供することなく、サーバに接続できます。
 <!--
 After that, the user must enter the trust password for that server, if
 it matches, the client certificate is added to the server's trust store
@@ -280,7 +280,7 @@ trusted.
 -->
 
 これは別の信頼されたクライアントかローカルのサーバ管理者がサーバ上の
-信頼エントリを削除したおきに起こります。
+信頼エントリを削除したときに起こります。
 <!--
 This happens if another trusted client or the local server administrator
 removed the trust entry on the server.
