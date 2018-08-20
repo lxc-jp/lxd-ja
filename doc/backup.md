@@ -64,7 +64,7 @@ pool configuration.
 指定したコンテナの `backup.yaml` ファイルからコンテナをリストアします。
 このリカバリのメカニズムは主に緊急のリカバリ用として作られており、
 ストレージプール設定のバックアップからコンテナとストレージのデータベース
-エントリをを再生成しようとします。
+エントリを再生成しようとします。
 
 <!--
 Note that the corresponding storage volume for the container must exist and be
