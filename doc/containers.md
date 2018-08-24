@@ -1,142 +1,197 @@
-# Container configuration
-## Properties
+# コンテナの設定 <!-- Container configuration -->
+## プロパティ <!-- Properties -->
+<!--
 The following are direct container properties and can't be part of a profile:
+-->
+次のプロパティは、コンテナに直接結びつくプロパティであり、プロファイルの一部ではありません:
 
  - `name`
  - `architecture`
 
+<!--
 Name is the container name and can only be changed by renaming the container.
+-->
+`name` はコンテナ名であり、コンテナのリネームでのみ変更できます。
 
-## Key/value configuration
+## Key/value 形式の設定 <!-- Key/value configuration -->
+<!--
 The key/value configuration is namespaced with the following namespaces
 currently supported:
+-->
+key/value 形式の設定は、名前空間構造を取っており、現在は次のような名前空間があります:
 
- - `boot` (boot related options, timing, dependencies, ...)
- - `environment` (environment variables)
- - `image` (copy of the image properties at time of creation)
- - `limits` (resource limits)
- - `nvidia` (NVIDIA and CUDA configuration)
- - `raw` (raw container configuration overrides)
- - `security` (security policies)
- - `user` (storage for user properties, searchable)
- - `volatile` (used internally by LXD to store settings that are specific to a specific container instance)
+ - `boot` (ブートに関連したオプション、タイミング、依存性、…<!-- boot related options, timing, dependencies, ... -->)
+ - `environment` (環境変数<!-- environment variables -->)
+ - `image` (作成時のイメージプロパティのコピー<!-- copy of the image properties at time of creation -->)
+ - `limits` (リソース制限<!-- resource limits -->)
+ - `nvidia` (NVIDIA と CUDA の設定<!-- NVIDIA and CUDA configuration -->)
+ - `raw` (生のコンテナ設定を上書きする<!-- raw container configuration overrides -->)
+ - `security` (セキュリティーポリシー<!-- security policies -->)
+ - `user` (ユーザの指定するプロパティを保持。検索可能<!-- storage for user properties, searchable -->)
+ - `volatile` (特定のコンテナインスタンス固有の設定を格納するために LXD が内部的に使用する設定<!-- used internally by LXD to store settings that are specific to a specific container instance -->)
 
+<!--
 The currently supported keys are:
+-->
+現在設定できる項目は次のものです:
 
 Key                                     | Type      | Default       | Live update   | API extension                        | Description
 :--                                     | :---      | :------       | :----------   | :------------                        | :----------
-boot.autostart                          | boolean   | -             | n/a           | -                                    | Always start the container when LXD starts (if not set, restore last state)
-boot.autostart.delay                    | integer   | 0             | n/a           | -                                    | Number of seconds to wait after the container started before starting the next one
-boot.autostart.priority                 | integer   | 0             | n/a           | -                                    | What order to start the containers in (starting with highest)
-boot.host\_shutdown\_timeout            | integer   | 30            | yes           | container\_host\_shutdown\_timeout   | Seconds to wait for container to shutdown before it is force stopped
-boot.stop.priority                      | integer   | 0             | n/a           | container\_stop\_priority            | What order to shutdown the containers (starting with highest)
-environment.\*                          | string    | -             | yes (exec)    | -                                    | key/value environment variables to export to the container and set on exec
-limits.cpu                              | string    | - (all)       | yes           | -                                    | Number or range of CPUs to expose to the container
-limits.cpu.allowance                    | string    | 100%          | yes           | -                                    | How much of the CPU can be used. Can be a percentage (e.g. 50%) for a soft limit or hard a chunk of time (25ms/100ms)
-limits.cpu.priority                     | integer   | 10 (maximum)  | yes           | -                                    | CPU scheduling priority compared to other containers sharing the same CPUs (overcommit) (integer between 0 and 10)
-limits.disk.priority                    | integer   | 5 (medium)    | yes           | -                                    | When under load, how much priority to give to the container's I/O requests (integer between 0 and 10)
-limits.kernel.\*                        | string    | -             | no            | kernel\_limits                       | This limits kernel resources per container (e.g. number of open files)
-limits.memory                           | string    | - (all)       | yes           | -                                    | Percentage of the host's memory or fixed value in bytes (supports kB, MB, GB, TB, PB and EB suffixes)
-limits.memory.enforce                   | string    | hard          | yes           | -                                    | If hard, container can't exceed its memory limit. If soft, the container can exceed its memory limit when extra host memory is available.
-limits.memory.swap                      | boolean   | true          | yes           | -                                    | Whether to allow some of the container's memory to be swapped out to disk
-limits.memory.swap.priority             | integer   | 10 (maximum)  | yes           | -                                    | The higher this is set, the least likely the container is to be swapped to disk (integer between 0 and 10)
-limits.network.priority                 | integer   | 0 (minimum)   | yes           | -                                    | When under load, how much priority to give to the container's network requests (integer between 0 and 10)
-limits.processes                        | integer   | - (max)       | yes           | -                                    | Maximum number of processes that can run in the container
-linux.kernel\_modules                   | string    | -             | yes           | -                                    | Comma separated list of kernel modules to load before starting the container
-migration.incremental.memory            | boolean   | false         | yes           | migration\_pre\_copy                 | Incremental memory transfer of the container's memory to reduce downtime.
-migration.incremental.memory.goal       | integer   | 70            | yes           | migration\_pre\_copy                 | Percentage of memory to have in sync before stopping the container.
-migration.incremental.memory.iterations | integer   | 10            | yes           | migration\_pre\_copy                 | Maximum number of transfer operations to go through before stopping the container.
-nvidia.runtime                          | boolean   | false         | no            | nvidia\_runtime                      | Pass the host NVIDIA and CUDA runtime libraries into the container
-raw.apparmor                            | blob      | -             | yes           | -                                    | Apparmor profile entries to be appended to the generated profile
-raw.idmap                               | blob      | -             | no            | id\_map                              | Raw idmap configuration (e.g. "both 1000 1000")
-raw.lxc                                 | blob      | -             | no            | -                                    | Raw LXC configuration to be appended to the generated one
-raw.seccomp                             | blob      | -             | no            | container\_syscall\_filtering        | Raw Seccomp configuration
-security.devlxd                         | boolean   | true          | no            | restrict\_devlxd                     | Controls the presence of /dev/lxd in the container
-security.devlxd.images                  | boolean   | false         | no            | devlxd\_images                       | Controls the availability of the /1.0/images API over devlxd
-security.idmap.base                     | integer   | -             | no            | id\_map\_base                        | The base host ID to use for the allocation (overrides auto-detection)
-security.idmap.isolated                 | boolean   | false         | no            | id\_map                              | Use an idmap for this container that is unique among containers with isolated set.
-security.idmap.size                     | integer   | -             | no            | id\_map                              | The size of the idmap to use
-security.nesting                        | boolean   | false         | yes           | -                                    | Support running lxd (nested) inside the container
-security.privileged                     | boolean   | false         | no            | -                                    | Runs the container in privileged mode
-security.syscalls.blacklist             | string    | -             | no            | container\_syscall\_filtering        | A '\n' separated list of syscalls to blacklist
-security.syscalls.blacklist\_compat     | boolean   | false         | no            | container\_syscall\_filtering        | On x86\_64 this enables blocking of compat\_\* syscalls, it is a no-op on other arches
-security.syscalls.blacklist\_default    | boolean   | true          | no            | container\_syscall\_filtering        | Enables the default syscall blacklist
-security.syscalls.whitelist             | string    | -             | no            | container\_syscall\_filtering        | A '\n' separated list of syscalls to whitelist (mutually exclusive with security.syscalls.blacklist\*)
-user.\*                                 | string    | -             | n/a           | -                                    | Free form user key/value storage (can be used in search)
+boot.autostart                          | boolean   | -             | n/a           | -                                    | LXD起動時に常にコンテナを起動するかどうか（設定しない場合、最後の状態がリストアされます）<!-- Always start the container when LXD starts (if not set, restore last state) -->
+boot.autostart.delay                    | integer   | 0             | n/a           | -                                    | コンテナが起動した後に次のコンテナが起動するまで待つ秒数<!-- Number of seconds to wait after the container started before starting the next one -->
+boot.autostart.priority                 | integer   | 0             | n/a           | -                                    | コンテナを起動させる順番（高いほど早く起動します）<!-- What order to start the containers in (starting with highest) -->
+boot.host\_shutdown\_timeout            | integer   | 30            | yes           | container\_host\_shutdown\_timeout   | 強制停止前にコンテナが停止するのを待つ秒数 <!-- Seconds to wait for container to shutdown before it is force stopped -->
+boot.stop.priority                      | integer   | 0             | n/a           | container\_stop\_priority            | コンテナの停止順（高いほど早く停止します）<!-- What order to shutdown the containers (starting with highest) -->
+environment.\*                          | string    | -             | yes (exec)    | -                                    | コンテナ実行時に設定される key/value 形式の環境変数<!-- key/value environment variables to export to the container and set on exec -->
+limits.cpu                              | string    | - (all)       | yes           | -                                    | コンテナに割り当てる CPU 番号、もしくは番号の範囲 <!-- Number or range of CPUs to expose to the container -->
+limits.cpu.allowance                    | string    | 100%          | yes           | -                                    | どれくらい CPU を使えるか。ソフトリミットとしてパーセント指定（例、50%）か固定値として単位時間内に使える時間（25ms/100ms）を指定できます <!-- How much of the CPU can be used. Can be a percentage (e.g. 50%) for a soft limit or hard a chunk of time (25ms/100ms) -->
+limits.cpu.priority                     | integer   | 10 (maximum)  | yes           | -                                    | 同じ CPU をシェアする他のコンテナと比較した CPU スケジューリングの優先度（オーバーコミット）（0 〜 10 の整数）<!-- CPU scheduling priority compared to other containers sharing the same CPUs (overcommit) (integer between 0 and 10) -->
+limits.disk.priority                    | integer   | 5 (medium)    | yes           | -                                    | 負荷がかかった状態で、コンテナの I/O リクエストに割り当てる優先度（0 〜 10 の整数）<!-- When under load, how much priority to give to the container's I/O requests (integer between 0 and 10) -->
+limits.kernel.\*                        | string    | -             | no            | kernel\_limits                       | コンテナごとのカーネルリソースの制限（例、オープンできるファイルの数）<!-- This limits kernel resources per container (e.g. number of open files) -->
+limits.memory                           | string    | - (all)       | yes           | -                                    | ホストメモリに対する割合（パーセント）もしくはメモリの固定値（単位として kB, MB, GB, TB, PB, EB を指定できます）<!-- Percentage of the host's memory or fixed value in bytes (supports kB, MB, GB, TB, PB and EB suffixes) -->
+limits.memory.enforce                   | string    | hard          | yes           | -                                    | hard に設定すると、コンテナはメモリー制限値を超過できません。soft に設定すると、ホストでメモリに余裕がある場合は超過できる可能性があります <!-- If hard, container can't exceed its memory limit. If soft, the container can exceed its memory limit when extra host memory is available. -->
+limits.memory.swap                      | boolean   | true          | yes           | -                                    | コンテナのメモリの一部をディスクにスワップすることを許すかどうか <!-- Whether to allow some of the container's memory to be swapped out to disk -->
+limits.memory.swap.priority             | integer   | 10 (maximum)  | yes           | -                                    | 高い値を設定するほど、コンテナがディスクにスワップされにくくなります（0 〜 10 の整数） <!-- The higher this is set, the least likely the container is to be swapped to disk (integer between 0 and 10) -->
+limits.network.priority                 | integer   | 0 (minimum)   | yes           | -                                    | 負荷がかかった状態で、コンテナのネットワークリクエストに割り当てる優先度（0 〜 10 の整数）<!-- When under load, how much priority to give to the container's network requests (integer between 0 and 10) -->
+limits.processes                        | integer   | - (max)       | yes           | -                                    | コンテナ内で実行できるプロセスの最大数 <!-- Maximum number of processes that can run in the container -->
+linux.kernel\_modules                   | string    | -             | yes           | -                                    | コンテナを起動する前にロードするカーネルモジュールのリスト。カンマ区切り <!-- Comma separated list of kernel modules to load before starting the container -->
+migration.incremental.memory            | boolean   | false         | yes           | migration\_pre\_copy                 | コンテナのダウンタイムを縮小させるためにコンテナのメモリを増分転送するかどうか <!-- Incremental memory transfer of the container's memory to reduce downtime. -->
+migration.incremental.memory.goal       | integer   | 70            | yes           | migration\_pre\_copy                 | コンテナを停止させる前に同期するメモリの割合 <!-- Percentage of memory to have in sync before stopping the container. -->
+migration.incremental.memory.iterations | integer   | 10            | yes           | migration\_pre\_copy                 | コンテナを停止させる前に完了させるメモリ転送処理の最大数 <!-- Maximum number of transfer operations to go through before stopping the container. -->
+nvidia.runtime                          | boolean   | false         | no            | nvidia\_runtime                      | ホストの NVIDIA と CUDA ラインタイムライブラリーをコンテナ内でも使えるようにする <!-- Pass the host NVIDIA and CUDA runtime libraries into the container -->
+raw.apparmor                            | blob      | -             | yes           | -                                    | 生成されたプロファイルに追加する Apparmor プロファイルエントリー <!-- Apparmor profile entries to be appended to the generated profile -->
+raw.idmap                               | blob      | -             | no            | id\_map                              | 生（raw）の idmap 設定 <!-- Raw idmap configuration (e.g. "both 1000 1000") -->
+raw.lxc                                 | blob      | -             | no            | -                                    | 生成された設定に追加する生（raw）の LXC 設定 <!-- Raw LXC configuration to be appended to the generated one -->
+raw.seccomp                             | blob      | -             | no            | container\_syscall\_filtering        | 生（raw）の seccomp 設定 <!-- Raw Seccomp configuration -->
+security.devlxd                         | boolean   | true          | no            | restrict\_devlxd                     | コンテナ内の `/dev/lxd` の存在を制御する <!-- Controls the presence of /dev/lxd in the container -->
+security.devlxd.images                  | boolean   | false         | no            | devlxd\_images                       | devlxd 経由の `/1.0/images` の利用可否を制御する <!-- Controls the availability of the /1.0/images API over devlxd -->
+security.idmap.base                     | integer   | -             | no            | id\_map\_base                        | 割り当てに使う host の ID の base（auto-detection （自動検出）を上書きします） <!-- The base host ID to use for the allocation (overrides auto-detection) -->
+security.idmap.isolated                 | boolean   | false         | no            | id\_map                              | コンテナ間で独立した idmap のセットを使用するかどうか <!-- Use an idmap for this container that is unique among containers with isolated set. -->
+security.idmap.size                     | integer   | -             | no            | id\_map                              | 使用する idmap のサイズ <!-- The size of the idmap to use -->
+security.nesting                        | boolean   | false         | yes           | -                                    | コンテナ内でネストした lxd の実行を許可するかどうか <!-- Support running lxd (nested) inside the container -->
+security.privileged                     | boolean   | false         | no            | -                                    | 特権モードでコンテナを実行するかどうか <!-- Runs the container in privileged mode -->
+security.syscalls.blacklist             | string    | -             | no            | container\_syscall\_filtering        | `\n` 区切りのシステムコールのブラックリスト <!-- A '\n' separated list of syscalls to blacklist -->
+security.syscalls.blacklist\_compat     | boolean   | false         | no            | container\_syscall\_filtering        | `x86_64` で `compat_*` システムコールのブロックを有効にするかどうか。他のアーキテクチャでは何もしません <!-- On x86\_64 this enables blocking of compat\_\* syscalls, it is a no-op on other arches -->
+security.syscalls.blacklist\_default    | boolean   | true          | no            | container\_syscall\_filtering        | デフォルトのシステムコールブラックリストを有効にするかどうか <!-- Enables the default syscall blacklist -->
+security.syscalls.whitelist             | string    | -             | no            | container\_syscall\_filtering        | `\n` 区切りのシステムコールのホワイトリスト（`security.syscalls.blacklist\*)` と排他）<!-- A '\n' separated list of syscalls to whitelist (mutually exclusive with security.syscalls.blacklist\*) -->
+user.\*                                 | string    | -             | n/a           | -                                    | 自由形式のユーザ定義の key/value の設定の組 <!-- Free form user key/value storage (can be used in search) -->
 
+<!--
 The following volatile keys are currently internally used by LXD:
+-->
+LXD は内部的に次の揮発性の設定を使います:
 
 Key                             | Type      | Default       | Description
 :--                             | :---      | :------       | :----------
-volatile.apply\_quota           | string    | -             | Disk quota to be applied on next container start
-volatile.apply\_template        | string    | -             | The name of a template hook which should be triggered upon next startup
-volatile.base\_image            | string    | -             | The hash of the image the container was created from, if any.
-volatile.idmap.base             | integer   | -             | The first id in the container's primary idmap range
-volatile.idmap.next             | string    | -             | The idmap to use next time the container starts
-volatile.last\_state.idmap      | string    | -             | Serialized container uid/gid map
-volatile.last\_state.power      | string    | -             | Container state as of last host shutdown
-volatile.\<name\>.host\_name    | string    | -             | Network device name on the host (for nictype=bridged or nictype=p2p, or nictype=sriov)
-volatile.\<name\>.hwaddr        | string    | -             | Network device MAC address (when no hwaddr property is set on the device itself)
-volatile.\<name\>.name          | string    | -             | Network device name (when no name propery is set on the device itself)
+volatile.apply\_quota           | string    | -             | 次にコンテナが起動する際に適用されるディスククォータ <!-- Disk quota to be applied on next container start -->
+volatile.apply\_template        | string    | -             | 次の起動時にトリガーされるテンプレートフックの名前 <!-- The name of a template hook which should be triggered upon next startup -->
+volatile.base\_image            | string    | -             | コンテナを作成したイメージのハッシュ（存在する場合）<!-- The hash of the image the container was created from, if any. -->
+volatile.idmap.base             | integer   | -             | コンテナの主 idmap の範囲の最初の ID <!-- The first id in the container's primary idmap range -->
+volatile.idmap.next             | string    | -             | 次にコンテナが起動する際に使う idmap <!-- The idmap to use next time the container starts -->
+volatile.last\_state.idmap      | string    | -             | シリアライズ化したコンテナの uid/gid マップ <!-- Serialized container uid/gid map -->
+volatile.last\_state.power      | string    | -             | 最後にホストがシャットダウンした時点のコンテナの状態 <!-- Container state as of last host shutdown -->
+volatile.\<name\>.host\_name    | string    | -             | ホスト上のネットワークデバイス名（nictype=bridged, nictype=p2p, nictype=sriov の場合）<!-- Network device name on the host (for nictype=bridged or nictype=p2p, or nictype=sriov) -->
+volatile.\<name\>.hwaddr        | string    | -             | ネットワークデバイスの MAC アドレス（`hwaddr` プロパティがデバイスに設定されていない場合）<!-- Network device MAC address (when no hwaddr property is set on the device itself) -->
+volatile.\<name\>.name          | string    | -             | ネットワークデバイス名（`name` プロパティがデバイスに設定されていない場合） <!-- Network device name (when no name propery is set on the device itself) -->
 
-
+<!--
 Additionally, those user keys have become common with images (support isn't guaranteed):
+-->
+加えて、次のユーザ設定がイメージで共通になっています（サポートを保証するものではありません）:
 
 Key                         | Type          | Default           | Description
 :--                         | :---          | :------           | :----------
-user.meta-data              | string        | -                 | Cloud-init meta-data, content is appended to seed value.
-user.network-config         | string        | DHCP on eth0      | Cloud-init network-config, content is used as seed value.
-user.network\_mode          | string        | dhcp              | One of "dhcp" or "link-local". Used to configure network in supported images.
-user.user-data              | string        | #!cloud-config    | Cloud-init user-data, content is used as seed value.
-user.vendor-data            | string        | #!cloud-config    | Cloud-init vendor-data, content is used as seed value.
+user.meta-data              | string        | -                 | cloud-init メタデータ。設定は seed 値に追加されます <!-- Cloud-init meta-data, content is appended to seed value. -->
+user.network-config         | string        | DHCP on eth0      | cloud-init ネットワーク設定。設定は seed 値として使われます <!-- Cloud-init network-config, content is used as seed value. -->
+user.network\_mode          | string        | dhcp              | "dhcp"、"link-local" のどちらか。サポートされているイメージでネットワークを設定するために使われます <!-- One of "dhcp" or "link-local". Used to configure network in supported images. -->
+user.user-data              | string        | #!cloud-config    | cloud-init メタデータ。seed 値として使われます <!-- Cloud-init user-data, content is used as seed value. -->
+user.vendor-data            | string        | #!cloud-config    | cloud-init ベンダーデータ。seed 値として使われます <!-- Cloud-init vendor-data, content is used as seed value. -->
 
+<!--
 Note that while a type is defined above as a convenience, all values are
 stored as strings and should be exported over the REST API as strings
 (which makes it possible to support any extra values without breaking
 backward compatibility).
+-->
+便宜的に型（type）を定義していますが、すべての値は文字列として保存されます。そして REST API を通して文字列として提供されます（後方互換性を損なうことなく任意の追加の値をサポートできます）。
 
+<!--
 Those keys can be set using the lxc tool with:
+-->
+これらの設定は lxc ツールで次のように設定できます:
 
 ```bash
 lxc config set <container> <key> <value>
 ```
 
+<!--
 Volatile keys can't be set by the user and can only be set directly against a container.
+-->
+揮発性（volatile）の設定はユーザは設定できません。そして、コンテナに対してのみ直接設定できます。
 
+<!--
 The raw keys allow direct interaction with the backend features that LXD
 itself uses, setting those may very well break LXD in non-obvious ways
 and should whenever possible be avoided.
+-->
+生（raw）の設定は、LXD が使うバックエンドの機能に直接アクセスできます。これを設定することは、自明ではない方法で LXD を破壊する可能性がありますので、可能な限り避ける必要があります。
 
-### CPU limits
+### CPU 制限 <!-- CPU limits -->
+<!--
 The CPU limits are implemented through a mix of the `cpuset` and `cpu` CGroup controllers.
+-->
+CPU 制限は cgroup コントローラの `cpuset` と `cpu` を組み合わせて実装しています。
 
+<!--
 `limits.cpu` results in CPU pinning through the `cpuset` controller.
 A set of CPUs (e.g. `1,2,3`) or a CPU range (e.g. `0-3`) can be specified.
+-->
+`limits.cpu` は `cpuset` コントローラを使って、使う CPU を固定（ピンニング）します。
+使う CPU の組み合わせ（例: `1,2,3`）もしくは使う CPU の範囲（例: `0-3`）で指定できます。
 
+<!--
 When a number of CPUs is specified instead (e.g. `4`), LXD will do
 dynamic load-balancing of all containers that aren't pinned to specific
 CPUs, trying to spread the load on the machine. Containers will then be
 re-balanced every time a container starts or stops as well as whenever a
 CPU is added to the system.
+-->
+代わりに CPU 数を指定した場合（例: `4`）、LXD は CPU の固定（ピンニング）がされていない全コンテナのダイナミックな負荷分散を行い、マシン上の負荷を分散しようとします。
+コンテナが起動したり停止するたびに、コンテナはリバランスされます。これはシステムに CPU が足された場合も同様にリバランスされます。
 
+<!--
 To pin to a single CPU, you have to use the range syntax (e.g. `1-1`) to
 differentiate it from a number of CPUs.
+-->
+単一の CPU に固定（ピンニング）するためには、CPU 数との区別をつけるために、範囲を指定する文法（例: `1-1`）を使う必要があります。
 
+<!--
 `limits.cpu.allowance` drives either the CFS scheduler quotas when
 passed a time constraint, or the generic CPU shares mechanism when
 passed a percentage value.
+-->
+`limits.cpu.allowance` は、時間の制限を与えたときは CFS スケジューラのクォータを、パーセント指定をした場合は全体的な CPU シェアの仕組みを使います。
 
+<!--
 The time constraint (e.g. `20ms/50ms`) is relative to one CPU worth of
 time, so to restrict to two CPUs worth of time, something like
 100ms/50ms should be used.
+-->
+時間制限（例: `20ms/50ms`）はひとつの CPU 相当の時間に関連するので、ふたつの CPU の時間を制限するには、100ms/50ms のような指定を使うようにします。
 
+<!--
 When using a percentage value, the limit will only be applied when under
 load and will be used to calculate the scheduler priority for the
 container, relative to any other container which is using the same CPU(s).
+-->
+パーセント指定を使う場合は、制限は負荷状態にある場合のみに適用されます。そして設定は、同じ CPU（もしくは CPU の組）を使う他のコンテナとの比較で、コンテナに対するスケジューラの優先度を計算するのに使われます。
 
+<!--
 `limits.cpu.priority` is another knob which is used to compute that
 scheduler priority score when a number of containers sharing a set of
 CPUs have the same percentage of CPU assigned to them.
+-->
+`limits.cpu.priority` は、CPU の組を共有するいくつかのコンテナに割り当てられた CPU の割合が同じ場合に、スケジューラの優先度スコアを計算するために使われます。
 
 # Devices configuration
 LXD will always provide the container with the basic devices which are required
