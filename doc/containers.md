@@ -297,33 +297,39 @@ It can be added in a profile being applied after the profile it originated from 
 デバイスは、もともと含まれているプロファイルの後にプロファイルに追加されるか、直接コンテナに追加されます。
 
 ### Type: nic
+<!--
 LXD supports different kind of network devices:
+-->
+LXD では、様々な種類のネットワークデバイスが使えます:
 
- - `physical`: Straight physical device passthrough from the host. The targeted device will vanish from the host and appear in the container.
- - `bridged`: Uses an existing bridge on the host and creates a virtual device pair to connect the host bridge to the container.
- - `macvlan`: Sets up a new network device based on an existing one but using a different MAC address.
- - `p2p`: Creates a virtual device pair, putting one side in the container and leaving the other side on the host.
- - `sriov`: Passes a virtual function of an SR-IOV enabled physical network device into the container.
+ - `physical`: ホストの物理デバイスを直接使います。対象のデバイスはホスト上では見えなくなり、コンテナ内に出現します <!-- Straight physical device passthrough from the host. The targeted device will vanish from the host and appear in the container. -->
+ - `bridged`: ホスト上に存在するブリッジを使います。ホストのブリッジとコンテナを接続する仮想デバイスペアを作成します <!-- Uses an existing bridge on the host and creates a virtual device pair to connect the host bridge to the container. -->
+ - `macvlan`: 既存のネットワークデバイスをベースに MAC が異なる新しいネットワークデバイスを作成します。 <!-- Sets up a new network device based on an existing one but using a different MAC address. -->
+ - `p2p`: 仮想デバイスペアを作成し、片方をコンテナ内に置き、残りの片方をホスト上に残します <!-- Creates a virtual device pair, putting one side in the container and leaving the other side on the host. -->
+ - `sriov`: SR-IOV が有効な物理ネットワークデバイスの virtual function をコンテナに与えます <!-- Passes a virtual function of an SR-IOV enabled physical network device into the container. -->
 
+<!--
 Different network interface types have different additional properties, the current list is:
+-->
+ネットワークインターフェースの種類が異なると追加のプロパティが異なります。現時点のリストは次の通りです:
 
 Key                     | Type      | Default           | Required  | Used by                           | API extension                          | Description
 :--                     | :--       | :--               | :--       | :--                               | :--                                    | :--
-nictype                 | string    | -                 | yes       | all                               | -                                      | The device type, one of "bridged", "macvlan", "p2p", "physical", or "sriov"
-limits.ingress          | string    | -                 | no        | bridged, p2p                      | -                                      | I/O limit in bit/s (supports kbit, Mbit, Gbit suffixes)
-limits.egress           | string    | -                 | no        | bridged, p2p                      | -                                      | I/O limit in bit/s (supports kbit, Mbit, Gbit suffixes)
-limits.max              | string    | -                 | no        | bridged, p2p                      | -                                      | Same as modifying both limits.read and limits.write
-name                    | string    | kernel assigned   | no        | all                               | -                                      | The name of the interface inside the container
-host\_name              | string    | randomly assigned | no        | bridged, macvlan, p2p, sriov      | -                                      | The name of the interface inside the host
-hwaddr                  | string    | randomly assigned | no        | all                               | -                                      | The MAC address of the new interface
-mtu                     | integer   | parent MTU        | no        | all                               | -                                      | The MTU of the new interface
-parent                  | string    | -                 | yes       | bridged, macvlan, physical, sriov | -                                      | The name of the host device or bridge
-vlan                    | integer   | -                 | no        | macvlan, physical                 | network\_vlan, network\_vlan\_physical | The VLAN ID to attach to
-ipv4.address            | string    | -                 | no        | bridged                           | network                                | An IPv4 address to assign to the container through DHCP
-ipv6.address            | string    | -                 | no        | bridged                           | network                                | An IPv6 address to assign to the container through DHCP
-security.mac\_filtering | boolean   | false             | no        | bridged                           | network                                | Prevent the container from spoofing another's MAC address
-maas.subnet.ipv4        | string    | -                 | no        | bridged, macvlan, physical, sriov | maas\_network                          | MAAS IPv4 subnet to register the container in
-maas.subnet.ipv6        | string    | -                 | no        | bridged, macvlan, physical, sriov | maas\_network                          | MAAS IPv6 subnet to register the container in
+nictype                 | string    | -                 | yes       | all                               | -                                      | デバイスタイプ。`bridged`、`macvlan`、`p2p`、`physical`、`sriov`のいずれか <!-- The device type, one of "bridged", "macvlan", "p2p", "physical", or "sriov" -->
+limits.ingress          | string    | -                 | no        | bridged, p2p                      | -                                      | I/O 制限値（bit/s、単位として kbit、Mbit、Gbit が使えます）<!-- I/O limit in bit/s (supports kbit, Mbit, Gbit suffixes) -->
+limits.egress           | string    | -                 | no        | bridged, p2p                      | -                                      | I/O 制限値（bit/s、単位として kbit、Mbit、Gbit が使えます）<!-- I/O limit in bit/s (supports kbit, Mbit, Gbit suffixes) -->
+limits.max              | string    | -                 | no        | bridged, p2p                      | -                                      | `limits.ingress`と`limits.egress`の両方を同じ値に変更する <!-- Same as modifying both limits.read and limits.write -->
+name                    | string    | kernel assigned   | no        | all                               | -                                      | コンテナ内部でのインターフェース名 <!-- The name of the interface inside the container -->
+host\_name              | string    | randomly assigned | no        | bridged, macvlan, p2p, sriov      | -                                      | ホスト上でのインターフェース名 <!-- The name of the interface inside the host -->
+hwaddr                  | string    | randomly assigned | no        | all                               | -                                      | 新しいインターフェースの MAC アドレス <!-- The MAC address of the new interface -->
+mtu                     | integer   | parent MTU        | no        | all                               | -                                      | 新しいインター絵f−すの MTU <!-- The MTU of the new interface -->
+parent                  | string    | -                 | yes       | bridged, macvlan, physical, sriov | -                                      | ホスト上のデバイス、ブリッジの名前 <!-- The name of the host device or bridge -->
+vlan                    | integer   | -                 | no        | macvlan, physical                 | network\_vlan, network\_vlan\_physical | アタッチする VLAN の ID <!-- The VLAN ID to attach to -->
+ipv4.address            | string    | -                 | no        | bridged                           | network                                | DHCP でコンテナに割り当てる IPv4 アドレス <!-- An IPv4 address to assign to the container through DHCP -->
+ipv6.address            | string    | -                 | no        | bridged                           | network                                | DHCP でコンテナに割り当てる IPv6 アドレス <!-- An IPv6 address to assign to the container through DHCP -->
+security.mac\_filtering | boolean   | false             | no        | bridged                           | network                                | コンテナが他の MAC アドレスになりすますのを防ぐ <!-- Prevent the container from spoofing another's MAC address -->
+maas.subnet.ipv4        | string    | -                 | no        | bridged, macvlan, physical, sriov | maas\_network                          | コンテナを登録する MAAS IPv4 サブネット <!-- MAAS IPv4 subnet to register the container in -->
+maas.subnet.ipv6        | string    | -                 | no        | bridged, macvlan, physical, sriov | maas\_network                          | コンテナを登録する MAAS IPv6 サブネット <!-- MAAS IPv6 subnet to register the container in -->
 
 #### bridged or macvlan for connection to physical network
 The `bridged` and `macvlan` interface types can both be used to connect
