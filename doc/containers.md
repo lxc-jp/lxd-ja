@@ -193,12 +193,18 @@ CPUs have the same percentage of CPU assigned to them.
 -->
 `limits.cpu.priority` は、CPU の組を共有するいくつかのコンテナに割り当てられた CPU の割合が同じ場合に、スケジューラの優先度スコアを計算するために使われます。
 
-# Devices configuration
+# デバイス設定 <!-- Devices configuration -->
+<!--
 LXD will always provide the container with the basic devices which are required
 for a standard POSIX system to work. These aren't visible in container or
 profile configuration and may not be overridden.
+-->
+LXD は、標準の POSIX システムが動作するのに必要な基本的なデバイスを常にコンテナに提供します。これらはコンテナやプロファイルの設定では見えず、上書きもできません。
 
+<!--
 Those includes:
+-->
+このデバイスには次のようなデバイスが含まれます:
 
  - `/dev/null` (character device)
  - `/dev/zero` (character device)
@@ -211,26 +217,44 @@ Those includes:
  - `/dev/fuse` (character device)
  - `lo` (network interface)
 
+<!--
 Anything else has to be defined in the container configuration or in one of its
 profiles. The default profile will typically contain a network interface to
 become `eth0` in the container.
+-->
+これ以外に関しては、コンテナの設定もしくはコンテナで使われるいずれかのプロファイルで定義する必要があります。デフォルトのプロファイルには、コンテナ内で `eth0` になるネットワークインターフェースが通常は含まれます。
 
+<!--
 To add extra devices to a container, device entries can be added directly to a
 container, or to a profile.
+-->
+コンテナに追加でデバイスを追加する場合は、デバイスエントリー直接コンテナかプロファイルに追加できます。
 
+<!--
 Devices may be added or removed while the container is running.
+-->
+デバイスはコンテナの実行中に追加・削除できます。
 
+<!--
 Every device entry is identified by a unique name. If the same name is used in
 a subsequent profile or in the container's own configuration, the whole entry
 is overridden by the new definition.
+-->
+各デバイスエントリーは一意な名前で識別されます。もし同じ名前が後続のプロファイルやコンテナ自身の設定で使われている場合、エントリ全体が新しい定義で上書きされます。
 
+<!--
 Device entries are added to a container through:
+-->
+デバイスエントリーは次のようにコンテナに追加するか:
 
 ```bash
 lxc config device add <container> <name> <type> [key=value]...
 ```
 
+<!--
 or to a profile with:
+-->
+もしくは次のようにプロファイルに追加します:
 
 ```bash
 lxc profile device add <profile> <name> <type> [key=value]...
