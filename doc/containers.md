@@ -260,28 +260,41 @@ or to a profile with:
 lxc profile device add <profile> <name> <type> [key=value]...
 ```
 
-## Device types
+## デバイスタイプ <!-- Device types -->
+<!--
 LXD supports the following device types:
+-->
+LXD では次のデバイスタイプが使えます:
 
 ID (database)   | Name                              | Description
 :--             | :--                               | :--
-0               | [none](#type-none)                | Inheritance blocker
-1               | [nic](#type-nic)                  | Network interface
-2               | [disk](#type-disk)                | Mountpoint inside the container
-3               | [unix-char](#type-unix-char)      | Unix character device
-4               | [unix-block](#type-unix-block)    | Unix block device
-5               | [usb](#type-usb)                  | USB device
-6               | [gpu](#type-gpu)                  | GPU device
-7               | [infiniband](#type-infiniband)    | Infiniband device
-8               | [proxy](#type-proxy)              | Proxy device
+0               | [none](#type-none)                | 継承ブロッカー <!-- Inheritance blocker -->
+1               | [nic](#type-nic)                  | ネットワークインターフェース <!-- Network interface -->
+2               | [disk](#type-disk)                | コンテナ内のマウントポイント <!-- Mountpoint inside the container -->
+3               | [unix-char](#type-unix-char)      | Unix キャラクターデバイス <!-- Unix character device -->
+4               | [unix-block](#type-unix-block)    | Unix ブロックデバイス <!-- Unix block device -->
+5               | [usb](#type-usb)                  | USB デバイス <!-- USB device -->
+6               | [gpu](#type-gpu)                  | GPU デバイス <!-- GPU device -->
+7               | [infiniband](#type-infiniband)    | インフィニバンドデバイス <!-- Infiniband device -->
+8               | [proxy](#type-proxy)              | プロキシデバイス <!-- Proxy device -->
 
 ### Type: none
+<!--
 A none type device doesn't have any property and doesn't create anything inside the container.
+-->
+none タイプのデバイスはプロパティを一切持たず、コンテナ内に何も作成しません。
 
+<!--
 It's only purpose it to stop inheritance of devices coming from profiles.
+-->
+プロファイルからのデバイスの継承を止めるためだけに存在します。
 
+<!--
 To do so, just add a none type device with the same name of the one you wish to skip inheriting.
 It can be added in a profile being applied after the profile it originated from or directly on the container.
+-->
+継承を止めるには、継承をスキップしたいデバイスと同じ名前の none タイプのデバイスを追加するだけです。
+デバイスは、もともと含まれているプロファイルの後にプロファイルに追加されるか、直接コンテナに追加されます。
 
 ### Type: nic
 LXD supports different kind of network devices:
