@@ -331,22 +331,34 @@ security.mac\_filtering | boolean   | false             | no        | bridged   
 maas.subnet.ipv4        | string    | -                 | no        | bridged, macvlan, physical, sriov | maas\_network                          | コンテナを登録する MAAS IPv4 サブネット <!-- MAAS IPv4 subnet to register the container in -->
 maas.subnet.ipv6        | string    | -                 | no        | bridged, macvlan, physical, sriov | maas\_network                          | コンテナを登録する MAAS IPv6 サブネット <!-- MAAS IPv6 subnet to register the container in -->
 
-#### bridged or macvlan for connection to physical network
+#### ブリッジ、macvlan を使った物理ネットワークへの接続 <!-- bridged or macvlan for connection to physical network -->
+<!--
 The `bridged` and `macvlan` interface types can both be used to connect
 to an existing physical network.
+-->
+`bridged`、`macvlan` インターフェースタイプの両方とも、既存の物理ネットワークへ接続できます。
 
+<!--
 macvlan effectively lets you fork your physical NIC, getting a second
 interface that's then used by the container. This saves you from
 creating a bridge device and veth pairs and usually offers better
 performance than a bridge.
+-->
+macvlan は、物理 NIC を効率的に分岐できます。つまり、物理 NIC からコンテナで使える第 2 のインターフェースを取得できます。macvlan を使うことで、ブリッジデバイスと veth ペアの作成を減らせますし、通常はブリッジよりも良いパフォーマンスが得られます。
 
+<!--
 The downside to this is that macvlan devices while able to communicate
 between themselves and to the outside, aren't able to talk to their
 parent device. This means that you can't use macvlan if you ever need
 your containers to talk to the host itself.
+-->
+macvlan の欠点は、macvlan は外部との間で通信はできますが、自身の親デバイスとは通信できないことです。つまりコンテナとホストが通信する必要がある場合は macvlan は使えません。
 
+<!--
 In such case, a bridge is preferable. A bridge will also let you use mac
 filtering and I/O limits which cannot be applied to a macvlan device.
+-->
+そのような場合は、ブリッジを選ぶのが良いでしょう。macvlan では使えない MAC フィルタリングと I/O 制限も使えます。
 
 #### SR-IOV
 The `sriov` interface type supports SR-IOV enabled network devices. These
