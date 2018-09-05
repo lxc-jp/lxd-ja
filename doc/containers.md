@@ -306,7 +306,7 @@ LXD では、様々な種類のネットワークデバイスが使えます:
  - `bridged`: ホスト上に存在するブリッジを使います。ホストのブリッジとコンテナを接続する仮想デバイスペアを作成します <!-- Uses an existing bridge on the host and creates a virtual device pair to connect the host bridge to the container. -->
  - `macvlan`: 既存のネットワークデバイスをベースに MAC が異なる新しいネットワークデバイスを作成します。 <!-- Sets up a new network device based on an existing one but using a different MAC address. -->
  - `p2p`: 仮想デバイスペアを作成し、片方をコンテナ内に置き、残りの片方をホスト上に残します <!-- Creates a virtual device pair, putting one side in the container and leaving the other side on the host. -->
- - `sriov`: SR-IOV が有効な物理ネットワークデバイスの virtual function をコンテナに与えます <!-- Passes a virtual function of an SR-IOV enabled physical network device into the container. -->
+ - `sriov`: SR-IOV が有効な物理ネットワークデバイスの仮想ファンクション（virtual function）をコンテナに与えます <!-- Passes a virtual function of an SR-IOV enabled physical network device into the container. -->
 
 <!--
 Different network interface types have different additional properties, the current list is:
@@ -361,6 +361,7 @@ filtering and I/O limits which cannot be applied to a macvlan device.
 そのような場合は、ブリッジを選ぶのが良いでしょう。macvlan では使えない MAC フィルタリングと I/O 制限も使えます。
 
 #### SR-IOV
+<!--
 The `sriov` interface type supports SR-IOV enabled network devices. These
 devices associate a set of virtual functions (VFs) with the single physical
 function (PF) of the network device. PFs are standard PCIe functions. VFs on
@@ -376,13 +377,26 @@ currently enabled VFs are in use it will bump the number of supported VFs to
 the maximum value and use the first free VF. If all possible VFs are in use or
 the kernel or card doesn't support incrementing the number of VFs LXD will
 return an error. To create a `sriov` network device use:
+-->
+`sriov` インターフェースタイプで、SR-IOV が有効になったネットワークデバイスを使えます。このデバイスは、複数の仮想ファンクション（Virtual Functions: VFs）をネットワークデバイスの単一の物理ファンクション（Physical Function: PF）に関連付けます。
+PF は標準の PCIe ファンクションです。一方、VFs は非常に軽量な PCIe ファンクションで、データの移動に最適化されています。
+VFs は PF のプロパティを変更できないように、制限された設定機能のみを持っています。
+VFs は通常の PCIe デバイスとしてシステム上に現れるので、通常の物理デバイスと同様にコンテナに与えることができます。
+`sriov` インターフェースタイプは、システム上の SR-IOV が有効になったネットワークデバイス名が、`parent` プロパティに設定されることを想定しています。
+すると LXD は、システム上で使用可能な VFs があるかどうかをチェックします。デフォルトでは、LXD は検索で最初に見つかった使われていない VF を割り当てます。
+有効になった VF が存在しないか、現時点で有効な VFs がすべて使われている場合は、サポートされている VF 数の最大値まで有効化し、最初の使用可能な VF をつかいます。
+もしすべての使用可能な VF が使われているか、カーネルもしくはカードが VF 数を増加させられない場合は、LXD はエラーを返します。
+`sriov` ネットワークデバイスは次のように作成します:
 
 ```
 lxc config device add <container> <device-name> nic nictype=sriov parent=<sriov-enabled-device>
 ```
 
+<!--
 To tell LXD to use a specific unused VF add the `host_name` property and pass
 it the name of the enabled VF.
+-->
+特定の未使用な VF を使うように LXD に指示するには、`host_name` プロパティを追加し、有効な VF 名を設定します。
 
 
 #### MAAS integration
