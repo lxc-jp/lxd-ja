@@ -48,19 +48,19 @@ limits.cpu.allowance                    | string    | 100%          | yes       
 limits.cpu.priority                     | integer   | 10 (maximum)  | yes           | -                                    | 同じ CPU をシェアする他のコンテナと比較した CPU スケジューリングの優先度（オーバーコミット）（0 〜 10 の整数）<!-- CPU scheduling priority compared to other containers sharing the same CPUs (overcommit) (integer between 0 and 10) -->
 limits.disk.priority                    | integer   | 5 (medium)    | yes           | -                                    | 負荷がかかった状態で、コンテナの I/O リクエストに割り当てる優先度（0 〜 10 の整数）<!-- When under load, how much priority to give to the container's I/O requests (integer between 0 and 10) -->
 limits.kernel.\*                        | string    | -             | no            | kernel\_limits                       | コンテナごとのカーネルリソースの制限（例、オープンできるファイルの数）<!-- This limits kernel resources per container (e.g. number of open files) -->
-limits.memory                           | string    | - (all)       | yes           | -                                    | ホストメモリに対する割合（パーセント）もしくはメモリの固定値（単位として kB, MB, GB, TB, PB, EB を指定できます）<!-- Percentage of the host's memory or fixed value in bytes (supports kB, MB, GB, TB, PB and EB suffixes) -->
+limits.memory                           | string    | - (all)       | yes           | -                                    | ホストメモリに対する割合（パーセント）もしくはメモリサイズの固定値（単位として kB, MB, GB, TB, PB, EB を指定できます）<!-- Percentage of the host's memory or fixed value in bytes (supports kB, MB, GB, TB, PB and EB suffixes) -->
 limits.memory.enforce                   | string    | hard          | yes           | -                                    | hard に設定すると、コンテナはメモリー制限値を超過できません。soft に設定すると、ホストでメモリに余裕がある場合は超過できる可能性があります <!-- If hard, container can't exceed its memory limit. If soft, the container can exceed its memory limit when extra host memory is available. -->
 limits.memory.swap                      | boolean   | true          | yes           | -                                    | コンテナのメモリの一部をディスクにスワップすることを許すかどうか <!-- Whether to allow some of the container's memory to be swapped out to disk -->
 limits.memory.swap.priority             | integer   | 10 (maximum)  | yes           | -                                    | 高い値を設定するほど、コンテナがディスクにスワップされにくくなります（0 〜 10 の整数） <!-- The higher this is set, the least likely the container is to be swapped to disk (integer between 0 and 10) -->
 limits.network.priority                 | integer   | 0 (minimum)   | yes           | -                                    | 負荷がかかった状態で、コンテナのネットワークリクエストに割り当てる優先度（0 〜 10 の整数）<!-- When under load, how much priority to give to the container's network requests (integer between 0 and 10) -->
 limits.processes                        | integer   | - (max)       | yes           | -                                    | コンテナ内で実行できるプロセスの最大数 <!-- Maximum number of processes that can run in the container -->
-linux.kernel\_modules                   | string    | -             | yes           | -                                    | コンテナを起動する前にロードするカーネルモジュールのリスト。カンマ区切り <!-- Comma separated list of kernel modules to load before starting the container -->
-migration.incremental.memory            | boolean   | false         | yes           | migration\_pre\_copy                 | コンテナのダウンタイムを縮小させるためにコンテナのメモリを増分転送するかどうか <!-- Incremental memory transfer of the container's memory to reduce downtime. -->
+linux.kernel\_modules                   | string    | -             | yes           | -                                    | コンテナを起動する前にロードするカーネルモジュールのカンマ区切りのリスト <!-- Comma separated list of kernel modules to load before starting the container -->
+migration.incremental.memory            | boolean   | false         | yes           | migration\_pre\_copy                 | コンテナのダウンタイムを短くするためにコンテナのメモリを増分転送するかどうか <!-- Incremental memory transfer of the container's memory to reduce downtime. -->
 migration.incremental.memory.goal       | integer   | 70            | yes           | migration\_pre\_copy                 | コンテナを停止させる前に同期するメモリの割合 <!-- Percentage of memory to have in sync before stopping the container. -->
 migration.incremental.memory.iterations | integer   | 10            | yes           | migration\_pre\_copy                 | コンテナを停止させる前に完了させるメモリ転送処理の最大数 <!-- Maximum number of transfer operations to go through before stopping the container. -->
 nvidia.runtime                          | boolean   | false         | no            | nvidia\_runtime                      | ホストの NVIDIA と CUDA ラインタイムライブラリーをコンテナ内でも使えるようにする <!-- Pass the host NVIDIA and CUDA runtime libraries into the container -->
 raw.apparmor                            | blob      | -             | yes           | -                                    | 生成されたプロファイルに追加する Apparmor プロファイルエントリー <!-- Apparmor profile entries to be appended to the generated profile -->
-raw.idmap                               | blob      | -             | no            | id\_map                              | 生（raw）の idmap 設定 <!-- Raw idmap configuration (e.g. "both 1000 1000") -->
+raw.idmap                               | blob      | -             | no            | id\_map                              | 生（raw）の idmap 設定（例: "both 1000 1000"） <!-- Raw idmap configuration (e.g. "both 1000 1000") -->
 raw.lxc                                 | blob      | -             | no            | -                                    | 生成された設定に追加する生（raw）の LXC 設定 <!-- Raw LXC configuration to be appended to the generated one -->
 raw.seccomp                             | blob      | -             | no            | container\_syscall\_filtering        | 生（raw）の seccomp 設定 <!-- Raw Seccomp configuration -->
 security.devlxd                         | boolean   | true          | no            | restrict\_devlxd                     | コンテナ内の `/dev/lxd` の存在を制御する <!-- Controls the presence of /dev/lxd in the container -->
@@ -74,7 +74,7 @@ security.syscalls.blacklist             | string    | -             | no        
 security.syscalls.blacklist\_compat     | boolean   | false         | no            | container\_syscall\_filtering        | `x86_64` で `compat_*` システムコールのブロックを有効にするかどうか。他のアーキテクチャでは何もしません <!-- On x86\_64 this enables blocking of compat\_\* syscalls, it is a no-op on other arches -->
 security.syscalls.blacklist\_default    | boolean   | true          | no            | container\_syscall\_filtering        | デフォルトのシステムコールブラックリストを有効にするかどうか <!-- Enables the default syscall blacklist -->
 security.syscalls.whitelist             | string    | -             | no            | container\_syscall\_filtering        | `\n` 区切りのシステムコールのホワイトリスト（`security.syscalls.blacklist\*)` と排他）<!-- A '\n' separated list of syscalls to whitelist (mutually exclusive with security.syscalls.blacklist\*) -->
-user.\*                                 | string    | -             | n/a           | -                                    | 自由形式のユーザ定義の key/value の設定の組 <!-- Free form user key/value storage (can be used in search) -->
+user.\*                                 | string    | -             | n/a           | -                                    | 自由形式のユーザ定義の key/value の設定の組（検索に使えます） <!-- Free form user key/value storage (can be used in search) -->
 
 <!--
 The following volatile keys are currently internally used by LXD:
@@ -206,16 +206,16 @@ Those includes:
 -->
 このデバイスには次のようなデバイスが含まれます:
 
- - `/dev/null` (character device)
- - `/dev/zero` (character device)
- - `/dev/full` (character device)
- - `/dev/console` (character device)
- - `/dev/tty` (character device)
- - `/dev/random` (character device)
- - `/dev/urandom` (character device)
- - `/dev/net/tun` (character device)
- - `/dev/fuse` (character device)
- - `lo` (network interface)
+ - `/dev/null` (キャラクターデバイス<!-- character device -->)
+ - `/dev/zero` (キャラクターデバイス<!-- character device -->)
+ - `/dev/full` (キャラクターデバイス<!-- character device -->)
+ - `/dev/console` (キャラクターデバイス<!-- character device -->)
+ - `/dev/tty` (キャラクターデバイス<!-- character device -->)
+ - `/dev/random` (キャラクターデバイス<!-- character device -->)
+ - `/dev/urandom` (キャラクターデバイス<!-- character device -->)
+ - `/dev/net/tun` (キャラクターデバイス<!-- character device -->)
+ - `/dev/fuse` (キャラクターデバイス<!-- character device -->)
+ - `lo` (ネットワークインターフェース<!-- network interface -->)
 
 <!--
 Anything else has to be defined in the container configuration or in one of its
@@ -228,7 +228,7 @@ become `eth0` in the container.
 To add extra devices to a container, device entries can be added directly to a
 container, or to a profile.
 -->
-コンテナに追加でデバイスを追加する場合は、デバイスエントリー直接コンテナかプロファイルに追加できます。
+コンテナに追加でデバイスを追加する場合は、デバイスエントリーを直接コンテナかプロファイルに追加できます。
 
 <!--
 Devices may be added or removed while the container is running.
@@ -322,7 +322,7 @@ limits.max              | string    | -                 | no        | bridged, p
 name                    | string    | kernel assigned   | no        | all                               | -                                      | コンテナ内部でのインターフェース名 <!-- The name of the interface inside the container -->
 host\_name              | string    | randomly assigned | no        | bridged, macvlan, p2p, sriov      | -                                      | ホスト上でのインターフェース名 <!-- The name of the interface inside the host -->
 hwaddr                  | string    | randomly assigned | no        | all                               | -                                      | 新しいインターフェースの MAC アドレス <!-- The MAC address of the new interface -->
-mtu                     | integer   | parent MTU        | no        | all                               | -                                      | 新しいインター絵f−すの MTU <!-- The MTU of the new interface -->
+mtu                     | integer   | parent MTU        | no        | all                               | -                                      | 新しいインターフェースの MTU <!-- The MTU of the new interface -->
 parent                  | string    | -                 | yes       | bridged, macvlan, physical, sriov | -                                      | ホスト上のデバイス、ブリッジの名前 <!-- The name of the host device or bridge -->
 vlan                    | integer   | -                 | no        | macvlan, physical                 | network\_vlan, network\_vlan\_physical | アタッチする VLAN の ID <!-- The VLAN ID to attach to -->
 ipv4.address            | string    | -                 | no        | bridged                           | network                                | DHCP でコンテナに割り当てる IPv4 アドレス <!-- An IPv4 address to assign to the container through DHCP -->
