@@ -399,21 +399,34 @@ it the name of the enabled VF.
 特定の未使用な VF を使うように LXD に指示するには、`host_name` プロパティを追加し、有効な VF 名を設定します。
 
 
-#### MAAS integration
+#### MAAS を使った統合管理 <!-- MAAS integration -->
+<!--
 If you're using MAAS to manage the physical network under your LXD host
 and want to attach your containers directly to a MAAS managed network,
 LXD can be configured to interact with MAAS so that it can track your
 containers.
+-->
+もし、LXD ホストが接続されている物理ネットワークを MAAS を使って管理している場合で、コンテナを直接 MAAS が管理するネットワークに接続したい場合は、MAAS とやりとりをしてコンテナをトラッキングするように LXD を設定できます。
 
+<!_-
 At the daemon level, you must configure `maas.api.url` and
 `maas.api.key`, then set the `maas.subnet.ipv4` and/or
 `maas.subnet.ipv6` keys on the container or profile's `nic` entry.
+-->
+そのためには、デーモンに対して、`maas.api.url` と `maas.api.key` を設定しなければなりません。
+そして、`maas.subnet.ipv4` と `maas.subnet.ipv6` の両方またはどちらかを、コンテナもしくはプロファイルの `nic` エントリーに設定します。
 
+<!--
 This will have LXD register all your containers with MAAS, giving them
 proper DHCP leases and DNS records.
+-->
+これで、LXD はすべてのコンテナを MAAS に登録し、適切な DHCP リースと DNS レコードがコンテナに与えられます。
 
+<!--
 If you set the `ipv4.address` or `ipv6.address` keys on the nic, then
 those will be registered as static assignments in MAAS too.
+-->
+`ipv4.address` もしくは `ipv6.address` を設定した場合は、MAAS 上でも静的な割り当てとして登録されます。
 
 ### Type: infiniband
 LXD supports two different kind of network types for infiniband devices:
