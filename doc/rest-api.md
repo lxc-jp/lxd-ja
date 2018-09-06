@@ -210,46 +210,93 @@ The codes are always 3 digits, with the following ranges:
 400   | 失敗 <!-- Failure -->
 401   | キャンセルされた <!-- Cancelled -->
 
-# Recursion
+# 再帰 <!-- Recursion -->
+巨大な一覧のクエリを最適化するために、コレクションに対して再帰が実装されています。
+コレクションに対するクエリの GET リクエストに `recursion` パラメータを指定できます。
+<!--
 To optimize queries of large lists, recursion is implemented for collections.
 A `recursion` argument can be passed to a GET query against a collection.
+-->
 
+デフォルト値は 0 でコレクションのメンバーの URL が返されることを意味します。
+1 を指定するとこれらの URL がそれが指すオブジェクト (通常は dict 形式) で
+置き換えられます。
+<!--
 The default value is 0 which means that collection member URLs are
 returned. Setting it to 1 will have those URLs be replaced by the object
 they point to (typically a dict).
+-->
 
+再帰はジョブへのポインタ (URL) をオブジェクトそのもので単に置き換えるように
+実装されています。
+<!--
 Recursion is implemented by simply replacing any pointer to an job (URL)
 by the object itself.
+-->
 
-# Async operations
+# 非同期操作 <!-- Async operations -->
+完了までに 1 秒以上かかるかもしれない操作はバックグラウンドで実行しなければ
+なりません。そしてクライアントにはバックグラウンド操作 ID を返します。
+<!--
 Any operation which may take more than a second to be done must be done
 in the background, returning a background operation ID to the client.
+-->
 
+クライアントは操作のステータス更新をポーリングするか long-poll API を使って
+通知を待つことが出来ます。
+<!--
 The client will then be able to either poll for a status update or wait
 for a notification using the long-poll API.
+-->
 
-# Notifications
+# 通知 <!-- Notifications -->
+通知のために Websocket ベースの API が利用できます。クライアントへ送られる
+トラフィックを制限するためにいくつかの異なる通知種別が存在します。
+<!--
 A websocket based API is available for notifications, different notification
 types exist to limit the traffic going to the client.
+-->
 
+リモート操作の状態をポーリングしなくて済むように、リモート操作を開始する
+前に操作の通知をクライアントが常に購読しておくのがお勧めです。
+<!--
 It's recommended that the client always subscribes to the operations
 notification type before triggering remote operations so that it doesn't
 have to then poll for their status.
+-->
 
-# PUT vs PATCH
+# PUT と PATCH の使い分け <!-- PUT vs PATCH -->
+LXD API は既存のオブジェクトを変更するのに PUT と PATCH の両方をサポートします。
+<!--
 The LXD API supports both PUT and PATCH to modify existing objects.
+-->
 
+PUT はオブジェクト全体を新しい定義で置き換えます。典型的には GET で現在の
+オブジェクトの状態を取得した後に PUT が呼ばれます。
+<!--
 PUT replaces the entire object with a new definition, it's typically
 called after the current object state was retrieved through GET.
+-->
 
+レースコンディションを避けるため、 GET のレスポンスから ETag ヘッダを読み取り
+PUT リクエストの If-Match ヘッダに設定するべきです。こうしておけば GET と
+PUT の間にオブジェクトが他から変更されていた場合は更新が失敗するようになります。
+<!--
 To avoid race conditions, the Etag header should be read from the GET
 response and sent as If-Match for the PUT request. This will cause LXD
 to fail the request if the object was modified between GET and PUT.
+-->
 
+PATCH は変更したいプロパティだけを指定することでオブジェクト内の単一の
+フィールドを変更するのに用いられます。キーを削除するには通常は空の値を
+設定すれば良いようになっていますが、 PATCH ではキーの削除は出来ず、代わりに
+PUT を使う必要がある場合もあります。
+<!--
 PATCH can be used to modify a single field inside an object by only
 specifying the property that you want to change. To unset a key, setting
 it to empty will usually do the trick, but there are cases where PATCH
 won't work and PUT needs to be used instead.
+-->
 
 # API structure
  * [`/`](#)
