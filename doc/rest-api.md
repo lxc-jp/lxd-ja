@@ -13,10 +13,10 @@ remote operations or a unix socket for local operations.
 Not all of the REST interface requires authentication:
 -->
 
- * `/` への `GET` は認証なしで実行可能です (API エンドポイント一覧を返します) <!-- `GET` to `/` is allowed for everyone (lists the API endpoints) -->
- * `/1.0` への GET は認証なしで実行可能です (ですが結果は認証ありの場合と異なります) <!-- `GET` to `/1.0` is allowed for everyone (but result varies) -->
- * `/1.0/certificates` への `POST` はクライアント証明書があれば認証なしでも実行可能です <!-- `POST` to `/1.0/certificates` is allowed for everyone with a client certificate -->
- * `/1.0/images/*` への `GET` は認証なしで実行可能ですが、その場合認証なしのユーザに対して公開されているイメージだけを返します。 <!-- `GET` to `/1.0/images/*` is allowed for everyone but only returns public images for unauthenticated users -->
+ * `/` への `GET` は認証なしで誰でも実行可能です (API エンドポイント一覧を返します) <!-- `GET` to `/` is allowed for everyone (lists the API endpoints) -->
+ * `/1.0` への GET は認証なしで誰でも実行可能です (ですが結果は認証ありの場合と異なります) <!-- `GET` to `/1.0` is allowed for everyone (but result varies) -->
+ * `/1.0/certificates` への `POST` はクライアント証明書があれば誰でも実行可能です <!-- `POST` to `/1.0/certificates` is allowed for everyone with a client certificate -->
+ * `/1.0/images/*` への `GET` は認証なしで誰でも実行可能ですが、その場合認証なしのユーザに対して公開されているイメージだけを返します。 <!-- `GET` to `/1.0/images/*` is allowed for everyone but only returns public images for unauthenticated users -->
 
 以下では認証なしで利用できるエンドポイントはそのように明記します。
 <!--
@@ -298,7 +298,7 @@ it to empty will usually do the trick, but there are cases where PATCH
 won't work and PUT needs to be used instead.
 -->
 
-# API structure
+# API 構造 <!-- API structure -->
  * [`/`](#)
    * [`/1.0`](#10)
      * [`/1.0/certificates`](#10certificates)
@@ -346,15 +346,15 @@ won't work and PUT needs to be used instead.
        * [`/1.0/cluster/members`](#10clustermembers)
          * [`/1.0/cluster/members/<name>`](#10clustermembersname)
 
-# API details
+# API 詳細 <!-- API details -->
 ## `/`
 ### GET
- * Description: List of supported APIs
- * Authentication: guest
- * Operation: sync
- * Return: list of supported API endpoint URLs
+ * 説明: サポートされている API の一覧 <!-- Description: List of supported APIs -->
+ * 認証: guest <!-- Authentication: guest -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻り値: サポートされている API エンドポイントの URL の一覧 <!-- Return: list of supported API endpoint URLs -->
 
-Return value:
+戻り値 <!-- Return value: -->
 
     [
         "/1.0"
@@ -362,23 +362,23 @@ Return value:
 
 ## `/1.0/`
 ### GET
- * Description: Server configuration and environment information
- * Authentication: guest, untrusted or trusted
- * Operation: sync
- * Return: Dict representing server state
+ * 説明: サーバーの設定と環境情報 <!-- Description: Server configuration and environment information -->
+ * 認証: guest, untrusted, trusted のいずれか <!-- Authentication: guest, untrusted or trusted -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻り値: サーバーの状態を表す dict <!-- Return: Dict representing server state -->
 
-Return value (if trusted):
+戻り値 (trusted の場合) <!-- Return value (if trusted): -->
 
     {
-        "api_extensions": [],                           # List of API extensions added after the API was marked stable
-        "api_status": "stable",                         # API implementation status (one of, development, stable or deprecated)
-        "api_version": "1.0",                           # The API version as a string
-        "auth": "trusted",                              # Authentication state, one of "guest", "untrusted" or "trusted"
-        "config": {                                     # Host configuration
+        "api_extensions": [],                           # stable とマークされた API 以降に追加された API 拡張の一覧 <!-- List of API extensions added after the API was marked stable -->
+        "api_status": "stable",                         # API の実装状態 (development, stable, deprecated のいずれか) <!-- API implementation status (one of, development, stable or deprecated) -->
+        "api_version": "1.0",                           # 文字列表記での API バージョン <!-- The API version as a string -->
+        "auth": "trusted",                              # 認証状態 ("guest", "untrusted", "trusted" のいずれか) <!-- Authentication state, one of "guest", "untrusted" or "trusted" -->
+        "config": {                                     # ホストの設定 <!-- Host configuration -->
             "core.trust_password": true,
             "core.https_address": "[::]:8443"
         },
-        "environment": {                                # Various information about the host (OS, kernel, ...)
+        "environment": {                                # ホストの様々な情報 (OS, カーネル, ...) <!-- Various information about the host (OS, kernel, ...) -->
             "addresses": [
                 "1.2.3.4:8443",
                 "[1234::1234]:8443"
@@ -399,17 +399,17 @@ Return value (if trusted):
             "storage": "btrfs",
             "storage_version": "3.19",
         },
-        "public": false,                                # Whether the server should be treated as a public (read-only) remote by the client
+        "public": false,                                # クライアントにとってサーバーを公開された (読み取り専用の) リモートとして扱うべきかどうか <!-- Whether the server should be treated as a public (read-only) remote by the client -->
     }
 
-Return value (if guest or untrusted):
+戻り値 (guest または untrusted の場合) <!-- Return value (if guest or untrusted): -->
 
     {
-        "api_extensions": [],                   # List of API extensions added after the API was marked stable
-        "api_status": "stable",                 # API implementation status (one of, development, stable or deprecated)
-        "api_version": "1.0",                   # The API version as a string
-        "auth": "guest",                        # Authentication state, one of "guest", "untrusted" or "trusted"
-        "public": false,                        # Whether the server should be treated as a public (read-only) remote by the client
+        "api_extensions": [],                   # stable とマークされた API 以降に追加された API 拡張の一覧 <!-- List of API extensions added after the API was marked stable -->
+        "api_status": "stable",                 # API の実装状態 (development, stable, deprecated のいずれか) <!-- API implementation status (one of, development, stable or deprecated) -->
+        "api_version": "1.0",                   # 文字列表記での API バージョン <!-- The API version as a string -->
+        "auth": "guest",                        # 認証状態 ("guest", "untrusted", "trusted" のいずれか) <!-- Authentication state, one of "guest", "untrusted" or "trusted" -->
+        "public": false,                        # クライアントにとってサーバーを公開された (読み取り専用の) リモートとして扱うべきかどうか <!-- Whether the server should be treated as a public (read-only) remote by the client -->
     }
 
 ### PUT (ETag supported)
