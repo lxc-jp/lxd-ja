@@ -1,141 +1,214 @@
-# Introduction
+# イントロダクション <!-- Introduction -->
+LXD とクライアントの間の全ての通信は HTTP 上の RESTful API を使って
+行います。リモートの操作は SSL で暗号化して通信し、ローカルの操作は
+Unix ソケットを使って通信します。
+<!--
 All the communications between LXD and its clients happen using a
 RESTful API over http which is then encapsulated over either SSL for
 remote operations or a unix socket for local operations.
+-->
 
+全ての REST インターフェースが認証を必要とするわけではありません。
+<!--
 Not all of the REST interface requires authentication:
+-->
 
- * `GET` to `/` is allowed for everyone (lists the API endpoints)
- * `GET` to `/1.0` is allowed for everyone (but result varies)
- * `POST` to `/1.0/certificates` is allowed for everyone with a client certificate
- * `GET` to `/1.0/images/*` is allowed for everyone but only returns public images for unauthenticated users
+ * `/` への `GET` は認証なしで実行可能です (API エンドポイント一覧を返します) <!-- `GET` to `/` is allowed for everyone (lists the API endpoints) -->
+ * `/1.0` への GET は認証なしで実行可能です (ですが結果は認証ありの場合と異なります) <!-- `GET` to `/1.0` is allowed for everyone (but result varies) -->
+ * `/1.0/certificates` への `POST` はクライアント証明書があれば認証なしでも実行可能です <!-- `POST` to `/1.0/certificates` is allowed for everyone with a client certificate -->
+ * `/1.0/images/*` への `GET` は認証なしで実行可能ですが、その場合認証なしのユーザに対して公開されているイメージだけを返します。 <!-- `GET` to `/1.0/images/*` is allowed for everyone but only returns public images for unauthenticated users -->
 
+以下では認証なしで利用できるエンドポイントはそのように明記します。
+<!--
 Unauthenticated endpoints are clearly identified as such below.
+-->
 
-# API versioning
+# API のバージョニング <!-- API versioning -->
+サポートされている API のメジャーバージョンのリストは `GET /` を使って
+取得できます。
+<!--
 The list of supported major API versions can be retrieved using `GET /`.
+-->
 
+後方互換性を壊す場合は API のメジャーバージョンが上がります。
+<!--
 The reason for a major API bump is if the API breaks backward compatibility.
+-->
 
+後方互換性を壊さずに追加される機能は `api_extensions` の追加という形になり、
+特定の機能がサーバーでサポートされているかクライアントがチェックすることで
+利用できます。
+<!--
 Feature additions done without breaking backward compatibility only
 result in addition to `api_extensions` which can be used by the client
 to check if a given feature is supported by the server.
+-->
 
-# Return values
+# 戻り値 <!-- Return values -->
+次の 3 つの標準的な戻り値の型があります。
+<!--
 There are three standard return types:
+-->
 
- * Standard return value
- * Background operation
- * Error
+ * 標準の戻り値 <!-- Standard return value -->
+ * バックグラウンド操作 <!-- Background operation -->
+ * エラー <!-- Error -->
 
-### Standard return value
+### 標準の戻り値 <!-- Standard return value -->
+標準の同期的な操作に対しては以下のような dict が返されます。
+<!--
 For a standard synchronous operation, the following dict is returned:
+-->
 
     {
         "type": "sync",
         "status": "Success",
         "status_code": 200,
-        "metadata": {}                          # Extra resource/action specific metadata
+        "metadata": {}                          # リソースやアクションに固有な追加のメタデータ <!-- Extra resource/action specific metadata -->
     }
 
+HTTP ステータスコードは必ず 200 です。
+<!--
 HTTP code must be 200.
+-->
 
-### Background operation
+### バックグラウンド操作 <!-- Background operation -->
+リクエストの結果がバックグラウンド操作になる場合、 HTTP ステータスコードは 202 (Accepted)
+になり、操作の URL を指す HTTP の Location ヘッダが返されます。
+<!--
 When a request results in a background operation, the HTTP code is set to 202 (Accepted)
 and the Location HTTP header is set to the operation URL.
+-->
 
+レスポンスボディは以下のような構造を持つ dict です。
+<!--
 The body is a dict with the following structure:
+-->
 
     {
         "type": "async",
         "status": "OK",
         "status_code": 100,
-        "operation": "/1.0/containers/<id>",                    # URL to the background operation
-        "metadata": {}                                          # Operation metadata (see below)
+        "operation": "/1.0/containers/<id>",                    # バックグラウンド操作の URL <!-- URL to the background operation -->
+        "metadata": {}                                          # 操作のメタデータ (下記参照) <!-- Operation metadata (see below) -->
     }
 
+操作のメタデータの構造は以下のようになります。
+<!--
 The operation metadata structure looks like:
+-->
 
     {
-        "id": "a40f5541-5e98-454f-b3b6-8a51ef5dbd3c",           # UUID of the operation
-        "class": "websocket",                                   # Class of the operation (task, websocket or token)
-        "created_at": "2015-11-17T22:32:02.226176091-05:00",    # When the operation was created
-        "updated_at": "2015-11-17T22:32:02.226176091-05:00",    # Last time the operation was updated
-        "status": "Running",                                    # String version of the operation's status
-        "status_code": 103,                                     # Integer version of the operation's status (use this rather than status)
-        "resources": {                                          # Dictionary of resource types (container, snapshots, images) and affected resources
+        "id": "a40f5541-5e98-454f-b3b6-8a51ef5dbd3c",           # 操作の UUID <!-- UUID of the operation -->
+        "class": "websocket",                                   # 操作の種別 (task, websocket, token のいずれか) <!-- Class of the operation (task, websocket or token) -->
+        "created_at": "2015-11-17T22:32:02.226176091-05:00",    # 操作の作成日時 <!-- When the operation was created -->
+        "updated_at": "2015-11-17T22:32:02.226176091-05:00",    # 操作の最終更新日時 <!-- Last time the operation was updated -->
+        "status": "Running",                                    # 文字列表記での操作の状態 <!-- String version of the operation's status -->
+        "status_code": 103,                                     # 整数表記での操作の状態 (status ではなくこちらを利用してください。訳注: 文字列表記の status は人間が見るためのものでプログラムでステータスを判定する場合はこちらの status_code を参照してくださいという意味) <!-- Integer version of the operation's status (use this rather than status) -->
+        "resources": {                                          # リソース種別 (container, snapshots, images のいずれか) の dict を影響を受けるリソース <!-- Dictionary of resource types (container, snapshots, images) and affected resources -->
           "containers": [
             "/1.0/containers/test"
           ]
         },
-        "metadata": {                                           # Metadata specific to the operation in question (in this case, exec)
+        "metadata": {                                           # 対象となっている (この例では exec) 操作に固有なメタデータ <!-- Metadata specific to the operation in question (in this case, exec) -->
           "fds": {
             "0": "2a4a97af81529f6608dca31f03a7b7e47acc0b8dc6514496eb25e325f9e4fa6a",
             "control": "5b64c661ef313b423b5317ba9cb6410e40b705806c28255f601c0ef603f079a7"
           }
         },
-        "may_cancel": false,                                    # Whether the operation can be canceled (DELETE over REST)
-        "err": ""                                               # The error string should the operation have failed
+        "may_cancel": false,                                    # (REST で DELETE を使用して) 操作がキャンセル可能かどうか <!-- Whether the operation can be canceled (DELETE over REST) -->
+        "err": ""                                               # 操作が失敗した場合にエラー文字列が設定されます <!-- The error string should the operation have failed -->
     }
 
+対象の操作に対して追加のリクエストを送って情報を取り出さなくても、
+何が起こっているかユーザにとってわかりやすい形でボディは構成されています。
+ボディに含まれる全ての情報はバックグラウンド操作の URL から取得する
+こともできます。
+<!--
 The body is mostly provided as a user friendly way of seeing what's
 going on without having to pull the target operation, all information in
 the body can also be retrieved from the background operation URL.
+-->
 
-### Error
+### エラー <!-- Error -->
+さまざまな状況によっては操作を行う前に直ぐに問題が起きる場合があり、
+そういう場合には以下のような値が返されます。
+<!--
 There are various situations in which something may immediately go
 wrong, in those cases, the following return value is used:
+-->
 
     {
         "type": "error",
         "error": "Failure",
         "error_code": 400,
-        "metadata": {}                      # More details about the error
+        "metadata": {}                      # エラーについてのさらなる詳細 <!-- More details about the error -->
     }
 
+HTTP ステータスコードは 400, 401, 403, 404, 409, 412, 500 のいずれかです。
+<!--
 HTTP code must be one of of 400, 401, 403, 404, 409, 412 or 500.
+-->
 
-# Status codes
+# ステータスコード <!-- Status codes -->
+LXD REST API はステータス情報を返す必要があります。それはエラーの理由だったり、
+操作の現在の状態だったり、 LXD が提供する様々なリソースの状態だったりします。
+<!--
 The LXD REST API often has to return status information, be that the
 reason for an error, the current state of an operation or the state of
 the various resources it exports.
+-->
 
+デバッグをシンプルにするため、ステータスは常に文字列表記と整数表記で
+重複して返されます。ステータスの整数表記の値は将来に渡って不変なので
+API クライアントが個々の値に依存できます。文字列表記のステータスは
+人間が API を手動で実行したときに何が起きているかをより簡単に判断
+できるように用意されています。
+<!--
 To make it simple to debug, all of those are always doubled. There is a
 numeric representation of the state which is guaranteed never to change
 and can be relied on by API clients. Then there is a text version meant
 to make it easier for people manually using the API to figure out what's
 happening.
+-->
 
+ほとんどのケースでこれらは `status` と `status_code` と呼ばれ、前者は
+ユーザフレンドリーな文字列表記で後者は固定の数値です。
+<!--
 In most cases, those will be called status and `status_code`, the former
 being the user-friendly string representation and the latter the fixed
 numeric value.
+-->
 
+整数表記のコードは常に 3 桁の数字で以下の範囲の値となっています。
+<!--
 The codes are always 3 digits, with the following ranges:
+-->
 
- * 100 to 199: resource state (started, stopped, ready, ...)
- * 200 to 399: positive action result
- * 400 to 599: negative action result
- * 600 to 999: future use
+ * 100 to 199: リソースの状態 (started, stopped, ready, ...) <!-- resource state (started, stopped, ready, ...) -->
+ * 200 to 399: 成功したアクションの結果 <!-- positive action result -->
+ * 400 to 599: 失敗したアクションの結果 <!-- negative action result -->
+ * 600 to 999: 将来使用するために予約されている番号の範囲 <!-- future use -->
 
-## List of current status codes
+## 現在使用されているステータスコード一覧 <!-- List of current status codes -->
 
-Code  | Meaning
+コード <!-- Code -->  | 意味 <!-- Meaning -->
 :---  | :------
-100   | Operation created
-101   | Started
-102   | Stopped
-103   | Running
-104   | Cancelling
-105   | Pending
-106   | Starting
-107   | Stopping
-108   | Aborting
-109   | Freezing
-110   | Frozen
-111   | Thawed
-200   | Success
-400   | Failure
-401   | Cancelled
+100   | 操作が作成された <!-- Operation created -->
+101   | 開始された <!-- Started -->
+102   | 停止された <!-- Stopped -->
+103   | 実行中 <!-- Running -->
+104   | キャンセル中 <!-- Cancelling -->
+105   | ペンディング <!-- Pending -->
+106   | 開始中 <!-- Starting -->
+107   | 停止中 <!-- Stopping -->
+108   | 中断中 <!-- Aborting -->
+109   | 凍結中 <!-- Freezing -->
+110   | 凍結された <!-- Frozen -->
+111   | 解凍された <!-- Thawed -->
+200   | 成功 <!-- Success -->
+400   | 失敗 <!-- Failure -->
+401   | キャンセルされた <!-- Cancelled -->
 
 # Recursion
 To optimize queries of large lists, recursion is implemented for collections.
