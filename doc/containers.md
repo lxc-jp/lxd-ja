@@ -429,34 +429,50 @@ those will be registered as static assignments in MAAS too.
 `ipv4.address` もしくは `ipv6.address` を設定した場合は、MAAS 上でも静的な割り当てとして登録されます。
 
 ### Type: infiniband
+<!--
 LXD supports two different kind of network types for infiniband devices:
+-->
+LXD では、InfiniBand デバイスに対する 2 種類の異なったネットワークタイプが使えます:
 
- - `physical`: Straight physical device passthrough from the host. The targeted device will vanish from the host and appear in the container.
- - `sriov`: Passes a virtual function of an SR-IOV enabled physical network device into the container.
+ - `physical`: ホストの物理デバイスをパススルーで直接使います。対象のデバイスはホスト上では見えなくなり、コンテナ内に出現します <!-- Straight physical device passthrough from the host. The targeted device will vanish from the host and appear in the container. -->
+ - `sriov`: SR-IOV が有効な物理ネットワークデバイスの仮想ファンクション（virtual function）をコンテナに与えます <!-- Passes a virtual function of an SR-IOV enabled physical network device into the container. -->
 
+<!--
 Different network interface types have different additional properties, the current list is:
+-->
+ネットワークインターフェースの種類が異なると追加のプロパティが異なります。現時点のリストは次の通りです:
 
 Key                     | Type      | Default           | Required  | Used by         | API extension | Description
 :--                     | :--       | :--               | :--       | :--             | :--           | :--
-nictype                 | string    | -                 | yes       | all             | infiniband    | The device type, one of "physical", or "sriov"
-name                    | string    | kernel assigned   | no        | all             | infiniband    | The name of the interface inside the container
-hwaddr                  | string    | randomly assigned | no        | all             | infiniband    | The MAC address of the new interface
-mtu                     | integer   | parent MTU        | no        | all             | infiniband    | The MTU of the new interface
-parent                  | string    | -                 | yes       | physical, sriov | infiniband    | The name of the host device or bridge
+nictype                 | string    | -                 | yes       | all             | infiniband    | デバイスタイプ。`physical` か `sriov` のいずれか <!-- The device type, one of "physical", or "sriov" -->
+name                    | string    | kernel assigned   | no        | all             | infiniband    | コンテナ内部でのインターフェース名 <!-- The name of the interface inside the container -->
+hwaddr                  | string    | randomly assigned | no        | all             | infiniband    | 新しいインターフェースの MAC アドレス <!-- The MAC address of the new interface -->
+mtu                     | integer   | parent MTU        | no        | all             | infiniband    | 新しいインターフェースの MTU <!-- The MTU of the new interface -->
+parent                  | string    | -                 | yes       | physical, sriov | infiniband    | ホスト上のデバイス、ブリッジの名前 <!-- The name of the host device or bridge -->
 
+<!--
 To create a `physical` `infiniband` device use:
+-->
+`physical` な `infiniband` デバイスを作成するには次のように実行します:
 
 ```
 lxc config device add <container> <device-name> infiniband nictype=physical parent=<device>
 ```
 
-#### SR-IOV with infiniband devices
+#### InfiniBand デバイスでの SR-IOV <!-- SR-IOV with infiniband devices -->
+<!--
 Infiniband devices do support SR-IOV but in contrast to other SR-IOV enabled
 devices infiniband does not support dynamic device creation in SR-IOV mode.
 This means users need to pre-configure the number of virtual functions by
 configuring the corresponding kernel module.
+-->
+InfiniBand デバイスは SR-IOV をサポートしますが、他の SR-IOV と違って、SR-IOV モードでの動的なデバイスの作成はできません。
+つまり、カーネルモジュール側で事前に仮想ファンクション（virtual functions）の数を設定する必要があるということです。
 
+<!--
 To create a `sriov` `infiniband` device use:
+-->
+`sriov` の `infiniband` でバースを作るには次のように実行します:
 
 ```
 lxc config device add <container> <device-name> infiniband nictype=sriov parent=<sriov-enabled-device>
