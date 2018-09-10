@@ -494,7 +494,7 @@ The following properties exist:
 Key             | Type      | Default           | Required  | Description
 :--             | :--       | :--               | :--       | :--
 limits.read     | string    | -                 | no        | byte/s（単位として kb, MB, GB, TB, PB, EB が使えます）もしくは iops（あとに "iops" と付けなければなりません）で指定する読み込みの I/O 制限値 <!-- I/O limit in byte/s (supports kB, MB, GB, TB, PB and EB suffixes) or in iops (must be suffixed with "iops") -->
-limits.write    | string    | -                 | no        | byte/s（単位として kb, MB, GB, TB, PB, EB が使えます）もしくは iops（あとに "iops" と付けなければなりません）で指定する書き込みの I/O 制限値 <!-- I/O limit in byte/s (supports kB, MB, GB, TB, PB and EB suffixes) or in iops (must be suffixed with "iops")
+limits.write    | string    | -                 | no        | byte/s（単位として kb, MB, GB, TB, PB, EB が使えます）もしくは iops（あとに "iops" と付けなければなりません）で指定する書き込みの I/O 制限値 <!-- I/O limit in byte/s (supports kB, MB, GB, TB, PB and EB suffixes) or in iops (must be suffixed with "iops") -->
 limits.max      | string    | -                 | no        | `limits.read` と `limits.write` の両方を同じ値に変更する <!-- Same as modifying both limits.read and limits.write -->
 path            | string    | -                 | yes       | ディスクをマウントするコンテナ内のパス <!-- Path inside the container where the disk will be mounted -->
 source          | string    | -                 | yes       | ファイル・ディレクトリ、もしくはブロックデバイスのホスト上のパス <!-- Path on the host, either to a file/directory or to a block device -->
