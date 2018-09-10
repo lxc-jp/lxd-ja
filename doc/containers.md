@@ -512,21 +512,27 @@ the average of the limits will be used.
 同じブロックデバイスに属するディスクに I/O 制限を設定した場合は、制限は平均値となります。
 
 ### Type: unix-char
+<!--
 Unix character device entries simply make the requested character device
 appear in the container's `/dev` and allow read/write operations to it.
+-->
+UNIX キャラクターデバイスエントリーは、シンプルにコンテナの `/dev` に、リクエストしたキャラクターデバイスを出現させます。そしてそれに対して読み書き操作を許可します。
 
+<!--
 The following properties exist:
+-->
+次に挙げるプロパティがあります:
 
 Key         | Type      | Default           | API extension                     | Required  | Description
 :--         | :--       | :--               | :--                               | :--       | :--
-source      | string    | -                 | unix\_device\_rename              | no        | Path on the host
-path        | string    | -                 |                                   | no        | Path inside the container(one of "source" and "path" must be set)
-major       | int       | device on host    |                                   | no        | Device major number
-minor       | int       | device on host    |                                   | no        | Device minor number
-uid         | int       | 0                 |                                   | no        | UID of the device owner in the container
-gid         | int       | 0                 |                                   | no        | GID of the device owner in the container
-mode        | int       | 0660              |                                   | no        | Mode of the device in the container
-required    | boolean   | true              | unix\_device\_hotplug             | no        | Whether or not this device is required to start the container.
+source      | string    | -                 | unix\_device\_rename              | no        | ホスト上でのパス <!-- Path on the host -->
+path        | string    | -                 |                                   | no        | コンテナ内のパス（"source" と "path" のどちらかを設定しなければいけません）<!-- Path inside the container(one of "source" and "path" must be set) -->
+major       | int       | device on host    |                                   | no        | デバイスのメジャー番号 <!-- Device major number -->
+minor       | int       | device on host    |                                   | no        | デバイスのマイナー番号 <!-- Device minor number -->
+uid         | int       | 0                 |                                   | no        | コンテナ内のデバイス所有者の UID <!-- UID of the device owner in the container -->
+gid         | int       | 0                 |                                   | no        | コンテナ内のデバイス所有者の GID <!-- GID of the device owner in the container -->
+mode        | int       | 0660              |                                   | no        | コンテナ内のデバイスのモード <!-- Mode of the device in the container -->
+required    | boolean   | true              | unix\_device\_hotplug             | no        | このデバイスがコンテナの起動に必要かどうか <!-- Whether or not this device is required to start the container. -->
 
 ### Type: unix-block
 Unix block device entries simply make the requested block device
