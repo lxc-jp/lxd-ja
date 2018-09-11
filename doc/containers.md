@@ -634,29 +634,44 @@ bind        | string    | host              | no        | ホスト/コンテナ
 lxc config device add <container> <device-name> proxy listen=<type>:<addr>:<port>[-<port>][,<port>] connect=<type>:<addr>:<port> bind=<host/container>
 ```
 
-## Instance types
+## インスタンスタイプ <!-- Instance types -->
+<!--
 LXD supports simple instance types. Those are represented as a string
 which can be passed at container creation time.
+-->
+LXD ではシンプルなインスタンスタイプが使えます。これは、コンテナの作成時に指定できる文字列で表されます。
 
+<!--
 There are three allowed syntaxes:
+-->
+3 つの指定方法があります:
 
  - `<instance type>`
  - `<cloud>:<instance type>`
  - `c<CPU>-m<RAM in GB>`
 
+<!--
 For example, those 3 are equivalent:
+-->
+例えば、次の 3 つは同じです:
 
  - t2.micro
  - aws:t2.micro
  - c1-m1
 
+<!--
 On the command line, this is passed like this:
+-->
+コマンドラインでは、インスタンスタイプは次のように指定します:
 
 ```bash
 lxc launch ubuntu:16.04 my-container -t t2.micro
 ```
 
+<!--
 The list of supported clouds and instance types can be found here:
+-->
+使えるクラウドとインスタンスタイプのリストは次をご覧ください:
 
   https://github.com/dustinkirkland/instance-type
 
