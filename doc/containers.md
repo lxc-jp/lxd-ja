@@ -601,12 +601,19 @@ gid         | int       | 0                 | no        | コンテナ内のデ�
 mode        | int       | 0660              | no        | コンテナ内のデバイスのモード <!-- Mode of the device in the container -->
 
 ### Type: proxy
+<!--
 Proxy devices allow forwarding network connections between host and container.
 This makes it possible to forward traffic hitting one of the host's
 addresses to an address inside the container or to do the reverse and
 have an address in the container connect through the host.
+-->
+プロキシーデバイスにより、ホストとコンテナ間のネットワーク接続を転送できます。
+このデバイスを使って、ホストのアドレスの一つに到達したトラフィックをコンテナ内のアドレスに転送したり、その逆を行ったりして、ホストを通してコンテナ内にアドレスを持てます。
 
+<!--
 The supported connection types are:
+-->
+利用できる接続タイプは次の通りです:
 * `TCP <-> TCP`
 * `UDP <-> UDP`
 * `UNIX <-> UNIX`
@@ -619,9 +626,9 @@ The supported connection types are:
 
 Key         | Type      | Default           | Required  | Description
 :--         | :--       | :--               | :--       | :--
-listen      | string    | -                 | yes       | The address and port to bind and listen
-connect     | string    | -                 | yes       | The address and port to connect to
-bind        | string    | host              | no        | Which side to bind on (host/container)
+listen      | string    | -                 | yes       | バインドし、接続を待ち受けるアドレスとポート <!-- The address and port to bind and listen -->
+connect     | string    | -                 | yes       | 接続するアドレスとポート <!-- The address and port to connect to -->
+bind        | string    | host              | no        | ホスト/コンテナのどちら側にバインドするか <!-- Which side to bind on (host/container) -->
 
 ```
 lxc config device add <container> <device-name> proxy listen=<type>:<addr>:<port>[-<port>][,<port>] connect=<type>:<addr>:<port> bind=<host/container>
