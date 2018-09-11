@@ -535,52 +535,70 @@ mode        | int       | 0660              |                                   
 required    | boolean   | true              | unix\_device\_hotplug             | no        | このデバイスがコンテナの起動に必要かどうか <!-- Whether or not this device is required to start the container. -->
 
 ### Type: unix-block
+<!--
 Unix block device entries simply make the requested block device
 appear in the container's `/dev` and allow read/write operations to it.
+-->
+UNIX ブロックデバイスエントリーは、シンプルにコンテナの `/dev` に、リクエストしたブロックデバイスを出現させます。そしてそれに対して読み書き操作を許可します。
 
+<!--
 The following properties exist:
+-->
+次に挙げるプロパティがあります:
 
 Key         | Type      | Default           | API extension                     | Required  | Description
 :--         | :--       | :--               | :--                               | :--       | :--
-source      | string    | -                 | unix\_device\_rename              | no        | Path on the host
-path        | string    | -                 |                                   | no        | Path inside the container(one of "source" and "path" must be set)
-major       | int       | device on host    |                                   | no        | Device major number
-minor       | int       | device on host    |                                   | no        | Device minor number
-uid         | int       | 0                 |                                   | no        | UID of the device owner in the container
-gid         | int       | 0                 |                                   | no        | GID of the device owner in the container
-mode        | int       | 0660              |                                   | no        | Mode of the device in the container
-required    | boolean   | true              | unix\_device\_hotplug             | no        | Whether or not this device is required to start the container.
+source      | string    | -                 | unix\_device\_rename              | no        | ホスト上のパス <!-- Path on the host -->
+path        | string    | -                 |                                   | no        | コンテナ内のパス（"source" と "path" のどちらかを設定しなければいけません） <!-- Path inside the container(one of "source" and "path" must be set) -->
+major       | int       | device on host    |                                   | no        | デバイスのメジャー番号 <!-- Device major number -->
+minor       | int       | device on host    |                                   | no        | デバイスのマイナー番号 <!-- Device minor number -->
+uid         | int       | 0                 |                                   | no        | コンテナ内のデバイス所有者の UID <!-- UID of the device owner in the container -->
+gid         | int       | 0                 |                                   | no        | コンテナ内のデバイス所有者の GID <!-- GID of the device owner in the container -->
+mode        | int       | 0660              |                                   | no        | コンテナ内のデバイスのモード <!-- Mode of the device in the container -->
+required    | boolean   | true              | unix\_device\_hotplug             | no        | このデバイスがコンテナの起動に必要かどうか <!-- Whether or not this device is required to start the container. -->
 
 ### Type: usb
+<!--
 USB device entries simply make the requested USB device appear in the
 container.
+-->
+USB デバイスエントリーは、シンプルにリクエストのあった USB デバイスをコンテナに出現させます。
 
+<!--
 The following properties exist:
+-->
+次に挙げるプロパティがあります:
 
 Key         | Type      | Default           | Required  | Description
 :--         | :--       | :--               | :--       | :--
-vendorid    | string    | -                 | yes       | The vendor id of the USB device.
-productid   | string    | -                 | no        | The product id of the USB device.
-uid         | int       | 0                 | no        | UID of the device owner in the container
-gid         | int       | 0                 | no        | GID of the device owner in the container
-mode        | int       | 0660              | no        | Mode of the device in the container
-required    | boolean   | false             | no        | Whether or not this device is required to start the container. (The default is no, and all devices are hot-pluggable.)
+vendorid    | string    | -                 | yes       | USB デバイスのベンダー ID <!-- The vendor id of the USB device. -->
+productid   | string    | -                 | no        | USB デバイスのプロダクト ID <!-- The product id of the USB device. -->
+uid         | int       | 0                 | no        | コンテナ内のデバイス所有者の UID <!-- UID of the device owner in the container -->
+gid         | int       | 0                 | no        | コンテナ内のデバイス所有者の GID <!-- GID of the device owner in the container -->
+mode        | int       | 0660              | no        | コンテナ内のデバイスのモード <!-- Mode of the device in the container -->
+required    | boolean   | false             | no        | このデバイスがコンテナの起動に必要かどうか（デフォルトは false で、すべてのデバイスがホットプラグ可能です） <!-- Whether or not this device is required to start the container. (The default is no, and all devices are hot-pluggable.) -->
 
 ### Type: gpu
+<!--
 GPU device entries simply make the requested gpu device appear in the
 container.
+-->
+GPU デバイスエントリーは、シンプルにリクエストのあった GPU デバイスをコンテナに出現させます。
 
+<!--
 The following properties exist:
+-->
+次に挙げるプロパティがあります:
 
 Key         | Type      | Default           | Required  | Description
 :--         | :--       | :--               | :--       | :--
-vendorid    | string    | -                 | no        | The vendor id of the GPU device.
-productid   | string    | -                 | no        | The product id of the GPU device.
-id          | string    | -                 | no        | The card id of the GPU device.
-pci         | string    | -                 | no        | The pci address of the GPU device.
-uid         | int       | 0                 | no        | UID of the device owner in the container
-gid         | int       | 0                 | no        | GID of the device owner in the container
-mode        | int       | 0660              | no        | Mode of the device in the container
+vendorid    | string    | -                 | no        | GPU デバイスのベンダー ID <!-- The vendor id of the GPU device. -->
+productid   | string    | -                 | no        | GPU デバイスのプロダクト ID <!-- The product id of the GPU device. -->
+id          | string    | -                 | no        | GPU デバイスのカード ID <!-- The card id of the GPU device. -->
+pci         | string    | -                 | no        | GPU デバイスの PCI アドレス <!-- The pci address of the GPU device. -->
+uid         | int       | 0                 | no        | コンテナ内のデバイス所有者の UID <!-- UID of the device owner in the container -->
+gid         | int       | 0                 | no        | コンテナ内のデバイス所有者の GID <!-- GID of the device owner in the container -->
+mode        | int       | 0660              | no        | コンテナ内のデバイスのモード <!-- Mode of the device in the container -->
 
 ### Type: proxy
 Proxy devices allow forwarding network connections between host and container.
