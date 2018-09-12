@@ -675,7 +675,8 @@ The list of supported clouds and instance types can be found here:
 
   https://github.com/dustinkirkland/instance-type
 
-## Resource limits via `limits.kernel.[limit name]`
+## `limits.kernel.[limit name]` を使ったリソース制限 <!-- Resource limits via `limits.kernel.[limit name]` -->
+<!--
 LXD exposes a generic namespaced key `limits.kernel.*` which can be used to set
 resource limits for a given container. It is generic in the sense that LXD will
 not perform any validation on the resource that is specified following the
@@ -684,22 +685,30 @@ a given kernel supports. Instead, LXD will simply pass down the corresponding
 resource key after the `limits.kernel.*` prefix and its value to the kernel.
 The kernel will do the appropriate validation. This allows users to specify any
 supported limit on their system. Some common limits are:
+-->
+LXD では、指定したコンテナのリソース制限を設定するのに、 `limits.kernel.*` という名前空間のキーが使えます。
+LXD は `limits.kernel.*` のあとに指定されるキーのリソースについての妥当性の確認は一切行こないません。
+LXD は、使用中のカーネルで、指定したリソースがすべてが使えるのかどうかを知ることができません。
+LXD は単純に `limits.kernel.*` の後に指定されるリソースキーと値をカーネルに渡すだけです。
+カーネルが適切な確認を行います。これにより、ユーザーは使っているシステム上で使えるどんな制限でも指定できます。
+いくつか一般的に使える制限は次の通りです:
 
 Key                      | Resource          | Description
 :--                      | :---              | :----------
-limits.kernel.as         | RLIMIT\_AS         | Maximum size of the process's virtual memory
-limits.kernel.core       | RLIMIT\_CORE       | Maximum size of the process's coredump file
-limits.kernel.cpu        | RLIMIT\_CPU        | Limit in seconds on the amount of cpu time the process can consume
-limits.kernel.data       | RLIMIT\_DATA       | Maximum size of the process's data segment
-limits.kernel.fsize      | RLIMIT\_FSIZE      | Maximum size of files the process may create
-limits.kernel.locks      | RLIMIT\_LOCKS      | Limit on the number of file locks that this process may establish
-limits.kernel.memlock    | RLIMIT\_MEMLOCK    | Limit on the number of bytes of memory that the process may lock in RAM
-limits.kernel.nice       | RLIMIT\_NICE       | Maximum value to which the process's nice value can be raised
-limits.kernel.nofile     | RLIMIT\_NOFILE     | Maximum number of open files for the process
-limits.kernel.nproc      | RLIMIT\_NPROC      | Maximum number of processes that can be created for the user of the calling process
-limits.kernel.rtprio     | RLIMIT\_RTPRIO     | Maximum value on the real-time-priority that maybe set for this process
-limits.kernel.sigpending | RLIMIT\_SIGPENDING | Maximum number of signals that maybe queued for the user of the calling process
+limits.kernel.as         | RLIMIT\_AS         | プロセスの仮想メモリーの最大サイズ <!-- Maximum size of the process's virtual memory -->
+limits.kernel.core       | RLIMIT\_CORE       | プロセスのコアダンプファイルの最大サイズ <!-- Maximum size of the process's coredump file -->
+limits.kernel.cpu        | RLIMIT\_CPU        | プロセスが使える CPU 時間の秒単位の制限 <!-- Limit in seconds on the amount of cpu time the process can consume -->
+limits.kernel.data       | RLIMIT\_DATA       | プロセスのデーターセグメントの最大サイズ <!-- Maximum size of the process's data segment -->
+limits.kernel.fsize      | RLIMIT\_FSIZE      | プロセスが作成できるファイルの最大サイズ <!-- Maximum size of files the process may create -->
+limits.kernel.locks      | RLIMIT\_LOCKS      | プロセスが確立できるファイルロック数の制限 <!-- Limit on the number of file locks that this process may establish -->
+limits.kernel.memlock    | RLIMIT\_MEMLOCK    | プロセスが RAM 上でロックできるメモリのバイト数の制限 <!-- Limit on the number of bytes of memory that the process may lock in RAM -->
+limits.kernel.nice       | RLIMIT\_NICE       | 引き上げることができるプロセスの nice 値の最大値 <!-- Maximum value to which the process's nice value can be raised -->
+limits.kernel.nofile     | RLIMIT\_NOFILE     | プロセスがオープンできるファイルの最大値 <!-- Maximum number of open files for the process -->
+limits.kernel.nproc      | RLIMIT\_NPROC      | 呼び出し元プロセスのユーザーが作れるプロセスの最大数 <!-- Maximum number of processes that can be created for the user of the calling process -->
+limits.kernel.rtprio     | RLIMIT\_RTPRIO     | プロセスに対して設定できるリアルタイム優先度の最大値 <!-- Maximum value on the real-time-priority that maybe set for this process -->
+limits.kernel.sigpending | RLIMIT\_SIGPENDING | 呼び出し元プロセスのユーザがキューに入れられるシグナルの最大数 <!-- Maximum number of signals that maybe queued for the user of the calling process -->
 
+<!--
 A full list of all available limits can be found in the manpages for the
 `getrlimit(2)`/`setrlimit(2)` system calls. To specify a limit within the
 `limits.kernel.*` namespace use the resource name in lowercase without the
@@ -710,6 +719,12 @@ used as a shortcut to set both soft and hard limit (e.g.
 `limits.kernel.nofile=3000`) to the same value. A resource with no explicitly
 configured limitation will be inherited from the process starting up the
 container. Note that this inheritance is not enforced by LXD but by the kernel.
+-->
+指定できる制限の完全なリストは `getrlimit(2)`/`setrlimit(2)`システムコールの man ページで確認できます。
+`limits.kernel.*` 名前空間内で制限を指定するには、`RLIMIT_` を付けずに、リソース名を小文字で指定します。
+例えば、`RLIMIT_NOFILE` は `nofile` と指定します。制限は、コロン区切りのふたつの数字もしくは `unlimited` という文字列で指定します（例: `limits.kernel.nofile=1000:2000`）。
+単一の値を使って、ソフトリミットとハードリミットを同じ値に設定できます（例: `limits.kernel.nofile=3000`）。
+明示的に設定されないリソースは、コンテナを起動したプロセスから継承されます。この継承は LXD でなく、カーネルによって強制されます。
 
 ## Live migration
 LXD supports live migration of containers using [CRIU](http://criu.org). In
