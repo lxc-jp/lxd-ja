@@ -726,7 +726,8 @@ container. Note that this inheritance is not enforced by LXD but by the kernel.
 単一の値を使って、ソフトリミットとハードリミットを同じ値に設定できます（例: `limits.kernel.nofile=3000`）。
 明示的に設定されないリソースは、コンテナを起動したプロセスから継承されます。この継承は LXD でなく、カーネルによって強制されます。
 
-## Live migration
+## ライブマイグレーション <!-- Live migration -->
+<!--
 LXD supports live migration of containers using [CRIU](http://criu.org). In
 order to optimize the memory transfer for a container LXD can be instructed to
 make use of CRIU's pre-copy features by setting the
@@ -741,3 +742,11 @@ memory dump and transfer it. If the threshold is not reached after the maximum
 number of allowed iterations specified via
 `migration.incremental.memory.iterations` LXD will request a final memory dump
 from CRIU and migrate the container.
+-->
+LXD では、[CRIU](http://criu.org) を使ったコンテナのライブマイグレーションが使えます。
+コンテナのメモリ転送を最適化するために、`migration.incremental.memory` プロパティを `true` に設定することで、CRIU の pre-copy 機能を使うように LXD を設定できます。
+つまり、LXD は CRIU にコンテナの一連のメモリダンプを実行するように要求します。
+ダンプが終わると、LXD はメモリダンプを指定したリモートホストに送ります。
+理想的なシナリオでは、各メモリダンプを前のメモリダンプとの差分にまで減らし、それによりすでに同期されたメモリの割合を増やします。
+同期されたメモリの割合が `migration.incremental.memory.goal` で設定したしきい値と等しいか超えた場合、LXD は CRIU に最終的なメモリダンプを実行し、転送するように要求します。
+`migration.incremental.memory.iterations` で指定したメモリダンプの最大許容回数に達した後、まだしきい値に達していない場合は、LXD は最終的なメモリダンプを CRIU に要求し、コンテナを移行します。
