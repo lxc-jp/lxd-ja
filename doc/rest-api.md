@@ -509,13 +509,16 @@ won't work and PUT needs to be used instead.
     }
 -->
 
-### PUT (ETag supported)
- * Description: Replaces the server configuration or other properties
- * Authentication: trusted
- * Operation: sync
- * Return: standard return value or standard error
+### PUT (ETag サポートあり) <!-- PUT (ETag supported) -->
+ * 説明: サーバー設定や他の設定を置き換える <!-- Description: Replaces the server configuration or other properties -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻り値: 標準の戻り値または標準のエラー <!-- Return: standard return value or standard error -->
 
+入力 (既存の全ての設定を指定された設定で置き換える)
+<!--
 Input (replaces any existing config with the provided one):
+-->
 
     {
         "config": {
@@ -524,14 +527,17 @@ Input (replaces any existing config with the provided one):
         }
     }
 
-### PATCH (ETag supported)
- * Description: Updates the server configuration or other properties
- * Introduced: with API extension `patch`
- * Authentication: trusted
- * Operation: sync
- * Return: standard return value or standard error
+### PATCH (ETag サポートあり) <!-- PATCH (ETag supported) -->
+ * 説明: サーバー設定や他の設定を更新する <!-- Description: Updates the server configuration or other properties -->
+ * 導入: `patch` API 拡張により <!-- Introduced: with API extension `patch` -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻り値: 標準の戻り値または標準のエラー <!-- Return: standard return value or standard error -->
 
+入力 (指定されたキーだけを更新し、残りの既存の設定はそのまま残る)
+<!--
 Input (updates only the listed keys, rest remains intact):
+-->
 
     {
         "config": {
@@ -541,40 +547,56 @@ Input (updates only the listed keys, rest remains intact):
 
 ## `/1.0/certificates`
 ### GET
- * Description: list of trusted certificates
- * Authentication: trusted
- * Operation: sync
- * Return: list of URLs for trusted certificates
+ * 説明: 信頼された証明書の一覧を返す <!-- Description: list of trusted certificates -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻り値: 信頼された証明書の URL の一覧 <!-- Return: list of URLs for trusted certificates -->
 
-Return:
+戻り値
+<!-- Return: -->
 
     [
         "/1.0/certificates/3ee64be3c3c7d617a7470e14f2d847081ad467c8c26e1caad841c8f67f7c7b09"
     ]
 
 ### POST
- * Description: add a new trusted certificate
- * Authentication: trusted or untrusted
- * Operation: sync
- * Return: standard return value or standard error
+ * 説明: 信頼された証明書を追加する <!-- Description: add a new trusted certificate -->
+ * 認証: trusted または untrusted <!-- Authentication: trusted or untrusted -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻り値: 標準の戻り値または標準のエラー <!-- Return: standard return value or standard error -->
 
+入力
+<!--
 Input:
+-->
 
+    {
+        "type": "client",                       # 証明書の種別 (keyring)、現在は client のみ
+        "certificate": "PEM certificate",       # 提供される場合は有効な x509 形式の証明書。提供されない場合は接続のクライアント証明書が使用される
+        "name": "foo",                          # 証明書の名前を指定可能。指定しない場合はリクエストの TLS ヘッダーのホスト名が使用される。
+        "password": "server-trust-password"     # そのサーバのトラスト・パスワード (untrusted の場合にのみ必須)
+    }
+
+<!--
     {
         "type": "client",                       # Certificate type (keyring), currently only client
         "certificate": "PEM certificate",       # If provided, a valid x509 certificate. If not, the client certificate of the connection will be used
         "name": "foo",                          # An optional name for the certificate. If nothing is provided, the host in the TLS header for the request is used.
         "password": "server-trust-password"     # The trust password for that server (only required if untrusted)
     }
+-->
 
 ## `/1.0/certificates/<fingerprint>`
 ### GET
- * Description: trusted certificate information
- * Authentication: trusted
- * Operation: sync
- * Return: dict representing a trusted certificate
+ * 説明: 信頼された証明書の情報 <!-- Description: trusted certificate information -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻り値: 信頼された証明書を表す dict <!-- Return: dict representing a trusted certificate -->
 
+出力
+<!--
 Output:
+-->
 
     {
         "type": "client",
@@ -583,28 +605,34 @@ Output:
         "fingerprint": "SHA256 Hash of the raw certificate"
     }
 
-### PUT (ETag supported)
- * Description: Replaces the certificate properties
- * Introduced: with API extension `certificate_update`
- * Authentication: trusted
- * Operation: sync
- * Return: standard return value or standard error
+### PUT (ETag サポートあり) <!-- PUT (ETag supported) -->
+ * 説明: 証明書のプロパティを置き換える <!-- Description: Replaces the certificate properties -->
+ * 導入: `certificate_update` API 拡張にて <!-- Introduced: with API extension `certificate_update` -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻り値: 標準の戻り値または標準のエラー <!-- Return: standard return value or standard error -->
 
+入力
+<!--
 Input:
+-->
 
     {
         "type": "client",
         "name": "bar"
     }
 
-### PATCH (ETag supported)
- * Description: Updates the certificate properties
- * Introduced: with API extension `certificate_update`
- * Authentication: trusted
- * Operation: sync
- * Return: standard return value or standard error
+### PATCH (ETag サポートあり) <!-- PATCH (ETag supported) -->
+ * 説明: 証明書のプロパティを更新する <!-- Description: Updates the certificate properties -->
+ * 導入: `certificate_update` API 拡張にて <!-- Introduced: with API extension `certificate_update` -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻り値: 標準の戻り値または標準のエラー <!-- Return: standard return value or standard error -->
 
+入力
+<!--
 Input:
+-->
 
     {
         "name": "baz"
@@ -612,17 +640,23 @@ Input:
 
 
 ### DELETE
- * Description: Remove a trusted certificate
- * Authentication: trusted
- * Operation: sync
- * Return: standard return value or standard error
+ * 説明: 信頼された証明書を削除する <!-- Description: Remove a trusted certificate -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻り値: 標準の戻り値または標準のエラー <!-- Return: standard return value or standard error -->
 
-Input (none at present):
+入力 (現在は何もなし)
+<!--
+Input:
+-->
 
     {
     }
 
+レスポンスの HTTP ステータスコードは 202 (Accepted)。
+<!--
 HTTP code for this should be 202 (Accepted).
+-->
 
 ## `/1.0/containers`
 ### GET
