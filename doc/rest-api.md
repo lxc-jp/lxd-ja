@@ -64,8 +64,17 @@ For a standard synchronous operation, the following dict is returned:
         "type": "sync",
         "status": "Success",
         "status_code": 200,
-        "metadata": {}                          # リソースやアクションに固有な追加のメタデータ <!-- Extra resource/action specific metadata -->
+        "metadata": {}                          # リソースやアクションに固有な追加のメタデータ
     }
+
+<!--
+    {
+        "type": "sync",
+        "status": "Success",
+        "status_code": 200,
+        "metadata": {}                          # Extra resource/action specific metadata
+    }
+-->
 
 HTTP ステータスコードは必ず 200 です。
 <!--
@@ -89,9 +98,19 @@ The body is a dict with the following structure:
         "type": "async",
         "status": "OK",
         "status_code": 100,
-        "operation": "/1.0/containers/<id>",                    # バックグラウンド操作の URL <!-- URL to the background operation -->
-        "metadata": {}                                          # 操作のメタデータ (下記参照) <!-- Operation metadata (see below) -->
+        "operation": "/1.0/containers/<id>",                    # バックグラウンド操作の URL
+        "metadata": {}                                          # 操作のメタデータ (下記参照)
     }
+
+<!--
+    {
+        "type": "async",
+        "status": "OK",
+        "status_code": 100,
+        "operation": "/1.0/containers/<id>",                    # URL to the background operation
+        "metadata": {}                                          # Operation metadata (see below)
+    }
+-->
 
 操作のメタデータの構造は以下のようになります。
 <!--
@@ -99,26 +118,50 @@ The operation metadata structure looks like:
 -->
 
     {
-        "id": "a40f5541-5e98-454f-b3b6-8a51ef5dbd3c",           # 操作の UUID <!-- UUID of the operation -->
-        "class": "websocket",                                   # 操作の種別 (task, websocket, token のいずれか) <!-- Class of the operation (task, websocket or token) -->
-        "created_at": "2015-11-17T22:32:02.226176091-05:00",    # 操作の作成日時 <!-- When the operation was created -->
-        "updated_at": "2015-11-17T22:32:02.226176091-05:00",    # 操作の最終更新日時 <!-- Last time the operation was updated -->
-        "status": "Running",                                    # 文字列表記での操作の状態 <!-- String version of the operation's status -->
-        "status_code": 103,                                     # 整数表記での操作の状態 (status ではなくこちらを利用してください。訳注: 文字列表記の status は人間が見るためのものでプログラムでステータスを判定する場合はこちらの status_code を参照してくださいという意味) <!-- Integer version of the operation's status (use this rather than status) -->
-        "resources": {                                          # リソース種別 (container, snapshots, images のいずれか) の dict を影響を受けるリソース <!-- Dictionary of resource types (container, snapshots, images) and affected resources -->
+        "id": "a40f5541-5e98-454f-b3b6-8a51ef5dbd3c",           # 操作の UUID
+        "class": "websocket",                                   # 操作の種別 (task, websocket, token のいずれか)
+        "created_at": "2015-11-17T22:32:02.226176091-05:00",    # 操作の作成日時
+        "updated_at": "2015-11-17T22:32:02.226176091-05:00",    # 操作の最終更新日時
+        "status": "Running",                                    # 文字列表記での操作の状態
+        "status_code": 103,                                     # 整数表記での操作の状態 (status ではなくこちらを利用してください。訳注: 文字列表記の status は人間が見るためのものでプログラムでステータスを判定する場合はこちらの status_code を参照してくださいという意味)
+        "resources": {                                          # リソース種別 (container, snapshots, images のいずれか) の dict を影響を受けるリソース
           "containers": [
             "/1.0/containers/test"
           ]
         },
-        "metadata": {                                           # 対象となっている (この例では exec) 操作に固有なメタデータ <!-- Metadata specific to the operation in question (in this case, exec) -->
+        "metadata": {                                           # 対象となっている (この例では exec) 操作に固有なメタデータ
           "fds": {
             "0": "2a4a97af81529f6608dca31f03a7b7e47acc0b8dc6514496eb25e325f9e4fa6a",
             "control": "5b64c661ef313b423b5317ba9cb6410e40b705806c28255f601c0ef603f079a7"
           }
         },
-        "may_cancel": false,                                    # (REST で DELETE を使用して) 操作がキャンセル可能かどうか <!-- Whether the operation can be canceled (DELETE over REST) -->
-        "err": ""                                               # 操作が失敗した場合にエラー文字列が設定されます <!-- The error string should the operation have failed -->
+        "may_cancel": false,                                    # (REST で DELETE を使用して) 操作がキャンセル可能かどうか
+        "err": ""                                               # 操作が失敗した場合にエラー文字列が設定されます
     }
+
+<!--
+    {
+        "id": "a40f5541-5e98-454f-b3b6-8a51ef5dbd3c",           # UUID of the operation
+        "class": "websocket",                                   # Class of the operation (task, websocket or token)
+        "created_at": "2015-11-17T22:32:02.226176091-05:00",    # When the operation was created
+        "updated_at": "2015-11-17T22:32:02.226176091-05:00",    # Last time the operation was updated
+        "status": "Running",                                    # String version of the operation's status
+        "status_code": 103,                                     # Integer version of the operation's status (use this rather than status)
+        "resources": {                                          # Dictionary of resource types (container, snapshots, images) and affected resources
+          "containers": [
+            "/1.0/containers/test"
+          ]
+        },
+        "metadata": {                                           # Metadata specific to the operation in question (in this case, exec)
+          "fds": {
+            "0": "2a4a97af81529f6608dca31f03a7b7e47acc0b8dc6514496eb25e325f9e4fa6a",
+            "control": "5b64c661ef313b423b5317ba9cb6410e40b705806c28255f601c0ef603f079a7"
+          }
+        },
+        "may_cancel": false,                                    # Whether the operation can be canceled (DELETE over REST)
+        "err": ""                                               # The error string should the operation have failed
+    }
+-->
 
 対象の操作に対して追加のリクエストを送って情報を取り出さなくても、
 何が起こっているかユーザにとってわかりやすい形でボディは構成されています。
@@ -142,8 +185,17 @@ wrong, in those cases, the following return value is used:
         "type": "error",
         "error": "Failure",
         "error_code": 400,
-        "metadata": {}                      # エラーについてのさらなる詳細 <!-- More details about the error -->
+        "metadata": {}                      # エラーについてのさらなる詳細
     }
+
+<!--
+    {
+        "type": "error",
+        "error": "Failure",
+        "error_code": 400,
+        "metadata": {}                      # More details about the error
+    }
+-->
 
 HTTP ステータスコードは 400, 401, 403, 404, 409, 412, 500 のいずれかです。
 <!--
@@ -370,15 +422,15 @@ won't work and PUT needs to be used instead.
 戻り値 (trusted の場合) <!-- Return value (if trusted): -->
 
     {
-        "api_extensions": [],                           # stable とマークされた API 以降に追加された API 拡張の一覧 <!-- List of API extensions added after the API was marked stable -->
-        "api_status": "stable",                         # API の実装状態 (development, stable, deprecated のいずれか) <!-- API implementation status (one of, development, stable or deprecated) -->
-        "api_version": "1.0",                           # 文字列表記での API バージョン <!-- The API version as a string -->
-        "auth": "trusted",                              # 認証状態 ("guest", "untrusted", "trusted" のいずれか) <!-- Authentication state, one of "guest", "untrusted" or "trusted" -->
-        "config": {                                     # ホストの設定 <!-- Host configuration -->
+        "api_extensions": [],                           # stable とマークされた API 以降に追加された API 拡張の一覧
+        "api_status": "stable",                         # API の実装状態 (development, stable, deprecated のいずれか)
+        "api_version": "1.0",                           # 文字列表記での API バージョン
+        "auth": "trusted",                              # 認証状態 ("guest", "untrusted", "trusted" のいずれか)
+        "config": {                                     # ホストの設定
             "core.trust_password": true,
             "core.https_address": "[::]:8443"
         },
-        "environment": {                                # ホストの様々な情報 (OS, カーネル, ...) <!-- Various information about the host (OS, kernel, ...) -->
+        "environment": {                                # ホストの様々な情報 (OS, カーネル, ...)
             "addresses": [
                 "1.2.3.4:8443",
                 "[1234::1234]:8443"
@@ -399,18 +451,63 @@ won't work and PUT needs to be used instead.
             "storage": "btrfs",
             "storage_version": "3.19",
         },
-        "public": false,                                # クライアントにとってサーバーを公開された (読み取り専用の) リモートとして扱うべきかどうか <!-- Whether the server should be treated as a public (read-only) remote by the client -->
+        "public": false,                                # クライアントにとってサーバーを公開された (読み取り専用の) リモートとして扱うべきかどうか
     }
+
+<!--
+    {
+        "api_extensions": [],                           # List of API extensions added after the API was marked stable
+        "api_status": "stable",                         # API implementation status (one of, development, stable or deprecated)
+        "api_version": "1.0",                           # The API version as a string
+        "auth": "trusted",                              # Authentication state, one of "guest", "untrusted" or "trusted"
+        "config": {                                     # Host configuration
+            "core.trust_password": true,
+            "core.https_address": "[::]:8443"
+        },
+        "environment": {                                # Various information about the host (OS, kernel, ...)
+            "addresses": [
+                "1.2.3.4:8443",
+                "[1234::1234]:8443"
+            ],
+            "architectures": [
+                "x86_64",
+                "i686"
+            ],
+            "certificate": "PEM certificate",
+            "driver": "lxc",
+            "driver_version": "1.0.6",
+            "kernel": "Linux",
+            "kernel_architecture": "x86_64",
+            "kernel_version": "3.16",
+            "server": "lxd",
+            "server_pid": 10224,
+            "server_version": "0.8.1"}
+            "storage": "btrfs",
+            "storage_version": "3.19",
+        },
+        "public": false,                                # Whether the server should be treated as a public (read-only) remote by the client
+    }
+-->
 
 戻り値 (guest または untrusted の場合) <!-- Return value (if guest or untrusted): -->
 
     {
-        "api_extensions": [],                   # stable とマークされた API 以降に追加された API 拡張の一覧 <!-- List of API extensions added after the API was marked stable -->
-        "api_status": "stable",                 # API の実装状態 (development, stable, deprecated のいずれか) <!-- API implementation status (one of, development, stable or deprecated) -->
-        "api_version": "1.0",                   # 文字列表記での API バージョン <!-- The API version as a string -->
-        "auth": "guest",                        # 認証状態 ("guest", "untrusted", "trusted" のいずれか) <!-- Authentication state, one of "guest", "untrusted" or "trusted" -->
-        "public": false,                        # クライアントにとってサーバーを公開された (読み取り専用の) リモートとして扱うべきかどうか <!-- Whether the server should be treated as a public (read-only) remote by the client -->
+        "api_extensions": [],                   # stable とマークされた API 以降に追加された API 拡張の一覧
+        "api_status": "stable",                 # API の実装状態 (development, stable, deprecated のいずれか)
+        "api_version": "1.0",                   # 文字列表記での API バージョン
+        "auth": "guest",                        # 認証状態 ("guest", "untrusted", "trusted" のいずれか)
+        "public": false,                        # クライアントにとってサーバーを公開された (読み取り専用の) リモートとして扱うべきかどうか
     }
+
+<!--
+    {
+        "api_extensions": [],                   # List of API extensions added after the API was marked stable
+        "api_status": "stable",                 # API implementation status (one of, development, stable or deprecated)
+        "api_version": "1.0",                   # The API version as a string
+        "auth": "guest",                        # Authentication state, one of "guest", "untrusted" or "trusted"
+        "public": false,                        # Whether the server should be treated as a public (read-only) remote by the client
+    }
+-->
 
 ### PUT (ETag supported)
  * Description: Replaces the server configuration or other properties
