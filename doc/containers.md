@@ -484,7 +484,7 @@ Disk entries are essentially mountpoints inside the container. They can
 either be a bind-mount of an existing file or directory on the host, or
 if the source is a block device, a regular mount.
 -->
-ディスクエントリーは基本的にコンテナ内のマウントポイントです。既存ファイルのバインドマウント、ホストのディレクトリでも構いませんし、ソースがブロックデバイスであるなら、通常のマウントでも構いません。
+ディスクエントリーは基本的にコンテナ内のマウントポイントです。ホスト上の既存ファイルやディレクトリのバインドマウントでも構いませんし、ソースがブロックデバイスであるなら、通常のマウントでも構いません。
 
 <!--
 The following properties exist:
@@ -500,7 +500,7 @@ path            | string    | -                 | yes       | ディスクをマ
 source          | string    | -                 | yes       | ファイル・ディレクトリ、もしくはブロックデバイスのホスト上のパス <!-- Path on the host, either to a file/directory or to a block device -->
 optional        | boolean   | false             | no        | ソースが存在しないときに失敗とするかどうかを制御する <!-- Controls whether to fail if the source doesn't exist -->
 readonly        | boolean   | false             | no        | マウントを読み込み専用とするかどうかを制御する <!-- Controls whether to make the mount read-only -->
-size            | string    | -                 | no        | byte（単位として kb, MB, GB, TB, PB, EB が使えます）で指定するディスクサイズ <!-- Disk size in bytes (supports kB, MB, GB, TB, PB and EB suffixes). This is only supported for the rootfs (/). -->
+size            | string    | -                 | no        | byte（単位として kb, MB, GB, TB, PB, EB が使えます）で指定するディスクサイズ。rootfs（/）でのみサポートされます <!-- Disk size in bytes (supports kB, MB, GB, TB, PB and EB suffixes). This is only supported for the rootfs (/). -->
 recursive       | boolean   | false             | no        | ソースパスを再帰的にマウントするかどうか <!-- Whether or not to recursively mount the source path -->
 pool            | string    | -                 | no        | ディスクデバイスが属するストレージプール。LXD が管理するストレージボリュームにのみ適用されます <!-- The storage pool the disk device belongs to. This is only applicable for storage volumes managed by LXD. -->
 propagation     | string    | -                 | no        | バインドマウントをコンテナとホストでどのように共有するかを管理する（デフォルトである `private`, `shared`, `slave`, `unbindable`,  `rshared`, `rslave`, `runbindable`,  `rprivate` のいずれか。詳しくは Linux kernel の文書 [shared subtree](https://www.kernel.org/doc/Documentation/filesystems/sharedsubtree.txt) をご覧ください）<!-- Controls how a bind-mount is shared between the container and the host. (Can be one of `private`, the default, or `shared`, `slave`, `unbindable`,  `rshared`, `rslave`, `runbindable`,  `rprivate`. Please see the Linux Kernel [shared subtree](https://www.kernel.org/doc/Documentation/filesystems/sharedsubtree.txt) documentation for a full explanation) -->
@@ -687,7 +687,7 @@ The kernel will do the appropriate validation. This allows users to specify any
 supported limit on their system. Some common limits are:
 -->
 LXD では、指定したコンテナのリソース制限を設定するのに、 `limits.kernel.*` という名前空間のキーが使えます。
-LXD は `limits.kernel.*` のあとに指定されるキーのリソースについての妥当性の確認は一切行こないません。
+LXD は `limits.kernel.*` のあとに指定されるキーのリソースについての妥当性の確認は一切行ないません。
 LXD は、使用中のカーネルで、指定したリソースがすべてが使えるのかどうかを知ることができません。
 LXD は単純に `limits.kernel.*` の後に指定されるリソースキーと値をカーネルに渡すだけです。
 カーネルが適切な確認を行います。これにより、ユーザーは使っているシステム上で使えるどんな制限でも指定できます。
