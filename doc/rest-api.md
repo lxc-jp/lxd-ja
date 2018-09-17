@@ -660,12 +660,15 @@ HTTP code for this should be 202 (Accepted).
 
 ## `/1.0/containers`
 ### GET
- * Description: List of containers
- * Authentication: trusted
- * Operation: sync
- * Return: list of URLs for containers this server publishes
+ * 説明: コンテナの一覧 <!-- Description: List of containers -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻り値: このサーバーが公開しているコンテナの URL の一覧 <!-- Return: list of URLs for containers this server publishes -->
 
+戻り値
+<!--
 Return value:
+-->
 
     [
         "/1.0/containers/blah",
@@ -673,13 +676,34 @@ Return value:
     ]
 
 ### POST
- * Description: Create a new container
- * Authentication: trusted
- * Operation: async
- * Return: background operation or standard error
+ * 説明: 新しいコンテナを作成する <!-- Description: Create a new container -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻り値: バックグラウンド操作か標準のエラー <!-- Return: background operation or standard error -->
 
+入力 ("ubuntu/devel" というエイリアスを持つローカルイメージをベースとするコンテナ)
+<!--
 Input (container based on a local image with the "ubuntu/devel" alias):
+-->
 
+    {
+        "name": "my-new-container",                                         # 最大 64 文字、 ASCII が使用可、スラッシュ、コロン、カンマは使用不可
+        "architecture": "x86_64",
+        "profiles": ["default"],                                            # プロファイルの一覧
+        "ephemeral": true,                                                  # シャットダウン時にコンテナを破棄するかどうか
+        "config": {"limits.cpu": "2"},                                      # 設定のオーバーライド
+        "devices": {                                                        # コンテナが持つデバイスのオプショナルなリスト
+            "kvm": {
+                "path": "/dev/kvm",
+                "type": "unix-char"
+            },
+        },
+        "instance_type": "c2.micro",                                        # リミットのベースとして使用するためのオプショナルなインスタンスタイプ
+        "source": {"type": "image",                                         # "image", "migration", "copy", "none" のいずれかを指定可能
+                   "alias": "ubuntu/devel"},                                # エイリアスの名前
+    }
+
+<!--
     {
         "name": "my-new-container",                                         # 64 chars max, ASCII, no slash, no colon and no comma
         "architecture": "x86_64",
@@ -696,9 +720,30 @@ Input (container based on a local image with the "ubuntu/devel" alias):
         "source": {"type": "image",                                         # Can be: "image", "migration", "copy" or "none"
                    "alias": "ubuntu/devel"},                                # Name of the alias
     }
+-->
 
+入力 (フィンガープリントで識別されるローカルのイメージをベースとするコンテナ)
+<!--
 Input (container based on a local image identified by its fingerprint):
+-->
 
+    {
+        "name": "my-new-container",                                         # 最大 64 文字、 ASCII が使用可、スラッシュ、コロン、カンマは使用不可
+        "architecture": "x86_64",
+        "profiles": ["default"],                                            # プロファイルの一覧
+        "ephemeral": true,                                                  # シャットダウン時にコンテナを破棄するかどうか
+        "config": {"limits.cpu": "2"},                                      # 設定のオーバーライド
+        "devices": {                                                        # コンテナが持つデバイスのオプショナルなリスト
+            "kvm": {
+                "path": "/dev/kvm",
+                "type": "unix-char"
+            },
+        },
+        "source": {"type": "image",                                         # "image", "migration", "copy", "none" のいずれかを指定可能
+                   "fingerprint": "SHA-256"},                               # フィンガープリント
+    }
+
+<!--
     {
         "name": "my-new-container",                                         # 64 chars max, ASCII, no slash, no colon and no comma
         "architecture": "x86_64",
@@ -714,9 +759,34 @@ Input (container based on a local image identified by its fingerprint):
         "source": {"type": "image",                                         # Can be: "image", "migration", "copy" or "none"
                    "fingerprint": "SHA-256"},                               # Fingerprint
     }
+-->
 
+入力 (指定したイメージのプロパティに対して最も最近マッチしたイメージをベースとするコンテナ)
+<!--
 Input (container based on most recent match based on image properties):
+-->
 
+    {
+        "name": "my-new-container",                                         # 最大 64 文字、 ASCII が使用可、スラッシュ、コロン、カンマは使用不可
+        "architecture": "x86_64",
+        "profiles": ["default"],                                            # プロファイルの一覧
+        "ephemeral": true,                                                  # シャットダウン時にコンテナを破棄するかどうか
+        "config": {"limits.cpu": "2"},                                      # 設定のオーバーライド
+        "devices": {                                                        # コンテナが持つデバイスのオプショナルなリスト
+            "kvm": {
+                "path": "/dev/kvm",
+                "type": "unix-char"
+            },
+        },
+        "source": {"type": "image",                                         # "image", "migration", "copy", "none" のいずれかを指定可能
+                   "properties": {                                          # プロパティ
+                        "os": "ubuntu",
+                        "release": "14.04",
+                        "architecture": "x86_64"
+                    }},
+    }
+
+<!--
     {
         "name": "my-new-container",                                         # 64 chars max, ASCII, no slash, no colon and no comma
         "architecture": "x86_64",
@@ -736,9 +806,29 @@ Input (container based on most recent match based on image properties):
                         "architecture": "x86_64"
                     }},
     }
+-->
 
+入力 (事前に作成済みの rootfs を除いたコンテナ、既存のコンテナにアタッチする際に有用)
+<!--
 Input (container without a pre-populated rootfs, useful when attaching to an existing one):
+-->
 
+    {
+        "name": "my-new-container",                                         # 最大 64 文字、 ASCII が使用可、スラッシュ、コロン、カンマは使用不可
+        "architecture": "x86_64",
+        "profiles": ["default"],                                            # プロファイルの一覧
+        "ephemeral": true,                                                  # シャットダウン時にコンテナを破棄するかどうか
+        "config": {"limits.cpu": "2"},                                      # 設定のオーバーライド
+        "devices": {                                                        # コンテナが持つデバイスのオプショナルなリスト
+            "kvm": {
+                "path": "/dev/kvm",
+                "type": "unix-char"
+            },
+        },
+        "source": {"type": "none"},                                         # "image", "migration", "copy", "none" のいずれかを指定可能
+    }
+
+<!--
     {
         "name": "my-new-container",                                         # 64 chars max, ASCII, no slash, no colon and no comma
         "architecture": "x86_64",
@@ -753,9 +843,34 @@ Input (container without a pre-populated rootfs, useful when attaching to an exi
         },
         "source": {"type": "none"},                                         # Can be: "image", "migration", "copy" or "none"
     }
+-->
 
+入力 (公開されたリモートのイメージを使用)
+<!--
 Input (using a public remote image):
+-->
 
+    {
+        "name": "my-new-container",                                         # 最大 64 文字、 ASCII が使用可、スラッシュ、コロン、カンマは使用不可
+        "architecture": "x86_64",
+        "profiles": ["default"],                                            # プロファイルの一覧
+        "ephemeral": true,                                                  # シャットダウン時にコンテナを破棄するかどうか
+        "config": {"limits.cpu": "2"},                                      # 設定のオーバーライド
+        "devices": {                                                        # コンテナが持つデバイスのオプショナルなリスト
+            "kvm": {
+                "path": "/dev/kvm",
+                "type": "unix-char"
+            },
+        },
+        "source": {"type": "image",                                         # "image", "migration", "copy", "none" のいずれかを指定可能
+                   "mode": "pull",                                          # "local" (デフォルト) か "pull" のいずれか
+                   "server": "https://10.0.2.3:8443",                       # リモートサーバー (pull モードのときのみ)
+                   "protocol": "lxd",                                       # プロトコル (lxd か simplestreams のいずれか、デフォルトは lxd)
+                   "certificate": "PEM certificate",                        # PEM 証明書を指定可能。未指定の場合はシステムの CA が使用される。
+                   "alias": "ubuntu/devel"},                                # エイリアスの名前
+    }
+
+<!--
     {
         "name": "my-new-container",                                         # 64 chars max, ASCII, no slash, no colon and no comma
         "architecture": "x86_64",
@@ -775,9 +890,34 @@ Input (using a public remote image):
                    "certificate": "PEM certificate",                        # Optional PEM certificate. If not mentioned, system CA is used.
                    "alias": "ubuntu/devel"},                                # Name of the alias
     }
+-->
 
+入力 (プライベートなリモートのイメージをそのイメージのシークレットを取得した後に使用)
+<!--
 Input (using a private remote image after having obtained a secret for that image):
+-->
 
+    {
+        "name": "my-new-container",                                         # 最大 64 文字、 ASCII が使用可、スラッシュ、コロン、カンマは使用不可
+        "architecture": "x86_64",
+        "profiles": ["default"],                                            # プロファイルの一覧
+        "ephemeral": true,                                                  # シャットダウン時にコンテナを破棄するかどうか
+        "config": {"limits.cpu": "2"},                                      # 設定のオーバーライド
+        "devices": {                                                        # コンテナが持つデバイスのオプショナルなリスト
+            "kvm": {
+                "path": "/dev/kvm",
+                "type": "unix-char"
+            },
+        },
+        "source": {"type": "image",                                         # "image", "migration", "copy", "none" のいずれかを指定可能
+                   "mode": "pull",                                          # "local" (デフォルト) か "pull" のいずれか
+                   "server": "https://10.0.2.3:8443",                       # リモートサーバー (pull モードのときのみ)
+                   "secret": "my-secret-string",                            # イメージを取得するために使用するシークレット (pull モードのときのみ)
+                   "certificate": "PEM certificate",                        # PEM 証明書を指定可能。未指定の場合はシステムの CA が使用される。
+                   "alias": "ubuntu/devel"},                                # エイリアスの名前
+    }
+
+<!--
     {
         "name": "my-new-container",                                         # 64 chars max, ASCII, no slash, no colon and no comma
         "architecture": "x86_64",
@@ -797,9 +937,38 @@ Input (using a private remote image after having obtained a secret for that imag
                    "certificate": "PEM certificate",                        # Optional PEM certificate. If not mentioned, system CA is used.
                    "alias": "ubuntu/devel"},                                # Name of the alias
     }
+-->
 
+入力 (マイグレーション・ウェブソケットで送られるリモートのコンテナを使用)
+<!--
 Input (using a remote container, sent over the migration websocket):
+-->
 
+    {
+        "name": "my-new-container",                                                     # 最大 64 文字、 ASCII が使用可、スラッシュ、コロン、カンマは使用不可
+        "architecture": "x86_64",
+        "profiles": ["default"],                                                        # プロファイルの一覧
+        "ephemeral": true,                                                              # シャットダウン時にコンテナを破棄するかどうか
+        "config": {"limits.cpu": "2"},                                                  # 設定のオーバーライド
+        "devices": {                                                                    # コンテナが持つデバイスのオプショナルなリスト
+            "kvm": {
+                "path": "/dev/kvm",
+                "type": "unix-char"
+            },
+        },
+        "source": {"type": "migration",                                                 # "image", "migration", "copy", "none" のいずれかを指定可能
+                   "mode": "pull",                                                      # 現状 "pull" と "push" がサポートされる
+                   "operation": "https://10.0.2.3:8443/1.0/operations/<UUID>",          # リモート操作への完全な URL
+                   "certificate": "PEM certificate",                                    # PEM 証明書を指定可能。未指定の場合はシステムの CA が使用される。
+                   "base-image": "<fingerprint>",                                       # オプショナルでコンテナが作られたベースのイメージを指定可能
+                   "container_only": true,                                              # スナップショットなしでコンテナだけをマイグレートするかどうか。 "true" か "false" のいずれか。
+                   "secrets": {"control": "my-secret-string",                           # マイグレーションのソースと通信する際に使用するシークレット
+                               "criu":    "my-other-secret",
+                               "fs":      "my third secret"}
+        }
+    }
+
+<!--
     {
         "name": "my-new-container",                                                     # 64 chars max, ASCII, no slash, no colon and no comma
         "architecture": "x86_64",
@@ -823,9 +992,30 @@ Input (using a remote container, sent over the migration websocket):
                                "fs":      "my third secret"}
         }
     }
+-->
 
+入力 (ローカルのコンテナを使用)
+<!--
 Input (using a local container):
+-->
 
+    {
+        "name": "my-new-container",                                                     # 最大 64 文字、 ASCII が使用可、スラッシュ、コロン、カンマは使用不可
+        "profiles": ["default"],                                                        # プロファイルの一覧
+        "ephemeral": true,                                                              # シャットダウン時にコンテナを破棄するかどうか
+        "config": {"limits.cpu": "2"},                                                  # 設定のオーバーライド
+        "devices": {                                                                    # コンテナが持つデバイスのオプショナルなリスト
+            "kvm": {
+                "path": "/dev/kvm",
+                "type": "unix-char"
+            },
+        },
+        "source": {"type": "copy",                                                      # "image", "migration", "copy", "none" のいずれかを指定可能
+                   "container_only": true,                                              # スナップショットなしでコンテナだけをマイグレートするかどうか。 "true" か "false" のいずれか。
+                   "source": "my-old-container"}                                        # ソースのコンテナの名前
+    }
+
+<!--
     {
         "name": "my-new-container",                                                     # 64 chars max, ASCII, no slash, no colon and no comma
         "profiles": ["default"],                                                        # List of profiles
@@ -841,9 +1031,33 @@ Input (using a local container):
                    "container_only": true,                                              # Whether to copy only the container without snapshots. Can be "true" or "false".
                    "source": "my-old-container"}                                        # Name of the source container
     }
+-->
 
+入力 (クライアントプロキシ経由でマイグレーションウェブソケット越しに push モードで送られるリモートコンテナを使用)
+<!--
 Input (using a remote container, in push mode sent over the migration websocket via client proxying):
+-->
 
+    {
+        "name": "my-new-container",                                                     # 最大 64 文字、 ASCII が使用可、スラッシュ、コロン、カンマは使用不可
+        "architecture": "x86_64",
+        "profiles": ["default"],                                                        # プロファイルの一覧
+        "ephemeral": true,                                                              # シャットダウン時にコンテナを破棄するかどうか
+        "config": {"limits.cpu": "2"},                                                  # 設定のオーバーライド
+        "devices": {                                                                    # コンテナが持つデバイスのオプショナルなリスト
+            "kvm": {
+                "path": "/dev/kvm",
+                "type": "unix-char"
+            },
+        },
+        "source": {"type": "migration",                                                 # "image", "migration", "copy", "none" のいずれかを指定可能
+                   "mode": "push",                                                      # "pull" と "push" がサポートされている
+                   "base-image": "<fingerprint>",                                       # オプショナルでコンテナが作られたベースのイメージを指定可能
+                   "live": true,                                                        # マイグレーションが live で実行されるかどうか
+                   "container_only": true}                                              # スナップショットなしでコンテナだけをマイグレートするかどうか。 "true" か "false" のいずれか。
+    }
+
+<!--
     {
         "name": "my-new-container",                                                     # 64 chars max, ASCII, no slash, no colon and no comma
         "architecture": "x86_64",
@@ -862,10 +1076,18 @@ Input (using a remote container, in push mode sent over the migration websocket 
                    "live": true,                                                        # Whether migration is performed live
                    "container_only": true}                                              # Whether to migrate only the container without snapshots. Can be "true" or "false".
     }
+-->
 
+入力 (バックアップを使用)
+<!--
 Input (using a backup):
+-->
 
+    バックアップダウンロードにより提供される生の圧縮された tarball
+
+<!--
     Raw compressed tarball as provided by a backup download.
+-->
 
 ## `/1.0/containers/<name>`
 ### GET
