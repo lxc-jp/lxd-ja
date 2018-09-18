@@ -692,13 +692,13 @@ Input (container based on a local image with the "ubuntu/devel" alias):
         "profiles": ["default"],                                            # プロファイルの一覧
         "ephemeral": true,                                                  # シャットダウン時にコンテナを破棄するかどうか
         "config": {"limits.cpu": "2"},                                      # 設定のオーバーライド
-        "devices": {                                                        # コンテナが持つデバイスのオプショナルなリスト
+        "devices": {                                                        # コンテナが持つデバイスの任意で指定可能なリスト
             "kvm": {
                 "path": "/dev/kvm",
                 "type": "unix-char"
             },
         },
-        "instance_type": "c2.micro",                                        # リミットのベースとして使用するためのオプショナルなインスタンスタイプ
+        "instance_type": "c2.micro",                                        # リミットのベースとして使用するための任意で指定可能なインスタンスタイプ
         "source": {"type": "image",                                         # "image", "migration", "copy", "none" のいずれかを指定可能
                    "alias": "ubuntu/devel"},                                # エイリアスの名前
     }
@@ -733,7 +733,7 @@ Input (container based on a local image identified by its fingerprint):
         "profiles": ["default"],                                            # プロファイルの一覧
         "ephemeral": true,                                                  # シャットダウン時にコンテナを破棄するかどうか
         "config": {"limits.cpu": "2"},                                      # 設定のオーバーライド
-        "devices": {                                                        # コンテナが持つデバイスのオプショナルなリスト
+        "devices": {                                                        # コンテナが持つデバイスの任意で指定可能なリスト
             "kvm": {
                 "path": "/dev/kvm",
                 "type": "unix-char"
@@ -772,7 +772,7 @@ Input (container based on most recent match based on image properties):
         "profiles": ["default"],                                            # プロファイルの一覧
         "ephemeral": true,                                                  # シャットダウン時にコンテナを破棄するかどうか
         "config": {"limits.cpu": "2"},                                      # 設定のオーバーライド
-        "devices": {                                                        # コンテナが持つデバイスのオプショナルなリスト
+        "devices": {                                                        # コンテナが持つデバイスの任意で指定可能なリスト
             "kvm": {
                 "path": "/dev/kvm",
                 "type": "unix-char"
@@ -819,7 +819,7 @@ Input (container without a pre-populated rootfs, useful when attaching to an exi
         "profiles": ["default"],                                            # プロファイルの一覧
         "ephemeral": true,                                                  # シャットダウン時にコンテナを破棄するかどうか
         "config": {"limits.cpu": "2"},                                      # 設定のオーバーライド
-        "devices": {                                                        # コンテナが持つデバイスのオプショナルなリスト
+        "devices": {                                                        # コンテナが持つデバイスの任意で指定可能なリスト
             "kvm": {
                 "path": "/dev/kvm",
                 "type": "unix-char"
@@ -856,7 +856,7 @@ Input (using a public remote image):
         "profiles": ["default"],                                            # プロファイルの一覧
         "ephemeral": true,                                                  # シャットダウン時にコンテナを破棄するかどうか
         "config": {"limits.cpu": "2"},                                      # 設定のオーバーライド
-        "devices": {                                                        # コンテナが持つデバイスのオプショナルなリスト
+        "devices": {                                                        # コンテナが持つデバイスの任意で指定可能なリスト
             "kvm": {
                 "path": "/dev/kvm",
                 "type": "unix-char"
@@ -903,7 +903,7 @@ Input (using a private remote image after having obtained a secret for that imag
         "profiles": ["default"],                                            # プロファイルの一覧
         "ephemeral": true,                                                  # シャットダウン時にコンテナを破棄するかどうか
         "config": {"limits.cpu": "2"},                                      # 設定のオーバーライド
-        "devices": {                                                        # コンテナが持つデバイスのオプショナルなリスト
+        "devices": {                                                        # コンテナが持つデバイスの任意で指定可能なリスト
             "kvm": {
                 "path": "/dev/kvm",
                 "type": "unix-char"
@@ -950,7 +950,7 @@ Input (using a remote container, sent over the migration websocket):
         "profiles": ["default"],                                                        # プロファイルの一覧
         "ephemeral": true,                                                              # シャットダウン時にコンテナを破棄するかどうか
         "config": {"limits.cpu": "2"},                                                  # 設定のオーバーライド
-        "devices": {                                                                    # コンテナが持つデバイスのオプショナルなリスト
+        "devices": {                                                                    # コンテナが持つデバイスの任意で指定可能なリスト
             "kvm": {
                 "path": "/dev/kvm",
                 "type": "unix-char"
@@ -960,7 +960,7 @@ Input (using a remote container, sent over the migration websocket):
                    "mode": "pull",                                                      # 現状 "pull" と "push" がサポートされる
                    "operation": "https://10.0.2.3:8443/1.0/operations/<UUID>",          # リモート操作への完全な URL
                    "certificate": "PEM certificate",                                    # PEM 証明書を指定可能。未指定の場合はシステムの CA が使用される。
-                   "base-image": "<fingerprint>",                                       # オプショナルでコンテナが作られたベースのイメージを指定可能
+                   "base-image": "<fingerprint>",                                       # 任意で指定可能。コンテナが作られたベースのイメージ
                    "container_only": true,                                              # スナップショットなしでコンテナだけをマイグレートするかどうか。 "true" か "false" のいずれか。
                    "secrets": {"control": "my-secret-string",                           # マイグレーションのソースと通信する際に使用するシークレット
                                "criu":    "my-other-secret",
@@ -1004,7 +1004,7 @@ Input (using a local container):
         "profiles": ["default"],                                                        # プロファイルの一覧
         "ephemeral": true,                                                              # シャットダウン時にコンテナを破棄するかどうか
         "config": {"limits.cpu": "2"},                                                  # 設定のオーバーライド
-        "devices": {                                                                    # コンテナが持つデバイスのオプショナルなリスト
+        "devices": {                                                                    # コンテナが持つデバイスの任意で指定可能なリスト
             "kvm": {
                 "path": "/dev/kvm",
                 "type": "unix-char"
@@ -1012,7 +1012,7 @@ Input (using a local container):
         },
         "source": {"type": "copy",                                                      # "image", "migration", "copy", "none" のいずれかを指定可能
                    "container_only": true,                                              # スナップショットなしでコンテナだけをマイグレートするかどうか。 "true" か "false" のいずれか。
-                   "source": "my-old-container"}                                        # ソースのコンテナの名前
+                   "source": "my-old-container"}                                        # 作成元のコンテナの名前
     }
 
 <!--
@@ -1044,7 +1044,7 @@ Input (using a remote container, in push mode sent over the migration websocket 
         "profiles": ["default"],                                                        # プロファイルの一覧
         "ephemeral": true,                                                              # シャットダウン時にコンテナを破棄するかどうか
         "config": {"limits.cpu": "2"},                                                  # 設定のオーバーライド
-        "devices": {                                                                    # コンテナが持つデバイスのオプショナルなリスト
+        "devices": {                                                                    # コンテナが持つデバイスの任意で指定可能なリスト
             "kvm": {
                 "path": "/dev/kvm",
                 "type": "unix-char"
@@ -1052,7 +1052,7 @@ Input (using a remote container, in push mode sent over the migration websocket 
         },
         "source": {"type": "migration",                                                 # "image", "migration", "copy", "none" のいずれかを指定可能
                    "mode": "push",                                                      # "pull" と "push" がサポートされている
-                   "base-image": "<fingerprint>",                                       # オプショナルでコンテナが作られたベースのイメージを指定可能
+                   "base-image": "<fingerprint>",                                       # 任意で指定可能。コンテナが作られたベースのイメージ
                    "live": true,                                                        # マイグレーションが live で実行されるかどうか
                    "container_only": true}                                              # スナップショットなしでコンテナだけをマイグレートするかどうか。 "true" か "false" のいずれか。
     }
@@ -1091,13 +1091,59 @@ Input (using a backup):
 
 ## `/1.0/containers/<name>`
 ### GET
- * Description: Container information
- * Authentication: trusted
- * Operation: sync
- * Return: dict of the container configuration and current state.
+ * 説明: コンテナの情報 <!-- Description: Container information -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻り値: コンテナの設定と現在の状態の dict `<!-- Return: dict of the container configuration and current state. -->
 
+出力
+<!--
 Output:
+-->
 
+    {
+        "architecture": "x86_64",
+        "config": {
+            "limits.cpu": "3",
+            "volatile.base_image": "97d97a3d1d053840ca19c86cdd0596cf1be060c5157d31407f2a4f9f350c78cc",
+            "volatile.eth0.hwaddr": "00:16:3e:1c:94:38"
+        },
+        "created_at": "2016-02-16T01:05:05Z",
+        "devices": {
+            "rootfs": {
+                "path": "/",
+                "type": "disk"
+            }
+        },
+        "ephemeral": false,
+        "expanded_config": {    # プロファイルを展開したものにコンテナのローカルの設定を追加した結果
+            "limits.cpu": "3",
+            "volatile.base_image": "97d97a3d1d053840ca19c86cdd0596cf1be060c5157d31407f2a4f9f350c78cc",
+            "volatile.eth0.hwaddr": "00:16:3e:1c:94:38"
+        },
+        "expanded_devices": {   # プロファイルを展開したものにコンテナのローカルのデバイスを追加した結果
+            "eth0": {
+                "name": "eth0",
+                "nictype": "bridged",
+                "parent": "lxdbr0",
+                "type": "nic"
+            },
+            "root": {
+                "path": "/",
+                "type": "disk"
+            }
+        },
+        "last_used_at": "2016-02-16T01:05:05Z",
+        "name": "my-container",
+        "profiles": [
+            "default"
+        ],
+        "stateful": false,      # true の場合はコンテナがスタートアップ時に復元できる何らかの保管された状態を持つことを意味する
+        "status": "Running",
+        "status_code": 103
+    }
+
+<!--
     {
         "architecture": "x86_64",
         "config": {
@@ -1139,14 +1185,18 @@ Output:
         "status": "Running",
         "status_code": 103
     }
+-->
 
-### PUT (ETag supported)
- * Description: replaces container configuration or restore snapshot
- * Authentication: trusted
- * Operation: async
- * Return: background operation or standard error
+### PUT (ETag サポートあり) <!-- PUT (ETag supported) -->
+ * 説明: コンテナの設定を置き換えるかスナップショットをリストアする <!-- Description: replaces container configuration or restore snapshot -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻り値: バックグラウンド操作か標準のエラー <!-- Return: background operation or standard error -->
 
+入力 (コンテナの設定を更新する)
+<!--
 Input (update container configuration):
+-->
 
     {
         "architecture": "x86_64",
@@ -1167,24 +1217,35 @@ Input (update container configuration):
         ]
     }
 
+GET の戻り値と同じ構造を持つが、名前の変更は許されず (以下の POST 参照)、
+status の sub-dict への変更も許されない (status の sub-dict は読み取り
+専用のため)。
+<!--
 Takes the same structure as that returned by GET but doesn't allow name
 changes (see POST below) or changes to the status sub-dict (since that's
 read-only).
+-->
 
+入力 (スナップショットをリストアする)
+<!--
 Input (restore snapshot):
+-->
 
     {
         "restore": "snapshot-name"
     }
 
-### PATCH (ETag supported)
- * Description: update container configuration
- * Introduced: with API extension `patch`
- * Authentication: trusted
- * Operation: sync
- * Return: standard return value or standard error
+### PATCH (ETag サポートあり) <!-- PATCH (ETag supported) -->
+ * 説明: コンテナの設定を更新する <!-- Description: update container configuration -->
+ * 導入: `patch` API 拡張によって <!-- Introduced: with API extension `patch` -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻り値: 標準の戻り値または標準のエラー <!-- Return: standard return value or standard error -->
 
+入力
+<!--
 Input:
+-->
 
     {
         "config": {
@@ -1199,20 +1260,29 @@ Input:
     }
 
 ### POST
- * Description: used to rename/migrate the container
- * Authentication: trusted
- * Operation: async
- * Return: background operation or standard error
+ * 説明: コンテナをリネーム/マイグレートするのに用いられます <!-- Description: used to rename/migrate the container -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻り値: バックグラウンド操作か標準のエラー <!-- Return: background operation or standard error -->
 
+既に存在する名前にリネームしようとすると 409 (Conflict) という HTTP ステータスコードを返します。
+<!--
 Renaming to an existing name must return the 409 (Conflict) HTTP code.
+-->
 
+入力 (単純なリネーム)
+<!--
 Input (simple rename):
+-->
 
     {
         "name": "new-name"
     }
 
+入力 (lxd インスタンス間でのマイグレーション)
+<!--
 Input (migration across lxd instances):
+-->
 
     {
         "name": "new-name"
@@ -1220,56 +1290,97 @@ Input (migration across lxd instances):
         "live": "true"
     }
 
+誰か (つまり他の lxd インスタンス) が全てのウェブソケットに接続してソースと
+交渉を始めるまでは、マイグレーションは実際には開始されません。
+<!--
 The migration does not actually start until someone (i.e. another lxd instance)
 connects to all the websockets and begins negotiation with the source.
+-->
 
+メタデータセクション内の出力 (マイグレーションの場合)
+<!--
 Output in metadata section (for migration):
+-->
 
+    {
+        "control": "secret1",       # マイグレーション制御ソケット
+        "criu": "secret2",          # 状態転送ソケット (ライブマイグレーションのときのみ)
+        "fs": "secret3"             # ファイルシステム転送ソケット
+    }
+
+<!--
     {
         "control": "secret1",       # Migration control socket
         "criu": "secret2",          # State transfer socket (only if live migrating)
         "fs": "secret3"             # Filesystem transfer socket
     }
+-->
 
+これらは作成の呼び出し時に渡されるシークレットです。
+<!--
 These are the secrets that should be passed to the create call.
+-->
 
 ### DELETE
- * Description: remove the container
- * Authentication: trusted
- * Operation: async
- * Return: background operation or standard error
+ * 説明: コンテナを削除します <!-- Description: remove the container -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻り値: バックグラウンド操作か標準のエラー <!-- Return: background operation or standard error -->
 
+入力 (現在は何もなし)
+<!--
 Input (none at present):
+-->
 
     {
     }
 
+この操作に対する HTTP レスポンスのステータスコードは 202 (Accepted) です。
+<!--
 HTTP code for this should be 202 (Accepted).
+-->
 
 ## `/1.0/containers/<name>/console`
 ### GET
-* Description: returns the contents of the container's console  log
-* Authentication: trusted
-* Operation: N/A
-* Return: the contents of the console log
+* 説明: コンテナのコンソールログの内容を返します <!-- Description: returns the contents of the container's console  log -->
+* 認証: trusted <!-- Authentication: trusted -->
+* 操作: 該当なし <!-- Operation: N/A -->
+* 戻り値: コンソールログの内容 <!-- Return: the contents of the console log -->
 
 ### POST
- * Description: attach to a container's console devices
- * Authentication: trusted
- * Operation: async
- * Return: standard error
+ * 説明: コンテナのコンソールデバイスにアタッチします <!-- Description: attach to a container's console devices -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 非同期 <!-- Operation: async -->
+ * 戻り値: 標準のエラー <!-- Return: standard error -->
 
+入力 (/dev/console にアタッチします)
+<!--
 Input (attach to /dev/console):
+-->
 
+    {
+        "width": 80,                    # 端末の初期の幅 (任意で指定可能)
+        "height": 25,                   # 端末の初期の高さ (任意で指定可能)
+    }
+
+<!--
     {
         "width": 80,                    # Initial width of the terminal (optional)
         "height": 25,                   # Initial height of the terminal (optional)
     }
+-->
 
+制御用ウェブソケットがコンソールセッションの out-of-band メッセージの送信に使用されます。
+現状ではウィンドウサイズの変更に使われています。
+<!--
 The control websocket can be used to send out-of-band messages during a console session.
 This is currently used for window size changes.
+-->
 
+制御 (ウィンドウサイズの変更)
+<!--
 Control (window size change):
+-->
 
     {
         "command": "window-resize",
@@ -1280,17 +1391,17 @@ Control (window size change):
     }
 
 ### DELETE
-* Description: empty the container's console log
-* Authentication: trusted
-* Operation: Sync
-* Return: empty response or standard error
+* 説明: コンテナのコンソールログを空にします <!-- Description: empty the container's console log -->
+* 認証: trusted <!-- Authentication: trusted -->
+* 操作: 同期 <!-- Operation: Sync -->
+* 戻り値: 空のレスポンスか標準のエラー <!-- Return: empty response or standard error -->
 
 ## `/1.0/containers/<name>/exec`
 ### POST
- * Description: run a remote command
- * Authentication: trusted
- * Operation: async
- * Return: background operation + optional websocket information or standard error
+ * 説明: リモートコマンドを実行します <!-- Description: run a remote command -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 非同期 <!-- Operation: async -->
+ * 戻り値: バックグラウンド操作 + 任意で指定可能な websocket 情報あるいは標準のエラー <!-- Return: background operation + optional websocket information or standard error -->
 
 Input (run bash):
 
