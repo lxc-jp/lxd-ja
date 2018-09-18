@@ -1403,8 +1403,22 @@ Control (window size change):
  * 操作: 非同期 <!-- Operation: async -->
  * 戻り値: バックグラウンド操作 + 任意で指定可能な websocket 情報あるいは標準のエラー <!-- Return: background operation + optional websocket information or standard error -->
 
+入力 (bash を実行する例です)
+<!--
 Input (run bash):
+-->
 
+    {
+        "command": ["/bin/bash"],       # コマンドと引数
+        "environment": {},              # 追加で設定する任意で指定可能な環境変数
+        "wait-for-websocket": false,    # プロセスを開始する前に接続を待つかどうか
+        "record-output": false,         # 標準出力と標準エラー出力を記録するかどうか (wait-for-websocket=false のときのみ有効)
+        "interactive": true,            # PIPE の代わりに pts デバイスを割り当てるかどうか
+        "width": 80,                    # 端末の初期の幅 (任意で指定可能)
+        "height": 25,                   # 端末の初期の高さ (任意で指定可能)
+    }
+
+<!--
     {
         "command": ["/bin/bash"],       # Command and arguments
         "environment": {},              # Optional extra environment variables to set
@@ -1414,30 +1428,64 @@ Input (run bash):
         "width": 80,                    # Initial width of the terminal (optional)
         "height": 25,                   # Initial height of the terminal (optional)
     }
+-->
 
+`wait-for-websocket` は (ユーザが標準入力を渡し、標準出力を読み取れる
+ようにするために) 操作がブロックしウェブソケットの接続が開始するのを
+待つか、あるいは即座に開始するかを指示します。
+<!--
 `wait-for-websocket` indicates whether the operation should block and wait for
 a websocket connection to start (so that users can pass stdin and read
 stdout), or start immediately.
+-->
 
+即座に開始する場合、 /dev/null が標準入力、標準出力、標準エラー出力に
+使われます。これは record-output が true に設定されない場合です。
+true に設定される場合は、標準出力と標準エラー出力はログファイルに
+リダイレクトされます。
+<!--
 If starting immediately, /dev/null will be used for stdin, stdout and
 stderr. That's unless record-output is set to true, in which case,
 stdout and stderr will be redirected to a log file.
+-->
 
+interactive が true に設定される場合は、 1 つのウェブソケットが返され、
+それが実行されたプロセスの標準入力、標準出力、標準エラー出力用の pts
+デバイスにマッピングされます。
+<!--
 If interactive is set to true, a single websocket is returned and is mapped to a
 pts device for stdin, stdout and stderr of the execed process.
+-->
 
+interactive が false (デフォルト) に設定される場合は、標準入力、標準出力、
+標準エラー出力に 1 つずつ、合計 3 つのパイプがセットアップされます。
+<!--
 If interactive is set to false (default), three pipes will be setup, one
 for each of stdin, stdout and stderr.
+-->
 
+interactive フラグの状態によって、 1 つまたは 3 つのウェブソケットと
+シークレットの組が返され、それはこの操作の /websocket エンドポイントに
+接続するのに有効です。
+<!--
 Depending on the state of the interactive flag, one or three different
 websocket/secret pairs will be returned, which are valid for connecting to this
 operations /websocket endpoint.
+-->
 
 
+実行セッションの間、制御用のウェブソケットが out-of-band メッセージを送るのに
+利用できます。これは現状はウィンドウサイズの変更とシグナルのフォワーディングに
+使われています。
+<!--
 The control websocket can be used to send out-of-band messages during an exec session.
 This is currently used for window size changes and for forwarding of signals.
+-->
 
+制御 (ウィンドウサイズの変更)
+<!--
 Control (window size change):
+-->
 
     {
         "command": "window-resize",
@@ -1447,14 +1495,20 @@ Control (window size change):
         }
     }
 
+制御 (SIGUSR1 シグナル)
+<!--
 Control (SIGUSR1 signal):
+-->
 
     {
         "command": "signal",
         "signal": 10
     }
 
+戻り値 (wait-for-websocket=true で interactive=false の場合)
+<!--
 Return (with wait-for-websocket=true and interactive=false):
+-->
 
     {
         "fds": {
@@ -1465,7 +1519,10 @@ Return (with wait-for-websocket=true and interactive=false):
         }
     }
 
+戻り値 (wait-for-websocket=true で interactive=true の場合)
+<!--
 Return (with wait-for-websocket=true and interactive=true):
+-->
 
     {
         "fds": {
@@ -1474,8 +1531,12 @@ Return (with wait-for-websocket=true and interactive=true):
         }
     }
 
+実行コマンドが終了した時は、終了ステータスが操作のメタデータに
+含まれます。
+<!--
 When the exec command finishes, its exit status is available from the
 operation's metadata:
+-->
 
     {
         "return": 0
@@ -1483,51 +1544,72 @@ operation's metadata:
 
 ## `/1.0/containers/<name>/files`
 ### GET (`?path=/path/inside/the/container`)
- * Description: download a file or directory listing from the container
- * Authentication: trusted
- * Operation: sync
- * Return: if the type of the file is a directory, the return is a sync
+ * 説明: ファイルかディレクトリの内容をコンテナからダウンロードします <!-- Description: download a file or directory listing from the container -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻り値: ファイルの種別がディレクトリの場合、戻り値はメタデータにディレクトリの内容の一覧を
+   含んだ同期的なレスポンスになり、それ以外の種別の場合はファイルの生の内容になります。 <!-- Return: if the type of the file is a directory, the return is a sync
    response with a list of the directory contents as metadata, otherwise it is
-   the raw contents of the file.
+   the raw contents of the file. -->
 
+次のヘッダがセットされます (標準のサイズと MIME タイプのヘッダに加えて)
+<!--
 The following headers will be set (on top of standard size and mimetype headers):
+-->
 
  * `X-LXD-uid`: 0
  * `X-LXD-gid`: 0
  * `X-LXD-mode`: 0700
- * `X-LXD-type`: one of `directory` or `file`
+ * `X-LXD-type`: `directory` か `file` のいずれか <!-- one of `directory` or `file` -->
 
+これはコマンドラインあるいはウェブブラウザからでさえ簡単に使えるように
+設計されています。
+<!--
 This is designed to be easily usable from the command line or even a web
 browser.
+-->
 
 ### POST (`?path=/path/inside/the/container`)
- * Description: upload a file to the container
- * Authentication: trusted
- * Operation: sync
- * Return: standard return value or standard error
+ * 説明: コンテナにファイルをアップロードします <!-- Description: upload a file to the container -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻り値: 標準の戻り値または標準のエラー <!-- Return: standard return value or standard error -->
 
+入力
+<!--
 Input:
- * Standard http file upload
+-->
+ * 標準的な HTTP のファイルアップロード <!-- Standard http file upload -->
 
+クライアントは次のヘッダを設定しても構いません。
+<!--
 The following headers may be set by the client:
+-->
 
  * `X-LXD-uid`: 0
  * `X-LXD-gid`: 0
  * `X-LXD-mode`: 0700
- * `X-LXD-type`: one of `directory`, `file` or `symlink`
- * `X-LXD-write`: overwrite (or append, introduced with API extension `file_append`)
+ * `X-LXD-type`: `directory`, `file`, `symlink` のいずれか <!-- one of `directory`, `file` or `symlink` -->
+ * `X-LXD-write`: overwrite (か append。 append は `file_append` API 拡張によって導入されます) <!-- overwrite (or append, introduced with API extension `file_append`) -->
 
+これはコマンドラインあるいはウェブブラウザからでさえ簡単に使えるように
+設計されています。
+<!--
 This is designed to be easily usable from the command line or even a web
 browser.
+-->
 
 ### DELETE (`?path=/path/inside/the/container`)
- * Description: delete a file in the container
- * Introduced: with API extension `file_delete`
- * Authentication: trusted
- * Operation: sync
- * Return: standard return value or standard error
+ * 説明: コンテナ内のファイルを削除します <!-- Description: delete a file in the container -->
+ * 導入: `file_delete` API 拡張によって <!-- Introduced: with API extension `file_delete` -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻り値: 標準の戻り値または標準のエラー <!-- Return: standard return value or standard error -->
 
+入力 (現在は何もなし)
+<!--
 Input (none at present):
+-->
 
     {
     }
