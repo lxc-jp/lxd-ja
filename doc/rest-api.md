@@ -510,12 +510,12 @@ won't work and PUT needs to be used instead.
 -->
 
 ### PUT (ETag サポートあり) <!-- PUT (ETag supported) -->
- * 説明: サーバー設定や他の設定を置き換える <!-- Description: Replaces the server configuration or other properties -->
+ * 説明: サーバー設定や他の設定を置き換えます <!-- Description: Replaces the server configuration or other properties -->
  * 認証: trusted <!-- Authentication: trusted -->
  * 操作: 同期 <!-- Operation: sync -->
  * 戻り値: 標準の戻り値または標準のエラー <!-- Return: standard return value or standard error -->
 
-入力 (既存の全ての設定を指定された設定で置き換える)
+入力 (既存の全ての設定を指定された設定で置き換えます)
 <!--
 Input (replaces any existing config with the provided one):
 -->
@@ -528,13 +528,13 @@ Input (replaces any existing config with the provided one):
     }
 
 ### PATCH (ETag サポートあり) <!-- PATCH (ETag supported) -->
- * 説明: サーバー設定や他の設定を更新する <!-- Description: Updates the server configuration or other properties -->
+ * 説明: サーバー設定や他の設定を更新します <!-- Description: Updates the server configuration or other properties -->
  * 導入: `patch` API 拡張により <!-- Introduced: with API extension `patch` -->
  * 認証: trusted <!-- Authentication: trusted -->
  * 操作: 同期 <!-- Operation: sync -->
  * 戻り値: 標準の戻り値または標準のエラー <!-- Return: standard return value or standard error -->
 
-入力 (指定されたキーだけを更新し、残りの既存の設定はそのまま残る)
+入力 (指定されたキーだけを更新し、残りの既存の設定はそのまま残ります)
 <!--
 Input (updates only the listed keys, rest remains intact):
 -->
@@ -547,7 +547,7 @@ Input (updates only the listed keys, rest remains intact):
 
 ## `/1.0/certificates`
 ### GET
- * 説明: 信頼された証明書の一覧を返す <!-- Description: list of trusted certificates -->
+ * 説明: 信頼された証明書の一覧を返します <!-- Description: list of trusted certificates -->
  * 認証: trusted <!-- Authentication: trusted -->
  * 操作: 同期 <!-- Operation: sync -->
  * 戻り値: 信頼された証明書の URL の一覧 <!-- Return: list of URLs for trusted certificates -->
@@ -560,7 +560,7 @@ Input (updates only the listed keys, rest remains intact):
     ]
 
 ### POST
- * 説明: 信頼された証明書を追加する <!-- Description: add a new trusted certificate -->
+ * 説明: 信頼された証明書を追加します <!-- Description: add a new trusted certificate -->
  * 認証: trusted または untrusted <!-- Authentication: trusted or untrusted -->
  * 操作: 同期 <!-- Operation: sync -->
  * 戻り値: 標準の戻り値または標準のエラー <!-- Return: standard return value or standard error -->
@@ -606,8 +606,8 @@ Output:
     }
 
 ### PUT (ETag サポートあり) <!-- PUT (ETag supported) -->
- * 説明: 証明書のプロパティを置き換える <!-- Description: Replaces the certificate properties -->
- * 導入: `certificate_update` API 拡張にて <!-- Introduced: with API extension `certificate_update` -->
+ * 説明: 証明書のプロパティを置き換えます <!-- Description: Replaces the certificate properties -->
+ * 導入: `certificate_update` API 拡張により <!-- Introduced: with API extension `certificate_update` -->
  * 認証: trusted <!-- Authentication: trusted -->
  * 操作: 同期 <!-- Operation: sync -->
  * 戻り値: 標準の戻り値または標準のエラー <!-- Return: standard return value or standard error -->
@@ -623,8 +623,8 @@ Input:
     }
 
 ### PATCH (ETag サポートあり) <!-- PATCH (ETag supported) -->
- * 説明: 証明書のプロパティを更新する <!-- Description: Updates the certificate properties -->
- * 導入: `certificate_update` API 拡張にて <!-- Introduced: with API extension `certificate_update` -->
+ * 説明: 証明書のプロパティを更新します <!-- Description: Updates the certificate properties -->
+ * 導入: `certificate_update` API 拡張により <!-- Introduced: with API extension `certificate_update` -->
  * 認証: trusted <!-- Authentication: trusted -->
  * 操作: 同期 <!-- Operation: sync -->
  * 戻り値: 標準の戻り値または標準のエラー <!-- Return: standard return value or standard error -->
@@ -640,7 +640,7 @@ Input:
 
 
 ### DELETE
- * 説明: 信頼された証明書を削除する <!-- Description: Remove a trusted certificate -->
+ * 説明: 信頼された証明書を削除します <!-- Description: Remove a trusted certificate -->
  * 認証: trusted <!-- Authentication: trusted -->
  * 操作: 同期 <!-- Operation: sync -->
  * 戻り値: 標準の戻り値または標準のエラー <!-- Return: standard return value or standard error -->
@@ -676,7 +676,7 @@ Return value:
     ]
 
 ### POST
- * 説明: 新しいコンテナを作成する <!-- Description: Create a new container -->
+ * 説明: 新しいコンテナを作成します <!-- Description: Create a new container -->
  * 認証: trusted <!-- Authentication: trusted -->
  * 操作: 同期 <!-- Operation: sync -->
  * 戻り値: バックグラウンド操作か標準のエラー <!-- Return: background operation or standard error -->
@@ -1188,12 +1188,12 @@ Output:
 -->
 
 ### PUT (ETag サポートあり) <!-- PUT (ETag supported) -->
- * 説明: コンテナの設定を置き換えるかスナップショットをリストアする <!-- Description: replaces container configuration or restore snapshot -->
+ * 説明: コンテナの設定を置き換えるかスナップショットをリストアします <!-- Description: replaces container configuration or restore snapshot -->
  * 認証: trusted <!-- Authentication: trusted -->
  * 操作: 同期 <!-- Operation: sync -->
  * 戻り値: バックグラウンド操作か標準のエラー <!-- Return: background operation or standard error -->
 
-入力 (コンテナの設定を更新する)
+入力 (コンテナの設定を更新します)
 <!--
 Input (update container configuration):
 -->
@@ -1218,7 +1218,7 @@ Input (update container configuration):
     }
 
 GET の戻り値と同じ構造を持つが、名前の変更は許されず (以下の POST 参照)、
-status の sub-dict への変更も許されない (status の sub-dict は読み取り
+status の sub-dict への変更も許されません (status の sub-dict は読み取り
 専用のため)。
 <!--
 Takes the same structure as that returned by GET but doesn't allow name
@@ -1226,7 +1226,7 @@ changes (see POST below) or changes to the status sub-dict (since that's
 read-only).
 -->
 
-入力 (スナップショットをリストアする)
+入力 (スナップショットをリストアします)
 <!--
 Input (restore snapshot):
 -->
@@ -1236,7 +1236,7 @@ Input (restore snapshot):
     }
 
 ### PATCH (ETag サポートあり) <!-- PATCH (ETag supported) -->
- * 説明: コンテナの設定を更新する <!-- Description: update container configuration -->
+ * 説明: コンテナの設定を更新します <!-- Description: update container configuration -->
  * 導入: `patch` API 拡張によって <!-- Introduced: with API extension `patch` -->
  * 認証: trusted <!-- Authentication: trusted -->
  * 操作: 同期 <!-- Operation: sync -->
