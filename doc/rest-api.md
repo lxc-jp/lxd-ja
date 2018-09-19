@@ -36,7 +36,7 @@ The reason for a major API bump is if the API breaks backward compatibility.
 -->
 
 後方互換性を壊さずに追加される機能は `api_extensions` の追加という形になり、
-特定の機能がサーバーでサポートされているかクライアントがチェックすることで
+特定の機能がサーバでサポートされているかクライアントがチェックすることで
 利用できます。
 <!--
 Feature additions done without breaking backward compatibility only
@@ -414,10 +414,10 @@ won't work and PUT needs to be used instead.
 
 ## `/1.0/`
 ### GET
- * 説明: サーバーの設定と環境情報 <!-- Description: Server configuration and environment information -->
+ * 説明: サーバの設定と環境情報 <!-- Description: Server configuration and environment information -->
  * 認証: guest, untrusted, trusted のいずれか <!-- Authentication: guest, untrusted or trusted -->
  * 操作: 同期 <!-- Operation: sync -->
- * 戻り値: サーバーの状態を表す dict <!-- Return: Dict representing server state -->
+ * 戻り値: サーバの状態を表す dict <!-- Return: Dict representing server state -->
 
 戻り値 (trusted の場合) <!-- Return value (if trusted): -->
 
@@ -451,7 +451,7 @@ won't work and PUT needs to be used instead.
             "storage": "btrfs",
             "storage_version": "3.19",
         },
-        "public": false,                                # クライアントにとってサーバーを公開された (読み取り専用の) リモートとして扱うべきかどうか
+        "public": false,                                # クライアントにとってサーバを公開された (読み取り専用の) リモートとして扱うべきかどうか
     }
 
 <!--
@@ -496,7 +496,7 @@ won't work and PUT needs to be used instead.
         "api_status": "stable",                 # API の実装状態 (development, stable, deprecated のいずれか)
         "api_version": "1.0",                   # 文字列表記での API バージョン
         "auth": "guest",                        # 認証状態 ("guest", "untrusted", "trusted" のいずれか)
-        "public": false,                        # クライアントにとってサーバーを公開された (読み取り専用の) リモートとして扱うべきかどうか
+        "public": false,                        # クライアントにとってサーバを公開された (読み取り専用の) リモートとして扱うべきかどうか
     }
 
 <!--
@@ -510,7 +510,7 @@ won't work and PUT needs to be used instead.
 -->
 
 ### PUT (ETag サポートあり) <!-- PUT (ETag supported) -->
- * 説明: サーバー設定や他の設定を置き換えます <!-- Description: Replaces the server configuration or other properties -->
+ * 説明: サーバ設定や他の設定を置き換えます <!-- Description: Replaces the server configuration or other properties -->
  * 認証: trusted <!-- Authentication: trusted -->
  * 操作: 同期 <!-- Operation: sync -->
  * 戻り値: 標準の戻り値または標準のエラー <!-- Return: standard return value or standard error -->
@@ -528,7 +528,7 @@ Input (replaces any existing config with the provided one):
     }
 
 ### PATCH (ETag サポートあり) <!-- PATCH (ETag supported) -->
- * 説明: サーバー設定や他の設定を更新します <!-- Description: Updates the server configuration or other properties -->
+ * 説明: サーバ設定や他の設定を更新します <!-- Description: Updates the server configuration or other properties -->
  * 導入: `patch` API 拡張により <!-- Introduced: with API extension `patch` -->
  * 認証: trusted <!-- Authentication: trusted -->
  * 操作: 同期 <!-- Operation: sync -->
@@ -663,7 +663,7 @@ HTTP code for this should be 202 (Accepted).
  * 説明: コンテナの一覧 <!-- Description: List of containers -->
  * 認証: trusted <!-- Authentication: trusted -->
  * 操作: 同期 <!-- Operation: sync -->
- * 戻り値: このサーバーが公開しているコンテナの URL の一覧 <!-- Return: list of URLs for containers this server publishes -->
+ * 戻り値: このサーバが公開しているコンテナの URL の一覧 <!-- Return: list of URLs for containers this server publishes -->
 
 戻り値
 <!--
@@ -864,7 +864,7 @@ Input (using a public remote image):
         },
         "source": {"type": "image",                                         # "image", "migration", "copy", "none" のいずれかを指定可能
                    "mode": "pull",                                          # "local" (デフォルト) か "pull" のいずれか
-                   "server": "https://10.0.2.3:8443",                       # リモートサーバー (pull モードのときのみ)
+                   "server": "https://10.0.2.3:8443",                       # リモートサーバ (pull モードのときのみ)
                    "protocol": "lxd",                                       # プロトコル (lxd か simplestreams のいずれか、デフォルトは lxd)
                    "certificate": "PEM certificate",                        # PEM 証明書を指定可能。未指定の場合はシステムの CA が使用される。
                    "alias": "ubuntu/devel"},                                # エイリアスの名前
@@ -911,7 +911,7 @@ Input (using a private remote image after having obtained a secret for that imag
         },
         "source": {"type": "image",                                         # "image", "migration", "copy", "none" のいずれかを指定可能
                    "mode": "pull",                                          # "local" (デフォルト) か "pull" のいずれか
-                   "server": "https://10.0.2.3:8443",                       # リモートサーバー (pull モードのときのみ)
+                   "server": "https://10.0.2.3:8443",                       # リモートサーバ (pull モードのときのみ)
                    "secret": "my-secret-string",                            # イメージを取得するために使用するシークレット (pull モードのときのみ)
                    "certificate": "PEM certificate",                        # PEM 証明書を指定可能。未指定の場合はシステムの CA が使用される。
                    "alias": "ubuntu/devel"},                                # エイリアスの名前
@@ -2231,28 +2231,63 @@ Output:
     }
 
 ## `/1.0/events`
+この URL は真の REST API エンドポイントではなく、代わりに GET クエリを
+実行すると接続をウェブソケットにアップグレードし、そのウェブソケット上で
+通知が送信されます。
+<!--
 This URL isn't a real REST API endpoint, instead doing a GET query on it
 will upgrade the connection to a websocket on which notifications will
 be sent.
+-->
 
 ### GET (`?type=operation,logging`)
- * Description: websocket upgrade
- * Authentication: trusted
- * Operation: sync
- * Return: none (never ending flow of events)
+ * 説明: ウェブソケットへのアップグレード <!-- Description: websocket upgrade -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻り値: なし (イベントのフローが終わることはありません) <!-- Return: none (never ending flow of events) -->
 
+サポートされる引数は次のとおりです。
+<!--
 Supported arguments are:
+-->
 
- * type: comma separated list of notifications to subscribe to (defaults to all)
+ * type: 購読する通知のカンマ区切りリスト (デフォルトは all) <!-- type: comma separated list of notifications to subscribe to (defaults to all) -->
 
+通知の種別は次のとおりです。
+<!--
 The notification types are:
+-->
 
- * operation (notification about creation, updates and termination of all background operations)
- * logging (every log entry from the server)
- * lifecycle (container lifecycle events)
+ * operation (作成、更新、終了という全てのバックグラウンド操作についての通知) <!-- operation (notification about creation, updates and termination of all background operations) -->
+ * logging (サーバからの全てのログエントリ) <!-- logging (every log entry from the server) -->
+ * lifecycle (コンテナのライフサイクルイベント) <!-- lifecycle (container lifecycle events) -->
 
+このエンドポイントの出力が完了することはありません。それぞれの通知は個別の JSON dict として送られます。
+<!--
 This never returns. Each notification is sent as a separate JSON dict:
+-->
 
+    {
+        "timestamp": "2015-06-09T19:07:24.379615253-06:00",                # 現在のタイムスタンプ
+        "type": "operation",                                               # 通知の種別
+        "metadata": {}                                                     # リソースまたはタイプに特有な追加のメタデータ
+    }
+
+    {
+        "timestamp": "2016-02-17T11:44:28.572721913-05:00",
+        "type": "logging",
+        "metadata": {
+            "context": {
+                "ip": "@",
+                "method": "GET"
+                "url": "/1.0/containers/xen/snapshots",
+            },
+            "level": "info",
+            "message": "handling"
+        }
+    }
+
+<!--
     {
         "timestamp": "2015-06-09T19:07:24.379615253-06:00",                # Current timestamp
         "type": "operation",                                               # Notification type
@@ -2272,15 +2307,19 @@ This never returns. Each notification is sent as a separate JSON dict:
             "message": "handling"
         }
     }
+-->
 
 ## `/1.0/images`
 ### GET
- * Description: list of images (public or private)
- * Authentication: guest or trusted
- * Operation: sync
- * Return: list of URLs for images this server publishes
+ * 説明: (public または private の) イメージの一覧 <!-- Description: list of images (public or private) -->
+ * 認証: guest または trusted <!-- Authentication: guest or trusted -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻り値: このサーバが提供しているイメージの URL の一覧 <!-- Return: list of URLs for images this server publishes -->
 
+戻り値
+<!--
 Return:
+-->
 
     [
         "/1.0/images/54c8caac1f61901ed86c68f24af5f5d3672bdc62c71d04f06df3a59e95684473",
@@ -2290,27 +2329,60 @@ Return:
     ]
 
 ### POST
- * Description: create and publish a new image
- * Authentication: trusted
- * Operation: async
- * Return: background operation or standard error
+ * 説明: 新しいイメージを作成し提供する <!-- Description: create and publish a new image -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 非同期 <!-- Operation: async -->
+ * 戻り値: バックグラウンド操作または標準のエラー <!-- Return: background operation or standard error -->
 
+入力 (次のいずれか 1 つ)
+<!--
 Input (one of):
+-->
 
- * Standard http file upload
- * Source image dictionary (transfers a remote image)
- * Source container dictionary (makes an image out of a local container)
- * Remote image URL dictionary (downloads a remote image)
+ * 標準の HTTP ファイルアップロード <!-- Standard http file upload -->
+ * 作成元のイメージの dict (リモートのイメージを転送する場合) <!-- Source image dictionary (transfers a remote image) -->
+ * 作成元のコンテナの dict (ローカルコンテナからイメージを作成する場合) <!-- Source container dictionary (makes an image out of a local container) -->
+ * リモートのイメージの URL の dict (リモートのイメージをダウンロードする場合) <!-- Remote image URL dictionary (downloads a remote image) -->
 
+HTTP ファイルアップロードの場合、次のヘッダがクライアントにより設定可能です。
+<!--
 In the http file upload case, The following headers may be set by the client:
+-->
 
- * `X-LXD-fingerprint`: SHA-256 (if set, uploaded file must match)
- * `X-LXD-filename`: FILENAME (used for export)
- * `X-LXD-public`: true/false (defaults to false)
- * `X-LXD-properties`: URL-encoded key value pairs without duplicate keys (optional properties)
+ * `X-LXD-fingerprint`: SHA-256 (設定された場合はアップロードされたファイルのフィンガープリントが一致する必要があります) <!-- (if set, uploaded file must match) -->
+ * `X-LXD-filename`: FILENAME (エクスポートの際に使用されます) <!-- (used for export) -->
+ * `X-LXD-public`: true/false (デフォルトは false) <!-- (defaults to false) -->
+ * `X-LXD-properties`: 重複したキーを除いたキーと値のペアを URL エンコードしたもの (任意で指定可能なプロパティ) <!-- URL-encoded key value pairs without duplicate keys (optional properties) -->
 
+作成元としてイメージを使う場合、次の dict を使用する必要があります。
+<!--
 In the source image case, the following dict must be used:
+-->
 
+    {
+        "filename": filename,                   # エクスポートの際に使用されます (任意で指定可能)
+        "public": true,                         # 信頼されないユーザがイメージをダウンロードしてよいか (デフォルトは false)
+        "auto_update": true,                    # イメージを自動更新するかどうか (任意で指定可能、デフォルトは false)
+        "properties": {                         # イメージのプロパティ (任意で指定可能、作成元のプロパティに追加して適用されます)
+            "os": "Ubuntu"
+        },
+        "aliases": [                            # 初期のエイリアスを設定します ("image_create_aliases" API 拡張)
+            {"name": "my-alias",
+             "description": "A description"}
+        ],
+        "source": {
+            "type": "image",
+            "mode": "pull",                     # 現在は pull のみがサポートされています
+            "server": "https://10.0.2.3:8443",  # リモートサーバ (pull モードのときのみ)
+            "protocol": "lxd",                  # プロトコル (lxd または simplestreams、デフォルトは lxd)
+            "secret": "my-secret-string",       # シークレット (pull もーどのときのみ、 private なイメージのみ)
+            "certificate": "PEM certificate",   # 任意で指定可能な PEM 証明書。指定されない場合はシステム CA が使用されます
+            "fingerprint": "SHA256",            # イメージのフィンガープリント (エイリアスを指定しない場合は必須です)
+            "alias": "ubuntu/devel",            # エイリアスの名前 (フィンガープリントを指定しない場合は必須です)
+        }
+    }
+
+<!--
     {
         "filename": filename,                   # Used for export (optional)
         "public": true,                         # Whether the image can be downloaded by untrusted users (defaults to false)
@@ -2333,9 +2405,31 @@ In the source image case, the following dict must be used:
             "alias": "ubuntu/devel",            # Name of the alias (must be set if fingerprint isn't)
         }
     }
+-->
 
+作成元にコンテナを使う場合、次の dict を使用する必要があります。
+<!--
 In the source container case, the following dict must be used:
+-->
 
+    {
+        "compression_algorithm": "xz",  # イメージの圧縮アルゴリズムをオーバーライドします (任意で指定可能)
+        "filename": filename,           # エクスポートの際に使用されます (任意で指定可能)
+        "public":   true,               # 信頼されないユーザがイメージをダウンロードしてよいか (デフォルトは false)
+        "properties": {                 # イメージのプロパティ (任意で指定可能)
+            "os": "Ubuntu"
+        },
+        "aliases": [                    # 初期のエイリアスを設定します ("image_create_aliases" API 拡張)
+            {"name": "my-alias",
+             "description": "A description"}
+        ],
+        "source": {
+            "type": "container",        # "container" か "snapshot" のいずれか
+            "name": "abc"
+        }
+    }
+
+<!--
     {
         "compression_algorithm": "xz",  # Override the compression algorithm for the image (optional)
         "filename": filename,           # Used for export (optional)
@@ -2352,9 +2446,30 @@ In the source container case, the following dict must be used:
             "name": "abc"
         }
     }
+-->
 
+リモートイメージの URL の場合は、次の dict を使用する必要があります。
+<!--
 In the remote image URL case, the following dict must be used:
+-->
 
+    {
+        "filename": filename,                           # エクスポートの際に使用されます (任意で指定可能)
+        "public":   true,                               # 信頼されないユーザがイメージをダウンロードしてよいか (デフォルトは false)
+        "properties": {                                 # イメージのプロパティ (任意で指定可能)
+            "os": "Ubuntu"
+        },
+        "aliases": [                                    # 初期のエイリアスを設定します ("image_create_aliases" API 拡張)
+            {"name": "my-alias",
+             "description": "A description"}
+        ],
+        "source": {
+            "type": "url",
+            "url": "https://www.some-server.com/image"  # イメージの URL
+        }
+    }
+
+<!--
     {
         "filename": filename,                           # Used for export (optional)
         "public":   true,                               # Whether the image can be downloaded by untrusted users  (defaults to false)
@@ -2370,10 +2485,16 @@ In the remote image URL case, the following dict must be used:
             "url": "https://www.some-server.com/image"  # URL for the image
         }
     }
+-->
 
+LXD が入力を受け取った後、バックグラウンド操作が開始され、イメージを
+ストアに追加し、場合によってバックエンドファイルシステムに特有な
+なんらかの最適化を行います。
+<!--
 After the input is received by LXD, a background operation is started
 which will add the image to the store and possibly do some backend
 filesystem-specific optimizations.
+-->
 
 ## `/1.0/images/<fingerprint>`
 ### GET (optional `?secret=SECRET`)
