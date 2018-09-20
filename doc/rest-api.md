@@ -123,7 +123,7 @@ The operation metadata structure looks like:
         "created_at": "2015-11-17T22:32:02.226176091-05:00",    # 操作の作成日時
         "updated_at": "2015-11-17T22:32:02.226176091-05:00",    # 操作の最終更新日時
         "status": "Running",                                    # 文字列表記での操作の状態
-        "status_code": 103,                                     # 整数表記での操作の状態 (status ではなくこちらを利用してください。訳注: 文字列表記の status は人間が見るためのものでプログラムでステータスを判定する場合はこちらの status_code を参照してくださいという意味)
+        "status_code": 103,                                     # 整数表記での操作の状態 (status ではなくこちらを利用してください。訳注: 詳しくは下記のステータスコードの項を参照)
         "resources": {                                          # リソース種別 (container, snapshots, images のいずれか) の dict を影響を受けるリソース
           "containers": [
             "/1.0/containers/test"
@@ -961,7 +961,7 @@ Input (using a remote container, sent over the migration websocket):
                    "operation": "https://10.0.2.3:8443/1.0/operations/<UUID>",          # リモート操作への完全な URL
                    "certificate": "PEM certificate",                                    # PEM 証明書を指定可能。未指定の場合はシステムの CA が使用される。
                    "base-image": "<fingerprint>",                                       # 任意で指定可能。コンテナが作られたベースのイメージ
-                   "container_only": true,                                              # スナップショットなしでコンテナだけをマイグレートするかどうか。 "true" か "false" のいずれか。
+                   "container_only": true,                                              # スナップショットなしでコンテナだけをマイグレーションするかどうか。 "true" か "false" のいずれか。
                    "secrets": {"control": "my-secret-string",                           # マイグレーションのソースと通信する際に使用するシークレット
                                "criu":    "my-other-secret",
                                "fs":      "my third secret"}
@@ -1011,7 +1011,7 @@ Input (using a local container):
             },
         },
         "source": {"type": "copy",                                                      # "image", "migration", "copy", "none" のいずれかを指定可能
-                   "container_only": true,                                              # スナップショットなしでコンテナだけをマイグレートするかどうか。 "true" か "false" のいずれか。
+                   "container_only": true,                                              # スナップショットなしでコンテナだけをマイグレーションするかどうか。 "true" か "false" のいずれか。
                    "source": "my-old-container"}                                        # 作成元のコンテナの名前
     }
 
@@ -1054,7 +1054,7 @@ Input (using a remote container, in push mode sent over the migration websocket 
                    "mode": "push",                                                      # "pull" と "push" がサポートされている
                    "base-image": "<fingerprint>",                                       # 任意で指定可能。コンテナが作られたベースのイメージ
                    "live": true,                                                        # マイグレーションが live で実行されるかどうか
-                   "container_only": true}                                              # スナップショットなしでコンテナだけをマイグレートするかどうか。 "true" か "false" のいずれか。
+                   "container_only": true}                                              # スナップショットなしでコンテナだけをマイグレーションするかどうか。 "true" か "false" のいずれか。
     }
 
 <!--
@@ -1260,7 +1260,7 @@ Input:
     }
 
 ### POST
- * 説明: コンテナをリネーム/マイグレートするのに用いられます <!-- Description: used to rename/migrate the container -->
+ * 説明: コンテナをリネーム/マイグレーションするのに用いられます <!-- Description: used to rename/migrate the container -->
  * 認証: trusted <!-- Authentication: trusted -->
  * 操作: 同期 <!-- Operation: sync -->
  * 戻り値: バックグラウンド操作または標準のエラー <!-- Return: background operation or standard error -->
@@ -1316,7 +1316,7 @@ Output in metadata section (for migration):
     }
 -->
 
-これらは作成の呼び出し時に渡されるシークレットです。
+これらは作成の呼び出し時に渡すべきシークレットです。
 <!--
 These are the secrets that should be passed to the create call.
 -->
@@ -2497,13 +2497,16 @@ filesystem-specific optimizations.
 -->
 
 ## `/1.0/images/<fingerprint>`
-### GET (optional `?secret=SECRET`)
- * Description: Image description and metadata
- * Authentication: guest or trusted
- * Operation: sync
- * Return: dict representing an image properties
+### GET (`?secret=SECRET` を任意に指定可能) <!-- GET (optional `?secret=SECRET`) -->
+ * 説明: イメージの説明とメタデータ <!-- Description: Image description and metadata -->
+ * 認証: guest または trusted <!-- Authentication: guest or trusted -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻り値: イメージのプロパティを表す dict <!-- Return: dict representing an image properties -->
 
+出力
+<!--
 Output:
+-->
 
     {
         "aliases": [
@@ -2537,13 +2540,16 @@ Output:
         "uploaded_at": "2016-02-16T00:44:47Z"
     }
 
-### PUT (ETag supported)
- * Description: Replaces the image properties, update information and visibility
- * Authentication: trusted
- * Operation: sync
- * Return: standard return value or standard error
+### PUT (ETag サポートあり) <!-- PUT (ETag supported) -->
+ * 説明: イメージのプロパティを置き換えたり、情報や公開状態を変更します <!-- Description: Replaces the image properties, update information and visibility -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻り値: 標準の戻り値または標準のエラー <!-- Return: standard return value or standard error -->
 
+入力
+<!--
 Input:
+-->
 
     {
         "auto_update": true,
@@ -2556,14 +2562,17 @@ Input:
         "public": true,
     }
 
-### PATCH (ETag supported)
- * Description: Updates the image properties, update information and visibility
- * Introduced: with API extension `patch`
- * Authentication: trusted
- * Operation: sync
- * Return: standard return value or standard error
+### PATCH (ETag サポートあり) <!-- PATCH (ETag supported) -->
+ * 説明: イメージのプロパティを変更したり、情報や公開状態を変更します <!-- Description: Updates the image properties, update information and visibility -->
+ * 導入: `patch` API 拡張によって <!-- Introduced: with API extension `patch` -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻り値: 標準の戻り値または標準のエラー <!-- Return: standard return value or standard error -->
 
+入力
+<!--
 Input:
+-->
 
     {
         "properties": {
@@ -2574,17 +2583,23 @@ Input:
     }
 
 ### DELETE
- * Description: Remove an image
- * Authentication: trusted
- * Operation: async
- * Return: background operaton or standard error
+ * 説明: イメージを削除します <!-- Description: Remove an image -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 非同期 <!-- Operation: async -->
+ * 戻り値: バックグラウンド操作または標準のエラー <!-- Return: background operation or standard error -->
 
+入力 (現在は何もなし)
+<!--
 Input (none at present):
+-->
 
     {
     }
 
+この操作に対する HTTP ステータスコードは 202 (Accepted) です。
+<!--
 HTTP code for this should be 202 (Accepted).
+-->
 
 ## `/1.0/images/<fingerprint>/export`
 ### GET (optional `?secret=SECRET`)
@@ -2603,46 +2618,67 @@ GET the image as a guest, passing the secret token.
 
 ## `/1.0/images/<fingerprint>/refresh`
 ### POST
- * Description: Refresh an image from its origin
- * Authentication: trusted
- * Operation: async
- * Return: Background operation or standard error
+ * 説明: イメージをオリジンからリフレッシュします <!-- Description: Refresh an image from its origin -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 非同期 <!-- Operation: async -->
+ * 戻り値: バックグラウンド操作または標準のエラー <!-- Return: background operation or standard error -->
 
+これは指定されたイメージをオリジンからリフレッシュする操作を作成します。
+<!--
 This creates an operation to refresh the specified image from its origin.
+-->
 
 ## `/1.0/images/<fingerprint>/secret`
 ### POST
- * Description: Generate a random token and tell LXD to expect it be used by a guest
- * Authentication: guest or trusted
- * Operation: async
- * Return: background operation or standard error
+ * 説明: ランダムなトークンを生成し、ゲストが使用することを LXD に伝えます <!-- Description: Generate a random token and tell LXD to expect it be used by a guest -->
+ * 認証: guest または trusted <!-- Authentication: guest or trusted -->
+ * 操作: 非同期 <!-- Operation: async -->
+ * 戻り値: バックグラウンド操作または標準のエラー <!-- Return: background operation or standard error -->
 
+入力
+<!--
 Input:
+-->
 
     {
     }
 
+戻り値
+<!--
 Return:
+-->
 
     {
         "secret": "52e9ec5885562aa24d05d7b4846ebb8b5f1f7bf5cd6e285639b569d9eaf54c9b"
     }
 
+メタデータ内の "secret" に生成されたシークレットの文字列が設定された
+標準のバックグランド操作です。
+<!--
 Standard backround operation with "secret" set to the generated secret
 string in metadata.
+-->
 
+シークレットはそれを使うイメージ URL にアクセスされてから 5 秒後に自動的に
+無効化されます。これによりイメージの情報の取得とその後の /export の呼び出し
+の両方に同じシークレットが使えます。
+<!--
 The secret is automatically invalidated 5s after an image URL using it
 has been accessed. This allows to both retried the image information and
 then hit /export with the same secret.
+-->
 
 ## `/1.0/images/aliases`
 ### GET
- * Description: list of aliases (public or private based on image visibility)
- * Authentication: guest or trusted
- * Operation: sync
- * Return: list of URLs for aliases this server knows about
+ * 説明: エイリアスの一覧 (イメージの公開状態に応じて public または private なエイリアスが含まれます) <!-- Description: list of aliases (public or private based on image visibility) -->
+ * 認証: guest または trusted <!-- Authentication: guest or trusted -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻り値: このサーバが知っているエイリアスの URL の一覧 <!-- Return: list of URLs for aliases this server knows about -->
 
+戻り値
+<!--
 Return:
+-->
 
     [
         "/1.0/images/aliases/sl6",
@@ -2651,12 +2687,15 @@ Return:
     ]
 
 ### POST
- * Description: create a new alias
- * Authentication: trusted
- * Operation: sync
- * Return: standard return value or standard error
+ * 説明: 新しいエイリアスを作成します <!-- Description: create a new alias -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻り値: 標準の戻り値または標準のエラー <!-- Return: standard return value or standard error -->
 
+入力
+<!--
 Input:
+-->
 
     {
         "description": "The alias description",
@@ -2666,12 +2705,15 @@ Input:
 
 ## `/1.0/images/aliases/<name>`
 ### GET
- * Description: Alias description and target
- * Authentication: guest or trusted
- * Operation: sync
- * Return: dict representing an alias description and target
+ * 説明: エイリアスの説明とターゲット <!-- Description: Alias description and target -->
+ * 認証: guest または trusted <!-- Authentication: guest or trusted -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻り値: エイリアスの説明とターゲットを表す dict <!-- Return: dict representing an alias description and target -->
 
+出力
+<!--
 Output:
+-->
 
     {
         "name": "test",
@@ -2679,65 +2721,83 @@ Output:
         "target": "c9b6e738fae75286d52f497415463a8ecc61bbcb046536f220d797b0e500a41f"
     }
 
-### PUT (ETag supported)
- * Description: Replaces the alias target or description
- * Authentication: trusted
- * Operation: sync
- * Return: standard return value or standard error
+### PUT (ETag サポートあり) <!-- PUT (ETag supported) -->
+ * 説明: エイリアスのターゲットまたは説明を置き換えます <!-- Description: Replaces the alias target or description -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻り値: 標準の戻り値または標準のエラー <!-- Return: standard return value or standard error -->
 
+入力
+<!--
 Input:
+-->
 
     {
         "description": "New description",
         "target": "54c8caac1f61901ed86c68f24af5f5d3672bdc62c71d04f06df3a59e95684473"
     }
 
-### PATCH (ETag supported)
- * Description: Updates the alias target or description
- * Introduced: with API extension `patch`
- * Authentication: trusted
- * Operation: sync
- * Return: standard return value or standard error
+### PATCH (ETag サポートあり) <!-- PATCH (ETag supported) -->
+ * 説明: エイリアスのターゲットまたは説明を更新します <!-- Description: Updates the alias target or description -->
+ * 導入: `patch` API 拡張 によって <!-- Introduced: with API extension `patch` -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻り値: 標準の戻り値または標準のエラー <!-- Return: standard return value or standard error -->
 
+入力
+<!--
 Input:
+-->
 
     {
         "description": "New description"
     }
 
 ### POST
- * Description: rename an alias
- * Authentication: trusted
- * Operation: sync
- * Return: standard return value or standard error
+ * 説明: エイリアスをリネームします <!-- Description: rename an alias -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻り値: 標準の戻り値または標準のエラー <!-- Return: standard return value or standard error -->
 
+入力
+<!--
 Input:
+-->
 
     {
         "name": "new-name"
     }
 
+既に存在する名前にリネームしようとすると 409 (Conflict) の HTTP ステータスコードを返します。
+<!--
 Renaming to an existing name must return the 409 (Conflict) HTTP code.
+-->
 
 ### DELETE
- * Description: Remove an alias
- * Authentication: trusted
- * Operation: sync
- * Return: standard return value or standard error
+ * 説明: エイリアスを削除します <!-- Description: Remove an alias -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻り値: 標準の戻り値または標準のエラー <!-- Return: standard return value or standard error -->
 
+入力 (現在は何もなし)
+<!--
 Input (none at present):
+-->
 
     {
     }
 
 ## `/1.0/networks`
 ### GET
- * Description: list of networks
- * Authentication: trusted
- * Operation: sync
- * Return: list of URLs for networks that are current defined on the host
+ * 説明: ネットワークの一覧 <!-- Description: list of networks -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻り値: ホストに現在定義されているネットワークの URL の一覧 <!-- Return: list of URLs for networks that are current defined on the host -->
 
+戻り値
+<!--
 Return:
+-->
 
     [
         "/1.0/networks/eth0",
@@ -2745,13 +2805,16 @@ Return:
     ]
 
 ### POST
- * Description: define a new network
- * Introduced: with API extension `network`
- * Authentication: trusted
- * Operation: sync
- * Return: standard return value or standard error
+ * 説明: 新しいネットワークを定義します <!-- Description: define a new network -->
+ * 導入: `network` API 拡張によって <!-- Introduced: with API extension `network` -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻り値: 標準の戻り値または標準のエラー <!-- Return: standard return value or standard error -->
 
+入力
+<!--
 Input:
+-->
 
     {
         "name": "my-network",
@@ -2765,12 +2828,15 @@ Input:
 
 ## `/1.0/networks/<name>`
 ### GET
- * Description: information about a network
- * Authentication: trusted
- * Operation: sync
- * Return: dict representing a network
+ * 説明: ネットワークについての情報 <!-- Description: information about a network -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻りt: ネットワークを表す dict <!-- Return: dict representing a network -->
 
+戻り値
+<!--
 Return:
+-->
 
     {
         "config": {},
@@ -2782,14 +2848,17 @@ Return:
         ]
     }
 
-### PUT (ETag supported)
- * Description: replace the network information
- * Introduced: with API extension `network`
- * Authentication: trusted
- * Operation: sync
- * Return: standard return value or standard error
+### PUT (ETag サポートあり) <!-- PUT (ETag supported) -->
+ * 説明: ネットワークの情報を置き換えます <!-- Description: replace the network information -->
+ * 導入: `network` API 拡張によって <!-- Introduced: with API extension `network` -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻り値: 標準の戻り値または標準のエラー <!-- Return: standard return value or standard error -->
 
+入力
+<!--
 Input:
+-->
 
     {
         "config": {
@@ -2799,17 +2868,24 @@ Input:
         }
     }
 
+初期の作成や GET での情報取得結果と同じ dict です。ただし、
+config のキーだけが使用され、それ以外の全てのキーは無視されます。
+<!--
 Same dict as used for initial creation and coming from GET. Only the
 config is used, everything else is ignored.
+-->
 
-### PATCH (ETag supported)
- * Description: update the network information
- * Introduced: with API extension `network`
- * Authentication: trusted
- * Operation: sync
- * Return: standard return value or standard error
+### PATCH (ETag supported) <!-- PATCH (ETag supported) -->
+ * 説明: ネットワークの情報を更新します。 <!-- Description: update the network information -->
+ * 導入: `network` API 拡張によって <!-- Introduced: with API extension `network` -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻り値: 標準の戻り値または標準のエラー <!-- Return: standard return value or standard error -->
 
+入力
+<!--
 Input:
+-->
 
     {
         "config": {
@@ -2818,45 +2894,64 @@ Input:
     }
 
 ### POST
- * Description: rename a network
- * Introduced: with API extension `network`
- * Authentication: trusted
- * Operation: sync
- * Return: standard return value or standard error
+ * 説明: ネットワークをリネームします <!-- Description: rename a network -->
+ * 導入: `network` API 拡張によって <!-- Introduced: with API extension `network` -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻り値: 標準の戻り値または標準のエラー <!-- Return: standard return value or standard error -->
 
+入力 (ネットワークをリネームします)
+<!--
 Input (rename a network):
+-->
 
     {
         "name": "new-name"
     }
 
+HTTP ステータスコードは 204 (No content) で Location ヘッダは
+リネーム後のリソースの URL を指します。
+<!--
 HTTP return value must be 204 (No content) and Location must point to
 the renamed resource.
+-->
 
+既に存在する名前にリネームしようとすると 409 (Conflict) の HTTP ステータスコードを返します。
+<!--
 Renaming to an existing name must return the 409 (Conflict) HTTP code.
+-->
 
 ### DELETE
- * Description: remove a network
- * Introduced: with API extension `network`
- * Authentication: trusted
- * Operation: sync
- * Return: standard return value or standard error
+ * 説明: ネットワークを削除します <!-- Description: remove a network -->
+ * 導入: `network` API 拡張によって <!-- Introduced: with API extension `network` -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻り値: 標準の戻り値または標準のエラー <!-- Return: standard return value or standard error -->
 
+入力 (現在は何もなし)
+<!--
 Input (none at present):
+-->
 
     {
     }
 
+この操作に対する HTTP ステータスコードは 202 (Accepted) です。
+<!--
 HTTP code for this should be 202 (Accepted).
+-->
 
 ## `/1.0/networks/<name>/state`
 ### GET
- * Description: network state
- * Authentication: trusted
- * Operation: sync
- * Return: dict representing a network's state
+ * 説明: ネットワークの状態 <!-- Description: network state -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻り値: ネットワークの状態を表す dict <!-- Return: dict representing a network's state -->
 
+戻り値
+<!--
 Return:
+-->
 
     {
         "addresses": [
@@ -2893,12 +2988,15 @@ Return:
 
 ## `/1.0/operations`
 ### GET
- * Description: list of operations
- * Authentication: trusted
- * Operation: sync
- * Return: list of URLs for operations that are currently going on/queued
+ * 説明: 操作の一覧 <!-- Description: list of operations -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻り値: 現在実行中またはキューに追加された操作の URL の一覧 <!-- Return: list of URLs for operations that are currently going on/queued -->
 
+戻り値
+<!--
 Return:
+-->
 
     [
         "/1.0/operations/c0fc0d0d-a997-462b-842b-f8bd0df82507",
@@ -2907,13 +3005,36 @@ Return:
 
 ## `/1.0/operations/<uuid>`
 ### GET
- * Description: background operation
- * Authentication: trusted
- * Operation: sync
- * Return: dict representing a background operation
+ * 説明: バックグラウンド操作 <!-- Description: background operation -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻り値: バックグラウンド操作を表す dict <!-- Return: dict representing a background operation -->
 
+戻り値
+<!--
 Return:
+-->
 
+    {
+        "id": "b8d84888-1dc2-44fd-b386-7f679e171ba5",
+        "class": "token",                                                                       # "task" (バックグラウンドのタスク), "websocket" (ウェブソケットと認証情報の組) あるいは "token" (一時的な認証情報)
+        "created_at": "2016-02-17T16:59:27.237628195-05:00",                                    # 作成時のタイムスタンプ
+        "updated_at": "2016-02-17T16:59:27.237628195-05:00",                                    # 最終更新時のタイムスタンプ
+        "status": "Running",
+        "status_code": 103,
+        "resources": {                                                                          # 影響を受けるリソースの一覧
+            "images": [
+                "/1.0/images/54c8caac1f61901ed86c68f24af5f5d3672bdc62c71d04f06df3a59e95684473"
+            ]
+        },
+        "metadata": {                                                                           # 操作についての追加情報 (action, target, ...)
+            "secret": "c9209bee6df99315be1660dd215acde4aec89b8e5336039712fc11008d918b0d"
+        },
+        "may_cancel": true,                                                                     # (DELETE で) 操作をキャンセルできるかどうか
+        "err": ""
+    }
+
+<!--
     {
         "id": "b8d84888-1dc2-44fd-b386-7f679e171ba5",
         "class": "token",                                                                       # One of "task" (background task), "websocket" (set of websockets and crendentials) or "token" (temporary credentials)
@@ -2932,65 +3053,91 @@ Return:
         "may_cancel": true,                                                                     # Whether it's possible to cancel the operation (DELETE)
         "err": ""
     }
+-->
 
 ### DELETE
- * Description: cancel an operation. Calling this will change the state to "cancelling" rather than actually removing the entry.
- * Authentication: trusted
- * Operation: sync
- * Return: standard return value or standard error
+ * 説明: 操作をキャンセルします。この API を呼び出すとエントリを実際に削除するのではなく状態を "cancelling" に変更します <!-- Description: cancel an operation. Calling this will change the state to "cancelling" rather than actually removing the entry. -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻り値: 標準の戻り値または標準のエラー <!-- Return: standard return value or standard error -->
 
+入力 (現在は何もなし)
+<!--
 Input (none at present):
+-->
 
     {
     }
 
+この操作に対する HTTP ステータスコードは 202 (Accepted) です。
+<!--
 HTTP code for this should be 202 (Accepted).
+-->
 
 ## `/1.0/operations/<uuid>/wait`
-### GET (optional `?timeout=30`)
- * Description: Wait for an operation to finish
- * Authentication: trusted
- * Operation: sync
- * Return: dict of the operation after it's reached its final state
+### GET (`?timeout=30` を任意で指定可能) <!-- GET (optional `?timeout=30`) -->
+ * 説明: 操作が完了するのを待ちます <!-- Description: Wait for an operation to finish -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻り値: 操作が最終の状態に達した後の操作の dict <!-- Return: dict of the operation after it's reached its final state -->
 
+入力 (最終の状態まで無限に待つ場合): 引数なし
+<!--
 Input (wait indefinitely for a final state): no argument
+-->
 
+入力 (同様に最終の状態まで待つが 30 秒後にタイムアウトする場合): ?timeout=30
+<!--
 Input (similar but times out after 30s): ?timeout=30
+-->
 
 ## `/1.0/operations/<uuid>/websocket`
 ### GET (`?secret=SECRET`)
- * Description: This connection is upgraded into a websocket connection
+ * 説明: この接続はウェブソケットの接続にアップグレードされ、操作の種別毎に
+   定義されたプロトコルを話します。例えば exec 操作の場合、ウェブソケットは
+   標準入力／標準出力／標準エラー出力のための双方向のパイプになり、コンテナ
+   内のプロセスを入出力をやりとりします。 migration の場合はマイグレーション
+   情報を通信するプライマリのインターフェースになります。ここで使用する
+   シークレットは操作を作るときに指定していたのと同じものを指定します。
+   正しいシークレットを指定すればゲストもこのエンドポイントに接続できます。
+   <!-- Description: This connection is upgraded into a websocket connection
    speaking the protocol defined by the operation type. For example, in the
    case of an exec operation, the websocket is the bidirectional pipe for
    stdin/stdout/stderr to flow to and from the process inside the container.
    In the case of migration, it will be the primary interface over which the
    migration information is communicated. The secret here is the one that was
    provided when the operation was created. Guests are allowed to connect
-   provided they have the right secret.
- * Authentication: guest or trusted
- * Operation: sync
- * Return: websocket stream or standard error
+   provided they have the right secret. -->
+ * 認証: guest または trusted <!-- Authentication: guest or trusted -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻り値: ウェブソケットのストリームまたは標準のエラー <!-- Return: websocket stream or standard error -->
 
 ## `/1.0/profiles`
 ### GET
- * Description: List of configuration profiles
- * Authentication: trusted
- * Operation: sync
- * Return: list of URLs to defined profiles
+ * 説明: 設定プロファイルの一覧 <!-- Description: List of configuration profiles -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻り値: 定義されているプロファイルの URL の一覧 <!-- Return: list of URLs to defined profiles -->
 
+戻り値
+<!--
 Return:
+-->
 
     [
         "/1.0/profiles/default"
     ]
 
 ### POST
- * Description: define a new profile
- * Authentication: trusted
- * Operation: sync
- * Return: standard return value or standard error
+ * 説明: 新しいプロファイルを定義します <!-- Description: define a new profile -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻り値: 標準の戻り値または標準のエラー <!-- Return: standard return value or standard error -->
 
+入力
+<!--
 Input:
+-->
 
     {
         "name": "my-profilename",
@@ -3008,12 +3155,15 @@ Input:
 
 ## `/1.0/profiles/<name>`
 ### GET
- * Description: profile configuration
- * Authentication: trusted
- * Operation: sync
- * Return: dict representing the profile content
+ * 説明: プロファイルの設定 <!-- Description: profile configuration -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻り値: プロファイルの設定を表す dict <!-- Return: dict representing the profile content -->
 
+出力
+<!--
 Output:
+-->
 
     {
         "name": "test",
@@ -3032,13 +3182,16 @@ Output:
         ]
     }
 
-### PUT (ETag supported)
- * Description: replace the profile information
- * Authentication: trusted
- * Operation: sync
- * Return: standard return value or standard error
+### PUT (ETag サポートあり) <!-- PUT (ETag supported) -->
+ * 説明: プロファイルの情報を置き換えます <!-- Description: replace the profile information -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻り値: 標準の戻り値または標準のエラー <!-- Return: standard return value or standard error -->
 
+入力
+<!--
 Input:
+-->
 
     {
         "config": {
@@ -3053,17 +3206,24 @@ Input:
         }
     }
 
+初期の作成や GET での情報取得結果と同じ dict です。
+name プロパティは変更できません (変更するには POST を参照してください)。
+<!--
 Same dict as used for initial creation and coming from GET. The name
 property can't be changed (see POST for that).
+-->
 
-### PATCH (ETag supported)
- * Description: update the profile information
- * Introduced: with API extension `patch`
- * Authentication: trusted
- * Operation: sync
- * Return: standard return value or standard error
+### PATCH (ETag サポートあり) <!-- PATCH (ETag supported) -->
+ * 説明: プロファイルの情報を変更します <!-- Description: update the profile information -->
+ * 導入: `patch` API 拡張によって <!-- Introduced: with API extension `patch` -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻り値: 標準の戻り値または標準のエラー <!-- Return: standard return value or standard error -->
 
+入力
+<!--
 Input:
+-->
 
     {
         "config": {
@@ -3079,44 +3239,63 @@ Input:
     }
 
 ### POST
- * Description: rename a profile
- * Authentication: trusted
- * Operation: sync
- * Return: standard return value or standard error
+ * 説明: プロファイルをリネームします <!-- Description: rename a profile -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻り値: 標準の戻り値または標準のエラー <!-- Return: standard return value or standard error -->
 
+入力 (プロファイルをリネームします)
+<!--
 Input (rename a profile):
+-->
 
     {
         "name": "new-name"
     }
 
+HTTP ステータスコードは 204 (No content) で Location ヘッダは
+リネーム後のリソースの URL を指します。
+<!--
 HTTP return value must be 204 (No content) and Location must point to
 the renamed resource.
+-->
 
+既に存在する名前にリネームしようとすると 409 (Conflict) の HTTP ステータスコードを返します。
+<!--
 Renaming to an existing name must return the 409 (Conflict) HTTP code.
+-->
 
 ### DELETE
- * Description: remove a profile
- * Authentication: trusted
- * Operation: sync
- * Return: standard return value or standard error
+ * 説明: プロファイルを削除します <!-- Description: remove a profile -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻り値: 標準の戻り値または標準のエラー <!-- Return: standard return value or standard error -->
 
+入力 (現在は何もなし)
+<!--
 Input (none at present):
+-->
 
     {
     }
 
+この操作に対する HTTP ステータスコードは 202 (Accepted) です。
+<!--
 HTTP code for this should be 202 (Accepted).
+-->
 
 ## `/1.0/storage-pools`
 ### GET
- * Description: list of storage pools
- * Introduced: with API extension `storage`
- * Authentication: trusted
- * Operation: sync
- * Return: list of storage pools that are currently defined on the host
+ * 説明: ストレージプールの一覧 <!-- Description: list of storage pools -->
+ * 導入: `storage` API 拡張によって <!-- Introduced: with API extension `storage` -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻り値: ホストに現在定義されているストレージプールの一覧 <!-- Return: list of storage pools that are currently defined on the host -->
 
+戻り値
+<!--
 Return:
+-->
 
     [
         "/1.0/storage-pools/default",
@@ -3127,13 +3306,16 @@ Return:
     ]
 
 ### POST
- * Description: create a new storage pool
- * Introduced: with API extension `storage`
- * Authentication: trusted
- * Operation: sync
- * Return: standard return value or standard error
+ * 説明: 新しいストレージプールを作成します <!-- Description: create a new storage pool -->
+ * 導入: `storage` API 拡張によって <!-- Introduced: with API extension `storage` -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻り値: 標準の戻り値または標準のエラー <!-- Return: standard return value or standard error -->
 
+入力
+<!--
 Input:
+-->
 
     {
         "config": {
@@ -3145,13 +3327,16 @@ Input:
 
 ## `/1.0/storage-pools/<name>`
 ### GET
- * Description: information about a storage pool
- * Introduced: with API extension `storage`
- * Authentication: trusted
- * Operation: sync
- * Return: dict representing a storage pool
+ * 説明: ストレージプールの情報 <!-- Description: information about a storage pool -->
+ * 導入: `storage` API 拡張によって <!-- Introduced: with API extension `storage` -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻り値: ストレージプールを表す dict <!-- Return: dict representing a storage pool -->
 
+戻り値
+<!--
 Return:
+-->
 
     {
         "type": "sync",
@@ -3195,14 +3380,17 @@ Return:
         }
     }
 
-### PUT (ETag supported)
- * Description: replace the storage pool information
- * Introduced: with API extension `storage`
- * Authentication: trusted
- * Operation: sync
- * Return: standard return value or standard error
+### PUT (ETag サポートあり) <!-- PUT (ETag supported) -->
+ * 説明: ストレージプールの情報を置き換えます <!-- Description: replace the storage pool information -->
+ * 導入: `storage` API 拡張によって <!-- Introduced: with API extension `storage` -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻り値: 標準の戻り値または標準のエラー <!-- Return: standard return value or standard error -->
 
+入力
+<!--
  Input:
+-->
 
     {
         "config": {
@@ -3217,13 +3405,16 @@ Return:
     }
 
 ### PATCH
- * Description: update the storage pool configuration
- * Introduced: with API extension `storage`
- * Authentication: trusted
- * Operation: sync
- * Return: standard return value or standard error
+ * 説明: ストレージプールの設定を変更します <!-- Description: update the storage pool configuration -->
+ * 導入: `storage` API 拡張によって <!-- Introduced: with API extension `storage` -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻り値: 標準の戻り値または標準のエラー <!-- Return: standard return value or standard error -->
 
+入力
+<!--
 Input:
+-->
 
     {
         "config": {
@@ -3232,26 +3423,32 @@ Input:
     }
 
 ### DELETE
- * Description: delete a storage pool
- * Introduced: with API extension `storage`
- * Authentication: trusted
- * Operation: sync
- * Return: standard return value or standard error
+ * 説明: ストレージプールを削除します <!-- Description: delete a storage pool -->
+ * 導入: `storage` API 拡張によって <!-- Introduced: with API extension `storage` -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻り値: 標準の戻り値または標準のエラー <!-- Return: standard return value or standard error -->
 
+入力 (現在は何もなし)
+<!--
 Input (none at present):
+-->
 
     {
     }
 
 ## `/1.0/storage-pools/<name>/resources`
 ### GET
- * Description: information about the resources available to the storage pool
- * Introduced: with API extension `resources`
- * Authentication: trusted
- * Operation: sync
- * Return: dict representing the storage pool resources
+ * 説明: ストレージプールで利用可能なリソースに関する情報 <!-- Description: information about the resources available to the storage pool -->
+ * 導入: `resources` API 拡張によって <!-- Introduced: with API extension `resources` -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻り値: ストレージプールのリソースを表す dict <!-- Return: dict representing the storage pool resources -->
 
+戻り値
+<!--
 Return:
+-->
 
     {
         "type": "sync",
@@ -3275,13 +3472,16 @@ Return:
 
 ## `/1.0/storage-pools/<name>/volumes`
 ### GET
- * Description: list of storage volumes
- * Introduced: with API extension `storage`
- * Authentication: trusted
- * Operation: sync
- * Return: list of storage volumes that currently exist on a given storage pool
+ * 説明: ストレージボリュームの一覧 <!-- Description: list of storage volumes -->
+ * 導入: `storage` API 拡張によって <!-- Introduced: with API extension `storage` -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻り値: 指定されたストレージプール上に現在存在するストレージボリュームの一覧 <!-- Return: list of storage volumes that currently exist on a given storage pool -->
 
+戻り値
+<!--
 Return:
+-->
 
     [
         "/1.0/storage-pools/default/volumes/containers/alp1",
@@ -3308,13 +3508,16 @@ Return:
     ]
 
 ### POST
- * Description: create a new storage volume on a given storage pool
- * Introduced: with API extension `storage`
- * Authentication: trusted
- * Operation: sync or async (when copying an existing volume)
- * Return: standard return value or standard error
+ * 説明: 指定されたストレージプール上に新しいストレージボリュームを作成します <!-- Description: create a new storage volume on a given storage pool -->
+ * 導入: `storage` API 拡張によって <!-- Introduced: with API extension `storage` -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期または (既存のボリュームをコピーする場合は) 非同期 <!-- Operation: sync or async (when copying an existing volume) -->
+ * 戻り値: 標準の戻り値または標準のエラー <!-- Return: standard return value or standard error -->
 
+入力
+<!--
 Input:
+-->
 
     {
         "config": {},
@@ -3322,7 +3525,10 @@ Input:
         "type": "custom"
     }
 
+入力 (ボリュームをコピーする場合)
+<!--
 Input (when copying a volume):
+-->
 
     {
         "config": {},
@@ -3335,8 +3541,24 @@ Input (when copying a volume):
         }
     }
 
+入力 (ボリュームをマイグレーションする場合)
+<!--
 Input (when migrating a volume):
+-->
 
+    {
+        "config": {},
+        "name": "vol1",
+        "type": "custom"
+        "source": {
+            "pool": "pool2",
+            "name": "vol2",
+            "type": "migration"
+            "mode": "pull",                                                 # "pull" (デフォルト), "push", "relay" のいずれか
+        }
+    }
+
+<!--
     {
         "config": {},
         "name": "vol1",
@@ -3348,23 +3570,30 @@ Input (when migrating a volume):
             "mode": "pull",                                                 # One of "pull" (default), "push", "relay"
         }
     }
+-->
 
 ## `/1.0/storage-pools/<pool>/volumes/<type>`
 ### POST
- * Description: create a new storage volume of a particular type on a given storage pool
- * Introduced: with API extension `storage`
- * Authentication: trusted
- * Operation: sync or async (when copying an existing volume)
- * Return: standard return value or standard error
+ * 説明: 指定のストレージプール上に特定のタイプのストレージボリュームを作成します <!-- Description: create a new storage volume of a particular type on a given storage pool -->
+ * 導入: `storage` API 拡張によって <!-- Introduced: with API extension `storage` -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期または (既存のボリュームをコピーする場合は) 非同期 <!-- Operation: sync or async (when copying an existing volume) -->
+ * 戻り値: 標準の戻り値または標準のエラー <!-- Return: standard return value or standard error -->
 
+入力
+<!--
 Input:
+-->
 
     {
         "config": {},
         "name": "vol1",
     }
 
+入力 (ボリュームをコピーする場合)
+<!--
 Input (when copying a volume):
+-->
 
     {
         "config": {},
@@ -3376,8 +3605,23 @@ Input (when copying a volume):
         }
     }
 
+入力 (ボリュームをマイグレーションする場合)
+<!--
 Input (when migrating a volume):
+-->
 
+    {
+        "config": {},
+        "name": "vol1",
+        "source": {
+            "pool": "pool2",
+            "name": "vol2",
+            "type": "migration"
+            "mode": "pull",                                                 # "pull" (デフォルト), "push", "relay" のいずれか
+        }
+    }
+
+<!--
     {
         "config": {},
         "name": "vol1",
@@ -3388,23 +3632,30 @@ Input (when migrating a volume):
             "mode": "pull",                                                 # One of "pull" (default), "push", "relay"
         }
     }
+-->
 
 ## `/1.0/storage-pools/<pool>/volumes/<type>/<name>`
 ### POST
- * Description: rename a storage volume on a given storage pool
- * Introduced: with API extension `storage_api_volume_rename`
- * Authentication: trusted
- * Operation: sync or async (when moving to a different pool)
- * Return: standard return value or standard error
+ * 説明: 指定のストレージプール上のストレージボリュームをリネームします <!-- Description: rename a storage volume on a given storage pool -->
+ * 導入: `storage_api_volume_rename` API 拡張によって <!-- Introduced: with API extension `storage_api_volume_rename` -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期または (別のプールに移動する場合は) 非同期 <!-- Operation: sync or async (when moving to a different pool) -->
+ * 戻り値: 標準の戻り値または標準のエラー <!-- Return: standard return value or standard error -->
 
+入力
+<!--
 Input:
+-->
 
     {
         "name": "vol1",
         "pool": "pool3"
     }
 
+入力 (lxd インスタンス間でマイグレーションする場合)
+<!--
 Input (migration across lxd instances):
+-->
 
     {
         "name": "vol1"
@@ -3412,26 +3663,46 @@ Input (migration across lxd instances):
         "migration": true
     }
 
+誰か (つまり他の lxd インスタンス) が全てのウェブソケットに接続してソースと
+交渉を始めるまでは、マイグレーションは実際には開始されません。
+<!--
 The migration does not actually start until someone (i.e. another lxd instance)
 connects to all the websockets and begins negotiation with the source.
+-->
 
+出力のメタデータのセクション (マイグレーションの場合)
+<!--
 Output in metadata section (for migration):
+-->
 
+    {
+        "control": "secret1",       # マイグレーション制御ソケット
+        "fs": "secret2"             # ファイルシステム転送ソケット
+    }
+
+<!--
     {
         "control": "secret1",       # Migration control socket
         "fs": "secret2"             # Filesystem transfer socket
     }
+-->
 
+これらは作成の呼び出し時に渡すべきシークレットです。
+<!--
 These are the secrets that should be passed to the create call.
+-->
 
 ### GET
- * Description: information about a storage volume of a given type on a storage pool
- * Introduced: with API extension `storage`
- * Authentication: trusted
- * Operation: sync
- * Return: dict representing a storage volume
+ * 説明: ストレージプール上の指定のタイプのストレージボリュームの情報 <!-- Description: information about a storage volume of a given type on a storage pool -->
+ * 導入: `storage` API 拡張によって <!-- Introduced: with API extension `storage` -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻り値: ストレージボリュームを表す dict <!-- Return: dict representing a storage volume -->
 
+戻り値
+<!--
 Return:
+-->
 
     {
         "type": "sync",
@@ -3452,14 +3723,17 @@ Return:
     }
 
 
-### PUT (ETag supported)
- * Description: replace the storage volume information
- * Introduced: with API extension `storage`
- * Authentication: trusted
- * Operation: sync
- * Return: standard return value or standard error
+### PUT (ETag サポートあり) <!-- PUT (ETag supported) -->
+ * 説明: ストレージボリュームの情報を置き換えます <!-- Description: replace the storage volume information -->
+ * 導入: `storage` API 拡張によって <!-- Introduced: with API extension `storage` -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻り値: 標準の戻り値または標準のエラー <!-- Return: standard return value or standard error -->
 
+入力
+<!--
  Input:
+-->
 
     {
         "config": {
@@ -3474,14 +3748,17 @@ Return:
         }
     }
 
-### PATCH (ETag supported)
- * Description: update the storage volume information
- * Introduced: with API extension `storage`
- * Authentication: trusted
- * Operation: sync
- * Return: standard return value or standard error
+### PATCH (ETag サポートあり) <!-- PATCH (ETag supported) -->
+ * 説明: ストレージボリュームの情報を変更します <!-- Description: update the storage volume information -->
+ * 導入: `storage` API 拡張によって <!-- Introduced: with API extension `storage` -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻り値: 標準の戻り値または標準のエラー <!-- Return: standard return value or standard error -->
 
+入力
+<!--
  Input:
+-->
 
     {
         "config": {
@@ -3490,26 +3767,32 @@ Return:
     }
 
 ### DELETE
- * Description: delete a storage volume of a given type on a given storage pool
- * Introduced: with API extension `storage`
- * Authentication: trusted
- * Operation: sync
- * Return: standard return value or standard error
+ * 説明: 指定したストレージプール上の指定したタイプのストレージボリュームを削除します <!-- Description: delete a storage volume of a given type on a given storage pool -->
+ * 導入: `storage` API 拡張によって <!-- Introduced: with API extension `storage` -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻り値: 標準の戻り値または標準のエラー <!-- Return: standard return value or standard error -->
 
+入力 (現在は何もなし)
+<!--
 Input (none at present):
+-->
 
     {
     }
 
 ## `/1.0/resources`
 ### GET
- * Description: information about the resources available to the LXD server
- * Introduced: with API extension `resources`
- * Authentication: guest, untrusted or trusted
- * Operation: sync
- * Return: dict representing the system resources
+ * 説明: LXD サーバで利用可能なリソースに関する情報 <!-- Description: information about the resources available to the LXD server -->
+ * 導入: `resources` API 拡張によって <!-- Introduced: with API extension `resources` -->
+ * 認証: guest, untrusted または trusted <!-- Authentication: guest, untrusted or trusted -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻り値: システムリソースを表す dict <!-- Return: dict representing the system resources -->
 
+戻り値
+<!--
 Return:
+-->
 
     {
         "type": "sync",
@@ -3541,13 +3824,16 @@ Return:
 
 ## `/1.0/cluster`
 ### GET
- * Description: information about a cluster (such as networks and storage pools)
- * Introduced: with API extension `clustering`
- * Authentication: trusted or untrusted
- * Operation: sync
- * Return: dict representing a cluster
+ * 説明: クラスタの情報 (ネットワークやストレージプールなど) <!-- Description: information about a cluster (such as networks and storage pools) -->
+ * 導入: `clustering` API 拡張によって <!-- Introduced: with API extension `clustering` -->
+ * 認証: trusted または untrusted <!-- Authentication: trusted or untrusted -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻り値: クラスタを表す dict <!-- Return: dict representing a cluster -->
 
+戻り値
+<!--
 Return:
+-->
 
     {
         "server_name": "node1",
@@ -3569,22 +3855,31 @@ Return:
     }
 
 ### PUT
- * Description: bootstrap or join a cluster, or disable clustering on this node
- * Introduced: with API extension `clustering`
- * Authentication: trusted
- * Operation: sync or async
- * Return: various payloads depending on the input
+ * 説明: このノード上のクラスタをブートストラップしたりクラスタに参加したり、クラスタリングを無効にします <!-- Description: bootstrap or join a cluster, or disable clustering on this node -->
+ * 導入: `clustering` API 拡張によって <!-- Introduced: with API extension `clustering` -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期または非同期 <!-- Operation: sync or async -->
+ * 戻り値: 入力によってさまざまなペイロード <!-- Return: various payloads depending on the input -->
 
+入力 (新しいクラスタをブートストラップする場合)
+<!--
 Input (bootstrap a new cluster):
+-->
 
     {
         "server_name": "lxd1",
         "enabled": true,
     }
 
+バックグラウンド操作か標準のエラーを返します。
+<!--
 Return background operation or standard error.
+-->
 
+入力 (既存のクラスタに参加を依頼する場合)
+<!--
 Input (request to join an existing cluster):
+-->
 
     {
         "server_name": "node2",
@@ -3608,7 +3903,10 @@ Input (request to join an existing cluster):
             },
     }
 
+入力 (このノード上のクラスタリングを無効にする場合)
+<!--
 Input (disable clustering on the node):
+-->
 
     {
         "enabled": false,
@@ -3616,13 +3914,16 @@ Input (disable clustering on the node):
 
 ## `/1.0/cluster/members`
 ### GET
- * Description: list of LXD members in the cluster
- * Introduced: with API extension `clustering`
- * Authentication: trusted
- * Operation: sync
- * Return: list of cluster members
+ * 説明: クラスタ内の LXD メンバの一覧 <!-- Description: list of LXD members in the cluster -->
+ * 導入: `clustering` API 拡張によって <!-- Introduced: with API extension `clustering` -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻り値: クラスタメンバの一覧 <!-- Return: list of cluster members -->
 
+戻り値
+<!--
 Return:
+-->
 
     [
         "/1.0/cluster/members/lxd1",
@@ -3631,13 +3932,16 @@ Return:
 
 ## `/1.0/cluster/members/<name>`
 ### GET
- * Description: retrieve the member's information and status
- * Introduced: with API extension `clustering`
- * Authentication: trusted
- * Operation: sync
- * Return: dict representing the member
+ * 説明: メンバの情報と状態を取得します <!-- Description: retrieve the member's information and status -->
+ * 導入: `clustering` API 拡張によって <!-- Introduced: with API extension `clustering` -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻り値: メンバを表す dict <!-- Return: dict representing the member -->
 
+戻り値
+<!--
 Return:
+-->
 
     {
         "name": "lxd1",
@@ -3647,26 +3951,32 @@ Return:
     }
 
 ### POST
- * Description: rename a cluster member
- * Introduced: with API extension `clustering`
- * Authentication: trusted
- * Operation: sync
- * Return: standard return value or standard error
+ * 説明: クラスタメンバをリネームします <!-- Description: rename a cluster member -->
+ * 導入: `clustering` API 拡張によって <!-- Introduced: with API extension `clustering` -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻り値: 標準の戻り値または標準のエラー <!-- Return: standard return value or standard error -->
 
+入力
+<!--
 Input:
+-->
 
     {
         "server_name": "node1",
     }
 
-### DELETE (optional `?force=1`)
- * Description: remove a member of the cluster
- * Introduced: with API extension `clustering`
- * Authentication: trusted
- * Operation: async
- * Return: background operation or standard error
+### DELETE (`?force=1` を任意で指定可能) <!-- DELETE (optional `?force=1`) -->
+ * 説明: クラスタのメンバを削除します <!-- Description: remove a member of the cluster -->
+ * 導入: `clustering` API 拡張によって <!-- Introduced: with API extension `clustering` -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 非同期 <!-- Operation: async -->
+ * 戻り値: バックグラウンド操作または標準のエラー <!-- Return: background operation or standard error -->
 
+入力 (現在は何もなし)
+<!--
 Input (none at present):
+-->
 
     {
     }
