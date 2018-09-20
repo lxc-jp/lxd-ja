@@ -1190,7 +1190,7 @@ Output:
 ### PUT (ETag サポートあり) <!-- PUT (ETag supported) -->
  * 説明: コンテナの設定を置き換えるかスナップショットをリストアします <!-- Description: replaces container configuration or restore snapshot -->
  * 認証: trusted <!-- Authentication: trusted -->
- * 操作: 同期 <!-- Operation: sync -->
+ * 操作: 非同期 <!-- Operation: async -->
  * 戻り値: バックグラウンド操作または標準のエラー <!-- Return: background operation or standard error -->
 
 入力 (コンテナの設定を更新します)
@@ -1260,9 +1260,9 @@ Input:
     }
 
 ### POST
- * 説明: コンテナをリネーム/マイグレーションするのに用いられます <!-- Description: used to rename/migrate the container -->
+ * 説明: コンテナをリネーム／マイグレーションするのに用いられます <!-- Description: used to rename/migrate the container -->
  * 認証: trusted <!-- Authentication: trusted -->
- * 操作: 同期 <!-- Operation: sync -->
+ * 操作: 非同期 <!-- Operation: async -->
  * 戻り値: バックグラウンド操作または標準のエラー <!-- Return: background operation or standard error -->
 
 既に存在する名前にリネームしようとすると 409 (Conflict) という HTTP ステータスコードを返します。
@@ -1324,7 +1324,7 @@ These are the secrets that should be passed to the create call.
 ### DELETE
  * 説明: コンテナを削除します <!-- Description: remove the container -->
  * 認証: trusted <!-- Authentication: trusted -->
- * 操作: 同期 <!-- Operation: sync -->
+ * 操作: 非同期 <!-- Operation: async -->
  * 戻り値: バックグラウンド操作または標準のエラー <!-- Return: background operation or standard error -->
 
 入力 (現在は何もなし)
@@ -1633,7 +1633,7 @@ Return value:
 ### POST
  * 説明: 新しいスナップショットを作成します <!-- Description: create a new snapshot -->
  * 認証: trusted <!-- Authentication: trusted -->
- * 操作: 同期 <!-- Operation: sync -->
+ * 操作: 非同期 <!-- Operation: async -->
  * 戻り値: バックグラウンド操作または標準のエラー <!-- Return: background operation or standard error -->
 
 入力
@@ -1715,7 +1715,7 @@ Return:
 ### POST
  * 説明: スナップショットをリネーム／マイグレートします <!-- Description: used to rename/migrate the snapshot -->
  * 認証: trusted <!-- Authentication: trusted -->
- * 操作: 同期 <!-- Operation: sync -->
+ * 操作: 非同期 <!-- Operation: async -->
  * 戻り値: バックグラウンド操作または標準のエラー <!-- Return: background operation or standard error -->
 
 入力 (スナップショットをリネーム)
@@ -1763,7 +1763,7 @@ Renaming to an existing name must return the 409 (Conflict) HTTP code.
 ### DELETE
  * 説明: スナップショットを削除します <!-- Description: remove the snapshot -->
  * 認証: trusted <!-- Authentication: trusted -->
- * 操作: 同期 <!-- Operation: sync -->
+ * 操作: 非同期 <!-- Operation: async -->
  * 戻り値: バックグラウンド操作または標準のエラー <!-- Return: background operation or standard error -->
 
 入力 (現在は何もなし)
@@ -1936,7 +1936,7 @@ Output:
 ### PUT
  * 説明: コンテナの状態を変更する <!-- Description: change the container state -->
  * 認証: trusted <!-- Authentication: trusted -->
- * 操作: 同期 <!-- Operation: sync -->
+ * 操作: 同期 (訳注: 原文では非同期ですが戻り値がバックグラウンド操作ではなく dict なので同期と思われます) <!-- Operation: async -->
  * 戻り値: 現在の状態を表す dict <!-- Return: dict representing current state -->
 
 入力
@@ -2602,19 +2602,30 @@ HTTP code for this should be 202 (Accepted).
 -->
 
 ## `/1.0/images/<fingerprint>/export`
-### GET (optional `?secret=SECRET`)
- * Description: Download the image tarball
- * Authentication: guest or trusted
- * Operation: sync
- * Return: Raw file or standard error
+### GET (`?secret=SECRET` を任意で指定可能) <!-- GET (optional `?secret=SECRET`) -->
+ * 説明: イメージの tarball をダウンロードします <!-- Description: Download the image tarball -->
+ * 認証: guest または trusted <!-- Authentication: guest or trusted -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻り値: 生のファイルまたは標準のエラー <!-- Return: Raw file or standard error -->
 
+信頼されていない LXD が別の LXD に保管されている private なイメージから
+新しいコンテナを起動する場合は secret の文字列が必要です。
+<!--
 The secret string is required when an untrusted LXD is spawning a new
 container from a private image stored on a different LXD.
+-->
 
+2 つの LXD の間で信頼関係を要求する代わりに、クライアントは
+`/1.0/images/<fingerprint>/export` に `POST` のリクエストを
+送ってシークレットトークンを取得し、それをエクスポート先の LXD に
+渡すことが出来ます。エクスポート先の LXD はシークレットトークンを
+渡してイメージを guest として取得します。
+<!--
 Rather than require a trust relationship between the two LXDs, the
 client will `POST` to `/1.0/images/<fingerprint>/export` to get a secret
 token which it'll then pass to the target LXD. That target LXD will then
 GET the image as a guest, passing the secret token.
+-->
 
 ## `/1.0/images/<fingerprint>/refresh`
 ### POST
