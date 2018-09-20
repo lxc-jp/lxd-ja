@@ -1936,7 +1936,7 @@ Output:
 ### PUT
  * 説明: コンテナの状態を変更する <!-- Description: change the container state -->
  * 認証: trusted <!-- Authentication: trusted -->
- * 操作: 同期 (訳注: 原文では非同期ですが戻り値がバックグラウンド操作ではなく dict なので同期と思われます) <!-- Operation: async -->
+ * 操作: 非同期 <!-- Operation: async -->
  * 戻り値: 現在の状態を表す dict <!-- Return: dict representing current state -->
 
 入力
