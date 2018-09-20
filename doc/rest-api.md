@@ -1412,7 +1412,7 @@ Input (run bash):
         "command": ["/bin/bash"],       # コマンドと引数
         "environment": {},              # 追加で設定する任意で指定可能な環境変数
         "wait-for-websocket": false,    # プロセスを開始する前に接続を待つかどうか
-        "record-output": false,         # 標準出力と標準エラー出力を記録するかどうか (wait-for-websocket=false のときのみ有効)
+        "record-output": false,         # 標準出力と標準エラー出力を記録するかどうか (wait-for-websocket=false のときのみ有効) (container_exec_recording API 拡張が必要)
         "interactive": true,            # PIPE の代わりに pts デバイスを割り当てるかどうか
         "width": 80,                    # 端末の初期の幅 (任意で指定可能)
         "height": 25,                   # 端末の初期の高さ (任意で指定可能)
@@ -1431,7 +1431,7 @@ Input (run bash):
 -->
 
 `wait-for-websocket` は (ユーザが標準入力を渡し、標準出力を読み取れる
-ようにするために) 操作がブロックしウェブソケットの接続が開始するのを
+ようにするために) 操作をブロックしウェブソケットの接続が開始するのを
 待つか、あるいは即座に開始するかを指示します。
 <!--
 `wait-for-websocket` indicates whether the operation should block and wait for
@@ -1727,7 +1727,7 @@ Input (rename the snapshot):
         "name": "new-name"
     }
 
-入力 (マイグレーションの作成元をセットアップ)
+入力 (マイグレーション元をセットアップ)
 <!--
 Input (setup the migration source):
 -->
@@ -2375,7 +2375,7 @@ In the source image case, the following dict must be used:
             "mode": "pull",                     # 現在は pull のみがサポートされています
             "server": "https://10.0.2.3:8443",  # リモートサーバ (pull モードのときのみ)
             "protocol": "lxd",                  # プロトコル (lxd または simplestreams、デフォルトは lxd)
-            "secret": "my-secret-string",       # シークレット (pull もーどのときのみ、 private なイメージのみ)
+            "secret": "my-secret-string",       # シークレット (pull モードのときのみ、 private なイメージのみ)
             "certificate": "PEM certificate",   # 任意で指定可能な PEM 証明書。指定されない場合はシステム CA が使用されます
             "fingerprint": "SHA256",            # イメージのフィンガープリント (エイリアスを指定しない場合は必須です)
             "alias": "ubuntu/devel",            # エイリアスの名前 (フィンガープリントを指定しない場合は必須です)
