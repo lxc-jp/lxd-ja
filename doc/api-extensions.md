@@ -106,45 +106,91 @@ See [security.md](Security) for details.
 -->
 
 ## container\_last\_used\_at
+`GET /1.0/containers/<name>` エンドポイントに `last_used_at` フィールドが追加されました。
+<!--
 A `last_used_at` field was added to the `GET /1.0/containers/<name>` endpoint.
+-->
 
+これはコンテナが開始した最新の時刻のタイムスタンプです。
+<!--
 It is a timestamp of the last time the container was started.
+-->
 
+コンテナが作成されたが開始はされていない場合は `last_used_at` フィールドは
+`1970-01-01T00:00:00Z` になります。
+<!--
 If a container has been created but not started yet, `last_used_at` field
 will be `1970-01-01T00:00:00Z`
+-->
 
 ## etag
+関連性のある全てのエンドポイントに ETag ヘッダのサポートが追加されました。
+<!--
 Add support for the ETag header on all relevant endpoints.
+-->
 
+この変更により GET のレスポンスに次の HTTP ヘッダが追加されます。
+<!--
 This adds the following HTTP header on answers to GET:
+-->
 
- - ETag (SHA-256 of user modifiable content)
+ - ETag (ユーザが変更可能なコンテンツの SHA-256) <!-- ETag (SHA-256 of user modifiable content) -->
 
+また PUT リクエストに次の HTTP ヘッダのサポートが追加されます。
+<!--
 And adds support for the following HTTP header on PUT requests:
+-->
 
- - If-Match (ETag value retrieved through previous GET)
+ - If-Match (前回の GET で得られた ETag の値を指定) <!-- If-Match (ETag value retrieved through previous GET) -->
 
+これにより GET で LXD のオブジェクトを取得して PUT で変更する際に、
+レースコンディションになったり、途中で別のクライアントがオブジェクトを
+変更していた (訳注: のを上書きしてしまう) というリスク無しに PUT で
+変更できるようになります。
+<!--
 This makes it possible to GET a LXD object, modify it and PUT it without
 risking to hit a race condition where LXD or another client modified the
 object in the meantime.
+-->
 
 ## patch
+HTTP の PATCH メソッドのサポートを追加します。
+<!--
 Add support for the HTTP PATCH method.
+-->
 
+PUT の代わりに PATCH を使うとオブジェクトの部分的な変更が出来ます。
+<!--
 PATCH allows for partial update of an object in place of PUT.
+-->
 
 ## usb\_devices
+USB ホットプラグのサポートを追加します。
+<!--
 Add support for USB hotplug.
+-->
 
 ## https\_allowed\_credentials
+LXD API を全てのウェブブラウザで (SPA 経由で) 使用するには、 XHR の度に
+認証情報を送る必要があります。それぞれの XHR リクエストで 
+["withCredentials=true"](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/withCredentials)
+とセットします。
+<!--
 To use LXD API with all Web Browsers (via SPAs) you must send credentials
 (certificate) with each XHR (in order for this to happen, you should set
 ["withCredentials=true"](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/withCredentials)
 flag to each XHR Request).
+-->
 
+Firefox や Safari などいくつかのブラウザは
+`Access-Control-Allow-Credentials: true` ヘッダがないレスポンスを受け入れる
+ことができません。サーバがこのヘッダ付きのレスポンスを返すことを保証するには
+`core.https_allowed_credentials=true` と設定してください。
+<!--
 Some browsers like Firefox and Safari can't accept server response without
 `Access-Control-Allow-Credentials: true` header. To ensure that the server will
 return a response with that header, set `core.https_allowed_credentials=true`.
+-->
 
 ## image\_compression\_algorithm
 This adds support for a `compression_algorithm` property when creating an image (`POST /1.0/images`).
