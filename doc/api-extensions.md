@@ -1,52 +1,109 @@
-# API extensions
+# API 拡張 <!-- API extensions -->
 
+以下の変更は 1.0 API が確定した後に LXD API に導入されました。
+<!--
 The changes below were introduced to the LXD API after the 1.0 API was finalized.
+-->
 
+それらの変更は全て後方互換であり、 `GET /1.0/` の `api_extensions` を
+見ることでクライアントツールにより検出可能です。
+<!--
 They are all backward compatible and can be detected by client tools by
 looking at the `api_extensions` field in `GET /1.0/`.
+-->
 
 
 ## storage\_zfs\_remove\_snapshots
+`storage.zfs_remove_snapshots` というデーモン設定キーが導入されました。
+<!--
 A `storage.zfs_remove_snapshots` daemon configuration key was introduced.
+-->
 
+値の型は boolean でデフォルトは false です。 true にセットすると、スナップショットを
+復元しようとするときに必要なスナップショットを全て削除するように LXD に
+指示します。
+<!--
 It's a boolean that defaults to false and that when set to true instructs LXD
 to remove any needed snapshot when attempting to restore another.
+-->
 
+ZFS でスナップショットの復元が出来るのは最新のスナップショットに限られるので、
+この対応が必要になります。
+<!--
 This is needed as ZFS will only let you restore the latest snapshot.
+-->
 
 ## container\_host\_shutdown\_timeout
+`boot.host_shutdown_timeout` というコンテナ設定キーが導入されました。
+<!--
 A `boot.host_shutdown_timeout` container configuration key was introduced.
+-->
 
+値の型は integer でコンテナを停止しようとした後 kill するまでどれだけ
+待つかを LXD に指示します。
+<!--
 It's an integer which indicates how long LXD should wait for the container
 to stop before killing it.
+-->
 
+この値は LXD デーモンのクリーンなシャットダウンのときにのみ使用されます。
+デフォルトは 30s です。
+<!--
 Its value is only used on clean LXD daemon shutdown. It defaults to 30s.
+-->
 
 ## container\_stop\_priority
+`boot.stop.priority` というコンテナ設定キーが導入されました。
+<!--
 A `boot.stop.priority` container configuration key was introduced.
+-->
 
+値の型は integer でシャットダウン時のコンテナの優先度を指示します。
+<!--
 It's an integer which indicates the priority of a container during shutdown.
+-->
 
+コンテナは優先度レベルの高いものからシャットダウンを開始します。
+<!--
 Containers will shutdown starting with the highest priority level.
+-->
 
+同じ優先度のコンテナは並列にシャットダウンします。デフォルトは 0 です。
+<!--
 Containers with the same priority will shutdown in parallel.  It defaults to 0.
+-->
 
 ## container\_syscall\_filtering
+コンテナ設定キーに関するいくつかの新しい syscall が導入されました。
+<!--
 A number of new syscalls related container configuration keys were introduced.
+-->
 
  * `security.syscalls.blacklist_default`
  * `security.syscalls.blacklist_compat`
  * `security.syscalls.blacklist`
  * `security.syscalls.whitelist`
 
+使い方は [configuration.md](Configuration) を参照してください。
+<!--
 See [configuration.md](Configuration) for how to use them.
+-->
 
 ## auth\_pki
+これは PKI 認証モードのサポートを指示します。
+<!--
 This indicates support for PKI authentication mode.
+-->
 
+このモードではクライアントとサーバは同じ PKI によって発行された証明書を使わなければなりません。
+<!--
 In this mode, the client and server both must use certificates issued by the same PKI.
+-->
 
+詳細は [security.md](Security) を参照してください。
+<!--
 See [security.md](Security) for details.
+-->
 
 ## container\_last\_used\_at
 A `last_used_at` field was added to the `GET /1.0/containers/<name>` endpoint.
