@@ -193,49 +193,89 @@ return a response with that header, set `core.https_allowed_credentials=true`.
 -->
 
 ## image\_compression\_algorithm
+この変更はイメージを作成する時 (`POST /1.0/images`) に `compression_algorithm`
+というプロパティのサポートを追加します。
+<!--
 This adds support for a `compression_algorithm` property when creating an image (`POST /1.0/images`).
+-->
 
+このプロパティを設定するとサーバのデフォルト値 (`images.compression_algorithm`)
+<!--
 Setting this property overrides the server default value (`images.compression_algorithm`).
+-->
 
 ## directory\_manipulation
+この変更により LXD API 経由でディレクトリを作成したり一覧したりできるように
+なり、ファイルタイプを X-LXD-type ヘッダに付与するようになります。現状は
+ファイルタイプは "file" か "directory" のいずれかです。
+<!--
 This allows for creating and listing directories via the LXD API, and exports
 the file type via the X-LXD-type header, which can be either "file" or
 "directory" right now.
+-->
 
 ## container\_cpu\_time
+この拡張により実行中のコンテナの CPU 時間を取得できます。
+<!--
 This adds support for retrieving cpu time for a running container.
+-->
 
 ## storage\_zfs\_use\_refquota
+この拡張により新しいサーバプロパティ `storage.zfs_use_refquota` が追加されます。
+これはコンテナにサイズ制限を設定する際に "quota" の代わりに "refquota" を設定する
+ように LXD に指示します。また LXD はディスク使用量を調べる際に "used" の代わりに
+"usedbydataset" を使うようになります。
+<!--
 Introduces a new server property `storage.zfs_use_refquota` which instructs LXD
 to set the "refquota" property instead of "quota" when setting a size limit
 on a container. LXD will also then use "usedbydataset" in place of "used"
 when being queried about disk utilization.
+-->
 
+これはスナップショットによるディスク消費をコンテナのディスク利用の一部と
+みなすかどうかを実質的に切り替えることになります。
+<!--
 This effectively controls whether disk usage by snapshots should be
 considered as part of the container's disk space usage.
+-->
 
 ## storage\_lvm\_mount\_options
+この拡張は `storage.lvm_mount_options` という新しいデーモン設定オプションを
+追加します。デフォルト値は "discard" で、このオプションにより LVM LV で使用する
+ファイルシステムの追加マウントオプションをユーザが指定できるようになります。
+<!--
 Adds a new `storage.lvm_mount_options` daemon configuration option
 which defaults to "discard" and allows the user to set addition mount
 options for the filesystem used by the LVM LV.
+-->
 
 ## network
+LXD のネットワーク管理 API 。
+<!--
 Network management API for LXD.
+-->
 
+次のものを含みます。
+<!--
 This includes:
+-->
 
- * Addition of the "managed" property on `/1.0/networks` entries
- * All the network configuration options (see [configuration.md](configuration) for details)
- * `POST /1.0/networks` (see [rest-api.md](RESTful API) for details)
- * `PUT /1.0/networks/<entry>` (see [RESTful API](rest-api.md)for details)
- * `PATCH /1.0/networks/<entry>` (see [RESTful API](rest-api.md) for details)
- * `DELETE /1.0/networks/<entry>` (see [RESTful API](rest-api.md) for details)
- * `ipv4.address` property on "nic" type devices (when nictype is "bridged")
- * `ipv6.address` property on "nic" type devices (when nictype is "bridged")
- * `security.mac_filtering` property on "nic" type devices (when nictype is "bridged")
+ * `/1.0/networks` エントリに "managed" プロパティを追加 <!-- Addition of the "managed" property on `/1.0/networks` entries -->
+ * ネットワーク設定オプションの全て (詳細は[configuration.md](configuration) を参照) <!-- All the network configuration options (see [configuration.md](configuration) for details) -->
+ * `POST /1.0/networks` (詳細は [rest-api.md](RESTful API) を参照) <!-- `POST /1.0/networks` (see [rest-api.md](RESTful API) for details) -->
+ * `PUT /1.0/networks/<entry>` (詳細は [RESTful API](rest-api.md) を参照) <!-- `PUT /1.0/networks/<entry>` (see [RESTful API](rest-api.md)for details) -->
+ * `PATCH /1.0/networks/<entry>` (詳細は [RESTful API](rest-api.md) を参照) <!-- `PATCH /1.0/networks/<entry>` (see [RESTful API](rest-api.md) for details) -->
+ * `DELETE /1.0/networks/<entry>` (詳細は [RESTful API](rest-api.md) を参照) <!-- `DELETE /1.0/networks/<entry>` (see [RESTful API](rest-api.md) for details) -->
+ * "nic" タイプのデバイスの `ipv4.address` プロパティ (nictype が "bridged" の場合) <!-- `ipv4.address` property on "nic" type devices (when nictype is "bridged") -->
+ * "nic" タイプのデバイスの `ipv6.address` プロパティ (nictype が "bridged" の場合) <!-- `ipv6.address` property on "nic" type devices (when nictype is "bridged") -->
+ * "nic" タイプのデバイスの `security.mac_filtering` プロパティ (nictype が "bridged" の場合) <!-- `security.mac_filtering` property on "nic" type devices (when nictype is "bridged") -->
 
 ## profile\_usedby
+プロファイルを使用しているコンテナをプロファイルエントリの一覧の used\_by フィールド
+として新たに追加します。
+<!--
 Adds a new used\_by field to profile entries listing the containers that are using it.
+-->
 
 ## container\_push
 When a container is created in push mode, the client serves as a proxy between
