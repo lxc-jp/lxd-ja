@@ -538,151 +538,313 @@ places an upper limit on the amount of socket I/O allowed.
 -->
 
 ## network\_vxlan\_interface
+ネットワークに `tunnel.NAME.interface` オプションを新たに導入します。
+<!--
 This introduces a new `tunnel.NAME.interface` option for networks.
+-->
 
+このキーは VXLAN トンネルにホストのどのネットワークインタフェースを使うかを
+制御します。
+<!--
 This key control what host network interface is used for a VXLAN tunnel.
+-->
 
 ## storage\_btrfs\_mount\_options
+btrfs ストレージプールに `btrfs.mount_options` プロパティを導入します。
+<!--
 This introduces the `btrfs.mount_options` property for btrfs storage pools.
+-->
 
+このキーは btrfs ストレージプールに使われるマウントオプションを制御します。
+<!--
 This key controls what mount options will be used for the btrfs storage pool.
+-->
 
 ## entity\_description
+これはエンティティにコンテナ、スナップショット、ストレージプール、ボリュームの
+ような説明を追加します。
+<!--
 This adds descriptions to entities like containers, snapshots, networks, storage pools and volumes.
+-->
 
 ## image\_force\_refresh
+これは既存のイメージを強制的にリフレッシュできるようにします。
+<!--
 This allows forcing a refresh for an existing image.
+-->
 
 ## storage\_lvm\_lv\_resizing
+これはコンテナの root ディスクデバイス内に `size` プロパティを設定することで
+論理ボリュームをリサイズできるようにします。
+<!--
 This introduces the ability to resize logical volumes by setting the `size`
 property in the containers root disk device.
+-->
 
 ## id\_map\_base
+これは `security.idmap.base` を新しく導入します。これにより分離されたコンテナ
+に map auto-selection するプロセスをスキップし、ホストのどの uid/gid をベース
+として使うかをユーザが指定できるようにします。
+<!--
 This introduces a new `security.idmap.base` allowing the user to skip the
 map auto-selection process for isolated containers and specify what host
 uid/gid to use as the base.
+-->
 
 ## file\_symlinks
+これは file API 経由でシンボリックリンクを転送するサポートを追加します。
+X-LXD-type に "symlink" を指定できるようになり、リクエストの内容はターゲットの
+パスを指定します。
+<!--
 This adds support for transferring symlinks through the file API.
 X-LXD-type can now be "symlink" with the request content being the target path.
+-->
 
 ## container\_push\_target
+`POST /1.0/containers/<name>` に `target` フィールドを新たに追加します。
+これはマイグレーション中に作成元の LXD ホストが作成先に接続するために
+利用可能です。
+<!--
 This adds the `target` field to `POST /1.0/containers/<name>` which can be
 used to have the source LXD host connect to the target during migration.
+-->
 
 ## network\_vlan\_physical
+`physical` ネットワークデバイスで `vlan` プロパティが使用できるようにします。
+<!--
 Allows use of `vlan` property with `physical` network devices.
+-->
 
+設定すると、 `parent インタフェース上で指定された VLAN にアタッチするように
+LXD に指示します。 LXD はホスト上でその `parent` と VLAN を既存のインタフェース
+で探します。
+見つからない場合は作成します。
+その後コンテナにこのインタフェースを直接アタッチします。
+<!--
 When set, this will instruct LXD to attach to the specified VLAN on the `parent` interface.
 LXD will look for an existing interface for that `parent` and VLAN on the host.
 If one can't be found it will create one itself.
 Then, LXD will directly attach this interface to the container.
+-->
 
 ## storage\_images\_delete
+これは指定したストレージプールからイメージのストレージボリュームを
+ストレージ API で削除できるようにします。
+<!--
 This enabled the storage API to delete storage volumes for images from
 a specific storage pool.
+-->
 
 ## container\_edit\_metadata
+これはコンテナの metadata.yaml と関連するテンプレートを
+`/1.0/containers/<name>/metadata` 配下の URL にアクセスすることにより
+API で編集できるようにします。コンテナからイメージを発行する前にコンテナを
+編集できるようになります。
+<!--
 This adds support for editing a container metadata.yaml and related templates
 via API, by accessing urls under `/1.0/containers/<name>/metadata`. It can be used
 to edit a container before publishing an image from it.
+-->
 
 ## container\_snapshot\_stateful\_migration
+これは stateful なコンテナのスナップショットを新しいコンテナにマイグレート
+できるようにします。
+<!--
 This enables migrating stateful container snapshots to new containers.
+-->
 
 ## storage\_driver\_ceph
+これは ceph ストレージドライバを追加します。
+<!--
 This adds a ceph storage driver.
+-->
 
 ## storage\_ceph\_user\_name
+これは ceph ユーザを指定できるようにします。
+<!--
 This adds the ability to specify the ceph user.
+-->
 
 ## instance\_types
+これはコンテナの作成リクエストに `instance_type` フィールドを追加します。
+値は LXD のリソース制限に展開されます。
+<!--
 This adds the `instance_type` field to the container creation request.
 Its value is expanded to LXD resource limits.
+-->
 
 ## storage\_volatile\_initial\_source
+これはストレージプール作成中に LXD に渡された実際の作成元を記録します。
+<!--
 This records the actual source passed to LXD during storage pool creation.
+-->
 
 ## storage\_ceph\_force\_osd\_reuse
+これは ceph ストレージドライバに `ceph.osd.force_reuse` プロパティを
+導入します。 `true` に設定すると LXD は別の LXD インスタンスで既に使用中の
+osd ストレージプールを再利用するようになります。
+<!--
 This introduces the `ceph.osd.force_reuse` property for the ceph storage
 driver. When set to `true` LXD will reuse a osd storage pool that is already in
 use by another LXD instance.
+-->
 
 ## storage\_block\_filesystem\_btrfs
+これは ext4 と xfs に加えて btrfs をストレージボリュームファイルシステムとして
+サポートするようになります。
+<!--
 This adds support for btrfs as a storage volume filesystem, in addition to ext4
 and xfs.
+-->
 
 ## resources
+これは LXD が利用可能なシステムリソースを LXD デーモンに問い合わせできるようにします。
+<!--
 This adds support for querying an LXD daemon for the system resources it has
 available.
+-->
 
 ## kernel\_limits
+これは `nofile` でコンテナがオープンできるファイルの最大数といったプロセスの
+リミットを設定できるようにします。形式は `limits.kernel.[リミット名]` です。
+<!--
 This adds support for setting process limits such as maximum number of open
 files for the container via `nofile`. The format is `limits.kernel.[limit name]`.
+-->
 
 ## storage\_api\_volume\_rename
+これはカスタムストレージボリュームをリネームできるようにします。
+<!--
 This adds support for renaming custom storage volumes.
+-->
 
 ## external\_authentication
+これは Macaroons での外部認証をできるようにします。
+<!--
 This adds support for external authentication via Macaroons.
+-->
 
 ## network\_sriov
+これは SR-IOV を有効にしたネットワークデバイスのサポートを追加します。
+<!--
 This adds support for SR-IOV enabled network devices.
+-->
 
 ## console
+これはコンテナのコンソールデバイスとコンソールログを利用可能にします。
+<!--
 This adds support to interact with the container console device and console log.
+-->
 
 ## restrict\_devlxd
+security.devlxd コンテナ設定キーを新たに導入します。このキーは /dev/lxd
+インタフェースがコンテナで利用可能になるかを制御します。
+false に設定すると、コンテナが LXD デーモンと連携するのを実質無効に
+することになります。
+<!--
 A new security.devlxd container configuration key was introduced.
 The key controls whether the /dev/lxd interface is made available to the container.
 If set to false, this effectively prevents the container from interacting with the LXD daemon.
+-->
 
 ## migration\_pre\_copy
+これはライブマイグレーション中に最適化されたメモリ転送をできるようにします。
+<!--
 This adds support for optimized memory transfer during live migration.
+-->
 
 ## infiniband
+これは infiniband ネットワークデバイスを使用できるようにします。
+<!--
 This adds support to use infiniband network devices.
+-->
 
 ## maas\_network
+これは MAAS ネットワーク統合をできるようにします。
+<!--
 This adds support for MAAS network integration.
+-->
 
+デーモンレベルで設定すると、 "nic" デバイスを特定の MAAS サブネットに
+アタッチできるようになります。
+<!--
 When configured at the daemon level, it's then possible to attach a "nic"
 device to a particular MAAS subnet.
+-->
 
 ## devlxd\_events
+これは devlxd ソケットに websocket API を追加します。
+<!--
 This adds a websocket API to the devlxd socket.
+-->
 
+devlxd ソケット上で /1.0/events に接続すると、 websocket 上で
+イベントのストリームを受け取れるようになります。
+<!--
 When connecting to /1.0/events over the devlxd socket, you will now be
 getting a stream of events over websocket.
+-->
 
 ## proxy
+これはコンテナに `proxy` という新しいデバイスタイプを追加します。
+これによりホストとコンテナ間で接続をフォワーディングできるようになります。
+<!--
 This adds a new `proxy` device type to containers, allowing forwarding
 of connections between the host and container.
+-->
 
 ## network\_dhcp\_gateway
+代替のゲートウェイを設定するための ipv4.dhcp.gateway ネットワーク設定キーを
+新たに追加します。
+<!--
 Introduces a new ipv4.dhcp.gateway network config key to set an alternate gateway.
+-->
 
 ## file\_get\_symlink
+これは file API を使ってシンボリックリンクを取得できるようにします。
+<!--
 This makes it possible to retrieve symlinks using the file API.
+-->
 
 ## network\_leases
+/1.0/networks/NAME/leases API エンドポイントを追加します。 LXD が管理する
+DHCP サーバが稼働するブリッジ上の貸出データベースに問い合わせできるように
+なります。
+<!--
 Adds a new /1.0/networks/NAME/leases API endpoint to query the lease database on
 bridges which run a LXD-managed DHCP server.
+-->
 
 ## unix\_device\_hotplug
+これは unix デバイスに "required" プロパティのサポートを追加します。
+<!--
 This adds support for the "required" property for unix devices.
+-->
 
 ## storage\_api\_local\_volume\_handling
+これはカスタムストレージボリュームを同じあるいは異なるストレージプール間で
+コピーしたり移動したりできるようにします。
+<!--
 This add the ability to copy and move custom storage volumes locally in the
 same and between storage pools.
+-->
 
 ## operation\_description
+全ての操作に "description" フィールドを追加します。
+<!--
 Adds a "description" field to all operations.
+-->
 
 ## clustering
+LXD のクラスタリング API 。
+<!--
 Clustering API for LXD.
+-->
 
+これは次の新しいエンドポイントを含みます (詳細は [RESTful API](rest-api.md) を参照)。
+<!--
 This includes the following new endpoints (see [RESTful API](rest-api.md) for details):
+-->
 
 * `GET /1.0/cluster`
 * `UPDATE /1.0/cluster`
@@ -693,39 +855,62 @@ This includes the following new endpoints (see [RESTful API](rest-api.md) for de
 * `POST /1.0/cluster/members/<name>`
 * `DELETE /1.0/cluster/members/<name>`
 
+次の既存のエンドポイントは以下のように変更されます。
+<!--
 The following existing endpoints have been modified:
+-->
 
- * `POST /1.0/containers` accepts a new target query parameter
- * `POST /1.0/storage-pools` accepts a new target query parameter
- * `GET /1.0/storage-pool/<name>` accepts a new target query parameter
- * `POST /1.0/storage-pool/<pool>/volumes/<type>` accepts a new target query parameter
- * `GET /1.0/storage-pool/<pool>/volumes/<type>/<name>` accepts a new target query parameter
- * `POST /1.0/storage-pool/<pool>/volumes/<type>/<name>` accepts a new target query parameter
- * `PUT /1.0/storage-pool/<pool>/volumes/<type>/<name>` accepts a new target query parameter
- * `PATCH /1.0/storage-pool/<pool>/volumes/<type>/<name>` accepts a new target query parameter
- * `DELETE /1.0/storage-pool/<pool>/volumes/<type>/<name>` accepts a new target query parameter
- * `POST /1.0/networks` accepts a new target query parameter
- * `GET /1.0/networks/<name>` accepts a new target query parameter
+ * `POST /1.0/containers` 新しい target クエリパラメータを受け付けるようになります。 <!-- accepts a new target query parameter -->
+ * `POST /1.0/storage-pools` 新しい target クエリパラメータを受け付けるようになります <!-- accepts a new target query parameter -->
+ * `GET /1.0/storage-pool/<name>` 新しい target クエリパラメータを受け付けるようになります <!-- accepts a new target query parameter -->
+ * `POST /1.0/storage-pool/<pool>/volumes/<type>` 新しい target クエリパラメータを受け付けるようになります <!-- accepts a new target query parameter -->
+ * `GET /1.0/storage-pool/<pool>/volumes/<type>/<name>` 新しい target クエリパラメータを受け付けるようになります <!-- accepts a new target query parameter -->
+ * `POST /1.0/storage-pool/<pool>/volumes/<type>/<name>` 新しい target クエリパラメータを受け付けるようになります <!-- accepts a new target query parameter -->
+ * `PUT /1.0/storage-pool/<pool>/volumes/<type>/<name>` 新しい target クエリパラメータを受け付けるようになります <!-- accepts a new target query parameter -->
+ * `PATCH /1.0/storage-pool/<pool>/volumes/<type>/<name>` 新しい target クエリパラメータを受け付けるようになります <!-- accepts a new target query parameter -->
+ * `DELETE /1.0/storage-pool/<pool>/volumes/<type>/<name>` 新しい target クエリパラメータを受け付けるようになります <!-- accepts a new target query parameter -->
+ * `POST /1.0/networks` 新しい target クエリパラメータを受け付けるようになります <!-- accepts a new target query parameter -->
+ * `GET /1.0/networks/<name>` 新しい target クエリパラメータを受け付けるようになります <!-- accepts a new target query parameter -->
 
 ## event\_lifecycle
+これはイベント API に `lifecycle` メッセージ種別を新たに追加します。
+<!--
 This adds a new `lifecycle` message type to the events API.
+-->
 
 ## storage\_api\_remote\_volume\_handling
+これはリモート間でカスタムストレージボリュームをコピーや移動できるようにします。
+<!--
 This adds the ability to copy and move custom storage volumes between remote.
+-->
 
 ## nvidia\_runtime
+コンテナに `nvidia_runtime` という設定オプションを追加します。これを true に
+設定すると NVIDIA ランタイムと CUDA ライブラリがコンテナに渡されます。
+<!--
 Adds a `nvidia_runtime` config option for containers, setting this to
 true will have the NVIDIA runtime and CUDA libraries passed to the
 container.
+-->
 
 ## container\_mount\_propagation
+これはディスクデバイス種別に "propagation" オプションを新たに追加します。
+これによりカーネルのマウントプロパゲーションの設定ができるようになります。
+<!--
 This adds a new "propagation" option to the disk device type, allowing
 the configuration of kernel mount propagation.
+-->
 
 ## container_backup
+コンテナのバックアップサポートを追加します。
+<!--
 Add container backup support.
+-->
 
+これは次のエンドポイントを新たに追加します (詳細は [RESTful API](rest-api.md) を参照)。
+<!--
 This includes the following new endpoints (see [RESTful API](rest-api.md) for details):
+-->
 
 * `GET /1.0/containers/<name>/backups`
 * `POST /1.0/containers/<name>/backups`
@@ -736,26 +921,48 @@ This includes the following new endpoints (see [RESTful API](rest-api.md) for de
 
 * `GET /1.0/containers/<name>/backups/<name>/export`
 
+次の既存のエンドポイントは以下のように変更されます。
+<!--
 The following existing endpoint has been modified:
+-->
 
- * `POST /1.0/containers` accepts the new source type `backup`
+ * `POST /1.0/containers` 新たな作成元の種別 `backup` を受け付けるようになります <!-- accepts the new source type `backup` -->
 
 ## devlxd\_images
+コンテナに `security.devlxd.images` 設定オプションを追加します。これに
+より devlxd 上で `/1.0/images/FINGERPRINT/export` API が利用可能に
+なります。 nested LXD を動かすコンテナがホストから生のイメージを
+取得するためにこれは利用できます。
+<!--
 Adds a `security.devlxd.images` config option for containers which
 controls the availability of a `/1.0/images/FINGERPRINT/export` API over
 devlxd. This can be used by a container running nested LXD to access raw
 images from the host.
+-->
 
 ## container\_local\_cross\_pool\_handling
+これは同じ LXD インスタンス上のストレージプール間でコンテナをコピー・移動
+できるようにします。
+<!--
 This enables copying or moving containers between storage pools on the same LXD
 instance.
+-->
 
 ## proxy\_unix
+proxy デバイスで unix ソケットと abstract unix ソケットの両方のサポートを
+追加します。これらは `unix:/path/to/unix.sock` (通常のソケット) あるいは
+`unix:@/tmp/unix.sock` (abstract ソケット) のようにアドレスを指定して
+利用可能です。
+<!--
 Add support for both unix sockets and abstract unix sockets in proxy devices.
 They can be used by specifying the address as `unix:/path/to/unix.sock` (normal
 socket) or `unix:@/tmp/unix.sock` (abstract socket).
+-->
 
+現状サポートされている接続は次のとおりです。
+<!--
 Supported connections are now:
+-->
 
 * `TCP <-> TCP`
 * `UNIX <-> UNIX`
@@ -763,9 +970,15 @@ Supported connections are now:
 * `UNIX <-> TCP`
 
 ## proxy\_udp
+proxy デバイスで udp のサポートを追加します。
+<!--
 Add support for udp in proxy devices.
+-->
 
+現状サポートされている接続は次のとおりです。
+<!--
 Supported connections are now:
+-->
 
 * `TCP <-> TCP`
 * `UNIX <-> UNIX`
@@ -776,23 +989,42 @@ Supported connections are now:
 * `UNIX <-> UDP`
 
 ## clustering_join
+これにより GET /1.0/cluster がどのストレージプールとネットワークが参加するノードに
+よって作られる必要があるかとそれらを作る際にどのノード固有の設定キーを使う必要が
+あるかについての情報を返すようになります。同様に PUT /1.0/cluster エンドポイントも
+同じ形式でストレージプールとネットワークについての情報を受け付け、クラスタに参加
+する前にこれらが自動的に作成されるようになります。
+<!--
 This makes GET /1.0/cluster return information about which storage pools and
 networks are required to be created by joining nodes and which node-specific
 configuration keys they are required to use when creating them. Likewise the PUT
 /1.0/cluster endpoint now accepts the same format to pass information about
 storage pools and networks to be automatically created before attempting to join
 a cluster.
+-->
 
 ## proxy\_tcp\_udp\_multi\_port\_handling
+複数のポートにトラフィックをフォワーディングできるようにします。フォワーディングは
+ポートの範囲が転送元と転送先で同じ (例えば `1.2.3.4 0-1000 -> 5.6.7.8 1000-2000`)
+場合か転送元で範囲を指定し転送先で単一のポートを指定する
+(例えば `1.2.3.4 0-1000 -> 5.6.7.8 1000`) 場合に可能です。
+<!--
 Adds support for forwarding traffic for multiple ports. Forwarding is allowed
 between a range of ports if the port range is equal for source and target
 (for example `1.2.3.4 0-1000 -> 5.6.7.8 1000-2000`) and between a range of source
 ports and a single target port (for example `1.2.3.4 0-1000 -> 5.6.7.8 1000`).
+-->
 
 ## network\_state
+ネットワークの状態を取得できるようになります。
+<!--
 Adds support for retrieving a network's state.
+-->
 
+これは次のエンドポイントを新たに追加します (詳細は [RESTful API](rest-api.md) を参照)。
+<!--
 This adds the following new endpoint (see [RESTful API](rest-api.md) for details):
+-->
 
 * `GET /1.0/networks/<name>/state`
 
