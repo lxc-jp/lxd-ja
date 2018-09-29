@@ -305,7 +305,7 @@ The URL to the recorded output is included in the operation metadata
 once the command is done running.
 -->
 
-出力は他のログファイルと同様に、典型的には 48 時間後に期限切れになります。
+出力は他のログファイルと同様に、通常は 48 時間後に期限切れになります。
 <!--
 That output will expire similarly to other log files, typically after 48 hours.
 -->
