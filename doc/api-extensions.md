@@ -278,124 +278,230 @@ Adds a new used\_by field to profile entries listing the containers that are usi
 -->
 
 ## container\_push
+コンテナが push モードで作成される時、クライアントは作成元と作成先のサーバ間の
+プロキシとして機能します。作成先のサーバが NAT やファイアウォールの後ろにいて
+作成元のサーバと直接通信できず pull モードで作成できないときにこれは便利です。
+<!--
 When a container is created in push mode, the client serves as a proxy between
 the source and target server. This is useful in cases where the target server
 is behind a NAT or firewall and cannot directly communicate with the source
 server and operate in pull mode.
+-->
 
 ## container\_exec\_recording
+新しい boolean 型の "record-output" を導入します。これは `/1.0/containers/<name>/exec`
+のパラメータでこれを "true" に設定し "wait-for-websocket" を fales に設定すると
+標準出力と標準エラー出力をディスクに保存し logs インタフェース経由で利用可能にします。
+<!--
 Introduces a new boolean "record-output", parameter to
 `/1.0/containers/<name>/exec` which when set to "true" and combined with
 with "wait-for-websocket" set to false, will record stdout and stderr to
 disk and make them available through the logs interface.
+-->
 
+記録された出力の URL はコマンドが実行完了したら操作のメタデータに含まれます。
+<!--
 The URL to the recorded output is included in the operation metadata
 once the command is done running.
+-->
 
+出力は他のログファイルと同様に、典型的には 48 時間後に期限切れになります。
+<!--
 That output will expire similarly to other log files, typically after 48 hours.
+-->
 
 ## certificate\_update
+REST API に次のものを追加します。
+<!--
 Adds the following to the REST API:
+-->
 
- * ETag header on GET of a certificate
- * PUT of certificate entries
- * PATCH of certificate entries
+ * 証明書の GET に ETag ヘッダ <!-- ETag header on GET of a certificate -->
+ * 証明書エントリの PUT <!-- PUT of certificate entries -->
+ * 証明書エントリの PATCH <!-- PATCH of certificate entries -->
 
 ## container\_exec\_signal\_handling
+クライアントに送られたシグナルをコンテナ内で実行中のプロセスにフォワーディング
+するサポートを `/1.0/containers/<name>/exec` に追加します。現状では SIGTERM と
+SIGHUP がフォワードされます。フォワード出来るシグナルは今後さらに追加される
+かもしれません。
+<!--
 Adds support `/1.0/containers/<name>/exec` for forwarding signals sent to the
 client to the processes executing in the container. Currently SIGTERM and
 SIGHUP are forwarded. Further signals that can be forwarded might be added
 later.
+-->
 
 ## gpu\_devices
+コンテナに GPU を追加できるようにします。
+<!--
 Enables adding GPUs to a container.
+-->
 
 ## container\_image\_properties
+設定キー空間に新しく `image` を導入します。これは読み取り専用で、親のイメージのプロパティを
+含みます。
+<!--
 Introduces a new `image` config key space. Read-only, includes the properties of the parent image.
+-->
 
 ## migration\_progress
+転送の進捗が操作の一部として送信側と受信側の両方に公開されます。これは操作のメタデータの
+"fs\_progress" 属性として現れます。
+<!--
 Transfer progress is now exported as part of the operation, on both sending and receiving ends.
 This shows up as a "fs\_progress" attribute in the operation metadata.
+-->
 
 ## id\_map
+`security.idmap.isolated`, `security.idmap.isolated`,
+`security.idmap.size`, `raw.id_map` のフィールドを設定できるようにします。
+<!--
 Enables setting the `security.idmap.isolated` and `security.idmap.isolated`,
 `security.idmap.size`, and `raw.id_map` fields.
+-->
 
 ## network\_firewall\_filtering
+`ipv4.firewall` と `ipv6.firewall` という 2 つのキーを追加します。
+false に設置すると iptables の FORWARDING ルールの生成をしないように
+なります。 NAT ルールは対応する `ipv4.nat` や `ipv6.nat` キーが true に
+設定されている限り引き続き追加されます。
+<!--
 Add two new keys, `ipv4.firewall` and `ipv6.firewall` which if set to
 false will turn off the generation of iptables FORWARDING rules. NAT
 rules will still be added so long as the matching `ipv4.nat` or
 `ipv6.nat` key is set to true.
+-->
 
+ブリッジに対して dnsmasq が有効な場合、 dnsmasq が機能する (DHCP/DNS)
+ために必要なルールは常に適用されます。
+<!--
 Rules necessary for dnsmasq to work (DHCP/DNS) will always be applied if
 dnsmasq is enabled on the bridge.
+-->
 
 ## network\_routes
+`ipv4.routes` と `ipv6.routes` を導入します。これらは LXD ブリッジに
+追加のサブネットをルーティングできるようにします。
+<!--
 Introduces `ipv4.routes` and `ipv6.routes` which allow routing additional subnets to a LXD bridge.
+-->
 
 ## storage
+LXD のストレージ管理 API 。
+<!--
 Storage management API for LXD.
+-->
 
+これは次のものを含みます。
+<!--
 This includes:
+-->
 
 * `GET /1.0/storage-pools`
-* `POST /1.0/storage-pools` (see [RESTful API](rest-api.md) for details)
+* `POST /1.0/storage-pools` (詳細は [RESTful API](rest-api.md) を参照) <!-- (see [RESTful API](rest-api.md) for details) -->
 
-* `GET /1.0/storage-pools/<name>` (see [RESTful API](rest-api.md) for details)
-* `POST /1.0/storage-pools/<name>` (see [RESTful API](rest-api.md) for details)
-* `PUT /1.0/storage-pools/<name>` (see [RESTful API](rest-api.md) for details)
-* `PATCH /1.0/storage-pools/<name>` (see [RESTful API](rest-api.md) for details)
-* `DELETE /1.0/storage-pools/<name>` (see [RESTful API](rest-api.md) for details)
+* `GET /1.0/storage-pools/<name>` (詳細は [RESTful API](rest-api.md) を参照) <!-- (see [RESTful API](rest-api.md) for details) -->
+* `POST /1.0/storage-pools/<name>` (詳細は [RESTful API](rest-api.md) を参照) <!-- (see [RESTful API](rest-api.md) for details) -->
+* `PUT /1.0/storage-pools/<name>` (詳細は [RESTful API](rest-api.md) を参照) <!-- (see [RESTful API](rest-api.md) for details) -->
+* `PATCH /1.0/storage-pools/<name>` (詳細は [RESTful API](rest-api.md) を参照) <!-- (see [RESTful API](rest-api.md) for details) -->
+* `DELETE /1.0/storage-pools/<name>` (詳細は [RESTful API](rest-api.md) を参照) <!-- (see [RESTful API](rest-api.md) for details) -->
 
-* `GET /1.0/storage-pools/<name>/volumes` (see [RESTful API](rest-api.md) for details)
+* `GET /1.0/storage-pools/<name>/volumes` (詳細は [RESTful API](rest-api.md) を参照) <!-- (see [RESTful API](rest-api.md) for details) -->
 
-* `GET /1.0/storage-pools/<name>/volumes/<volume_type>` (see [RESTful API](rest-api.md) for details)
-* `POST /1.0/storage-pools/<name>/volumes/<volume_type>` (see [RESTful API](rest-api.md) for details)
+* `GET /1.0/storage-pools/<name>/volumes/<volume_type>` (詳細は [RESTful API](rest-api.md) を参照) <!-- (see [RESTful API](rest-api.md) for details) -->
+* `POST /1.0/storage-pools/<name>/volumes/<volume_type>` (詳細は [RESTful API](rest-api.md) を参照) <!-- (see [RESTful API](rest-api.md) for details) -->
 
-* `GET /1.0/storage-pools/<pool>/volumes/<volume_type>/<name>` (see [RESTful API](rest-api.md) for details)
-* `POST /1.0/storage-pools/<pool>/volumes/<volume_type>/<name>` (see [RESTful API](rest-api.md) for details)
-* `PUT /1.0/storage-pools/<pool>/volumes/<volume_type>/<name>` (see [RESTful API](rest-api.md) for details)
-* `PATCH /1.0/storage-pools/<pool>/volumes/<volume_type>/<name>` (see [RESTful API](rest-api.md) for details)
-* `DELETE /1.0/storage-pools/<pool>/volumes/<volume_type>/<name>` (see [RESTful API](rest-api.md) for details)
+* `GET /1.0/storage-pools/<pool>/volumes/<volume_type>/<name>` (詳細は [RESTful API](rest-api.md) を参照) <!-- (see [RESTful API](rest-api.md) for details) -->
+* `POST /1.0/storage-pools/<pool>/volumes/<volume_type>/<name>` (詳細は [RESTful API](rest-api.md) を参照) <!-- (see [RESTful API](rest-api.md) for details) -->
+* `PUT /1.0/storage-pools/<pool>/volumes/<volume_type>/<name>` (詳細は [RESTful API](rest-api.md) を参照) <!-- (see [RESTful API](rest-api.md) for details) -->
+* `PATCH /1.0/storage-pools/<pool>/volumes/<volume_type>/<name>` (詳細は [RESTful API](rest-api.md) を参照) <!-- (see [RESTful API](rest-api.md) for details) -->
+* `DELETE /1.0/storage-pools/<pool>/volumes/<volume_type>/<name>` (詳細は [RESTful API](rest-api.md) を参照) <!-- (see [RESTful API](rest-api.md) for details) -->
 
-* All storage configuration options (see [configuration.md](configuration) for details)
+* 全てのストレージ設定オプション (詳細は [configuration.md](configuration) を参照) <!-- All storage configuration options (see [configuration.md](configuration) for details) -->
 
 ## file\_delete
+`/1.0/containers/<name>/files` の DELETE メソッドを実装
+<!--
 Implements `DELETE` in `/1.0/containers/<name>/files`
+-->
 
 ## file\_append
+`X-LXD-write` ヘッダを実装しました。値は `overwrite` か `append` のいずれかです。
+<!--
 Implements the `X-LXD-write` header which can be one of `overwrite` or `append`.
+-->
 
 ## network\_dhcp\_expiry
+`ipv4.dhcp.expiry` と `ipv6.dhcp.expiry` を導入します。 DHCP のリース期限を設定
+できるようにします。
+<!--
 Introduces `ipv4.dhcp.expiry` and `ipv6.dhcp.expiry` allowing to set the DHCP lease expiry time.
+-->
 
 ## storage\_lvm\_vg\_rename
+`storage.lvm.vg_name` を設定することでボリュームグループをリネームできるようにします。
+<!--
 Introduces the ability to rename a volume group by setting `storage.lvm.vg_name`.
+-->
 
 ## storage\_lvm\_thinpool\_rename
+`storage.thinpool_name` を設定することで thinpool をリネームできるようにします。
+<!--
 Introduces the ability to rename a thinpool name by setting `storage.thinpool_name`.
+-->
 
 ## network\_vlan
+`macvlan` ネットワークデバイスに `vlan` プロパティを新たに追加します。
+<!--
 This adds a new `vlan` property to `macvlan` network devices.
+-->
 
+これを設定すると、指定した VLAN にアタッチするように LXD に指示します。
+LXD はホスト上でその VLAN を持つ既存のインタフェースを探します。
+もし見つからない場合は LXD がインタフェースを作成して macvlan の親として
+使用します。
+<!--
 When set, this will instruct LXD to attach to the specified VLAN. LXD
 will look for an existing interface for that VLAN on the host. If one
 can't be found it will create one itself and then use that as the
 macvlan parent.
+-->
 
 ## image\_create\_aliases
+`POST /1.0/images` に `aliases` フィールドを新たに追加します。イメージの
+作成／インポート時にエイリアスを設定できるようになります。
+<!--
 Adds a new `aliases` field to `POST /1.0/images` allowing for aliases to
 be set at image creation/import time.
+-->
 
 ## container\_stateless\_copy
+`POST /1.0/containers/<name>` に `live` という属性を新たに導入します。
+false に設定すると、実行状態を転送しようとしないように LXD に伝えます。
+<!--
 This introduces a new `live` attribute in `POST /1.0/containers/<name>`.
 Setting it to false tells LXD not to attempt running state transfer.
+-->
 
 ## container\_only\_migration
+`container_only` という boolean 型の属性を導入します。 true に設定すると
+コンテナだけがコピーや移動されるようになります。
+<!--
 Introduces a new boolean `container_only` attribute. When set to true only the
 container will be copied or moved.
+-->
 
 ## storage\_zfs\_clone\_copy
+ZFS ストレージプールに `storage_zfs_clone_copy` という boolean 型のプロパティを導入します。
+false に設定すると、コンテナのコピーは zfs send と receive 経由で行われる
+ようになります。これにより作成先のコンテナは作成元のコンテナに依存しないように
+なり、 ZFS プールに依存するスナップショットを維持する必要がなくなります。
+しかし、これは影響するプールのストレージの使用状況が以前より非効率的になる
+という結果を伴います。
+このプロパティのデフォルト値は true です。つまり明示的に "false" に設定
+しない限り、空間効率の良いスナップショットが使われます。
+<!--
 Introduces a new boolean `storage_zfs_clone_copy` property for ZFS storage
 pools. When set to false copying a container will be done through zfs send and
 receive. This will make the target container independent of its source
@@ -404,18 +510,32 @@ around. However, this also entails less efficient storage usage for the
 affected pool.
 The default value for this property is true, i.e. space-efficient snapshots
 will be used unless explicitly set to "false".
+-->
 
 ## unix\_device\_rename
+`path` を設定することによりコンテナ内部で unix-block/unix-char デバイスをリネーム
+できるようにし、ホスト上のデバイスを指定する `source` 属性が追加されます。
+`path` を設定せずに `source` を設定すると、 `path` は `source` と同じものとして
+扱います。 `source` や `major`/`minor` を設定せずに `path` を設定すると
+`source` は `path` と同じものとして扱います。ですので、最低どちらか 1 つは
+設定しなければなりません。
+<!--
 Introduces the ability to rename the unix-block/unix-char device inside container by setting `path`,
 and the `source` attribute is added to specify the device on host.
 If `source` is set without a `path`, we should assume that `path` will be the same as `source`.
 If `path` is set without `source` and `major`/`minor` isn't set,
 we should assume that `source` will be the same as `path`.
 So at least one of them must be set.
+-->
 
 ## storage\_rsync\_bwlimit
+ストレージエンティティを転送するために rsync が起動される場合に
+`rsync.bwlimit` を設定すると使用できるソケット I/O の量に上限を
+設定します。
+<!--
 When rsync has to be invoked to transfer storage entities setting `rsync.bwlimit`
 places an upper limit on the amount of socket I/O allowed.
+-->
 
 ## network\_vxlan\_interface
 This introduces a new `tunnel.NAME.interface` option for networks.
