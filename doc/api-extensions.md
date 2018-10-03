@@ -615,7 +615,7 @@ used to have the source LXD host connect to the target during migration.
 Allows use of `vlan` property with `physical` network devices.
 -->
 
-設定すると、 `parent インタフェース上で指定された VLAN にアタッチするように
+設定すると、 `parent` インタフェース上で指定された VLAN にアタッチするように
 LXD に指示します。 LXD はホスト上でその `parent` と VLAN を既存のインタフェース
 で探します。
 見つからない場合は作成します。
@@ -808,7 +808,7 @@ This makes it possible to retrieve symlinks using the file API.
 
 ## network\_leases
 /1.0/networks/NAME/leases API エンドポイントを追加します。 LXD が管理する
-DHCP サーバが稼働するブリッジ上の貸出データベースに問い合わせできるように
+DHCP サーバが稼働するブリッジ上のリースデータベースに問い合わせできるように
 なります。
 <!--
 Adds a new /1.0/networks/NAME/leases API endpoint to query the lease database on
@@ -989,11 +989,11 @@ Supported connections are now:
 * `UNIX <-> UDP`
 
 ## clustering_join
-これにより GET /1.0/cluster がどのストレージプールとネットワークが参加するノードに
-よって作られる必要があるかとそれらを作る際にどのノード固有の設定キーを使う必要が
-あるかについての情報を返すようになります。同様に PUT /1.0/cluster エンドポイントも
-同じ形式でストレージプールとネットワークについての情報を受け付け、クラスタに参加
-する前にこれらが自動的に作成されるようになります。
+これにより GET /1.0/cluster がノードに参加する際にどのようなストレージプールと
+ネットワークを作成する必要があるかについての情報を返します。また、それらを作成する
+際にどのノード固有の設定キーを使う必要があるかについての情報も返します。
+同様に PUT /1.0/cluster エンドポイントも同じ形式でストレージプールとネットワークに
+ついての情報を受け付け、クラスタに参加する前にこれらが自動的に作成されるようになります。
 <!--
 This makes GET /1.0/cluster return information about which storage pools and
 networks are required to be created by joining nodes and which node-specific
