@@ -10,7 +10,7 @@ at: <https://github.com/lxc/lxd>
 Proposed changes will then go through code review there and once acked,
 be merged in the main branch.
 -->
-そのあと、提案はコードレビューを経て確認され、メインブランチにマージされます。
+そのあと、提案はコードレビューを経て承認され、メインブランチにマージされます。
 
 # ライセンスと著作権 <!-- License and copyright -->:
 
