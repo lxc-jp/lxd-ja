@@ -39,14 +39,14 @@ A number of new syscalls related container configuration keys were introduced.
  * `security.syscalls.blacklist`
  * `security.syscalls.whitelist`
 
-See [configuration.md](Configuration) for how to use them.
+See [configuration.md](configuration.md) for how to use them.
 
 ## auth\_pki
 This indicates support for PKI authentication mode.
 
 In this mode, the client and server both must use certificates issued by the same PKI.
 
-See [security.md](Security) for details.
+See [security.md](security.md) for details.
 
 ## container\_last\_used\_at
 A `last_used_at` field was added to the `GET /1.0/containers/<name>` endpoint.
@@ -122,9 +122,9 @@ Network management API for LXD.
 This includes:
 
  * Addition of the "managed" property on `/1.0/networks` entries
- * All the network configuration options (see [configuration.md](configuration) for details)
- * `POST /1.0/networks` (see [rest-api.md](RESTful API) for details)
- * `PUT /1.0/networks/<entry>` (see [RESTful API](rest-api.md)for details)
+ * All the network configuration options (see [configuration.md](configuration.md) for details)
+ * `POST /1.0/networks` (see [RESTful API](rest-api.md) for details)
+ * `PUT /1.0/networks/<entry>` (see [RESTful API](rest-api.md) for details)
  * `PATCH /1.0/networks/<entry>` (see [RESTful API](rest-api.md) for details)
  * `DELETE /1.0/networks/<entry>` (see [RESTful API](rest-api.md) for details)
  * `ipv4.address` property on "nic" type devices (when nictype is "bridged")
@@ -215,7 +215,7 @@ This includes:
 * `PATCH /1.0/storage-pools/<pool>/volumes/<volume_type>/<name>` (see [RESTful API](rest-api.md) for details)
 * `DELETE /1.0/storage-pools/<pool>/volumes/<volume_type>/<name>` (see [RESTful API](rest-api.md) for details)
 
-* All storage configuration options (see [configuration.md](configuration) for details)
+* All storage configuration options (see [configuration.md](configuration.md) for details)
 
 ## file\_delete
 Implements `DELETE` in `/1.0/containers/<name>/files`
@@ -459,7 +459,7 @@ container.
 This adds a new "propagation" option to the disk device type, allowing
 the configuration of kernel mount propagation.
 
-## container_backup
+## container\_backup
 Add container backup support.
 
 This includes the following new endpoints (see [RESTful API](rest-api.md) for details):
@@ -512,7 +512,7 @@ Supported connections are now:
 * `TCP <-> UDP`
 * `UNIX <-> UDP`
 
-## clustering_join
+## clustering\_join
 This makes GET /1.0/cluster return information about which storage pools and
 networks are required to be created by joining nodes and which node-specific
 configuration keys they are required to use when creating them. Likewise the PUT
@@ -533,3 +533,86 @@ This adds the following new endpoint (see [RESTful API](rest-api.md) for details
 
 * `GET /1.0/networks/<name>/state`
 
+## proxy\_unix\_dac\_properties
+This adds support for gid, uid, and mode properties for non-abstract unix
+sockets.
+
+## container\_protection\_delete
+Enables setting the `security.protection.delete` field which prevents containers
+from being deleted if set to true. Snapshots are not affected by this setting.
+
+## proxy\_priv\_drop
+Adds security.uid and security.gid for the proxy devices, allowing
+privilege dropping and effectively changing the uid/gid used for
+connections to Unix sockets too.
+
+## pprof\_http
+This adds a new core.debug\_address config option to start a debugging HTTP server.
+
+That server currently includes a pprof API and replaces the old
+cpu-profile, memory-profile and print-goroutines debug options.
+
+## proxy\_haproxy\_protocol
+Adds a proxy\_protocol key to the proxy device which controls the use of the HAProxy PROXY protocol header.
+
+## network\_hwaddr
+Adds a bridge.hwaddr key to control the MAC address of the bridge.
+
+## proxy\_nat
+This adds optimized UDP/TCP proxying. If the configuration allows, proxying
+will be done via iptables instead of proxy devices.
+
+## network\_nat\_order
+This introduces the `ipv4.nat.order` and `ipv6.nat.order` configuration keys for LXD bridges.
+Those keys control whether to put the LXD rules before or after any pre-existing rules in the chain.
+
+## container\_full
+This introduces a new recursion=2 mode for `GET /1.0/containers` which allows for the retrieval of
+all container structs, including the state, snapshots and backup structs.
+
+This effectively allows for "lxc list" to get all it needs in one query.
+
+## candid\_authentication
+This introduces the new candid.api.url config option and removes
+core.macaroon.endpoint.
+
+## backup\_compression
+This introduces a new backups.compression\_algorithm config key which
+allows configuration of backup compression.
+
+## candid\_config
+This introduces the config keys `candid.domains` and `candid.expiry`. The
+former allows specifying allowed/valid Candid domains, the latter makes the
+macaroon's expiry configurable. The `lxc remote add` command now has a
+`--domain` flag which allows specifying a Candid domain.
+
+## nvidia\_runtime\_config
+This introduces a few extra config keys when using nvidia.runtime and the libnvidia-container library.
+Those keys translate pretty much directly to the matching nvidia-container environment variables:
+
+ - nvidia.driver.capabilities => NVIDIA\_DRIVER\_CAPABILITIES
+ - nvidia.require.cuda => NVIDIA\_REQUIRE\_CUDA
+ - nvidia.require.driver => NVIDIA\_REQUIRE\_DRIVER
+
+## storage\_api\_volume\_snapshots
+Add support for storage volume snapshots. They work like container snapshots,
+only for volumes.
+
+This adds the following new endpoint (see [RESTful API](rest-api.md) for details):
+
+* `GET /1.0/storage-pools/<pool>/volumes/<type>/<name>/snapshots`
+* `POST /1.0/storage-pools/<pool>/volumes/<type>/<name>/snapshots`
+
+* `GET /1.0/storage-pools/<pool>/volumes/<type>/<volume>/snapshots/<name>`
+* `PUT /1.0/storage-pools/<pool>/volumes/<type>/<volume>/snapshots/<name>`
+* `POST /1.0/storage-pools/<pool>/volumes/<type>/<volume>/snapshots/<name>`
+* `DELETE /1.0/storage-pools/<pool>/volumes/<type>/<volume>/snapshots/<name>`
+
+## storage\_unmapped
+Introduces a new `security.unmapped` boolean on storage volumes.
+
+Setting it to true will flush the current map on the volume and prevent
+any further idmap tracking and remapping on the volume.
+
+This can be used to share data between isolated containers after
+attaching it to the container which requires write access.

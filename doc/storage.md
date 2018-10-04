@@ -37,13 +37,14 @@ lxc storage set [<remote>:]<pool> <key> <value>
 ```
 
 ## Storage volume configuration
-Key                     | Type      | Condition                 | Default                               | API Extension | Description
-:--                     | :---      | :--------                 | :------                               | :------------ | :----------
-size                    | string    | appropriate driver        | same as volume.size                   | storage       | Size of the storage volume
-block.filesystem        | string    | block based driver (lvm)  | same as volume.block.filesystem       | storage       | Filesystem of the storage volume
-block.mount\_options    | string    | block based driver (lvm)  | same as volume.block.mount\_options   | storage       | Mount options for block devices
-zfs.remove\_snapshots   | string    | zfs driver                | same as volume.zfs.remove\_snapshots  | storage       | Remove snapshots as needed
-zfs.use\_refquota       | string    | zfs driver                | same as volume.zfs.zfs\_requota       | storage       | Use refquota instead of quota for space.
+Key                     | Type      | Condition                 | Default                               | API Extension     | Description
+:--                     | :---      | :--------                 | :------                               | :------------     | :----------
+size                    | string    | appropriate driver        | same as volume.size                   | storage           | Size of the storage volume
+block.filesystem        | string    | block based driver (lvm)  | same as volume.block.filesystem       | storage           | Filesystem of the storage volume
+block.mount\_options    | string    | block based driver (lvm)  | same as volume.block.mount\_options   | storage           | Mount options for block devices
+security.unmapped       | bool      | custom volume             | false                                 | storage\_unmapped | Disable id mapping for the volume
+zfs.remove\_snapshots   | string    | zfs driver                | same as volume.zfs.remove\_snapshots  | storage           | Remove snapshots as needed
+zfs.use\_refquota       | string    | zfs driver                | same as volume.zfs.zfs\_requota       | storage           | Use refquota instead of quota for space.
 
 Storage volume configuration keys can be set using the lxc tool with:
 
@@ -68,7 +69,7 @@ Block based                                 | no        | no    | yes   | no   |
 Instant cloning                             | no        | yes   | yes   | yes  | yes
 Storage driver usable inside a container    | yes       | yes   | no    | no   | no
 Restore from older snapshots (not latest)   | yes       | yes   | yes   | no   | yes
-Storage quotas                              | no        | yes   | no    | yes  | no
+Storage quotas                              | no        | yes   | yes   | yes  | no
 
 ## Recommended setup
 The two best options for use with LXD are ZFS and btrfs.  
@@ -80,6 +81,19 @@ While LXD will let you create loop based storage, this isn't a recommended for p
 Similarly, the directory backend is to be considered as a last resort option.  
 It does support all main LXD features, but is terribly slow and inefficient as it can't perform  
 instant copies or snapshots and so needs to copy the entirety of the container's filesystem every time.
+
+## Security Considerations
+
+Currently, the Linux Kernel may not apply mount options and silently ignore
+them when a block-based filesystem (e.g. `ext4`) is already mounted with
+different options. This means when dedicated disk devices are shared between
+different storage pools with different mount options set, the second mount may
+not have the expected mount options. This becomes security relevant, when e.g.
+one storage pool is supposed to provide `acl` support and the second one is
+supposed to not provide `acl` support. For this reason it is currently
+recommended to either have dedicated disk devices per storage pool or ensure
+that all storage pools that share the same dedicated disk device use the same
+mount options.
 
 ## Optimized image storage
 All backends but the directory backend have some kind of optimized image storage format.  
@@ -134,7 +148,7 @@ to restrict I/O at the disk level (but nothing finer grained than that).
 Because those apply to a whole physical disk rather than a partition or path, the following restrictions apply:
 
  - Limits will not apply to filesystems that are backed by virtual devices (e.g. device mapper).
- - If a fileystem is backed by multiple block devices, each device will get the same limit.
+ - If a filesystem is backed by multiple block devices, each device will get the same limit.
  - If the container is passed two disk devices that are each backed by the same disk,  
    the limits of the two devices will be averaged.
 

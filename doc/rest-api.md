@@ -221,6 +221,8 @@ won't work and PUT needs to be used instead.
          * [`/1.0/storage-pools/<name>/volumes`](#10storage-poolsnamevolumes)
            * [`/1.0/storage-pools/<name>/volumes/<type>`](#10storage-poolsnamevolumestype)
              * [`/1.0/storage-pools/<pool>/volumes/<type>/<name>`](#10storage-poolspoolvolumestypename)
+               * [`/1.0/storage-pools/<pool>/volumes/<type>/<name>/snapshots`](#10storage-poolspoolvolumestypenamesnapshots)
+                 * [`/1.0/storage-pools/<pool>/volumes/<type>/<volume>/snapshots/<name>`](#10storage-poolspoolvolumestypevolumesnapshotsname)
      * [`/1.0/resources`](#10resources)
      * [`/1.0/cluster`](#10cluster)
        * [`/1.0/cluster/members`](#10clustermembers)
@@ -421,7 +423,7 @@ Return value:
         "/1.0/containers/blah1"
     ]
 
-### POST
+### POST (optional `?target=<member>`)
  * Description: Create a new container
  * Authentication: trusted
  * Operation: async
@@ -725,7 +727,7 @@ Input:
         "ephemeral": true
     }
 
-### POST
+### POST (optional `?target=<member>`)
  * Description: used to rename/migrate the container
  * Authentication: trusted
  * Operation: async
@@ -739,7 +741,7 @@ Input (simple rename):
         "name": "new-name"
     }
 
-Input (migration across lxd instances):
+Input (migration across lxd instances or lxd cluster members):
 
     {
         "name": "new-name"
@@ -749,6 +751,8 @@ Input (migration across lxd instances):
 
 The migration does not actually start until someone (i.e. another lxd instance)
 connects to all the websockets and begins negotiation with the source.
+
+To migrate between cluster members the `?target=<member>` option is required.
 
 Output in metadata section (for migration):
 
@@ -890,6 +894,16 @@ Return (with wait-for-websocket=true and interactive=true):
         }
     }
 
+Return (with interactive=false and record-output=true):
+
+    {
+        "output": {
+            "1": "/1.0/containers/example/logs/exec_b0f737b4-2c8a-4edf-a7c1-4cc7e4e9e155.stdout",
+            "2": "/1.0/containers/example/logs/exec_b0f737b4-2c8a-4edf-a7c1-4cc7e4e9e155.stderr"
+        },
+        "return": 0
+    }
+
 When the exec command finishes, its exit status is available from the
 operation's metadata:
 
@@ -1023,7 +1037,7 @@ Return:
                 "type": "disk"
             },
         },
-        "name": "zerotier/blah",
+        "name": "blah",
         "profiles": [
             "default"
         ],
@@ -2209,6 +2223,8 @@ the renamed resource.
 
 Renaming to an existing name must return the 409 (Conflict) HTTP code.
 
+Attempting to rename the `default` profile will return the 403 (Forbidden) HTTP code.
+
 ### DELETE
  * Description: remove a profile
  * Authentication: trusted
@@ -2221,6 +2237,8 @@ Input (none at present):
     }
 
 HTTP code for this should be 202 (Accepted).
+
+Attempting to delete the `default` profile will return the 403 (Forbidden) HTTP code.
 
 ## `/1.0/storage-pools`
 ### GET
@@ -2398,27 +2416,27 @@ Return:
 Return:
 
     [
-        "/1.0/storage-pools/default/volumes/containers/alp1",
-        "/1.0/storage-pools/default/volumes/containers/alp10",
-        "/1.0/storage-pools/default/volumes/containers/alp11",
-        "/1.0/storage-pools/default/volumes/containers/alp12",
-        "/1.0/storage-pools/default/volumes/containers/alp13",
-        "/1.0/storage-pools/default/volumes/containers/alp14",
-        "/1.0/storage-pools/default/volumes/containers/alp15",
-        "/1.0/storage-pools/default/volumes/containers/alp16",
-        "/1.0/storage-pools/default/volumes/containers/alp17",
-        "/1.0/storage-pools/default/volumes/containers/alp18",
-        "/1.0/storage-pools/default/volumes/containers/alp19",
-        "/1.0/storage-pools/default/volumes/containers/alp2",
-        "/1.0/storage-pools/default/volumes/containers/alp20",
-        "/1.0/storage-pools/default/volumes/containers/alp3",
-        "/1.0/storage-pools/default/volumes/containers/alp4",
-        "/1.0/storage-pools/default/volumes/containers/alp5",
-        "/1.0/storage-pools/default/volumes/containers/alp6",
-        "/1.0/storage-pools/default/volumes/containers/alp7",
-        "/1.0/storage-pools/default/volumes/containers/alp8",
-        "/1.0/storage-pools/default/volumes/containers/alp9",
-        "/1.0/storage-pools/default/volumes/images/62e850a334bb9d99cac00b2e618e0291e5e7bb7db56c4246ecaf8e46fa0631a6"
+        "/1.0/storage-pools/default/volumes/container/alp1",
+        "/1.0/storage-pools/default/volumes/container/alp10",
+        "/1.0/storage-pools/default/volumes/container/alp11",
+        "/1.0/storage-pools/default/volumes/container/alp12",
+        "/1.0/storage-pools/default/volumes/container/alp13",
+        "/1.0/storage-pools/default/volumes/container/alp14",
+        "/1.0/storage-pools/default/volumes/container/alp15",
+        "/1.0/storage-pools/default/volumes/container/alp16",
+        "/1.0/storage-pools/default/volumes/container/alp17",
+        "/1.0/storage-pools/default/volumes/container/alp18",
+        "/1.0/storage-pools/default/volumes/container/alp19",
+        "/1.0/storage-pools/default/volumes/container/alp2",
+        "/1.0/storage-pools/default/volumes/container/alp20",
+        "/1.0/storage-pools/default/volumes/container/alp3",
+        "/1.0/storage-pools/default/volumes/container/alp4",
+        "/1.0/storage-pools/default/volumes/container/alp5",
+        "/1.0/storage-pools/default/volumes/container/alp6",
+        "/1.0/storage-pools/default/volumes/container/alp7",
+        "/1.0/storage-pools/default/volumes/container/alp8",
+        "/1.0/storage-pools/default/volumes/container/alp9",
+        "/1.0/storage-pools/default/volumes/image/62e850a334bb9d99cac00b2e618e0291e5e7bb7db56c4246ecaf8e46fa0631a6"
     ]
 
 ### POST
@@ -2567,8 +2585,8 @@ Return:
 
 
 ### PUT (ETag supported)
- * Description: replace the storage volume information
- * Introduced: with API extension `storage`
+ * Description: replace the storage volume information or restore from snapshot
+ * Introduced: with API extension `storage`, `storage_api_volume_snapshots`
  * Authentication: trusted
  * Operation: sync
  * Return: standard return value or standard error
@@ -2586,6 +2604,10 @@ Return:
             "lvm.vg_name": "pool1",
             "volume.size": "10737418240"
         }
+    }
+
+    {
+        "restore": "snapshot-name"
     }
 
 ### PATCH (ETag supported)
@@ -2614,6 +2636,79 @@ Input (none at present):
 
     {
     }
+
+
+## `/1.0/storage-pools/<pool>/volumes/<type>/<name>/snapshots`
+### GET
+ * Description: List of volume snapshots
+ * Authentication: trusted
+ * Operation: sync
+ * Return: list of URLs for snapshots for this volume
+
+Return value:
+
+    [
+        "/1.0/storage-pools/default/volumes/custom/foo/snapshots/snap0"
+    ]
+
+### POST
+ * Description: create a new volume snapshot
+ * Authentication: trusted
+ * Operation: async
+ * Return: background operation or standard error
+
+Input:
+
+    {
+        "name": "my-snapshot",          # Name of the snapshot
+    }
+
+## `/1.0/storage-pools/<pool>/volumes/<type>/<volume>/snapshots/name`
+### GET
+ * Description: Snapshot information
+ * Authentication: trusted
+ * Operation: sync
+ * Return: dict representing the snapshot
+
+Return:
+
+    {
+        "config": {},
+        "description": "",
+        "name": "snap0"
+    }
+
+### PUT
+ * Description: Volume snapshot information
+ * Authentication: trusted
+ * Operation: sync
+ * Return: dict representing the volume snapshot
+
+Input:
+
+    {
+        "description": "new-description"
+    }
+
+### POST
+ * Description: used to rename the volume snapshot
+ * Authentication: trusted
+ * Operation: async
+ * Return: background operation or standard error
+
+Input:
+
+    {
+        "name": "new-name"
+    }
+
+### DELETE
+ * Description: remove the volume snapshot
+ * Authentication: trusted
+ * Operation: async
+ * Return: background operation or standard error
+
+HTTP code for this should be 202 (Accepted).
 
 ## `/1.0/resources`
 ### GET
