@@ -172,14 +172,14 @@ pre-generated files.
 After this is done, restarting the server will have it run in PKI mode.
 -->
 
-# Macaroon ベースの認証でリモートを追加する <!-- Adding a remote with Macaroon-based authentication -->
-LXD を Macaroon ベースの認証を使うように設定した場合、 LXD はクライアントが
-`core.macaroon.endpoint` の設定に指定した認証サーバから Discharge トークンを
+# Candid でリモートを追加する <!-- Adding a remote with Candid -->
+LXD を Candid を使うように設定した場合、 LXD はクライアントが
+`candid.api.url` の設定に指定した認証サーバから Discharge トークンを
 取得して認証を試みるように依頼します。
 <!--
-When LXD is configured with Macaroon-based authentication, it will request that
-clients trying to authenticating with it get a Discharge token from the
-authentication server specified by the `core.macaroon.endpoint` setting.
+When LXD is configured with Candid, it will request that clients trying to
+authenticating with it get a Discharge token from the authentication server
+specified by the `candid.api.url` setting.
 -->
 
 認証サーバの証明書は LXD サーバに信頼される必要があります。
@@ -188,7 +188,7 @@ The authentication server certificate needs to be trusted by the LXD server.
 -->
 
 Macaroon 認証を設定された LXD にリモートを追加するには
-`lxd remote add REMOTE ENDPOINT --auth-type=macaroons`
+`lxd remote add REMOTE ENDPOINT --auth-type=candid`
 を実行します。クライアントはユーザを検証するために認証サーバに要求される
 機密情報を入力するためのプロンプトを表示します。認証が成功したら、
 認証サーバから受け取ったトークンを LXD サーバに渡して接続します。
@@ -196,7 +196,7 @@ LXD サーバはトークンを検証し、リクエストを認証します。�
 保存され、クライアントが LXD にリクエストを送る度にサーバに渡されます。
 <!--
 To add a remote pointing to a LXD configured with Macaroon auth, run `lxc
-remote add REMOTE ENDPOINT \-\-auth-type=macaroons`.  The client will prompt for
+remote add REMOTE ENDPOINT \-\-auth-type=candid`.  The client will prompt for
 the credentials required by the authentication server in order to verify the
 user. If the authentication is successful, it will connect to the LXD server
 presenting the token received from the authentication server.  The LXD server
