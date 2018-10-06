@@ -157,3 +157,15 @@ run in a SQL transaction).
 As above, please consult the LXD team first.
 -->
 上記の通り、まず LXD チームに相談してみてください。
+
+# クラスタデータベースをディスクに同期 <!-- Syncing the cluster database to disk -->
+クラスタデータベースの内容をディスクにフラッシュしたいなら、
+``lxd sql global .sync`` コマンドを使ってください。これは SQLite そのままの
+形式のデータベースのファイルを ``./database/global/db.bin`` に書き込みます。
+その後 ``sqlite3`` コマンドラインツールを使って中身を見ることが出来ます。
+<!--
+If you want to flush the content of the cluster database to disk, use the ``lxd
+sql global .sync`` command, that will write a plain SQLite database file into
+``./database/global/db.bin``, which you can then inspect with the ``sqlite3``
+command line tool.
+-->
