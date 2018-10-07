@@ -337,9 +337,10 @@ Different network interface types have different additional properties, the curr
 Key                     | Type      | Default           | Required  | Used by                           | API extension                          | Description
 :--                     | :--       | :--               | :--       | :--                               | :--                                    | :--
 nictype                 | string    | -                 | yes       | all                               | -                                      | デバイスタイプ。`bridged`、`macvlan`、`p2p`、`physical`、`sriov`のいずれか <!-- The device type, one of "bridged", "macvlan", "p2p", "physical", or "sriov" -->
-limits.ingress          | string    | -                 | no        | bridged, p2p                      | -                                      | I/O 制限値（bit/s、単位として kbit、Mbit、Gbit が使えます）<!-- I/O limit in bit/s (supports kbit, Mbit, Gbit suffixes) -->
-limits.egress           | string    | -                 | no        | bridged, p2p                      | -                                      | I/O 制限値（bit/s、単位として kbit、Mbit、Gbit が使えます）<!-- I/O limit in bit/s (supports kbit, Mbit, Gbit suffixes) -->
-limits.max              | string    | -                 | no        | bridged, p2p                      | -                                      | `limits.ingress`と`limits.egress`の両方を同じ値に変更する <!-- Same as modifying both limits.read and limits.write（訳注: オリジナルが間違っていると思われる。PR提出予定） -->
+
+limits.ingress          | string    | -                 | no        | bridged, p2p                      | -                                      | 入力トラフィックの I/O 制限値（bit/s、単位として kbit、Mbit、Gbit が使えます）<!-- I/O limit in bit/s for incoming traffic (supports kbit, Mbit, Gbit suffixes) -->
+limits.egress           | string    | -                 | no        | bridged, p2p                      | -                                      | 出力トラフィックの I/O 制限値（bit/s、単位として kbit、Mbit、Gbit が使えます）<!--I/O limit in bit/s for outgoing traffic (supports kbit, Mbit, Gbit suffixes) -->
+limits.max              | string    | -                 | no        | bridged, p2p                      | -                                      | `limits.ingress`と`limits.egress`の両方を同じ値に変更する <!-- Same as modifying both limits.ingress and limits.egress -->
 name                    | string    | kernel assigned   | no        | all                               | -                                      | コンテナ内部でのインターフェース名 <!-- The name of the interface inside the container -->
 host\_name              | string    | randomly assigned | no        | bridged, macvlan, p2p, sriov      | -                                      | ホスト上でのインターフェース名 <!-- The name of the interface inside the host -->
 hwaddr                  | string    | randomly assigned | no        | all                               | -                                      | 新しいインターフェースの MAC アドレス <!-- The MAC address of the new interface -->
@@ -645,11 +646,18 @@ The supported connection types are:
 * `UDP <-> UNIX`
 * `UNIX <-> UDP`
 
-Key         | Type      | Default           | Required  | Description
-:--         | :--       | :--               | :--       | :--
-listen      | string    | -                 | yes       | バインドし、接続を待ち受けるアドレスとポート <!-- The address and port to bind and listen -->
-connect     | string    | -                 | yes       | 接続するアドレスとポート <!-- The address and port to connect to -->
-bind        | string    | host              | no        | ホスト/コンテナのどちら側にバインドするか <!-- Which side to bind on (host/container) -->
+Key             | Type      | Default           | Required  | Description
+:--             | :--       | :--               | :--       | :--
+listen          | string    | -                 | yes       | バインドし、接続を待ち受けるアドレスとポート <!-- The address and port to bind and listen -->
+connect         | string    | -                 | yes       | 接続するアドレスとポート <!-- The address and port to connect to -->
+bind            | string    | host              | no        | ホスト/コンテナのどちら側にバインドするか <!-- Which side to bind on (host/container) -->
+uid             | int       | 0                 | no        | listen する Unix ソケットの所有者の UID <!-- UID of the owner of the listening Unix socket -->
+gid             | int       | 0                 | no        | listen する Unix ソケットの所有者の GID <!-- GID of the owner of the listening Unix socket -->
+mode            | int       | 0755              | no        | listen する Unix ソケットのモード <!-- Mode for the listening Unix socket -->
+nat             | bool      | false             | no        | NAT 経由でプロキシーを最適化するかどうか <!-- Whether to optimize proxying via NAT -->
+proxy\_protocol | bool      | false             | no        | 送信者情報を送信するのに HAProxy の PROXY プロトコルを使用するかどうか <!-- Whether to use the HAProxy PROXY protocol to transmit sender information -->
+security.uid    | int       | 0                 | no        | 特権を落とす UID <!-- What UID to drop privilege to -->
+security.gid    | int       | 0                 | no        | 特権を落とす GID <!-- What GID to drop privilege to -->
 
 ```
 lxc config device add <container> <device-name> proxy listen=<type>:<addr>:<port>[-<port>][,<port>] connect=<type>:<addr>:<port> bind=<host/container>
