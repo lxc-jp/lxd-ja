@@ -13,6 +13,23 @@ Name is the container name and can only be changed by renaming the container.
 -->
 `name` はコンテナ名であり、コンテナのリネームでのみ変更できます。
 
+<!--
+Valid container names must:
+-->
+有効なコンテナ名は次の条件を満たさなければなりません:
+
+ - 1 〜 63 文字 <!-- Be between 1 and 63 characters long -->
+ - ASCII テーブルの文字、数字、ダッシュのみから構成される <!-- Be made up exclusively of letters, numbers and dashes from the ASCII table -->
+ - 1 文字目は数字、ダッシュではない <!-- Not start with a digit or a dash -->
+ - 最後の文字はダッシュではない <!-- Not end with a dash -->
+
+<!--
+This requirement is so that the container name may properly be used in
+DNS records, on the filesystem, in various security profiles as well as
+the hostname of the container itself.
+-->
+この要件は、コンテナ名が DNS レコードとして、ファイルシステム上で、色々なセキュリティプロファイル、そしてコンテナ自身のホスト名として適切に使えるように定められています。
+
 ## Key/value 形式の設定 <!-- Key/value configuration -->
 <!--
 The key/value configuration is namespaced with the following namespaces
