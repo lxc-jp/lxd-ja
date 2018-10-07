@@ -337,7 +337,6 @@ Different network interface types have different additional properties, the curr
 Key                     | Type      | Default           | Required  | Used by                           | API extension                          | Description
 :--                     | :--       | :--               | :--       | :--                               | :--                                    | :--
 nictype                 | string    | -                 | yes       | all                               | -                                      | デバイスタイプ。`bridged`、`macvlan`、`p2p`、`physical`、`sriov`のいずれか <!-- The device type, one of "bridged", "macvlan", "p2p", "physical", or "sriov" -->
-
 limits.ingress          | string    | -                 | no        | bridged, p2p                      | -                                      | 入力トラフィックの I/O 制限値（bit/s、単位として kbit、Mbit、Gbit が使えます）<!-- I/O limit in bit/s for incoming traffic (supports kbit, Mbit, Gbit suffixes) -->
 limits.egress           | string    | -                 | no        | bridged, p2p                      | -                                      | 出力トラフィックの I/O 制限値（bit/s、単位として kbit、Mbit、Gbit が使えます）<!--I/O limit in bit/s for outgoing traffic (supports kbit, Mbit, Gbit suffixes) -->
 limits.max              | string    | -                 | no        | bridged, p2p                      | -                                      | `limits.ingress`と`limits.egress`の両方を同じ値に変更する <!-- Same as modifying both limits.ingress and limits.egress -->
