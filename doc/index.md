@@ -55,7 +55,7 @@ Ubuntu では次のようにインストールできます:
 
 ```bash
 sudo apt update
-sudo apt install acl dnsmasq-base git golang liblxc1 lxc-dev libacl1-dev make pkg-config rsync squashfs-tools tar xz-utils
+sudo apt install acl autoconf dnsmasq-base git golang libacl1-dev libcap-dev liblxc1 liblxc-dev libtool libuv1-dev make pkg-config rsync squashfs-tools tar tcl xz-utils
 ```
 
 <!--
@@ -117,6 +117,7 @@ And then download it as usual:
 ```bash
 go get -d -v github.com/lxc/lxd/lxd
 cd $GOPATH/src/github.com/lxc/lxd
+make deps
 make
 ```
 
@@ -138,13 +139,13 @@ echo "root:1000000:65536" | sudo tee -a /etc/subuid /etc/subgid
 ```
 
 <!--
-Now you can run the daemon (the `--group` sudo bit allows everyone in the sudo
+Now you can run the daemon (the `\-\-group` sudo bit allows everyone in the sudo
 group to talk to LXD; you can create your own group if you want):
 -->
 これでデーモンを実行できます（sudo グループに属する全員が LXD とやりとりできるように `--group sudo` を指定します。別に指定したいグループを作ることもできます）:
 
 ```bash
-sudo -E $GOPATH/bin/lxd --group sudo
+sudo -E LD_LIBRARY_PATH=$LD_LIBRARY_PATH $GOPATH/bin/lxd --group sudo
 ```
 
 ## LXD を使い始める <!-- Getting started with LXD -->
@@ -305,7 +306,7 @@ Live migration requires a tool installed on both hosts called
 Ubuntu では次のようにインストールできます:
 
 ```bash
-sudo apt-get install criu
+sudo apt install criu
 ```
 
 <!--
