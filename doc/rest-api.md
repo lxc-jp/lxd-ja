@@ -393,6 +393,8 @@ won't work and PUT needs to be used instead.
          * [`/1.0/storage-pools/<name>/volumes`](#10storage-poolsnamevolumes)
            * [`/1.0/storage-pools/<name>/volumes/<type>`](#10storage-poolsnamevolumestype)
              * [`/1.0/storage-pools/<pool>/volumes/<type>/<name>`](#10storage-poolspoolvolumestypename)
+               * [`/1.0/storage-pools/<pool>/volumes/<type>/<name>/snapshots`](#10storage-poolspoolvolumestypenamesnapshots)
+                 * [`/1.0/storage-pools/<pool>/volumes/<type>/<volume>/snapshots/<name>`](#10storage-poolspoolvolumestypevolumesnapshotsname)
      * [`/1.0/resources`](#10resources)
      * [`/1.0/cluster`](#10cluster)
        * [`/1.0/cluster/members`](#10clustermembers)
@@ -675,7 +677,7 @@ Return value:
         "/1.0/containers/blah1"
     ]
 
-### POST
+### POST (`?target=<member>` を任意で指定可能) <!-- POST (optional `?target=<member>`) -->
  * 説明: 新しいコンテナを作成します <!-- Description: Create a new container -->
  * 認証: trusted <!-- Authentication: trusted -->
  * 操作: 同期 <!-- Operation: sync -->
@@ -1259,7 +1261,7 @@ Input:
         "ephemeral": true
     }
 
-### POST
+### POST (`?target=<member>` を任意で指定可能) <!-- POST (optional `?target=<member>`) -->
  * 説明: コンテナをリネーム／マイグレーションするのに用いられます <!-- Description: used to rename/migrate the container -->
  * 認証: trusted <!-- Authentication: trusted -->
  * 操作: 非同期 <!-- Operation: async -->
@@ -1279,9 +1281,9 @@ Input (simple rename):
         "name": "new-name"
     }
 
-入力 (lxd インスタンス間でのマイグレーション)
+入力 (lxd インスタンスまたは lxd クラスタメンバ間でのマイグレーション)
 <!--
-Input (migration across lxd instances):
+Input (migration across lxd instances or lxd cluster members):
 -->
 
     {
@@ -1295,6 +1297,12 @@ Input (migration across lxd instances):
 <!--
 The migration does not actually start until someone (i.e. another lxd instance)
 connects to all the websockets and begins negotiation with the source.
+-->
+
+クラスタメンバ間でマイグレーションするには `?target=<member>` オプションが
+必要です。
+<!--
+To migrate between cluster members the `?target=<member>` option is required.
 -->
 
 メタデータセクション内の出力 (マイグレーションの場合)
@@ -1531,6 +1539,19 @@ Return (with wait-for-websocket=true and interactive=true):
         }
     }
 
+戻り値 (interactive=false で record-output=true の場合)
+<!--
+Return (with interactive=false and record-output=true):
+-->
+
+    {
+        "output": {
+            "1": "/1.0/containers/example/logs/exec_b0f737b4-2c8a-4edf-a7c1-4cc7e4e9e155.stdout",
+            "2": "/1.0/containers/example/logs/exec_b0f737b4-2c8a-4edf-a7c1-4cc7e4e9e155.stderr"
+        },
+        "return": 0
+    }
+
 実行コマンドが終了した時は、終了ステータスが操作のメタデータに
 含まれます。
 <!--
@@ -1705,7 +1726,7 @@ Return:
                 "type": "disk"
             },
         },
-        "name": "zerotier/blah",
+        "name": "blah",
         "profiles": [
             "default"
         ],
@@ -1758,6 +1779,11 @@ Return (with migration=true):
 既に存在する名前にリネームしようとすると 409 (Conflict) という HTTP ステータスコードが返ります。
 <!--
 Renaming to an existing name must return the 409 (Conflict) HTTP code.
+-->
+
+`default` プロファイルをリネームしようとすると 403 (Forbidden) という HTTP ステータスコードが返ります。
+<!--
+Attempting to rename the `default` profile will return the 403 (Forbidden) HTTP code.
 -->
 
 ### DELETE
@@ -3295,6 +3321,11 @@ Input (none at present):
 HTTP code for this should be 202 (Accepted).
 -->
 
+`default` プロファイルをリネームしようとすると 403 (Forbidden) という HTTP ステータスコードが返ります。
+<!--
+Attempting to rename the `default` profile will return the 403 (Forbidden) HTTP code.
+-->
+
 ## `/1.0/storage-pools`
 ### GET
  * 説明: ストレージプールの一覧 <!-- Description: list of storage pools -->
@@ -3495,27 +3526,27 @@ Return:
 -->
 
     [
-        "/1.0/storage-pools/default/volumes/containers/alp1",
-        "/1.0/storage-pools/default/volumes/containers/alp10",
-        "/1.0/storage-pools/default/volumes/containers/alp11",
-        "/1.0/storage-pools/default/volumes/containers/alp12",
-        "/1.0/storage-pools/default/volumes/containers/alp13",
-        "/1.0/storage-pools/default/volumes/containers/alp14",
-        "/1.0/storage-pools/default/volumes/containers/alp15",
-        "/1.0/storage-pools/default/volumes/containers/alp16",
-        "/1.0/storage-pools/default/volumes/containers/alp17",
-        "/1.0/storage-pools/default/volumes/containers/alp18",
-        "/1.0/storage-pools/default/volumes/containers/alp19",
-        "/1.0/storage-pools/default/volumes/containers/alp2",
-        "/1.0/storage-pools/default/volumes/containers/alp20",
-        "/1.0/storage-pools/default/volumes/containers/alp3",
-        "/1.0/storage-pools/default/volumes/containers/alp4",
-        "/1.0/storage-pools/default/volumes/containers/alp5",
-        "/1.0/storage-pools/default/volumes/containers/alp6",
-        "/1.0/storage-pools/default/volumes/containers/alp7",
-        "/1.0/storage-pools/default/volumes/containers/alp8",
-        "/1.0/storage-pools/default/volumes/containers/alp9",
-        "/1.0/storage-pools/default/volumes/images/62e850a334bb9d99cac00b2e618e0291e5e7bb7db56c4246ecaf8e46fa0631a6"
+        "/1.0/storage-pools/default/volumes/container/alp1",
+        "/1.0/storage-pools/default/volumes/container/alp10",
+        "/1.0/storage-pools/default/volumes/container/alp11",
+        "/1.0/storage-pools/default/volumes/container/alp12",
+        "/1.0/storage-pools/default/volumes/container/alp13",
+        "/1.0/storage-pools/default/volumes/container/alp14",
+        "/1.0/storage-pools/default/volumes/container/alp15",
+        "/1.0/storage-pools/default/volumes/container/alp16",
+        "/1.0/storage-pools/default/volumes/container/alp17",
+        "/1.0/storage-pools/default/volumes/container/alp18",
+        "/1.0/storage-pools/default/volumes/container/alp19",
+        "/1.0/storage-pools/default/volumes/container/alp2",
+        "/1.0/storage-pools/default/volumes/container/alp20",
+        "/1.0/storage-pools/default/volumes/container/alp3",
+        "/1.0/storage-pools/default/volumes/container/alp4",
+        "/1.0/storage-pools/default/volumes/container/alp5",
+        "/1.0/storage-pools/default/volumes/container/alp6",
+        "/1.0/storage-pools/default/volumes/container/alp7",
+        "/1.0/storage-pools/default/volumes/container/alp8",
+        "/1.0/storage-pools/default/volumes/container/alp9",
+        "/1.0/storage-pools/default/volumes/image/62e850a334bb9d99cac00b2e618e0291e5e7bb7db56c4246ecaf8e46fa0631a6"
     ]
 
 ### POST
@@ -3735,8 +3766,8 @@ Return:
 
 
 ### PUT (ETag サポートあり) <!-- PUT (ETag supported) -->
- * 説明: ストレージボリュームの情報を置き換えます <!-- Description: replace the storage volume information -->
- * 導入: `storage` API 拡張によって <!-- Introduced: with API extension `storage` -->
+ * 説明: ストレージボリュームの情報を置き換えるかスナップショットから復元します <!-- Description: replace the storage volume information or restore from snapshot -->
+ * 導入: `storage`, `storage_api_volume_snapshots` API 拡張によって <!-- Introduced: with API extension `storage`, `storage_api_volume_snapshots` -->
  * 認証: trusted <!-- Authentication: trusted -->
  * 操作: 同期 <!-- Operation: sync -->
  * 戻り値: 標準の戻り値または標準のエラー <!-- Return: standard return value or standard error -->
@@ -3745,6 +3776,8 @@ Return:
 <!--
  Input:
 -->
+
+(訳注: ストレージボリュームの情報を置き換える場合の入力)
 
     {
         "config": {
@@ -3757,6 +3790,12 @@ Return:
             "lvm.vg_name": "pool1",
             "volume.size": "10737418240"
         }
+    }
+
+(訳注: スナップショットから復元する場合の入力)
+
+    {
+        "restore": "snapshot-name"
     }
 
 ### PATCH (ETag サポートあり) <!-- PATCH (ETag supported) -->
@@ -3791,6 +3830,102 @@ Input (none at present):
 
     {
     }
+
+## `/1.0/storage-pools/<pool>/volumes/<type>/<name>/snapshots`
+### GET
+ * 説明: ボリュームスナップショットの一覧 <!-- Description: List of volume snapshots -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻り値: このボリュームのスナップショットの URL の一覧 <!-- Return: list of URLs for snapshots for this volume -->
+
+戻り値
+<!--
+Return value:
+-->
+
+    [
+        "/1.0/storage-pools/default/volumes/custom/foo/snapshots/snap0"
+    ]
+
+### POST
+ * 説明: 新規のボリュームスナップショットを作成する <!-- Description: create a new volume snapshot -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 非同期 <!-- Operation: async -->
+ * 戻り値: バックグラウンド操作または標準のエラー <!-- Return: background operation or standard error -->
+
+入力
+<!--
+Input:
+-->
+
+    {
+        "name": "my-snapshot",          # スナップショットの名前
+    }
+
+<!--
+    {
+        "name": "my-snapshot",          # Name of the snapshot
+    }
+-->
+
+## `/1.0/storage-pools/<pool>/volumes/<type>/<volume>/snapshots/name`
+### GET
+ * 説明: スナップショットの情報 <!-- Description: Snapshot information -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻り値: スナップショットを表す dict <!-- Return: dict representing the snapshot -->
+
+戻り値
+<!--
+Return:
+-->
+
+    {
+        "config": {},
+        "description": "",
+        "name": "snap0"
+    }
+
+### PUT
+ * 説明: ボリュームスナップショットの情報 <!-- Description: Volume snapshot information -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻り値: ボリュームスナップショットを表す dict <!-- Return: dict representing the volume snapshot -->
+
+入力
+<!--
+Input:
+-->
+
+    {
+        "description": "new-description"
+    }
+
+### POST
+ * 説明: ボリュームスナップショットをリネームするのに使用されます <!-- Description: used to rename the volume snapshot -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 非同期 <!-- Operation: async -->
+ * 戻り値: バックグラウンド操作または標準のエラー <!-- Return: background operation or standard error -->
+
+入力
+<!--
+Input:
+-->
+
+    {
+        "name": "new-name"
+    }
+
+### DELETE
+ * 説明: ボリュームスナップショットを削除します <!-- Description: remove the volume snapshot -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 非同期 <!-- Operation: async -->
+ * 戻り値: バックグラウンド操作または標準のエラー <!-- Return: background operation or standard error -->
+
+レスポンスの HTTP ステータスコードは 202 (Accepted)。
+<!--
+HTTP code for this should be 202 (Accepted).
+-->
 
 ## `/1.0/resources`
 ### GET
