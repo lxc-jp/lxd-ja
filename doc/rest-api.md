@@ -1963,7 +1963,7 @@ Output:
  * 説明: コンテナの状態を変更する <!-- Description: change the container state -->
  * 認証: trusted <!-- Authentication: trusted -->
  * 操作: 非同期 <!-- Operation: async -->
- * 戻り値: 現在の状態を表す dict <!-- Return: dict representing current state -->
+ * 戻り値: バックグラウンド操作または標準のエラー <!-- Return: background operation or standard error -->
 
 入力
 <!--
