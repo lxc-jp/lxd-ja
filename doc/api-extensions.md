@@ -84,9 +84,9 @@ A number of new syscalls related container configuration keys were introduced.
  * `security.syscalls.blacklist`
  * `security.syscalls.whitelist`
 
-使い方は [configuration.md](Configuration) を参照してください。
+使い方は [configuration.md](Configuration.md) を参照してください。
 <!--
-See [configuration.md](Configuration) for how to use them.
+See [configuration.md](configuration.md) for how to use them.
 -->
 
 ## auth\_pki
@@ -100,9 +100,9 @@ This indicates support for PKI authentication mode.
 In this mode, the client and server both must use certificates issued by the same PKI.
 -->
 
-詳細は [security.md](Security) を参照してください。
+詳細は [security.md](Security.md) を参照してください。
 <!--
-See [security.md](Security) for details.
+See [security.md](security.md) for details.
 -->
 
 ## container\_last\_used\_at
@@ -261,8 +261,8 @@ This includes:
 -->
 
  * `/1.0/networks` エントリに "managed" プロパティを追加 <!-- Addition of the "managed" property on `/1.0/networks` entries -->
- * ネットワーク設定オプションの全て (詳細は[configuration.md](configuration) を参照) <!-- All the network configuration options (see [configuration.md](configuration) for details) -->
- * `POST /1.0/networks` (詳細は [rest-api.md](RESTful API) を参照) <!-- `POST /1.0/networks` (see [rest-api.md](RESTful API) for details) -->
+ * ネットワーク設定オプションの全て (詳細は[configuration.md](configuration.md) を参照) <!-- All the network configuration options (see [configuration.md](configuration.md) for details) -->
+ * `POST /1.0/networks` (詳細は [RESTful API](rest-api.md) を参照) <!-- `POST /1.0/networks` (see [RESTful API](rest-api.md) for details) -->
  * `PUT /1.0/networks/<entry>` (詳細は [RESTful API](rest-api.md) を参照) <!-- `PUT /1.0/networks/<entry>` (see [RESTful API](rest-api.md)for details) -->
  * `PATCH /1.0/networks/<entry>` (詳細は [RESTful API](rest-api.md) を参照) <!-- `PATCH /1.0/networks/<entry>` (see [RESTful API](rest-api.md) for details) -->
  * `DELETE /1.0/networks/<entry>` (詳細は [RESTful API](rest-api.md) を参照) <!-- `DELETE /1.0/networks/<entry>` (see [RESTful API](rest-api.md) for details) -->
@@ -418,7 +418,7 @@ This includes:
 * `PATCH /1.0/storage-pools/<pool>/volumes/<volume_type>/<name>` (詳細は [RESTful API](rest-api.md) を参照) <!-- (see [RESTful API](rest-api.md) for details) -->
 * `DELETE /1.0/storage-pools/<pool>/volumes/<volume_type>/<name>` (詳細は [RESTful API](rest-api.md) を参照) <!-- (see [RESTful API](rest-api.md) for details) -->
 
-* 全てのストレージ設定オプション (詳細は [configuration.md](configuration) を参照) <!-- All storage configuration options (see [configuration.md](configuration) for details) -->
+* 全てのストレージ設定オプション (詳細は [configuration.md](configuration.md) を参照) <!-- All storage configuration options (see [configuration.md](configuration.md) for details) -->
 
 ## file\_delete
 `/1.0/containers/<name>/files` の DELETE メソッドを実装
@@ -901,7 +901,7 @@ This adds a new "propagation" option to the disk device type, allowing
 the configuration of kernel mount propagation.
 -->
 
-## container_backup
+## container\_backup
 コンテナのバックアップサポートを追加します。
 <!--
 Add container backup support.
@@ -988,7 +988,7 @@ Supported connections are now:
 * `TCP <-> UDP`
 * `UNIX <-> UDP`
 
-## clustering_join
+## clustering\_join
 これにより GET /1.0/cluster がノードに参加する際にどのようなストレージプールと
 ネットワークを作成する必要があるかについての情報を返します。また、それらを作成する
 際にどのノード固有の設定キーを使う必要があるかについての情報も返します。
@@ -1028,3 +1028,172 @@ This adds the following new endpoint (see [RESTful API](rest-api.md) for details
 
 * `GET /1.0/networks/<name>/state`
 
+## proxy\_unix\_dac\_properties
+これは抽象的ではない unix ソケットに gid, uid, パーミションのプロパティを追加します。
+<!--
+This adds support for gid, uid, and mode properties for non-abstract unix
+sockets.
+-->
+
+## container\_protection\_delete
+`security.protection.delete` フィールドを設定できるようにします。 true に設定すると
+コンテナが削除されるのを防ぎます。スナップショットはこの設定により影響を受けません。
+<!--
+Enables setting the `security.protection.delete` field which prevents containers
+from being deleted if set to true. Snapshots are not affected by this setting.
+-->
+
+## proxy\_priv\_drop
+proxy デバイスに security.uid と security.gid を追加します。これは root 権限を
+落とし (訳注: 非 root 権限で動作させるという意味です)、 Unix ソケットに接続する
+際に用いられる uid/gid も変更します。
+<!--
+Adds security.uid and security.gid for the proxy devices, allowing
+privilege dropping and effectively changing the uid/gid used for
+connections to Unix sockets too.
+-->
+
+## pprof\_http
+これはデバッグ用の HTTP サーバを起動する core.debug\_address という新しいオプションを
+追加します。
+<!--
+This adds a new core.debug\_address config option to start a debugging HTTP server.
+-->
+
+このサーバは現在 pprof API を含んでおり、従来の cpu-profile, memory-profile
+と print-goroutines デバッグオプションを置き換えるものです。
+<!--
+That server currently includes a pprof API and replaces the old
+cpu-profile, memory-profile and print-goroutines debug options.
+-->
+
+## proxy\_haproxy\_protocol
+proxy デバイスに proxy\_protocol キーを追加します。これは HAProxy PROXY プロトコルヘッダ
+の使用を制御します。
+<!--
+Adds a proxy\_protocol key to the proxy device which controls the use of the HAProxy PROXY protocol header.
+-->
+
+## network\_hwaddr
+ブリッジの MAC アドレスを制御する bridge.hwaddr キーを追加します。
+<!--
+Adds a bridge.hwaddr key to control the MAC address of the bridge.
+-->
+
+## proxy\_nat
+これは最適化された UDP/TCP プロキシを追加します。設定上可能であれば
+プロキシ処理は proxy デバイスの代わりに iptables 経由で行われるように
+なります。
+<!--
+This adds optimized UDP/TCP proxying. If the configuration allows, proxying
+will be done via iptables instead of proxy devices.
+-->
+
+## network\_nat\_order
+LXD ブリッジに `ipv4.nat.order` と `ipv6.nat.order` 設定キーを導入します。
+これらのキーは LXD のルールをチェイン内の既存のルールの前に置くか後に置くかを
+制御します。
+<!--
+This introduces the `ipv4.nat.order` and `ipv6.nat.order` configuration keys for LXD bridges.
+Those keys control whether to put the LXD rules before or after any pre-existing rules in the chain.
+-->
+
+## container\_full
+これは `GET /1.0/containers` に recursion=2 という新しいモードを導入します。
+これにより状態、スナップショットとバックアップの構造を含むコンテナの全ての構造を
+取得できるようになります。
+<!--
+This introduces a new recursion=2 mode for `GET /1.0/containers` which allows for the retrieval of
+all container structs, including the state, snapshots and backup structs.
+-->
+
+この結果 "lxc list" は必要な全ての情報を 1 つのクエリで取得できるように
+なります。
+<!--
+This effectively allows for "lxc list" to get all it needs in one query.
+-->
+
+## candid\_authentication
+これは新たに candid.api.url 設定キーを導入し core.macaroon.endpoint を
+削除します。
+<!--
+This introduces the new candid.api.url config option and removes
+core.macaroon.endpoint.
+-->
+
+## backup\_compression
+これは新たに backups.compression\_algorithm 設定キーを導入します。
+これによりバックアップの圧縮の設定が可能になります。
+<!--
+This introduces a new backups.compression\_algorithm config key which
+allows configuration of backup compression.
+-->
+
+## candid\_config
+これは `candid.domains` と `candid.expiry` 設定キーを導入します。
+前者は許可された／有効な Candid ドメインを指定することを可能にし、
+後者は macaroon の有効期限を設定可能にします。 `lxc remote add` コマンドに
+新たに `--domain` フラグが追加され、これにより Candid ドメインを
+指定可能になります。
+<!--
+This introduces the config keys `candid.domains` and `candid.expiry`. The
+former allows specifying allowed/valid Candid domains, the latter makes the
+macaroon's expiry configurable. The `lxc remote add` command now has a
+`\-\-domain` flag which allows specifying a Candid domain.
+-->
+
+## nvidia\_runtime\_config
+これは nvidia.runtime と libnvidia-container ライブラリを使用する際に追加の
+いくつかの設定キーを導入します。これらのキーは nvidia-container の対応する
+環境変数にほぼそのまま置き換えられます。
+<!--
+This introduces a few extra config keys when using nvidia.runtime and the libnvidia-container library.
+Those keys translate pretty much directly to the matching nvidia-container environment variables:
+-->
+
+ - nvidia.driver.capabilities => NVIDIA\_DRIVER\_CAPABILITIES
+ - nvidia.require.cuda => NVIDIA\_REQUIRE\_CUDA
+ - nvidia.require.driver => NVIDIA\_REQUIRE\_DRIVER
+
+## storage\_api\_volume\_snapshots
+ストレージボリュームスナップショットのサポートを追加します。これらは
+コンテナスナップショットのように振る舞いますが、ボリュームに対してのみ
+作成できます。
+<!--
+Add support for storage volume snapshots. They work like container snapshots,
+only for volumes.
+-->
+
+これにより次の新しいエンドポイントが追加されます (詳細は [RESTful API](rest-api.md) を参照)。
+<!--
+This adds the following new endpoint (see [RESTful API](rest-api.md) for details):
+-->
+
+* `GET /1.0/storage-pools/<pool>/volumes/<type>/<name>/snapshots`
+* `POST /1.0/storage-pools/<pool>/volumes/<type>/<name>/snapshots`
+
+* `GET /1.0/storage-pools/<pool>/volumes/<type>/<volume>/snapshots/<name>`
+* `PUT /1.0/storage-pools/<pool>/volumes/<type>/<volume>/snapshots/<name>`
+* `POST /1.0/storage-pools/<pool>/volumes/<type>/<volume>/snapshots/<name>`
+* `DELETE /1.0/storage-pools/<pool>/volumes/<type>/<volume>/snapshots/<name>`
+
+## storage\_unmapped
+ストレージボリュームに新たに `security.unmapped` という boolean を導入します。
+<!--
+Introduces a new `security.unmapped` boolean on storage volumes.
+-->
+
+true に設定するとボリューム上の現在のマップをフラッシュし、以降の
+idmap のトラッキングとボリューム上のリマッピングを防ぎます。
+<!--
+Setting it to true will flush the current map on the volume and prevent
+any further idmap tracking and remapping on the volume.
+-->
+
+これは隔離されたコンテナ間でデータを共有するために使用できます。
+この際コンテナを書き込みアクセスを要求するコンテナにアタッチした
+後にデータを共有します。
+<!--
+This can be used to share data between isolated containers after
+attaching it to the container which requires write access.
+-->
