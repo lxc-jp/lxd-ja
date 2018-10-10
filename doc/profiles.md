@@ -26,6 +26,11 @@ If not present, LXD will create a `default` profile.
 まだ存在していない場合は、LXDは `default` プロファイルを作成します。
 
 <!--
+The `default` profile cannot be renamed or removed.
+-->
+`default` プロファイルはリネームや削除はできません。
+
+<!--
 The `default` profile is set for any new container created which doesn't
 specify a different profiles list.
 -->
