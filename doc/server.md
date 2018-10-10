@@ -20,7 +20,7 @@ currently supported:
 backups.compression\_algorithm  | string    | gzip      | backup\_compression      | 新規のイメージに用いる圧縮アルゴリズム (bzip2, gzip, lzma, xz, none のいずれか) <!-- Compression algorithm to use for new images (bzip2, gzip, lzma, xz or none) -->
 candid.api.url                  | string    | -         | candid\_authentication   | Candid を使用する外部認証エンドポイントの URL <!-- URL of the the external authentication endpoint using Candid -->
 candid.expiry                   | integer   | 3600      | candid\_config           | Canded macaroon の有効期間 (秒で指定) <!-- Candid macaroon expiry in seconds -->
-candid.domains                  | string    | -         | candid\_config           | 許可される Candid ドメインのカンマ区切りリスト (から文字は全てのドメインが有効という意味になります) <!-- Comma-separated list of allowed Candid domains (empty string means all domains are valid) -->
+candid.domains                  | string    | -         | candid\_config           | 許可される Candid ドメインのカンマ区切りリスト (空文字は全てのドメインが有効という意味になります) <!-- Comma-separated list of allowed Candid domains (empty string means all domains are valid) -->
 cluster.offline\_threshold      | integer   | 20        | clustering               | 無反応なノードをオフラインとみなす秒数 <!-- Number of seconds after which an unresponsive node is considered offline -->
 core.debug\_address             | string    | -         | pprof\_http              | pprof デバッグサーバがバインドするアドレス (HTTP) <!-- Address to bind the pprof debug server to (HTTP) -->
 core.https\_address             | string    | -         | -                        | リモート API がバインドするアドレス (HTTPs) <!-- Address to bind for the remote API (HTTPs) -->
