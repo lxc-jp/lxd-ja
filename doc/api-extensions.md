@@ -1029,7 +1029,7 @@ This adds the following new endpoint (see [RESTful API](rest-api.md) for details
 * `GET /1.0/networks/<name>/state`
 
 ## proxy\_unix\_dac\_properties
-これは抽象的ではない unix ソケットに gid, uid, パーミションのプロパティを追加します。
+これは抽象的 unix ソケットではない unix ソケットに gid, uid, パーミションのプロパティを追加します。
 <!--
 This adds support for gid, uid, and mode properties for non-abstract unix
 sockets.
@@ -1054,8 +1054,8 @@ connections to Unix sockets too.
 -->
 
 ## pprof\_http
-これはデバッグ用の HTTP サーバを起動する core.debug\_address という新しいオプションを
-追加します。
+これはデバッグ用の HTTP サーバを起動するために、新たに core.debug\_address
+オプションを追加します。
 <!--
 This adds a new core.debug\_address config option to start a debugging HTTP server.
 -->
@@ -1178,7 +1178,7 @@ This adds the following new endpoint (see [RESTful API](rest-api.md) for details
 * `DELETE /1.0/storage-pools/<pool>/volumes/<type>/<volume>/snapshots/<name>`
 
 ## storage\_unmapped
-ストレージボリュームに新たに `security.unmapped` という boolean を導入します。
+ストレージボリュームに新たに `security.unmapped` という設定を導入します。
 <!--
 Introduces a new `security.unmapped` boolean on storage volumes.
 -->
