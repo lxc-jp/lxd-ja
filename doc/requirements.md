@@ -2,11 +2,10 @@
 ## Go
 
 <!--
-LXD requires Go 1.9 or higher.
-Both the golang and gccgo compilers are supported.
+LXD requires Go 1.9 or higher and is only tested with the golang compiler.
 -->
-LXD は Go 1.9 以上を必要とします。
-golang と gccgo の両方のコンパイラがサポートされます。
+LXD は Go 1.9 以上を必要とし、 golang のコンパイラのみでテストされています。
+(訳注: 以前は gccgo もサポートされていましたが golang のみになりました)
 
 ## 必要なカーネルバージョン <!-- Kernel requirements -->
 <!--
@@ -67,3 +66,27 @@ should also be installed.
 -->
 Ubuntu を含む、さまざまなディストリビューションの最近のバージョンを
 動かすためには、 LXCFS もインストールする必要があります。
+
+## 追加のライブラリ(と開発用のヘッダ) <!-- Additional libraries (and development headers) -->
+<!--
+LXD uses `dqlite` for its database, to build and setup the custom
+`sqlite3` and `dqlite` needed for it, you can run `make deps`.
+-->
+LXD はデータベースとして `dqlite` を使用しています。そのために必要な
+カスタム版の `sqlite3` と `dqlite` をビルドしセットアップするためには
+`make deps` を実行してください。
+
+<!--
+LXD itself also uses a number of (usually packaged) C libraries:
+-->
+LXD は他にもいくつかの (たいていはパッケージ化されている) C ライブラリを使用しています。
+ - libacl1
+ - libcap2
+ - libuv1 (`dqlite` で使用) <!-- (for `dqlite`) -->
+
+<!--
+Make sure you have both the libraries themselves and their development
+headers (-dev packages) installed.
+-->
+ライブラリそのものとライブラリの開発用ヘッダ (-dev パッケージ)の両方を
+インストールしたことを確認してください。
