@@ -26,6 +26,7 @@ using containers that require tens of thousands of file operations.
 
 `failed to open stream: Too many open files in...`
 
+`neighbour: ndisc_cache: neighbor table overflow!`
 
 # サーバの変更 <!-- Server Changes -->
 ## /etc/security/limits.conf
@@ -49,6 +50,8 @@ fs.inotify.max\_user\_instances | 1048576   | 128     | これは実ユーザ ID
 fs.inotify.max\_user\_watches   | 1048576   | 8192    | これは実ユーザ ID 枚に作成可能な watch 数の上限を指定します。 <!-- This specifies an upper limit on the number of watches that can be created per real user ID. --> [1]
 vm.max\_map\_count              | 262144    | 65530   | このファイルはプロセスが持つメモリマップ領域の最大数を含みます。malloc の呼び出しの副作用として、 直接的にはmmap と mprotect によって、また、共有ライブラリをロードすることによって、メモリマップ領域を使います。  <!-- This file contains the maximum number of memory map areas a process may have. Memory map areas are used as a side-effect of calling malloc, directly by mmap and mprotect, and also when loading shared libraries. -->
 kernel.dmesg\_restrict          | 1         | 0       | この設定を有効にするとコンテナがカーネルのリングバッファ内のメッセージにアクセスするのを拒否します。この設定はホスト・システム上の非 root ユーザへのアクセスも拒否することに注意してください。 <!-- This denies container access to the messages in the kernel ring buffer. Please note that this also will deny access to non-root users on the host system. -->
+net.ipv4.neigh.default.gc_thresh3| 8192     | 1024    | これは ARP テーブル (IPv4) 内のエントリの最大数です。1024 個を超えるコンテナを作成するなら増やすべきです。増やさなければ ARP テーブルがフルになったときに `neighbour: ndisc_cache: neighbor table overflow!` というエラーが発生し、コンテナがネットワーク設定を取得できなくなります。 [2] <!-- This is the maximum number of entries in ARP table (IPv4). You should increase this if you create over 1024 containers. Otherwise, you will get the error `neighbour: ndisc_cache: neighbor table overflow!` when the ARP table gets full and those containers will not be able to get a network configuration. [2] -->
+net.ipv6.neigh.default.gc_thresh3| 8192     | 1024    | これは ARP テーブル (IPv6) 内のエントリの最大数です。1024 個を超えるコンテナを作成するなら増やすべきです。増やさなければ ARP テーブルがフルになったときに `neighbour: ndisc_cache: neighbor table overflow!` というエラーが発生し、コンテナがネットワーク設定を取得できなくなります。 [2] <!-- This is the maximum number of entries in ARP table (IPv6). You should increase this if you plan to create over 1024 containers. Otherwise, you will get the error `neighbour: ndisc_cache: neighbor table overflow!` when the ARP table gets full and those containers will not be able to get a network configuration. [2] -->
 
 設定後、サーバの再起動が必要です。
 <!--
@@ -56,6 +59,7 @@ Then, reboot the server.
 -->
 
 [1]: http://man7.org/linux/man-pages/man7/inotify.7.html
+[2]: https://www.kernel.org/doc/Documentation/networking/ip-sysctl.txt
 
 ## ネットワーク帯域の調整 <!-- Network Bandwidth Tweaking -->
 大量の (コンテナ・コンテナ間、あるいはホスト・コンテナ間の) ローカル・アクティビティを持つ
