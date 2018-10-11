@@ -17,13 +17,17 @@ currently supported:
 
 キー <!-- Key -->                             | 型 <!-- Type -->      | デフォルト値 <!-- Default -->   | API 拡張 <!-- API extension -->            | 説明 <!-- Description -->
 :--                             | :---      | :------   | :------------            | :----------
+backups.compression\_algorithm  | string    | gzip      | backup\_compression      | 新規のイメージに用いる圧縮アルゴリズム (bzip2, gzip, lzma, xz, none のいずれか) <!-- Compression algorithm to use for new images (bzip2, gzip, lzma, xz or none) -->
+candid.api.url                  | string    | -         | candid\_authentication   | Candid を使用する外部認証エンドポイントの URL <!-- URL of the the external authentication endpoint using Candid -->
+candid.expiry                   | integer   | 3600      | candid\_config           | Canded macaroon の有効期間 (秒で指定) <!-- Candid macaroon expiry in seconds -->
+candid.domains                  | string    | -         | candid\_config           | 許可される Candid ドメインのカンマ区切りリスト (空文字は全てのドメインが有効という意味になります) <!-- Comma-separated list of allowed Candid domains (empty string means all domains are valid) -->
 cluster.offline\_threshold      | integer   | 20        | clustering               | 無反応なノードをオフラインとみなす秒数 <!-- Number of seconds after which an unresponsive node is considered offline -->
-core.https\_address             | string    | -         | -                        | remote API のためにバインドするアドレス <!-- Address to bind for the remote API -->
+core.debug\_address             | string    | -         | pprof\_http              | pprof デバッグサーバがバインドするアドレス (HTTP) <!-- Address to bind the pprof debug server to (HTTP) -->
+core.https\_address             | string    | -         | -                        | リモート API がバインドするアドレス (HTTPs) <!-- Address to bind for the remote API (HTTPs) -->
 core.https\_allowed\_credentials| boolean   | -         | -                        | Access-Control-Allow-Credentials HTTP ヘッダの値を "true" にするかどうか <!-- Whether to set Access-Control-Allow-Credentials http header value to "true" -->
 core.https\_allowed\_headers    | string    | -         | -                        | Access-Control-Allow-Headers HTTP ヘッダの値 <!-- Access-Control-Allow-Headers http header value -->
 core.https\_allowed\_methods    | string    | -         | -                        | Access-Control-Allow-Methods HTTP ヘッダの値 <!-- Access-Control-Allow-Methods http header value -->
 core.https\_allowed\_origin     | string    | -         | -                        | Access-Control-Allow-Origin HTTP ヘッダの値 <!-- Access-Control-Allow-Origin http header value -->
-core.macaroon.endpoint          | string    | -         | macaroon\_authentication | Macaroon を使用する外部認証エンドポイントの URL <!-- URL of the the external authentication endpoint using Macaroons -->
 core.proxy\_https               | string    | -         | -                        | HTTPS プロキシを使用する場合はその URL (未指定の場合は HTTPS\_PROXY 環境変数を参照) <!-- https proxy to use, if any (falls back to HTTPS\_PROXY environment variable) -->
 core.proxy\_http                | string    | -         | -                        | HTTP プロキシを使用する場合はその URL (未指定の場合は HTTP\_PROXY 環境変数を参照) <!-- http proxy to use, if any (falls back to HTTP\_PROXY environment variable) -->
 core.proxy\_ignore\_hosts       | string    | -         | -                        | プロキシが不要なホスト (NO\_PROXY と同様な形式、例えば 1.2.3.4,1.2.3.5, を指定。未指定の場合は NO\_PROXY 環境変数を参照) <!-- hosts which don't need the proxy for use (similar format to NO\_PROXY, e.g. 1.2.3.4,1.2.3.5, falls back to NO\_PROXY environment variable) -->
