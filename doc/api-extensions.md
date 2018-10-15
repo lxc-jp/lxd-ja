@@ -616,3 +616,18 @@ any further idmap tracking and remapping on the volume.
 
 This can be used to share data between isolated containers after
 attaching it to the container which requires write access.
+
+## projects
+Add a new project API, supporting creation, update and deletion of projects.
+
+Projects can hold containers, profiles or images at this point and let
+you get a separate view of your LXD resources by switching to it.
+
+## candid\_config\_key
+This introduces a new `candid.api.key` option which allows for setting
+the expected public key for the endpoint, allowing for safe use of a
+HTTP-only candid server.
+
+## network\_vxlan\_ttl
+This adds a new `tunnel.NAME.ttl` network configuration option which
+makes it possible to raise the ttl on VXLAN tunnels.
