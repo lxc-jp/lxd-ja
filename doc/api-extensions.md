@@ -1197,3 +1197,30 @@ any further idmap tracking and remapping on the volume.
 This can be used to share data between isolated containers after
 attaching it to the container which requires write access.
 -->
+
+## projects
+新たに project API を追加します。プロジェクトの作成、更新、削除ができます。
+<!--
+Add a new project API, supporting creation, update and deletion of projects.
+-->
+
+プロジェクトは、現時点でコンテナ、プロファイル、イメージを保持できます。そして、プロジェクトを切り替えることで、独立した LXD リソースのビューを見せられます。
+<!--
+Projects can hold containers, profiles or images at this point and let
+you get a separate view of your LXD resources by switching to it.
+-->
+
+## candid\_config\_key
+新たに `candid.api.key` オプションが使えるようになります。これにより、エンドポイントが期待する公開鍵を設定でき、HTTP のみの Candid サーバを安全に利用できます。
+<!--
+This introduces a new `candid.api.key` option which allows for setting
+the expected public key for the endpoint, allowing for safe use of a
+HTTP-only candid server.
+-->
+
+## network\_vxlan\_ttl
+新たにネットワークの設定に `tunnel.NAME.ttl` が指定できるようになります。これにより、VXLAN トンネルの TTL を増加させることができます。
+<!--
+This adds a new `tunnel.NAME.ttl` network configuration option which
+makes it possible to raise the ttl on VXLAN tunnels.
+-->
