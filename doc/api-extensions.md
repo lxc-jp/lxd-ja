@@ -1204,7 +1204,7 @@ attaching it to the container which requires write access.
 Add a new project API, supporting creation, update and deletion of projects.
 -->
 
-プロジェクトは、現時点でコンテナ、プロファイル、イメージを保持できます。そして、プロジェクトを切り替えることで、独立した LXD リソースのビューを見せられます。
+現時点では、プロジェクトは、コンテナ、プロファイル、イメージを保持できます。そして、プロジェクトを切り替えることで、独立した LXD リソースのビューを見せられます。
 <!--
 Projects can hold containers, profiles or images at this point and let
 you get a separate view of your LXD resources by switching to it.
