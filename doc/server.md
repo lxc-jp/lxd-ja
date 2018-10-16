@@ -18,6 +18,7 @@ currently supported:
 キー <!-- Key -->                             | 型 <!-- Type -->      | デフォルト値 <!-- Default -->   | API 拡張 <!-- API extension -->            | 説明 <!-- Description -->
 :--                             | :---      | :------   | :------------            | :----------
 backups.compression\_algorithm  | string    | gzip      | backup\_compression      | 新規のイメージに用いる圧縮アルゴリズム (bzip2, gzip, lzma, xz, none のいずれか) <!-- Compression algorithm to use for new images (bzip2, gzip, lzma, xz or none) -->
+candid.api.key                  | string    | -         | candid\_config\_key      | Candid サーバーの公開鍵（HTTPのみのサーバーで必要） <!-- Public key of the candid server (required for HTTP-only servers) -->
 candid.api.url                  | string    | -         | candid\_authentication   | Candid を使用する外部認証エンドポイントの URL <!-- URL of the the external authentication endpoint using Candid -->
 candid.expiry                   | integer   | 3600      | candid\_config           | Canded macaroon の有効期間 (秒で指定) <!-- Candid macaroon expiry in seconds -->
 candid.domains                  | string    | -         | candid\_config           | 許可される Candid ドメインのカンマ区切りリスト (空文字は全てのドメインが有効という意味になります) <!-- Comma-separated list of allowed Candid domains (empty string means all domains are valid) -->
