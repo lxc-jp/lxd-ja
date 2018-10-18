@@ -1,4 +1,5 @@
-# イントロダクション <!-- Introduction -->
+# REST API
+## イントロダクション <!-- Introduction -->
 LXD とクライアントの間の全ての通信は HTTP 上の RESTful API を使って
 行います。リモートの操作は SSL で暗号化して通信し、ローカルの操作は
 Unix ソケットを使って通信します。
@@ -23,7 +24,7 @@ Not all of the REST interface requires authentication:
 Unauthenticated endpoints are clearly identified as such below.
 -->
 
-# API のバージョニング <!-- API versioning -->
+## API のバージョニング <!-- API versioning -->
 サポートされている API のメジャーバージョンのリストは `GET /` を使って
 取得できます。
 <!--
@@ -44,7 +45,7 @@ result in addition to `api_extensions` which can be used by the client
 to check if a given feature is supported by the server.
 -->
 
-# 戻り値 <!-- Return values -->
+## 戻り値 <!-- Return values -->
 次の 3 つの標準的な戻り値の型があります。
 <!--
 There are three standard return types:
@@ -54,7 +55,7 @@ There are three standard return types:
  * バックグラウンド操作 <!-- Background operation -->
  * エラー <!-- Error -->
 
-### 標準の戻り値 <!-- Standard return value -->
+#### 標準の戻り値 <!-- Standard return value -->
 標準の同期的な操作に対しては以下のような dict が返されます。
 <!--
 For a standard synchronous operation, the following dict is returned:
@@ -81,7 +82,7 @@ HTTP ステータスコードは必ず 200 です。
 HTTP code must be 200.
 -->
 
-### バックグラウンド操作 <!-- Background operation -->
+#### バックグラウンド操作 <!-- Background operation -->
 リクエストの結果がバックグラウンド操作になる場合、 HTTP ステータスコードは 202 (Accepted)
 になり、操作の URL を指す HTTP の Location ヘッダが返されます。
 <!--
@@ -173,7 +174,7 @@ going on without having to pull the target operation, all information in
 the body can also be retrieved from the background operation URL.
 -->
 
-### エラー <!-- Error -->
+#### エラー <!-- Error -->
 さまざまな状況によっては操作を行う前に直ぐに問題が起きる場合があり、
 そういう場合には以下のような値が返されます。
 <!--
@@ -202,7 +203,7 @@ HTTP ステータスコードは 400, 401, 403, 404, 409, 412, 500 のいずれ�
 HTTP code must be one of of 400, 401, 403, 404, 409, 412 or 500.
 -->
 
-# ステータスコード <!-- Status codes -->
+## ステータスコード <!-- Status codes -->
 LXD REST API はステータス情報を返す必要があります。それはエラーの理由だったり、
 操作の現在の状態だったり、 LXD が提供する様々なリソースの状態だったりします。
 <!--
@@ -242,7 +243,7 @@ The codes are always 3 digits, with the following ranges:
  * 400 to 599: 失敗したアクションの結果 <!-- negative action result -->
  * 600 to 999: 将来使用するために予約されている番号の範囲 <!-- future use -->
 
-## 現在使用されているステータスコード一覧 <!-- List of current status codes -->
+### 現在使用されているステータスコード一覧 <!-- List of current status codes -->
 
 コード <!-- Code -->  | 意味 <!-- Meaning -->
 :---  | :------
@@ -262,7 +263,7 @@ The codes are always 3 digits, with the following ranges:
 400   | 失敗 <!-- Failure -->
 401   | キャンセルされた <!-- Cancelled -->
 
-# 再帰 <!-- Recursion -->
+## 再帰 <!-- Recursion -->
 巨大な一覧のクエリを最適化するために、コレクションに対して再帰が実装されています。
 コレクションに対するクエリの GET リクエストに `recursion` パラメータを指定できます。
 <!--
@@ -286,7 +287,7 @@ Recursion is implemented by simply replacing any pointer to an job (URL)
 by the object itself.
 -->
 
-# 非同期操作 <!-- Async operations -->
+## 非同期操作 <!-- Async operations -->
 完了までに 1 秒以上かかるかもしれない操作はバックグラウンドで実行しなければ
 なりません。そしてクライアントにはバックグラウンド操作 ID を返します。
 <!--
@@ -301,7 +302,7 @@ The client will then be able to either poll for a status update or wait
 for a notification using the long-poll API.
 -->
 
-# 通知 <!-- Notifications -->
+## 通知 <!-- Notifications -->
 通知のために Websocket ベースの API が利用できます。クライアントへ送られる
 トラフィックを制限するためにいくつかの異なる通知種別が存在します。
 <!--
@@ -317,7 +318,7 @@ notification type before triggering remote operations so that it doesn't
 have to then poll for their status.
 -->
 
-# PUT と PATCH の使い分け <!-- PUT vs PATCH -->
+## PUT と PATCH の使い分け <!-- PUT vs PATCH -->
 LXD API は既存のオブジェクトを変更するのに PUT と PATCH の両方をサポートします。
 <!--
 The LXD API supports both PUT and PATCH to modify existing objects.
@@ -350,7 +351,7 @@ it to empty will usually do the trick, but there are cases where PATCH
 won't work and PUT needs to be used instead.
 -->
 
-# API 構造 <!-- API structure -->
+## API 構造 <!-- API structure -->
  * [`/`](#)
    * [`/1.0`](#10)
      * [`/1.0/certificates`](#10certificates)
@@ -402,9 +403,9 @@ won't work and PUT needs to be used instead.
        * [`/1.0/cluster/members`](#10clustermembers)
          * [`/1.0/cluster/members/<name>`](#10clustermembersname)
 
-# API 詳細 <!-- API details -->
-## `/`
-### GET
+## API 詳細 <!-- API details -->
+### `/`
+#### GET
  * 説明: サポートされている API の一覧 <!-- Description: List of supported APIs -->
  * 認証: guest <!-- Authentication: guest -->
  * 操作: 同期 <!-- Operation: sync -->
@@ -416,8 +417,8 @@ won't work and PUT needs to be used instead.
         "/1.0"
     ]
 
-## `/1.0/`
-### GET
+### `/1.0/`
+#### GET
  * 説明: サーバの設定と環境情報 <!-- Description: Server configuration and environment information -->
  * 認証: guest, untrusted, trusted のいずれか <!-- Authentication: guest, untrusted or trusted -->
  * 操作: 同期 <!-- Operation: sync -->
@@ -513,7 +514,7 @@ won't work and PUT needs to be used instead.
     }
 -->
 
-### PUT (ETag サポートあり) <!-- PUT (ETag supported) -->
+#### PUT (ETag サポートあり) <!-- PUT (ETag supported) -->
  * 説明: サーバ設定や他の設定を置き換えます <!-- Description: Replaces the server configuration or other properties -->
  * 認証: trusted <!-- Authentication: trusted -->
  * 操作: 同期 <!-- Operation: sync -->
@@ -531,7 +532,7 @@ Input (replaces any existing config with the provided one):
         }
     }
 
-### PATCH (ETag サポートあり) <!-- PATCH (ETag supported) -->
+#### PATCH (ETag サポートあり) <!-- PATCH (ETag supported) -->
  * 説明: サーバ設定や他の設定を更新します <!-- Description: Updates the server configuration or other properties -->
  * 導入: `patch` API 拡張により <!-- Introduced: with API extension `patch` -->
  * 認証: trusted <!-- Authentication: trusted -->
@@ -549,8 +550,8 @@ Input (updates only the listed keys, rest remains intact):
         }
     }
 
-## `/1.0/certificates`
-### GET
+### `/1.0/certificates`
+#### GET
  * 説明: 信頼された証明書の一覧を返します <!-- Description: list of trusted certificates -->
  * 認証: trusted <!-- Authentication: trusted -->
  * 操作: 同期 <!-- Operation: sync -->
@@ -563,7 +564,7 @@ Input (updates only the listed keys, rest remains intact):
         "/1.0/certificates/3ee64be3c3c7d617a7470e14f2d847081ad467c8c26e1caad841c8f67f7c7b09"
     ]
 
-### POST
+#### POST
  * 説明: 信頼された証明書を追加します <!-- Description: add a new trusted certificate -->
  * 認証: trusted または untrusted <!-- Authentication: trusted or untrusted -->
  * 操作: 同期 <!-- Operation: sync -->
@@ -590,8 +591,8 @@ Input:
     }
 -->
 
-## `/1.0/certificates/<fingerprint>`
-### GET
+### `/1.0/certificates/<fingerprint>`
+#### GET
  * 説明: 信頼された証明書の情報 <!-- Description: trusted certificate information -->
  * 認証: trusted <!-- Authentication: trusted -->
  * 操作: 同期 <!-- Operation: sync -->
@@ -609,7 +610,7 @@ Output:
         "fingerprint": "SHA256 Hash of the raw certificate"
     }
 
-### PUT (ETag サポートあり) <!-- PUT (ETag supported) -->
+#### PUT (ETag サポートあり) <!-- PUT (ETag supported) -->
  * 説明: 証明書のプロパティを置き換えます <!-- Description: Replaces the certificate properties -->
  * 導入: `certificate_update` API 拡張により <!-- Introduced: with API extension `certificate_update` -->
  * 認証: trusted <!-- Authentication: trusted -->
@@ -626,7 +627,7 @@ Input:
         "name": "bar"
     }
 
-### PATCH (ETag サポートあり) <!-- PATCH (ETag supported) -->
+#### PATCH (ETag サポートあり) <!-- PATCH (ETag supported) -->
  * 説明: 証明書のプロパティを更新します <!-- Description: Updates the certificate properties -->
  * 導入: `certificate_update` API 拡張により <!-- Introduced: with API extension `certificate_update` -->
  * 認証: trusted <!-- Authentication: trusted -->
@@ -643,7 +644,7 @@ Input:
     }
 
 
-### DELETE
+#### DELETE
  * 説明: 信頼された証明書を削除します <!-- Description: Remove a trusted certificate -->
  * 認証: trusted <!-- Authentication: trusted -->
  * 操作: 同期 <!-- Operation: sync -->
@@ -662,8 +663,8 @@ Input:
 HTTP code for this should be 202 (Accepted).
 -->
 
-## `/1.0/containers`
-### GET
+### `/1.0/containers`
+#### GET
  * 説明: コンテナの一覧 <!-- Description: List of containers -->
  * 認証: trusted <!-- Authentication: trusted -->
  * 操作: 同期 <!-- Operation: sync -->
@@ -679,7 +680,7 @@ Return value:
         "/1.0/containers/blah1"
     ]
 
-### POST (`?target=<member>` を任意で指定可能) <!-- POST (optional `?target=<member>`) -->
+#### POST (`?target=<member>` を任意で指定可能) <!-- POST (optional `?target=<member>`) -->
  * 説明: 新しいコンテナを作成します <!-- Description: Create a new container -->
  * 認証: trusted <!-- Authentication: trusted -->
  * 操作: 同期 <!-- Operation: sync -->
@@ -1093,8 +1094,8 @@ Input (using a backup):
     Raw compressed tarball as provided by a backup download.
 -->
 
-## `/1.0/containers/<name>`
-### GET
+### `/1.0/containers/<name>`
+#### GET
  * 説明: コンテナの情報 <!-- Description: Container information -->
  * 認証: trusted <!-- Authentication: trusted -->
  * 操作: 同期 <!-- Operation: sync -->
@@ -1191,7 +1192,7 @@ Output:
     }
 -->
 
-### PUT (ETag サポートあり) <!-- PUT (ETag supported) -->
+#### PUT (ETag サポートあり) <!-- PUT (ETag supported) -->
  * 説明: コンテナの設定を置き換えるかスナップショットをリストアします <!-- Description: replaces container configuration or restore snapshot -->
  * 認証: trusted <!-- Authentication: trusted -->
  * 操作: 非同期 <!-- Operation: async -->
@@ -1239,7 +1240,7 @@ Input (restore snapshot):
         "restore": "snapshot-name"
     }
 
-### PATCH (ETag サポートあり) <!-- PATCH (ETag supported) -->
+#### PATCH (ETag サポートあり) <!-- PATCH (ETag supported) -->
  * 説明: コンテナの設定を更新します <!-- Description: update container configuration -->
  * 導入: `patch` API 拡張によって <!-- Introduced: with API extension `patch` -->
  * 認証: trusted <!-- Authentication: trusted -->
@@ -1263,7 +1264,7 @@ Input:
         "ephemeral": true
     }
 
-### POST (`?target=<member>` を任意で指定可能) <!-- POST (optional `?target=<member>`) -->
+#### POST (`?target=<member>` を任意で指定可能) <!-- POST (optional `?target=<member>`) -->
  * 説明: コンテナをリネーム／マイグレーションするのに用いられます <!-- Description: used to rename/migrate the container -->
  * 認証: trusted <!-- Authentication: trusted -->
  * 操作: 非同期 <!-- Operation: async -->
@@ -1331,7 +1332,7 @@ Output in metadata section (for migration):
 These are the secrets that should be passed to the create call.
 -->
 
-### DELETE
+#### DELETE
  * 説明: コンテナを削除します <!-- Description: remove the container -->
  * 認証: trusted <!-- Authentication: trusted -->
  * 操作: 非同期 <!-- Operation: async -->
@@ -1350,14 +1351,14 @@ Input (none at present):
 HTTP code for this should be 202 (Accepted).
 -->
 
-## `/1.0/containers/<name>/console`
-### GET
+### `/1.0/containers/<name>/console`
+#### GET
 * 説明: コンテナのコンソールログの内容を返します <!-- Description: returns the contents of the container's console  log -->
 * 認証: trusted <!-- Authentication: trusted -->
 * 操作: 該当なし <!-- Operation: N/A -->
 * 戻り値: コンソールログの内容 <!-- Return: the contents of the console log -->
 
-### POST
+#### POST
  * 説明: コンテナのコンソールデバイスにアタッチします <!-- Description: attach to a container's console devices -->
  * 認証: trusted <!-- Authentication: trusted -->
  * 操作: 非同期 <!-- Operation: async -->
@@ -1400,14 +1401,14 @@ Control (window size change):
         }
     }
 
-### DELETE
+#### DELETE
 * 説明: コンテナのコンソールログを空にします <!-- Description: empty the container's console log -->
 * 認証: trusted <!-- Authentication: trusted -->
 * 操作: 同期 <!-- Operation: Sync -->
 * 戻り値: 空のレスポンスまたは標準のエラー <!-- Return: empty response or standard error -->
 
-## `/1.0/containers/<name>/exec`
-### POST
+### `/1.0/containers/<name>/exec`
+#### POST
  * 説明: リモートコマンドを実行します <!-- Description: run a remote command -->
  * 認証: trusted <!-- Authentication: trusted -->
  * 操作: 非同期 <!-- Operation: async -->
@@ -1565,8 +1566,8 @@ operation's metadata:
         "return": 0
     }
 
-## `/1.0/containers/<name>/files`
-### GET (`?path=/path/inside/the/container`)
+### `/1.0/containers/<name>/files`
+#### GET (`?path=/path/inside/the/container`)
  * 説明: ファイルかディレクトリの内容をコンテナからダウンロードします <!-- Description: download a file or directory listing from the container -->
  * 認証: trusted <!-- Authentication: trusted -->
  * 操作: 同期 <!-- Operation: sync -->
@@ -1592,7 +1593,7 @@ This is designed to be easily usable from the command line or even a web
 browser.
 -->
 
-### POST (`?path=/path/inside/the/container`)
+#### POST (`?path=/path/inside/the/container`)
  * 説明: コンテナにファイルをアップロードします <!-- Description: upload a file to the container -->
  * 認証: trusted <!-- Authentication: trusted -->
  * 操作: 同期 <!-- Operation: sync -->
@@ -1622,7 +1623,7 @@ This is designed to be easily usable from the command line or even a web
 browser.
 -->
 
-### DELETE (`?path=/path/inside/the/container`)
+#### DELETE (`?path=/path/inside/the/container`)
  * 説明: コンテナ内のファイルを削除します <!-- Description: delete a file in the container -->
  * 導入: `file_delete` API 拡張によって <!-- Introduced: with API extension `file_delete` -->
  * 認証: trusted <!-- Authentication: trusted -->
@@ -1637,8 +1638,8 @@ Input (none at present):
     {
     }
 
-## `/1.0/containers/<name>/snapshots`
-### GET
+### `/1.0/containers/<name>/snapshots`
+#### GET
  * 説明: スナップショットの一覧 <!-- Description: List of snapshots -->
  * 認証: trusted <!-- Authentication: trusted -->
  * 操作: 同期 <!-- Operation: sync -->
@@ -1653,7 +1654,7 @@ Return value:
         "/1.0/containers/blah/snapshots/snap0"
     ]
 
-### POST
+#### POST
  * 説明: 新しいスナップショットを作成します <!-- Description: create a new snapshot -->
  * 認証: trusted <!-- Authentication: trusted -->
  * 操作: 非同期 <!-- Operation: async -->
@@ -1676,8 +1677,8 @@ Input:
     }
 -->
 
-## `/1.0/containers/<name>/snapshots/<name>`
-### GET
+### `/1.0/containers/<name>/snapshots/<name>`
+#### GET
  * 説明: スナップショットの情報 <!-- Description: Snapshot information -->
  * 認証: trusted <!-- Authentication: trusted -->
  * 操作: 同期 <!-- Operation: sync -->
@@ -1735,7 +1736,7 @@ Return:
         "stateful": false
     }
 
-### POST
+#### POST
  * 説明: スナップショットをリネーム／マイグレートします <!-- Description: used to rename/migrate the snapshot -->
  * 認証: trusted <!-- Authentication: trusted -->
  * 操作: 非同期 <!-- Operation: async -->
@@ -1788,7 +1789,7 @@ Renaming to an existing name must return the 409 (Conflict) HTTP code.
 Attempting to rename the `default` profile will return the 403 (Forbidden) HTTP code.
 -->
 
-### DELETE
+#### DELETE
  * 説明: スナップショットを削除します <!-- Description: remove the snapshot -->
  * 認証: trusted <!-- Authentication: trusted -->
  * 操作: 非同期 <!-- Operation: async -->
@@ -1807,8 +1808,8 @@ Input (none at present):
 HTTP code for this should be 202 (Accepted).
 -->
 
-## `/1.0/containers/<name>/state`
-### GET
+### `/1.0/containers/<name>/state`
+#### GET
  * 説明: 現在の状態 <!-- Description: current state -->
  * 認証: trusted <!-- Authentication: trusted -->
  * 操作: 同期 <!-- Operation: sync -->
@@ -1961,7 +1962,7 @@ Output:
         }
     }
 
-### PUT
+#### PUT
  * 説明: コンテナの状態を変更する <!-- Description: change the container state -->
  * 認証: trusted <!-- Authentication: trusted -->
  * 操作: 非同期 <!-- Operation: async -->
@@ -1988,8 +1989,8 @@ Input:
     }
 -->
 
-## `/1.0/containers/<name>/logs`
-### GET
+### `/1.0/containers/<name>/logs`
+#### GET
 * 説明: このコンテナで利用可能なログファイルの一覧を返します。
   作成の失敗についてのログを取得できるようにするため、この操作は
   削除が完了した (あるいは一度も作られなかった) コンテナに対しても
@@ -2011,21 +2012,21 @@ Return:
         "/1.0/containers/blah/logs/lxc.log"
     ]
 
-## `/1.0/containers/<name>/logs/<logfile>`
-### GET
+### `/1.0/containers/<name>/logs/<logfile>`
+#### GET
 * 説明: 特定のログファイルの中身を返します <!-- Description: returns the contents of a particular log file. -->
 * 認証: trusted <!-- Authentication: trusted -->
 * 操作: 該当なし <!-- Operation: N/A -->
 * 戻り値: ログファイルの中身 <!-- Return: the contents of the log file -->
 
-### DELETE
+#### DELETE
 * 説明: 特定のログファイルを削除します <!-- Description: delete a particular log file. -->
 * 認証: trusted <!-- Authentication: trusted -->
 * 操作: 同期 <!-- Operation: Sync -->
 * 戻り値: 空のレスポンスまたは標準のエラー <!-- Return: empty response or standard error -->
 
-## `/1.0/containers/<name>/metadata`
-### GET
+### `/1.0/containers/<name>/metadata`
+#### GET
 * 説明: コンテナのメタデータ <!-- Description: Container metadata -->
 * 導入: `container_edit_metadata` API 拡張によって <!-- Introduced: with API extension `container_edit_metadata` -->
 * 認証: trusted <!-- Authentication: trusted -->
@@ -2059,7 +2060,7 @@ Return:
         }
     }
 
-### PUT (ETag サポートあり) <!-- PUT (ETag supported) -->
+#### PUT (ETag サポートあり) <!-- PUT (ETag supported) -->
 * 説明: コンテナのメタデータを置き換える <!-- Description: Replaces container metadata -->
 * 導入: `container_edit_metadata` API 拡張によって <!-- Introduced: with API extension `container_edit_metadata` -->
 * 認証: trusted <!-- Authentication: trusted -->
@@ -2093,8 +2094,8 @@ Input:
         }
     }
 
-## `/1.0/containers/<name>/metadata/templates`
-### GET
+### `/1.0/containers/<name>/metadata/templates`
+#### GET
 * 説明: コンテナテンプレートの一覧 <!-- Description: List container templates -->
 * 導入: `container_edit_metadata` API 拡張によって <!-- Introduced: with API extension `container_edit_metadata` -->
 * 認証: trusted <!-- Authentication: trusted -->
@@ -2111,14 +2112,14 @@ Return:
         "hosts.tpl"
     ]
 
-### GET (`?path=<template>`)
+#### GET (`?path=<template>`)
 * 説明: コンテナテンプレートの中身 <!-- Description: Content of a container template -->
 * 導入: `container_edit_metadata` API 拡張によって <!-- Introduced: with API extension `container_edit_metadata` -->
 * 認証: trusted <!-- Authentication: trusted -->
 * 操作: 同期 <!-- Operation: Sync -->
 * 戻り値: テンプレートの中身 <!-- Return: the content of the template -->
 
-### POST (`?path=<template>`)
+#### POST (`?path=<template>`)
 * 説明: コンテナテンプレートを追加します <!-- Description: Add a continer template -->
 * 導入: `container_edit_metadata` API 拡張によって <!-- Introduced: with API extension `container_edit_metadata` -->
 * 認証: trusted <!-- Authentication: trusted -->
@@ -2131,7 +2132,7 @@ Input:
 -->
  * 標準的な HTTP のファイルアップロード <!-- Standard http file upload -->
 
-### PUT (`?path=<template>`)
+#### PUT (`?path=<template>`)
 * 説明: テンプレートの中身を置き換えます <!-- Description: Replace content of a template -->
 * 導入: `container_edit_metadata` API 拡張によって <!-- Introduced: with API extension `container_edit_metadata` -->
 * 認証: trusted <!-- Authentication: trusted -->
@@ -2144,15 +2145,15 @@ Input:
 -->
  * 標準的な HTTP のファイルアップロード <!-- Standard http file upload -->
 
-### DELETE (`?path=<template>`)
+#### DELETE (`?path=<template>`)
 * 説明: コンテナテンプレートを削除します <!-- Description: Delete a container template -->
 * 導入: `container_edit_metadata` API 拡張によって <!-- Introduced: with API extension `container_edit_metadata` -->
 * 認証: trusted <!-- Authentication: trusted -->
 * 操作: 同期 <!-- Operation: Sync -->
 * 戻り値: 標準の戻り値または標準のエラー <!-- Return: standard return value or standard error -->
 
-## `/1.0/containers/<name>/backups`
-### GET
+### `/1.0/containers/<name>/backups`
+#### GET
 * 説明: コンテナのバックアップの一覧 <!-- Description: List of backups for the container -->
 * 導入: `container_backup` API 拡張によって <!-- Introduced: with API extension `container_backup` -->
 * 認証: trusted <!-- Authentication: trusted -->
@@ -2169,7 +2170,7 @@ Return value:
         "/1.0/containers/c1/backups/c1/backup1",
     ]
 
-### POST
+#### POST
 * 説明: 新しいバックアップを作成します <!-- Description: Create a new backup -->
 * 導入: `container_backup` API 拡張によって <!-- Introduced: with API extension `container_backup` -->
 * 認証: trusted <!-- Authentication: trusted -->
@@ -2197,8 +2198,8 @@ Input:
     }
 -->
 
-## `/1.0/containers/<name>/backups/<name>`
-### GET
+### `/1.0/containers/<name>/backups/<name>`
+#### GET
 * 説明: バックアップの情報 <!-- Description: Backup information -->
 * 導入: `container_backup` API 拡張によって <!-- Introduced: with API extension `container_backup` -->
 * 認証: trusted <!-- Authentication: trusted -->
@@ -2218,14 +2219,14 @@ Output:
         "optimized_storage": false
     }
 
-### DELETE
+#### DELETE
  * 説明: バックアップを削除します <!-- Description: remove the backup -->
  * 導入: `container_backup` API 拡張によって <!-- Introduced: with API extension `container_backup` -->
  * 認証: trusted <!-- Authentication: trusted -->
  * 操作: 非同期 <!-- Operation: async -->
  * 戻り値: バックグラウンド操作または標準のエラー <!-- Return: background operation or standard error -->
 
-### POST
+#### POST
  * 説明: バックアップをリネームします <!-- Description: used to rename the backup -->
  * 導入: `container_backup` API 拡張によって <!-- Introduced: with API extension `container_backup` -->
  * 認証: trusted <!-- Authentication: trusted -->
@@ -2241,8 +2242,8 @@ Input:
         "name": "new-name"
     }
 
-## `/1.0/containers/<name>/backups/<name>/export`
-### GET
+### `/1.0/containers/<name>/backups/<name>/export`
+#### GET
 * 説明: バックアップの tarball を取得します <!-- Description: fetch the backup tarball -->
 * 導入: `container_backup` API 拡張によって <!-- Introduced: with API extension `container_backup` -->
 * 認証: trusted <!-- Authentication: trusted -->
@@ -2258,7 +2259,7 @@ Output:
         "data": <byte-stream>
     }
 
-## `/1.0/events`
+### `/1.0/events`
 この URL は真の REST API エンドポイントではなく、代わりに GET クエリを
 実行すると接続をウェブソケットにアップグレードし、そのウェブソケット上で
 通知が送信されます。
@@ -2268,7 +2269,7 @@ will upgrade the connection to a websocket on which notifications will
 be sent.
 -->
 
-### GET (`?type=operation,logging`)
+#### GET (`?type=operation,logging`)
  * 説明: ウェブソケットへのアップグレード <!-- Description: websocket upgrade -->
  * 認証: trusted <!-- Authentication: trusted -->
  * 操作: 同期 <!-- Operation: sync -->
@@ -2337,8 +2338,8 @@ This never returns. Each notification is sent as a separate JSON dict:
     }
 -->
 
-## `/1.0/images`
-### GET
+### `/1.0/images`
+#### GET
  * 説明: (public または private の) イメージの一覧 <!-- Description: list of images (public or private) -->
  * 認証: guest または trusted <!-- Authentication: guest or trusted -->
  * 操作: 同期 <!-- Operation: sync -->
@@ -2356,7 +2357,7 @@ Return:
         "/1.0/images/c9b6e738fae75286d52f497415463a8ecc61bbcb046536f220d797b0e500a41f"
     ]
 
-### POST
+#### POST
  * 説明: 新しいイメージを作成し提供する <!-- Description: create and publish a new image -->
  * 認証: trusted <!-- Authentication: trusted -->
  * 操作: 非同期 <!-- Operation: async -->
@@ -2524,8 +2525,8 @@ which will add the image to the store and possibly do some backend
 filesystem-specific optimizations.
 -->
 
-## `/1.0/images/<fingerprint>`
-### GET (`?secret=SECRET` を任意に指定可能) <!-- GET (optional `?secret=SECRET`) -->
+### `/1.0/images/<fingerprint>`
+#### GET (`?secret=SECRET` を任意に指定可能) <!-- GET (optional `?secret=SECRET`) -->
  * 説明: イメージの説明とメタデータ <!-- Description: Image description and metadata -->
  * 認証: guest または trusted <!-- Authentication: guest or trusted -->
  * 操作: 同期 <!-- Operation: sync -->
@@ -2568,7 +2569,7 @@ Output:
         "uploaded_at": "2016-02-16T00:44:47Z"
     }
 
-### PUT (ETag サポートあり) <!-- PUT (ETag supported) -->
+#### PUT (ETag サポートあり) <!-- PUT (ETag supported) -->
  * 説明: イメージのプロパティを置き換えたり、情報や公開状態を変更します <!-- Description: Replaces the image properties, update information and visibility -->
  * 認証: trusted <!-- Authentication: trusted -->
  * 操作: 同期 <!-- Operation: sync -->
@@ -2590,7 +2591,7 @@ Input:
         "public": true,
     }
 
-### PATCH (ETag サポートあり) <!-- PATCH (ETag supported) -->
+#### PATCH (ETag サポートあり) <!-- PATCH (ETag supported) -->
  * 説明: イメージのプロパティを変更したり、情報や公開状態を変更します <!-- Description: Updates the image properties, update information and visibility -->
  * 導入: `patch` API 拡張によって <!-- Introduced: with API extension `patch` -->
  * 認証: trusted <!-- Authentication: trusted -->
@@ -2610,7 +2611,7 @@ Input:
         "public": true,
     }
 
-### DELETE
+#### DELETE
  * 説明: イメージを削除します <!-- Description: Remove an image -->
  * 認証: trusted <!-- Authentication: trusted -->
  * 操作: 非同期 <!-- Operation: async -->
@@ -2629,8 +2630,8 @@ Input (none at present):
 HTTP code for this should be 202 (Accepted).
 -->
 
-## `/1.0/images/<fingerprint>/export`
-### GET (`?secret=SECRET` を任意で指定可能) <!-- GET (optional `?secret=SECRET`) -->
+### `/1.0/images/<fingerprint>/export`
+#### GET (`?secret=SECRET` を任意で指定可能) <!-- GET (optional `?secret=SECRET`) -->
  * 説明: イメージの tarball をダウンロードします <!-- Description: Download the image tarball -->
  * 認証: guest または trusted <!-- Authentication: guest or trusted -->
  * 操作: 同期 <!-- Operation: sync -->
@@ -2655,8 +2656,8 @@ token which it'll then pass to the target LXD. That target LXD will then
 GET the image as a guest, passing the secret token.
 -->
 
-## `/1.0/images/<fingerprint>/refresh`
-### POST
+### `/1.0/images/<fingerprint>/refresh`
+#### POST
  * 説明: イメージをオリジンからリフレッシュします <!-- Description: Refresh an image from its origin -->
  * 認証: trusted <!-- Authentication: trusted -->
  * 操作: 非同期 <!-- Operation: async -->
@@ -2667,8 +2668,8 @@ GET the image as a guest, passing the secret token.
 This creates an operation to refresh the specified image from its origin.
 -->
 
-## `/1.0/images/<fingerprint>/secret`
-### POST
+### `/1.0/images/<fingerprint>/secret`
+#### POST
  * 説明: ランダムなトークンを生成し、ゲストが使用することを LXD に伝えます <!-- Description: Generate a random token and tell LXD to expect it be used by a guest -->
  * 認証: guest または trusted <!-- Authentication: guest or trusted -->
  * 操作: 非同期 <!-- Operation: async -->
@@ -2707,8 +2708,8 @@ has been accessed. This allows to both retried the image information and
 then hit /export with the same secret.
 -->
 
-## `/1.0/images/aliases`
-### GET
+### `/1.0/images/aliases`
+#### GET
  * 説明: エイリアスの一覧 (イメージの公開状態に応じて public または private なエイリアスが含まれます) <!-- Description: list of aliases (public or private based on image visibility) -->
  * 認証: guest または trusted <!-- Authentication: guest or trusted -->
  * 操作: 同期 <!-- Operation: sync -->
@@ -2725,7 +2726,7 @@ Return:
         "/1.0/images/aliases/xenial"
     ]
 
-### POST
+#### POST
  * 説明: 新しいエイリアスを作成します <!-- Description: create a new alias -->
  * 認証: trusted <!-- Authentication: trusted -->
  * 操作: 同期 <!-- Operation: sync -->
@@ -2742,8 +2743,8 @@ Input:
         "name": "alias-name"
     }
 
-## `/1.0/images/aliases/<name>`
-### GET
+### `/1.0/images/aliases/<name>`
+#### GET
  * 説明: エイリアスの説明とターゲット <!-- Description: Alias description and target -->
  * 認証: guest または trusted <!-- Authentication: guest or trusted -->
  * 操作: 同期 <!-- Operation: sync -->
@@ -2760,7 +2761,7 @@ Output:
         "target": "c9b6e738fae75286d52f497415463a8ecc61bbcb046536f220d797b0e500a41f"
     }
 
-### PUT (ETag サポートあり) <!-- PUT (ETag supported) -->
+#### PUT (ETag サポートあり) <!-- PUT (ETag supported) -->
  * 説明: エイリアスのターゲットまたは説明を置き換えます <!-- Description: Replaces the alias target or description -->
  * 認証: trusted <!-- Authentication: trusted -->
  * 操作: 同期 <!-- Operation: sync -->
@@ -2776,7 +2777,7 @@ Input:
         "target": "54c8caac1f61901ed86c68f24af5f5d3672bdc62c71d04f06df3a59e95684473"
     }
 
-### PATCH (ETag サポートあり) <!-- PATCH (ETag supported) -->
+#### PATCH (ETag サポートあり) <!-- PATCH (ETag supported) -->
  * 説明: エイリアスのターゲットまたは説明を更新します <!-- Description: Updates the alias target or description -->
  * 導入: `patch` API 拡張 によって <!-- Introduced: with API extension `patch` -->
  * 認証: trusted <!-- Authentication: trusted -->
@@ -2792,7 +2793,7 @@ Input:
         "description": "New description"
     }
 
-### POST
+#### POST
  * 説明: エイリアスをリネームします <!-- Description: rename an alias -->
  * 認証: trusted <!-- Authentication: trusted -->
  * 操作: 同期 <!-- Operation: sync -->
@@ -2812,7 +2813,7 @@ Input:
 Renaming to an existing name must return the 409 (Conflict) HTTP code.
 -->
 
-### DELETE
+#### DELETE
  * 説明: エイリアスを削除します <!-- Description: Remove an alias -->
  * 認証: trusted <!-- Authentication: trusted -->
  * 操作: 同期 <!-- Operation: sync -->
@@ -2826,8 +2827,8 @@ Input (none at present):
     {
     }
 
-## `/1.0/networks`
-### GET
+### `/1.0/networks`
+#### GET
  * 説明: ネットワークの一覧 <!-- Description: list of networks -->
  * 認証: trusted <!-- Authentication: trusted -->
  * 操作: 同期 <!-- Operation: sync -->
@@ -2843,7 +2844,7 @@ Return:
         "/1.0/networks/lxdbr0"
     ]
 
-### POST
+#### POST
  * 説明: 新しいネットワークを定義します <!-- Description: define a new network -->
  * 導入: `network` API 拡張によって <!-- Introduced: with API extension `network` -->
  * 認証: trusted <!-- Authentication: trusted -->
@@ -2865,8 +2866,8 @@ Input:
         }
     }
 
-## `/1.0/networks/<name>`
-### GET
+### `/1.0/networks/<name>`
+#### GET
  * 説明: ネットワークについての情報 <!-- Description: information about a network -->
  * 認証: trusted <!-- Authentication: trusted -->
  * 操作: 同期 <!-- Operation: sync -->
@@ -2887,7 +2888,7 @@ Return:
         ]
     }
 
-### PUT (ETag サポートあり) <!-- PUT (ETag supported) -->
+#### PUT (ETag サポートあり) <!-- PUT (ETag supported) -->
  * 説明: ネットワークの情報を置き換えます <!-- Description: replace the network information -->
  * 導入: `network` API 拡張によって <!-- Introduced: with API extension `network` -->
  * 認証: trusted <!-- Authentication: trusted -->
@@ -2914,7 +2915,7 @@ Same dict as used for initial creation and coming from GET. Only the
 config is used, everything else is ignored.
 -->
 
-### PATCH (ETag supported) <!-- PATCH (ETag supported) -->
+#### PATCH (ETag supported) <!-- PATCH (ETag supported) -->
  * 説明: ネットワークの情報を更新します。 <!-- Description: update the network information -->
  * 導入: `network` API 拡張によって <!-- Introduced: with API extension `network` -->
  * 認証: trusted <!-- Authentication: trusted -->
@@ -2932,7 +2933,7 @@ Input:
         }
     }
 
-### POST
+#### POST
  * 説明: ネットワークをリネームします <!-- Description: rename a network -->
  * 導入: `network` API 拡張によって <!-- Introduced: with API extension `network` -->
  * 認証: trusted <!-- Authentication: trusted -->
@@ -2960,7 +2961,7 @@ the renamed resource.
 Renaming to an existing name must return the 409 (Conflict) HTTP code.
 -->
 
-### DELETE
+#### DELETE
  * 説明: ネットワークを削除します <!-- Description: remove a network -->
  * 導入: `network` API 拡張によって <!-- Introduced: with API extension `network` -->
  * 認証: trusted <!-- Authentication: trusted -->
@@ -2980,8 +2981,8 @@ Input (none at present):
 HTTP code for this should be 202 (Accepted).
 -->
 
-## `/1.0/networks/<name>/state`
-### GET
+### `/1.0/networks/<name>/state`
+#### GET
  * 説明: ネットワークの状態 <!-- Description: network state -->
  * 認証: trusted <!-- Authentication: trusted -->
  * 操作: 同期 <!-- Operation: sync -->
@@ -3025,8 +3026,8 @@ Return:
         "type": "broadcast"
     }
 
-## `/1.0/operations`
-### GET
+### `/1.0/operations`
+#### GET
  * 説明: 操作の一覧 <!-- Description: list of operations -->
  * 認証: trusted <!-- Authentication: trusted -->
  * 操作: 同期 <!-- Operation: sync -->
@@ -3042,8 +3043,8 @@ Return:
         "/1.0/operations/092a8755-fd90-4ce4-bf91-9f87d03fd5bc"
     ]
 
-## `/1.0/operations/<uuid>`
-### GET
+### `/1.0/operations/<uuid>`
+#### GET
  * 説明: バックグラウンド操作 <!-- Description: background operation -->
  * 認証: trusted <!-- Authentication: trusted -->
  * 操作: 同期 <!-- Operation: sync -->
@@ -3094,7 +3095,7 @@ Return:
     }
 -->
 
-### DELETE
+#### DELETE
  * 説明: 操作をキャンセルします。この API を呼び出すとエントリを実際に削除するのではなく状態を "cancelling" に変更します <!-- Description: cancel an operation. Calling this will change the state to "cancelling" rather than actually removing the entry. -->
  * 認証: trusted <!-- Authentication: trusted -->
  * 操作: 同期 <!-- Operation: sync -->
@@ -3113,8 +3114,8 @@ Input (none at present):
 HTTP code for this should be 202 (Accepted).
 -->
 
-## `/1.0/operations/<uuid>/wait`
-### GET (`?timeout=30` を任意で指定可能) <!-- GET (optional `?timeout=30`) -->
+### `/1.0/operations/<uuid>/wait`
+#### GET (`?timeout=30` を任意で指定可能) <!-- GET (optional `?timeout=30`) -->
  * 説明: 操作が完了するのを待ちます <!-- Description: Wait for an operation to finish -->
  * 認証: trusted <!-- Authentication: trusted -->
  * 操作: 同期 <!-- Operation: sync -->
@@ -3130,8 +3131,8 @@ Input (wait indefinitely for a final state): no argument
 Input (similar but times out after 30s): ?timeout=30
 -->
 
-## `/1.0/operations/<uuid>/websocket`
-### GET (`?secret=SECRET`)
+### `/1.0/operations/<uuid>/websocket`
+#### GET (`?secret=SECRET`)
  * 説明: この接続はウェブソケットの接続にアップグレードされ、操作の種別毎に
    定義されたプロトコルを話します。例えば exec 操作の場合、ウェブソケットは
    標準入力／標準出力／標準エラー出力のための双方向のパイプになり、コンテナ
@@ -3151,8 +3152,8 @@ Input (similar but times out after 30s): ?timeout=30
  * 操作: 同期 <!-- Operation: sync -->
  * 戻り値: ウェブソケットのストリームまたは標準のエラー <!-- Return: websocket stream or standard error -->
 
-## `/1.0/profiles`
-### GET
+### `/1.0/profiles`
+#### GET
  * 説明: 設定プロファイルの一覧 <!-- Description: List of configuration profiles -->
  * 認証: trusted <!-- Authentication: trusted -->
  * 操作: 同期 <!-- Operation: sync -->
@@ -3167,7 +3168,7 @@ Return:
         "/1.0/profiles/default"
     ]
 
-### POST
+#### POST
  * 説明: 新しいプロファイルを定義します <!-- Description: define a new profile -->
  * 認証: trusted <!-- Authentication: trusted -->
  * 操作: 同期 <!-- Operation: sync -->
@@ -3192,8 +3193,8 @@ Input:
         }
     }
 
-## `/1.0/profiles/<name>`
-### GET
+### `/1.0/profiles/<name>`
+#### GET
  * 説明: プロファイルの設定 <!-- Description: profile configuration -->
  * 認証: trusted <!-- Authentication: trusted -->
  * 操作: 同期 <!-- Operation: sync -->
@@ -3221,7 +3222,7 @@ Output:
         ]
     }
 
-### PUT (ETag サポートあり) <!-- PUT (ETag supported) -->
+#### PUT (ETag サポートあり) <!-- PUT (ETag supported) -->
  * 説明: プロファイルの情報を置き換えます <!-- Description: replace the profile information -->
  * 認証: trusted <!-- Authentication: trusted -->
  * 操作: 同期 <!-- Operation: sync -->
@@ -3252,7 +3253,7 @@ Same dict as used for initial creation and coming from GET. The name
 property can't be changed (see POST for that).
 -->
 
-### PATCH (ETag サポートあり) <!-- PATCH (ETag supported) -->
+#### PATCH (ETag サポートあり) <!-- PATCH (ETag supported) -->
  * 説明: プロファイルの情報を変更します <!-- Description: update the profile information -->
  * 導入: `patch` API 拡張によって <!-- Introduced: with API extension `patch` -->
  * 認証: trusted <!-- Authentication: trusted -->
@@ -3277,7 +3278,7 @@ Input:
         }
     }
 
-### POST
+#### POST
  * 説明: プロファイルをリネームします <!-- Description: rename a profile -->
  * 認証: trusted <!-- Authentication: trusted -->
  * 操作: 同期 <!-- Operation: sync -->
@@ -3304,7 +3305,7 @@ the renamed resource.
 Renaming to an existing name must return the 409 (Conflict) HTTP code.
 -->
 
-### DELETE
+#### DELETE
  * 説明: プロファイルを削除します <!-- Description: remove a profile -->
  * 認証: trusted <!-- Authentication: trusted -->
  * 操作: 同期 <!-- Operation: sync -->
@@ -3328,8 +3329,8 @@ HTTP code for this should be 202 (Accepted).
 Attempting to delete the `default` profile will return the 403 (Forbidden) HTTP code.
 -->
 
-## `/1.0/projects`
-### GET
+### `/1.0/projects`
+#### GET
  * 説明: プロジェクトの一覧 <!-- Description: List of projects -->
  * 導入: `projects` API 拡張によって <!-- Introduced: with API extension `projects` -->
  * 認証: trusted <!-- Authentication: trusted -->
@@ -3345,7 +3346,7 @@ Return:
         "/1.0/projects/default"
     ]
 
-### POST
+#### POST
  * 説明: 新しいプロジェクトを定義します <!-- Description: define a new project -->
  * 導入: `projects` API 拡張によって <!-- Introduced: with API extension `projects` -->
  * 認証: trusted <!-- Authentication: trusted -->
@@ -3366,8 +3367,8 @@ Input:
         "description": "Some description string"
     }
 
-## `/1.0/projects/<name>`
-### GET
+### `/1.0/projects/<name>`
+#### GET
  * 説明: プロジェクトの設定 <!-- Description: project configuration -->
  * 導入: `projects` API 拡張によって <!-- Introduced: with API extension `projects` -->
  * 認証: trusted <!-- Authentication: trusted -->
@@ -3391,7 +3392,7 @@ Output:
         ]
     }
 
-### PUT (ETag サポートあり) <!-- PUT (ETag supported) -->
+#### PUT (ETag サポートあり) <!-- PUT (ETag supported) -->
  * 説明: プロジェクトの情報を置き換えます <!-- Description: replace the project information -->
  * 導入: `projects` API 拡張によって <!-- Introduced: with API extension `projects` -->
  * 認証: trusted <!-- Authentication: trusted -->
@@ -3418,7 +3419,7 @@ Same dict as used for initial creation and coming from GET. The name
 property can't be changed (see POST for that).
 -->
 
-### PATCH (ETag サポートあり) <!-- PATCH (ETag supported) -->
+#### PATCH (ETag サポートあり) <!-- PATCH (ETag supported) -->
  * 説明: プロジェクトの情報を更新します <!-- Description: replace the project information -->
  * 導入: `projects` API 拡張によって <!-- Introduced: with API extension `projects` -->
  * 認証: trusted <!-- Authentication: trusted -->
@@ -3437,7 +3438,7 @@ Input:
         "description": "Some description string"
     }
 
-### POST
+#### POST
  * 説明: プロジェクトをリネームします <!-- Description: rename a project -->
  * 導入: `projects` API 拡張によって <!-- Introduced: with API extension `projects` -->
  * 認証: trusted <!-- Authentication: trusted -->
@@ -3470,7 +3471,7 @@ Renaming to an existing name must return the 409 (Conflict) HTTP code.
 Attempting to rename the `default` project will return the 403 (Forbidden) HTTP code.
 -->
 
-### DELETE
+#### DELETE
  * 説明: プロジェクトを削除します <!-- Description: remove a project -->
  * 導入: `projects` API 拡張によって <!-- Introduced: with API extension `projects` -->
  * 認証: trusted <!-- Authentication: trusted -->
@@ -3495,8 +3496,8 @@ HTTP code for this should be 202 (Accepted).
 Attempting to delete the `default` project will return the 403 (Forbidden) HTTP code.
 -->
 
-## `/1.0/storage-pools`
-### GET
+### `/1.0/storage-pools`
+#### GET
  * 説明: ストレージプールの一覧 <!-- Description: list of storage pools -->
  * 導入: `storage` API 拡張によって <!-- Introduced: with API extension `storage` -->
  * 認証: trusted <!-- Authentication: trusted -->
@@ -3516,7 +3517,7 @@ Return:
         "/1.0/storage-pools/pool4"
     ]
 
-### POST
+#### POST
  * 説明: 新しいストレージプールを作成します <!-- Description: create a new storage pool -->
  * 導入: `storage` API 拡張によって <!-- Introduced: with API extension `storage` -->
  * 認証: trusted <!-- Authentication: trusted -->
@@ -3536,8 +3537,8 @@ Input:
         "name": "pool1"
     }
 
-## `/1.0/storage-pools/<name>`
-### GET
+### `/1.0/storage-pools/<name>`
+#### GET
  * 説明: ストレージプールの情報 <!-- Description: information about a storage pool -->
  * 導入: `storage` API 拡張によって <!-- Introduced: with API extension `storage` -->
  * 認証: trusted <!-- Authentication: trusted -->
@@ -3591,7 +3592,7 @@ Return:
         }
     }
 
-### PUT (ETag サポートあり) <!-- PUT (ETag supported) -->
+#### PUT (ETag サポートあり) <!-- PUT (ETag supported) -->
  * 説明: ストレージプールの情報を置き換えます <!-- Description: replace the storage pool information -->
  * 導入: `storage` API 拡張によって <!-- Introduced: with API extension `storage` -->
  * 認証: trusted <!-- Authentication: trusted -->
@@ -3615,7 +3616,7 @@ Return:
         }
     }
 
-### PATCH
+#### PATCH
  * 説明: ストレージプールの設定を変更します <!-- Description: update the storage pool configuration -->
  * 導入: `storage` API 拡張によって <!-- Introduced: with API extension `storage` -->
  * 認証: trusted <!-- Authentication: trusted -->
@@ -3633,7 +3634,7 @@ Input:
         }
     }
 
-### DELETE
+#### DELETE
  * 説明: ストレージプールを削除します <!-- Description: delete a storage pool -->
  * 導入: `storage` API 拡張によって <!-- Introduced: with API extension `storage` -->
  * 認証: trusted <!-- Authentication: trusted -->
@@ -3648,8 +3649,8 @@ Input (none at present):
     {
     }
 
-## `/1.0/storage-pools/<name>/resources`
-### GET
+### `/1.0/storage-pools/<name>/resources`
+#### GET
  * 説明: ストレージプールで利用可能なリソースに関する情報 <!-- Description: information about the resources available to the storage pool -->
  * 導入: `resources` API 拡張によって <!-- Introduced: with API extension `resources` -->
  * 認証: trusted <!-- Authentication: trusted -->
@@ -3681,8 +3682,8 @@ Return:
     }
 
 
-## `/1.0/storage-pools/<name>/volumes`
-### GET
+### `/1.0/storage-pools/<name>/volumes`
+#### GET
  * 説明: ストレージボリュームの一覧 <!-- Description: list of storage volumes -->
  * 導入: `storage` API 拡張によって <!-- Introduced: with API extension `storage` -->
  * 認証: trusted <!-- Authentication: trusted -->
@@ -3718,7 +3719,7 @@ Return:
         "/1.0/storage-pools/default/volumes/image/62e850a334bb9d99cac00b2e618e0291e5e7bb7db56c4246ecaf8e46fa0631a6"
     ]
 
-### POST
+#### POST
  * 説明: 指定されたストレージプール上に新しいストレージボリュームを作成します <!-- Description: create a new storage volume on a given storage pool -->
  * 導入: `storage` API 拡張によって <!-- Introduced: with API extension `storage` -->
  * 認証: trusted <!-- Authentication: trusted -->
@@ -3783,8 +3784,8 @@ Input (when migrating a volume):
     }
 -->
 
-## `/1.0/storage-pools/<pool>/volumes/<type>`
-### POST
+### `/1.0/storage-pools/<pool>/volumes/<type>`
+#### POST
  * 説明: 指定のストレージプール上に特定のタイプのストレージボリュームを作成します <!-- Description: create a new storage volume of a particular type on a given storage pool -->
  * 導入: `storage` API 拡張によって <!-- Introduced: with API extension `storage` -->
  * 認証: trusted <!-- Authentication: trusted -->
@@ -3845,8 +3846,8 @@ Input (when migrating a volume):
     }
 -->
 
-## `/1.0/storage-pools/<pool>/volumes/<type>/<name>`
-### POST
+### `/1.0/storage-pools/<pool>/volumes/<type>/<name>`
+#### POST
  * 説明: 指定のストレージプール上のストレージボリュームをリネームします <!-- Description: rename a storage volume on a given storage pool -->
  * 導入: `storage_api_volume_rename` API 拡張によって <!-- Introduced: with API extension `storage_api_volume_rename` -->
  * 認証: trusted <!-- Authentication: trusted -->
@@ -3903,7 +3904,7 @@ Output in metadata section (for migration):
 These are the secrets that should be passed to the create call.
 -->
 
-### GET
+#### GET
  * 説明: ストレージプール上の指定のタイプのストレージボリュームの情報 <!-- Description: information about a storage volume of a given type on a storage pool -->
  * 導入: `storage` API 拡張によって <!-- Introduced: with API extension `storage` -->
  * 認証: trusted <!-- Authentication: trusted -->
@@ -3934,7 +3935,7 @@ Return:
     }
 
 
-### PUT (ETag サポートあり) <!-- PUT (ETag supported) -->
+#### PUT (ETag サポートあり) <!-- PUT (ETag supported) -->
  * 説明: ストレージボリュームの情報を置き換えるかスナップショットから復元します <!-- Description: replace the storage volume information or restore from snapshot -->
  * 導入: `storage`, `storage_api_volume_snapshots` API 拡張によって <!-- Introduced: with API extension `storage`, `storage_api_volume_snapshots` -->
  * 認証: trusted <!-- Authentication: trusted -->
@@ -3967,7 +3968,7 @@ Return:
         "restore": "snapshot-name"
     }
 
-### PATCH (ETag サポートあり) <!-- PATCH (ETag supported) -->
+#### PATCH (ETag サポートあり) <!-- PATCH (ETag supported) -->
  * 説明: ストレージボリュームの情報を変更します <!-- Description: update the storage volume information -->
  * 導入: `storage` API 拡張によって <!-- Introduced: with API extension `storage` -->
  * 認証: trusted <!-- Authentication: trusted -->
@@ -3985,7 +3986,7 @@ Return:
         }
     }
 
-### DELETE
+#### DELETE
  * 説明: 指定したストレージプール上の指定したタイプのストレージボリュームを削除します <!-- Description: delete a storage volume of a given type on a given storage pool -->
  * 導入: `storage` API 拡張によって <!-- Introduced: with API extension `storage` -->
  * 認証: trusted <!-- Authentication: trusted -->
@@ -4000,8 +4001,8 @@ Input (none at present):
     {
     }
 
-## `/1.0/storage-pools/<pool>/volumes/<type>/<name>/snapshots`
-### GET
+### `/1.0/storage-pools/<pool>/volumes/<type>/<name>/snapshots`
+#### GET
  * 説明: ボリュームスナップショットの一覧 <!-- Description: List of volume snapshots -->
  * 認証: trusted <!-- Authentication: trusted -->
  * 操作: 同期 <!-- Operation: sync -->
@@ -4016,7 +4017,7 @@ Return value:
         "/1.0/storage-pools/default/volumes/custom/foo/snapshots/snap0"
     ]
 
-### POST
+#### POST
  * 説明: 新規のボリュームスナップショットを作成する <!-- Description: create a new volume snapshot -->
  * 認証: trusted <!-- Authentication: trusted -->
  * 操作: 非同期 <!-- Operation: async -->
@@ -4037,8 +4038,8 @@ Input:
     }
 -->
 
-## `/1.0/storage-pools/<pool>/volumes/<type>/<volume>/snapshots/name`
-### GET
+### `/1.0/storage-pools/<pool>/volumes/<type>/<volume>/snapshots/name`
+#### GET
  * 説明: スナップショットの情報 <!-- Description: Snapshot information -->
  * 認証: trusted <!-- Authentication: trusted -->
  * 操作: 同期 <!-- Operation: sync -->
@@ -4055,7 +4056,7 @@ Return:
         "name": "snap0"
     }
 
-### PUT
+#### PUT
  * 説明: ボリュームスナップショットの情報 <!-- Description: Volume snapshot information -->
  * 認証: trusted <!-- Authentication: trusted -->
  * 操作: 同期 <!-- Operation: sync -->
@@ -4070,7 +4071,7 @@ Input:
         "description": "new-description"
     }
 
-### POST
+#### POST
  * 説明: ボリュームスナップショットをリネームするのに使用されます <!-- Description: used to rename the volume snapshot -->
  * 認証: trusted <!-- Authentication: trusted -->
  * 操作: 非同期 <!-- Operation: async -->
@@ -4085,7 +4086,7 @@ Input:
         "name": "new-name"
     }
 
-### DELETE
+#### DELETE
  * 説明: ボリュームスナップショットを削除します <!-- Description: remove the volume snapshot -->
  * 認証: trusted <!-- Authentication: trusted -->
  * 操作: 非同期 <!-- Operation: async -->
@@ -4096,8 +4097,8 @@ Input:
 HTTP code for this should be 202 (Accepted).
 -->
 
-## `/1.0/resources`
-### GET
+### `/1.0/resources`
+#### GET
  * 説明: LXD サーバで利用可能なリソースに関する情報 <!-- Description: information about the resources available to the LXD server -->
  * 導入: `resources` API 拡張によって <!-- Introduced: with API extension `resources` -->
  * 認証: guest, untrusted または trusted <!-- Authentication: guest, untrusted or trusted -->
@@ -4137,8 +4138,8 @@ Return:
         }
     }
 
-## `/1.0/cluster`
-### GET
+### `/1.0/cluster`
+#### GET
  * 説明: クラスタの情報 (ネットワークやストレージプールなど) <!-- Description: information about a cluster (such as networks and storage pools) -->
  * 導入: `clustering` API 拡張によって <!-- Introduced: with API extension `clustering` -->
  * 認証: trusted または untrusted <!-- Authentication: trusted or untrusted -->
@@ -4169,7 +4170,7 @@ Return:
         ],
     }
 
-### PUT
+#### PUT
  * 説明: このノード上のクラスタをブートストラップしたりクラスタに参加したり、クラスタリングを無効にします <!-- Description: bootstrap or join a cluster, or disable clustering on this node -->
  * 導入: `clustering` API 拡張によって <!-- Introduced: with API extension `clustering` -->
  * 認証: trusted <!-- Authentication: trusted -->
@@ -4227,8 +4228,8 @@ Input (disable clustering on the node):
         "enabled": false,
     }
 
-## `/1.0/cluster/members`
-### GET
+### `/1.0/cluster/members`
+#### GET
  * 説明: クラスタ内の LXD メンバの一覧 <!-- Description: list of LXD members in the cluster -->
  * 導入: `clustering` API 拡張によって <!-- Introduced: with API extension `clustering` -->
  * 認証: trusted <!-- Authentication: trusted -->
@@ -4245,8 +4246,8 @@ Return:
         "/1.0/cluster/members/lxd2"
     ]
 
-## `/1.0/cluster/members/<name>`
-### GET
+### `/1.0/cluster/members/<name>`
+#### GET
  * 説明: メンバの情報と状態を取得します <!-- Description: retrieve the member's information and status -->
  * 導入: `clustering` API 拡張によって <!-- Introduced: with API extension `clustering` -->
  * 認証: trusted <!-- Authentication: trusted -->
@@ -4265,7 +4266,7 @@ Return:
         "state": "Online"
     }
 
-### POST
+#### POST
  * 説明: クラスタメンバをリネームします <!-- Description: rename a cluster member -->
  * 導入: `clustering` API 拡張によって <!-- Introduced: with API extension `clustering` -->
  * 認証: trusted <!-- Authentication: trusted -->
@@ -4281,7 +4282,7 @@ Input:
         "server_name": "node1",
     }
 
-### DELETE (`?force=1` を任意で指定可能) <!-- DELETE (optional `?force=1`) -->
+#### DELETE (`?force=1` を任意で指定可能) <!-- DELETE (optional `?force=1`) -->
  * 説明: クラスタのメンバを削除します <!-- Description: remove a member of the cluster -->
  * 導入: `clustering` API 拡張によって <!-- Introduced: with API extension `clustering` -->
  * 認証: trusted <!-- Authentication: trusted -->

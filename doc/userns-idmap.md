@@ -1,4 +1,5 @@
-# イントロダクション <!-- Introduction -->
+# ユーザ名前空間 (user namespace) 用の ID のマッピング <!-- Idmaps for user namespace -->
+## イントロダクション <!-- Introduction -->
 <!--
 LXD runs safe containers. This is achieved mostly through the use of
 user namespaces which make it possible to run containers unprivileged,
@@ -39,7 +40,7 @@ the POSIX range including root (0) and nobody (65534).
 root (0) と nobody (65534) の POSIX の範囲をカバーするため、割当は必ず
 最低 65535 個の uid と gid であるべきです。
 
-# カーネルのサポート <!-- Kernel support -->
+## カーネルのサポート <!-- Kernel support -->
 <!--
 User namespaces require a kernel >= 3.12, LXD will start even on older
 kernels but will refuse to start containers.
@@ -47,7 +48,7 @@ kernels but will refuse to start containers.
 ユーザー・ネームスペースの使用にはカーネル 3.12 以上が必要です。 LXD は
 古いカーネルでも起動しますが、コンテナを起動するのは拒否します。
 
-# 使用可能な範囲 <!-- Allowed ranges -->
+## 使用可能な範囲 <!-- Allowed ranges -->
 <!--
 On most hosts, LXD will check `/etc/subuid` and `/etc/subgid` for
 allocations for the "lxd" user and on first start, set the default
@@ -87,7 +88,7 @@ shadow の上で稼働していると想定します。このモードでは LXD
 上のどんな uid と gid も使用可能と想定し、最初の 65536 個をデフォルトの
 マッピングに使用します。
 
-# ホスト間で異なる範囲の使用 <!-- Varying ranges between hosts -->
+## ホスト間で異なる範囲の使用 <!-- Varying ranges between hosts -->
 <!--
 The source map is sent when moving containers between hosts so that they
 can be remapped on the receiving host.
@@ -95,7 +96,7 @@ can be remapped on the receiving host.
 ホスト間でコンテナを移動する時、送信側のマッピングが送られるので、受信側の
 ホストで異なる範囲にマッピング可能です。
 
-# コンテナ毎に異なる ID マッピング <!-- Different idmaps per container -->
+## コンテナ毎に異なる ID マッピング <!-- Different idmaps per container -->
 <!--
 LXD supports using different idmaps per container, to further isolate
 containers from each other. This is controlled with two per-container
@@ -141,7 +142,7 @@ These properties require a container reboot to take effect.
 -->
 これらのプロパティを反映するにはコンテナの再起動が必要です。
 
-# カスタムの ID マッピング <!-- Custom idmaps -->
+## カスタムの ID マッピング <!-- Custom idmaps -->
 <!--
 LXD also supports customizing bits of the idmap, e.g. to allow users to bind
 mount parts of the host's filesystem into a container without the need for any

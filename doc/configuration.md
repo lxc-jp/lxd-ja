@@ -1,4 +1,4 @@
-# イントロダクション <!-- Introduction -->
+# 設定 <!-- Configuration -->
 <!--
 Current LXD stores configurations for a few components:
 -->

@@ -1,4 +1,5 @@
-# イントロダクション <!-- Introduction -->
+# アーキテクチャ <!-- Architectures -->
+## イントロダクション <!-- Introduction -->
 <!--
 LXD just like LXC can run on just about any architecture that's
 supported by the Linux kernel and by Go.
@@ -41,7 +42,7 @@ allowing easy query.
 あれば正確なユーザスペースの ABI がイメージとコンテナプロパティとして
 設定可能となり、簡単に問い合わせすることを許可します。
 
-# アーキテクチャ <!-- Architectures -->
+## アーキテクチャ <!-- Architectures -->
 
 ID    | Name          | Notes                           | Personalities
 :---  | :---          | :----                           | :------------

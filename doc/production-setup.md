@@ -1,4 +1,5 @@
-# イントロダクション <!-- Introduction -->
+# プロダクション環境のセットアップ <!-- Production setup -->
+## イントロダクション <!-- Introduction -->
 あなたは [LXD live online](https://linuxcontainers.org/lxd/try-it/) か、
 なんらかのサーバで LXD を試してみました。結果に満足して、今度は LXD で
 本格的な作業を試してみたいと思います。
@@ -18,7 +19,7 @@ using containers that require tens of thousands of file operations.
 -->
 
 
-## よく遭遇するエラー <!-- Common errors that may be encountered -->
+### よく遭遇するエラー <!-- Common errors that may be encountered -->
 
 `Failed to allocate directory watch: Too many open files`
 
@@ -28,8 +29,8 @@ using containers that require tens of thousands of file operations.
 
 `neighbour: ndisc_cache: neighbor table overflow!`
 
-# サーバの変更 <!-- Server Changes -->
-## /etc/security/limits.conf
+## サーバの変更 <!-- Server Changes -->
+### /etc/security/limits.conf
 
 ドメイン <!-- Domain -->  | 種別 <!-- Type -->  | 項目 <!-- Item -->    | 値 <!-- Value -->    | デフォルト <!-- Default -->  | 説明 <!-- Description -->
 :-----  | :---  | :----   | :-------- | :-------- | :----------
@@ -41,7 +42,7 @@ root    | hard  | nofile  | 1048576   | 未設定 <!-- unset -->     | オープ
 \*      | hard  | memlock | unlimited | 未設定 <!-- unset -->     | ロックされたメモリ内の最大のアドレス空間 <!-- maximum locked-in-memory address space --> (KB)
 
 
-## /etc/sysctl.conf
+### /etc/sysctl.conf
 
 パラメータ <!-- Parameter -->                       | 値 <!-- Value -->     | デフォルト <!-- Default --> | 説明 <!-- Description -->
 :-----                          | :---      | :---    | :---
@@ -61,7 +62,7 @@ Then, reboot the server.
 [1]: http://man7.org/linux/man-pages/man7/inotify.7.html
 [2]: https://www.kernel.org/doc/Documentation/networking/ip-sysctl.txt
 
-## ネットワーク帯域の調整 <!-- Network Bandwidth Tweaking -->
+### ネットワーク帯域の調整 <!-- Network Bandwidth Tweaking -->
 大量の (コンテナ・コンテナ間、あるいはホスト・コンテナ間の) ローカル・アクティビティを持つ
 LXD ホスト上に 1GbE 以上の NIC をお持ちか、 LXD ホストに 1GbE 以上のインターネット接続を
 お持ちでしたら、 txqueuelen を調整する価値があります。これらの設定は 10GbE NIC ではさらに
@@ -70,9 +71,9 @@ LXD ホスト上に 1GbE 以上の NIC をお持ちか、 LXD ホストに 1GbE 
 If you have at least 1GbE NIC on your lxd host with a lot of local activity (container - container connections, or host - container connections), or you have 1GbE or better internet connection on your lxd host it worth play with txqueuelen. These settings work even better with 10GbE NIC.
 -->
 
-### サーバの変更 <!-- Server Changes -->
+#### サーバの変更 <!-- Server Changes -->
 
-#### txqueuelen 
+##### txqueuelen 
 
 (あなたにとっての最適な値はわかりませんが) あなたの実 NIC の `txqueuelen` を
 10000 に変える必要がある場合、 lxdbr0 インタフェースの `txqueuelen` も 10000 に
@@ -88,7 +89,7 @@ You can add for ex.: `up ip link set eth0 txqueuelen 10000` to your interface co
 You could set it txqueuelen temporary (for test purpose) with `ifconfig <interface> txqueuelen 10000`
 -->
 
-#### /etc/sysctl.conf
+##### /etc/sysctl.conf
 
 `net.core.netdev_max_backlog` の値も増やす必要があります。
 `/etc/sysctl.conf` に `net.core.netdev_max_backlog = 182757` という設定を加えれば
@@ -106,7 +107,7 @@ Note: You can find this value too high, most people prefer set `netdev_max_backl
 For example I use this values `net.ipv4.tcp_mem = 182757 243679 365514`
 -->
 
-### コンテナの変更 <!-- Containers changes -->
+#### コンテナの変更 <!-- Containers changes -->
 
 コンテナ内のイーサネット・インタフェース全ての txqueuelen の値を変更する必要も
 あります。
@@ -120,7 +121,7 @@ In Debian-based distros you can change txqueuelen permanently in `/etc/network/i
 You can add for ex.: `up ip link set eth0 txqueuelen 10000` to your interface configuration to set txqueuelen value on boot.
 -->
 
-### この変更についての注意 <!-- Notes regarding this change -->
+#### この変更についての注意 <!-- Notes regarding this change -->
 
 10000 という txqueuelen の値は 10GbE NIC ではよく使われます。基本的には、 小さな
 txqueuelen の値は高レイテンシで低速なデバイスと低レイテンシで高速なデバイスで

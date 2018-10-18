@@ -1,4 +1,5 @@
-# イントロダクション <!-- Introduction -->
+# イメージの扱い <!-- Image handling -->
+## イントロダクション <!-- Introduction -->
 LXD はイメージをベースとしたワークフローを使用します。 LXD にはビルトイン
 のイメージ・ストアがあり、ユーザが外部のツールがそこからイメージをインポート
 できます。
@@ -21,7 +22,7 @@ containers using remote images. In such cases, the image may be cached
 on the target LXD.
 -->
 
-# キャッシュ <!-- Caching -->
+## キャッシュ <!-- Caching -->
 リモートのイメージからコンテナを起動する時、リモートのイメージが
 ローカルのイメージ・ストアにキャッシュ・ビットをセットした状態で
 ダウンロードされます。イメージは、 `images.remote_cache_expiry` に
@@ -44,7 +45,7 @@ LXD keeps track of image usage by updating the `last_used_at` image
 property every time a new container is spawned from the image.
 -->
 
-# 自動更新 <!-- Auto-update -->
+## 自動更新 <!-- Auto-update -->
 LXD はイメージを最新に維持できます。デフォルトではエイリアスで指定し
 リモートサーバから取得したイメージは LXD によって自動更新されます。
 これは `images.auto_update_cached` という設定で変更できます。
@@ -99,7 +100,7 @@ This behavior only happens if the current image is scheduled to be
 auto-updated and can be disabled by setting `images.auto_update_interval` to 0.
 -->
 
-# イメージの形式 <!-- Image format -->
+## イメージの形式 <!-- Image format -->
 LXD は現状 2 つの LXD に特有なイメージの形式をサポートします。
 <!--
 LXD currently supports two LXD-specific image formats.
@@ -133,7 +134,7 @@ The latter is designed to allow for easy image building from existing
 non-LXD rootfs tarballs already available today.
 -->
 
-## 統合された tarball <!-- Unified tarball -->
+### 統合された tarball <!-- Unified tarball -->
 tarball は圧縮できます。そして次のものを含みます。
 <!--
 Tarball, can be compressed and contains:
@@ -148,7 +149,7 @@ Tarball, can be compressed and contains:
 In this mode, the image identifier is the SHA-256 of the tarball.
 -->
 
-## 分離された tarball <!-- Split tarballs -->
+### 分離された tarball <!-- Split tarballs -->
 2 つの (圧縮しても良い) tarball 。 1 つはメタデータ、もう 1 つは rootfs です。
 <!--
 Two (possibly compressed) tarballs. One for metadata, one for the rootfs.
@@ -174,7 +175,7 @@ In this mode the image identifier is the SHA-256 of the concatenation of
 the metadata and rootfs tarball (in that order).
 -->
 
-## サポートされている圧縮形式 <!-- Supported compression -->
+### サポートされている圧縮形式 <!-- Supported compression -->
 tarball は bz2, gz, xz, lzma, tar (非圧縮) で圧縮することができ、あるいは
 squashfs のイメージでも構いません。
 <!--
@@ -182,7 +183,7 @@ The tarball(s) can be compressed using bz2, gz, xz, lzma, tar (uncompressed) or
 it can also be a squashfs image.
 -->
 
-## 中身 <!-- Content -->
+### 中身 <!-- Content -->
 rootfs のディレクトリ (あるいは tarball) は完全なファイルシステムのツリーを含み、
 それがコンテナの `/` になります。
 <!--
