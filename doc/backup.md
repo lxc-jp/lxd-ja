@@ -98,7 +98,7 @@ and can be imported back into LXD using the `lxc import` command.
 
 ## ディザスタリカバリ <!-- Disaster recovery -->
 さらに、 LXD は各コンテナのストレージボリューム内に `backup.yaml` ファイルを
-保管しています。このファイルはコンテナの設定やあタッチされたデバイスや
+保管しています。このファイルはコンテナの設定やアタッチされたデバイスや
 ストレージなど、コンテナを復元するのに必要な全ての情報を含んでいます。
 <!--
 Additionally, LXD maintains a `backup.yaml` file in each container's storage
