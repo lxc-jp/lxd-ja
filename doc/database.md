@@ -1,5 +1,5 @@
 # データベース <!-- Database -->
-# イントロダクション <!-- Introduction -->
+## イントロダクション <!-- Introduction -->
 <!--
 So first of all, why a database?
 -->
@@ -40,7 +40,7 @@ with a pretty simple query.
 データベースにアクセスするだけで良くなるのです。
 
 
-# データベースエンジン <!-- Database engine -->
+## データベースエンジン <!-- Database engine -->
 <!--
 Since LXD supports clustering, and all members of the cluster must share the
 same database state, the database engine is based on a [distributed
@@ -91,7 +91,7 @@ you need to revert the state as it was before the upgrade.
 ファイルのバックアップが作成され、 ``.bak`` のサフィックス付きでタグ付けされます。
 アップグレード前の状態に戻す必要がある場合は、このバックアップを使うことができます。
 
-# データベースのデータとスキーマをダンプする <!-- Dumping the database content or schema -->
+## データベースのデータとスキーマをダンプする <!-- Dumping the database content or schema -->
 <!--
 If you want to get a SQL text dump of the content or the schema of the databases,
 use the ``lxd sql <local|global> [.dump|.schema]`` command, which produces the
@@ -103,7 +103,7 @@ command line tool.
 sqlite3 コマンドラインツールの ``.dump`` または ``.schema`` ディレクティブと同じ出力を
 生成できます。
 
-# コンソールからカスタムクエリを実行する <!-- Running custom queries from the console -->
+## コンソールからカスタムクエリを実行する <!-- Running custom queries from the console -->
 <!--
 If you need to perform SQL queries (e.g. ``SELECT``, ``INSERT``, ``UPDATE``)
 against the local or global database, you can use the ``lxd sql`` command (run
@@ -124,7 +124,7 @@ issue](https://github.com/lxc/lxd/issues/new) or
 [GitHubのイシュー](https://github.com/lxc/lxd/issues/new) を作成するか
 [フォーラム](https://discuss.linuxcontainers.org/) に投稿)。
 
-# LXD デーモン起動時にカスタムクエリを実行する <!-- Running custom queries at LXD daemon startup -->
+## LXD デーモン起動時にカスタムクエリを実行する <!-- Running custom queries at LXD daemon startup -->
 <!--
 In case the LXD daemon fails to start after an upgrade because of SQL data
 migration bugs or similar problems, it's possible to recover the situation by
@@ -159,7 +159,7 @@ As above, please consult the LXD team first.
 -->
 上記の通り、まず LXD チームに相談してみてください。
 
-# クラスタデータベースをディスクに同期 <!-- Syncing the cluster database to disk -->
+## クラスタデータベースをディスクに同期 <!-- Syncing the cluster database to disk -->
 クラスタデータベースの内容をディスクにフラッシュしたいなら、
 ``lxd sql global .sync`` コマンドを使ってください。これは SQLite そのままの
 形式のデータベースのファイルを ``./database/global/db.bin`` に書き込みます。

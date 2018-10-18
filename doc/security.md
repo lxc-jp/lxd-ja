@@ -1,5 +1,5 @@
 # セキュリティー <!-- Security -->
-# イントロダクション <!-- Introduction -->
+## イントロダクション <!-- Introduction -->
 UNIX ソケット上のローカルの通信は平文の HTTP で行い、ソケットの所有者
 とパーミションの設定によってアクセスが制限されます。
 <!--
@@ -50,7 +50,7 @@ To cause certificates to be regenerated, simply remove the old ones. On the
 next connection a new certificate will be generated.
 -->
 
-# デフォルトのセットアップでリモートを追加する <!-- Adding a remote with a default setup -->
+## デフォルトのセットアップでリモートを追加する <!-- Adding a remote with a default setup -->
 デフォルトのセットアップでは、ユーザが `lxd remote add` で新しいサーバを
 追加する際、サーバに https で通信し、証明書がダウンロードされ、
 フィンガープリントがユーザに表示されます。
@@ -103,7 +103,7 @@ automatically accept the fingerprint if it matches that in the DNS
 record.
 -->
 
-# PKI ベースのセットアップでリモートを追加する <!-- Adding a remote with a PKI based setup -->
+## PKI ベースのセットアップでリモートを追加する <!-- Adding a remote with a PKI based setup -->
 PKI ベースのセットアップではシステム管理者は中心となる PKI を運営します。
 その PKI が全ての lxc クライアント用のクライアント証明書と全ての LXD
 デーモンのサーバ証明書を発行します。
@@ -173,7 +173,7 @@ pre-generated files.
 After this is done, restarting the server will have it run in PKI mode.
 -->
 
-# Candid でリモートを追加する <!-- Adding a remote with Candid -->
+## Candid でリモートを追加する <!-- Adding a remote with Candid -->
 LXD を Candid を使うように設定した場合、 LXD はクライアントが
 `candid.api.url` の設定に指定した認証サーバから Discharge トークンを
 取得して認証を試みるように依頼します。
@@ -205,7 +205,7 @@ verifies the token, thus authenticating the request.  The token is stored as
 cookie and is presented by the client at each request to LXD.
 -->
 
-# 信頼されたクライントを管理する <!-- Managing trusted clients -->
+## 信頼されたクライントを管理する <!-- Managing trusted clients -->
 LXD サーバが信頼している証明書の一覧は `lxc config trust list` で
 取得できます。
 <!--
@@ -220,7 +220,7 @@ To revoke trust to a client its certificate can be removed with `lxc config
 trust remove FINGERPRINT`.
 -->
 
-# パスワード・プロンプト <!-- Password prompt -->
+## パスワード・プロンプト <!-- Password prompt -->
 新しい信頼関係を確立するには、サーバにパスワードを設定し、クライアントが
 自身をサーバに登録する際にそのパスワードを送る必要があります。
 <!--
@@ -241,8 +241,8 @@ A remote add operation should therefore go like this:
     trusted. -->
  4. これでリモートが準備完了になりました。 <!-- Remote is now ready -->
 
-# 失敗のシナリオ <!-- Failure scenarios -->
-## サーバ証明書が変更されていた場合 <!-- Server certificate changes -->
+## 失敗のシナリオ <!-- Failure scenarios -->
+### サーバ証明書が変更されていた場合 <!-- Server certificate changes -->
 典型的には次の 2 つの場合があるでしょう。
 <!--
 This will typically happen in two cases:
@@ -271,7 +271,7 @@ re-added.
 -->
 
 
-## サーバ上の信頼関係が取り消された <!-- Server trust relationship revoked -->
+### サーバ上の信頼関係が取り消された <!-- Server trust relationship revoked -->
 このケースでは、サーバは同じ証明書をまだ使っていますが、全ての API 呼び出しは
 クライアントが信頼されていないことを示す 403 エラーを返します。
 <!--
@@ -288,7 +288,7 @@ removed the trust entry on the server.
 -->
 
 
-# プロダクションのセットアップ <!-- Production setup -->
+## プロダクションのセットアップ <!-- Production setup -->
 プロダクション環境のセットアップでは、全てのクライアントを追加した後、
 `core.trust_password` の設定を削除することを推奨します。削除することにより
 パスワードを推測しようとするブルート・フォース攻撃を防ぐことができます。
