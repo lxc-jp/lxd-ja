@@ -1,117 +1,139 @@
-# LXD のバックアップ戦略 <!-- LXD Backup Strategies -->
-
-LXD のインスタンスをバックアップするのにいくつかの異なる戦略が利用可能です。
+# LXD サーバをバックアップする <!-- Backing up a LXD server -->
+## 何をバックアップするか <!-- What to backup -->
+LXD サーバのバックアップを計画する際は、 LXD に保管／管理されている
+全ての異なるオブジェクトについて考慮してください。
 <!--
-To backup a LXD instance different strategies are available.
+When planning to backup a LXD server, consider all the different objects
+that are stored/managed by LXD:
+-->
+
+ - コンテナ (データベースのレコードとファイルシステム) <!-- Containers (database records and filesystems) -->
+ - イメージ (データベースのレコード、イメージファイル、そしてファイルシステム) <!-- Images (database records, image files and filesystems) -->
+ - ネットワーク (データベースのレコードと状態ファイル) <!-- Networks (database records and state files) -->
+ - プロファイル (データベースのレコード) <!-- Profiles (database records) -->
+ - ストレージボリューム (データベースのレコードとファイルシステム) <!-- Storage volumes (database records and filesystems) -->
+
+データベースだけをバックアップあるいはコンテナのファイルシステムだけを
+バックアップしても完全に機能するバックアップにはなりません。
+<!--
+Only backing up the database or only backing up the container filesystem
+will not get you a fully functional backup.
+-->
+
+ディザスターリカバリのシナリオによっては、上記のようなバックアップも
+妥当かもしれませんが、素早くオンラインに復帰することが目標なら、
+使用している LXD の全ての異なるピースを考慮してください。
+<!--
+In some disaster recovery scenarios, that may be reasonable but if your
+goal is to get back online quickly, consider all the different pieces of
+LXD you're using.
 -->
 
 ## フルバックアップ <!-- Full backup -->
-これは `/var/lib/lxd` か（snap でインストールした LXD の場合は）
-`/var/snap/lxd/common/lxd` フォルダー全体をバックアップする必要があります。
-さらに、全てのストレージプールもバックアップする必要があります。
+フルバックアップは `/var/lib/lxd` あるいは snap ユーザの場合は
+`/var/snap/lxd/common/lxd` の全体を含みます。
 <!--
-This requires that the whole `/var/lib/lxd` or
-`/var/snap/lxd/common/lxd` (for the snap) folder be backuped up.
-Additionally, it is necessary to backup all storage pools as well.
+A full backup would include the entirety of `/var/lib/lxd` or
+`/var/snap/lxd/common/lxd` for snap users.
 -->
 
-LXD インスタンスをリストアするためには古い `lxd` のフォルダーは削除して
-`lxd` のスナップショットで置き換える必要があります。
-全てのストレージプールもリストアする必要があります。
+LXD が外部ストレージを使用している場合はそれらも適切にバックアップする
+必要があります。これは LVM ボリュームグループや ZFS プールなど LXD に
+直接含まれていないあらゆる外部のリソースです。
 <!--
-In order to restore the LXD instance the old `lxd` folder needs to be
-removed and replaced with the `lxd` snapshot. All storage pools need to
-be restored as well.
+You will also need to appropriately backup any external storage that you
+made LXD use, this can be LVM volume groups, ZFS zpools or any other
+resource which isn't directly self-contained to LXD.
 -->
 
-## セカンダリの LXD <!-- Secondary LXD -->
-これはセカンダリの LXD インスタンスをセットアップし、バックアップする LXD
-インスタンスから到達可能にする必要があります。そうすれば、全てのコンテナは
-セカンダリの LXD インスタンスにバックアップ用としてコピーすることができます。
+リストアにはリストア先のサーバ上の LXD の停止、 LXD ディレクトリの削除、
+そしてバックアップと必要な外部リソースのリストアを含みます。
 <!--
-This requires a second LXD instance to be setup and reachable from the LXD
-instance that is to be backed up. Then, all containers can be copied to the
-secondary LXD instance for backup.
+Restoring involves stopping LXD on the target server, wiping the lxd
+directory, restoring the backup and any external dependency it requires.
 -->
 
-## コンテナのバックアップとリストア <!-- Container backup and restore -->
-さらに LXD はそれぞれのコンテナのストレージボリューム内に `backup.yaml` という
-ファイルを保持しています。このファイルは対象のコンテナをリカバーするために
-必要な全ての情報を含んでいます。コンテナ設定、アタッチされたデバイスやストレージ
-などの情報です。このファイルは `lxd import` コマンドで処理することができます。
+その後再び LXD を起動し、全てが正常に動作するか確認してください。
+<!--
+Then start LXD again and check that everything works fine.
+-->
+
+## LXD サーバのセカンダリバックアップ <!-- Secondary backup LXD server -->
+LXD は 2 つのホスト間でコンテナとストレージボリュームのコピーと移動を
+サポートしています。
+<!--
+LXD supports copying and moving containers and storage volumes between two hosts.
+-->
+
+ですので予備のサーバがあれば、コンテナとストレージボリュームを時々
+そのセカンダリサーバにコピーしておき、オフラインの予備あるいは単なる
+ストレージサーバとして稼働させることが可能です。そして必要ならばそこから
+コンテナをコピーして戻すことができます。
+<!--
+So with a spare server, you can copy your containers and storage volumes
+to that secondary server every so often, allowing it to act as either an
+offline spare or just as a storage server that you can copy your
+containers back from if needed.
+-->
+
+## コンテナのバックアップ <!-- Container backups -->
+`lxc export` コマンドがコンテナをバックアップの tarball にエクスポートする
+のに使えます。これらの tarball はデフォルトで全てのスナップショットを含みますが、
+同じストレージプールバックエンドを使っている LXD サーバにリストアすることが
+わかっていれば「最適化」された tarball を取得することもできます。
+<!--
+The `lxc export` command can be used to export containers to a backup tarball.
+Those tarballs will include all snapshots by default and an "optimized"
+tarball can be obtained if you know that you'll be restoring on a LXD
+server using the same storage pool backend.
+-->
+
+これらの tarball はあなたが望むどんなファイルシステム上にどのようにでも
+保存することができ、 `lxc import` コマンドを使って LXD にインポートして
+戻すことができます。
+<!--
+Those tarballs can be saved any way you want on any filesystem you wan
+and can be imported back into LXD using the `lxc import` command.
+-->
+
+## ディザスタリカバリ <!-- Disaster recovery -->
+さらに、 LXD は各コンテナのストレージボリューム内に `backup.yaml` ファイルを
+保管しています。このファイルはコンテナの設定やアタッチされたデバイスや
+ストレージなど、コンテナを復元するのに必要な全ての情報を含んでいます。
 <!--
 Additionally, LXD maintains a `backup.yaml` file in each container's storage
 volume. This file contains all necessary information to recover a given
 container, such as container configuration, attached devices and storage.
-This file can be processed by the `lxd import` command.
 -->
 
-以下のように実行すると
+このファイルは `lxd import` コマンドで処理できます。 `lxc import` コマンドと
+間違えないようにしてください。
 <!--
-Running 
+This file can be processed by the `lxd import` command, not to
+be confused with `lxc import`.
 -->
 
-```bash
-lxd import <container-name>
-```
-
-指定したコンテナの `backup.yaml` ファイルからコンテナをリストアします。
-このリカバリのメカニズムは主に緊急のリカバリ用として作られており、
-ストレージプール設定のバックアップからコンテナとストレージのデータベース
-エントリを再生成しようとします。
+ディザスタリカバリ機構を使うためには、コンテナのストレージを期待される場所、
+通常は `storage-pools/NAME-OF-POOL/containers/コンテナ名` にマウントしておく
+必要があります。
 <!--
-will restore the specified container from its `backup.yaml` file.  This
-recovery mechanism is mostly meant for emergency recoveries and will try to
-re-create container and storage database entries from a backup of the storage
-pool configuration.
+To use the disaster recovery mechanism, you must mount the container's
+storage to its expected location, usually under
+`storage-pools/NAME-OF-POOL/containers/NAME-OF-CONTAINER`.
 -->
 
-コンテナに対応するストレージボリュームが存在し、コンテナがインポートできる前に
-アクセス可能でなければならない点に注意してください。例えば、コンテナのストレージ
-ボリュームがアンマウントされていた場合は、ユーザが手動で再度マウントする必要が
-あります。
+ストレージバックエンドによっては、リストアしたい全てのスナップショットに
+ついても同様にマウントが必要です (`dir` と `btrfs` で必要です)。
 <!--
-Note that the corresponding storage volume for the container must exist and be
-accessible before the container can be imported.  For example, if the
-container's storage volume got unmounted the user is required to remount it
-manually.
+Depending on your storage backend you will also need to do the same for
+any snapshot you want to restore (needed for `dir` and `btrfs`).
 -->
-
-コンテナは
-`/var/lib/lxd/storage-pools/POOL-NAME/containers/NAME` か、snap でインストールした
-LXD の場合は
-`/var/snap/lxd/common/lxd/storage-pools/POOL-NAME/containers/NAME` の下に
-存在する必要があります。
-<!--
-The container must be available under
-`/var/lib/lxd/storage-pools/POOL-NAME/containers/NAME` or
-`/var/snap/lxd/common/lxd/storage-pools/POOL-NAME/containers/NAME`
-in the case of the LXD snap.
--->
-
-LXD はコンテナの場所を見つけてその `backup.yaml` ファイルを読み込み、
-不足しているデータベースエントリを作成しようとします。
-<!--
-LXD will then locate the container and read its `backup.yaml` file,
-creating any missing database entry.
--->
-
 
 `backup.yaml` に宣言されているリソースに対応するデータベースエントリがインポート
 中に見つかったら、コマンドはコンテナをリストアすることを拒絶します。これは
-以下のように実行することでオーバーライドできます。
+`--force` を渡すことでオーバーライドできます。
 <!--
 If any matching database entry for resources declared in `backup.yaml` is found
 during import, the command will refuse to restore the container.  This can be
-overridden running 
--->
-
-```bash
-lxd import --force <container-name>
-```
-
-このように実行することで LXD に現在存在するデータベースエントリを削除して
-置き換えさせることができます。
-<!--
-which causes LXD to delete and replace any currently existing db entries.
+overridden by passing `\-\-force`.
 -->

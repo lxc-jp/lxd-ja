@@ -387,6 +387,8 @@ won't work and PUT needs to be used instead.
          * [`/1.0/operations/<uuid>/websocket`](#10operationsuuidwebsocket)
      * [`/1.0/profiles`](#10profiles)
        * [`/1.0/profiles/<name>`](#10profilesname)
+     * [`/1.0/projects`](#10projects)
+       * [`/1.0/projects/<name>`](#10projectsname)
      * [`/1.0/storage-pools`](#10storage-pools)
        * [`/1.0/storage-pools/<name>`](#10storage-poolsname)
          * [`/1.0/storage-pools/<name>/resources`](#10storage-poolsnameresources)
@@ -3321,9 +3323,176 @@ Input (none at present):
 HTTP code for this should be 202 (Accepted).
 -->
 
-`default` プロファイルをリネームしようとすると 403 (Forbidden) という HTTP ステータスコードが返ります。
+`default` プロファイルを削除しようとすると 403 (Forbidden) という HTTP ステータスコードが返ります。
 <!--
-Attempting to rename the `default` profile will return the 403 (Forbidden) HTTP code.
+Attempting to delete the `default` profile will return the 403 (Forbidden) HTTP code.
+-->
+
+## `/1.0/projects`
+### GET
+ * 説明: プロジェクトの一覧 <!-- Description: List of projects -->
+ * 導入: `projects` API 拡張によって <!-- Introduced: with API extension `projects` -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻り値: 定義済みのプロジェクトの URL の一覧 <!-- Return: list of URLs to defined projects -->
+
+戻り値
+<!--
+Return:
+-->
+
+    [
+        "/1.0/projects/default"
+    ]
+
+### POST
+ * 説明: 新しいプロジェクトを定義します <!-- Description: define a new project -->
+ * 導入: `projects` API 拡張によって <!-- Introduced: with API extension `projects` -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻り値: 標準の戻り値または標準のエラー <!-- Return: standard return value or standard error -->
+
+入力
+<!--
+Input:
+-->
+
+    {
+        "name": "test",
+        "config": {
+            "features.images": "true",
+            "features.profiles": "true",
+        },
+        "description": "Some description string"
+    }
+
+## `/1.0/projects/<name>`
+### GET
+ * 説明: プロジェクトの設定 <!-- Description: project configuration -->
+ * 導入: `projects` API 拡張によって <!-- Introduced: with API extension `projects` -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻り値: プロジェクトの内容を表す dict <!-- Return: dict representing the project content -->
+
+出力
+<!--
+Output:
+-->
+
+    {
+        "name": "test",
+        "config": {
+            "features.images": "true",
+            "features.profiles": "true",
+        },
+        "description": "Some description string",
+        "used_by": [
+            "/1.0/containers/blah"
+        ]
+    }
+
+### PUT (ETag サポートあり) <!-- PUT (ETag supported) -->
+ * 説明: プロジェクトの情報を置き換えます <!-- Description: replace the project information -->
+ * 導入: `projects` API 拡張によって <!-- Introduced: with API extension `projects` -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻り値: 標準の戻り値または標準のエラー <!-- Return: standard return value or standard error -->
+
+入力
+<!--
+Input:
+-->
+
+    {
+        "config": {
+            "features.images": "true",
+            "features.profiles": "true",
+        },
+        "description": "Some description string"
+    }
+
+初期作成への入力と GET の戻り値は同じ形式の dict が使用されます。
+name プロパティは変更できません (その用途には POST を参照してください)。
+<!--
+Same dict as used for initial creation and coming from GET. The name
+property can't be changed (see POST for that).
+-->
+
+### PATCH (ETag サポートあり) <!-- PATCH (ETag supported) -->
+ * 説明: プロジェクトの情報を更新します <!-- Description: replace the project information -->
+ * 導入: `projects` API 拡張によって <!-- Introduced: with API extension `projects` -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻り値: 標準の戻り値または標準のエラー <!-- Return: standard return value or standard error -->
+
+入力
+<!--
+Input:
+-->
+
+    {
+        "config": {
+            "features.images": "true",
+        },
+        "description": "Some description string"
+    }
+
+### POST
+ * 説明: プロジェクトをリネームします <!-- Description: rename a project -->
+ * 導入: `projects` API 拡張によって <!-- Introduced: with API extension `projects` -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 非同期 <!-- Operation: async -->
+ * 戻り値: バックグラウンド操作または標準のエラー <!-- Return: background operation or standard error -->
+
+入力 (プロジェクトをリネームします)
+<!--
+Input (rename a project):
+-->
+
+    {
+        "name": "new-name"
+    }
+
+HTTP ステータスコードは 204 (No content) で Location ヘッダは
+リネーム後のリソースの URL を指します。
+<!--
+HTTP return value must be 204 (No content) and Location must point to
+the renamed resource.
+-->
+
+既に存在する名前にリネームしようとすると 409 (Conflict) の HTTP ステータスコードを返します。
+<!--
+Renaming to an existing name must return the 409 (Conflict) HTTP code.
+-->
+
+`default` プロジェクトをリネームしようとすると 403 (Forbidden) という HTTP ステータスコードが返ります。
+<!--
+Attempting to rename the `default` project will return the 403 (Forbidden) HTTP code.
+-->
+
+### DELETE
+ * 説明: プロジェクトを削除します <!-- Description: remove a project -->
+ * 導入: `projects` API 拡張によって <!-- Introduced: with API extension `projects` -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻り値: 標準の戻り値または標準のエラー <!-- Return: standard return value or standard error -->
+
+入力 (現在は何もなし)
+<!--
+Input (none at present):
+-->
+
+    {
+    }
+
+この操作に対する HTTP ステータスコードは 202 (Accepted) です。
+<!--
+HTTP code for this should be 202 (Accepted).
+-->
+
+`default` プロジェクトを削除しようとすると 403 (Forbidden) という HTTP ステータスコードが返ります。
+<!--
+Attempting to delete the `default` project will return the 403 (Forbidden) HTTP code.
 -->
 
 ## `/1.0/storage-pools`
