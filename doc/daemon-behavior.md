@@ -1,4 +1,5 @@
-# イントロダクション <!-- Introduction -->
+# デーモンの動作 <!-- Daemon behavior -->
+## イントロダクション <!-- Introduction -->
 
 <!--
 This specification covers some of the daemon's behavior, such as
@@ -7,7 +8,7 @@ reaction to given signals, crashes, ...
 この仕様書は特定のシグナルに対する反応やクラッシュなどのデーモンの
 振る舞いの一部を取り扱います。
 
-# 起動 <!-- Startup -->
+## 起動 <!-- Startup -->
 <!--
 On every start, LXD checks that its directory structure exists. If it
 doesn't, it'll create the required directories, generate a keypair and
@@ -29,8 +30,8 @@ container isn't running, LXD will start it.
 されているのにコンテナが稼働していない場合は LXD はそのコンテナを
 開始します。
 
-# シグナル処理 <!-- Signal handling -->
-## SIGINT, SIGQUIT, SIGTERM
+## シグナル処理 <!-- Signal handling -->
+### SIGINT, SIGQUIT, SIGTERM
 <!--
 For those signals, LXD assumes that it's being temporarily stopped and
 will be restarted at a later time to continue handling the containers.
@@ -45,7 +46,7 @@ exit cleanly.
 コンテナは稼働し続けて LXD は全ての接続を閉じ、クリーンな状態で終了する
 でしょう。
 
-## SIGPWR
+### SIGPWR
 <!--
 Indicates to LXD that the host is going down.
 -->
@@ -67,7 +68,7 @@ they were.
 データベース内のコンテナのテーブルの `power_state` カラムにコンテナの
 元の電源状態を記録しておきます。
 
-## SIGUSR1
+### SIGUSR1
 <!--
 Write a memory profile dump to the file specified with `\-\-memprofile`.
 -->

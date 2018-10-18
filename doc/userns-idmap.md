@@ -1,3 +1,4 @@
+# ユーザ名前空間 (user namespace) 用の ID のマッピング <!-- Idmaps for user namespace -->
 # イントロダクション <!-- Introduction -->
 <!--
 LXD runs safe containers. This is achieved mostly through the use of

@@ -1,4 +1,5 @@
-# イントロダクション <!-- Introduction -->
+# 環境変数 <!-- Environment variables -->
+## イントロダクション <!-- Introduction -->
 以下の環境変数を設定することで、 LXD のクライアントとデーモンを
 ユーザの環境に適合させることができ、いくつかの高度な機能を有効または
 無効にすることができます。
@@ -7,7 +8,7 @@ The LXD client and daemon respect some environment variables to adapt to
 the user's environment and to turn some advanced features on and off.
 -->
 
-# クライアントとサーバ共通の環境変数 <!-- Common -->
+## クライアントとサーバ共通の環境変数 <!-- Common -->
 名前 <!-- Name -->                           | 説明 <!-- Description -->
 :---                            | :----
 `LXD_DIR`                       | LXD のデータディレクトリ <!-- The LXD data directory -->
@@ -16,13 +17,13 @@ the user's environment and to turn some advanced features on and off.
 `https_proxy`                   | HTTPs 用のプロキシサーバの URL <!-- Proxy server URL for HTTPs -->
 `no_proxy`                      | プロキシが不要なドメインのリスト <!-- List of domains that don't require the use of a proxy -->
 
-# クライアントの環境変数 <!-- Client environment variable -->
+## クライアントの環境変数 <!-- Client environment variable -->
 名前 <!-- Name -->                           | 説明 <!-- Description -->
 :---                            | :----
 `EDITOR`                        | 使用するテキストエディタ <!-- What text editor to use -->
 `VISUAL`                        | (`EDITOR` が設定されてないときに) 使用するテキストエディタ <!-- What text editor to use (if `EDITOR` isn't set) -->
 
-# サーバの環境変数 <!-- Server environment variable -->
+## サーバの環境変数 <!-- Server environment variable -->
 名前 <!-- Name -->                           | 説明 <!-- Description -->
 :---                            | :----
 `LXD_EXEC_PATH`                 | (サブコマンド実行時に使用される) LXD 実行ファイルのフルパス <!-- Full path to the LXD binary (used when forking subcommands) -->

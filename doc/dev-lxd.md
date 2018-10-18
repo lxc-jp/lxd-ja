@@ -1,4 +1,5 @@
-# イントロダクション <!-- Introduction -->
+# コンテナ〜ホスト間の通信 <!-- Communication between container and host -->
+## イントロダクション <!-- Introduction -->
 <!--
 Communication between the hosted workload (container) and its host while
 not strictly needed is a pretty useful feature.
@@ -21,7 +22,7 @@ same time.
 このファイルはコンテナ内部のプロセスが接続できる Unix ソケットです。
 マルチスレッドで動いているので複数のクライアントが同時に接続できます。
 
-# 実装詳細 <!-- Implementation details -->
+## 実装詳細 <!-- Implementation details -->
 <!--
 LXD on the host binds `/var/lib/lxd/devlxd` and starts listening for new
 connections on it.
@@ -45,7 +46,7 @@ bind mount は 4096 を超えるコンテナを扱うのに必要です。そう
 LXD は各々のコンテナに異なるソケットをバインドする必要があり、
 ファイルディスクリプタ数の上限にすぐ到達してしまいます。
 
-# 認証 <!-- Authentication -->
+## 認証 <!-- Authentication -->
 <!--
 Queries on `/dev/lxd/sock` will only return information related to the
 requesting container. To figure out where a request comes from, LXD will
@@ -56,7 +57,7 @@ containers it manages.
 返します。リクエストがどこから来たかを知るために、 LXD は初期のソケットの
 ucred 構造体を取り出し、 LXD が管理しているコンテナのリストと比較します。
 
-# プロトコル <!-- Protocol -->
+## プロトコル <!-- Protocol -->
 <!--
 The protocol on `/dev/lxd/sock` is plain-text HTTP with JSON messaging, so very
 similar to the local version of the LXD protocol.
@@ -71,8 +72,8 @@ authentication support in the `/dev/lxd/sock` API.
 メインの LXD API とは異なり、 `/dev/lxd/sock` API にはバックグラウンド処理と
 認証サポートはありません。
 
-# REST-API
-## API の構造 <!-- API structure -->
+## REST-API
+### API の構造 <!-- API structure -->
  * /
    * /1.0
      * /1.0/config
@@ -81,9 +82,9 @@ authentication support in the `/dev/lxd/sock` API.
      * /1.0/images/{fingerprint}/export
      * /1.0/meta-data
 
-## API の詳細 <!-- API details -->
-### `/`
-#### GET
+### API の詳細 <!-- API details -->
+#### `/`
+##### GET
 <!--
  * Description: List of supported APIs
  * Return: list of supported API endpoint URLs (by default `['/1.0']`)
@@ -101,8 +102,8 @@ Return value:
     "/1.0"
 ]
 ```
-### `/1.0`
-#### GET
+#### `/1.0`
+##### GET
 <!--
  * Description: Information about the 1.0 API
  * Return: dict
@@ -120,8 +121,8 @@ Return value:
     "api_version": "1.0"
 }
 ```
-### `/1.0/config`
-#### GET
+#### `/1.0/config`
+##### GET
 <!--
  * Description: List of configuration keys
  * Return: list of configuration keys URL
@@ -153,8 +154,8 @@ Return value:
 ]
 ```
 
-### `/1.0/config/<KEY>`
-#### GET
+#### `/1.0/config/<KEY>`
+##### GET
 <!--
  * Description: Value of that key
  * Return: Plain-text value
@@ -169,8 +170,8 @@ Return value:
 
     blah
 
-### `/1.0/events`
-#### GET
+#### `/1.0/events`
+##### GET
 <!--
  * Description: websocket upgrade
  * Return: none (never ending flow of events)
@@ -228,8 +229,8 @@ This never returns. Each notification is sent as a separate JSON dict:
         }
     }
 
-### `/1.0/images/<FINGERPRINT>/export`
-#### GET
+#### `/1.0/images/<FINGERPRINT>/export`
+##### GET
 <!--
  * Description: Download a public/cached image from the host
  * Return: raw image or error
@@ -250,8 +251,8 @@ Return value:
     LXD デーモン API の /1.0/images/<FINGERPRINT>/export を参照してください。
 
 
-### `/1.0/meta-data`
-#### GET
+#### `/1.0/meta-data`
+##### GET
 <!--
  * Description: Container meta-data compatible with cloud-init
  * Return: cloud-init meta-data

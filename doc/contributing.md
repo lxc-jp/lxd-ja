@@ -1,4 +1,5 @@
-# プルリクエスト <!-- Pull requests -->:
+# コントリビュート <!-- Contributing -->
+## プルリクエスト <!-- Pull requests -->:
 
 <!--
 Changes to this project should be proposed as pull requests on Github
@@ -12,7 +13,7 @@ be merged in the main branch.
 -->
 そのあと、提案はコードレビューを経て承認され、メインブランチにマージされます。
 
-# ライセンスと著作権 <!-- License and copyright -->:
+## ライセンスと著作権 <!-- License and copyright -->:
 
 <!--
 By default, any contribution to this project is made under the Apache
@@ -26,7 +27,7 @@ The author of a change remains the copyright holder of their code
 -->
 変更の著者は、そのコードに対する著作権を保持します（著作権の割り当てはありません）。
 
-# Developer Certificate of Origin:
+## Developer Certificate of Origin:
 
 <!--
 To improve tracking of contributions to this project we use the DCO 1.1
