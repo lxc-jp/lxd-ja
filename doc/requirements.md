@@ -2,9 +2,9 @@
 ## Go
 
 <!--
-LXD requires Go 1.9 or higher and is only tested with the golang compiler.
+LXD requires Go 1.10 or higher and is only tested with the golang compiler.
 -->
-LXD は Go 1.9 以上を必要とし、 golang のコンパイラのみでテストされています。
+LXD は Go 1.10 以上を必要とし、 golang のコンパイラのみでテストされています。
 (訳注: 以前は gccgo もサポートされていましたが golang のみになりました)
 
 ## 必要なカーネルバージョン <!-- Kernel requirements -->
