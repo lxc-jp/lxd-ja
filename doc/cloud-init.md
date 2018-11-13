@@ -113,8 +113,8 @@ A container's rootfs will contain the following files as a result:
 -->
 
  * `/var/lib/cloud/seed/nocloud-net/network-config`
- * `/etc/network/interfaces.d/50-cloud-init.cfg` (if using ifupdown)
- * `/etc/netplan/50-cloud-init.yaml` (if using netplan)
+ * `/etc/network/interfaces.d/50-cloud-init.cfg` (ifupdown を使う場合<!-- if using ifupdown -->)
+ * `/etc/netplan/50-cloud-init.yaml` (netplan を使う場合<!-- if using netplan -->)
 
 # 実装詳細 <!-- Implementation Details -->
 
