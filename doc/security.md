@@ -9,14 +9,16 @@ socket and access is restricted by socket ownership and mode.
 
 LXD デーモンとのリモートの通信は HTTPS 上の JSON を使って行います。
 サポートしているプロトコルは TLS 1.2 以上です。
-全ての通信は完全な前方秘匿性 (Perfect Forward Secrecy; PFS) を使う必要があり、
-暗号は強力な楕円曲線のもの (ECDHE-RSA や ECDHE-ECDSA など)に限定されます。
 <!--
 Remote communications with the LXD daemon happen using JSON over HTTPS.
 The supported protocol must be TLS1.2 or better.
+-->
+
+全ての通信は完全な前方秘匿性 (Perfect Forward Secrecy; PFS) を使う必要があり、
+暗号は強力な楕円曲線のもの (ECDHE-RSA や ECDHE-ECDSA など)に限定されます。
+<!--
 All communications must use perfect forward secrecy and ciphers must be
-limited to strong elliptic curve ones (such as ECDHE-RSA or
-ECDHE-ECDSA).
+limited to strong elliptic curve ones (such as ECDHE-RSA or ECDHE-ECDSA).
 -->
 
 生成されるキーは最低でも 4096 ビットのRSAでなければならず、
@@ -83,24 +85,11 @@ and the client can now connect to the server without having to provide
 any additional credentials.
 -->
 
-このワークフローは ssh が未知のサーバに初めて接続したときにプロンプトが
+このワークフローは SSH が未知のサーバに初めて接続したときにプロンプトが
 表示されるのと非常に似ています。
 <!--
-This is a workflow that's very similar to that of ssh where an initial
+This is a workflow that's very similar to that of SSH where an initial
 connection to an unknown server triggers a prompt.
--->
-
-このワークフローの拡張として考えられるのは ssh のフィンガープリントを
-DNS で確認するのと似た仕組みを作ることです。証明書のフィンガープリントを
-TXT レコードとして追加し、ドメインを DNSSEC で署名すると、クライアントは
-フィンガープリントが DNS レコードと一致すれば自動的に受け入れるようになる
-でしょう。
-<!--
-A possible extension to that is to support something similar to ssh's
-fingerprint in DNS feature where the certificate fingerprint is added as
-a TXT record, then if the domain is signed by DNSSEC, the client will
-automatically accept the fingerprint if it matches that in the DNS
-record.
 -->
 
 ## PKI ベースのセットアップでリモートを追加する <!-- Adding a remote with a PKI based setup -->
@@ -211,6 +200,15 @@ LXD サーバが信頼している証明書の一覧は `lxc config trust list` 
 <!--
 The list of certificates trusted by a LXD server can be obtained with `lxc
 config trust list`.
+-->
+
+クライアントは `lxc config trust add <file>` を使用して手動で追加できます。
+これにより既存の管理者が新しいクライアント証明書を直接トラスト・ストアに
+追加することによって共有されたトラスト・パスワードの必要性を無くします。
+<!--
+Clients can manually be added using `lxc config trust add <file>`,
+removing the need for a shared trust password by letting an existing
+administrator add the new client certificate directly to the trust store.
 -->
 
 クライアントへの信頼を取り消すには `lxc config trust remove FINGERPRINT` を
