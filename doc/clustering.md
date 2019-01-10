@@ -202,6 +202,23 @@ lxc delete xenial
 lxc pull file xenial/etc/hosts .
 ```
 
+## Images
+
+By default, LXD will replicate images on as many cluster members as you
+have database members. This typically means up to 3 copies within the cluster.
+
+That number can be increased to improve fault tolerance and likelihood
+of the image being locally available.
+
+The special value of "-1" may be used to have the image copied on all nodes.
+
+
+You can disable the image replication in the cluster by setting the count down to 1:
+
+```bash
+lxc config set cluster.images_minimal_replica 1
+```
+
 ## Storage pools
 
 As mentioned above, all nodes must have identical storage pools. The
@@ -294,3 +311,33 @@ returned.
 
 You can pass to this final ``network create`` command any configuration key
 which is not node-specific (see above).
+
+## Separate REST API and clustering networks
+
+You can configure different networks for the REST API endpoint of your clients
+and for internal traffic between the nodes of your cluster (for example in order
+to use a virtual address for your REST API, with DNS round robin).
+
+To do that, you need to bootstrap the first node of the cluster using the
+```cluster.https_address``` config key. For example, when using preseed:
+
+```yaml
+config:
+  core.trust_password: sekret
+  core.https_address: my.lxd.cluster:8443
+  cluster.https_address: 10.55.60.171:8443
+...
+```
+
+(the rest of the preseed YAML is the same as above).
+
+To join a new node, first set its REST API address, for instance using the
+```lxc``` client:
+
+```bash
+lxc config set core.https_address my.lxd.cluster:8443
+```
+
+and then use the ```PUT /1.0/cluster``` API endpoint as usual, specifying the
+address of the joining node with the ```server_address``` field. If you use
+preseed, the YAML payload would be exactly like the one above.

@@ -47,7 +47,7 @@ limits.cpu.allowance                    | string    | 100%              | yes   
 limits.cpu.priority                     | integer   | 10 (maximum)      | yes           | -                                    | CPU scheduling priority compared to other containers sharing the same CPUs (overcommit) (integer between 0 and 10)
 limits.disk.priority                    | integer   | 5 (medium)        | yes           | -                                    | When under load, how much priority to give to the container's I/O requests (integer between 0 and 10)
 limits.kernel.\*                        | string    | -                 | no            | kernel\_limits                       | This limits kernel resources per container (e.g. number of open files)
-limits.memory                           | string    | - (all)           | yes           | -                                    | Percentage of the host's memory or fixed value in bytes (supports kB, MB, GB, TB, PB and EB suffixes)
+limits.memory                           | string    | - (all)           | yes           | -                                    | Percentage of the host's memory or fixed value in bytes (various suffixes supported, see below)
 limits.memory.enforce                   | string    | hard              | yes           | -                                    | If hard, container can't exceed its memory limit. If soft, the container can exceed its memory limit when extra host memory is available.
 limits.memory.swap                      | boolean   | true              | yes           | -                                    | Whether to allow some of the container's memory to be swapped out to disk
 limits.memory.swap.priority             | integer   | 10 (maximum)      | yes           | -                                    | The higher this is set, the least likely the container is to be swapped to disk (integer between 0 and 10)
@@ -73,10 +73,14 @@ security.idmap.size                     | integer   | -                 | no    
 security.nesting                        | boolean   | false             | yes           | -                                    | Support running lxd (nested) inside the container
 security.privileged                     | boolean   | false             | no            | -                                    | Runs the container in privileged mode
 security.protection.delete              | boolean   | false             | yes           | container\_protection\_delete        | Prevents the container from being deleted
+security.protection.shift               | boolean   | false             | yes           | container\_protection\_shift         | Prevents the container's filesystem from being uid/gid shifted on startup
 security.syscalls.blacklist             | string    | -                 | no            | container\_syscall\_filtering        | A '\n' separated list of syscalls to blacklist
 security.syscalls.blacklist\_compat     | boolean   | false             | no            | container\_syscall\_filtering        | On x86\_64 this enables blocking of compat\_\* syscalls, it is a no-op on other arches
 security.syscalls.blacklist\_default    | boolean   | true              | no            | container\_syscall\_filtering        | Enables the default syscall blacklist
 security.syscalls.whitelist             | string    | -                 | no            | container\_syscall\_filtering        | A '\n' separated list of syscalls to whitelist (mutually exclusive with security.syscalls.blacklist\*)
+snapshots.schedule                      | string    | -                 | no            | snapshot\_scheduling                 | Cron expression (`<minute> <hour> <dom> <month> <dow>`)
+snapshots.schedule.stopped              | bool      | false             | no            | snapshot\_scheduling                 | Controls whether or not stopped containers are to be snapshoted automatically
+snapshots.pattern                       | string    | snap%d            | no            | snapshot\_scheduling                 | Pongo2 template string which represents the snapshot name (used for scheduled snapshots and unnamed snapshots)
 user.\*                                 | string    | -                 | n/a           | -                                    | Free form user key/value storage (can be used in search)
 
 The following volatile keys are currently internally used by LXD:
@@ -233,8 +237,8 @@ Different network interface types have different additional properties, the curr
 Key                     | Type      | Default           | Required  | Used by                           | API extension                          | Description
 :--                     | :--       | :--               | :--       | :--                               | :--                                    | :--
 nictype                 | string    | -                 | yes       | all                               | -                                      | The device type, one of "bridged", "macvlan", "p2p", "physical", or "sriov"
-limits.ingress          | string    | -                 | no        | bridged, p2p                      | -                                      | I/O limit in bit/s for incoming traffic (supports kbit, Mbit, Gbit suffixes)
-limits.egress           | string    | -                 | no        | bridged, p2p                      | -                                      | I/O limit in bit/s for outgoing traffic (supports kbit, Mbit, Gbit suffixes)
+limits.ingress          | string    | -                 | no        | bridged, p2p                      | -                                      | I/O limit in bit/s for incoming traffic (various suffixes supported, see below)
+limits.egress           | string    | -                 | no        | bridged, p2p                      | -                                      | I/O limit in bit/s for outgoing traffic (various suffixes supported, see below)
 limits.max              | string    | -                 | no        | bridged, p2p                      | -                                      | Same as modifying both limits.ingress and limits.egress
 name                    | string    | kernel assigned   | no        | all                               | -                                      | The name of the interface inside the container
 host\_name              | string    | randomly assigned | no        | bridged, macvlan, p2p, sriov      | -                                      | The name of the interface inside the host
@@ -349,14 +353,14 @@ The following properties exist:
 
 Key             | Type      | Default           | Required  | Description
 :--             | :--       | :--               | :--       | :--
-limits.read     | string    | -                 | no        | I/O limit in byte/s (supports kB, MB, GB, TB, PB and EB suffixes) or in iops (must be suffixed with "iops")
-limits.write    | string    | -                 | no        | I/O limit in byte/s (supports kB, MB, GB, TB, PB and EB suffixes) or in iops (must be suffixed with "iops")
+limits.read     | string    | -                 | no        | I/O limit in byte/s (various suffixes supported, see below) or in iops (must be suffixed with "iops")
+limits.write    | string    | -                 | no        | I/O limit in byte/s (various suffixes supported, see below) or in iops (must be suffixed with "iops")
 limits.max      | string    | -                 | no        | Same as modifying both limits.read and limits.write
 path            | string    | -                 | yes       | Path inside the container where the disk will be mounted
 source          | string    | -                 | yes       | Path on the host, either to a file/directory or to a block device
 optional        | boolean   | false             | no        | Controls whether to fail if the source doesn't exist
 readonly        | boolean   | false             | no        | Controls whether to make the mount read-only
-size            | string    | -                 | no        | Disk size in bytes (supports kB, MB, GB, TB, PB and EB suffixes). This is only supported for the rootfs (/).
+size            | string    | -                 | no        | Disk size in bytes (various suffixes supported, see below). This is only supported for the rootfs (/).
 recursive       | boolean   | false             | no        | Whether or not to recursively mount the source path
 pool            | string    | -                 | no        | The storage pool the disk device belongs to. This is only applicable for storage volumes managed by LXD.
 propagation     | string    | -                 | no        | Controls how a bind-mount is shared between the container and the host. (Can be one of `private`, the default, or `shared`, `slave`, `unbindable`,  `rshared`, `rslave`, `runbindable`,  `rprivate`. Please see the Linux Kernel [shared subtree](https://www.kernel.org/doc/Documentation/filesystems/sharedsubtree.txt) documentation for a full explanation)
@@ -406,7 +410,7 @@ The following properties exist:
 
 Key         | Type      | Default           | Required  | Description
 :--         | :--       | :--               | :--       | :--
-vendorid    | string    | -                 | yes       | The vendor id of the USB device.
+vendorid    | string    | -                 | no        | The vendor id of the USB device.
 productid   | string    | -                 | no        | The product id of the USB device.
 uid         | int       | 0                 | no        | UID of the device owner in the container
 gid         | int       | 0                 | no        | GID of the device owner in the container
@@ -462,6 +466,44 @@ security.gid    | int       | 0                 | no        | What GID to drop p
 ```
 lxc config device add <container> <device-name> proxy listen=<type>:<addr>:<port>[-<port>][,<port>] connect=<type>:<addr>:<port> bind=<host/container>
 ```
+
+## Units for storage and network limits
+Any value representing bytes or bits can make use of a number of useful
+suffixes to make it easier to understand what a particular limit is.
+
+Both decimal and binary (kibi) units are supported with the latter
+mostly making sense for storage limits.
+
+The full list of bit suffixes currently supported is:
+
+ - bit (1)
+ - kbit (1000)
+ - Mbit (1000^2)
+ - Gbit (1000^3)
+ - Tbit (1000^4)
+ - Pbit (1000^5)
+ - Ebit (1000^6)
+ - Kibit (1024)
+ - Mibit (1024^2)
+ - Gibit (1024^3)
+ - Tibit (1024^4)
+ - Pibit (1024^5)
+ - Eibit (1024^6)
+
+The full list of byte suffixes currently supported is:
+ - B or bytes (1)
+ - kB (1000)
+ - MB (1000^2)
+ - GB (1000^3)
+ - TB (1000^4)
+ - PB (1000^5)
+ - EB (1000^6)
+ - KiB (1024)
+ - MiB (1024^2)
+ - GiB (1024^3)
+ - TiB (1024^4)
+ - PiB (1024^5)
+ - EiB (1024^6)
 
 ## Instance types
 LXD supports simple instance types. Those are represented as a string
@@ -540,3 +582,13 @@ memory dump and transfer it. If the threshold is not reached after the maximum
 number of allowed iterations specified via
 `migration.incremental.memory.iterations` LXD will request a final memory dump
 from CRIU and migrate the container.
+
+## Snapshot scheduling
+LXD supports scheduled snapshots which can be created at most once every minute.
+There are three configuration options. `snapshots.schedule` takes a shortened
+cron expression: `<minute> <hour> <day-of-month> <month> <day-of-week>`. If this is
+empty (default), no snapshots will be created. `snapshots.schedule.stopped`
+controls whether or not stopped container are to be automatically snapshotted.
+It defaults to `false`. `snapshots.pattern` takes a pongo2 template string,
+and the pongo2 context contains the `creation_date` variable. In order to avoid
+name colisions, snapshots will be suffixed with `-0`, `-1`, and so on.

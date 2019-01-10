@@ -637,3 +637,38 @@ This adds support for incremental container copy. When copying a container
 using the `--refresh` flag, only the missing or outdated files will be
 copied over. Should the target container not exist yet, a normal copy operation
 is performed.
+
+## usb\_optional\_vendorid
+As the name implies, the `vendorid` field on USB devices attached to
+containers has now been made optional, allowing for all USB devices to
+be passed to a container (similar to what's done for GPUs).
+
+## snapshot\_scheduling
+This adds support for snapshot scheduling. It introduces three new
+configuration keys: `snapshots.schedule`, `snapshots.schedule.stopped`, and
+`snapshots.pattern`. Snapshots can be created automatically up to every minute.
+
+## container\_copy\_project
+Introduces a `project` field to the container source dict, allowing for
+copy/move of containers between projects.
+
+## clustering\_server\_address
+This adds support for configuring a server network address which differs from
+the REST API client network address. When bootstrapping a new cluster, clients
+can set the new ```cluster.https_address``` config key to specify the address of
+the initial server. When joining a new server, clients can set the
+```core.https_address``` config key of the joining server to the REST API
+address the joining server should listen at, and set the ```server_address```
+key in the ```PUT /1.0/cluster``` API to the address the joining server should
+use for clustering traffic (the value of ```server_address``` will be
+automatically copied to the ```cluster.https_address``` config key of the
+joining server).
+
+## clustering\_image\_replication
+Enable image replication across the nodes in the cluster.
+A new cluster.images_minimal_replica configuration key was introduced can be used
+to specify to the minimal numbers of nodes for image replication.
+
+## container\_protection\_shift
+Enables setting the `security.protection.shift` option which prevents containers
+from having their filesystem shifted.
