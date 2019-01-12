@@ -1234,3 +1234,73 @@ using the `\-\-refresh` flag, only the missing or outdated files will be
 copied over. Should the target container not exist yet, a normal copy operation
 is performed.
 -->
+
+## usb\_optional\_vendorid
+名前が暗示しているように、コンテナにアタッチされた USB デバイスの
+`vendorid` フィールドが省略可能になります。これにより全ての USB デバイスが
+コンテナに渡されます (GPU に対してなされたのと同様)。
+<!--
+As the name implies, the `vendorid` field on USB devices attached to
+containers has now been made optional, allowing for all USB devices to
+be passed to a container (similar to what's done for GPUs).
+-->
+
+## snapshot\_scheduling
+これはスナップショットのスケジューリングのサポートを追加します。これにより
+3 つの新しい設定キーが導入されます。 `snapshots.schedule`, `snapshots.schedule.stopped`,
+そして `snapshots.pattern` です。スナップショットは最短で 1 分間隔で自動的に
+作成されます。
+<!--
+This adds support for snapshot scheduling. It introduces three new
+configuration keys: `snapshots.schedule`, `snapshots.schedule.stopped`, and
+`snapshots.pattern`. Snapshots can be created automatically up to every minute.
+-->
+
+## container\_copy\_project
+コピー元のコンテナの dict に `project` フィールドを導入します。これにより
+プロジェクト間でコンテナをコピーあるいは移動できるようになります。
+<!--
+Introduces a `project` field to the container source dict, allowing for
+copy/move of containers between projects.
+-->
+
+## clustering\_server\_address
+これはサーバのネットワークアドレスを REST API のクライアントネットワーク
+アドレスと異なる値に設定することのサポートを追加します。クライアントは
+新しい ```cluster.https_address``` 設定キーを初期のサーバのアドレスを指定するために
+に設定できます。新しいサーバが参加する際、クライアントは参加するサーバの
+```core.https_address``` 設定キーを参加するサーバがリッスンすべきアドレスに設定でき、
+```PUT /1.0/cluster``` API の ```server_address``` キーを参加するサーバが
+クラスタリングトラフィックに使用すべきアドレスに設定できます (```server_address```
+の値は自動的に参加するサーバの ```cluster.https_address``` 設定キーに
+コピーされます)。
+<!--
+This adds support for configuring a server network address which differs from
+the REST API client network address. When bootstrapping a new cluster, clients
+can set the new ```cluster.https_address``` config key to specify the address of
+the initial server. When joining a new server, clients can set the
+```core.https_address``` config key of the joining server to the REST API
+address the joining server should listen at, and set the ```server_address```
+key in the ```PUT /1.0/cluster``` API to the address the joining server should
+use for clustering traffic (the value of ```server_address``` will be
+automatically copied to the ```cluster.https_address``` config key of the
+joining server).
+-->
+
+## clustering\_image\_replication
+クラスタ内のノードをまたいだイメージのレプリケーションを可能にします。
+新しい cluster.images_minimal_replica 設定キーが導入され、イメージの
+リプリケーションに対するノードの最小数を指定するのに使用できます。
+<!--
+Enable image replication across the nodes in the cluster.
+A new cluster.images_minimal_replica configuration key was introduced can be used
+to specify to the minimal numbers of nodes for image replication.
+-->
+
+## container\_protection\_shift
+`security.protection.shift` の設定を可能にします。これによりコンテナの
+ファイルシステム上で uid/gid をシフト (再マッピング) させることを防ぎます。
+<!--
+Enables setting the `security.protection.shift` option which prevents containers
+from having their filesystem shifted.
+-->
