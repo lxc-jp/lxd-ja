@@ -65,7 +65,7 @@ limits.cpu.allowance                    | string    | 100%              | yes   
 limits.cpu.priority                     | integer   | 10 (maximum)      | yes           | -                                    | 同じ CPU をシェアする他のコンテナと比較した CPU スケジューリングの優先度（オーバーコミット）（0 〜 10 の整数）<!-- CPU scheduling priority compared to other containers sharing the same CPUs (overcommit) (integer between 0 and 10) -->
 limits.disk.priority                    | integer   | 5 (medium)        | yes           | -                                    | 負荷がかかった状態で、コンテナの I/O リクエストに割り当てる優先度（0 〜 10 の整数）<!-- When under load, how much priority to give to the container's I/O requests (integer between 0 and 10) -->
 limits.kernel.\*                        | string    | -                 | no            | kernel\_limits                       | コンテナごとのカーネルリソースの制限（例、オープンできるファイルの数）<!-- This limits kernel resources per container (e.g. number of open files) -->
-limits.memory                           | string    | - (all)           | yes           | -                                    | ホストメモリに対する割合（パーセント）もしくはメモリサイズの固定値（単位として kB, MB, GB, TB, PB, EB を指定できます）<!-- Percentage of the host's memory or fixed value in bytes (supports kB, MB, GB, TB, PB and EB suffixes) -->
+limits.memory                           | string    | - (all)           | yes           | -                                    | ホストメモリに対する割合（パーセント）もしくはメモリサイズの固定値（さまざまな単位が指定可能、下記参照）<!-- Percentage of the host's memory or fixed value in bytes (various suffixes supported, see below) -->
 limits.memory.enforce                   | string    | hard              | yes           | -                                    | hard に設定すると、コンテナはメモリー制限値を超過できません。soft に設定すると、ホストでメモリに余裕がある場合は超過できる可能性があります <!-- If hard, container can't exceed its memory limit. If soft, the container can exceed its memory limit when extra host memory is available. -->
 limits.memory.swap                      | boolean   | true              | yes           | -                                    | コンテナのメモリの一部をディスクにスワップすることを許すかどうか <!-- Whether to allow some of the container's memory to be swapped out to disk -->
 limits.memory.swap.priority             | integer   | 10 (maximum)      | yes           | -                                    | 高い値を設定するほど、コンテナがディスクにスワップされにくくなります（0 〜 10 の整数） <!-- The higher this is set, the least likely the container is to be swapped to disk (integer between 0 and 10) -->
@@ -91,10 +91,14 @@ security.idmap.size                     | integer   | -                 | no    
 security.nesting                        | boolean   | false             | yes           | -                                    | コンテナ内でネストした lxd の実行を許可するかどうか <!-- Support running lxd (nested) inside the container -->
 security.privileged                     | boolean   | false             | no            | -                                    | 特権モードでコンテナを実行するかどうか <!-- Runs the container in privileged mode -->
 security.protection.delete              | boolean   | false             | yes           | container\_protection\_delete        | コンテナを削除から保護する <!-- Prevents the container from being deleted -->
+security.protection.shift               | boolean   | false             | yes           | container\_protection\_shift         | コンテナのファイルシステムが起動時に uid/gid がシフト（再マッピング）されるのを防ぐ <!-- Prevents the container's filesystem from being uid/gid shifted on startup -->
 security.syscalls.blacklist             | string    | -                 | no            | container\_syscall\_filtering        | `\n` 区切りのシステムコールのブラックリスト <!-- A '\n' separated list of syscalls to blacklist -->
 security.syscalls.blacklist\_compat     | boolean   | false             | no            | container\_syscall\_filtering        | `x86_64` で `compat_*` システムコールのブロックを有効にするかどうか。他のアーキテクチャでは何もしません <!-- On x86\_64 this enables blocking of compat\_\* syscalls, it is a no-op on other arches -->
 security.syscalls.blacklist\_default    | boolean   | true              | no            | container\_syscall\_filtering        | デフォルトのシステムコールブラックリストを有効にするかどうか <!-- Enables the default syscall blacklist -->
 security.syscalls.whitelist             | string    | -                 | no            | container\_syscall\_filtering        | `\n` 区切りのシステムコールのホワイトリスト（`security.syscalls.blacklist\*)` と排他）<!-- A '\n' separated list of syscalls to whitelist (mutually exclusive with security.syscalls.blacklist\*) -->
+snapshots.schedule                      | string    | -                 | no            | snapshot\_scheduling                 | Cron 表記 <!-- Cron expression --> (`<minute> <hour> <dom> <month> <dow>`)
+snapshots.schedule.stopped              | bool      | false             | no            | snapshot\_scheduling                 | 停止したコンテナのスナップショットを自動的に作成するかどうか <!-- Controls whether or not stopped containers are to be snapshoted automatically -->
+snapshots.pattern                       | string    | snap%d            | no            | snapshot\_scheduling                 | スナップショット名を表す Pongo2 テンプレート（スケジュールされたスナップショットと名前を指定されないスナップショットに使用される） <!-- Pongo2 template string which represents the snapshot name (used for scheduled snapshots and unnamed snapshots) -->
 user.\*                                 | string    | -                 | n/a           | -                                    | 自由形式のユーザ定義の key/value の設定の組（検索に使えます） <!-- Free form user key/value storage (can be used in search) -->
 
 <!--
@@ -337,8 +341,8 @@ Different network interface types have different additional properties, the curr
 Key                     | Type      | Default           | Required  | Used by                           | API extension                          | Description
 :--                     | :--       | :--               | :--       | :--                               | :--                                    | :--
 nictype                 | string    | -                 | yes       | all                               | -                                      | デバイスタイプ。`bridged`、`macvlan`、`p2p`、`physical`、`sriov`のいずれか <!-- The device type, one of "bridged", "macvlan", "p2p", "physical", or "sriov" -->
-limits.ingress          | string    | -                 | no        | bridged, p2p                      | -                                      | 入力トラフィックの I/O 制限値（bit/s、単位として kbit、Mbit、Gbit が使えます）<!-- I/O limit in bit/s for incoming traffic (supports kbit, Mbit, Gbit suffixes) -->
-limits.egress           | string    | -                 | no        | bridged, p2p                      | -                                      | 出力トラフィックの I/O 制限値（bit/s、単位として kbit、Mbit、Gbit が使えます）<!--I/O limit in bit/s for outgoing traffic (supports kbit, Mbit, Gbit suffixes) -->
+limits.ingress          | string    | -                 | no        | bridged, p2p                      | -                                      | 入力トラフィックの I/O 制限値（さまざまな単位が使用可能、下記参照）<!-- I/O limit in bit/s for incoming traffic (various suffixes supported, see below) -->
+limits.egress           | string    | -                 | no        | bridged, p2p                      | -                                      | 出力トラフィックの I/O 制限値（さまざまな単位が使用可能、下記参照）<!--I/O limit in bit/s for outgoing traffic (various suffixes supported, see below) -->
 limits.max              | string    | -                 | no        | bridged, p2p                      | -                                      | `limits.ingress`と`limits.egress`の両方を同じ値に変更する <!-- Same as modifying both limits.ingress and limits.egress -->
 name                    | string    | kernel assigned   | no        | all                               | -                                      | コンテナ内部でのインターフェース名 <!-- The name of the interface inside the container -->
 host\_name              | string    | randomly assigned | no        | bridged, macvlan, p2p, sriov      | -                                      | ホスト上でのインターフェース名 <!-- The name of the interface inside the host -->
@@ -514,14 +518,14 @@ The following properties exist:
 
 Key             | Type      | Default           | Required  | Description
 :--             | :--       | :--               | :--       | :--
-limits.read     | string    | -                 | no        | byte/s（単位として kb, MB, GB, TB, PB, EB が使えます）もしくは iops（あとに "iops" と付けなければなりません）で指定する読み込みの I/O 制限値 <!-- I/O limit in byte/s (supports kB, MB, GB, TB, PB and EB suffixes) or in iops (must be suffixed with "iops") -->
-limits.write    | string    | -                 | no        | byte/s（単位として kb, MB, GB, TB, PB, EB が使えます）もしくは iops（あとに "iops" と付けなければなりません）で指定する書き込みの I/O 制限値 <!-- I/O limit in byte/s (supports kB, MB, GB, TB, PB and EB suffixes) or in iops (must be suffixed with "iops") -->
+limits.read     | string    | -                 | no        | byte/s（さまざまな単位が使用可能、下記参照）もしくは iops（あとに "iops" と付けなければなりません）で指定する読み込みの I/O 制限値 <!-- I/O limit in byte/s (various suffixes supported, see below) or in iops (must be suffixed with "iops") -->
+limits.write    | string    | -                 | no        | byte/s（さまざまな単位が使用可能、下記参照）もしくは iops（あとに "iops" と付けなければなりません）で指定する書き込みの I/O 制限値 <!-- I/O limit in byte/s (various suffixes supported, see below) or in iops (must be suffixed with "iops") -->
 limits.max      | string    | -                 | no        | `limits.read` と `limits.write` の両方を同じ値に変更する <!-- Same as modifying both limits.read and limits.write -->
 path            | string    | -                 | yes       | ディスクをマウントするコンテナ内のパス <!-- Path inside the container where the disk will be mounted -->
 source          | string    | -                 | yes       | ファイル・ディレクトリ、もしくはブロックデバイスのホスト上のパス <!-- Path on the host, either to a file/directory or to a block device -->
 optional        | boolean   | false             | no        | ソースが存在しないときに失敗とするかどうかを制御する <!-- Controls whether to fail if the source doesn't exist -->
 readonly        | boolean   | false             | no        | マウントを読み込み専用とするかどうかを制御する <!-- Controls whether to make the mount read-only -->
-size            | string    | -                 | no        | byte（単位として kb, MB, GB, TB, PB, EB が使えます）で指定するディスクサイズ。rootfs（/）でのみサポートされます <!-- Disk size in bytes (supports kB, MB, GB, TB, PB and EB suffixes). This is only supported for the rootfs (/). -->
+size            | string    | -                 | no        | byte（さまざまな単位が使用可能、下記参照す）で指定するディスクサイズ。rootfs（/）でのみサポートされます <!-- Disk size in bytes (various suffixes supported, see below). This is only supported for the rootfs (/). -->
 recursive       | boolean   | false             | no        | ソースパスを再帰的にマウントするかどうか <!-- Whether or not to recursively mount the source path -->
 pool            | string    | -                 | no        | ディスクデバイスが属するストレージプール。LXD が管理するストレージボリュームにのみ適用されます <!-- The storage pool the disk device belongs to. This is only applicable for storage volumes managed by LXD. -->
 propagation     | string    | -                 | no        | バインドマウントをコンテナとホストでどのように共有するかを管理する（デフォルトである `private`, `shared`, `slave`, `unbindable`,  `rshared`, `rslave`, `runbindable`,  `rprivate` のいずれか。詳しくは Linux kernel の文書 [shared subtree](https://www.kernel.org/doc/Documentation/filesystems/sharedsubtree.txt) をご覧ください）<!-- Controls how a bind-mount is shared between the container and the host. (Can be one of `private`, the default, or `shared`, `slave`, `unbindable`,  `rshared`, `rslave`, `runbindable`,  `rprivate`. Please see the Linux Kernel [shared subtree](https://www.kernel.org/doc/Documentation/filesystems/sharedsubtree.txt) documentation for a full explanation) -->
@@ -592,7 +596,7 @@ The following properties exist:
 
 Key         | Type      | Default           | Required  | Description
 :--         | :--       | :--               | :--       | :--
-vendorid    | string    | -                 | yes       | USB デバイスのベンダー ID <!-- The vendor id of the USB device. -->
+vendorid    | string    | -                 | no        | USB デバイスのベンダー ID <!-- The vendor id of the USB device. -->
 productid   | string    | -                 | no        | USB デバイスのプロダクト ID <!-- The product id of the USB device. -->
 uid         | int       | 0                 | no        | コンテナ内のデバイス所有者の UID <!-- UID of the device owner in the container -->
 gid         | int       | 0                 | no        | コンテナ内のデバイス所有者の GID <!-- GID of the device owner in the container -->
@@ -661,6 +665,59 @@ security.gid    | int       | 0                 | no        | 特権を落とす
 ```
 lxc config device add <container> <device-name> proxy listen=<type>:<addr>:<port>[-<port>][,<port>] connect=<type>:<addr>:<port> bind=<host/container>
 ```
+
+## ストレージとネットワーク制限の単位 <!-- Units for storage and network limits -->
+バイト数とビット数を表す値は全ていくつかの有用な単位を使用し
+特定の制限がどういう値かをより理解しやすいようにできます。
+<!--
+Any value representing bytes or bits can make use of a number of useful
+suffixes to make it easier to understand what a particular limit is.
+-->
+
+10進と2進 (kibi) の単位の両方がサポートされており、後者は
+主にストレージの制限に有用です。
+<!--
+Both decimal and binary (kibi) units are supported with the latter
+mostly making sense for storage limits.
+-->
+
+現在サポートされているビットの単位の完全なリストは以下の通りです。
+<!--
+The full list of bit suffixes currently supported is:
+-->
+
+ - bit (1)
+ - kbit (1000)
+ - Mbit (1000^2)
+ - Gbit (1000^3)
+ - Tbit (1000^4)
+ - Pbit (1000^5)
+ - Ebit (1000^6)
+ - Kibit (1024)
+ - Mibit (1024^2)
+ - Gibit (1024^3)
+ - Tibit (1024^4)
+ - Pibit (1024^5)
+ - Eibit (1024^6)
+
+現在サポートされているバイトの単位の完全なリストは以下の通りです。
+<!--
+The full list of byte suffixes currently supported is:
+-->
+
+ - B または bytes <!-- B or bytes --> (1)
+ - kB (1000)
+ - MB (1000^2)
+ - GB (1000^3)
+ - TB (1000^4)
+ - PB (1000^5)
+ - EB (1000^6)
+ - KiB (1024)
+ - MiB (1024^2)
+ - GiB (1024^3)
+ - TiB (1024^4)
+ - PiB (1024^5)
+ - EiB (1024^6)
 
 ## インスタンスタイプ <!-- Instance types -->
 <!--
