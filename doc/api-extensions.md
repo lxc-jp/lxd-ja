@@ -1257,7 +1257,7 @@ configuration keys: `snapshots.schedule`, `snapshots.schedule.stopped`, and
 -->
 
 ## container\_copy\_project
-コピー元のコンテナの辞書に `project` フィールドを導入します。これにより
+コピー元のコンテナの dict に `project` フィールドを導入します。これにより
 プロジェクト間でコンテナをコピーあるいは移動できるようになります。
 <!--
 Introduces a `project` field to the container source dict, allowing for
@@ -1298,8 +1298,8 @@ to specify to the minimal numbers of nodes for image replication.
 -->
 
 ## container\_protection\_shift
-`security.protection.shift` の設定を可能にします。これによりコンテナが
-コンテナのファイルシステムをシフトさせることを防ぎます。
+`security.protection.shift` の設定を可能にします。これによりコンテナの
+ファイルシステム上で uid/gid をシフト (再マッピング) させることを防ぎます。
 <!--
 Enables setting the `security.protection.shift` option which prevents containers
 from having their filesystem shifted.
