@@ -112,7 +112,7 @@ cluster:
 ```
 
 <!--
-Then run `cat <preseed-file> | lxd init --preseed` and your first node
+Then run `cat <preseed-file> | lxd init \-\-preseed` and your first node
 should be bootstrapped.
 -->
 定義ファイルを作成したあと、`cat <preseed-file> | lxd init --preseed` を実行し、最初のノードを作成します。
@@ -203,7 +203,7 @@ available again.
 
 <!--
 If you can't or don't want to bring the node back online, you can
-delete it from the cluster using `lxc cluster remove --force <node name>`.
+delete it from the cluster using `lxc cluster remove \-\-force <node name>`.
 -->
 ノードをオンラインに戻せないとき、ノードをオンラインに戻したくないときは、`lxc cluster remove --force <node name>` を使ってクラスターからノードを削除できます。
 
@@ -293,6 +293,38 @@ lxc pull file xenial/etc/hosts .
 
 のように操作できます。
 
+## イメージ <!-- Images -->
+
+デフォルトではデータベースメンバを持っているのと同じ数のクラスタに
+LXD はイメージを複製します。これは通常はクラスタ内で最大3つのコピーを
+持つことを意味します。
+<!--
+By default, LXD will replicate images on as many cluster members as you
+have database members. This typically means up to 3 copies within the cluster.
+-->
+
+耐障害性とイメージがローカルにある可能性を上げるためにこの数を増やす
+ことができます。
+<!--
+That number can be increased to improve fault tolerance and likelihood
+of the image being locally available.
+-->
+
+特別な値である "-1" は全てのノードにイメージをコピーするために使用できます。
+<!--
+The special value of "-1" may be used to have the image copied on all nodes.
+-->
+
+
+この数を 1 に設定することでイメージの複製を無効にできます。
+<!--
+You can disable the image replication in the cluster by setting the count down to 1:
+-->
+
+```bash
+lxc config set cluster.images_minimal_replica 1
+```
+
 ## ストレージプール <!-- Storage pools -->
 
 <!--
@@ -361,7 +393,7 @@ resides.
 Different volumes can have the same name as long as they live on
 different nodes (for example image volumes). You can manage storage
 volumes in the same way you do in non-clustered deployments, except
-that you'll have to pass a `--target <node name>` parameter to volume
+that you'll have to pass a `\-\-target <node name>` parameter to volume
 commands if more than one node has a volume with the given name.
 -->
 異なるボリュームは、異なるノード（例えば image volumes）上に存在する限りは同じ名前を持てます。複数のノードが与えた名前のボリュームを持つ場合には、ボリュームコマンドに `--target <node name>` を与える必要がある点を除いて、ストレージボリュームはクラスタ化されていない場合と同じ方法で管理できます。
@@ -437,3 +469,55 @@ You can pass to this final ``network create`` command any configuration key
 which is not node-specific (see above).
 -->
 この最後の ``network create`` コマンドには、ノード固有ではない（上記参照）任意の設定項目を与えることができます。
+
+## 分離した REST API とクラスタネットワーク <!-- Separate REST API and clustering networks -->
+
+クライアントの REST API エンドポイントとクラスタ内のノード間の内部的なトラフィック
+（例えば REST API に DNS ラウンドロビンとともに仮想 IP アドレスを使うために）
+で別のネットワークを設定できます。
+<!--
+You can configure different networks for the REST API endpoint of your clients
+and for internal traffic between the nodes of your cluster (for example in order
+to use a virtual address for your REST API, with DNS round robin).
+-->
+
+このためには、クラスタの最初のノードを ```cluster.https_address``` 設定キーを
+使ってブートストラップする必要があります。例えば以下の定義ファイルを使うと
+<!--
+To do that, you need to bootstrap the first node of the cluster using the
+```cluster.https_address``` config key. For example, when using preseed:
+-->
+
+```yaml
+config:
+  core.trust_password: sekret
+  core.https_address: my.lxd.cluster:8443
+  cluster.https_address: 10.55.60.171:8443
+...
+```
+
+（YAML 定義ファイルの残りは上記と同じ）。
+<!--
+(the rest of the preseed YAML is the same as above).
+-->
+
+新しいノードを参加させるには、まず REST API のアドレスを設定します。
+例えば ```lxc``` クライアントを使って以下のように実行し
+<!--
+To join a new node, first set its REST API address, for instance using the
+```lxc``` client:
+-->
+
+```bash
+lxc config set core.https_address my.lxd.cluster:8443
+```
+
+そして通常通り ```PUT /1.0/cluster``` API エンドポイントを使って、
+```server_address``` フィールドで参加するノードのアドレスを設定します。
+定義ファイルを使うなら YAML のペイロードは完全に上記のものと同じに
+なるでしょう。
+<!--
+and then use the ```PUT /1.0/cluster``` API endpoint as usual, specifying the
+address of the joining node with the ```server_address``` field. If you use
+preseed, the YAML payload would be exactly like the one above.
+-->
