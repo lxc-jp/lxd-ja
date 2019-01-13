@@ -295,8 +295,9 @@ lxc pull file xenial/etc/hosts .
 
 ## イメージ <!-- Images -->
 
-デフォルトではデータベースメンバーを持っているのと同じ数のクラスタに
-LXD はイメージを複製します。
+デフォルトではデータベースメンバを持っているのと同じ数のクラスタに
+LXD はイメージを複製します。これは通常はクラスタ内で最大3つのコピーを
+持つことを意味します。
 <!--
 By default, LXD will replicate images on as many cluster members as you
 have database members. This typically means up to 3 copies within the cluster.
