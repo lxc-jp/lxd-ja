@@ -1,4 +1,5 @@
-# コントリビュート <!-- Contributing -->
+# コントリビュート
+<!-- Contributing -->
 ## プルリクエスト <!-- Pull requests -->:
 
 <!--

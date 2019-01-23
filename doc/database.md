@@ -1,4 +1,5 @@
-# データベース <!-- Database -->
+# データベース
+<!-- Database -->
 ## イントロダクション <!-- Introduction -->
 <!--
 So first of all, why a database?

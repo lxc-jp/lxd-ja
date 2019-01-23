@@ -1,4 +1,5 @@
-# ストレージの設定 <!-- Storage configuration -->
+# ストレージの設定
+<!-- Storage configuration -->
 <!--
 LXD supports creating and managing storage pools and storage volumes.
 General keys are top-level. Driver specific keys are namespaced by driver name.

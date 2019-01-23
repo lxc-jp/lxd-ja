@@ -1,4 +1,5 @@
-# クラスタリング <!-- Clustering -->
+# クラスタリング
+<!-- Clustering -->
 
 <!--
 LXD can be run in clustering mode, where any number of LXD instances

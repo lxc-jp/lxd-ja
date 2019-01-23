@@ -1,4 +1,5 @@
-# デーモンの動作 <!-- Daemon behavior -->
+# デーモンの動作
+<!-- Daemon behavior -->
 ## イントロダクション <!-- Introduction -->
 
 <!--

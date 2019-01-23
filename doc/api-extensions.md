@@ -1,4 +1,5 @@
-# API 拡張 <!-- API extensions -->
+# API 拡張
+<!-- API extensions -->
 
 以下の変更は 1.0 API が確定した後に LXD API に導入されました。
 <!--
