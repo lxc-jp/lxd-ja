@@ -1,4 +1,5 @@
-# cloud-init でのカスタム・ネットワーク設定 <!-- Custom network configuration with cloud-init -->
+# cloud-init でのカスタム・ネットワーク設定
+<!-- Custom network configuration with cloud-init -->
 
 コンテナのカスタム・ネットワークの設定には [cloud-init](https://launchpad.net/cloud-init) を
 使うこともできます。

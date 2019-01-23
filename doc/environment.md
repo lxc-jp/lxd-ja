@@ -1,4 +1,5 @@
-# 環境変数 <!-- Environment variables -->
+# 環境変数
+<!-- Environment variables -->
 ## イントロダクション <!-- Introduction -->
 以下の環境変数を設定することで、 LXD のクライアントとデーモンを
 ユーザの環境に適合させることができ、いくつかの高度な機能を有効または

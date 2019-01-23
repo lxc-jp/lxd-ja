@@ -1,4 +1,5 @@
-# presseed YAML を使った非対話型設定 <!-- Non-interactive configuration via preseed YAML -->
+# presseed YAML を使った非対話型設定
+<!-- Non-interactive configuration via preseed YAML -->
 
 <!--
 The `lxd init` command supports a `\-\-preseed` command line flag that

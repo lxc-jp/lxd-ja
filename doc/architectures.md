@@ -1,4 +1,5 @@
-# アーキテクチャ <!-- Architectures -->
+# アーキテクチャ
+<!-- Architectures -->
 ## イントロダクション <!-- Introduction -->
 <!--
 LXD just like LXC can run on just about any architecture that's

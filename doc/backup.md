@@ -1,4 +1,5 @@
-# LXD サーバをバックアップする <!-- Backing up a LXD server -->
+# LXD サーバをバックアップする
+<!-- Backing up a LXD server -->
 ## 何をバックアップするか <!-- What to backup -->
 LXD サーバのバックアップを計画する際は、 LXD に保管／管理されている
 全ての異なるオブジェクトについて考慮してください。

@@ -1,4 +1,5 @@
-# サーバ設定 <!-- Server configuration -->
+# サーバ設定
+<!-- Server configuration -->
 サーバ設定は単純なキーと値の組です。
 <!--
 The server configuration is a simple set of key and values.

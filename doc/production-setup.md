@@ -1,4 +1,5 @@
-# プロダクション環境のセットアップ <!-- Production setup -->
+# プロダクション環境のセットアップ
+<!-- Production setup -->
 ## イントロダクション <!-- Introduction -->
 あなたは [LXD live online](https://linuxcontainers.org/lxd/try-it/) か、
 なんらかのサーバで LXD を試してみました。結果に満足して、今度は LXD で
