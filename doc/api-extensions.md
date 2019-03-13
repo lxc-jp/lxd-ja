@@ -672,3 +672,29 @@ to specify to the minimal numbers of nodes for image replication.
 ## container\_protection\_shift
 Enables setting the `security.protection.shift` option which prevents containers
 from having their filesystem shifted.
+
+## snapshot\_expiry
+This adds support for snapshot expiration. The task is run minutely. The config
+option `snapshots.expiry` takes an expression in the form of `1M 2H 3d 4w 5m
+6y` (1 minute, 2 hours, 3 days, 4 weeks, 5 months, 6 weeks), however not all
+parts have to be used.
+
+Snapshots which are then created will be given an expiry date based on the
+expression. This expiry date, defined by `expires\_at`, can be manually edited
+using the API or `lxc config edit`. Snapshots with a valid expiry date will be
+removed when the task in run. Expiry can be disabled by setting `expires\_at` to
+an empty string or `0001-01-01T00:00:00Z` (zero time). This is the default if
+`snapshots.expiry` is not set.
+
+This adds the following new endpoint (see [RESTful API](rest-api.md) for details):
+
+* `PUT /1.0/containers/<name>/snapshots/<name>`
+
+## snapshot\_expiry\_creation
+Adds `expires\_at` to container creation, allowing for override of a
+snapshot's expiry at creation time.
+
+## network\_leases\_location
+Introductes a "Location" field in the leases list.
+This is used when querying a cluster to show what node a particular
+lease was found on.
