@@ -93,7 +93,7 @@ server using the same storage pool backend.
 保存することができ、 `lxc import` コマンドを使って LXD にインポートして
 戻すことができます。
 <!--
-Those tarballs can be saved any way you want on any filesystem you wan
+Those tarballs can be saved any way you want on any filesystem you want
 and can be imported back into LXD using the `lxc import` command.
 -->
 
