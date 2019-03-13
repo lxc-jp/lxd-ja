@@ -1353,10 +1353,10 @@ HTTP code for this should be 202 (Accepted).
 
 ### `/1.0/containers/<name>/console`
 #### GET
-* 説明: コンテナのコンソールログの内容を返します <!-- Description: returns the contents of the container's console  log -->
-* 認証: trusted <!-- Authentication: trusted -->
-* 操作: 該当なし <!-- Operation: N/A -->
-* 戻り値: コンソールログの内容 <!-- Return: the contents of the console log -->
+ * 説明: コンテナのコンソールログの内容を返します <!-- Description: returns the contents of the container's console  log -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 該当なし <!-- Operation: N/A -->
+ * 戻り値: コンソールログの内容 <!-- Return: the contents of the console log -->
 
 #### POST
  * 説明: コンテナのコンソールデバイスにアタッチします <!-- Description: attach to a container's console devices -->
@@ -1402,10 +1402,10 @@ Control (window size change):
     }
 
 #### DELETE
-* 説明: コンテナのコンソールログを空にします <!-- Description: empty the container's console log -->
-* 認証: trusted <!-- Authentication: trusted -->
-* 操作: 同期 <!-- Operation: Sync -->
-* 戻り値: 空のレスポンスまたは標準のエラー <!-- Return: empty response or standard error -->
+ * 説明: コンテナのコンソールログを空にします <!-- Description: empty the container's console log -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期 <!-- Operation: Sync -->
+ * 戻り値: 空のレスポンスまたは標準のエラー <!-- Return: empty response or standard error -->
 
 ### `/1.0/containers/<name>/exec`
 #### POST
@@ -1803,6 +1803,18 @@ Input (none at present):
     {
     }
 
+#### PUT
+ * 説明: スナップショットを更新します <!-- Description: update the snapshot -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 非同期 <!-- Operation: async -->
+ * 戻り値: バックグラウンド操作または標準のエラー <!-- Return: background operation or standard error -->
+
+Input:
+
+    {
+        "expires_at": "2019-01-16T12:34:56+02:00"
+    }
+
 この操作に対する HTTP ステータスコードは 202 (Accepted) です。
 <!--
 HTTP code for this should be 202 (Accepted).
@@ -1991,15 +2003,15 @@ Input:
 
 ### `/1.0/containers/<name>/logs`
 #### GET
-* 説明: このコンテナで利用可能なログファイルの一覧を返します。
-  作成の失敗についてのログを取得できるようにするため、この操作は
-  削除が完了した (あるいは一度も作られなかった) コンテナに対しても
-  動作します。 <!-- Description: Returns a list of the log files available for this container.
+ * 説明: このコンテナで利用可能なログファイルの一覧を返します。
+   作成の失敗についてのログを取得できるようにするため、この操作は
+   削除が完了した (あるいは一度も作られなかった) コンテナに対しても
+   動作します。 <!-- Description: Returns a list of the log files available for this container.
   Note that this works on containers that have been deleted (or were never
   created) to enable people to get logs for failed creations. -->
-* 認証: trusted <!-- Authentication: trusted -->
-* 操作: 同期 <!-- Operation: Sync -->
-* 戻り値: 利用可能なログファイルの一覧 <!-- Return: a list of the available log files -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期 <!-- Operation: Sync -->
+ * 戻り値: 利用可能なログファイルの一覧 <!-- Return: a list of the available log files -->
 
 戻り値
 <!--
@@ -2014,24 +2026,24 @@ Return:
 
 ### `/1.0/containers/<name>/logs/<logfile>`
 #### GET
-* 説明: 特定のログファイルの中身を返します <!-- Description: returns the contents of a particular log file. -->
-* 認証: trusted <!-- Authentication: trusted -->
-* 操作: 該当なし <!-- Operation: N/A -->
-* 戻り値: ログファイルの中身 <!-- Return: the contents of the log file -->
+ * 説明: 特定のログファイルの中身を返します <!-- Description: returns the contents of a particular log file. -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 該当なし <!-- Operation: N/A -->
+ * 戻り値: ログファイルの中身 <!-- Return: the contents of the log file -->
 
 #### DELETE
-* 説明: 特定のログファイルを削除します <!-- Description: delete a particular log file. -->
-* 認証: trusted <!-- Authentication: trusted -->
-* 操作: 同期 <!-- Operation: Sync -->
-* 戻り値: 空のレスポンスまたは標準のエラー <!-- Return: empty response or standard error -->
+ * 説明: 特定のログファイルを削除します <!-- Description: delete a particular log file. -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期 <!-- Operation: Sync -->
+ * 戻り値: 空のレスポンスまたは標準のエラー <!-- Return: empty response or standard error -->
 
 ### `/1.0/containers/<name>/metadata`
 #### GET
-* 説明: コンテナのメタデータ <!-- Description: Container metadata -->
-* 導入: `container_edit_metadata` API 拡張によって <!-- Introduced: with API extension `container_edit_metadata` -->
-* 認証: trusted <!-- Authentication: trusted -->
-* 操作: 同期 <!-- Operation: Sync -->
-* 戻り値: コンテナのメタデータを表す dict <!-- Return: dict representing container metadata -->
+ * 説明: コンテナのメタデータ <!-- Description: Container metadata -->
+ * 導入: `container_edit_metadata` API 拡張によって <!-- Introduced: with API extension `container_edit_metadata` -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期 <!-- Operation: Sync -->
+ * 戻り値: コンテナのメタデータを表す dict <!-- Return: dict representing container metadata -->
 
 戻り値
 <!--
@@ -2061,11 +2073,11 @@ Return:
     }
 
 #### PUT (ETag サポートあり) <!-- PUT (ETag supported) -->
-* 説明: コンテナのメタデータを置き換える <!-- Description: Replaces container metadata -->
-* 導入: `container_edit_metadata` API 拡張によって <!-- Introduced: with API extension `container_edit_metadata` -->
-* 認証: trusted <!-- Authentication: trusted -->
-* 操作: 同期 <!-- Operation: sync -->
-* 戻り値: 標準の戻り値または標準のエラー <!-- Return: standard return value or standard error -->
+ * 説明: コンテナのメタデータを置き換える <!-- Description: Replaces container metadata -->
+ * 導入: `container_edit_metadata` API 拡張によって <!-- Introduced: with API extension `container_edit_metadata` -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻り値: 標準の戻り値または標準のエラー <!-- Return: standard return value or standard error -->
 
 入力
 <!--
@@ -2096,11 +2108,11 @@ Input:
 
 ### `/1.0/containers/<name>/metadata/templates`
 #### GET
-* 説明: コンテナテンプレートの一覧 <!-- Description: List container templates -->
-* 導入: `container_edit_metadata` API 拡張によって <!-- Introduced: with API extension `container_edit_metadata` -->
-* 認証: trusted <!-- Authentication: trusted -->
-* 操作: 同期 <!-- Operation: Sync -->
-* 戻り値: コンテナテンプレート名の一覧 <!-- Return: a list with container template names -->
+ * 説明: コンテナテンプレートの一覧 <!-- Description: List container templates -->
+ * 導入: `container_edit_metadata` API 拡張によって <!-- Introduced: with API extension `container_edit_metadata` -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期 <!-- Operation: Sync -->
+ * 戻り値: コンテナテンプレート名の一覧 <!-- Return: a list with container template names -->
 
 戻り値
 <!--
@@ -2113,18 +2125,18 @@ Return:
     ]
 
 #### GET (`?path=<template>`)
-* 説明: コンテナテンプレートの中身 <!-- Description: Content of a container template -->
-* 導入: `container_edit_metadata` API 拡張によって <!-- Introduced: with API extension `container_edit_metadata` -->
-* 認証: trusted <!-- Authentication: trusted -->
-* 操作: 同期 <!-- Operation: Sync -->
-* 戻り値: テンプレートの中身 <!-- Return: the content of the template -->
+ * 説明: コンテナテンプレートの中身 <!-- Description: Content of a container template -->
+ * 導入: `container_edit_metadata` API 拡張によって <!-- Introduced: with API extension `container_edit_metadata` -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期 <!-- Operation: Sync -->
+ * 戻り値: テンプレートの中身 <!-- Return: the content of the template -->
 
 #### POST (`?path=<template>`)
-* 説明: コンテナテンプレートを追加します <!-- Description: Add a continer template -->
-* 導入: `container_edit_metadata` API 拡張によって <!-- Introduced: with API extension `container_edit_metadata` -->
-* 認証: trusted <!-- Authentication: trusted -->
-* 操作: 同期 <!-- Operation: Sync -->
-* 戻り値: 標準の戻り値または標準のエラー <!-- Return: standard return value or standard error -->
+ * 説明: コンテナテンプレートを追加します <!-- Description: Add a continer template -->
+ * 導入: `container_edit_metadata` API 拡張によって <!-- Introduced: with API extension `container_edit_metadata` -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期 <!-- Operation: Sync -->
+ * 戻り値: 標準の戻り値または標準のエラー <!-- Return: standard return value or standard error -->
 
 入力
 <!--
@@ -2133,11 +2145,11 @@ Input:
  * 標準的な HTTP のファイルアップロード <!-- Standard http file upload -->
 
 #### PUT (`?path=<template>`)
-* 説明: テンプレートの中身を置き換えます <!-- Description: Replace content of a template -->
-* 導入: `container_edit_metadata` API 拡張によって <!-- Introduced: with API extension `container_edit_metadata` -->
-* 認証: trusted <!-- Authentication: trusted -->
-* 操作: 同期 <!-- Operation: Sync -->
-* 戻り値: 標準の戻り値または標準のエラー <!-- Return: standard return value or standard error -->
+ * 説明: テンプレートの中身を置き換えます <!-- Description: Replace content of a template -->
+ * 導入: `container_edit_metadata` API 拡張によって <!-- Introduced: with API extension `container_edit_metadata` -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期 <!-- Operation: Sync -->
+ * 戻り値: 標準の戻り値または標準のエラー <!-- Return: standard return value or standard error -->
 
 入力
 <!--
@@ -2146,19 +2158,19 @@ Input:
  * 標準的な HTTP のファイルアップロード <!-- Standard http file upload -->
 
 #### DELETE (`?path=<template>`)
-* 説明: コンテナテンプレートを削除します <!-- Description: Delete a container template -->
-* 導入: `container_edit_metadata` API 拡張によって <!-- Introduced: with API extension `container_edit_metadata` -->
-* 認証: trusted <!-- Authentication: trusted -->
-* 操作: 同期 <!-- Operation: Sync -->
-* 戻り値: 標準の戻り値または標準のエラー <!-- Return: standard return value or standard error -->
+ * 説明: コンテナテンプレートを削除します <!-- Description: Delete a container template -->
+ * 導入: `container_edit_metadata` API 拡張によって <!-- Introduced: with API extension `container_edit_metadata` -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期 <!-- Operation: Sync -->
+ * 戻り値: 標準の戻り値または標準のエラー <!-- Return: standard return value or standard error -->
 
 ### `/1.0/containers/<name>/backups`
 #### GET
-* 説明: コンテナのバックアップの一覧 <!-- Description: List of backups for the container -->
-* 導入: `container_backup` API 拡張によって <!-- Introduced: with API extension `container_backup` -->
-* 認証: trusted <!-- Authentication: trusted -->
-* 操作: 同期 <!-- Operation: sync -->
-* 戻り値: コンテナのバックアップの一覧 <!-- Return: a list of backups for the container -->
+ * 説明: コンテナのバックアップの一覧 <!-- Description: List of backups for the container -->
+ * 導入: `container_backup` API 拡張によって <!-- Introduced: with API extension `container_backup` -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻り値: コンテナのバックアップの一覧 <!-- Return: a list of backups for the container -->
 
 戻り値
 <!--
@@ -2171,11 +2183,11 @@ Return value:
     ]
 
 #### POST
-* 説明: 新しいバックアップを作成します <!-- Description: Create a new backup -->
-* 導入: `container_backup` API 拡張によって <!-- Introduced: with API extension `container_backup` -->
-* 認証: trusted <!-- Authentication: trusted -->
-* 操作: 非同期 <!-- Operation: async -->
-* 戻り値: バックグラウンド操作または標準のエラー <!-- Return: background operation or standard error -->
+ * 説明: 新しいバックアップを作成します <!-- Description: Create a new backup -->
+ * 導入: `container_backup` API 拡張によって <!-- Introduced: with API extension `container_backup` -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 非同期 <!-- Operation: async -->
+ * 戻り値: バックグラウンド操作または標準のエラー <!-- Return: background operation or standard error -->
 
 入力
 <!--
@@ -2200,11 +2212,11 @@ Input:
 
 ### `/1.0/containers/<name>/backups/<name>`
 #### GET
-* 説明: バックアップの情報 <!-- Description: Backup information -->
-* 導入: `container_backup` API 拡張によって <!-- Introduced: with API extension `container_backup` -->
-* 認証: trusted <!-- Authentication: trusted -->
-* 操作: 同期 <!-- Operation: sync -->
-* 戻り値: バックアップの dict <!-- Returns: dict of the backup -->
+ * 説明: バックアップの情報 <!-- Description: Backup information -->
+ * 導入: `container_backup` API 拡張によって <!-- Introduced: with API extension `container_backup` -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻り値: バックアップの dict <!-- Returns: dict of the backup -->
 
 出力
 <!--
@@ -2244,11 +2256,11 @@ Input:
 
 ### `/1.0/containers/<name>/backups/<name>/export`
 #### GET
-* 説明: バックアップの tarball を取得します <!-- Description: fetch the backup tarball -->
-* 導入: `container_backup` API 拡張によって <!-- Introduced: with API extension `container_backup` -->
-* 認証: trusted <!-- Authentication: trusted -->
-* 操作: 同期 <!-- Operation: sync -->
-* 戻り値: バックアップの tarball を含む dict <!-- Return: dict containing the backup tarball -->
+ * 説明: バックアップの tarball を取得します <!-- Description: fetch the backup tarball -->
+ * 導入: `container_backup` API 拡張によって <!-- Introduced: with API extension `container_backup` -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻り値: バックアップの tarball を含む dict <!-- Return: dict containing the backup tarball -->
 
 出力
 <!--
