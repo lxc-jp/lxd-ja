@@ -100,6 +100,7 @@ security.syscalls.whitelist             | string    | -                 | no    
 snapshots.schedule                      | string    | -                 | no            | snapshot\_scheduling                 | Cron 表記 <!-- Cron expression --> (`<minute> <hour> <dom> <month> <dow>`)
 snapshots.schedule.stopped              | bool      | false             | no            | snapshot\_scheduling                 | 停止したコンテナのスナップショットを自動的に作成するかどうか <!-- Controls whether or not stopped containers are to be snapshoted automatically -->
 snapshots.pattern                       | string    | snap%d            | no            | snapshot\_scheduling                 | スナップショット名を表す Pongo2 テンプレート（スケジュールされたスナップショットと名前を指定されないスナップショットに使用される） <!-- Pongo2 template string which represents the snapshot name (used for scheduled snapshots and unnamed snapshots) -->
+snapshots.expiry                        | string    | -                 | no            | snapshot\_expiry                     | スナップショットをいつ削除するかを設定します（`1M 2H 3d 4w 5m 6y` のような書式で設定します）<!-- Controls when snapshots are to be deleted (expects expression like `1M 2H 3d 4w 5m 6y`) -->
 user.\*                                 | string    | -                 | n/a           | -                                    | 自由形式のユーザ定義の key/value の設定の組（検索に使えます） <!-- Free form user key/value storage (can be used in search) -->
 
 <!--
