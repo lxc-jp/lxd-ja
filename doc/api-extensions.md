@@ -1305,3 +1305,51 @@ to specify to the minimal numbers of nodes for image replication.
 Enables setting the `security.protection.shift` option which prevents containers
 from having their filesystem shifted.
 -->
+
+## snapshot\_expiry
+これはスナップショットの有効期限のサポートを追加します。タスクは 1 分おきに実行されます。
+`snapshots.expiry` 設定オプションは、`1M 2H 3d 4w 5m 6y` （それぞれ 1 分、2 時間、3 日、4 週間、5 ヶ月、6 年）といった形式を取ります。
+この指定ではすべての部分を使う必要はありません。
+<!--
+This adds support for snapshot expiration. The task is run minutely. The config
+option `snapshots.expiry` takes an expression in the form of `1M 2H 3d 4w 5m
+6y` (1 minute, 2 hours, 3 days, 4 weeks, 5 months, 6 years), however not all
+parts have to be used.
+-->
+
+作成されるスナップショットには、指定した式に基づいて有効期限が設定されます。
+`expires\_at` で定義される有効期限は、API や `lxc config edit` コマンドを使って手動で編集できます。
+有効な有効期限が設定されたスナップショットはタスク実行時に削除されます。
+有効期限は `expires\_at` に空文字列や `0001-01-01T00:00:00Z`（zero time）を設定することで無効化できます。
+`snapshots.expiry` が設定されていない場合はこれがデフォルトです。
+<!--
+Snapshots which are then created will be given an expiry date based on the
+expression. This expiry date, defined by `expires\_at`, can be manually edited
+using the API or `lxc config edit`. Snapshots with a valid expiry date will be
+removed when the task in run. Expiry can be disabled by setting `expires\_at` to
+an empty string or `0001-01-01T00:00:00Z` (zero time). This is the default if
+`snapshots.expiry` is not set.
+-->
+
+これは次のような新しいエンドポイントを追加します（詳しくは [RESTful API](rest-api.md) をご覧ください）:
+<!--
+This adds the following new endpoint (see [RESTful API](rest-api.md) for details):
+-->
+
+* `PUT /1.0/containers/<name>/snapshots/<name>`
+
+## snapshot\_expiry\_creation
+コンテナ作成に `expires\_at` を追加し、作成時にスナップショットの有効期限を上書きできます。
+<!--
+Adds `expires\_at` to container creation, allowing for override of a
+snapshot's expiry at creation time.
+-->
+
+## network\_leases\_location
+ネットワークのリースリストに "Location" フィールドを導入します。
+これは、特定のリースがどのノードに存在するかを問い合わせるときに使います。
+<!--
+Introductes a "Location" field in the leases list.
+This is used when querying a cluster to show what node a particular
+lease was found on.
+-->
