@@ -46,7 +46,7 @@ try to. As this is an unprivileged container, systemd does not have
 the ability to do this, and it then freezes.
 -->
 
-何かを変更する前に環境を見ることはできます。`raw.lxc` 設定パラメーターを使って、明示的にコンテナ内の init を変更できます。
+何かが変更される前に環境を見ることはできます。`raw.lxc` 設定パラメーターを使って、明示的にコンテナ内の init を変更できます。
 これは Linux カーネルコマンドラインに `init=/bin/bash` を設定するのと同じです。
 <!--
 So you can see the environment before anything is changed, you can
