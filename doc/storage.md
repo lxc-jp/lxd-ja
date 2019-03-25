@@ -451,6 +451,7 @@ lxc storage create pool1 lvm source=/dev/sdX lvm.vg_name=my-pool
    the old container does however work, at the cost of losing any other
    snapshot the container may have had.
    -->
+
  - LXD は ZFS プールとデータセットがフルコントロールできると仮定していることに注意してください。
    LXD の ZFS プールやデータセット内に LXD と関係ないファイルシステムエンティティを維持しないことをおすすめします。LXD がそれらを消してしまう恐れがあるからです。
    <!--
