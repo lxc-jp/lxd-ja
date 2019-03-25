@@ -1,5 +1,13 @@
 # デバッグ
 <!-- Debugging -->
+
+<!--
+For information on debugging container issues, see [Frequently Asked Questions](faq.md)
+-->
+コンテナの問題をデバッグする際の情報については、[FAQ](faq.md) を参照してください。
+
+## `lxc` と `lxd` のデバッグ <!-- Debugging `lxc` and `lxd` -->
+
 <!--
 Here are different ways to help troubleshooting `lxc` and `lxd` code.
 -->
