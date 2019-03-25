@@ -338,6 +338,17 @@ lxc storage create pool1 btrfs source=/some/path
 lxc storage create pool1 btrfs source=/dev/sdX
 ```
 
+#### ループバックデバイスを使った btrfs プールの拡張 <!-- Growing a loop backed btrfs pool -->
+<!--
+LXD doesn't let you directly grow a loop backed btrfs pool, but you can do so with:
+-->
+LXD では、ループバックデバイスの btrfs プールを直接は拡張できませんが、次のように拡張できます:
+
+```bash
+sudo truncate -s +5G /var/lib/lxd/disks/<POOL>.img
+sudo btrfs filesystem resize max /var/lib/lxd/storage-pools/<POOL>/
+```
+
 ### LVM
 
  - イメージ用に LV を使うと、コンテナとコンテナスナップショット用に LV のスナップショットを使います <!-- Uses LVs for images, then LV snapshots for containers and container snapshots. -->
