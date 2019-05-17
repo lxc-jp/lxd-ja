@@ -676,7 +676,7 @@ from having their filesystem shifted.
 ## snapshot\_expiry
 This adds support for snapshot expiration. The task is run minutely. The config
 option `snapshots.expiry` takes an expression in the form of `1M 2H 3d 4w 5m
-6y` (1 minute, 2 hours, 3 days, 4 weeks, 5 months, 6 weeks), however not all
+6y` (1 minute, 2 hours, 3 days, 4 weeks, 5 months, 6 years), however not all
 parts have to be used.
 
 Snapshots which are then created will be given an expiry date based on the
@@ -698,3 +698,70 @@ snapshot's expiry at creation time.
 Introductes a "Location" field in the leases list.
 This is used when querying a cluster to show what node a particular
 lease was found on.
+
+## resources\_cpu\_socket
+Add Socket field to CPU resources in case we get out of order socket information.
+
+## resources\_gpu
+Add a new GPU struct to the server resources, listing all usable GPUs on the system.
+
+## resources\_numa
+Shows the NUMA node for all CPUs and GPUs.
+
+## kernel\_features
+Exposes the state of optional kernel features through the server environment.
+
+## id\_map\_current
+This introduces a new internal `volatile.idmap.current` key which is
+used to track the current mapping for the container.
+
+This effectively gives us:
+ - `volatile.last\_state.idmap` => On-disk idmap
+ - `volatile.idmap.current` => Current kernel map
+ - `volatile.idmap.next` => Next on-disk idmap
+
+This is required to implement environments where the on-disk map isn't
+changed but the kernel map is (e.g. shiftfs).
+
+## event\_location
+Expose the location of the generation of API events.
+
+## storage\_api\_remote\_volume\_snapshots
+This allows migrating storage volumes including their snapshots.
+
+## network\_nat\_address
+This introduces the `ipv4.nat.address` and `ipv6.nat.address` configuration keys for LXD bridges.
+Those keys control the source address used for outbound traffic from the bridge.
+
+## container\_nic\_routes
+This introduces the `ipv4.routes` and `ipv6.routes` properties on "nic" type devices.
+This allows adding static routes on host to container's nic.
+
+## rbac
+Adds support for RBAC (role based access control). This introduces new config keys:
+
+  * rbac.api.url
+  * rbac.api.key
+  * rbac.api.expiry
+  * rbac.agent.url
+  * rbac.agent.username
+  * rbac.agent.private\_key
+  * rbac.agent.public\_key
+
+## cluster\_internal\_copy
+This makes it possible to do a normal "POST /1.0/containers" to copy a
+container between cluster nodes with LXD internally detecting whether a
+migration is required.
+
+## seccomp\_notify
+If the kernel supports seccomp-based syscall interception LXD can be notified
+by a container that a registered syscall has been performed. LXD can then
+decide to trigger various actions.
+
+## lxc\_features
+This introduces the `lxc_features` section output from the `lxc info` command
+via the `GET /1.0/` route. It outputs the result of checks for key features being present in the
+underlying LXC library.
+
+## container\_nic\_ipvlan
+This introduces the `ipvlan` "nic" device type.

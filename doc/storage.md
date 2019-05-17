@@ -69,7 +69,7 @@ Block based                                 | no        | no    | yes   | no   |
 Instant cloning                             | no        | yes   | yes   | yes  | yes
 Storage driver usable inside a container    | yes       | yes   | no    | no   | no
 Restore from older snapshots (not latest)   | yes       | yes   | yes   | no   | yes
-Storage quotas                              | no        | yes   | yes   | yes  | no
+Storage quotas                              | yes(\*)   | yes   | yes   | yes  | no
 
 ## Recommended setup
 The two best options for use with LXD are ZFS and btrfs.  
@@ -162,6 +162,8 @@ This also means that access to cached data will not be affected by the limit.
  - While this backend is fully functional, it's also much slower than
    all the others due to it having to unpack images or do instant copies of
    containers, snapshots and images.
+ - Quotas are supported with the directory backend when running on
+   either ext4 or XFS with project quotas enabled at the filesystem level.
 
 #### The following commands can be used to create directory storage pools
 
@@ -318,6 +320,7 @@ lxc storage create pool1 lvm source=/dev/sdX lvm.vg_name=my-pool
 
 ### ZFS
 
+ - When LXD creates a ZFS pool, compression is enabled by default.
  - Uses ZFS filesystems for images, then snapshots and clones to create containers and snapshots.
  - Due to the way copy-on-write works in ZFS, parent filesystems can't
    be removed until all children are gone. As a result, LXD will
@@ -338,6 +341,7 @@ lxc storage create pool1 lvm source=/dev/sdX lvm.vg_name=my-pool
    Copying the wanted snapshot into a new container and then deleting
    the old container does however work, at the cost of losing any other
    snapshot the container may have had.
+
  - Note that LXD will assume it has full control over the ZFS pool or dataset.
    It is recommended to not maintain any non-LXD owned filesystem entities in
    a LXD zfs pool or dataset since LXD might delete them.
