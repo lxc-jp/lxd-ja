@@ -56,7 +56,7 @@ Ubuntu では次のようにインストールできます:
 
 ```bash
 sudo apt update
-sudo apt install acl autoconf dnsmasq-base git golang libacl1-dev libcap-dev liblxc1 liblxc-dev libtool libuv1-dev make pkg-config rsync squashfs-tools tar tcl xz-utils
+sudo apt install acl autoconf dnsmasq-base git golang libacl1-dev libcap-dev liblxc1 liblxc-dev libtool libuv1-dev make pkg-config rsync squashfs-tools tar tcl xz-utils ebtables
 ```
 
 <!--
@@ -90,7 +90,7 @@ To run the testsuite, you'll also need:
 テストスイートを実行するには、次のパッケージも必要です:
 
 ```bash
-sudo apt install curl gettext jq sqlite3 uuid-runtime bzr
+sudo apt install curl gettext jq sqlite3 uuid-runtime bzr socat
 ```
 
 
