@@ -86,7 +86,7 @@ LXD では、イメージやコンテナ用のストレージとして ZFS、btr
 インスタントクローン <!-- Instant cloning --> | no | yes | yes | yes | yes
 コンテナ内でストレージドライバの使用 <!-- Storage driver usable inside a container --> | yes | yes | no | no | no
 古い（最新ではない）スナップショットからのリストア <!-- Restore from older snapshots (not latest) --> | yes | yes | yes | no | yes
-ストレージクオータ <!-- Storage quotas --> | no | yes | no | yes | no
+ストレージクオータ <!-- Storage quotas --> | yes(\*) | yes | no | yes | no
 
 ## おすすめのセットアップ <!-- Recommended setup -->
 <!--
@@ -226,6 +226,9 @@ This also means that access to cached data will not be affected by the limit.
    <!-- While this backend is fully functional, it's also much slower than
    all the others due to it having to unpack images or do instant copies of
    containers, snapshots and images. -->
+ - ファイルシステムレベルでプロジェクトクォータが有効に設定されている ext4 もしくは XFS で実行している場合は、ディレクトリバックエンドでクォータがサポートされます。
+   <!-- Quotas are supported with the directory backend when running on
+   either ext4 or XFS with project quotas enabled at the filesystem level. -->
 
 #### ディレクトリストレージプールを作成するコマンド <!-- The following commands can be used to create directory storage pools -->
 
@@ -413,6 +416,7 @@ lxc storage create pool1 lvm source=/dev/sdX lvm.vg_name=my-pool
 
 ### ZFS
 
+ - LXD が ZFS プールを作成した場合は、デフォルトで圧縮が有効になります <!-- When LXD creates a ZFS pool, compression is enabled by default. -->
  - イメージ用に ZFS を使うと、コンテナとスナップショットの作成にスナップショットとクローンを使います <!-- Uses ZFS filesystems for images, then snapshots and clones to create containers and snapshots. -->
  - ZFS でコピーオンライトが動作するため、すべての子のファイルシステムがなくなるまで、親のファイルシステムを削除できません。
    ですので、削除されたけれども、まだ参照されているオブジェクトを、LXD はランダムな `deleted/` なパスに自動的にリネームし、参照がなくなりオブジェクトを安全に削除できるようになるまで、そのオブジェクトを保持します。
