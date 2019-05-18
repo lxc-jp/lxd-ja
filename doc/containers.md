@@ -114,6 +114,7 @@ volatile.apply\_quota           | string    | -             | 次にコンテナ
 volatile.apply\_template        | string    | -             | 次の起動時にトリガーされるテンプレートフックの名前 <!-- The name of a template hook which should be triggered upon next startup -->
 volatile.base\_image            | string    | -             | コンテナを作成したイメージのハッシュ（存在する場合）<!-- The hash of the image the container was created from, if any. -->
 volatile.idmap.base             | integer   | -             | コンテナの主 idmap の範囲の最初の ID <!-- The first id in the container's primary idmap range -->
+volatile.idmap.current          | string    | -             | コンテナで現在使用中の idmap <!-- The idmap currently in use by the container -->
 volatile.idmap.next             | string    | -             | 次にコンテナが起動する際に使う idmap <!-- The idmap to use next time the container starts -->
 volatile.last\_state.idmap      | string    | -             | シリアライズ化したコンテナの uid/gid マップ <!-- Serialized container uid/gid map -->
 volatile.last\_state.power      | string    | -             | 最後にホストがシャットダウンした時点のコンテナの状態 <!-- Container state as of last host shutdown -->
@@ -332,6 +333,7 @@ LXD では、様々な種類のネットワークデバイスが使えます:
  - `physical`: ホストの物理デバイスを直接使います。対象のデバイスはホスト上では見えなくなり、コンテナ内に出現します <!-- Straight physical device passthrough from the host. The targeted device will vanish from the host and appear in the container. -->
  - `bridged`: ホスト上に存在するブリッジを使います。ホストのブリッジとコンテナを接続する仮想デバイスペアを作成します <!-- Uses an existing bridge on the host and creates a virtual device pair to connect the host bridge to the container. -->
  - `macvlan`: 既存のネットワークデバイスをベースに MAC が異なる新しいネットワークデバイスを作成します。 <!-- Sets up a new network device based on an existing one but using a different MAC address. -->
+ - `ipvlan`: 既存のネットワークデバイスをベースに MAC アドレスは同じですが IP アドレスが異なる新しいネットワークデバイスを作成します。 <!-- Sets up a new network device based on an existing one using the same MAC address but a different IP. -->
  - `p2p`: 仮想デバイスペアを作成し、片方をコンテナ内に置き、残りの片方をホスト上に残します <!-- Creates a virtual device pair, putting one side in the container and leaving the other side on the host. -->
  - `sriov`: SR-IOV が有効な物理ネットワークデバイスの仮想ファンクション（virtual function）をコンテナに与えます <!-- Passes a virtual function of an SR-IOV enabled physical network device into the container. -->
 
@@ -342,36 +344,38 @@ Different network interface types have different additional properties, the curr
 
 Key                     | Type      | Default           | Required  | Used by                           | API extension                          | Description
 :--                     | :--       | :--               | :--       | :--                               | :--                                    | :--
-nictype                 | string    | -                 | yes       | all                               | -                                      | デバイスタイプ。`bridged`、`macvlan`、`p2p`、`physical`、`sriov`のいずれか <!-- The device type, one of "bridged", "macvlan", "p2p", "physical", or "sriov" -->
+nictype                 | string    | -                 | yes       | all                               | -                                      | デバイスタイプ。`bridged`、`macvlan`、`ipvlan`、`p2p`、`physical`、`sriov`のいずれか <!-- The device type, one of "bridged", "macvlan", "ipvlan", "p2p", "physical", or "sriov" -->
 limits.ingress          | string    | -                 | no        | bridged, p2p                      | -                                      | 入力トラフィックの I/O 制限値（さまざまな単位が使用可能、下記参照）<!-- I/O limit in bit/s for incoming traffic (various suffixes supported, see below) -->
 limits.egress           | string    | -                 | no        | bridged, p2p                      | -                                      | 出力トラフィックの I/O 制限値（さまざまな単位が使用可能、下記参照）<!--I/O limit in bit/s for outgoing traffic (various suffixes supported, see below) -->
 limits.max              | string    | -                 | no        | bridged, p2p                      | -                                      | `limits.ingress`と`limits.egress`の両方を同じ値に変更する <!-- Same as modifying both limits.ingress and limits.egress -->
 name                    | string    | kernel assigned   | no        | all                               | -                                      | コンテナ内部でのインターフェース名 <!-- The name of the interface inside the container -->
-host\_name              | string    | randomly assigned | no        | bridged, macvlan, p2p, sriov      | -                                      | ホスト上でのインターフェース名 <!-- The name of the interface inside the host -->
-hwaddr                  | string    | randomly assigned | no        | all                               | -                                      | 新しいインターフェースの MAC アドレス <!-- The MAC address of the new interface -->
+host\_name              | string    | randomly assigned | no        | bridged, p2p                      | -                                      | ホスト上でのインターフェース名 <!-- The name of the interface inside the host -->
+hwaddr                  | string    | randomly assigned | no        | bridged, macvlan, physical, sriov | -                                      | 新しいインターフェースの MAC アドレス <!-- The MAC address of the new interface -->
 mtu                     | integer   | parent MTU        | no        | all                               | -                                      | 新しいインターフェースの MTU <!-- The MTU of the new interface -->
-parent                  | string    | -                 | yes       | bridged, macvlan, physical, sriov | -                                      | ホスト上のデバイス、ブリッジの名前 <!-- The name of the host device or bridge -->
-vlan                    | integer   | -                 | no        | macvlan, physical                 | network\_vlan, network\_vlan\_physical | アタッチする VLAN の ID <!-- The VLAN ID to attach to -->
-ipv4.address            | string    | -                 | no        | bridged                           | network                                | DHCP でコンテナに割り当てる IPv4 アドレス <!-- An IPv4 address to assign to the container through DHCP -->
-ipv6.address            | string    | -                 | no        | bridged                           | network                                | DHCP でコンテナに割り当てる IPv6 アドレス <!-- An IPv6 address to assign to the container through DHCP -->
+parent                  | string    | -                 | yes       | bridged, macvlan, ipvlan, physical, sriov | -                                      | ホスト上のデバイス、ブリッジの名前 <!-- The name of the host device or bridge -->
+vlan                    | integer   | -                 | no        | macvlan, ipvlan, physical                 | network\_vlan, network\_vlan\_physical | アタッチする VLAN の ID <!-- The VLAN ID to attach to -->
+ipv4.address            | string    | -                 | no        | bridged, ipvlan                           | network                                | DHCP でコンテナに割り当てる IPv4 アドレス (bridged の場合)、 IPVLAN の場合は静的なアドレスのカンマ区切りリスト (どちらか1つは最低必要)  <!-- An IPv4 address to assign to the container through DHCP (bridged), for IPVLAN comma separated list of static addresses (at least 1 required) -->
+ipv6.address            | string    | -                 | no        | bridged, ipvlan                           | network                                | DHCP でコンテナに割り当てる IPv6 アドレス (bridged の場合)、 IPVLAN の場合は静的なアドレスのカンマ区切りリスト (どちらか1つは最低必要)  <!-- An IPv6 address to assign to the container through DHCP (bridged), for IPVLAN comma separated list of static addresses (at least 1 required) -->
+ipv4.routes             | string    | -                 | no        | bridged, p2p                              | container\_nic\_routes                 | ホストに追加する nic への IPv4 静的ルートのカンマ区切りリスト <!-- Comma delimited list of IPv4 static routes to add on host to nic -->
+ipv6.routes             | string    | -                 | no        | bridged, p2p                              | container\_nic\_routes                 | ホストに追加する nic への IPv6 静的ルートのカンマ区切りリスト <!-- Comma delimited list of IPv6 static routes to add on host to nic -->
 security.mac\_filtering | boolean   | false             | no        | bridged                           | network                                | コンテナが他の MAC アドレスになりすますのを防ぐ <!-- Prevent the container from spoofing another's MAC address -->
 maas.subnet.ipv4        | string    | -                 | no        | bridged, macvlan, physical, sriov | maas\_network                          | コンテナを登録する MAAS IPv4 サブネット <!-- MAAS IPv4 subnet to register the container in -->
 maas.subnet.ipv6        | string    | -                 | no        | bridged, macvlan, physical, sriov | maas\_network                          | コンテナを登録する MAAS IPv6 サブネット <!-- MAAS IPv6 subnet to register the container in -->
 
-#### ブリッジ、macvlan を使った物理ネットワークへの接続 <!-- bridged or macvlan for connection to physical network -->
+#### ブリッジ、ipvlan、macvlan を使った物理ネットワークへの接続 <!-- bridged, macvlan or ipvlan for connection to physical network -->
 <!--
-The `bridged` and `macvlan` interface types can both be used to connect
+The `bridged`, `macvlan` and `ipvlan interface types can both be used to connect
 to an existing physical network.
 -->
-`bridged`、`macvlan` インターフェースタイプの両方とも、既存の物理ネットワークへ接続できます。
+`bridged`、`ipvlan`、`macvlan` インターフェースタイプのいずれも、既存の物理ネットワークへ接続できます。
 
 <!--
-macvlan effectively lets you fork your physical NIC, getting a second
+`macvlan` effectively lets you fork your physical NIC, getting a second
 interface that's then used by the container. This saves you from
 creating a bridge device and veth pairs and usually offers better
 performance than a bridge.
 -->
-macvlan は、物理 NIC を効率的に分岐できます。つまり、物理 NIC からコンテナで使える第 2 のインターフェースを取得できます。macvlan を使うことで、ブリッジデバイスと veth ペアの作成を減らせますし、通常はブリッジよりも良いパフォーマンスが得られます。
+`macvlan` は、物理 NIC を効率的に分岐できます。つまり、物理 NIC からコンテナで使える第 2 のインターフェースを取得できます。macvlan を使うことで、ブリッジデバイスと veth ペアの作成を減らせますし、通常はブリッジよりも良いパフォーマンスが得られます。
 
 <!--
 The downside to this is that macvlan devices while able to communicate
@@ -386,6 +390,13 @@ In such case, a bridge is preferable. A bridge will also let you use mac
 filtering and I/O limits which cannot be applied to a macvlan device.
 -->
 そのような場合は、ブリッジを選ぶのが良いでしょう。macvlan では使えない MAC フィルタリングと I/O 制限も使えます。
+
+<~--
+`ipvlan` is similar to `macvlan`, with the difference being that the forked device has IPs
+statically assigned to it and inherits the parent's MAC address on the network.
+-->
+`ipvlan` は `macvlan` と同様ですが、フォークされたデバイスが静的に割り当てられた IP アドレスを
+持ち、ネットワーク上の親の MAC アドレスを受け継ぐ点が異なります。
 
 #### SR-IOV
 <!--
@@ -837,3 +848,34 @@ LXD では、[CRIU](http://criu.org) を使ったコンテナのライブマイ�
 理想的なシナリオでは、各メモリダンプを前のメモリダンプとの差分にまで減らし、それによりすでに同期されたメモリの割合を増やします。
 同期されたメモリの割合が `migration.incremental.memory.goal` で設定したしきい値と等しいか超えた場合、LXD は CRIU に最終的なメモリダンプを実行し、転送するように要求します。
 `migration.incremental.memory.iterations` で指定したメモリダンプの最大許容回数に達した後、まだしきい値に達していない場合は、LXD は最終的なメモリダンプを CRIU に要求し、コンテナを移行します。
+
+## スナップショットの定期実行 <!-- Snapshot scheduling -->
+<!--
+LXD supports scheduled snapshots which can be created at most once every minute.
+There are three configuration options. `snapshots.schedule` takes a shortened
+cron expression: `<minute> <hour> <day-of-month> <month> <day-of-week>`. If this is
+empty (default), no snapshots will be created. `snapshots.schedule.stopped`
+controls whether or not stopped container are to be automatically snapshotted.
+It defaults to `false`. `snapshots.pattern` takes a pongo2 template string,
+and the pongo2 context contains the `creation_date` variable. Be aware that you
+should format the date (e.g. use `{{ creation_date|date:"2006-01-02_15-04-05" }}`) 
+in your template string to avoid forbidden characters in your snapshot name.
+Another way to avoid name collisions is to use the placeholder `%d`. If a snapshot
+with the same name (excluding the placeholder) already exists, all existing snapshot
+names will be taken into account to find the highest number at the placeholders
+position. This numnber will be incremented by one for the new name. The starting
+number if no snapshot exists will be `0`.
+-->
+LXD は 1 分毎に最大 1 回作成可能なスナップショットの定期実行をサポートします。
+3 つの設定項目があります。 `snapshots.schedule` には短縮された cron 書式:
+`<分> <時> <日> <月> <曜日>` を指定します。これが空 (デフォルト) の場合はスナップショットは
+作成されません。 `snapshots.schedule.stopped` は自動的にスナップショットを作成する際に
+コンテナを停止するかどうかを制御します。デフォルトは `false` です。
+`snapshots.pattern` は pongo2 のテンプレート文字列を指定し、 pongo2 のコンテキストには
+`creation_date` 変数を含みます。スナップショットの名前に禁止された文字が含まれないように
+日付をフォーマットする (例: `{{ creation_date|date:"2006-01-02_15-04-05" }}`) べきで
+あることに注意してください。名前の衝突を防ぐ別の方法はプレースホルダ `%d` を使うことです。
+(プレースホルダを除いて) 同じ名前のスナップショットが既に存在する場合、
+既存の全てのスナップショットの名前を考慮に入れてプレースホルダの最大の番号を見つけます。
+新しい名前にはこの番号を 1 増やしたものになります。スナップショットが存在しない場合の
+開始番号は `0` になります。
