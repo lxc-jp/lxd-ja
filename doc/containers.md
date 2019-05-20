@@ -364,7 +364,7 @@ maas.subnet.ipv6        | string    | -                 | no        | bridged, m
 
 #### ブリッジ、ipvlan、macvlan を使った物理ネットワークへの接続 <!-- bridged, macvlan or ipvlan for connection to physical network -->
 <!--
-The `bridged`, `macvlan` and `ipvlan interface types can both be used to connect
+The `bridged`, `macvlan` and `ipvlan` interface types can both be used to connect
 to an existing physical network.
 -->
 `bridged`、`ipvlan`、`macvlan` インターフェースタイプのいずれも、既存の物理ネットワークへ接続できます。
@@ -391,7 +391,7 @@ filtering and I/O limits which cannot be applied to a macvlan device.
 -->
 そのような場合は、ブリッジを選ぶのが良いでしょう。macvlan では使えない MAC フィルタリングと I/O 制限も使えます。
 
-<~--
+<!--
 `ipvlan` is similar to `macvlan`, with the difference being that the forked device has IPs
 statically assigned to it and inherits the parent's MAC address on the network.
 -->
