@@ -43,6 +43,13 @@ images.remote\_cache\_expiry        | integer   | 10        | -                 
 maas.api.key                        | string    | -         | maas\_network            | MAAS を管理するための API キー <!-- API key to manage MAAS -->
 maas.api.url                        | string    | -         | maas\_network            | MAAS サーバの URL <!-- URL of the MAAS server -->
 maas.machine                        | string    | hostname  | maas\_network            | この LXD ホストの MAAS での名前 <!-- Name of this LXD host in MAAS -->
+rbac.agent.url                      | string    |           | rbac                              | RBAC 登録中に提供される Candid エージェントの URL <!-- The Candid agent url as provided during RBAC registration -->
+rbac.agent.username                 | string    |           | rbac                              | RBAC 登録中に提供される Candid エージェントのユーザ名 <!-- The Candid agent username as provided during RBAC registration -->
+rbac.agent.public\_key              | string    |           | rbac                              | RBAC 登録中に提供される Candid エージェントの公開鍵 <!-- The Candid agent public key as provided during RBAC registration -->
+rbac.agent.private\_key             | string    |           | rbac                              | RBAC 登録中に提供される Candid エージェントの秘密鍵 <!-- The Candid agent private key as provided during RBAC registration -->
+rbac.api.expiry                     | integer   |           | rbac                              | RBAC の macaroon の有効期限 (秒) <!-- RBAC macaroon expiry in seconds -->
+rbac.api.key                        | string    |           | rbac                              | RBAC サーバの公開鍵 (HTTP のみ有効なサーバで必要) <!-- Public key of the RBAC server (required for HTTP-only servers) -->
+rbac.api.url                        | string    |           | rbac                              | 外部の RBAC サーバの URL <!-- URL of the external RBAC server -->
 
 これらのキーは lxc コマンドで次のように設定します。 <!-- Those keys can be set using the lxc tool with: -->
 
