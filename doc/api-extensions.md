@@ -1355,7 +1355,7 @@ lease was found on.
 -->
 
 ## resources\_cpu\_socket
-アウト・オブ・オーダーのソケット情報を取得する際にCPUリソースにソケットフィールドを追加します。
+ソケットの情報が入れ替わる場合に備えて CPU リソースにソケットフィールドを追加します。
 <!--
 Add Socket field to CPU resources in case we get out of order socket information.
 -->
@@ -1373,7 +1373,7 @@ Shows the NUMA node for all CPUs and GPUs.
 -->
 
 ## kernel\_features
-サーバ環境を通して任意で指定可能なカーネルの機能の状態を公開します。
+サーバの環境からオプショナルなカーネル機能の使用可否状態を取得します。
 <!--
 Exposes the state of optional kernel features through the server environment.
 -->
@@ -1415,7 +1415,7 @@ This allows migrating storage volumes including their snapshots.
 
 ## network\_nat\_address
 これは LXD ブリッジに `ipv4.nat.address` と `ipv6.nat.address` 設定キーを導入します。
-これらのキーはブリッジからの送信トラフィック	に使うソースアドレスを制御します。
+これらのキーはブリッジからの送信トラフィックに使うソースアドレスを制御します。
 <!--
 This introduces the `ipv4.nat.address` and `ipv6.nat.address` configuration keys for LXD bridges.
 Those keys control the source address used for outbound traffic from the bridge.
