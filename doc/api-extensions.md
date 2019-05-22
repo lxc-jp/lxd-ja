@@ -1353,3 +1353,129 @@ Introductes a "Location" field in the leases list.
 This is used when querying a cluster to show what node a particular
 lease was found on.
 -->
+
+## resources\_cpu\_socket
+ソケットの情報が入れ替わる場合に備えて CPU リソースにソケットフィールドを追加します。
+<!--
+Add Socket field to CPU resources in case we get out of order socket information.
+-->
+
+## resources\_gpu
+サーバリソースに新規にGPU構造を追加し、システム上で利用可能な全てのGPUを一覧表示します。
+<!--
+Add a new GPU struct to the server resources, listing all usable GPUs on the system.
+-->
+
+## resources\_numa
+全てのCPUとGPUに対するNUMAノードを表示します。
+<!--
+Shows the NUMA node for all CPUs and GPUs.
+-->
+
+## kernel\_features
+サーバの環境からオプショナルなカーネル機能の使用可否状態を取得します。
+<!--
+Exposes the state of optional kernel features through the server environment.
+-->
+
+## id\_map\_current
+内部的な `volatile.idmap.current` キーを新規に導入します。これはコンテナに
+対する現在のマッピングを追跡するのに使われます。
+<!--
+This introduces a new internal `volatile.idmap.current` key which is
+used to track the current mapping for the container.
+-->
+
+実質的には以下が利用可能になります。
+<!--
+This effectively gives us:
+-->
+ - `volatile.last\_state.idmap` => ディスク上の idmap <!-- On-disk idmap -->
+ - `volatile.idmap.current` => 現在のカーネルマップ <!-- Current kernel map -->
+ - `volatile.idmap.next` => 次のディスク上の idmap <!-- Next on-disk idmap -->
+
+これはディスク上の map が変更されていないがカーネルマップは変更されている
+(例: shiftfs) ような環境を実装するために必要です。
+<!--
+This is required to implement environments where the on-disk map isn't
+changed but the kernel map is (e.g. shiftfs).
+-->
+
+## event\_location
+API イベントの世代の場所を公開します。
+<!--
+Expose the location of the generation of API events.
+-->
+
+## storage\_api\_remote\_volume\_snapshots
+これはストレージボリュームをそれらのスナップショットを含んで移行することを可能にします。
+<!--
+This allows migrating storage volumes including their snapshots.
+-->
+
+## network\_nat\_address
+これは LXD ブリッジに `ipv4.nat.address` と `ipv6.nat.address` 設定キーを導入します。
+これらのキーはブリッジからの送信トラフィックに使うソースアドレスを制御します。
+<!--
+This introduces the `ipv4.nat.address` and `ipv6.nat.address` configuration keys for LXD bridges.
+Those keys control the source address used for outbound traffic from the bridge.
+-->
+
+## container\_nic\_routes
+これは "nic" タイプのデバイスに `ipv4.routes` と `ipv6.routes` プロパティを導入します。
+ホストからコンテナの nic への静的ルートの追加を可能にします。
+<!--
+This introduces the `ipv4.routes` and `ipv6.routes` properties on "nic" type devices.
+This allows adding static routes on host to container's nic.
+-->
+
+## rbac
+RBAC (role based access control; ロールベースのアクセス制御) のサポートを追加します。
+これは以下の設定キーを新規に導入します。
+<!--
+Adds support for RBAC (role based access control). This introduces new config keys:
+-->
+
+  * rbac.api.url
+  * rbac.api.key
+  * rbac.api.expiry
+  * rbac.agent.url
+  * rbac.agent.username
+  * rbac.agent.private\_key
+  * rbac.agent.public\_key
+
+## cluster\_internal\_copy
+これは通常の "POST /1.0/containers" を実行することでクラスタノード間で
+コンテナをコピーすることを可能にします。この際 LXD はマイグレーションが
+必要かどうかを内部的に判定します。
+<!--
+This makes it possible to do a normal "POST /1.0/containers" to copy a
+container between cluster nodes with LXD internally detecting whether a
+migration is required.
+-->
+
+## seccomp\_notify
+カーネルが seccomp ベースの syscall インターセプトをサポートする場合に
+登録された syscall が実行されたことをコンテナから LXD に通知することが
+できます。 LXD はそれを受けて様々なアクションをトリガーするかを決定します。
+<!--
+If the kernel supports seccomp-based syscall interception LXD can be notified
+by a container that a registered syscall has been performed. LXD can then
+decide to trigger various actions.
+-->
+
+## lxc\_features
+これは `GET /1.0/` ルート経由で `lxc info` コマンドの出力に `lxc_features`
+セクションを導入します。配下の LXC ライブラリに存在するキー・フィーチャーに
+対するチェックの結果を出力します。
+<!--
+This introduces the `lxc_features` section output from the `lxc info` command
+via the `GET /1.0/` route. It outputs the result of checks for key features being present in the
+underlying LXC library.
+-->
+
+## container\_nic\_ipvlan
+これは "nic" デバイスに `ipvlan` のタイプを導入します。
+<!--
+This introduces the `ipvlan` "nic" device type.
+-->
