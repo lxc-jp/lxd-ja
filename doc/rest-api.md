@@ -1427,6 +1427,9 @@ Input (run bash):
         "interactive": true,            # PIPE の代わりに pts デバイスを割り当てるかどうか
         "width": 80,                    # 端末の初期の幅 (任意で指定可能)
         "height": 25,                   # 端末の初期の高さ (任意で指定可能)
+        "user": 1000,                   # コマンドを実行するユーザー (任意で指定可能)
+        "group: 1000,                   # コマンドを実行するグループ (任意で指定可能)
+        "cwd": "/tmp"                   # 現在の作業ディレクトリ (任意で指定可能)
     }
 
 <!--
@@ -1438,6 +1441,9 @@ Input (run bash):
         "interactive": true,            # Whether to allocate a pts device instead of PIPEs
         "width": 80,                    # Initial width of the terminal (optional)
         "height": 25,                   # Initial height of the terminal (optional)
+        "user": 1000,                   # User to run the command as (optional)
+        "group: 1000,                   # Group to run the command as (optional)
+        "cwd": "/tmp"                   # Current working directory (optional)
     }
 -->
 

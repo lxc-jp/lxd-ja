@@ -15,7 +15,7 @@ the user's environment and to turn some advanced features on and off.
 `LXD_DIR`                       | LXD のデータディレクトリ <!-- The LXD data directory -->
 `PATH`                          | 実行ファイルの検索対象のパスのリスト <!-- List of paths to look into when resolving binaries -->
 `http_proxy`                    | HTTP 用のプロキシサーバの URL <!-- Proxy server URL for HTTP -->
-`https_proxy`                   | HTTPs 用のプロキシサーバの URL <!-- Proxy server URL for HTTPs -->
+`https_proxy`                   | HTTPS 用のプロキシサーバの URL <!-- Proxy server URL for HTTPS -->
 `no_proxy`                      | プロキシが不要なドメインのリスト <!-- List of domains that don't require the use of a proxy -->
 
 ## クライアントの環境変数 <!-- Client environment variable -->
