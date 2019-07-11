@@ -27,7 +27,7 @@ cluster.https\_address              | string    | -         | clustering\_server
 cluster.offline\_threshold          | integer   | 20        | clustering               | 無反応なノードをオフラインとみなす秒数 <!-- Number of seconds after which an unresponsive node is considered offline -->
 cluster.images\_minimal\_replica    | integer   | 3         | clustering\_image\_replication    | 特定のイメージのコピーを持つべきクラスタメンバの最小数 (リプリケーションなしは 1 を、全メンバにコピーは -1 を設定) <!-- Minimal numbers of cluster members with a copy of a particular image (set 1 for no replication, -1 for all members) -->
 core.debug\_address                 | string    | -         | pprof\_http              | pprof デバッグサーバがバインドするアドレス (HTTP) <!-- Address to bind the pprof debug server to (HTTP) -->
-core.https\_address                 | string    | -         | -                        | リモート API がバインドするアドレス (HTTPs) <!-- Address to bind for the remote API (HTTPs) -->
+core.https\_address                 | string    | -         | -                        | リモート API がバインドするアドレス (HTTPS) <!-- Address to bind for the remote API (HTTPS) -->
 core.https\_allowed\_credentials    | boolean   | -         | -                        | Access-Control-Allow-Credentials HTTP ヘッダの値を "true" にするかどうか <!-- Whether to set Access-Control-Allow-Credentials http header value to "true" -->
 core.https\_allowed\_headers        | string    | -         | -                        | Access-Control-Allow-Headers HTTP ヘッダの値 <!-- Access-Control-Allow-Headers http header value -->
 core.https\_allowed\_methods        | string    | -         | -                        | Access-Control-Allow-Methods HTTP ヘッダの値 <!-- Access-Control-Allow-Methods http header value -->
