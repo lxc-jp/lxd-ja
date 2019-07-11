@@ -41,9 +41,20 @@ Project status      | CII Best Practices    | [![CII Best Practices](https://bes
 
 ## LXD のパッケージからのインストール <!-- Installing LXD from packages -->
 <!--
-Instructions on installing LXD for a wide variety of Linux distributions and operating systems [can be found on our website](https://linuxcontainers.org/lxd/getting-started-cli/).
+The LXD daemon only works on Linux but the client tool (`lxc`) is available on most platforms.
 -->
-さまざまな Linux ディストリビューションとオペレーティングシステムで LXD をインストールする方法は、[公式サイト](https://linuxcontainers.org/lxd/getting-started-cli/) をご覧ください。
+LXD デーモンは Linux でしか動きませんが、クライアントツール (`lxc`) はほとんどのプラットフォームで提供されています。
+
+OS                  | 形式 <!-- Format -->                                            | コマンド <!-- Command -->
+---                 | ---                                               | ---
+Linux               | [Snap](https://snapcraft.io/lxd)                  | snap install lxd
+Windows             | [Chocolatey](https://chocolatey.org/packages/lxc) | choco install lxc
+MacOS               | [Homebrew](https://formulae.brew.sh/formula/lxc)  | brew install lxc
+
+<!--
+More instructions on installing LXD for a wide variety of Linux distributions and operating systems [can be found on our website](https://linuxcontainers.org/lxd/getting-started-cli/).
+-->
+さまざまな Linux ディストリビューションとオペレーティングシステムで LXD をインストールするためのより詳細な方法は、[公式サイト](https://linuxcontainers.org/lxd/getting-started-cli/) をご覧ください。
 
 ## LXD のソースからのインストール <!-- Installing LXD from source -->
 <!--
@@ -119,9 +130,9 @@ And then download it as usual:
 go get -d -v github.com/lxc/lxd/lxd
 cd $GOPATH/src/github.com/lxc/lxd
 make deps
-export CGO_CFLAGS="${CGO_CFLAGS} -I${GOPATH}/deps/sqlite/ -I${GOPATH}/deps/dqlite/include/"
-export CGO_LDFLAGS="${CGO_LDFLAGS} -L${GOPATH}/deps/sqlite/.libs/ -L${GOPATH}/deps/dqlite/.libs/"
-export LD_LIBRARY_PATH="${GOPATH}/deps/sqlite/.libs/:${GOPATH}/deps/dqlite/.libs/:${LD_LIBRARY_PATH}"
+export CGO_CFLAGS="${CGO_CFLAGS} -I${GOPATH}/deps/sqlite/ -I${GOPATH}/deps/dqlite/include/ -I${GOPATH}/deps/raft/include/ -I${GOPATH}/deps/libco/"
+export CGO_LDFLAGS="${CGO_LDFLAGS} -L${GOPATH}/deps/sqlite/.libs/ -L${GOPATH}/deps/dqlite/.libs/ -L${GOPATH}/deps/raft/.libs -L${GOPATH}/deps/libco/"
+export LD_LIBRARY_PATH="${GOPATH}/deps/sqlite/.libs/:${GOPATH}/deps/dqlite/.libs/:${GOPATH}/deps/raft/.libs:${GOPATH}/deps/libco/:${LD_LIBRARY_PATH}"
 make
 ```
 
@@ -151,6 +162,37 @@ group to talk to LXD; you can create your own group if you want):
 ```bash
 sudo -E LD_LIBRARY_PATH=$LD_LIBRARY_PATH $GOPATH/bin/lxd --group sudo
 ```
+
+## セキュリティ <!-- Security -->
+<!--
+LXD, similar to other container managers provides a UNIX socket for local communication.
+-->
+LXD は他のコンテナ管理システムと同様にローカル通信用に UNIX ソケットを提供します。
+
+<!--
+**WARNING**: Anyone with access to that socket can fully control LXD, which includes
+the ability to attach host devices and filesystems, this should
+therefore only be given to users who would be trusted with root access
+to the host.
+-->
+**警告**: このソケットにアクセスできる人は LXD を完全に制御できます。
+これはホストのデバイスやファイルシステムにアタッチする能力も含みます。
+ですので、ホストに root 権限でアクセスを許可するほどに信頼できる
+ユーザだけにこのソケットを与えるようにすべきです。
+
+<!--
+When listening on the network, the same API is available on a TLS socket
+(HTTPS), specific access on the remote API can be restricted through
+Canonical RBAC.
+-->
+ネットワークでリッスンする時、同じ API が TLS ソケット (HTTPS) 上で
+利用可能です。リモート API の特定のアクセスは Canonical RBAC 経由で
+制限することができます。
+
+<!--
+More details are [available here](security.md).
+-->
+より詳細は[こちらを参照してください](security.md).
 
 ## LXD を使い始める <!-- Getting started with LXD -->
 <!--
