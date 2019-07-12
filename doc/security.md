@@ -1,13 +1,43 @@
 # セキュリティー
 <!-- Security -->
 ## イントロダクション <!-- Introduction -->
-UNIX ソケット上のローカルの通信は平文の HTTP で行い、ソケットの所有者
-とパーミションの設定によってアクセスが制限されます。
+LXD は root ユーザで実行するデーモンです。
 <!--
-Local communications over the UNIX socket happen over a cleartext HTTP
-socket and access is restricted by socket ownership and mode.
+LXD is a daemon running as root.
 -->
 
+デフォルトではデーモンへのアクセスはローカルの UNIX ソケット経由でのみ
+可能です。設定によって、 TLS ソケット上でネットワーク越しに同じ API を
+公開することが可能です。
+<!--
+Access to that daemon is only possible over a local UNIX socket by default.
+Through configuration, it's then possible to expose the same API over
+the network on a TLS socket.
+-->
+
+**警告**: UNIX ソケット経由でのローカルアクセスは LXD へのフルのアクセスを
+常に許可します。これはあらゆるファイルシステムのパスやデバイスをコンテナ
+にアタッチする能力やコンテナの全てのセキュリティの機能を変更することも
+含みます。あなたのシステムに root 権限でアクセスを許可するほど信頼できる人
+だけにそのようなアクセスを許可するべきです。
+<!--
+**WARNING**: Local access to LXD through the UNIX socket always grants
+full access to LXD. This includes the ability to attach any filesystem
+paths or devices to any container as well as tweaking all security
+features on containers. You should only give such access to someone who
+you'd trust with root access to your system.
+-->
+
+リモート API は TLS クライアント証明書か Candid ベースの認証のどちらかを
+使用します。 Canonical RBAC のサポートは Canded ベースの認証と組み合わせて
+API クライアントが LXD で何を出来るかを制限するのに使えます。
+<!--
+The remote API uses either TLS client certificates or Candid based
+authentication. Canonical RBAC support can be used combined with Candid
+based authentication to limit what an API client may do on LXD.
+-->
+
+## TLS configuration
 LXD デーモンとのリモートの通信は HTTPS 上の JSON を使って行います。
 サポートしているプロトコルは TLS 1.2 以上です。
 <!--
@@ -22,11 +52,11 @@ All communications must use perfect forward secrecy and ciphers must be
 limited to strong elliptic curve ones (such as ECDHE-RSA or ECDHE-ECDSA).
 -->
 
-生成されるキーは最低でも 4096 ビットのRSAでなければならず、
+生成されるキーは最低でも 4096 ビットのRSAでなければならず、 EC384 が好ましいです。
 署名を使う場合は SHA-2 の署名だけが信頼されます。
 <!--
-Any generated key should be at least 4096bit RSA and when using
-signatures, only SHA-2 signatures should be trusted.
+Any generated key should be at least 4096bit RSA, preferably EC384 and
+when using signatures, only SHA-2 signatures should be trusted.
 -->
 
 LXD を導入する際はクライアントとサーバの両方を管理するので、後方互換性の
@@ -53,13 +83,94 @@ To cause certificates to be regenerated, simply remove the old ones. On the
 next connection a new certificate will be generated.
 -->
 
-## デフォルトのセットアップでリモートを追加する <!-- Adding a remote with a default setup -->
+## Role Based Access Control (RBAC)
+LXD は Canonical RBAC サービスとの統合をサポートします。
+<!--
+LXD supports integrating with the Canonical RBAC service.
+-->
+
+これは Candid ベースの認証を用い、 RBAC サービスがユーザ／グループと
+ロールの関係を管理します。ロールは個々のプロジェクト、全てのプロジェクト、
+あるいは LXD インスタンス全体に割り当てることができます。
+<!--
+This uses Candid based authentication with the RBAC service maintaining
+roles to user/group relationships. Roles can be assigned to individual
+projects, to all projects or to the entire LXD instance.
+-->
+
+ロールはプロジェクトに割り当てられると以下のような意味を持ちます。
+<!--
+The meaning of the roles when applied to a project is as follow:
+-->
+
+ - auditor: プロジェクトへの読み取り専用のアクセス <!-- Read-only access to the project -->
+ - user: 通常のライフサイクルアクション（起動、停止、…）の実行、コンテナ内でのコマンドの実行、コンソールへのアタッチ、スナップショットの管理、… を行う能力 <!-- Ability to do normal lifecycle actions (start, stop, ...),
+   execute commands in the containers, attach to console, manage snapshots, ... -->
+ - operator: 上記のすべてに加えてコンテナとイメージを作成、再設定、そして削除する能力 <!-- All of the above + the ability to create, re-configure and
+   delete containers and images -->
+ - admin: 上記のすべてに加えてプロジェクト自体を再構成する能力 <!-- All of the above + the ability to reconfigure the project itself -->
+
+**警告**: これらのロールのうち現状では `auditor` と `user` だけが
+ホストへの root 権限のアクセスを渡す信頼が持てないユーザに適した
+ロールです。
+<!--
+**WARNING**: Of those roles, only `auditor` and `user` are currently
+suitable for a user whom you wouldn't trust with root access to the
+host.
+-->
+
+## Container security
+LXD コンテナはかなり広い範囲のセキュリティの機能を利用可能です。
+<!--
+LXD containers can use a pretty wide range of features for security.
+-->
+
+デフォルトではコンテナは非特権 (`unprivileged`) です。これはコンテナが
+ユーザ名前空間で稼働することを意味し、コンテナ内のユーザの能力をホスト上の
+通常ユーザの能力に制限し、コンテナが所有するデバイスにも限定した権限しか
+与えないことを意味します。
+<!--
+By default containers are `unprivileged`, meaning that they operate
+inside a user namespace, restricting the abilities of users in the
+container to that of regular users on the host with limited privileges
+on the devices that the container owns.
+-->
+
+コンテナ間のデータ共有が不要であれば、 `security.idmap.isolated` を
+有効にすることで各コンテナに対する uid/gid のマッピングをオーバーラップ
+しないようにでき、他のコンテナへの潜在的な DoS 攻撃を防ぐことができます。
+<!--
+If data sharing between containers isn't needed, it is possible to
+enable `security.idmap.isolated` which will use non-overlapping uid/gid
+maps for each container, preventing potential DoS attacks on other
+containers.
+-->
+
+もし望む場合は LXD は特権 (`privileged`) コンテナを実行することもできます。
+ただし、これらは root 権限を取得しようとする行為に対して安全ではないこと、
+特権コンテナ内の root 権限を持つユーザはホストに DoS をすることができ、
+コンテナ内への監禁から脱出する方法を見つけるかもしれないことに注意してください。
+<!--
+LXD can also run `privileged` containers if you so wish, do note that
+those aren't root safe and a user with root in such a container will be
+able to DoS the host as well as find ways to escape confinement.
+-->
+
+コンテナのセキュリティとカーネル機能についてのより詳細は
+[LXC のセキュリティページ](https://linuxcontainers.org/ja/lxc/security/).
+を参照してください。
+<!--
+More details on container security and the kernel features we use can be found on the
+[LXC security page](https://linuxcontainers.org/lxc/security/).
+-->
+
+## TLS クライアント証明書での認証を使ってリモートを追加する <!-- Adding a remote with TLS client certificate authentication -->
 デフォルトのセットアップでは、ユーザが `lxd remote add` で新しいサーバを
 追加する際、サーバに https で通信し、証明書がダウンロードされ、
 フィンガープリントがユーザに表示されます。
 <!--
 In the default setup, when the user adds a new server with `lxc remote add`,
-the server will be contacted over HTTPs, its certificate downloaded and the
+the server will be contacted over HTTPS, its certificate downloaded and the
 fingerprint will be shown to the user.
 -->
 
@@ -93,7 +204,7 @@ This is a workflow that's very similar to that of SSH where an initial
 connection to an unknown server triggers a prompt.
 -->
 
-## PKI ベースのセットアップでリモートを追加する <!-- Adding a remote with a PKI based setup -->
+## PKI ベースのセットアップで TLS クライアントを使ってリモートを追加する <!-- Adding a remote with a TLS client in a PKI based setup -->
 PKI ベースのセットアップではシステム管理者は中心となる PKI を運営します。
 その PKI が全ての lxc クライアント用のクライアント証明書と全ての LXD
 デーモンのサーバ証明書を発行します。
@@ -163,7 +274,7 @@ pre-generated files.
 After this is done, restarting the server will have it run in PKI mode.
 -->
 
-## Candid でリモートを追加する <!-- Adding a remote with Candid -->
+## Candid 認証を使ってでリモートを追加する <!-- Adding a remote with Candid authentication -->
 LXD を Candid を使うように設定した場合、 LXD はクライアントが
 `candid.api.url` の設定に指定した認証サーバから Discharge トークンを
 取得して認証を試みるように依頼します。
@@ -195,12 +306,12 @@ verifies the token, thus authenticating the request.  The token is stored as
 cookie and is presented by the client at each request to LXD.
 -->
 
-## 信頼されたクライントを管理する <!-- Managing trusted clients -->
-LXD サーバが信頼している証明書の一覧は `lxc config trust list` で
+## 信頼された TLS クライントを管理する <!-- Managing trusted TLS clients -->
+LXD サーバが信頼している TLS 証明書の一覧は `lxc config trust list` で
 取得できます。
 <!--
-The list of certificates trusted by a LXD server can be obtained with `lxc
-config trust list`.
+The list of TLS certificates trusted by a LXD server can be obtained with
+`lxc config trust list`.
 -->
 
 クライアントは `lxc config trust add <file>` を使用して手動で追加できます。
@@ -219,12 +330,14 @@ To revoke trust to a client its certificate can be removed with `lxc config
 trust remove FINGERPRINT`.
 -->
 
-## パスワード・プロンプト <!-- Password prompt -->
+## TLS 認証でのパスワード・プロンプト <!-- Password prompt with TLS authentication -->
+管理者によって事前に信頼関係がセットアップされていない場合に
 新しい信頼関係を確立するには、サーバにパスワードを設定し、クライアントが
 自身をサーバに登録する際にそのパスワードを送る必要があります。
 <!--
-To establish a new trust relationship, a password must be set on the
-server and send by the client when adding itself.
+To establish a new trust relationship when not already setup by the
+administrator, a password must be set on the server and sent by the
+client when adding itself.
 -->
 
 ですので、リモートを追加する操作は次のようになります。
@@ -269,7 +382,6 @@ can be replaced by the new one or the remote be removed altogether and
 re-added.
 -->
 
-
 ### サーバ上の信頼関係が取り消された <!-- Server trust relationship revoked -->
 このケースでは、サーバは同じ証明書をまだ使っていますが、全ての API 呼び出しは
 クライアントが信頼されていないことを示す 403 エラーを返します。
@@ -285,7 +397,6 @@ trusted.
 This happens if another trusted client or the local server administrator
 removed the trust entry on the server.
 -->
-
 
 ## プロダクションのセットアップ <!-- Production setup -->
 プロダクション環境のセットアップでは、全てのクライアントを追加した後、
