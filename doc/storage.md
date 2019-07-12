@@ -23,6 +23,9 @@ ceph.osd.pg\_num                | string    | ceph driver                       
 ceph.osd.pool\_name             | string    | ceph driver                       | プール名 <!-- name of the pool --> | storage\_driver\_ceph              | OSD ストレージプール名 <!-- Name of the osd storage pool. -->
 ceph.rbd.clone\_copy            | string    | ceph driver                       | true                       | storage\_driver\_ceph              | フルデータセットのコピーの代わりに RBD Lightweight Clone を使うかどうか <!-- Whether to use RBD lightweight clones rather than full dataset copies. -->
 ceph.user.name                  | string    | ceph driver                       | admin                      | storage\_ceph\_user\_name          | ストレージプールやボリュームを作成する際に使用する Ceph ユーザ名 <!-- The ceph user to use when creating storage pools and volumes. -->
+cephfs.cluster\_name            | string    | cephfs driver                     | ceph                       | storage\_driver\_cephfs            | 新しいストレージプールを作成する ceph のクラスター名 <!-- Name of the ceph cluster in which to create new storage pools. -->
+cephfs.path                     | string    | cephfs driver                     | /                          | storage\_driver\_cephfs            | CEPHFS をマウントするベースのパス <!-- The base path for the CEPHFS mount -->
+cephfs.user.name                | string    | cephfs driver                     | admin                      | storage\_driver\_cephfs            | ストレージプールとボリュームを作成する際に用いる ceph のユーザ <!-- The ceph user to use when creating storage pools and volumes. -->
 lvm.thinpool\_name              | string    | lvm driver                        | LXDThinPool                | storage                            | イメージとコンテナを作る Thin pool 名 <!-- Thin pool where images and containers are created. -->
 lvm.use\_thinpool               | bool      | lvm driver                        | true                       | storage\_lvm\_use\_thinpool        | ストレージプールは論理ボリュームに Thinpool を使うかどうか <!-- Whether the storage pool uses a thinpool for logical volumes. -->
 lvm.vg\_name                    | string    | lvm driver                        | プール名 <!-- name of the pool --> | storage                            | 作成するボリュームグループ名 <!-- Name of the volume group to create. -->
@@ -306,6 +309,11 @@ lxc storage create pool1 ceph ceph.osd.pool\_name=my-osd
 ```bash
 lxc storage create pool1 ceph source=my-already-existing-osd
 ```
+
+### CEPHFS
+
+ - カスタムストレージボリュームにのみ利用可能 <!-- Can only be used for custom storage volumes -->
+ - サーバサイドで許可されていればスナップショットもサポート <!-- Supports snapshots if enabled on the server side -->
 
 ### Btrfs
 
