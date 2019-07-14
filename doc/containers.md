@@ -123,10 +123,10 @@ volatile.\<name\>.hwaddr        | string    | -             | ネットワーク
 volatile.\<name\>.last\_state.created       | string    | -             | 物理デバイスのネットワークデバイスが作られたかどうか ("true" または "false") <!-- Whether or not the network device physical device was created ("true" or "false") -->
 volatile.\<name\>.last\_state.mtu           | string    | -             | 物理デバイスをコンテナに移動したときに使われていたネットワークデバイスの元の MTU <!-- Network device original MTU used when moving a physical device into a container -->
 volatile.\<name\>.last\_state.hwaddr        | string    | -             | 物理デバイスをコンテナに移動したときに使われていたネットワークデバイスの元の MAC <!-- Network device original MAC used when moving a physical device into a container -->
-volatile.\<name\>.last\_state.vf.id         | string    | -             | VF をコンテナに移動したときに使われていた SR-IOV 仮想ファンクション ID <!-- SR-IOV Virtual function ID used when moving a VF into a container -->
-volatile.\<name\>.last\_state.vf.hwaddr     | string    | -             | VF をコンテナに移動したときに使われていた SR-IOV 仮想ファンクションの元の MAC <!-- SR-IOV Virtual function original MAC used when moving a VF into a container -->
-volatile.\<name\>.last\_state.vf.vlan       | string    | -             | VF をコンテナに移動したときに使われていた SR-IOV 仮想ファンクションの元の VLAN <!-- SR-IOV Virtual function original VLAN used when moving a VF into a container -->
-volatile.\<name\>.last\_state.vf.spoofcheck | string    | -             | VF をコンテナに移動したときに使われていた SR-IOV 仮想ファンクションの元の spoof チェックの設定 <!-- SR-IOV Virtual function original spoof check setting used when moving a VF into a container -->
+volatile.\<name\>.last\_state.vf.id         | string    | -             | SR-IOV の仮想ファンクション（VF）をコンテナに移動したときに使われていた VF の ID <!-- SR-IOV Virtual function ID used when moving a VF into a container -->
+volatile.\<name\>.last\_state.vf.hwaddr     | string    | -             | SR-IOV の仮想ファンクション（VF）をコンテナに移動したときに使われていた VF の MAC <!-- SR-IOV Virtual function original MAC used when moving a VF into a container -->
+volatile.\<name\>.last\_state.vf.vlan       | string    | -             | SR-IOV の仮想ファンクション（VF）をコンテナに移動したときに使われていた VF の元の VLAN <!-- SR-IOV Virtual function original VLAN used when moving a VF into a container -->
+volatile.\<name\>.last\_state.vf.spoofcheck | string    | -             | SR-IOV の仮想ファンクション（VF）をコンテナに移動したときに使われていた VF の元の spoof チェックの設定 <!-- SR-IOV Virtual function original spoof check setting used when moving a VF into a container -->
 
 <!--
 Additionally, those user keys have become common with images (support isn't guaranteed):
