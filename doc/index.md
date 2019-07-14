@@ -43,7 +43,7 @@ Project status      | CII Best Practices    | [![CII Best Practices](https://bes
 <!--
 The LXD daemon only works on Linux but the client tool (`lxc`) is available on most platforms.
 -->
-LXD デーモンは Linux でしか動きませんが、クライアントツール (`lxc`) はほとんどのプラットフォームで提供されています。
+LXD デーモンは Linux でしか動きませんが、クライアントツール (`lxc`) はほとんどのプラットフォームで動作します。
 
 OS                  | 形式 <!-- Format -->                                            | コマンド <!-- Command -->
 ---                 | ---                                               | ---
