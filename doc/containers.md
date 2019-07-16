@@ -120,7 +120,13 @@ volatile.last\_state.idmap      | string    | -             | シリアライズ
 volatile.last\_state.power      | string    | -             | 最後にホストがシャットダウンした時点のコンテナの状態 <!-- Container state as of last host shutdown -->
 volatile.\<name\>.host\_name    | string    | -             | ホスト上のネットワークデバイス名（nictype=bridged, nictype=p2p, nictype=sriov の場合）<!-- Network device name on the host (for nictype=bridged or nictype=p2p, or nictype=sriov) -->
 volatile.\<name\>.hwaddr        | string    | -             | ネットワークデバイスの MAC アドレス（`hwaddr` プロパティがデバイスに設定されていない場合）<!-- Network device MAC address (when no hwaddr property is set on the device itself) -->
-volatile.\<name\>.name          | string    | -             | ネットワークデバイス名（`name` プロパティがデバイスに設定されていない場合） <!-- Network device name (when no name propery is set on the device itself) -->
+volatile.\<name\>.last\_state.created       | string    | -             | 物理デバイスのネットワークデバイスが作られたかどうか ("true" または "false") <!-- Whether or not the network device physical device was created ("true" or "false") -->
+volatile.\<name\>.last\_state.mtu           | string    | -             | 物理デバイスをコンテナに移動したときに使われていたネットワークデバイスの元の MTU <!-- Network device original MTU used when moving a physical device into a container -->
+volatile.\<name\>.last\_state.hwaddr        | string    | -             | 物理デバイスをコンテナに移動したときに使われていたネットワークデバイスの元の MAC <!-- Network device original MAC used when moving a physical device into a container -->
+volatile.\<name\>.last\_state.vf.id         | string    | -             | SR-IOV の仮想ファンクション（VF）をコンテナに移動したときに使われていた VF の ID <!-- SR-IOV Virtual function ID used when moving a VF into a container -->
+volatile.\<name\>.last\_state.vf.hwaddr     | string    | -             | SR-IOV の仮想ファンクション（VF）をコンテナに移動したときに使われていた VF の MAC <!-- SR-IOV Virtual function original MAC used when moving a VF into a container -->
+volatile.\<name\>.last\_state.vf.vlan       | string    | -             | SR-IOV の仮想ファンクション（VF）をコンテナに移動したときに使われていた VF の元の VLAN <!-- SR-IOV Virtual function original VLAN used when moving a VF into a container -->
+volatile.\<name\>.last\_state.vf.spoofcheck | string    | -             | SR-IOV の仮想ファンクション（VF）をコンテナに移動したときに使われていた VF の元の spoof チェックの設定 <!-- SR-IOV Virtual function original spoof check setting used when moving a VF into a container -->
 
 <!--
 Additionally, those user keys have become common with images (support isn't guaranteed):
@@ -330,37 +336,210 @@ LXD supports different kind of network devices:
 -->
 LXD では、様々な種類のネットワークデバイスが使えます:
 
- - `physical`: ホストの物理デバイスを直接使います。対象のデバイスはホスト上では見えなくなり、コンテナ内に出現します <!-- Straight physical device passthrough from the host. The targeted device will vanish from the host and appear in the container. -->
- - `bridged`: ホスト上に存在するブリッジを使います。ホストのブリッジとコンテナを接続する仮想デバイスペアを作成します <!-- Uses an existing bridge on the host and creates a virtual device pair to connect the host bridge to the container. -->
- - `macvlan`: 既存のネットワークデバイスをベースに MAC が異なる新しいネットワークデバイスを作成します。 <!-- Sets up a new network device based on an existing one but using a different MAC address. -->
- - `ipvlan`: 既存のネットワークデバイスをベースに MAC アドレスは同じですが IP アドレスが異なる新しいネットワークデバイスを作成します。 <!-- Sets up a new network device based on an existing one using the same MAC address but a different IP. -->
- - `p2p`: 仮想デバイスペアを作成し、片方をコンテナ内に置き、残りの片方をホスト上に残します <!-- Creates a virtual device pair, putting one side in the container and leaving the other side on the host. -->
- - `sriov`: SR-IOV が有効な物理ネットワークデバイスの仮想ファンクション（virtual function）をコンテナに与えます <!-- Passes a virtual function of an SR-IOV enabled physical network device into the container. -->
+ - [physical](#nictype-physical): ホストの物理デバイスを直接使います。対象のデバイスはホスト上では見えなくなり、コンテナ内に出現します <!-- Straight physical device passthrough from the host. The targeted device will vanish from the host and appear in the container. -->
+ - [bridged](#nictype-bridged): ホスト上に存在するブリッジを使います。ホストのブリッジとコンテナを接続する仮想デバイスペアを作成します <!-- Uses an existing bridge on the host and creates a virtual device pair to connect the host bridge to the container. -->
+ - [macvlan](#nictype-macvlan): 既存のネットワークデバイスをベースに MAC が異なる新しいネットワークデバイスを作成します。 <!-- Sets up a new network device based on an existing one but using a different MAC address. -->
+ - [ipvlan](#nictype-ipvlan): 既存のネットワークデバイスをベースに MAC アドレスは同じですが IP アドレスが異なる新しいネットワークデバイスを作成します。 <!-- Sets up a new network device based on an existing one using the same MAC address but a different IP. -->
+ - [p2p](#nictype-p2p): 仮想デバイスペアを作成し、片方をコンテナ内に置き、残りの片方をホスト上に残します <!-- Creates a virtual device pair, putting one side in the container and leaving the other side on the host. -->
+ - [sriov](#nictype-sriov): SR-IOV が有効な物理ネットワークデバイスの仮想ファンクション（virtual function）をコンテナに与えます <!-- Passes a virtual function of an SR-IOV enabled physical network device into the container. -->
 
 <!--
-Different network interface types have different additional properties, the current list is:
+Different network interface types have different additional properties.
 -->
-ネットワークインターフェースの種類が異なると追加のプロパティが異なります。現時点のリストは次の通りです:
+ネットワークインターフェースの種類が異なると追加のプロパティが異なります。
 
-Key                     | Type      | Default           | Required  | Used by                           | API extension                          | Description
-:--                     | :--       | :--               | :--       | :--                               | :--                                    | :--
-nictype                 | string    | -                 | yes       | all                               | -                                      | デバイスタイプ。`bridged`、`macvlan`、`ipvlan`、`p2p`、`physical`、`sriov`のいずれか <!-- The device type, one of "bridged", "macvlan", "ipvlan", "p2p", "physical", or "sriov" -->
-limits.ingress          | string    | -                 | no        | bridged, p2p                      | -                                      | 入力トラフィックの I/O 制限値（さまざまな単位が使用可能、下記参照）<!-- I/O limit in bit/s for incoming traffic (various suffixes supported, see below) -->
-limits.egress           | string    | -                 | no        | bridged, p2p                      | -                                      | 出力トラフィックの I/O 制限値（さまざまな単位が使用可能、下記参照）<!--I/O limit in bit/s for outgoing traffic (various suffixes supported, see below) -->
-limits.max              | string    | -                 | no        | bridged, p2p                      | -                                      | `limits.ingress`と`limits.egress`の両方を同じ値に変更する <!-- Same as modifying both limits.ingress and limits.egress -->
-name                    | string    | kernel assigned   | no        | all                               | -                                      | コンテナ内部でのインターフェース名 <!-- The name of the interface inside the container -->
-host\_name              | string    | randomly assigned | no        | bridged, p2p                      | -                                      | ホスト上でのインターフェース名 <!-- The name of the interface inside the host -->
-hwaddr                  | string    | randomly assigned | no        | bridged, macvlan, physical, sriov | -                                      | 新しいインターフェースの MAC アドレス <!-- The MAC address of the new interface -->
-mtu                     | integer   | parent MTU        | no        | all                               | -                                      | 新しいインターフェースの MTU <!-- The MTU of the new interface -->
-parent                  | string    | -                 | yes       | bridged, macvlan, ipvlan, physical, sriov | -                                      | ホスト上のデバイス、ブリッジの名前 <!-- The name of the host device or bridge -->
-vlan                    | integer   | -                 | no        | macvlan, ipvlan, physical                 | network\_vlan, network\_vlan\_physical | アタッチする VLAN の ID <!-- The VLAN ID to attach to -->
-ipv4.address            | string    | -                 | no        | bridged, ipvlan                           | network                                | DHCP でコンテナに割り当てる IPv4 アドレス (bridged の場合)、 IPVLAN の場合は静的なアドレスのカンマ区切りリスト (どちらか1つは最低必要)  <!-- An IPv4 address to assign to the container through DHCP (bridged), for IPVLAN comma separated list of static addresses (at least 1 required) -->
-ipv6.address            | string    | -                 | no        | bridged, ipvlan                           | network                                | DHCP でコンテナに割り当てる IPv6 アドレス (bridged の場合)、 IPVLAN の場合は静的なアドレスのカンマ区切りリスト (どちらか1つは最低必要)  <!-- An IPv6 address to assign to the container through DHCP (bridged), for IPVLAN comma separated list of static addresses (at least 1 required) -->
-ipv4.routes             | string    | -                 | no        | bridged, p2p                              | container\_nic\_routes                 | ホストに追加する nic への IPv4 静的ルートのカンマ区切りリスト <!-- Comma delimited list of IPv4 static routes to add on host to nic -->
-ipv6.routes             | string    | -                 | no        | bridged, p2p                              | container\_nic\_routes                 | ホストに追加する nic への IPv6 静的ルートのカンマ区切りリスト <!-- Comma delimited list of IPv6 static routes to add on host to nic -->
-security.mac\_filtering | boolean   | false             | no        | bridged                           | network                                | コンテナが他の MAC アドレスになりすますのを防ぐ <!-- Prevent the container from spoofing another's MAC address -->
-maas.subnet.ipv4        | string    | -                 | no        | bridged, macvlan, physical, sriov | maas\_network                          | コンテナを登録する MAAS IPv4 サブネット <!-- MAAS IPv4 subnet to register the container in -->
-maas.subnet.ipv6        | string    | -                 | no        | bridged, macvlan, physical, sriov | maas\_network                          | コンテナを登録する MAAS IPv6 サブネット <!-- MAAS IPv6 subnet to register the container in -->
+<!--
+Each possible `nictype` value is documented below along with the relevant properties for nics of that type.
+-->
+`nictype` の設定可能な値は、そのタイプの NIC に対応するプロパティとともに以下に記載します。
+
+#### nictype: physical
+
+<!--
+Straight physical device passthrough from the host. The targeted device will vanish from the host and appear in the container.
+-->
+物理デバイスそのものをパススルー。対象のデバイスはホストからは消失し、コンテナ内に出現します。
+
+<!--
+Device configuration properties:
+-->
+デバイス設定プロパティは以下の通りです。
+
+Key                     | Type      | Default           | Required  | API extension                          | Description
+:--                     | :--       | :--               | :--       | :--                                    | :--
+parent                  | string    | -                 | yes       | -                                      | ホストデバイスの名前 <!-- The name of the host device -->
+name                    | string    | カーネルが割り当て <!-- kernel assigned -->  | no        | -                                      | コンテナ内部でのインタフェース名 <!-- The name of the interface inside the container -->
+mtu                     | integer   | 親の MTU <!-- parent MTU -->        | no        | -                                      | 新しいインタフェースの MTU <!-- The MTU of the new interface -->
+hwaddr                  | string    | ランダムに割り当て <!-- randomly assigned --> | no        | -                                      | 新しいインタフェースの MAC アドレス <!-- The MAC address of the new interface -->
+vlan                    | integer   | -                 | no        | network\_vlan\_physical                | アタッチ先の VLAN ID <!-- The VLAN ID to attach to -->
+maas.subnet.ipv4        | string    | -                 | no        | maas\_network                          | コンテナを登録する MAAS IPv4 サブネット <!-- MAAS IPv4 subnet to register the container in -->
+maas.subnet.ipv6        | string    | -                 | no        | maas\_network                          | コンテナを登録する MAAS IPv6 サブネット <!-- MAAS IPv6 subnet to register the container in -->
+
+#### nictype: bridged
+
+<!--
+Uses an existing bridge on the host and creates a virtual device pair to connect the host bridge to the container.
+-->
+ホストの既存のブリッジを使用し、ホストのブリッジをコンテナに接続するための仮想デバイスのペアを作成します。
+
+<!--
+Device configuration properties:
+-->
+デバイス設定プロパティは以下の通りです。
+
+Key                      | Type      | Default           | Required  | API extension                          | Description
+:--                      | :--       | :--               | :--       | :--                                    | :--
+parent                   | string    | -                 | yes       | -                                      | ホストデバイスの名前 <!-- The name of the host device -->
+name                     | string    | カーネルが割り当て <!-- kernel assigned -->   | no        | -                                      | <!-- The name of the interface inside the container -->
+mtu                      | integer   | 親の MTU <!-- parent MTU -->        | no        | -                                      | 新しいインタフェースの MTU <!-- The MTU of the new interface -->
+hwaddr                   | string    | ランダムに割り当て <!-- randomly assigned --> | no        | -                                      | 新しいインタフェースの MAC アドレス <!-- The MAC address of the new interface -->
+host\_name               | string    | ランダムに割り当て <!-- randomly assigned --> | no        | -                                      | ホスト内でのインタフェースの名前 <!-- The name of the interface inside the host -->
+limits.ingress           | string    | -                 | no        | -                                      | 入力トラフィックの I/O 制限値（さまざまな単位が使用可能、下記参照）<!-- I/O limit in bit/s for incoming traffic (various suffixes supported, see below) -->
+limits.egress            | string    | -                 | no        | -                                      | 出力トラフィックの I/O 制限値（さまざまな単位が使用可能、下記参照）<!-- I/O limit in bit/s for outgoing traffic (various suffixes supported, see below) -->
+limits.max               | string    | -                 | no        | -                                      | `limits.ingress`と`limits.egress`の両方を同じ値に変更する <!-- Same as modifying both limits.ingress and limits.egress -->
+ipv4.address             | string    | -                 | no        | network                                | DHCP でコンテナに割り当てる IPv4 アドレス <!-- An IPv4 address to assign to the container through DHCP -->
+ipv6.address             | string    | -                 | no        | network                                | DHCP でコンテナに割り当てる IPv6 アドレス <!-- An IPv6 address to assign to the container through DHCP -->
+ipv4.routes              | string    | -                 | no        | container\_nic\_routes                 | ホスト上で nic に追加する IPv4 静的ルートのカンマ区切りリスト <!-- Comma delimited list of IPv4 static routes to add on host to nic -->
+ipv6.routes              | string    | -                 | no        | container\_nic\_routes                 | ホスト上で nic に追加する IPv6 静的ルートのカンマ区切りリスト <!-- Comma delimited list of IPv6 static routes to add on host to nic -->
+security.mac\_filtering  | boolean   | false             | no        | network                                | コンテナが他の MAC アドレスになりすますのを防ぐ <!-- Prevent the container from spoofing another's MAC address -->
+security.ipv4\_filtering | boolean   | false             | no        | container\_nic\_ipfilter               | コンテナが他の IPv4 アドレスになりすますのを防ぐ (これを設定すると mac\_filtering も有効になります） <!-- Prevent the container from spoofing another's IPv4 address (enables mac_filtering) -->
+security.ipv6\_filtering | boolean   | false             | no        | container\_nic\_ipfilter               | コンテナが他の IPv6 アドレスになりすますのを防ぐ (これを設定すると mac\_filtering も有効になります） <!-- Prevent the container from spoofing another's IPv6 address (enables mac_filtering) -->
+maas.subnet.ipv4         | string    | -                 | no        | maas\_network                          | コンテナを登録する MAAS IPv4 サブネット <!-- MAAS IPv4 subnet to register the container in -->
+maas.subnet.ipv6         | string    | -                 | no        | maas\_network                          | コンテナを登録する MAAS IPv6 サブネット <!-- MAAS IPv6 subnet to register the container in -->
+
+#### nictype: macvlan
+
+<!--
+Sets up a new network device based on an existing one but using a different MAC address.
+-->
+既存のネットワークデバイスを元に新しいネットワークデバイスをセットアップしますが、異なる MAC アドレスを用います。
+
+<!--
+Device configuration properties:
+-->
+デバイス設定プロパティは以下の通りです。
+
+Key                     | Type      | Default           | Required  | API extension                          | Description
+:--                     | :--       | :--               | :--       | :--                                    | :--
+parent                  | string    | -                 | yes       | -                                      | ホストデバイスの名前 <!-- The name of the host device -->
+name                    | string    | カーネルが割り当て <!-- kernel assigned -->   | no        | -                                      | コンテナ内部でのインタフェース名 <!-- The name of the interface inside the container -->
+mtu                     | integer   | 親の MTU <!-- parent MTU -->        | no        | -                                      | 新しいインタフェースの MTU <!-- The MTU of the new interface -->
+hwaddr                  | string    | ランダムに割り当て <!-- randomly assigned --> | no        | -                                      | 新しいインタフェースの MAC アドレス <!-- The MAC address of the new interface -->
+host\_name              | string    | ランダムに割り当て <!-- randomly assigned --> | no        | -                                      | ホスト内でのインタフェースの名前 <!-- The name of the interface inside the host -->
+vlan                    | integer   | -                 | no        | network\_vlan                          | アタッチ先の VLAN ID <!-- The VLAN ID to attach to -->
+maas.subnet.ipv4        | string    | -                 | no        | maas\_network                          | コンテナを登録する MAAS IPv4 サブネット <!-- MAAS IPv4 subnet to register the container in -->
+maas.subnet.ipv6        | string    | -                 | no        | maas\_network                          | コンテナを登録する MAAS IPv6 サブネット <!-- MAAS IPv6 subnet to register the container in -->
+
+#### nictype: ipvlan
+
+<!--
+Sets up a new network device based on an existing one using the same MAC address but a different IP.
+-->
+既存のネットワークデバイスを元に新しいネットワークデバイスをセットアップしますが、異なる IP アドレスを用います。
+
+<!--
+LXD currently supports IPVLAN in L3S mode.
+-->
+LXD は現状 L3S モードで IPVLAN をサポートします。
+
+<!--
+In this mode, the gateway is automatically set by LXD, however IP addresses must be manually specified using either one or both of `ipv4.address` and `ipv6.address` settings before container is started.
+-->
+このモードではゲートウェイは LXD により自動的に設定されますが、コンテナが起動する前に
+`ipv4.address` と `ipv6.address` の設定の 1 つあるいは両方を使うことにより IP アドレスを
+手動で指定する必要があります。
+
+<!--
+For DNS, the nameservers need to be configured inside the container, as these will not automatically be set.
+-->
+DNS に関しては、ネームサーバは自動的には設定されないので、コンテナ内部で設定する必要があります。
+
+<!--
+It requires the following sysctls to be set:
+-->
+ipvlan の nictype を使用するには以下の sysctl の設定が必要です。
+
+<!--
+If using IPv4 addresses:
+-->
+IPv4 アドレスを使用する場合
+
+```
+net.ipv4.conf.<parent>.forwarding=1
+```
+
+<!--
+If using IPv6 addresses:
+-->
+IPv6 アドレスを使用する場合
+
+```
+net.ipv6.conf.<parent>.forwarding=1
+net.ipv6.conf.<parent>.proxy_ndp=1
+```
+
+<!--
+Device configuration properties:
+-->
+デバイス設定プロパティは以下の通りです。
+
+Key                     | Type      | Default           | Required  | API extension                          | Description
+:--                     | :--       | :--               | :--       | :--                                    | :--
+parent                  | string    | -                 | yes       | -                                      | ホストデバイスの名前 <!-- The name of the host device -->
+name                    | string    | カーネルが割り当て <!-- kernel assigned -->   | no        | -                                      | コンテナ内部でのインタフェース名 <!-- The name of the interface inside the container -->
+mtu                     | integer   | 親の MTU <!-- parent MTU -->        | no        | -                                      | 新しいインタフェースの MTU <!-- The MTU of the new interface -->
+hwaddr                  | string    | ランダムに割り当て <!-- randomly assigned --> | no        | -                                      | 新しいインタフェースの MAC アドレス <!-- The MAC address of the new interface -->
+host\_name              | string    | ランダムに割り当て <!-- randomly assigned --> | no        | -                                      | ホスト内でのインタフェースの名前 <!-- The name of the interface inside the host -->
+ipv4.address            | string    | -                 | no        | network                                | コンテナに追加する IPv4 静的アドレスのカンマ区切りリスト <!-- Comma delimited list of IPv4 static addresses to add to container -->
+ipv6.address            | string    | -                 | no        | network                                | コンテナに追加する IPv6 静的アドレスのカンマ区切りリスト <!-- Comma delimited list of IPv6 static addresses to add to container -->
+vlan                    | integer   | -                 | no        | network\_vlan                          | アタッチ先の VLAN ID <!-- The VLAN ID to attach to -->
+
+#### nictype: p2p
+
+<!--
+Creates a virtual device pair, putting one side in the container and leaving the other side on the host.
+-->
+仮想デバイスペアを作成し、片方はコンテナ内に配置し、もう片方はコンテナに残します。
+
+<!--
+Device configuration properties:
+-->
+デバイス設定プロパティは以下の通りです。
+
+Key                     | Type      | Default           | Required  | API extension                          | Description
+:--                     | :--       | :--               | :--       | :--                                    | :--
+name                    | string    | カーネルが割り当て <!-- kernel assigned -->   | no        | -                                      | コンテナ内部でのインタフェース名 <!-- The name of the interface inside the container -->
+mtu                     | integer   | 親の MTU <!-- parent MTU -->        | no        | -                                      | 新しいインタフェースの MTU <!-- The MTU of the new interface -->
+hwaddr                  | string    | ランダムに割り当て <!-- randomly assigned --> | no        | -                                      | 新しいインタフェースの MAC アドレス <!-- The MAC address of the new interface -->
+host\_name              | string    | ランダムに割り当て <!-- randomly assigned --> | no        | -                                      | ホスト内でのインタフェースの名前 <!-- The name of the interface inside the host --> 
+limits.ingress          | string    | -                 | no        | -                                      | 入力トラフィックの I/O 制限値（さまざまな単位が使用可能、下記参照）<!-- I/O limit in bit/s for incoming traffic (various suffixes supported, see below) -->
+limits.egress           | string    | -                 | no        | -                                      | 出力トラフィックの I/O 制限値（さまざまな単位が使用可能、下記参照）<!-- I/O limit in bit/s for outgoing traffic (various suffixes supported, see below) -->
+limits.max              | string    | -                 | no        | -                                      | `limits.ingress`と`limits.egress`の両方を同じ値に変更する <!-- Same as modifying both limits.ingress and limits.egress -->
+ipv4.routes             | string    | -                 | no        | container\_nic\_routes                 | ホスト上で nic に追加する IPv4 静的ルートのカンマ区切りリスト <!-- Comma delimited list of IPv4 static routes to add on host to nic -->
+ipv6.routes             | string    | -                 | no        | container\_nic\_routes                 | ホスト上で nic に追加する IPv6 静的ルートのカンマ区切りリスト <!-- Comma delimited list of IPv6 static routes to add on host to nic -->
+
+#### nictype: sriov
+
+<!--
+Passes a virtual function of an SR-IOV enabled physical network device into the container.
+-->
+SR-IOV を有効にした物理ネットワークデバイスの仮想ファンクションをコンテナに渡します。
+
+<!--
+Device configuration properties:
+-->
+デバイス設定プロパティは以下の通りです。
+
+Key                     | Type      | Default           | Required  | API extension                          | Description
+:--                     | :--       | :--               | :--       | :--                                    | :--
+parent                  | string    | -                 | yes       | -                                      | ホストデバイスの名前 <!-- The name of the host device -->
+name                    | string    | カーネルが割り当て <!-- kernel assigned -->   | no        | -                                      | コンテナ内部でのインタフェース名 <!-- The name of the interface inside the container -->
+mtu                     | integer   | 親の MTU <!-- parent MTU -->        | no        | -                                      | 新しいインタフェースの MTU <!-- The MTU of the new interface -->
+hwaddr                  | string    | ランダムに割り当て <!-- randomly assigned --> | no        | -                                      | 新しいインタフェースの MAC アドレス <!-- The MAC address of the new interface -->
+security.mac\_filtering | boolean   | false             | no        | network\_vlan\_sriov                   | コンテナが他の MAC アドレスになりすますのを防ぐ <!-- Prevent the container from spoofing another's MAC address -->
+vlan                    | integer   | -                 | no        | network\_vlan\_sriov                   | アタッチ先の VLAN ID <!-- The VLAN ID to attach to -->
+maas.subnet.ipv4        | string    | -                 | no        | maas\_network                          | コンテナを登録する MAAS IPv4 サブネット <!-- MAAS IPv4 subnet to register the container in -->
+maas.subnet.ipv6        | string    | -                 | no        | maas\_network                          | コンテナを登録する MAAS IPv6 サブネット <!-- MAAS IPv6 subnet to register the container in -->
 
 #### ブリッジ、ipvlan、macvlan を使った物理ネットワークへの接続 <!-- bridged, macvlan or ipvlan for connection to physical network -->
 <!--
