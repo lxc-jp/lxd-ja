@@ -1465,11 +1465,11 @@ decide to trigger various actions.
 -->
 
 ## lxc\_features
-これは `GET /1.0/` ルート経由で `lxc info` コマンドの出力に `lxc_features`
+これは `GET /1.0/` ルート経由で `lxc info` コマンドの出力に `lxc\_features`
 セクションを導入します。配下の LXC ライブラリに存在するキー・フィーチャーに
 対するチェックの結果を出力します。
 <!--
-This introduces the `lxc_features` section output from the `lxc info` command
+This introduces the `lxc\_features` section output from the `lxc info` command
 via the `GET /1.0/` route. It outputs the result of checks for key features being present in the
 underlying LXC library.
 -->
@@ -1478,4 +1478,56 @@ underlying LXC library.
 これは "nic" デバイスに `ipvlan` のタイプを導入します。
 <!--
 This introduces the `ipvlan` "nic" device type.
+-->
+
+## network\_vlan\_sriov
+これは SR-IOV デバイスに VLAN (`vlan`) と MAC フィルタリング (`security.mac\_filtering`) のサポートを導入します。
+<!--
+This introduces VLAN (`vlan`) and MAC filtering (`security.mac\_filtering`) support for SR-IOV devices.
+-->
+
+## storage\_cephfs
+ストレージプールドライバとして CEPHFS のサポートを追加します。これは
+カスタムボリュームとしての利用のみが可能になり、イメージとコンテナは
+CEPHFS ではなく CEPH (RBD) 上に構築する必要があります。
+<!--
+Add support for CEPHFS as a storage pool driver. This can only be used
+for custom volumes, images and containers should be on CEPH (RBD)
+instead.
+-->
+
+## container\_nic\_ipfilter
+これは `bridged` の NIC デバイスに対してコンテナの IP フィルタリング
+(`security.ipv4\_filtering` and `security.ipv6\_filtering`) を導入します。
+<!--
+This introduces container IP filtering (`security.ipv4\_filtering` and `security.ipv6\_filtering`) support for `bridged` nic devices.
+-->
+
+## resources\_v2
+/1.0/resources のリソース API を見直しました。主な変更は以下の通りです。
+<!--
+Rework the resources API at /1.0/resources, especially:
+-->
+
+ - CPU
+   - ソケット、コア、スレッドのトラッキングのレポートを修正しました <!-- Fix reporting to track sockets, cores and threads -->
+   - コア毎の NUMA ノードのトラッキング <!-- Track NUMA node per core -->
+   - ソケット毎のベースとターボの周波数のトラッキング <!-- Track base and turbo frequency per socket -->
+   - コア毎の現在の周波数のトラッキング <!-- Track current frequency per core -->
+   - CPU のキャッシュ情報の追加 <!-- Add CPU cache information -->
+   - CPU アーキテクチャをエクスポート <!-- Export the CPU architecture -->
+   - スレッドのオンライン／オフライン状態を表示 <!-- Show online/offline status of threads -->
+ - メモリ <!-- Memory -->
+   - HugePages のトラッキングを追加 <!-- Add hugepages tracking -->
+   - NUMA ノード毎でもメモリ消費を追跡 <!-- Track memory consumption per NUMA node too -->
+ - GPU
+   - DRM 情報を別の構造体に分離 <!-- Split DRM information to separate struct -->
+   - DRM 構造体内にデバイスの名前とノードを公開 <!-- Export device names and nodes in DRM struct -->
+   - NVIDIA 構造体内にデバイスの名前とノードを公開 <!-- Export device name and node in NVIDIA struct -->
+   - SR-IOV VF のトラッキングを追加 <!-- Add SR-IOV VF tracking -->
+
+## container\_exec\_user\_group\_cwd
+`POST /1.0/containers/NAME/exec` の実行時に User, Group と Cwd を指定するサポートを追加
+<!--
+Adds support for specifying User, Group and Cwd during `POST /1.0/containers/NAME/exec`.
 -->
