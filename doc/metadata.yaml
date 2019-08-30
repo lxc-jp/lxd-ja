@@ -1,0 +1,110 @@
+site_title: LXD
+site_logo_url: https://linuxcontainers.org/static/img/containers.png
+navigation:
+    - title: LXD を使い始めるには # Getting started
+      location: index.md
+      children:
+        - title: 動作環境 # Requirements
+          location: requirements.md
+
+        - title: FAQ # Frequently asked
+          location: faq.md
+
+        - title: セキュリティー # Security
+          location: security.md
+
+        - title: コントリビュート # Contributing
+          location: contributing.md
+
+    - title: 設定 # Configuration
+      location: configuration.md
+      children:
+        - title: コンテナ # Containers
+          location: containers.md
+
+        - title: ネットワーク # Networks
+          location: networks.md
+
+        - title: presseed YAML # Preseed files
+          location: preseed.md
+
+        - title: プロファイル # Profiles
+          location: profiles.md
+
+        - title: プロジェクト # Projects
+          location: projects.md
+
+        - title: サーバ # Server settings
+          location: server.md
+
+        - title: ストレージプール # Storage pools
+          location: storage.md
+
+    - title: イメージ # Images
+      children:
+        - title: アーキテクチャ # Architectures
+          location: architectures.md
+
+        - title: Cloud-init # Cloud-init
+          location: cloud-init.md
+
+        - title: イメージの扱い # Handling
+          location: image-handling.md
+
+    - title: オペレーション # Operation
+      children:
+        - title: バックアップ # Backups
+          location: backup.md
+
+        - title: クラスタリング # Clustering
+          location: clustering.md
+
+        - title: プロダクション環境のセットアップ # Production setup
+          location: production-setup.md
+
+    - title: REST API
+      children:
+        - title: メインの API ドキュメント # Main API documentation
+          location: rest-api.md
+
+        - title: メインの API 拡張 # Main API extensions
+          location: api-extensions.md
+
+        - title: コンテナ API ドキュメント # Container API documentation
+          location: dev-lxd.md
+
+    - title: 内部動作とデバッグ # Internals & debugging
+      children:
+        - title: コンテナ環境 # Container environment
+          location: container-environment.md
+
+        - title: コンテナのマイグレーション # Container migration
+          location: migration.md
+
+        - title: デーモンの動作 # Daemon behavior
+          location: daemon-behavior.md
+
+        - title: データベース # Database
+          location: database.md
+
+        - title: デバッグ # Debugging
+          location: debugging.md
+
+        - title: 環境変数 # Environment variables
+          location: environment.md
+
+        - title: システムコールのインターセプション # System call interception
+          location: syscall-interception.md
+
+        - title: ユーザ名前空間の設定 # User namespace setup
+          location: userns-idmap.md
+
+    - title: 外部リソース # External resources
+      children:
+        - title: プロジェクトのレポジトリ # Project repository
+          location: https://github.com/lxc/lxd
+          external: true
+
+        - title: イメージサーバー # Image server
+          location: https://images.linuxcontainers.org
+          external: true

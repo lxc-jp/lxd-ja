@@ -55,9 +55,10 @@ Key                     | Type      | Condition                 | Default       
 size                    | string    | appropriate driver        | <!-- same as -->volume.size と同じ                  | storage           | ストレージボリュームのサイズ <!-- Size of the storage volume -->
 block.filesystem        | string    | block based driver (lvm)  | <!-- same as -->volume.block.filesystem と同じ      | storage           | ストレージボリュームのファイルシステム <!-- Filesystem of the storage volume -->
 block.mount\_options    | string    | block based driver (lvm)  | <!-- same as -->volume.block.mount\_options と同じ  | storage           | ブロックデバイスのマウントオプション <!-- Mount options for block devices -->
+security.shifted        | bool      | custom volume             | false                                 | storage\_shifted  | オーバーレイの id の shift を有効にするか (複数の隔離されたコンテナからのアタッチを許可する) <!-- Enable id shifting overlay (allows attach by multiple isolated containers) -->
 security.unmapped       | bool      | custom volume             | false                                               | storage\_unmapped | ボリュームに対する ID マッピングを無効化する <!-- Disable id mapping for the volume -->
 zfs.remove\_snapshots   | string    | zfs driver                | <!-- same as -->volume.zfs.remove\_snapshots と同じ | storage           | 必要に応じてスナップショットを削除するかどうか <!-- Remove snapshots as needed -->
-zfs.use\_refquota       | string    | zfs driver                | <!-- same as -->volume.zfs.zfs\_requota と同じ      | storage           | 領域の quota の代わりに refquota を使うかどうか <!-- Use refquota instead of quota for space. -->
+zfs.use\_refquota       | string    | zfs driver                | <!-- same as -->volume.zfs.zfs\_requota と同じ      | storage           | 領域の quota の代わりに refquota を使うかどうか <!-- Use refquota instead of quota for space -->
 
 <!--
 Storage volume configuration keys can be set using the lxc tool with:

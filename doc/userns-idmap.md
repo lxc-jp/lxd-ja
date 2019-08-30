@@ -78,16 +78,21 @@ broken shadow setup.
 これは shadow の設定が間違っていることを示しているので、これが修正されるまで
 LXD はコンテナの起動に失敗します。
 
+これらのファイルが 1 つも無い場合、 LXD は 1000000 の基点の uid/gid から開始する
+1000000000 の uid/gid の範囲を想定します。
 <!--
-If none of those 4 files can be found, then LXD will assume it's running
-on a host using an old version of shadow. In this mode, LXD will assume
-it can use any uids and gids above 65535 and will take the first 65536
-as its default map.
+If none of those files can be found, then LXD will assume a 1000000000
+uid/gid range starting at a base uid/gid of 1000000.
 -->
-これらの 4 つのファイルが 1 つも無い場合、 LXD はホストが古いバージョンの
-shadow の上で稼働していると想定します。このモードでは LXD は 65535 より
-上のどんな uid と gid も使用可能と想定し、最初の 65536 個をデフォルトの
-マッピングに使用します。
+
+これは最もよくあるケースであり、完全に非特権なコンテナをホストする
+(そしてコンテナランタイム自身はユーザ権限で実行するような)
+システム上で稼働するのではない場合に通常推奨される設定です。
+<!--
+This is the most common case and is usually the recommended setup when
+not running on a system which also hosts fully unprivileged containers
+(where the container runtime itself runs as a user).
+-->
 
 ## ホスト間で異なる範囲の使用 <!-- Varying ranges between hosts -->
 <!--
