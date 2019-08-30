@@ -798,3 +798,28 @@ Rework the resources API at /1.0/resources, especially:
 
 ## container\_exec\_user\_group\_cwd
 Adds support for specifying User, Group and Cwd during `POST /1.0/containers/NAME/exec`.
+
+## container\_syscall\_intercept
+Adds the `security.syscalls.intercept.\*` configuration keys to control
+what system calls will be interecepted by LXD and processed with
+elevated permissions.
+
+## container\_disk\_shift
+Adds the `shift` property on `disk` devices which controls the use of the shiftfs overlay.
+
+## storage\_shifted
+Introduces a new `security.shifted` boolean on storage volumes.
+
+Setting it to true will allow multiple isolated containers to attach the
+same storage volume while keeping the filesystem writable from all of
+them.
+
+This makes use of shiftfs as an overlay filesystem.
+
+## resources\_infiniband
+Export infiniband character device information (issm, umad, uverb) as part of the resources API.
+
+## daemon\_storage
+This introduces two new configuration keys `storage.images\_volume` and
+`storage.backups\_volume` to allow for a storage volume on an existing
+pool be used for storing the daemon-wide images and backups artifacts.
