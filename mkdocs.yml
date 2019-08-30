@@ -30,4 +30,5 @@ pages:
   - セキュリティ: security.md
   - サーバ: server.md
   - ストレージ: storage.md
+  - システムコールのインターセプト: syscall-interception.md
   - ユーザー名前空間のIDマッピング: userns-idmap.md
