@@ -85,9 +85,8 @@ If none of those files can be found, then LXD will assume a 1000000000
 uid/gid range starting at a base uid/gid of 1000000.
 -->
 
-これは最もよくあるケースであり、完全に非特権なコンテナをホストする
-(そしてコンテナランタイム自身はユーザ権限で実行するような)
-システム上で稼働するのではない場合に通常推奨される設定です。
+これは最もよくあるケースであり、完全に非特権なコンテナをホストするシステム上で稼働するのではない場合
+（コンテナランタイム自身はユーザ権限で実行するような場合）に、通常は推奨される設定です。
 <!--
 This is the most common case and is usually the recommended setup when
 not running on a system which also hosts fully unprivileged containers
