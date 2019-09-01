@@ -1531,3 +1531,50 @@ Rework the resources API at /1.0/resources, especially:
 <!--
 Adds support for specifying User, Group and Cwd during `POST /1.0/containers/NAME/exec`.
 -->
+
+## container\_syscall\_intercept
+`security.syscalls.intercept.\*` 設定キーを追加します。これはどのシステムコールを LXD がインターセプトし昇格された権限で処理するかを制御します。
+<!--
+Adds the `security.syscalls.intercept.\*` configuration keys to control
+what system calls will be interecepted by LXD and processed with
+elevated permissions.
+-->
+
+## container\_disk\_shift
+`disk` デバイスに `shift` プロパティを追加します。これは shiftfs のオーバーレイの使用を制御します。
+<!--
+Adds the `shift` property on `disk` devices which controls the use of the shiftfs overlay.
+-->
+
+## storage\_shifted
+ストレージボリュームに新しく `security.shifted` という boolean の設定を導入します。 
+<!--
+Introduces a new `security.shifted` boolean on storage volumes.
+-->
+
+これを true に設定すると複数の隔離されたコンテナが、それら全てがファイルシステムに
+書き込み可能にしたまま、同じストレージボリュームにアタッチするのを許可します。
+<!--
+Setting it to true will allow multiple isolated containers to attach the
+same storage volume while keeping the filesystem writable from all of
+them.
+-->
+
+これは shiftfs をオーバーレイファイルシステムとして使用します。
+<!--
+This makes use of shiftfs as an overlay filesystem.
+-->
+
+## resources\_infiniband
+リソース API の一部として infiniband キャラクタデバイス (issm, umad, uverb) の情報を公開します。
+<!--
+Export infiniband character device information (issm, umad, uverb) as part of the resources API.
+-->
+
+## daemon\_storage
+これは `storage.images\_volume` と `storage.backups\_volume` という 2 つの新しい設定項目を導入します。これらは既存のプール上のストレージボリュームがデーモン全体のイメージとバックアップを保管するのに使えるようにします。
+<!--
+This introduces two new configuration keys `storage.images\_volume` and
+`storage.backups\_volume` to allow for a storage volume on an existing
+pool be used for storing the daemon-wide images and backups artifacts.
+-->

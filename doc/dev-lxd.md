@@ -25,10 +25,10 @@ same time.
 
 ## 実装詳細 <!-- Implementation details -->
 <!--
-LXD on the host binds `/var/lib/lxd/devlxd` and starts listening for new
+LXD on the host binds `/var/lib/lxd/devlxd/sock` and starts listening for new
 connections on it.
 -->
-ホストでは LXD は `/var/lib/lxd/devlxd` をバインドして新しいコネクションの
+ホストでは LXD は `/var/lib/lxd/devlxd/sock` をバインドして新しいコネクションの
 リッスンを開始します。
 
 <!--

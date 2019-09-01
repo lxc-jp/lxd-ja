@@ -45,13 +45,13 @@ with a pretty simple query.
 <!--
 Since LXD supports clustering, and all members of the cluster must share the
 same database state, the database engine is based on a [distributed
-version](https://github.com/CanonicalLtd/dqlite) of SQLite, which provides
+version](https://github.com/canonical/dqlite) of SQLite, which provides
 replication, fault-tolerance and automatic failover without the need of external
 database processes. We refer to this database as the "global" LXD database.
 -->
 LXD はクラスタリングをサポートし、クラスタの全てのメンバは同じデータベースの
 状態を共有する必要があるため、データベースエンジンは SQLite の
-[分散対応バージョン](https://github.com/CanonicalLtd/dqlite) をベースにしています。
+[分散対応バージョン](https://github.com/canonical/dqlite) をベースにしています。
 それは外部のデータベースのプロセスを必要とせずに、 レプリケーション、
 フォールトトレランス、自動フェールオーバーの機能を提供します。
 このデータベースを「グローバル」 LXD データベースと呼びます。
