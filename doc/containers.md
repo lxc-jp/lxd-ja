@@ -721,7 +721,7 @@ size            | string    | -                 | no        | byte（さまざ�
 recursive       | boolean   | false             | no        | ソースパスを再帰的にマウントするかどうか <!-- Whether or not to recursively mount the source path -->
 pool            | string    | -                 | no        | ディスクデバイスが属するストレージプール。LXD が管理するストレージボリュームにのみ適用されます <!-- The storage pool the disk device belongs to. This is only applicable for storage volumes managed by LXD. -->
 propagation     | string    | -                 | no        | バインドマウントをコンテナとホストでどのように共有するかを管理する（デフォルトである `private`, `shared`, `slave`, `unbindable`,  `rshared`, `rslave`, `runbindable`,  `rprivate` のいずれか。詳しくは Linux kernel の文書 [shared subtree](https://www.kernel.org/doc/Documentation/filesystems/sharedsubtree.txt) をご覧ください）<!-- Controls how a bind-mount is shared between the container and the host. (Can be one of `private`, the default, or `shared`, `slave`, `unbindable`,  `rshared`, `rslave`, `runbindable`,  `rprivate`. Please see the Linux Kernel [shared subtree](https://www.kernel.org/doc/Documentation/filesystems/sharedsubtree.txt) documentation for a full explanation) -->
-shift           | boolean   | false             | no        | ソースの uid/gid をコンテナにマッチするように変換させるためにオーバーレイの shift を設定するか <-- Setup a shifting overlay to translate the source uid/gid to match the container -->
+shift           | boolean   | false             | no        | ソースの uid/gid をコンテナにマッチするように変換させるためにオーバーレイの shift を設定するか <!-- Setup a shifting overlay to translate the source uid/gid to match the container -->
 
 <!--
 If multiple disks, backed by the same block device, have I/O limits set,
