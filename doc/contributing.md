@@ -1,7 +1,6 @@
 # コントリビュート
 <!-- Contributing -->
-## プルリクエスト <!-- Pull requests -->:
-
+## プルリクエスト <!-- Pull requests -->
 <!--
 Changes to this project should be proposed as pull requests on Github
 at: <https://github.com/lxc/lxd>
@@ -14,7 +13,51 @@ be merged in the main branch.
 -->
 そのあと、提案はコードレビューを経て承認され、メインブランチにマージされます。
 
-## ライセンスと著作権 <!-- License and copyright -->:
+## コミットの構造 <!-- Commit structure -->
+<!--
+Separate commits should be used for:
+-->
+コミットを次のように分類する必要があります:
+
+<!--
+ - API extension (`api: Add XYZ extension`, contains `doc/api-extensions.md` and `shared/version.api.go`)
+ - Documentation (`doc: Update XYZ` for files in `doc/`)
+ - API structure (`shared/api: Add XYZ` for changes to `shared/api/`)
+ - Go client package (`client: Add XYZ` for changes to `client/`)
+ - CLI (`lxc/<command>: Change XYZ` for changes to `lxc/`)
+ - Scripts (`scripts: Update bash completion for XYZ` for changes to `scripts/`)
+ - LXD daemon (`lxd/<package>: Add support for XYZ` for changes to `lxd/`)
+ - Tests (`tests: Add test for XYZ` for changes to `tests/`)
+-->
+ - API 拡張 (`doc/api-extensions.md` と `shared/version.api.go` を含む変更に対して `api: Add XYZ extension`)
+ - ドキュメント (`doc/` 内のファイルに対して `doc: Update XYZ`)
+ - API 構造 (`shared/api/` の変更に対して `shared/api: Add XYZ`)
+ - Go クライアントパッケージ (`client/` の変更に対して `client: Add XYZ`)
+ - CLI (`lxc/` の変更に対して `lxc/<command>: Change XYZ`)
+ - スクリプト (`scripts/` の変更に対して `scripts: Update bash completion for XYZ`)
+ - LXD デーモン (`lxd/` の変更に対して `lxd/<package>: Add support for XYZ`)
+ - テスト (`tests/` の変更に対して `tests: Add test for XYZ`)
+
+<!--
+The same kind of pattern extends to the other tools in the LXD code tree
+and depending on complexity, things may be split into even smaller chunks.
+-->
+同様のパターンが LXD コードツリーの他のツールにも適用されます。そして複雑さによっては、さらに小さな単位に分けられるかもしれません。
+
+<!--
+When updating strings in the CLI tool (`lxc/`), you may need a commit to update the templates:
+-->
+CLI ツール (`lxc/`) 内の文字列を更新する際は、テンプレートを更新してコミットする必要があるでしょう:
+ - make i18n
+ - git commit -a -s -m "i18n: Update translation templates" po/
+
+<!--
+This structure makes it easier for contributions to be reviewed and also
+greatly simplifies the process of backporting fixes to stable branches.
+-->
+このようにすることで、コントリビューションに対するレビューが容易になり、stable ブランチへバックポートするプロセスが大幅に簡素化されます。
+
+## ライセンスと著作権 <!-- License and copyright -->
 
 <!--
 By default, any contribution to this project is made under the Apache
@@ -28,8 +71,7 @@ The author of a change remains the copyright holder of their code
 -->
 変更の著者は、そのコードに対する著作権を保持します（著作権の割り当てはありません）。
 
-## Developer Certificate of Origin:
-
+## Developer Certificate of Origin
 <!--
 To improve tracking of contributions to this project we use the DCO 1.1
 and use a "sign-off" procedure for all changes going into the branch.
