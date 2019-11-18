@@ -823,3 +823,60 @@ Export infiniband character device information (issm, umad, uverb) as part of th
 This introduces two new configuration keys `storage.images\_volume` and
 `storage.backups\_volume` to allow for a storage volume on an existing
 pool be used for storing the daemon-wide images and backups artifacts.
+
+## instances
+This introduces the concept of instances, of which currently the only type is "container".
+
+## image\_types
+This introduces support for a new Type field on images, indicating what type of images they are.
+
+## resources\_disk\_sata
+Extends the disk resource API struct to include:
+ - Proper detection of sata devices (type)
+ - Device path
+ - Drive RPM
+ - Block size
+ - Firmware version
+ - Serial number
+
+## clustering\_roles
+This adds a new `roles` attribute to cluster entries, exposing a list of
+roles that the member serves in the cluster.
+
+## images\_expiry
+This allows for editing of the expiry date on images.
+
+## resources\_network\_firmware
+Adds a FirmwareVersion field to network card entries.
+
+## backup\_compression\_algorithm
+This adds support for a `compression_algorithm` property when creating a backup (`POST /1.0/containers/<name>/backups`).
+
+Setting this property overrides the server default value (`backups.compression_algorithm`).
+
+## ceph\_data\_pool\_name
+This adds support for an optional argument (`ceph.osd.data_pool_name`) when creating
+storage pools using Ceph RBD, when this argument is used the pool will store it's
+actual data in the pool specified with `data_pool_name` while keeping the metadata
+in the pool specified by `pool_name`.
+
+## container\_syscall\_intercept\_mount
+Adds the `security.syscalls.intercept.mount`,
+`security.syscalls.intercept.mount.allowed`, and
+`security.syscalls.intercept.mount.shift` configuration keys to control whether
+and how the mount system call will be interecepted by LXD and processed with
+elevated permissions.
+
+## compression_squashfs
+Adds support for importing/exporting of images/backups using SquashFS file system format.
+
+## container\_raw\_mount
+This adds support for passing in raw mount options for disk devices.
+
+## container\_nic\_routed
+This introduces the `routed` "nic" device type.
+
+## container\_syscall\_intercept\_mount\_fuse
+Adds the `security.syscalls.intercept.mount.fuse` key. It can be used to
+redirect filesystem mounts to their fuse implementation. To this end, set e.g.
+`security.syscalls.intercept.mount.fuse=ext4=fuse2fs`.

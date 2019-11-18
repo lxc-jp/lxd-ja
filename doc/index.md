@@ -125,7 +125,7 @@ Canonical RBAC.
 More details are [available here](security.md).
 
 ## Getting started with LXD
-Now that you have LXD running on your system you can read the [getting started guide](https://linuxcontainers.org/lxd/getting-started-cli/) or go through more examples and configurations in [our documentation](https://lxd.readthedocs.org).
+Now that you have LXD running on your system you can read the [getting started guide](https://linuxcontainers.org/lxd/getting-started-cli/) or go through more examples and configurations in [our documentation](https://linuxcontainers.org/lxd/docs/master/).
 
 ## Bug reports
 Bug reports can be filed at: <https://github.com/lxc/lxd/issues/new>
@@ -143,7 +143,7 @@ find and subscribe to those at: <https://lists.linuxcontainers.org>
 
 ### IRC
 If you prefer live discussions, some of us also hang out in
-[#lxcontainers](http://webchat.freenode.net/?channels=#lxcontainers) on irc.freenode.net.
+[#lxcontainers](https://webchat.freenode.net/?channels=#lxcontainers) on irc.freenode.net.
 
 ## FAQ
 #### How to enable LXD server for remote access?
@@ -214,7 +214,7 @@ instead both for performance and reliability reasons.
 
 #### How can I live migrate a container using LXD?
 Live migration requires a tool installed on both hosts called
-[CRIU](http://criu.org), which is available in Ubuntu via:
+[CRIU](https://criu.org), which is available in Ubuntu via:
 
 ```bash
 sudo apt install criu

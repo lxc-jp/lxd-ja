@@ -14,6 +14,7 @@ ceph.cluster\_name              | string    | ceph driver                       
 ceph.osd.force\_reuse           | bool      | ceph driver                       | false                      | storage\_ceph\_force\_osd\_reuse   | Force using an osd storage pool that is already in use by another LXD instance.
 ceph.osd.pg\_num                | string    | ceph driver                       | 32                         | storage\_driver\_ceph              | Number of placement groups for the osd storage pool.
 ceph.osd.pool\_name             | string    | ceph driver                       | name of the pool           | storage\_driver\_ceph              | Name of the osd storage pool.
+ceph.osd.data\_pool\_name       | string    | ceph driver                       | -                          | storage\_driver\_ceph              | Name of the osd data pool.
 ceph.rbd.clone\_copy            | string    | ceph driver                       | true                       | storage\_driver\_ceph              | Whether to use RBD lightweight clones rather than full dataset copies.
 ceph.user.name                  | string    | ceph driver                       | admin                      | storage\_ceph\_user\_name          | The ceph user to use when creating storage pools and volumes.
 cephfs.cluster\_name            | string    | cephfs driver                     | ceph                       | storage\_driver\_cephfs            | Name of the ceph cluster in which to create new storage pools.
@@ -27,7 +28,7 @@ volatile.initial\_source        | string    | -                                 
 volatile.pool.pristine          | string    | -                                 | true                       | storage\_driver\_ceph              | Whether the pool has been empty on creation time.
 volume.block.filesystem         | string    | block based driver (lvm)          | ext4                       | storage                            | Filesystem to use for new volumes
 volume.block.mount\_options     | string    | block based driver (lvm)          | discard                    | storage                            | Mount options for block devices
-volume.size                     | string    | appropriate driver                | 0                          | storage                            | Default volume size
+volume.size                     | string    | appropriate driver                | unlimited (10GB for block) | storage                            | Default volume size
 volume.zfs.remove\_snapshots    | bool      | zfs driver                        | false                      | storage                            | Remove snapshots as needed
 volume.zfs.use\_refquota        | bool      | zfs driver                        | false                      | storage                            | Use refquota instead of quota for space.
 zfs.clone\_copy                 | bool      | zfs driver                        | true                       | storage\_zfs\_clone\_copy          | Whether to use ZFS lightweight clones rather than full dataset copies.
@@ -43,8 +44,8 @@ lxc storage set [<remote>:]<pool> <key> <value>
 Key                     | Type      | Condition                 | Default                               | API Extension     | Description
 :--                     | :---      | :--------                 | :------                               | :------------     | :----------
 size                    | string    | appropriate driver        | same as volume.size                   | storage           | Size of the storage volume
-block.filesystem        | string    | block based driver (lvm)  | same as volume.block.filesystem       | storage           | Filesystem of the storage volume
-block.mount\_options    | string    | block based driver (lvm)  | same as volume.block.mount\_options   | storage           | Mount options for block devices
+block.filesystem        | string    | block based driver        | same as volume.block.filesystem       | storage           | Filesystem of the storage volume
+block.mount\_options    | string    | block based driver        | same as volume.block.mount\_options   | storage           | Mount options for block devices
 security.shifted        | bool      | custom volume             | false                                 | storage\_shifted  | Enable id shifting overlay (allows attach by multiple isolated containers)
 security.unmapped       | bool      | custom volume             | false                                 | storage\_unmapped | Disable id mapping for the volume
 zfs.remove\_snapshots   | string    | zfs driver                | same as volume.zfs.remove\_snapshots  | storage           | Remove snapshots as needed
@@ -80,7 +81,7 @@ The two best options for use with LXD are ZFS and btrfs.
 They have about similar functionalities but ZFS is more reliable if available on your particular platform.
 
 Whenever possible, you should dedicate a full disk or partition to your LXD storage pool.  
-While LXD will let you create loop based storage, this isn't a recommended for production use.
+While LXD will let you create loop based storage, this isn't recommended for production use.
 
 Similarly, the directory backend is to be considered as a last resort option.  
 It does support all main LXD features, but is terribly slow and inefficient as it can't perform  
@@ -256,7 +257,7 @@ lxc storage create pool1 ceph source=my-already-existing-osd
 lxc storage create pool1 btrfs
 ```
 
- - Create a btrfs subvolume named "pool1" on the btrfs filesystem `/some/path` and use as pool.
+ - Create a new pool called "pool1" using an existing btrfs filesystem at `/some/path`.
 
 ```bash
 lxc storage create pool1 btrfs source=/some/path
@@ -273,6 +274,7 @@ LXD doesn't let you directly grow a loop backed btrfs pool, but you can do so wi
 
 ```bash
 sudo truncate -s +5G /var/lib/lxd/disks/<POOL>.img
+sudo losetup -c <LOOPDEV>
 sudo btrfs filesystem resize max /var/lib/lxd/storage-pools/<POOL>/
 ```
 
