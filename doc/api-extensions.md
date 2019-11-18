@@ -1578,3 +1578,105 @@ This introduces two new configuration keys `storage.images\_volume` and
 `storage.backups\_volume` to allow for a storage volume on an existing
 pool be used for storing the daemon-wide images and backups artifacts.
 -->
+
+## instances
+これはインスタンスの概念を導入します。現状ではインスタンスの唯一の種別は "container" です。
+<!--
+This introduces the concept of instances, of which currently the only type is "container".
+-->
+
+## image\_types
+これはイメージに新しく Type フィールドのサポートを導入します。 Type フィールドはイメージがどういう種別かを示します。
+<!--
+This introduces support for a new Type field on images, indicating what type of images they are.
+-->
+
+## resources\_disk\_sata
+ディスクリソース API の構造体を次の項目を含むように拡張します。
+<!--
+Extends the disk resource API struct to include:
+-->
+ - sata デバイス(種別)の適切な検出 <!-- Proper detection of sata devices (type) -->
+ - デバイスパス <!-- Device path -->
+ - ドライブの RPM <!-- Drive RPM -->
+ - ブロックサイズ <!-- Block size -->
+ - ファームウェアバージョン <!-- Firmware version -->
+ - シリアルナンバー <!-- Serial number -->
+
+## clustering\_roles
+これはクラスタのエントリに `roles` という新しい属性を追加し、クラスタ内のメンバーが提供する role の一覧を公開します。
+<!--
+This adds a new `roles` attribute to cluster entries, exposing a list of
+roles that the member serves in the cluster.
+-->
+
+## images\_expiry
+これはイメージの有効期限を設定できるようにします。
+<!--
+This allows for editing of the expiry date on images.
+-->
+
+## resources\_network\_firmware
+ネットワークカードのエントリに FirmwareVersion フィールドを追加します。
+<!--
+Adds a FirmwareVersion field to network card entries.
+-->
+
+## backup\_compression\_algorithm
+バックアップを作成する (`POST /1.0/containers/<name>/backups`) 際に `compression_algorithm` プロパティのサポートを追加します。
+<!--
+This adds support for a `compression_algorithm` property when creating a backup (`POST /1.0/containers/<name>/backups`).
+-->
+
+このプロパティを設定するとデフォルト値 (`backups.compression_algorithm`) をオーバーライドすることができます。
+<!--
+Setting this property overrides the server default value (`backups.compression_algorithm`).
+-->
+
+## ceph\_data\_pool\_name
+Ceph RBD を使ってストレージプールを作成する際にオプショナルな引数 (`ceph.osd.data_pool_name`) のサポートを追加します。
+この引数が指定されると、プールはメタデータは `pool_name` で指定されたプールに保持しつつ実際のデータは `data_pool_name` で指定されたプールに保管するようになります。
+<!--
+This adds support for an optional argument (`ceph.osd.data_pool_name`) when creating
+storage pools using Ceph RBD, when this argument is used the pool will store it's
+actual data in the pool specified with `data_pool_name` while keeping the metadata
+in the pool specified by `pool_name`.
+-->
+
+## container\_syscall\_intercept\_mount
+`security.syscalls.intercept.mount`, `security.syscalls.intercept.mount.allowed`, `security.syscalls.intercept.mount.shift` 設定キーを追加します。
+これらは mount システムコールを LXD にインターセプトさせるかどうか、昇格されたパーミションでどのように処理させるかを制御します。
+<!--
+Adds the `security.syscalls.intercept.mount`,
+`security.syscalls.intercept.mount.allowed`, and
+`security.syscalls.intercept.mount.shift` configuration keys to control whether
+and how the mount system call will be interecepted by LXD and processed with
+elevated permissions.
+-->
+
+## compression_squashfs
+イメージやバックアップを SquashFS ファイルシステムの形式でインポート／エクスポートするサポートを追加します。
+<!--
+Adds support for importing/exporting of images/backups using SquashFS file system format.
+-->
+
+## container\_raw\_mount
+ディスクデバイスに raw mount オプションを渡すサポートを追加します。
+<!--
+This adds support for passing in raw mount options for disk devices.
+-->
+
+## container\_nic\_routed
+`routed` "nic" デバイス種別を導入します。
+<!--
+This introduces the `routed` "nic" device type.
+-->
+
+## container\_syscall\_intercept\_mount\_fuse
+`security.syscalls.intercept.mount.fuse` キーを追加します。これはファイルシステムのマウントを fuse 実装にリダイレクトするのに使えます。
+このためには例えば `security.syscalls.intercept.mount.fuse=ext4=fuse2fs` のように設定します。
+<!--
+Adds the `security.syscalls.intercept.mount.fuse` key. It can be used to
+redirect filesystem mounts to their fuse implementation. To this end, set e.g.
+`security.syscalls.intercept.mount.fuse=ext4=fuse2fs`.
+-->
