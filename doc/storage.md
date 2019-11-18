@@ -21,6 +21,7 @@ ceph.cluster\_name              | string    | ceph driver                       
 ceph.osd.force\_reuse           | bool      | ceph driver                       | false                      | storage\_ceph\_force\_osd\_reuse   | 他の LXD インスタンスが使用中の OSD ストレージプールを強制的に使う <!-- Force using an osd storage pool that is already in use by another LXD instance. -->
 ceph.osd.pg\_num                | string    | ceph driver                       | 32                         | storage\_driver\_ceph              | OSD ストレージプールの Placement group 数 <!-- Number of placement groups for the osd storage pool. -->
 ceph.osd.pool\_name             | string    | ceph driver                       | プール名 <!-- name of the pool --> | storage\_driver\_ceph              | OSD ストレージプール名 <!-- Name of the osd storage pool. -->
+ceph.osd.data\_pool\_name       | string    | ceph driver                       | -                          | storage\_driver\_ceph              | OSD データプール名 <!-- Name of the osd data pool. -->
 ceph.rbd.clone\_copy            | string    | ceph driver                       | true                       | storage\_driver\_ceph              | フルデータセットのコピーの代わりに RBD Lightweight Clone を使うかどうか <!-- Whether to use RBD lightweight clones rather than full dataset copies. -->
 ceph.user.name                  | string    | ceph driver                       | admin                      | storage\_ceph\_user\_name          | ストレージプールやボリュームを作成する際に使用する Ceph ユーザ名 <!-- The ceph user to use when creating storage pools and volumes. -->
 cephfs.cluster\_name            | string    | cephfs driver                     | ceph                       | storage\_driver\_cephfs            | 新しいストレージプールを作成する ceph のクラスター名 <!-- Name of the ceph cluster in which to create new storage pools. -->
@@ -34,7 +35,7 @@ volatile.initial\_source        | string    | -                                 
 volatile.pool.pristine          | string    | -                                 | true                       | storage\_driver\_ceph              | プールが作成時に空かどうか <!-- Whether the pool has been empty on creation time. -->
 volume.block.filesystem         | string    | block based driver (lvm)          | ext4                       | storage                            | 新しいボリュームに使うファイルシステム <!-- Filesystem to use for new volumes -->
 volume.block.mount\_options     | string    | block based driver (lvm)          | discard                    | storage                            | ブロックデバイスのマウントポイント <!-- Mount options for block devices -->
-volume.size                     | string    | appropriate driver                | 0                          | storage                            | デフォルトのボリュームサイズ <!-- Default volume size -->
+volume.size                     | string    | appropriate driver                | unlimited (ブロックデバイスは 10GB) <!-- unlimited (10GB for block)--> | storage                            | デフォルトのボリュームサイズ <!-- Default volume size -->
 volume.zfs.remove\_snapshots    | bool      | zfs driver                        | false                      | storage                            | 必要に応じてスナップショットを削除するかどうか <!-- Remove snapshots as needed -->
 volume.zfs.use\_refquota        | bool      | zfs driver                        | false                      | storage                            | 領域の quota の代わりに refquota を使うかどうか <!-- Use refquota instead of quota for space. -->
 zfs.clone\_copy                 | bool      | zfs driver                        | true                       | storage\_zfs\_clone\_copy          | ZFS のフルデータセットコピーの代わりに軽量なクローンを使うかどうか <!-- Whether to use ZFS lightweight clones rather than full dataset copies. -->
@@ -53,8 +54,8 @@ lxc storage set [<remote>:]<pool> <key> <value>
 Key                     | Type      | Condition                 | Default                                             | API Extension     | Description
 :--                     | :---      | :--------                 | :------                                             | :------------     | :----------
 size                    | string    | appropriate driver        | <!-- same as -->volume.size と同じ                  | storage           | ストレージボリュームのサイズ <!-- Size of the storage volume -->
-block.filesystem        | string    | block based driver (lvm)  | <!-- same as -->volume.block.filesystem と同じ      | storage           | ストレージボリュームのファイルシステム <!-- Filesystem of the storage volume -->
-block.mount\_options    | string    | block based driver (lvm)  | <!-- same as -->volume.block.mount\_options と同じ  | storage           | ブロックデバイスのマウントオプション <!-- Mount options for block devices -->
+block.filesystem        | string    | block based driver        | <!-- same as -->volume.block.filesystem と同じ      | storage           | ストレージボリュームのファイルシステム <!-- Filesystem of the storage volume -->
+block.mount\_options    | string    | block based driver        | <!-- same as -->volume.block.mount\_options と同じ  | storage           | ブロックデバイスのマウントオプション <!-- Mount options for block devices -->
 security.shifted        | bool      | custom volume             | false                                 | storage\_shifted  | shiftfs オーバーレイを使って id をシフトさせる（複数の隔離されたコンテナからアタッチしたストレージで、コンテナそれぞれで指定したidになるようにする） <!-- Enable id shifting overlay (allows attach by multiple isolated containers) -->
 security.unmapped       | bool      | custom volume             | false                                               | storage\_unmapped | ボリュームに対する ID マッピングを無効化する <!-- Disable id mapping for the volume -->
 zfs.remove\_snapshots   | string    | zfs driver                | <!-- same as -->volume.zfs.remove\_snapshots と同じ | storage           | 必要に応じてスナップショットを削除するかどうか <!-- Remove snapshots as needed -->
@@ -102,7 +103,7 @@ LXD から使う場合のベストなオプションは ZFS と btrfs を使う�
 
 <!--
 Whenever possible, you should dedicate a full disk or partition to your LXD storage pool.  
-While LXD will let you create loop based storage, this isn't a recommended for production use.
+While LXD will let you create loop based storage, this isn't recommended for production use.
 -->
 可能であれば、LXD のストレージプールにディスクかパーティション全体を与えるのが良いでしょう。  
 LXD で loop ベースのストレージを作れますが、プロダクション環境ではおすすめしません。
@@ -338,7 +339,7 @@ lxc storage create pool1 ceph source=my-already-existing-osd
 lxc storage create pool1 btrfs
 ```
 
- - btrfs ファイルシステムである `/some/path` 上に "pool1" という btrfs サブボリュームを作成し、プールとして使う <!-- Create a btrfs subvolume named "pool1" on the btrfs filesystem `/some/path` and use as pool. -->
+ - `/some/path` の既存の `btrfs ファイルシステムを使って "pool1" という新しいプールを作成する。 <!-- Create a new pool called "pool1" using an existing btrfs filesystem at `/some/path`. -->
 
 ```bash
 lxc storage create pool1 btrfs source=/some/path
@@ -358,6 +359,7 @@ LXD では、ループバックデバイスの btrfs プールを直接は拡張
 
 ```bash
 sudo truncate -s +5G /var/lib/lxd/disks/<POOL>.img
+sudo losetup -c <LOOPDEV>
 sudo btrfs filesystem resize max /var/lib/lxd/storage-pools/<POOL>/
 ```
 
