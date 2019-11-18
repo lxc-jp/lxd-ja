@@ -247,6 +247,79 @@ out-of-date node left and will become operational again.
 -->
 残りのノードのアップグレードを進めると、最後のノードをアップグレードするまでは、ノードはすべて Blocked 状態に移行します。その時点で、Blocked ノードは古いノードが残っていないかを確認し、再度操作できるようになります。
 
+### ディザスターリカバリー <!-- Disaster recovery -->
+
+各 LXD クラスタはデータベースノードとして機能するメンバーを最大 3 つまで持つことができます。
+恒久的にデータベースノードとして機能するクラスタメンバーの過半数を失った場合 (例えば 3 メンバーのクラスタで 2 メンバーを失った場合)、
+クラスタは利用不可能になります。しかし、 1 つでもデータベースノードが生き残っていれば、クラスタをリカバーすることができます。
+<!--
+Every LXD cluster has up to 3 members that serve as database nodes. If you
+permanently lose a majority of the cluster members that are serving as database
+nodes (for example you have a 3-member cluster and you lose 2 members), the
+cluster will become unavailable. However, if at least one database node has
+survived, you will be able to recover the cluster.
+-->
+
+クラスタメンバーがデータベースノードとして設定されているかどうかをチェックするには、クラスタのいずれかの生き残っているメンバーにログオンして以下のコマンドを実行します。
+<!--
+In order to check which cluster members are configured as database nodes, log on
+any survived member of your cluster and run the command:
+-->
+
+```
+lxd cluster list-database
+```
+
+これは LXD デーモンが実行中でなくても実行できます。
+<!--
+This will work even if the LXD daemon is not running.
+-->
+
+一覧表示されたメンバーの中で、生き残っていてログインしたものを選びます (コマンドを実行したメンバーと異なる場合)。
+<!--
+Among the listed members, pick the one that has survived and log into it (if it
+differs from the one you have run the command on).
+-->
+
+LXD デーモンが実行していないことを確認したうえで次のコマンドを実行します。
+<!--
+Now make sure the LXD daemon is not running and then issue the command:
+-->
+
+```
+lxd cluster recover-from-quorum-loss
+```
+
+この時点で LXD デーモンを再起動できるようになり、データベースはオンラインに復帰するはずです。
+<!--
+At this point you can restart the LXD daemon and the database should be back
+online.
+-->
+
+データベースからは何の情報も削除されていないことに注意してください。特に失われたクラスタメンバーに関する情報は、それらのコンテナについてのメタデータも含めて、まだそこに残っています。
+この情報は失われたコンテナを再度作成する必要がある場合に、さらなるリカバーのステップで利用することができます。
+<!--
+Note that no information has been deleted from the database, in particular all
+information about the cluster members that you have lost is still there,
+including the metadata about their containers. This can help you with further
+recovery steps in case you need to re-create the lost containers.
+-->
+
+失われたクラスタメンバーを恒久的に削除するためには、次のコマンドが利用できます。
+<!--
+In order to permanently delete the cluster members that you have lost, you can
+run the command:
+-->
+
+```
+lxc cluster remove <name> --force
+```
+
+ここでは ``lxd``` ではなく通常の ```lxc``` コマンドを使う必要があることに注意してください。
+<!--
+Note that this time you have to use the regular ```lxc``` command line tool, not
+```lxd```.
+-->
 
 ## コンテナ <!-- Containers -->
 
