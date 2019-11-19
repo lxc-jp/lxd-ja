@@ -97,6 +97,10 @@ security.syscalls.blacklist             | string    | -                 | no    
 security.syscalls.blacklist\_compat     | boolean   | false             | no            | container\_syscall\_filtering        | `x86_64` で `compat_*` システムコールのブロックを有効にするかどうか。他のアーキテクチャでは何もしません <!-- On x86\_64 this enables blocking of compat\_\* syscalls, it is a no-op on other arches -->
 security.syscalls.blacklist\_default    | boolean   | true              | no            | container\_syscall\_filtering        | デフォルトのシステムコールブラックリストを有効にするかどうか <!-- Enables the default syscall blacklist -->
 security.syscalls.intercept.mknod       | boolean   | false             | no            | container\_syscall\_intercept        | `mknod` と `mknodat` システムコールを処理するかどうか (限定されたサブセットのキャラクタ／ブロックデバイスの作成を許可する) <!-- Handles the `mknod` and `mknodat` system calls (allows creation of a limited subset of char/block devices) -->
+security.syscalls.intercept.mount               | boolean   | false             | no            | container\_syscall\_intercept\_mount       | `mount` システムコールを処理するかどうか <!-- Handles the `mount` system call -->
+security.syscalls.intercept.mount.allowed       | string    | -                 | yes           | container\_syscall\_intercept\_mount       | コンテナ内のプロセスが安全にマウントできるファイルシステムのカンマ区切りリストを指定 <!-- Specify a comma-separated list of filesystems that are safe to mount for processes inside the container. -->
+security.syscalls.intercept.mount.fuse          | string    | -                 | yes           | container\_syscall\_intercept\_mount\_fuse | `mount` システムコールをインターセプトして処理対象のファイルシステムの上に shiftfs をマウントするかどうか <!-- Whether to mount shiftfs on top of filesystems handled through mount syscall interception. -->
+security.syscalls.intercept.mount.shift         | boolean   | false             | yes           | container\_syscall\_intercept\_mount       | 指定されたファイルシステムのマウントを fuse 実装にリダイレクトするかどうか (例: ext4=fuse2fs) <!-- Whether to redirect mounts of a given filesystem to their fuse implemenation (e.g. ext4=fuse2fs) -->
 security.syscalls.intercept.setxattr    | boolean   | false             | no            | container\_syscall\_intercept        | `setxattr` システムコールを処理するかどうか (限定されたサブセットの制限された拡張属性の設定を許可する) <!-- Handles the `setxattr` system call (allows setting a limited subset of restricted extended attributes) -->
 security.syscalls.whitelist             | string    | -                 | no            | container\_syscall\_filtering        | `\n` 区切りのシステムコールのホワイトリスト（`security.syscalls.blacklist\*)` と排他）<!-- A '\n' separated list of syscalls to whitelist (mutually exclusive with security.syscalls.blacklist\*) -->
 snapshots.schedule                      | string    | -                 | no            | snapshot\_scheduling                 | Cron 表記 <!-- Cron expression --> (`<minute> <hour> <dom> <month> <dow>`)
@@ -112,7 +116,6 @@ LXD は内部的に次の揮発性の設定を使います:
 
 Key                             | Type      | Default       | Description
 :--                             | :---      | :------       | :----------
-volatile.apply\_quota           | string    | -             | 次にコンテナが起動する際に適用されるディスククォータ <!-- Disk quota to be applied on next container start -->
 volatile.apply\_template        | string    | -             | 次の起動時にトリガーされるテンプレートフックの名前 <!-- The name of a template hook which should be triggered upon next startup -->
 volatile.base\_image            | string    | -             | コンテナを作成したイメージのハッシュ（存在する場合）<!-- The hash of the image the container was created from, if any. -->
 volatile.idmap.base             | integer   | -             | コンテナの主 idmap の範囲の最初の ID <!-- The first id in the container's primary idmap range -->
@@ -120,6 +123,7 @@ volatile.idmap.current          | string    | -             | コンテナで現
 volatile.idmap.next             | string    | -             | 次にコンテナが起動する際に使う idmap <!-- The idmap to use next time the container starts -->
 volatile.last\_state.idmap      | string    | -             | シリアライズ化したコンテナの uid/gid マップ <!-- Serialized container uid/gid map -->
 volatile.last\_state.power      | string    | -             | 最後にホストがシャットダウンした時点のコンテナの状態 <!-- Container state as of last host shutdown -->
+volatile.\<name\>.apply\_quota              | string    | -             | 次回のコンテナ起動時に適用されるディスククォータ <!-- Disk quota to be applied on next container start -->
 volatile.\<name\>.host\_name    | string    | -             | ホスト上のネットワークデバイス名 <!-- Network device name on the host -->
 volatile.\<name\>.hwaddr        | string    | -             | ネットワークデバイスの MAC アドレス（`hwaddr` プロパティがデバイスに設定されていない場合）<!-- Network device MAC address (when no hwaddr property is set on the device itself) -->
 volatile.\<name\>.last\_state.created       | string    | -             | 物理デバイスのネットワークデバイスが作られたかどうか ("true" または "false") <!-- Whether or not the network device physical device was created ("true" or "false") -->
@@ -338,12 +342,13 @@ LXD supports different kind of network devices:
 -->
 LXD では、様々な種類のネットワークデバイスが使えます:
 
- - [physical](#nictype-physical): ホストの物理デバイスを直接使います。対象のデバイスはホスト上では見えなくなり、コンテナ内に出現します <!-- Straight physical device passthrough from the host. The targeted device will vanish from the host and appear in the container. -->
- - [bridged](#nictype-bridged): ホスト上に存在するブリッジを使います。ホストのブリッジとコンテナを接続する仮想デバイスペアを作成します <!-- Uses an existing bridge on the host and creates a virtual device pair to connect the host bridge to the container. -->
+ - [physical](#nictype-physical): ホストの物理デバイスを直接使います。対象のデバイスはホスト上では見えなくなり、コンテナ内に出現します。 <!-- Straight physical device passthrough from the host. The targeted device will vanish from the host and appear in the container. -->
+ - [bridged](#nictype-bridged): ホスト上に存在するブリッジを使います。ホストのブリッジとコンテナを接続する仮想デバイスペアを作成します。 <!-- Uses an existing bridge on the host and creates a virtual device pair to connect the host bridge to the container. -->
  - [macvlan](#nictype-macvlan): 既存のネットワークデバイスをベースに MAC が異なる新しいネットワークデバイスを作成します。 <!-- Sets up a new network device based on an existing one but using a different MAC address. -->
  - [ipvlan](#nictype-ipvlan): 既存のネットワークデバイスをベースに MAC アドレスは同じですが IP アドレスが異なる新しいネットワークデバイスを作成します。 <!-- Sets up a new network device based on an existing one using the same MAC address but a different IP. -->
- - [p2p](#nictype-p2p): 仮想デバイスペアを作成し、片方をコンテナ内に置き、残りの片方をホスト上に残します <!-- Creates a virtual device pair, putting one side in the container and leaving the other side on the host. -->
- - [sriov](#nictype-sriov): SR-IOV が有効な物理ネットワークデバイスの仮想ファンクション（virtual function）をコンテナに与えます <!-- Passes a virtual function of an SR-IOV enabled physical network device into the container. -->
+ - [p2p](#nictype-p2p): 仮想デバイスペアを作成し、片方をコンテナ内に置き、残りの片方をホスト上に残します。 <!-- Creates a virtual device pair, putting one side in the container and leaving the other side on the host. -->
+ - [sriov](#nictype-sriov): SR-IOV が有効な物理ネットワークデバイスの仮想ファンクション（virtual function）をコンテナに与えます。 <!-- Passes a virtual function of an SR-IOV enabled physical network device into the container. -->
+ - [routed](#nictype-routed): 仮想デバイスペアを作成し、ホストからコンテナに繋いで静的ルートをセットアップし ARP/NDP エントリをプロキシします。これにより指定された親インタフェースのネットワークにコンテナが参加できるようになります。 <!-- Creates a virtual device pair to connect the host to the container and sets up static routes and proxy ARP/NDP entries to allow the container to join the network of a designated parent interface. -->
 
 <!--
 Different network interface types have different additional properties.
@@ -541,6 +546,95 @@ vlan                    | integer   | -                 | no        | network\_v
 maas.subnet.ipv4        | string    | -                 | no        | maas\_network                          | コンテナを登録する MAAS IPv4 サブネット <!-- MAAS IPv4 subnet to register the container in -->
 maas.subnet.ipv6        | string    | -                 | no        | maas\_network                          | コンテナを登録する MAAS IPv6 サブネット <!-- MAAS IPv6 subnet to register the container in -->
 
+#### nictype: routed
+
+この NIC タイプは運用上は IPVLAN に似ていて、ブリッジを作成することなくホストの MAC アドレスを共用してコンテナが外部ネットワークに参加できるようにします。
+<!--
+This NIC type is similar in operation to IPVLAN, in that it allows a container to join an external network without needing to configure a bridge and shares the host's MAC address.
+-->
+
+しかしカーネルに IPVLAN サポートを必要としないこととホストとコンテナが互いに通信できることが IPVLAN とは異なります。
+<!--
+However it differs from IPVLAN because it does not need IPVLAN support in the kernel and the host and container can communicate with each other.
+-->
+
+さらにホスト上の netfilter のルールを尊重し、ホストのルーティングテーブルを使ってパケットをルーティングしますのでホストが複数のネットワークに接続している場合に役立ちます。
+<!--
+It will also respect netfilter rules on the host and will use the host's routing table to route packets which can be useful if the host is connected to multiple networks.
+-->
+
+IP アドレスは `ipv4.address` と `ipv6.address` の設定のいずれかあるいは両方を使って、コンテナが起動する前に手動で指定する必要があります。
+<!--
+IP addresses must be manually specified using either one or both of `ipv4.address` and `ipv6.address` settings before container is started.
+-->
+
+ホストとコンテナの間に veth ペアをセットアップし、ホスト側の veth の上に次のリンクローカルゲートウェイ IP アドレスを設定し、それらをコンテナ内のデフォルトゲートウェイに設定します。
+<!--
+It sets up a veth pair between host and container and then configures the following link-local gateway IPs on the host end which are then set as the default gateways in the container:
+-->
+
+  169.254.0.1
+  fe80::1
+
+次にコンテナの IP アドレス全てをコンテナの veth インタフェースに向ける静的ルートをホスト上に設定します。
+<!--
+It then configures static routes on the host pointing to the container's veth interface for all of the container's IPs.
+-->
+
+この nic は `parent` のネットワークインタフェースのセットがあってもなくても利用できます。
+<!--
+This nic can operate with and without a `parent` network interface set.
+-->
+
+`parent` ネットワークインタフェースのセットがある場合、コンテナの IP の ARP/NDP のプロキシエントリが親のインタフェースに追加され、コンテナが親のインタフェースのネットワークにレイヤ 2 で参加できるようにします。
+<!--
+With the `parent` network interface set proxy ARP/NDP entries of the container's IPs are added to the parent interface allowing the container to join the parent interface's network at layer 2.
+-->
+
+DNS に関してはネームサーバは自動的には設定されないので、コンテナ内で設定する必要があります。
+<!--
+For DNS, the nameservers need to be configured inside the container, as these will not automatically be set.
+-->
+
+次の sysctl の設定が必要です。
+<!--
+It requires the following sysctls to be set:
+-->
+
+IPv4 アドレスを使用する場合は
+<!--
+If using IPv4 addresses:
+-->
+
+```
+net.ipv4.conf.<parent>.forwarding=1
+```
+
+IPv6 アドレスを使用する場合は
+<!--
+If using IPv6 addresses:
+-->
+
+```
+net.ipv6.conf.<parent>.forwarding=1
+net.ipv6.conf.<parent>.proxy_ndp=1
+```
+
+デバイス設定プロパティ
+<!--
+Device configuration properties:
+-->
+
+Key                     | Type      | Default           | Required  | API extension                          | Description
+:--                     | :--       | :--               | :--       | :--                                    | :--
+parent                  | string    | -                 | no        | -                                      | コンテナが参加するホストデバイス名 <!-- The name of the host device to join the container to -->
+name                    | string    | カーネルが割り当て <!-- kernel assigned -->   | no        | -                                      | コンテナ内部のインタフェース名 <!-- The name of the interface inside the container -->
+mtu                     | integer   | 親の MTU <!-- parent MTU -->        | no        | -                                      | 新しいインタフェースの MTU <!-- The MTU of the new interface -->
+hwaddr                  | string    | ランダムに割り当て <!-- randomly assigned --> | no        | -                                      | 新しいインタフェースの MAC アドレス <!-- The MAC address of the new interface -->
+ipv4.address            | string    | -                 | no        | network                                | コンテナに追加する IPv4 静的アドレスのカンマ区切りリスト <!-- Comma delimited list of IPv4 static addresses to add to container -->
+ipv6.address            | string    | -                 | no        | network                                | コンテナに追加する IPv6 静的アドレスのカンマ区切りリスト <!-- Comma delimited list of IPv6 static addresses to add to container -->
+vlan                    | integer   | -                 | no        | network\_vlan                          | アタッチ先の VLAN ID <!-- The VLAN ID to attach to -->
+
 #### ブリッジ、ipvlan、macvlan を使った物理ネットワークへの接続 <!-- bridged, macvlan or ipvlan for connection to physical network -->
 <!--
 The `bridged`, `macvlan` and `ipvlan` interface types can both be used to connect
@@ -715,13 +809,14 @@ limits.write    | string    | -                 | no        | byte/s（さまざ
 limits.max      | string    | -                 | no        | `limits.read` と `limits.write` の両方を同じ値に変更する <!-- Same as modifying both limits.read and limits.write -->
 path            | string    | -                 | yes       | ディスクをマウントするコンテナ内のパス <!-- Path inside the container where the disk will be mounted -->
 source          | string    | -                 | yes       | ファイル・ディレクトリ、もしくはブロックデバイスのホスト上のパス <!-- Path on the host, either to a file/directory or to a block device -->
-optional        | boolean   | false             | no        | ソースが存在しないときに失敗とするかどうかを制御する <!-- Controls whether to fail if the source doesn't exist -->
+required        | boolean   | true              | no        | ソースが存在しないときに失敗とするかどうかを制御する <!-- Controls whether to fail if the source doesn't exist -->
 readonly        | boolean   | false             | no        | マウントを読み込み専用とするかどうかを制御する <!-- Controls whether to make the mount read-only -->
 size            | string    | -                 | no        | byte（さまざまな単位が使用可能、下記参照す）で指定するディスクサイズ。rootfs（/）でのみサポートされます <!-- Disk size in bytes (various suffixes supported, see below). This is only supported for the rootfs (/). -->
 recursive       | boolean   | false             | no        | ソースパスを再帰的にマウントするかどうか <!-- Whether or not to recursively mount the source path -->
 pool            | string    | -                 | no        | ディスクデバイスが属するストレージプール。LXD が管理するストレージボリュームにのみ適用されます <!-- The storage pool the disk device belongs to. This is only applicable for storage volumes managed by LXD. -->
 propagation     | string    | -                 | no        | バインドマウントをコンテナとホストでどのように共有するかを管理する（デフォルトである `private`, `shared`, `slave`, `unbindable`,  `rshared`, `rslave`, `runbindable`,  `rprivate` のいずれか。詳しくは Linux kernel の文書 [shared subtree](https://www.kernel.org/doc/Documentation/filesystems/sharedsubtree.txt) をご覧ください）<!-- Controls how a bind-mount is shared between the container and the host. (Can be one of `private`, the default, or `shared`, `slave`, `unbindable`,  `rshared`, `rslave`, `runbindable`,  `rprivate`. Please see the Linux Kernel [shared subtree](https://www.kernel.org/doc/Documentation/filesystems/sharedsubtree.txt) documentation for a full explanation) -->
 shift           | boolean   | false             | no        | ソースの uid/gid をコンテナにマッチするように変換させるためにオーバーレイの shift を設定するか <!-- Setup a shifting overlay to translate the source uid/gid to match the container -->
+raw.mount.options| string    | -                 | no        | ファイルシステム固有のマウントオプション <!-- Filesystem specific mount options -->
 
 <!--
 If multiple disks, backed by the same block device, have I/O limits set,
@@ -794,7 +889,7 @@ productid   | string    | -                 | no        | USB デバイスのプ
 uid         | int       | 0                 | no        | コンテナ内のデバイス所有者の UID <!-- UID of the device owner in the container -->
 gid         | int       | 0                 | no        | コンテナ内のデバイス所有者の GID <!-- GID of the device owner in the container -->
 mode        | int       | 0660              | no        | コンテナ内のデバイスのモード <!-- Mode of the device in the container -->
-required    | boolean   | false             | no        | このデバイスがコンテナの起動に必要かどうか（デフォルトは false で、すべてのデバイスがホットプラグ可能です） <!-- Whether or not this device is required to start the container. (The default is no, and all devices are hot-pluggable.) -->
+required    | boolean   | false             | no        | このデバイスがコンテナの起動に必要かどうか（デフォルトは false で、すべてのデバイスがホットプラグ可能です） <!-- Whether or not this device is required to start the container. (The default is false, and all devices are hot-pluggable) -->
 
 ### Type: gpu
 <!--
