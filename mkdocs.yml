@@ -2,8 +2,8 @@ site_name: "LXDドキュメント翻訳プロジェクト"
 theme: readthedocs
 docs_dir: 'doc'
 pages:
-- Getting started:
-    - Getting started: index.md
+- はじめに:
+    - はじめに: index.md
     - 動作環境: requirements.md
     - FAQ: faq.md
     - セキュリティ: security.md
