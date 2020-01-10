@@ -200,15 +200,14 @@ return a response with that header, set `core.https_allowed_credentials=true`.
 This adds support for a `compression_algorithm` property when creating an image (`POST /1.0/images`).
 -->
 
-このプロパティを設定するとサーバのデフォルト値 (`images.compression_algorithm`)
+このプロパティを設定するとサーバのデフォルト値 (`images.compression_algorithm`) をオーバーライドします。
 <!--
 Setting this property overrides the server default value (`images.compression_algorithm`).
 -->
 
 ## directory\_manipulation
-この変更により LXD API 経由でディレクトリを作成したり一覧したりできるように
-なり、ファイルタイプを X-LXD-type ヘッダに付与するようになります。現状は
-ファイルタイプは "file" か "directory" のいずれかです。
+LXD API 経由でディレクトリを作成したり一覧したりでき、ファイルタイプを X-LXD-type ヘッダに付与するようになります。
+現状はファイルタイプは "file" か "directory" のいずれかです。
 <!--
 This allows for creating and listing directories via the LXD API, and exports
 the file type via the X-LXD-type header, which can be either "file" or
@@ -569,7 +568,7 @@ This adds descriptions to entities like containers, snapshots, networks, storage
 -->
 
 ## image\_force\_refresh
-これは既存のイメージを強制的にリフレッシュできるようにします。
+既存のイメージを強制的にリフレッシュできます。
 <!--
 This allows forcing a refresh for an existing image.
 -->
@@ -1408,7 +1407,7 @@ Expose the location of the generation of API events.
 -->
 
 ## storage\_api\_remote\_volume\_snapshots
-これはストレージボリュームをそれらのスナップショットを含んで移行することを可能にします。
+ストレージボリュームをそれらのスナップショットを含んで移行できます。
 <!--
 This allows migrating storage volumes including their snapshots.
 -->
@@ -1423,7 +1422,7 @@ Those keys control the source address used for outbound traffic from the bridge.
 
 ## container\_nic\_routes
 これは "nic" タイプのデバイスに `ipv4.routes` と `ipv6.routes` プロパティを導入します。
-ホストからコンテナの nic への静的ルートの追加を可能にします。
+ホストからコンテナへの nic への静的ルートが追加できます。
 <!--
 This introduces the `ipv4.routes` and `ipv6.routes` properties on "nic" type devices.
 This allows adding static routes on host to container's nic.
@@ -1611,7 +1610,7 @@ roles that the member serves in the cluster.
 -->
 
 ## images\_expiry
-これはイメージの有効期限を設定できるようにします。
+イメージの有効期限を設定できます。
 <!--
 This allows for editing of the expiry date on images.
 -->
@@ -1623,24 +1622,24 @@ Adds a FirmwareVersion field to network card entries.
 -->
 
 ## backup\_compression\_algorithm
-バックアップを作成する (`POST /1.0/containers/<name>/backups`) 際に `compression_algorithm` プロパティのサポートを追加します。
+バックアップを作成する (`POST /1.0/containers/<name>/backups`) 際に `compression\_algorithm` プロパティのサポートを追加します。
 <!--
-This adds support for a `compression_algorithm` property when creating a backup (`POST /1.0/containers/<name>/backups`).
+This adds support for a `compression\_algorithm` property when creating a backup (`POST /1.0/containers/<name>/backups`).
 -->
 
-このプロパティを設定するとデフォルト値 (`backups.compression_algorithm`) をオーバーライドすることができます。
+このプロパティを設定するとデフォルト値 (`backups.compression\_algorithm`) をオーバーライドすることができます。
 <!--
-Setting this property overrides the server default value (`backups.compression_algorithm`).
+Setting this property overrides the server default value (`backups.compression\_algorithm`).
 -->
 
 ## ceph\_data\_pool\_name
-Ceph RBD を使ってストレージプールを作成する際にオプショナルな引数 (`ceph.osd.data_pool_name`) のサポートを追加します。
-この引数が指定されると、プールはメタデータは `pool_name` で指定されたプールに保持しつつ実際のデータは `data_pool_name` で指定されたプールに保管するようになります。
+Ceph RBD を使ってストレージプールを作成する際にオプショナルな引数 (`ceph.osd.data\_pool\_name`) のサポートを追加します。
+この引数が指定されると、プールはメタデータは `pool\_name` で指定されたプールに保持しつつ実際のデータは `data\_pool\_name` で指定されたプールに保管するようになります。
 <!--
-This adds support for an optional argument (`ceph.osd.data_pool_name`) when creating
+This adds support for an optional argument (`ceph.osd.data\_pool\_name`) when creating
 storage pools using Ceph RBD, when this argument is used the pool will store it's
-actual data in the pool specified with `data_pool_name` while keeping the metadata
-in the pool specified by `pool_name`.
+actual data in the pool specified with `data\_pool\_name` while keeping the metadata
+in the pool specified by `pool\_name`.
 -->
 
 ## container\_syscall\_intercept\_mount
@@ -1654,7 +1653,7 @@ and how the mount system call will be interecepted by LXD and processed with
 elevated permissions.
 -->
 
-## compression_squashfs
+## compression\_squashfs
 イメージやバックアップを SquashFS ファイルシステムの形式でインポート／エクスポートするサポートを追加します。
 <!--
 Adds support for importing/exporting of images/backups using SquashFS file system format.
@@ -1679,4 +1678,22 @@ This introduces the `routed` "nic" device type.
 Adds the `security.syscalls.intercept.mount.fuse` key. It can be used to
 redirect filesystem mounts to their fuse implementation. To this end, set e.g.
 `security.syscalls.intercept.mount.fuse=ext4=fuse2fs`.
+-->
+
+## container\_disk\_ceph
+既存の CEPH RDB もしくは FS を直接 LXD コンテナに接続できます。
+<!--
+This allows for existing a CEPH RDB or FS to be directly connected to a LXD container.
+-->
+
+## virtual\_machines
+仮想マシンサポートが追加されます。
+<!--
+Add virtual machine support.
+-->
+
+## image\_profiles
+新しいコンテナを起動するときに、イメージに適用するプロファイルのリストが指定できます。
+<!--
+Allows a list of profiles to be applied to an image when launching a new container. 
 -->
