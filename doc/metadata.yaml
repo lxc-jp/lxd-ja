@@ -40,6 +40,9 @@ navigation:
         - title: ストレージプール # Storage pools
           location: storage.md
 
+        - title: 仮想マシン # Virtual machines
+          location: virtual-machines.md
+
     - title: イメージ # Images
       children:
         - title: アーキテクチャ # Architectures
