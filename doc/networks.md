@@ -1,16 +1,5 @@
 # ネットワーク設定
 <!-- Network configuration -->
-LXD はネットワークの作成と管理をサポートしています。サポートしている
-ブリッジの設定オプションは以下の一覧の通りです。
-<!--
-LXD supports creating and managing bridges, below is a list of the
-configuration options supported for those bridges.
--->
-
-この機能は API 拡張 "network" の一部だったことに注意してください。
-<!--
-Note that this feature was introduced as part of API extension "network".
--->
 
 次のネームスペースの key/value 設定が現在サポートされています。
 <!--
@@ -26,6 +15,59 @@ currently supported:
  - `dns` (DNS サーバと名前解決の設定) <!-- (DNS server and resolution configuration) -->
  - `raw` (raw の設定のファイルの内容) <!-- (raw configuration file content) -->
  - `user` (ユーザのメタデータに対する自由形式の key/value) <!-- (free form key/value for user metadata) -->
+
+## ブリッジ <!-- Bridges -->
+
+LXD でのネットワークの設定タイプの 1 つとして、 LXD はネットワークブリッジの作成と管理をサポートしています。
+LXD のブリッジは下層のネイティブな Linux のブリッジと Open vSwitch を利用できます。
+<!--
+As one of the possible network configuration types under LXD,
+LXD supports creating and managing network bridges. LXD bridges 
+can leverage underlying native Linux bridges and Open vSwitch. 
+-->
+
+LXD のブリッジの作成と管理は `lxc network` コマンドで行えます。
+LXD で作成されたブリッジはデフォルトでは "managed" です。
+というのは LXD はさらにローカルの `dnsmasq` DHCP サーバをセットアップし、希望すれば (これがデフォルトです) ブリッジに対して NAT も行います。
+<!--
+Creation and management of LXD bridges is performed via the `lxc network`
+command. A bridge created by LXD is by default "managed" which 
+means that LXD also will additionally set up a local `dnsmasq` 
+DHCP server and if desired also perform NAT for the bridge (this 
+is the default.)
+-->
+
+ブリッジが LXD に管理されているときは、 `bridge` ネームスペースを使って設定値を変更できます。
+<!--
+When a bridge is managed by LXD, configuration values
+under the `bridge` namespace can be used to configure it.
+-->
+
+さらに、 LXD は既存の Linux ブリッジを利用することも出来ます。
+この場合、ブリッジは `lxd network` で作成する必要はなく、コンテナかプロファイルのデバイス設定で下記のように単に参照できます。
+<!--
+Additionally, LXD can utilize a pre-existing Linux
+bridge. In this case, the bridge does not need to be created via
+`lxd network` and can simply be referenced in a container or
+profile device configuration as follows:
+-->
+
+```
+devices:
+  eth0:
+     name: eth0
+     nictype: bridged
+     parent: br0
+     type: nic
+```
+
+## 設定項目 <!-- Configuration Settings -->
+
+LXD のネットワークの設定項目の完全なリストは以下の通りです。
+<!--
+A complete list of configuration settings for LXD networks can
+be found below.
+-->
 
 IP アドレスとサブネットは CIDR 形式 (`1.1.1.1/24` や `fd80:1234::1/64`) で指定することを想定しています。例外としてトンネルのローカルとリモートのアドレスは単なるアドレス (`1.1.1.1` や `fd80:1234::1`) を指定します。
 <!--
@@ -67,7 +109,7 @@ ipv6.nat.order                  | string    | ipv6 address          | before    
 ipv6.nat.address                | string    | ipv6 address          | -                         | ブリッジからの送信時に使うソースアドレス <!-- The source address used for outbound traffic from the bridge -->
 ipv6.routes                     | string    | ipv6 address          | -                         | ブリッジへルーティングする追加の IPv4 CIDR サブネットのカンマ区切りリスト <!-- Comma separated list of additional IPv6 CIDR subnets to route to the bridge -->
 ipv6.routing                    | boolean   | ipv6 address          | true                      | ブリッジの内外にトラフィックをルーティングするかどうか <!-- Whether to route traffic in and out of the bridge -->
-raw.dnsmasq                     | string    | -                     | -                         | 設定に追加する dnsmasq の設定 <!-- Additional dnsmasq configuration to append to the configuration -->
+raw.dnsmasq                     | string    | -                     | -                         | 設定に追加する dnsmasq の設定ファイル <!-- Additional dnsmasq configuration to append to the configuration file-->
 tunnel.NAME.group               | string    | vxlan                 | 239.0.0.1                 | vxlan のマルチキャスト設定 (local と remote が未設定の場合に使われます) <!-- Multicast address for vxlan (used if local and remote aren't set) -->
 tunnel.NAME.id                  | integer   | vxlan                 | 0                         | vxlan トンネルに使用するトンネル ID <!-- Specific tunnel ID to use for the vxlan tunnel -->
 tunnel.NAME.interface           | string    | vxlan                 | -                         | トンネルに使用するホスト・インタフェース <!-- Specific host interface to use for the tunnel -->
