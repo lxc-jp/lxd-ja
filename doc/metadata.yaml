@@ -22,6 +22,9 @@ navigation:
         - title: コンテナ # Containers
           location: containers.md
 
+        - title: インスタンス # Instances
+          location: instances.md
+
         - title: ネットワーク # Networks
           location: networks.md
 
