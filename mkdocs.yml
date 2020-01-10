@@ -2,33 +2,40 @@ site_name: "LXDドキュメント翻訳プロジェクト"
 theme: readthedocs
 docs_dir: 'doc'
 pages:
-  - Home: index.md
-  - API拡張: api-extensions.md
-  - アーキテクチャ: architectures.md
-  - バックアップ: backup.md
-  - cloud-initファイル: cloud-init.md
-  - クラスタリング: clustering.md
-  - 設定: configuration.md
-  - コンテナ: containers.md
-  - コンテナ実行環境: container-environment.md
-  - コントリビュート: contributing.md
-  - デーモンの動作: daemon-behavior.md
-  - データベース: database.md
-  - デバッグ: debugging.md
-  - コンテナ〜ホスト間の通信: dev-lxd.md
-  - 環境変数: environment.md
-  - FAQ: faq.md
-  - イメージの扱い: image-handling.md
-  - ライブマイグレーション: migration.md
-  - ネットワーク: networks.md
-  - preseeded YAML: preseed.md
-  - プロダクション環境のセットアップ: production-setup.md
-  - プロファイル: profiles.md
-  - プロジェクト: projects.md
-  - 動作環境: requirements.md
-  - REST API: rest-api.md
-  - セキュリティ: security.md
-  - サーバ: server.md
-  - ストレージ: storage.md
-  - システムコールのインターセプト: syscall-interception.md
-  - ユーザー名前空間のIDマッピング: userns-idmap.md
+- Getting started:
+    - Getting started: index.md
+    - 動作環境: requirements.md
+    - FAQ: faq.md
+    - セキュリティ: security.md
+    - コントリビュート: contributing.md
+- 設定:
+    - 設定: configuration.md
+    - コンテナ: containers.md
+    - ネットワーク: networks.md
+    - preseeded YAML: preseed.md
+    - プロファイル: profiles.md
+    - プロジェクト: projects.md
+    - サーバ: server.md
+    - ストレージプール: storage.md
+    - 仮想マシン: virtual-machines.md
+- イメージ:
+    - アーキテクチャ: architectures.md
+    - cloud-initファイル: cloud-init.md
+    - イメージの扱い: image-handling.md
+- オペレーション:
+    - バックアップ: backup.md
+    - クラスタリング: clustering.md
+    - プロダクション環境のセットアップ: production-setup.md
+- REST API:
+    - REST API: rest-api.md
+    - API拡張: api-extensions.md
+    - コンテナ API: dev-lxd.md
+- 内部動作とデバッグ:
+    - コンテナ実行環境: container-environment.md
+    - コンテナのマイグレーション: migration.md
+    - デーモンの動作: daemon-behavior.md
+    - データベース: database.md
+    - デバッグ: debugging.md
+    - 環境変数: environment.md
+    - システムコールのインターセプト: syscall-interception.md
+    - ユーザー名前空間の設定: userns-idmap.md
