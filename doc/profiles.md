@@ -1,11 +1,11 @@
 # プロファイル
 <!-- Profiles -->
 <!--
-Profiles can store any configuration that a container can (key/value or
-devices) and any number of profiles can be applied to a container.
+Profiles can store any configuration that an instance can (key/value or devices)
+and any number of profiles can be applied to an instance.
 -->
-プロファイルはコンテナが保持できる（キー・バリューやデバイスなどの）あらゆる
-設定を保持することができ、プロファイルをいくつでもコンテナに適用することが
+プロファイルはインスタンスが保持できる（キー・バリューやデバイスなどの）あらゆる
+設定を保持することができ、プロファイルをいくつでもインスタンスに適用することが
 できます。
 
 <!--
@@ -16,11 +16,12 @@ specify a specific key wins.
 特定のキーを上書きします。
 
 <!--
-In any case, resource-specific configuration always overrides that coming from
+In any case, instance-specific configuration always overrides that coming from
 the profiles.
 -->
-どのような場合でも、リソース固有の設定はプロファイル由来のものを上書きします。
+どのような場合でも、インスタンス固有の設定はプロファイル由来のものを上書きします。
 
+## デフォルトのプロファイル <!-- Default profile -->
 <!--
 If not present, LXD will create a `default` profile.
 -->
@@ -28,18 +29,30 @@ If not present, LXD will create a `default` profile.
 
 <!--
 The `default` profile cannot be renamed or removed.
--->
-`default` プロファイルはリネームや削除はできません。
-
-<!--
-The `default` profile is set for any new container created which doesn't
+The `default` profile is set for any new instance created which doesn't
 specify a different profiles list.
 -->
+`default` プロファイルはリネームや削除はできません。
 `default` プロファイルは異なるプロファイルリストを指定せずに作られたあらゆる
-新規のコンテナに設定されます。
+新規のインスタンスに設定されます。
+
+## 設定 <!-- Configuration -->
+<!--
+As profiles aren't specific to containers or virtual machines, they may
+contain configuration and devices that are valid for either type.
+-->
+プロファイルはコンテナや仮想マシンに固有なものではないため、どちらのインスタンスタイプでも有効な設定やデバイスを含めることができます。
 
 <!--
-See [container configuration](containers.md) for valid configuration options.
+This differs from the behavior when applying those config/devices
+directly to an instance where its type is then taken into consideration
+and keys that aren't allowed result in an error.
 -->
-有効な設定のオプションについては [コンテナ設定](containers.md) を
+これはこれらの設定やデバイスをインスタンスに直接適用するときの挙動とは異なります。
+その場合はインスタンスタイプが考慮され、許可されないキーはエラーになります。
+
+<!--
+See [instance configuration](instances.md) for valid configuration options.
+-->
+有効な設定のオプションについては [インスタンス設定](instances.md) を
 参照してください。
