@@ -61,20 +61,24 @@ There are three standard return types:
 For a standard synchronous operation, the following dict is returned:
 -->
 
-    {
-        "type": "sync",
-        "status": "Success",
-        "status_code": 200,
-        "metadata": {}                          # リソースやアクションに固有な追加のメタデータ
-    }
+```js
+{
+    "type": "sync",
+    "status": "Success",
+    "status_code": 200,
+    "metadata": {}                          // リソースやアクションに固有な追加のメタデータ
+}
+```
 
 <!--
-    {
-        "type": "sync",
-        "status": "Success",
-        "status_code": 200,
-        "metadata": {}                          # Extra resource/action specific metadata
-    }
+```js
+{
+    "type": "sync",
+    "status": "Success",
+    "status_code": 200,
+    "metadata": {}                          // Extra resource/action specific metadata
+}
+```
 -->
 
 HTTP ステータスコードは必ず 200 です。
@@ -95,22 +99,26 @@ and the Location HTTP header is set to the operation URL.
 The body is a dict with the following structure:
 -->
 
-    {
-        "type": "async",
-        "status": "OK",
-        "status_code": 100,
-        "operation": "/1.0/containers/<id>",                    # バックグラウンド操作の URL
-        "metadata": {}                                          # 操作のメタデータ (下記参照)
-    }
+```js
+{
+    "type": "async",
+    "status": "OK",
+    "status_code": 100,
+    "operation": "/1.0/containers/<id>",                    // バックグラウンド操作の URL
+    "metadata": {}                                          // 操作のメタデータ (下記参照)
+}
+```
 
 <!--
-    {
-        "type": "async",
-        "status": "OK",
-        "status_code": 100,
-        "operation": "/1.0/containers/<id>",                    # URL to the background operation
-        "metadata": {}                                          # Operation metadata (see below)
-    }
+```js
+{
+    "type": "async",
+    "status": "OK",
+    "status_code": 100,
+    "operation": "/1.0/containers/<id>",                    // URL to the background operation
+    "metadata": {}                                          // Operation metadata (see below)
+}
+```
 -->
 
 操作のメタデータの構造は以下のようになります。
@@ -118,50 +126,54 @@ The body is a dict with the following structure:
 The operation metadata structure looks like:
 -->
 
-    {
-        "id": "a40f5541-5e98-454f-b3b6-8a51ef5dbd3c",           # 操作の UUID
-        "class": "websocket",                                   # 操作の種別 (task, websocket, token のいずれか)
-        "created_at": "2015-11-17T22:32:02.226176091-05:00",    # 操作の作成日時
-        "updated_at": "2015-11-17T22:32:02.226176091-05:00",    # 操作の最終更新日時
-        "status": "Running",                                    # 文字列表記での操作の状態
-        "status_code": 103,                                     # 整数表記での操作の状態 (status ではなくこちらを利用してください。訳注: 詳しくは下記のステータスコードの項を参照)
-        "resources": {                                          # リソース種別 (container, snapshots, images のいずれか) の dict を影響を受けるリソース
-          "containers": [
-            "/1.0/containers/test"
-          ]
-        },
-        "metadata": {                                           # 対象となっている (この例では exec) 操作に固有なメタデータ
-          "fds": {
-            "0": "2a4a97af81529f6608dca31f03a7b7e47acc0b8dc6514496eb25e325f9e4fa6a",
-            "control": "5b64c661ef313b423b5317ba9cb6410e40b705806c28255f601c0ef603f079a7"
-          }
-        },
-        "may_cancel": false,                                    # (REST で DELETE を使用して) 操作がキャンセル可能かどうか
-        "err": ""                                               # 操作が失敗した場合にエラー文字列が設定されます
-    }
+```js
+{
+    "id": "a40f5541-5e98-454f-b3b6-8a51ef5dbd3c",           // 操作の UUID
+    "class": "websocket",                                   // 操作の種別 (task, websocket, token のいずれか)
+    "created_at": "2015-11-17T22:32:02.226176091-05:00",    // 操作の作成日時
+    "updated_at": "2015-11-17T22:32:02.226176091-05:00",    // 操作の最終更新日時
+    "status": "Running",                                    // 文字列表記での操作の状態
+    "status_code": 103,                                     // 整数表記での操作の状態 (status ではなくこちらを利用してください。訳注: 詳しくは下記のステータスコードの項を参照)
+    "resources": {                                          // リソース種別 (container, snapshots, images のいずれか) の dict を影響を受けるリソース
+      "containers": [
+        "/1.0/containers/test"
+      ]
+    },
+    "metadata": {                                           // 対象となっている (この例では exec) 操作に固有なメタデータ
+      "fds": {
+        "0": "2a4a97af81529f6608dca31f03a7b7e47acc0b8dc6514496eb25e325f9e4fa6a",
+        "control": "5b64c661ef313b423b5317ba9cb6410e40b705806c28255f601c0ef603f079a7"
+      }
+    },
+    "may_cancel": false,                                    // (REST で DELETE を使用して) 操作がキャンセル可能かどうか
+    "err": ""                                               // 操作が失敗した場合にエラー文字列が設定されます
+}
+```
 
 <!--
-    {
-        "id": "a40f5541-5e98-454f-b3b6-8a51ef5dbd3c",           # UUID of the operation
-        "class": "websocket",                                   # Class of the operation (task, websocket or token)
-        "created_at": "2015-11-17T22:32:02.226176091-05:00",    # When the operation was created
-        "updated_at": "2015-11-17T22:32:02.226176091-05:00",    # Last time the operation was updated
-        "status": "Running",                                    # String version of the operation's status
-        "status_code": 103,                                     # Integer version of the operation's status (use this rather than status)
-        "resources": {                                          # Dictionary of resource types (container, snapshots, images) and affected resources
-          "containers": [
-            "/1.0/containers/test"
-          ]
-        },
-        "metadata": {                                           # Metadata specific to the operation in question (in this case, exec)
-          "fds": {
-            "0": "2a4a97af81529f6608dca31f03a7b7e47acc0b8dc6514496eb25e325f9e4fa6a",
-            "control": "5b64c661ef313b423b5317ba9cb6410e40b705806c28255f601c0ef603f079a7"
-          }
-        },
-        "may_cancel": false,                                    # Whether the operation can be canceled (DELETE over REST)
-        "err": ""                                               # The error string should the operation have failed
-    }
+```js
+{
+    "id": "a40f5541-5e98-454f-b3b6-8a51ef5dbd3c",           // UUID of the operation
+    "class": "websocket",                                   // Class of the operation (task, websocket or token)
+    "created_at": "2015-11-17T22:32:02.226176091-05:00",    // When the operation was created
+    "updated_at": "2015-11-17T22:32:02.226176091-05:00",    // Last time the operation was updated
+    "status": "Running",                                    // String version of the operation's status
+    "status_code": 103,                                     // Integer version of the operation's status (use this rather than status)
+    "resources": {                                          // Dictionary of resource types (container, snapshots, images) and affected resources
+      "containers": [
+        "/1.0/containers/test"
+      ]
+    },
+    "metadata": {                                           // Metadata specific to the operation in question (in this case, exec)
+      "fds": {
+        "0": "2a4a97af81529f6608dca31f03a7b7e47acc0b8dc6514496eb25e325f9e4fa6a",
+        "control": "5b64c661ef313b423b5317ba9cb6410e40b705806c28255f601c0ef603f079a7"
+      }
+    },
+    "may_cancel": false,                                    // Whether the operation can be canceled (DELETE over REST)
+    "err": ""                                               // The error string should the operation have failed
+}
+```
 -->
 
 対象の操作に対して追加のリクエストを送って情報を取り出さなくても、
@@ -182,20 +194,24 @@ There are various situations in which something may immediately go
 wrong, in those cases, the following return value is used:
 -->
 
-    {
-        "type": "error",
-        "error": "Failure",
-        "error_code": 400,
-        "metadata": {}                      # エラーについてのさらなる詳細
-    }
+```js
+{
+    "type": "error",
+    "error": "Failure",
+    "error_code": 400,
+    "metadata": {}                      // エラーについてのさらなる詳細
+}
+```
 
 <!--
-    {
-        "type": "error",
-        "error": "Failure",
-        "error_code": 400,
-        "metadata": {}                      # More details about the error
-    }
+```js
+{
+    "type": "error",
+    "error": "Failure",
+    "error_code": 400,
+    "metadata": {}                      // More details about the error
+}
+```
 -->
 
 HTTP ステータスコードは 400, 401, 403, 404, 409, 412, 500 のいずれかです。
@@ -354,54 +370,54 @@ won't work and PUT needs to be used instead.
 ## API 構造 <!-- API structure -->
  * [`/`](#)
    * [`/1.0`](#10)
-     * [`/1.0/certificates`](#10certificates)
-       * [`/1.0/certificates/<fingerprint>`](#10certificatesfingerprint)
-     * [`/1.0/containers`](#10containers)
-       * [`/1.0/containers/<name>`](#10containersname)
-         * [`/1.0/containers/<name>/console`](#10containersnameconsole)
-         * [`/1.0/containers/<name>/exec`](#10containersnameexec)
-         * [`/1.0/containers/<name>/files`](#10containersnamefiles)
-         * [`/1.0/containers/<name>/snapshots`](#10containersnamesnapshots)
-         * [`/1.0/containers/<name>/snapshots/<name>`](#10containersnamesnapshotsname)
-         * [`/1.0/containers/<name>/state`](#10containersnamestate)
-         * [`/1.0/containers/<name>/logs`](#10containersnamelogs)
-         * [`/1.0/containers/<name>/logs/<logfile>`](#10containersnamelogslogfile)
-         * [`/1.0/containers/<name>/metadata`](#10containersnamemetadata)
-         * [`/1.0/containers/<name>/metadata/templates`](#10containersnamemetadatatemplates)
-         * [`/1.0/containers/<name>/backups`](#10containersnamebackups)
-         * [`/1.0/containers/<name>/backups/<name>`](#10containersnamebackupsname)
-         * [`/1.0/containers/<name>/backups/<name>/export`](#10containersnamebackupsnameexport)
-     * [`/1.0/events`](#10events)
-     * [`/1.0/images`](#10images)
-       * [`/1.0/images/<fingerprint>`](#10imagesfingerprint)
-         * [`/1.0/images/<fingerprint>/export`](#10imagesfingerprintexport)
-         * [`/1.0/images/<fingerprint>/refresh`](#10imagesfingerprintrefresh)
-         * [`/1.0/images/<fingerprint>/secret`](#10imagesfingerprintsecret)
-       * [`/1.0/images/aliases`](#10imagesaliases)
-         * [`/1.0/images/aliases/<name>`](#10imagesaliasesname)
-     * [`/1.0/networks`](#10networks)
-       * [`/1.0/networks/<name>`](#10networksname)
-       * [`/1.0/networks/<name>/state`](#10networksnamestate)
-     * [`/1.0/operations`](#10operations)
-       * [`/1.0/operations/<uuid>`](#10operationsuuid)
-         * [`/1.0/operations/<uuid>/wait`](#10operationsuuidwait)
-         * [`/1.0/operations/<uuid>/websocket`](#10operationsuuidwebsocket)
-     * [`/1.0/profiles`](#10profiles)
-       * [`/1.0/profiles/<name>`](#10profilesname)
-     * [`/1.0/projects`](#10projects)
-       * [`/1.0/projects/<name>`](#10projectsname)
-     * [`/1.0/storage-pools`](#10storage-pools)
-       * [`/1.0/storage-pools/<name>`](#10storage-poolsname)
-         * [`/1.0/storage-pools/<name>/resources`](#10storage-poolsnameresources)
-         * [`/1.0/storage-pools/<name>/volumes`](#10storage-poolsnamevolumes)
-           * [`/1.0/storage-pools/<name>/volumes/<type>`](#10storage-poolsnamevolumestype)
-             * [`/1.0/storage-pools/<pool>/volumes/<type>/<name>`](#10storage-poolspoolvolumestypename)
-               * [`/1.0/storage-pools/<pool>/volumes/<type>/<name>/snapshots`](#10storage-poolspoolvolumestypenamesnapshots)
-                 * [`/1.0/storage-pools/<pool>/volumes/<type>/<volume>/snapshots/<name>`](#10storage-poolspoolvolumestypevolumesnapshotsname)
-     * [`/1.0/resources`](#10resources)
-     * [`/1.0/cluster`](#10cluster)
-       * [`/1.0/cluster/members`](#10clustermembers)
-         * [`/1.0/cluster/members/<name>`](#10clustermembersname)
+ * [`/1.0/certificates`](#10certificates)
+   * [`/1.0/certificates/<fingerprint>`](#10certificatesfingerprint)
+ * [`/1.0/containers`](#10containers)
+   * [`/1.0/containers/<name>`](#10containersname)
+     * [`/1.0/containers/<name>/console`](#10containersnameconsole)
+     * [`/1.0/containers/<name>/exec`](#10containersnameexec)
+     * [`/1.0/containers/<name>/files`](#10containersnamefiles)
+     * [`/1.0/containers/<name>/snapshots`](#10containersnamesnapshots)
+     * [`/1.0/containers/<name>/snapshots/<name>`](#10containersnamesnapshotsname)
+     * [`/1.0/containers/<name>/state`](#10containersnamestate)
+     * [`/1.0/containers/<name>/logs`](#10containersnamelogs)
+     * [`/1.0/containers/<name>/logs/<logfile>`](#10containersnamelogslogfile)
+     * [`/1.0/containers/<name>/metadata`](#10containersnamemetadata)
+     * [`/1.0/containers/<name>/metadata/templates`](#10containersnamemetadatatemplates)
+     * [`/1.0/containers/<name>/backups`](#10containersnamebackups)
+     * [`/1.0/containers/<name>/backups/<name>`](#10containersnamebackupsname)
+     * [`/1.0/containers/<name>/backups/<name>/export`](#10containersnamebackupsnameexport)
+ * [`/1.0/events`](#10events)
+ * [`/1.0/images`](#10images)
+   * [`/1.0/images/<fingerprint>`](#10imagesfingerprint)
+     * [`/1.0/images/<fingerprint>/export`](#10imagesfingerprintexport)
+     * [`/1.0/images/<fingerprint>/refresh`](#10imagesfingerprintrefresh)
+     * [`/1.0/images/<fingerprint>/secret`](#10imagesfingerprintsecret)
+   * [`/1.0/images/aliases`](#10imagesaliases)
+     * [`/1.0/images/aliases/<name>`](#10imagesaliasesname)
+ * [`/1.0/networks`](#10networks)
+   * [`/1.0/networks/<name>`](#10networksname)
+   * [`/1.0/networks/<name>/state`](#10networksnamestate)
+ * [`/1.0/operations`](#10operations)
+   * [`/1.0/operations/<uuid>`](#10operationsuuid)
+     * [`/1.0/operations/<uuid>/wait`](#10operationsuuidwait)
+     * [`/1.0/operations/<uuid>/websocket`](#10operationsuuidwebsocket)
+ * [`/1.0/profiles`](#10profiles)
+   * [`/1.0/profiles/<name>`](#10profilesname)
+ * [`/1.0/projects`](#10projects)
+   * [`/1.0/projects/<name>`](#10projectsname)
+ * [`/1.0/storage-pools`](#10storage-pools)
+   * [`/1.0/storage-pools/<name>`](#10storage-poolsname)
+     * [`/1.0/storage-pools/<name>/resources`](#10storage-poolsnameresources)
+     * [`/1.0/storage-pools/<name>/volumes`](#10storage-poolsnamevolumes)
+       * [`/1.0/storage-pools/<name>/volumes/<type>`](#10storage-poolsnamevolumestype)
+         * [`/1.0/storage-pools/<pool>/volumes/<type>/<name>`](#10storage-poolspoolvolumestypename)
+           * [`/1.0/storage-pools/<pool>/volumes/<type>/<name>/snapshots`](#10storage-poolspoolvolumestypenamesnapshots)
+             * [`/1.0/storage-pools/<pool>/volumes/<type>/<volume>/snapshots/<name>`](#10storage-poolspoolvolumestypevolumesnapshotsname)
+ * [`/1.0/resources`](#10resources)
+ * [`/1.0/cluster`](#10cluster)
+   * [`/1.0/cluster/members`](#10clustermembers)
+     * [`/1.0/cluster/members/<name>`](#10clustermembersname)
 
 ## API 詳細 <!-- API details -->
 ### `/`
@@ -413,9 +429,11 @@ won't work and PUT needs to be used instead.
 
 戻り値 <!-- Return value: -->
 
-    [
-        "/1.0"
-    ]
+```json
+[
+    "/1.0"
+]
+```
 
 ### `/1.0/`
 #### GET
@@ -426,92 +444,100 @@ won't work and PUT needs to be used instead.
 
 戻り値 (trusted の場合) <!-- Return value (if trusted): -->
 
-    {
-        "api_extensions": [],                           # stable とマークされた API 以降に追加された API 拡張の一覧
-        "api_status": "stable",                         # API の実装状態 (development, stable, deprecated のいずれか)
-        "api_version": "1.0",                           # 文字列表記での API バージョン
-        "auth": "trusted",                              # 認証状態 ("guest", "untrusted", "trusted" のいずれか)
-        "config": {                                     # ホストの設定
-            "core.trust_password": true,
-            "core.https_address": "[::]:8443"
-        },
-        "environment": {                                # ホストの様々な情報 (OS, カーネル, ...)
-            "addresses": [
-                "1.2.3.4:8443",
-                "[1234::1234]:8443"
-            ],
-            "architectures": [
-                "x86_64",
-                "i686"
-            ],
-            "certificate": "PEM certificate",
-            "driver": "lxc",
-            "driver_version": "1.0.6",
-            "kernel": "Linux",
-            "kernel_architecture": "x86_64",
-            "kernel_version": "3.16",
-            "server": "lxd",
-            "server_pid": 10224,
-            "server_version": "0.8.1"}
-            "storage": "btrfs",
-            "storage_version": "3.19",
-        },
-        "public": false,                                # クライアントにとってサーバを公開された (読み取り専用の) リモートとして扱うべきかどうか
-    }
+```js
+{
+    "api_extensions": [],                           // stable とマークされた API 以降に追加された API 拡張の一覧
+    "api_status": "stable",                         // API の実装状態 (development, stable, deprecated のいずれか)
+    "api_version": "1.0",                           // 文字列表記での API バージョン
+    "auth": "trusted",                              // 認証状態 ("guest", "untrusted", "trusted" のいずれか)
+    "config": {                                     // ホストの設定
+        "core.trust_password": true,
+        "core.https_address": "[::]:8443"
+    },
+    "environment": {                                // ホストの様々な情報 (OS, カーネル, ...)
+        "addresses": [
+            "1.2.3.4:8443",
+            "[1234::1234]:8443"
+        ],
+        "architectures": [
+            "x86_64",
+            "i686"
+        ],
+        "certificate": "PEM certificate",
+        "driver": "lxc",
+        "driver_version": "1.0.6",
+        "kernel": "Linux",
+        "kernel_architecture": "x86_64",
+        "kernel_version": "3.16",
+        "server": "lxd",
+        "server_pid": 10224,
+        "server_version": "0.8.1"}
+        "storage": "btrfs",
+        "storage_version": "3.19",
+    },
+    "public": false,                                // クライアントにとってサーバを公開された (読み取り専用の) リモートとして扱うべきかどうか
+}
+```
 
 <!--
-    {
-        "api_extensions": [],                           # List of API extensions added after the API was marked stable
-        "api_status": "stable",                         # API implementation status (one of, development, stable or deprecated)
-        "api_version": "1.0",                           # The API version as a string
-        "auth": "trusted",                              # Authentication state, one of "guest", "untrusted" or "trusted"
-        "config": {                                     # Host configuration
-            "core.trust_password": true,
-            "core.https_address": "[::]:8443"
-        },
-        "environment": {                                # Various information about the host (OS, kernel, ...)
-            "addresses": [
-                "1.2.3.4:8443",
-                "[1234::1234]:8443"
-            ],
-            "architectures": [
-                "x86_64",
-                "i686"
-            ],
-            "certificate": "PEM certificate",
-            "driver": "lxc",
-            "driver_version": "1.0.6",
-            "kernel": "Linux",
-            "kernel_architecture": "x86_64",
-            "kernel_version": "3.16",
-            "server": "lxd",
-            "server_pid": 10224,
-            "server_version": "0.8.1"}
-            "storage": "btrfs",
-            "storage_version": "3.19",
-        },
-        "public": false,                                # Whether the server should be treated as a public (read-only) remote by the client
-    }
+```js
+{
+    "api_extensions": [],                           // List of API extensions added after the API was marked stable
+    "api_status": "stable",                         // API implementation status (one of, development, stable or deprecated)
+    "api_version": "1.0",                           // The API version as a string
+    "auth": "trusted",                              // Authentication state, one of "guest", "untrusted" or "trusted"
+    "config": {                                     // Host configuration
+        "core.trust_password": true,
+        "core.https_address": "[::]:8443"
+    },
+    "environment": {                                // Various information about the host (OS, kernel, ...)
+        "addresses": [
+            "1.2.3.4:8443",
+            "[1234::1234]:8443"
+        ],
+        "architectures": [
+            "x86_64",
+            "i686"
+        ],
+        "certificate": "PEM certificate",
+        "driver": "lxc",
+        "driver_version": "1.0.6",
+        "kernel": "Linux",
+        "kernel_architecture": "x86_64",
+        "kernel_version": "3.16",
+        "server": "lxd",
+        "server_pid": 10224,
+        "server_version": "0.8.1"}
+        "storage": "btrfs",
+        "storage_version": "3.19",
+    },
+    "public": false,                                // Whether the server should be treated as a public (read-only) remote by the client
+}
+```
 -->
 
 戻り値 (guest または untrusted の場合) <!-- Return value (if guest or untrusted): -->
 
-    {
-        "api_extensions": [],                   # stable とマークされた API 以降に追加された API 拡張の一覧
-        "api_status": "stable",                 # API の実装状態 (development, stable, deprecated のいずれか)
-        "api_version": "1.0",                   # 文字列表記での API バージョン
-        "auth": "guest",                        # 認証状態 ("guest", "untrusted", "trusted" のいずれか)
-        "public": false,                        # クライアントにとってサーバを公開された (読み取り専用の) リモートとして扱うべきかどうか
-    }
+```js
+{
+    "api_extensions": [],                   // stable とマークされた API 以降に追加された API 拡張の一覧
+    "api_status": "stable",                 // API の実装状態 (development, stable, deprecated のいずれか)
+    "api_version": "1.0",                   // 文字列表記での API バージョン
+    "auth": "guest",                        // 認証状態 ("guest", "untrusted", "trusted" のいずれか)
+    "public": false,                        // クライアントにとってサーバを公開された (読み取り専用の) リモートとして扱うべきかどうか
+}
+```
 
 <!--
-    {
-        "api_extensions": [],                   # List of API extensions added after the API was marked stable
-        "api_status": "stable",                 # API implementation status (one of, development, stable or deprecated)
-        "api_version": "1.0",                   # The API version as a string
-        "auth": "guest",                        # Authentication state, one of "guest", "untrusted" or "trusted"
-        "public": false,                        # Whether the server should be treated as a public (read-only) remote by the client
-    }
+```js
+{
+    "api_extensions": [],                   // List of API extensions added after the API was marked stable
+    "api_status": "stable",                 // API implementation status (one of, development, stable or deprecated)
+    "api_version": "1.0",                   // The API version as a string
+    "auth": "guest",                        // Authentication state, one of "guest", "untrusted" or "trusted"
+    "public": false,                        // Whether the server should be treated as a public (read-only) remote by the client
+}
+```
 -->
 
 #### PUT (ETag サポートあり) <!-- PUT (ETag supported) -->
@@ -525,12 +551,14 @@ won't work and PUT needs to be used instead.
 Input (replaces any existing config with the provided one):
 -->
 
-    {
-        "config": {
-            "core.trust_password": "my-new-password",
-            "core.https_address": "1.2.3.4:8443"
-        }
+```json
+{
+    "config": {
+        "core.trust_password": "my-new-password",
+        "core.https_address": "1.2.3.4:8443"
     }
+}
+```
 
 #### PATCH (ETag サポートあり) <!-- PATCH (ETag supported) -->
  * 説明: サーバ設定や他の設定を更新します <!-- Description: Updates the server configuration or other properties -->
@@ -544,11 +572,13 @@ Input (replaces any existing config with the provided one):
 Input (updates only the listed keys, rest remains intact):
 -->
 
-    {
-        "config": {
-            "core.trust_password": "my-new-password"
-        }
+```json
+{
+    "config": {
+        "core.trust_password": "my-new-password"
     }
+}
+```
 
 ### `/1.0/certificates`
 #### GET
@@ -560,9 +590,11 @@ Input (updates only the listed keys, rest remains intact):
 戻り値
 <!-- Return: -->
 
-    [
-        "/1.0/certificates/3ee64be3c3c7d617a7470e14f2d847081ad467c8c26e1caad841c8f67f7c7b09"
-    ]
+```json
+[
+    "/1.0/certificates/3ee64be3c3c7d617a7470e14f2d847081ad467c8c26e1caad841c8f67f7c7b09"
+]
+```
 
 #### POST
  * 説明: 信頼された証明書を追加します <!-- Description: add a new trusted certificate -->
@@ -575,20 +607,24 @@ Input (updates only the listed keys, rest remains intact):
 Input:
 -->
 
-    {
-        "type": "client",                       # 証明書の種別 (keyring)、現在は client のみ
-        "certificate": "PEM certificate",       # 提供される場合は有効な x509 形式の証明書。提供されない場合は接続のクライアント証明書が使用される
-        "name": "foo",                          # 証明書の名前を指定可能。指定しない場合はリクエストの TLS ヘッダーのホスト名が使用される。
-        "password": "server-trust-password"     # そのサーバのトラスト・パスワード (untrusted の場合にのみ必須)
-    }
+```js
+{
+    "type": "client",                       // 証明書の種別 (keyring)、現在は client のみ
+    "certificate": "PEM certificate",       // 提供される場合は有効な x509 形式の証明書。提供されない場合は接続のクライアント証明書が使用される
+    "name": "foo",                          // 証明書の名前を指定可能。指定しない場合はリクエストの TLS ヘッダーのホスト名が使用される。
+    "password": "server-trust-password"     // そのサーバのトラスト・パスワード (untrusted の場合にのみ必須)
+}
+```
 
 <!--
-    {
-        "type": "client",                       # Certificate type (keyring), currently only client
-        "certificate": "PEM certificate",       # If provided, a valid x509 certificate. If not, the client certificate of the connection will be used
-        "name": "foo",                          # An optional name for the certificate. If nothing is provided, the host in the TLS header for the request is used.
-        "password": "server-trust-password"     # The trust password for that server (only required if untrusted)
-    }
+```js
+{
+    "type": "client",                       // Certificate type (keyring), currently only client
+    "certificate": "PEM certificate",       // If provided, a valid x509 certificate. If not, the client certificate of the connection will be used
+    "name": "foo",                          // An optional name for the certificate. If nothing is provided, the host in the TLS header for the request is used.
+    "password": "server-trust-password"     // The trust password for that server (only required if untrusted)
+}
+```
 -->
 
 ### `/1.0/certificates/<fingerprint>`
@@ -603,12 +639,14 @@ Input:
 Output:
 -->
 
-    {
-        "type": "client",
-        "certificate": "PEM certificate",
-        "name": "foo",
-        "fingerprint": "SHA256 Hash of the raw certificate"
-    }
+```json
+{
+    "type": "client",
+    "certificate": "PEM certificate",
+    "name": "foo",
+    "fingerprint": "SHA256 Hash of the raw certificate"
+}
+```
 
 #### PUT (ETag サポートあり) <!-- PUT (ETag supported) -->
  * 説明: 証明書のプロパティを置き換えます <!-- Description: Replaces the certificate properties -->
@@ -622,10 +660,12 @@ Output:
 Input:
 -->
 
-    {
-        "type": "client",
-        "name": "bar"
-    }
+```json
+{
+    "type": "client",
+    "name": "bar"
+}
+```
 
 #### PATCH (ETag サポートあり) <!-- PATCH (ETag supported) -->
  * 説明: 証明書のプロパティを更新します <!-- Description: Updates the certificate properties -->
@@ -639,9 +679,11 @@ Input:
 Input:
 -->
 
-    {
-        "name": "baz"
-    }
+```json
+{
+    "name": "baz"
+}
+```
 
 
 #### DELETE
@@ -655,8 +697,10 @@ Input:
 Input:
 -->
 
-    {
-    }
+```json
+{
+}
+```
 
 レスポンスの HTTP ステータスコードは 202 (Accepted)。
 <!--
@@ -675,10 +719,12 @@ HTTP code for this should be 202 (Accepted).
 Return value:
 -->
 
-    [
-        "/1.0/containers/blah",
-        "/1.0/containers/blah1"
-    ]
+```json
+[
+    "/1.0/containers/blah",
+    "/1.0/containers/blah1"
+]
+```
 
 #### POST (`?target=<member>` を任意で指定可能) <!-- POST (optional `?target=<member>`) -->
  * 説明: 新しいコンテナを作成します <!-- Description: Create a new container -->
@@ -691,40 +737,44 @@ Return value:
 Input (container based on a local image with the "ubuntu/devel" alias):
 -->
 
-    {
-        "name": "my-new-container",                                         # 最大 64 文字、 ASCII が使用可、スラッシュ、コロン、カンマは使用不可
-        "architecture": "x86_64",
-        "profiles": ["default"],                                            # プロファイルの一覧
-        "ephemeral": true,                                                  # シャットダウン時にコンテナを破棄するかどうか
-        "config": {"limits.cpu": "2"},                                      # 設定のオーバーライド
-        "devices": {                                                        # コンテナが持つデバイスの任意で指定可能なリスト
-            "kvm": {
-                "path": "/dev/kvm",
-                "type": "unix-char"
-            },
+```js
+{
+    "name": "my-new-container",                                         // 最大 64 文字、 ASCII が使用可、スラッシュ、コロン、カンマは使用不可
+    "architecture": "x86_64",
+    "profiles": ["default"],                                            // プロファイルの一覧
+    "ephemeral": true,                                                  // シャットダウン時にコンテナを破棄するかどうか
+    "config": {"limits.cpu": "2"},                                      // 設定のオーバーライド
+    "devices": {                                                        // コンテナが持つデバイスの任意で指定可能なリスト
+        "kvm": {
+            "path": "/dev/kvm",
+            "type": "unix-char"
         },
-        "instance_type": "c2.micro",                                        # リミットのベースとして使用するための任意で指定可能なインスタンスタイプ
-        "source": {"type": "image",                                         # "image", "migration", "copy", "none" のいずれかを指定可能
-                   "alias": "ubuntu/devel"},                                # エイリアスの名前
-    }
+    },
+    "instance_type": "c2.micro",                                        // リミットのベースとして使用するための任意で指定可能なインスタンスタイプ
+    "source": {"type": "image",                                         // "image", "migration", "copy", "none" のいずれかを指定可能
+               "alias": "ubuntu/devel"},                                // エイリアスの名前
+}
+```
 
 <!--
-    {
-        "name": "my-new-container",                                         # 64 chars max, ASCII, no slash, no colon and no comma
-        "architecture": "x86_64",
-        "profiles": ["default"],                                            # List of profiles
-        "ephemeral": true,                                                  # Whether to destroy the container on shutdown
-        "config": {"limits.cpu": "2"},                                      # Config override.
-        "devices": {                                                        # optional list of devices the container should have
-            "kvm": {
-                "path": "/dev/kvm",
-                "type": "unix-char"
-            },
+```js
+{
+    "name": "my-new-container",                                         // 64 chars max, ASCII, no slash, no colon and no comma
+    "architecture": "x86_64",
+    "profiles": ["default"],                                            // List of profiles
+    "ephemeral": true,                                                  // Whether to destroy the container on shutdown
+    "config": {"limits.cpu": "2"},                                      // Config override.
+    "devices": {                                                        // optional list of devices the container should have
+        "kvm": {
+            "path": "/dev/kvm",
+            "type": "unix-char"
         },
-        "instance_type": "c2.micro",                                        # An optional instance type to use as basis for limits
-        "source": {"type": "image",                                         # Can be: "image", "migration", "copy" or "none"
-                   "alias": "ubuntu/devel"},                                # Name of the alias
-    }
+    },
+    "instance_type": "c2.micro",                                        // An optional instance type to use as basis for limits
+    "source": {"type": "image",                                         // Can be: "image", "migration", "copy" or "none"
+               "alias": "ubuntu/devel"},                                // Name of the alias
+}
+```
 -->
 
 入力 (フィンガープリントで識別されるローカルのイメージをベースとするコンテナ)
@@ -732,38 +782,42 @@ Input (container based on a local image with the "ubuntu/devel" alias):
 Input (container based on a local image identified by its fingerprint):
 -->
 
-    {
-        "name": "my-new-container",                                         # 最大 64 文字、 ASCII が使用可、スラッシュ、コロン、カンマは使用不可
-        "architecture": "x86_64",
-        "profiles": ["default"],                                            # プロファイルの一覧
-        "ephemeral": true,                                                  # シャットダウン時にコンテナを破棄するかどうか
-        "config": {"limits.cpu": "2"},                                      # 設定のオーバーライド
-        "devices": {                                                        # コンテナが持つデバイスの任意で指定可能なリスト
-            "kvm": {
-                "path": "/dev/kvm",
-                "type": "unix-char"
-            },
+```js
+{
+    "name": "my-new-container",                                         // 最大 64 文字、 ASCII が使用可、スラッシュ、コロン、カンマは使用不可
+    "architecture": "x86_64",
+    "profiles": ["default"],                                            // プロファイルの一覧
+    "ephemeral": true,                                                  // シャットダウン時にコンテナを破棄するかどうか
+    "config": {"limits.cpu": "2"},                                      // 設定のオーバーライド
+    "devices": {                                                        // コンテナが持つデバイスの任意で指定可能なリスト
+        "kvm": {
+            "path": "/dev/kvm",
+            "type": "unix-char"
         },
-        "source": {"type": "image",                                         # "image", "migration", "copy", "none" のいずれかを指定可能
-                   "fingerprint": "SHA-256"},                               # フィンガープリント
-    }
+    },
+    "source": {"type": "image",                                         // "image", "migration", "copy", "none" のいずれかを指定可能
+               "fingerprint": "SHA-256"},                               // フィンガープリント
+}
+```
 
 <!--
-    {
-        "name": "my-new-container",                                         # 64 chars max, ASCII, no slash, no colon and no comma
-        "architecture": "x86_64",
-        "profiles": ["default"],                                            # List of profiles
-        "ephemeral": true,                                                  # Whether to destroy the container on shutdown
-        "config": {"limits.cpu": "2"},                                      # Config override.
-        "devices": {                                                        # optional list of devices the container should have
-            "kvm": {
-                "path": "/dev/kvm",
-                "type": "unix-char"
-            },
+```js
+{
+    "name": "my-new-container",                                         // 64 chars max, ASCII, no slash, no colon and no comma
+    "architecture": "x86_64",
+    "profiles": ["default"],                                            // List of profiles
+    "ephemeral": true,                                                  // Whether to destroy the container on shutdown
+    "config": {"limits.cpu": "2"},                                      // Config override.
+    "devices": {                                                        // optional list of devices the container should have
+        "kvm": {
+            "path": "/dev/kvm",
+            "type": "unix-char"
         },
-        "source": {"type": "image",                                         # Can be: "image", "migration", "copy" or "none"
-                   "fingerprint": "SHA-256"},                               # Fingerprint
-    }
+    },
+    "source": {"type": "image",                                         // Can be: "image", "migration", "copy" or "none"
+               "fingerprint": "SHA-256"},                               // Fingerprint
+}
+```
 -->
 
 入力 (指定したイメージのプロパティに対して最も最近マッチしたイメージをベースとするコンテナ)
@@ -771,46 +825,50 @@ Input (container based on a local image identified by its fingerprint):
 Input (container based on most recent match based on image properties):
 -->
 
-    {
-        "name": "my-new-container",                                         # 最大 64 文字、 ASCII が使用可、スラッシュ、コロン、カンマは使用不可
-        "architecture": "x86_64",
-        "profiles": ["default"],                                            # プロファイルの一覧
-        "ephemeral": true,                                                  # シャットダウン時にコンテナを破棄するかどうか
-        "config": {"limits.cpu": "2"},                                      # 設定のオーバーライド
-        "devices": {                                                        # コンテナが持つデバイスの任意で指定可能なリスト
-            "kvm": {
-                "path": "/dev/kvm",
-                "type": "unix-char"
-            },
+```js
+{
+    "name": "my-new-container",                                         // 最大 64 文字、 ASCII が使用可、スラッシュ、コロン、カンマは使用不可
+    "architecture": "x86_64",
+    "profiles": ["default"],                                            // プロファイルの一覧
+    "ephemeral": true,                                                  // シャットダウン時にコンテナを破棄するかどうか
+    "config": {"limits.cpu": "2"},                                      // 設定のオーバーライド
+    "devices": {                                                        // コンテナが持つデバイスの任意で指定可能なリスト
+        "kvm": {
+            "path": "/dev/kvm",
+            "type": "unix-char"
         },
-        "source": {"type": "image",                                         # "image", "migration", "copy", "none" のいずれかを指定可能
-                   "properties": {                                          # プロパティ
-                        "os": "ubuntu",
-                        "release": "14.04",
-                        "architecture": "x86_64"
-                    }},
-    }
+    },
+    "source": {"type": "image",                                         // "image", "migration", "copy", "none" のいずれかを指定可能
+               "properties": {                                          // プロパティ
+                    "os": "ubuntu",
+                    "release": "14.04",
+                    "architecture": "x86_64"
+                }},
+}
+```
 
 <!--
-    {
-        "name": "my-new-container",                                         # 64 chars max, ASCII, no slash, no colon and no comma
-        "architecture": "x86_64",
-        "profiles": ["default"],                                            # List of profiles
-        "ephemeral": true,                                                  # Whether to destroy the container on shutdown
-        "config": {"limits.cpu": "2"},                                      # Config override.
-        "devices": {                                                        # optional list of devices the container should have
-            "kvm": {
-                "path": "/dev/kvm",
-                "type": "unix-char"
-            },
+```js
+{
+    "name": "my-new-container",                                         // 64 chars max, ASCII, no slash, no colon and no comma
+    "architecture": "x86_64",
+    "profiles": ["default"],                                            // List of profiles
+    "ephemeral": true,                                                  // Whether to destroy the container on shutdown
+    "config": {"limits.cpu": "2"},                                      // Config override.
+    "devices": {                                                        // optional list of devices the container should have
+        "kvm": {
+            "path": "/dev/kvm",
+            "type": "unix-char"
         },
-        "source": {"type": "image",                                         # Can be: "image", "migration", "copy" or "none"
-                   "properties": {                                          # Properties
-                        "os": "ubuntu",
-                        "release": "14.04",
-                        "architecture": "x86_64"
-                    }},
-    }
+    },
+    "source": {"type": "image",                                         // Can be: "image", "migration", "copy" or "none"
+               "properties": {                                          // Properties
+                    "os": "ubuntu",
+                    "release": "14.04",
+                    "architecture": "x86_64"
+                }},
+}
+```
 -->
 
 入力 (事前に作成済みの rootfs を除いたコンテナ、既存のコンテナにアタッチする際に有用)
@@ -818,36 +876,40 @@ Input (container based on most recent match based on image properties):
 Input (container without a pre-populated rootfs, useful when attaching to an existing one):
 -->
 
-    {
-        "name": "my-new-container",                                         # 最大 64 文字、 ASCII が使用可、スラッシュ、コロン、カンマは使用不可
-        "architecture": "x86_64",
-        "profiles": ["default"],                                            # プロファイルの一覧
-        "ephemeral": true,                                                  # シャットダウン時にコンテナを破棄するかどうか
-        "config": {"limits.cpu": "2"},                                      # 設定のオーバーライド
-        "devices": {                                                        # コンテナが持つデバイスの任意で指定可能なリスト
-            "kvm": {
-                "path": "/dev/kvm",
-                "type": "unix-char"
-            },
+```js
+{
+    "name": "my-new-container",                                         // 最大 64 文字、 ASCII が使用可、スラッシュ、コロン、カンマは使用不可
+    "architecture": "x86_64",
+    "profiles": ["default"],                                            // プロファイルの一覧
+    "ephemeral": true,                                                  // シャットダウン時にコンテナを破棄するかどうか
+    "config": {"limits.cpu": "2"},                                      // 設定のオーバーライド
+    "devices": {                                                        // コンテナが持つデバイスの任意で指定可能なリスト
+        "kvm": {
+            "path": "/dev/kvm",
+            "type": "unix-char"
         },
-        "source": {"type": "none"},                                         # "image", "migration", "copy", "none" のいずれかを指定可能
-    }
+    },
+    "source": {"type": "none"},                                         // "image", "migration", "copy", "none" のいずれかを指定可能
+}
+```
 
 <!--
-    {
-        "name": "my-new-container",                                         # 64 chars max, ASCII, no slash, no colon and no comma
-        "architecture": "x86_64",
-        "profiles": ["default"],                                            # List of profiles
-        "ephemeral": true,                                                  # Whether to destroy the container on shutdown
-        "config": {"limits.cpu": "2"},                                      # Config override.
-        "devices": {                                                        # optional list of devices the container should have
-            "kvm": {
-                "path": "/dev/kvm",
-                "type": "unix-char"
-            },
+```js
+{
+    "name": "my-new-container",                                         // 64 chars max, ASCII, no slash, no colon and no comma
+    "architecture": "x86_64",
+    "profiles": ["default"],                                            // List of profiles
+    "ephemeral": true,                                                  // Whether to destroy the container on shutdown
+    "config": {"limits.cpu": "2"},                                      // Config override.
+    "devices": {                                                        // optional list of devices the container should have
+        "kvm": {
+            "path": "/dev/kvm",
+            "type": "unix-char"
         },
-        "source": {"type": "none"},                                         # Can be: "image", "migration", "copy" or "none"
-    }
+    },
+    "source": {"type": "none"},                                         // Can be: "image", "migration", "copy" or "none"
+}
+```
 -->
 
 入力 (公開されたリモートのイメージを使用)
@@ -855,46 +917,50 @@ Input (container without a pre-populated rootfs, useful when attaching to an exi
 Input (using a public remote image):
 -->
 
-    {
-        "name": "my-new-container",                                         # 最大 64 文字、 ASCII が使用可、スラッシュ、コロン、カンマは使用不可
-        "architecture": "x86_64",
-        "profiles": ["default"],                                            # プロファイルの一覧
-        "ephemeral": true,                                                  # シャットダウン時にコンテナを破棄するかどうか
-        "config": {"limits.cpu": "2"},                                      # 設定のオーバーライド
-        "devices": {                                                        # コンテナが持つデバイスの任意で指定可能なリスト
-            "kvm": {
-                "path": "/dev/kvm",
-                "type": "unix-char"
-            },
+```js
+{
+    "name": "my-new-container",                                         // 最大 64 文字、 ASCII が使用可、スラッシュ、コロン、カンマは使用不可
+    "architecture": "x86_64",
+    "profiles": ["default"],                                            // プロファイルの一覧
+    "ephemeral": true,                                                  // シャットダウン時にコンテナを破棄するかどうか
+    "config": {"limits.cpu": "2"},                                      // 設定のオーバーライド
+    "devices": {                                                        // コンテナが持つデバイスの任意で指定可能なリスト
+        "kvm": {
+            "path": "/dev/kvm",
+            "type": "unix-char"
         },
-        "source": {"type": "image",                                         # "image", "migration", "copy", "none" のいずれかを指定可能
-                   "mode": "pull",                                          # "local" (デフォルト) か "pull" のいずれか
-                   "server": "https://10.0.2.3:8443",                       # リモートサーバ (pull モードのときのみ)
-                   "protocol": "lxd",                                       # プロトコル (lxd か simplestreams のいずれか、デフォルトは lxd)
-                   "certificate": "PEM certificate",                        # PEM 証明書を指定可能。未指定の場合はシステムの CA が使用される。
-                   "alias": "ubuntu/devel"},                                # エイリアスの名前
-    }
+    },
+    "source": {"type": "image",                                         // "image", "migration", "copy", "none" のいずれかを指定可能
+               "mode": "pull",                                          // "local" (デフォルト) か "pull" のいずれか
+               "server": "https://10.0.2.3:8443",                       // リモートサーバ (pull モードのときのみ)
+               "protocol": "lxd",                                       // プロトコル (lxd か simplestreams のいずれか、デフォルトは lxd)
+               "certificate": "PEM certificate",                        // PEM 証明書を指定可能。未指定の場合はシステムの CA が使用される。
+               "alias": "ubuntu/devel"},                                // エイリアスの名前
+}
+```
 
 <!--
-    {
-        "name": "my-new-container",                                         # 64 chars max, ASCII, no slash, no colon and no comma
-        "architecture": "x86_64",
-        "profiles": ["default"],                                            # List of profiles
-        "ephemeral": true,                                                  # Whether to destroy the container on shutdown
-        "config": {"limits.cpu": "2"},                                      # Config override.
-        "devices": {                                                        # optional list of devices the container should have
-            "kvm": {
-                "path": "/dev/kvm",
-                "type": "unix-char"
-            },
+```js
+{
+    "name": "my-new-container",                                         // 64 chars max, ASCII, no slash, no colon and no comma
+    "architecture": "x86_64",
+    "profiles": ["default"],                                            // List of profiles
+    "ephemeral": true,                                                  // Whether to destroy the container on shutdown
+    "config": {"limits.cpu": "2"},                                      // Config override.
+    "devices": {                                                        // optional list of devices the container should have
+        "kvm": {
+            "path": "/dev/kvm",
+            "type": "unix-char"
         },
-        "source": {"type": "image",                                         # Can be: "image", "migration", "copy" or "none"
-                   "mode": "pull",                                          # One of "local" (default) or "pull"
-                   "server": "https://10.0.2.3:8443",                       # Remote server (pull mode only)
-                   "protocol": "lxd",                                       # Protocol (one of lxd or simplestreams, defaults to lxd)
-                   "certificate": "PEM certificate",                        # Optional PEM certificate. If not mentioned, system CA is used.
-                   "alias": "ubuntu/devel"},                                # Name of the alias
-    }
+    },
+    "source": {"type": "image",                                         // Can be: "image", "migration", "copy" or "none"
+               "mode": "pull",                                          // One of "local" (default) or "pull"
+               "server": "https://10.0.2.3:8443",                       // Remote server (pull mode only)
+               "protocol": "lxd",                                       // Protocol (one of lxd or simplestreams, defaults to lxd)
+               "certificate": "PEM certificate",                        // Optional PEM certificate. If not mentioned, system CA is used.
+               "alias": "ubuntu/devel"},                                // Name of the alias
+}
+```
 -->
 
 入力 (プライベートなリモートのイメージをそのイメージのシークレットを取得した後に使用)
@@ -902,46 +968,50 @@ Input (using a public remote image):
 Input (using a private remote image after having obtained a secret for that image):
 -->
 
-    {
-        "name": "my-new-container",                                         # 最大 64 文字、 ASCII が使用可、スラッシュ、コロン、カンマは使用不可
-        "architecture": "x86_64",
-        "profiles": ["default"],                                            # プロファイルの一覧
-        "ephemeral": true,                                                  # シャットダウン時にコンテナを破棄するかどうか
-        "config": {"limits.cpu": "2"},                                      # 設定のオーバーライド
-        "devices": {                                                        # コンテナが持つデバイスの任意で指定可能なリスト
-            "kvm": {
-                "path": "/dev/kvm",
-                "type": "unix-char"
-            },
+```js
+{
+    "name": "my-new-container",                                         // 最大 64 文字、 ASCII が使用可、スラッシュ、コロン、カンマは使用不可
+    "architecture": "x86_64",
+    "profiles": ["default"],                                            // プロファイルの一覧
+    "ephemeral": true,                                                  // シャットダウン時にコンテナを破棄するかどうか
+    "config": {"limits.cpu": "2"},                                      // 設定のオーバーライド
+    "devices": {                                                        // コンテナが持つデバイスの任意で指定可能なリスト
+        "kvm": {
+            "path": "/dev/kvm",
+            "type": "unix-char"
         },
-        "source": {"type": "image",                                         # "image", "migration", "copy", "none" のいずれかを指定可能
-                   "mode": "pull",                                          # "local" (デフォルト) か "pull" のいずれか
-                   "server": "https://10.0.2.3:8443",                       # リモートサーバ (pull モードのときのみ)
-                   "secret": "my-secret-string",                            # イメージを取得するために使用するシークレット (pull モードのときのみ)
-                   "certificate": "PEM certificate",                        # PEM 証明書を指定可能。未指定の場合はシステムの CA が使用される。
-                   "alias": "ubuntu/devel"},                                # エイリアスの名前
-    }
+    },
+    "source": {"type": "image",                                         // "image", "migration", "copy", "none" のいずれかを指定可能
+               "mode": "pull",                                          // "local" (デフォルト) か "pull" のいずれか
+               "server": "https://10.0.2.3:8443",                       // リモートサーバ (pull モードのときのみ)
+               "secret": "my-secret-string",                            // イメージを取得するために使用するシークレット (pull モードのときのみ)
+               "certificate": "PEM certificate",                        // PEM 証明書を指定可能。未指定の場合はシステムの CA が使用される。
+               "alias": "ubuntu/devel"},                                // エイリアスの名前
+}
+```
 
 <!--
-    {
-        "name": "my-new-container",                                         # 64 chars max, ASCII, no slash, no colon and no comma
-        "architecture": "x86_64",
-        "profiles": ["default"],                                            # List of profiles
-        "ephemeral": true,                                                  # Whether to destroy the container on shutdown
-        "config": {"limits.cpu": "2"},                                      # Config override.
-        "devices": {                                                        # optional list of devices the container should have
-            "kvm": {
-                "path": "/dev/kvm",
-                "type": "unix-char"
-            },
+```js
+{
+    "name": "my-new-container",                                         // 64 chars max, ASCII, no slash, no colon and no comma
+    "architecture": "x86_64",
+    "profiles": ["default"],                                            // List of profiles
+    "ephemeral": true,                                                  // Whether to destroy the container on shutdown
+    "config": {"limits.cpu": "2"},                                      // Config override.
+    "devices": {                                                        // optional list of devices the container should have
+        "kvm": {
+            "path": "/dev/kvm",
+            "type": "unix-char"
         },
-        "source": {"type": "image",                                         # Can be: "image", "migration", "copy" or "none"
-                   "mode": "pull",                                          # One of "local" (default) or "pull"
-                   "server": "https://10.0.2.3:8443",                       # Remote server (pull mode only)
-                   "secret": "my-secret-string",                            # Secret to use to retrieve the image (pull mode only)
-                   "certificate": "PEM certificate",                        # Optional PEM certificate. If not mentioned, system CA is used.
-                   "alias": "ubuntu/devel"},                                # Name of the alias
-    }
+    },
+    "source": {"type": "image",                                         // Can be: "image", "migration", "copy" or "none"
+               "mode": "pull",                                          // One of "local" (default) or "pull"
+               "server": "https://10.0.2.3:8443",                       // Remote server (pull mode only)
+               "secret": "my-secret-string",                            // Secret to use to retrieve the image (pull mode only)
+               "certificate": "PEM certificate",                        // Optional PEM certificate. If not mentioned, system CA is used.
+               "alias": "ubuntu/devel"},                                // Name of the alias
+}
+```
 -->
 
 入力 (マイグレーション・ウェブソケットで送られるリモートのコンテナを使用)
@@ -949,54 +1019,58 @@ Input (using a private remote image after having obtained a secret for that imag
 Input (using a remote container, sent over the migration websocket):
 -->
 
-    {
-        "name": "my-new-container",                                                     # 最大 64 文字、 ASCII が使用可、スラッシュ、コロン、カンマは使用不可
-        "architecture": "x86_64",
-        "profiles": ["default"],                                                        # プロファイルの一覧
-        "ephemeral": true,                                                              # シャットダウン時にコンテナを破棄するかどうか
-        "config": {"limits.cpu": "2"},                                                  # 設定のオーバーライド
-        "devices": {                                                                    # コンテナが持つデバイスの任意で指定可能なリスト
-            "kvm": {
-                "path": "/dev/kvm",
-                "type": "unix-char"
-            },
+```js
+{
+    "name": "my-new-container",                                                     // 最大 64 文字、 ASCII が使用可、スラッシュ、コロン、カンマは使用不可
+    "architecture": "x86_64",
+    "profiles": ["default"],                                                        // プロファイルの一覧
+    "ephemeral": true,                                                              // シャットダウン時にコンテナを破棄するかどうか
+    "config": {"limits.cpu": "2"},                                                  // 設定のオーバーライド
+    "devices": {                                                                    // コンテナが持つデバイスの任意で指定可能なリスト
+        "kvm": {
+            "path": "/dev/kvm",
+            "type": "unix-char"
         },
-        "source": {"type": "migration",                                                 # "image", "migration", "copy", "none" のいずれかを指定可能
-                   "mode": "pull",                                                      # 現状 "pull" と "push" がサポートされる
-                   "operation": "https://10.0.2.3:8443/1.0/operations/<UUID>",          # リモート操作への完全な URL
-                   "certificate": "PEM certificate",                                    # PEM 証明書を指定可能。未指定の場合はシステムの CA が使用される。
-                   "base-image": "<fingerprint>",                                       # 任意で指定可能。コンテナが作られたベースのイメージ
-                   "container_only": true,                                              # スナップショットなしでコンテナだけをマイグレーションするかどうか。 "true" か "false" のいずれか。
-                   "secrets": {"control": "my-secret-string",                           # マイグレーションのソースと通信する際に使用するシークレット
-                               "criu":    "my-other-secret",
-                               "fs":      "my third secret"}
-        }
+    },
+    "source": {"type": "migration",                                                 // "image", "migration", "copy", "none" のいずれかを指定可能
+               "mode": "pull",                                                      // 現状 "pull" と "push" がサポートされる
+               "operation": "https://10.0.2.3:8443/1.0/operations/<UUID>",          // リモート操作への完全な URL
+               "certificate": "PEM certificate",                                    // PEM 証明書を指定可能。未指定の場合はシステムの CA が使用される。
+               "base-image": "<fingerprint>",                                       // 任意で指定可能。コンテナが作られたベースのイメージ
+               "container_only": true,                                              // スナップショットなしでコンテナだけをマイグレーションするかどうか。 "true" か "false" のいずれか。
+               "secrets": {"control": "my-secret-string",                           // マイグレーションのソースと通信する際に使用するシークレット
+                           "criu":    "my-other-secret",
+                           "fs":      "my third secret"}
     }
+}
+```
 
 <!--
-    {
-        "name": "my-new-container",                                                     # 64 chars max, ASCII, no slash, no colon and no comma
-        "architecture": "x86_64",
-        "profiles": ["default"],                                                        # List of profiles
-        "ephemeral": true,                                                              # Whether to destroy the container on shutdown
-        "config": {"limits.cpu": "2"},                                                  # Config override.
-        "devices": {                                                                    # optional list of devices the container should have
-            "kvm": {
-                "path": "/dev/kvm",
-                "type": "unix-char"
-            },
+```js
+{
+    "name": "my-new-container",                                                     // 64 chars max, ASCII, no slash, no colon and no comma
+    "architecture": "x86_64",
+    "profiles": ["default"],                                                        // List of profiles
+    "ephemeral": true,                                                              // Whether to destroy the container on shutdown
+    "config": {"limits.cpu": "2"},                                                  // Config override.
+    "devices": {                                                                    // optional list of devices the container should have
+        "kvm": {
+            "path": "/dev/kvm",
+            "type": "unix-char"
         },
-        "source": {"type": "migration",                                                 # Can be: "image", "migration", "copy" or "none"
-                   "mode": "pull",                                                      # "pull" and "push" is supported for now
-                   "operation": "https://10.0.2.3:8443/1.0/operations/<UUID>",          # Full URL to the remote operation (pull mode only)
-                   "certificate": "PEM certificate",                                    # Optional PEM certificate. If not mentioned, system CA is used.
-                   "base-image": "<fingerprint>",                                       # Optional, the base image the container was created from
-                   "container_only": true,                                              # Whether to migrate only the container without snapshots. Can be "true" or "false".
-                   "secrets": {"control": "my-secret-string",                           # Secrets to use when talking to the migration source
-                               "criu":    "my-other-secret",
-                               "fs":      "my third secret"}
-        }
+    },
+    "source": {"type": "migration",                                                 // Can be: "image", "migration", "copy" or "none"
+               "mode": "pull",                                                      // "pull" and "push" is supported for now
+               "operation": "https://10.0.2.3:8443/1.0/operations/<UUID>",          // Full URL to the remote operation (pull mode only)
+               "certificate": "PEM certificate",                                    // Optional PEM certificate. If not mentioned, system CA is used.
+               "base-image": "<fingerprint>",                                       // Optional, the base image the container was created from
+               "container_only": true,                                              // Whether to migrate only the container without snapshots. Can be "true" or "false".
+               "secrets": {"control": "my-secret-string",                           // Secrets to use when talking to the migration source
+                           "criu":    "my-other-secret",
+                           "fs":      "my third secret"}
     }
+}
+```
 -->
 
 入力 (ローカルのコンテナを使用)
@@ -1004,38 +1078,42 @@ Input (using a remote container, sent over the migration websocket):
 Input (using a local container):
 -->
 
-    {
-        "name": "my-new-container",                                                     # 最大 64 文字、 ASCII が使用可、スラッシュ、コロン、カンマは使用不可
-        "profiles": ["default"],                                                        # プロファイルの一覧
-        "ephemeral": true,                                                              # シャットダウン時にコンテナを破棄するかどうか
-        "config": {"limits.cpu": "2"},                                                  # 設定のオーバーライド
-        "devices": {                                                                    # コンテナが持つデバイスの任意で指定可能なリスト
-            "kvm": {
-                "path": "/dev/kvm",
-                "type": "unix-char"
-            },
+```js
+{
+    "name": "my-new-container",                                                     // 最大 64 文字、 ASCII が使用可、スラッシュ、コロン、カンマは使用不可
+    "profiles": ["default"],                                                        // プロファイルの一覧
+    "ephemeral": true,                                                              // シャットダウン時にコンテナを破棄するかどうか
+    "config": {"limits.cpu": "2"},                                                  // 設定のオーバーライド
+    "devices": {                                                                    // コンテナが持つデバイスの任意で指定可能なリスト
+        "kvm": {
+            "path": "/dev/kvm",
+            "type": "unix-char"
         },
-        "source": {"type": "copy",                                                      # "image", "migration", "copy", "none" のいずれかを指定可能
-                   "container_only": true,                                              # スナップショットなしでコンテナだけをマイグレーションするかどうか。 "true" か "false" のいずれか。
-                   "source": "my-old-container"}                                        # 作成元のコンテナの名前
-    }
+    },
+    "source": {"type": "copy",                                                      // "image", "migration", "copy", "none" のいずれかを指定可能
+               "container_only": true,                                              // スナップショットなしでコンテナだけをマイグレーションするかどうか。 "true" か "false" のいずれか。
+               "source": "my-old-container"}                                        // 作成元のコンテナの名前
+}
+```
 
 <!--
-    {
-        "name": "my-new-container",                                                     # 64 chars max, ASCII, no slash, no colon and no comma
-        "profiles": ["default"],                                                        # List of profiles
-        "ephemeral": true,                                                              # Whether to destroy the container on shutdown
-        "config": {"limits.cpu": "2"},                                                  # Config override.
-        "devices": {                                                                    # optional list of devices the container should have
-            "kvm": {
-                "path": "/dev/kvm",
-                "type": "unix-char"
-            },
+```js
+{
+    "name": "my-new-container",                                                     // 64 chars max, ASCII, no slash, no colon and no comma
+    "profiles": ["default"],                                                        // List of profiles
+    "ephemeral": true,                                                              // Whether to destroy the container on shutdown
+    "config": {"limits.cpu": "2"},                                                  // Config override.
+    "devices": {                                                                    // optional list of devices the container should have
+        "kvm": {
+            "path": "/dev/kvm",
+            "type": "unix-char"
         },
-        "source": {"type": "copy",                                                      # Can be: "image", "migration", "copy" or "none"
-                   "container_only": true,                                              # Whether to copy only the container without snapshots. Can be "true" or "false".
-                   "source": "my-old-container"}                                        # Name of the source container
-    }
+    },
+    "source": {"type": "copy",                                                      // Can be: "image", "migration", "copy" or "none"
+               "container_only": true,                                              // Whether to copy only the container without snapshots. Can be "true" or "false".
+               "source": "my-old-container"}                                        // Name of the source container
+}
+```
 -->
 
 入力 (クライアントプロキシ経由でマイグレーションウェブソケット越しに push モードで送られるリモートコンテナを使用)
@@ -1043,44 +1121,48 @@ Input (using a local container):
 Input (using a remote container, in push mode sent over the migration websocket via client proxying):
 -->
 
-    {
-        "name": "my-new-container",                                                     # 最大 64 文字、 ASCII が使用可、スラッシュ、コロン、カンマは使用不可
-        "architecture": "x86_64",
-        "profiles": ["default"],                                                        # プロファイルの一覧
-        "ephemeral": true,                                                              # シャットダウン時にコンテナを破棄するかどうか
-        "config": {"limits.cpu": "2"},                                                  # 設定のオーバーライド
-        "devices": {                                                                    # コンテナが持つデバイスの任意で指定可能なリスト
-            "kvm": {
-                "path": "/dev/kvm",
-                "type": "unix-char"
-            },
+```js
+{
+    "name": "my-new-container",                                                     // 最大 64 文字、 ASCII が使用可、スラッシュ、コロン、カンマは使用不可
+    "architecture": "x86_64",
+    "profiles": ["default"],                                                        // プロファイルの一覧
+    "ephemeral": true,                                                              // シャットダウン時にコンテナを破棄するかどうか
+    "config": {"limits.cpu": "2"},                                                  // 設定のオーバーライド
+    "devices": {                                                                    // コンテナが持つデバイスの任意で指定可能なリスト
+        "kvm": {
+            "path": "/dev/kvm",
+            "type": "unix-char"
         },
-        "source": {"type": "migration",                                                 # "image", "migration", "copy", "none" のいずれかを指定可能
-                   "mode": "push",                                                      # "pull" と "push" がサポートされている
-                   "base-image": "<fingerprint>",                                       # 任意で指定可能。コンテナが作られたベースのイメージ
-                   "live": true,                                                        # マイグレーションが live で実行されるかどうか
-                   "container_only": true}                                              # スナップショットなしでコンテナだけをマイグレーションするかどうか。 "true" か "false" のいずれか。
-    }
+    },
+    "source": {"type": "migration",                                                 // "image", "migration", "copy", "none" のいずれかを指定可能
+               "mode": "push",                                                      // "pull" と "push" がサポートされている
+               "base-image": "<fingerprint>",                                       // 任意で指定可能。コンテナが作られたベースのイメージ
+               "live": true,                                                        // マイグレーションが live で実行されるかどうか
+               "container_only": true}                                              // スナップショットなしでコンテナだけをマイグレーションするかどうか。 "true" か "false" のいずれか。
+}
+```
 
 <!--
-    {
-        "name": "my-new-container",                                                     # 64 chars max, ASCII, no slash, no colon and no comma
-        "architecture": "x86_64",
-        "profiles": ["default"],                                                        # List of profiles
-        "ephemeral": true,                                                              # Whether to destroy the container on shutdown
-        "config": {"limits.cpu": "2"},                                                  # Config override.
-        "devices": {                                                                    # optional list of devices the container should have
-            "kvm": {
-                "path": "/dev/kvm",
-                "type": "unix-char"
-            },
+```js
+{
+    "name": "my-new-container",                                                     // 64 chars max, ASCII, no slash, no colon and no comma
+    "architecture": "x86_64",
+    "profiles": ["default"],                                                        // List of profiles
+    "ephemeral": true,                                                              // Whether to destroy the container on shutdown
+    "config": {"limits.cpu": "2"},                                                  // Config override.
+    "devices": {                                                                    // optional list of devices the container should have
+        "kvm": {
+            "path": "/dev/kvm",
+            "type": "unix-char"
         },
-        "source": {"type": "migration",                                                 # Can be: "image", "migration", "copy" or "none"
-                   "mode": "push",                                                      # "pull" and "push" are supported
-                   "base-image": "<fingerprint>",                                       # Optional, the base image the container was created from
-                   "live": true,                                                        # Whether migration is performed live
-                   "container_only": true}                                              # Whether to migrate only the container without snapshots. Can be "true" or "false".
-    }
+    },
+    "source": {"type": "migration",                                                 // Can be: "image", "migration", "copy" or "none"
+               "mode": "push",                                                      // "pull" and "push" are supported
+               "base-image": "<fingerprint>",                                       // Optional, the base image the container was created from
+               "live": true,                                                        // Whether migration is performed live
+               "container_only": true}                                              // Whether to migrate only the container without snapshots. Can be "true" or "false".
+}
+```
 -->
 
 入力 (バックアップを使用)
@@ -1088,10 +1170,10 @@ Input (using a remote container, in push mode sent over the migration websocket 
 Input (using a backup):
 -->
 
-    バックアップダウンロードにより提供される生の圧縮された tarball
+バックアップダウンロードにより提供される生の圧縮された tarball
 
 <!--
-    Raw compressed tarball as provided by a backup download.
+Raw compressed tarball as provided by a backup download.
 -->
 
 ### `/1.0/containers/<name>`
@@ -1106,90 +1188,94 @@ Input (using a backup):
 Output:
 -->
 
-    {
-        "architecture": "x86_64",
-        "config": {
-            "limits.cpu": "3",
-            "volatile.base_image": "97d97a3d1d053840ca19c86cdd0596cf1be060c5157d31407f2a4f9f350c78cc",
-            "volatile.eth0.hwaddr": "00:16:3e:1c:94:38"
+```js
+{
+    "architecture": "x86_64",
+    "config": {
+        "limits.cpu": "3",
+        "volatile.base_image": "97d97a3d1d053840ca19c86cdd0596cf1be060c5157d31407f2a4f9f350c78cc",
+        "volatile.eth0.hwaddr": "00:16:3e:1c:94:38"
+    },
+    "created_at": "2016-02-16T01:05:05Z",
+    "devices": {
+        "rootfs": {
+            "path": "/",
+            "type": "disk"
+        }
+    },
+    "ephemeral": false,
+    "expanded_config": {    // プロファイルを展開したものにコンテナのローカルの設定を追加した結果
+        "limits.cpu": "3",
+        "volatile.base_image":  "97d97a3d1d053840ca19c86cdd0596cf1be060c5157d31407f2a4f9f350c78cc",
+        "volatile.eth0.hwaddr":: "00:16:3e:1c:94:38"
+    },
+    "expanded_devices": {   // プロファイルを展開したものにコンテナのローカルのデバイスを追加した結果
+        "eth0": {
+            "name": "eth0",
+            "nictype": "bridgedd",
+            "parent": "lxdbr0",,
+            "type": "nic"
         },
-        "created_at": "2016-02-16T01:05:05Z",
-        "devices": {
-            "rootfs": {
-                "path": "/",
-                "type": "disk"
-            }
-        },
-        "ephemeral": false,
-        "expanded_config": {    # プロファイルを展開したものにコンテナのローカルの設定を追加した結果
-            "limits.cpu": "3",
-            "volatile.base_image": "97d97a3d1d053840ca19c86cdd0596cf1be060c5157d31407f2a4f9f350c78cc",
-            "volatile.eth0.hwaddr": "00:16:3e:1c:94:38"
-        },
-        "expanded_devices": {   # プロファイルを展開したものにコンテナのローカルのデバイスを追加した結果
-            "eth0": {
-                "name": "eth0",
-                "nictype": "bridged",
-                "parent": "lxdbr0",
-                "type": "nic"
-            },
-            "root": {
-                "path": "/",
-                "type": "disk"
-            }
-        },
-        "last_used_at": "2016-02-16T01:05:05Z",
-        "name": "my-container",
-        "profiles": [
-            "default"
-        ],
-        "stateful": false,      # true の場合はコンテナがスタートアップ時に復元できる何らかの保管された状態を持つことを意味する
-        "status": "Running",
-        "status_code": 103
-    }
+        "root": {
+            "path": "/",
+            "type": "disk"
+        }
+    },
+    "last_used_at": "2016-02-166T01:05:05Z",
+    "name": "my-container",
+    "profiles": [
+        "default"
+    ],
+    "stateful": false,      // true の場合はコンテナがスタートアップ時に復元できる何らかの保管された状態を持つことを意味する
+    "status": "Running",
+    "status_code": 103
+}
+```
 
 <!--
-    {
-        "architecture": "x86_64",
-        "config": {
-            "limits.cpu": "3",
-            "volatile.base_image": "97d97a3d1d053840ca19c86cdd0596cf1be060c5157d31407f2a4f9f350c78cc",
-            "volatile.eth0.hwaddr": "00:16:3e:1c:94:38"
+```js
+{
+    "architecture": "x86_64",
+    "config": {
+        "limits.cpu": "3",
+        "volatile.base_image": "97d97a3d1d053840ca19c86cdd0596cf1be060c5157d31407f2a4f9f350c78cc",
+        "volatile.eth0.hwaddr": "00:16:3e:1c:94:38"
+    },
+    "created_at": "2016-02-16T01:05:05Z",
+    "devices": {
+        "rootfs": {
+            "path": "/",
+            "type": "disk"
+        }
+    },
+    "ephemeral": false,
+    "expanded_config": {    // the result of expanding profiles and adding the container's local config
+        "limits.cpu": "3",
+        "volatile.base_image": "97d97a3d1d053840ca19c86cdd0596cf1be060c5157d31407f2a4f9f350c78cc",
+        "volatile.eth0.hwaddr": "00:16:3e:1c:94:38"
+    },
+    "expanded_devices": {   // the result of expanding profiles and adding the container's local devices
+        "eth0": {
+            "name": "eth0",
+            "nictype": "bridged",
+            "parent": "lxdbr0",
+            "type": "nic"
         },
-        "created_at": "2016-02-16T01:05:05Z",
-        "devices": {
-            "rootfs": {
-                "path": "/",
-                "type": "disk"
-            }
-        },
-        "ephemeral": false,
-        "expanded_config": {    # the result of expanding profiles and adding the container's local config
-            "limits.cpu": "3",
-            "volatile.base_image": "97d97a3d1d053840ca19c86cdd0596cf1be060c5157d31407f2a4f9f350c78cc",
-            "volatile.eth0.hwaddr": "00:16:3e:1c:94:38"
-        },
-        "expanded_devices": {   # the result of expanding profiles and adding the container's local devices
-            "eth0": {
-                "name": "eth0",
-                "nictype": "bridged",
-                "parent": "lxdbr0",
-                "type": "nic"
-            },
-            "root": {
-                "path": "/",
-                "type": "disk"
-            }
-        },
-        "last_used_at": "2016-02-16T01:05:05Z",
-        "name": "my-container",
-        "profiles": [
-            "default"
-        ],
-        "stateful": false,      # If true, indicates that the container has some stored state that can be restored on startup
-        "status": "Running",
-        "status_code": 103
-    }
+        "root": {
+            "path": "/",
+            "type": "disk"
+        }
+    },
+    "last_used_at": "2016-02-16T01:05:05Z",
+    "name": "my-container",
+    "profiles": [
+        "default"
+    ],
+    "stateful": false,      // If true, indicates that the container has some stored state that can be restored on startup
+    "status": "Running",
+    "status_code": 103
+}
+```
 -->
 
 #### PUT (ETag サポートあり) <!-- PUT (ETag supported) -->
@@ -1203,24 +1289,26 @@ Output:
 Input (update container configuration):
 -->
 
-    {
-        "architecture": "x86_64",
-        "config": {
-            "limits.cpu": "4",
-            "volatile.base_image": "97d97a3d1d053840ca19c86cdd0596cf1be060c5157d31407f2a4f9f350c78cc",
-            "volatile.eth0.hwaddr": "00:16:3e:1c:94:38"
-        },
-        "devices": {
-            "rootfs": {
-                "path": "/",
-                "type": "disk"
-            }
-        },
-        "ephemeral": true,
-        "profiles": [
-            "default"
-        ]
-    }
+```json
+{
+    "architecture": "x86_64",
+    "config": {
+        "limits.cpu": "4",
+        "volatile.base_image": "97d97a3d1d053840ca19c86cdd0596cf1be060c5157d31407f2a4f9f350c78cc",
+        "volatile.eth0.hwaddr": "00:16:3e:1c:94:38"
+    },
+    "devices": {
+        "rootfs": {
+            "path": "/",
+            "type": "disk"
+        }
+    },
+    "ephemeral": true,
+    "profiles": [
+        "default"
+    ]
+}
+```
 
 GET の戻り値と同じ構造を持つが、名前の変更は許されず (以下の POST 参照)、
 status の sub-dict への変更も許されません (status の sub-dict は読み取り
@@ -1236,9 +1324,11 @@ read-only).
 Input (restore snapshot):
 -->
 
-    {
-        "restore": "snapshot-name"
-    }
+```json
+{
+    "restore": "snapshot-name"
+}
+```
 
 #### PATCH (ETag サポートあり) <!-- PATCH (ETag supported) -->
  * 説明: コンテナの設定を更新します <!-- Description: update container configuration -->
@@ -1252,17 +1342,19 @@ Input (restore snapshot):
 Input:
 -->
 
-    {
-        "config": {
-            "limits.cpu": "4"
-        },
-        "devices": {
-            "rootfs": {
-                "size": "5GB"
-            }
-        },
-        "ephemeral": true
-    }
+```json
+{
+    "config": {
+        "limits.cpu": "4"
+    },
+    "devices": {
+        "rootfs": {
+            "size": "5GB"
+        }
+    },
+    "ephemeral": true
+}
+```
 
 #### POST (`?target=<member>` を任意で指定可能) <!-- POST (optional `?target=<member>`) -->
  * 説明: コンテナをリネーム／マイグレーションするのに用いられます <!-- Description: used to rename/migrate the container -->
@@ -1280,20 +1372,24 @@ Renaming to an existing name must return the 409 (Conflict) HTTP code.
 Input (simple rename):
 -->
 
-    {
-        "name": "new-name"
-    }
+```json
+{
+    "name": "new-name"
+}
+```
 
 入力 (lxd インスタンスまたは lxd クラスタメンバ間でのマイグレーション)
 <!--
 Input (migration across lxd instances or lxd cluster members):
 -->
 
-    {
-        "name": "new-name"
-        "migration": true
-        "live": "true"
-    }
+```json
+{
+    "name": "new-name",
+    "migration": true,
+    "live": "true"
+}
+```
 
 誰か (つまり他の lxd インスタンス) が全てのウェブソケットに接続してソースと
 交渉を始めるまでは、マイグレーションは実際には開始されません。
@@ -1313,18 +1409,22 @@ To migrate between cluster members the `?target=<member>` option is required.
 Output in metadata section (for migration):
 -->
 
-    {
-        "control": "secret1",       # マイグレーション制御ソケット
-        "criu": "secret2",          # 状態転送ソケット (ライブマイグレーションのときのみ)
-        "fs": "secret3"             # ファイルシステム転送ソケット
-    }
+```js
+{
+    "control": "secret1",       // マイグレーション制御ソケット
+    "criu": "secret2",          // 状態転送ソケット (ライブマイグレーションのときのみ)
+    "fs": "secret3"             // ファイルシステム転送ソケット
+}
+```
 
 <!--
-    {
-        "control": "secret1",       # Migration control socket
-        "criu": "secret2",          # State transfer socket (only if live migrating)
-        "fs": "secret3"             # Filesystem transfer socket
-    }
+```js
+{
+    "control": "secret1",       // Migration control socket
+    "criu": "secret2",          // State transfer socket (only if live migrating)
+    "fs": "secret3"             // Filesystem transfer socket
+}
+```
 -->
 
 これらは作成の呼び出し時に渡すべきシークレットです。
@@ -1343,8 +1443,10 @@ These are the secrets that should be passed to the create call.
 Input (none at present):
 -->
 
-    {
-    }
+```json
+{
+}
+```
 
 この操作に対する HTTP レスポンスのステータスコードは 202 (Accepted) です。
 <!--
@@ -1369,16 +1471,20 @@ HTTP code for this should be 202 (Accepted).
 Input (attach to /dev/console):
 -->
 
-    {
-        "width": 80,                    # 端末の初期の幅 (任意で指定可能)
-        "height": 25,                   # 端末の初期の高さ (任意で指定可能)
-    }
+```js
+{
+    "width": 80,                    // 端末の初期の幅 (任意で指定可能)
+    "height": 25                    // 端末の初期の高さ (任意で指定可能)
+}
+```
 
 <!--
-    {
-        "width": 80,                    # Initial width of the terminal (optional)
-        "height": 25,                   # Initial height of the terminal (optional)
-    }
+```js
+{
+    "width": 80,                    // Initial width of the terminal (optional)
+    "height": 25                    // Initial height of the terminal (optional)
+}
+```
 -->
 
 制御用ウェブソケットがコンソールセッションの out-of-band メッセージの送信に使用されます。
@@ -1393,13 +1499,15 @@ This is currently used for window size changes.
 Control (window size change):
 -->
 
-    {
-        "command": "window-resize",
-        "args": {
-            "width": "80",
-            "height": "50"
-        }
+```json
+{
+    "command": "window-resize",
+    "args": {
+        "width": "80",
+        "height": "50"
     }
+}
+```
 
 #### DELETE
  * 説明: コンテナのコンソールログを空にします <!-- Description: empty the container's console log -->
@@ -1419,41 +1527,46 @@ Control (window size change):
 Input (run bash):
 -->
 
-    {
-        "command": ["/bin/bash"],       # コマンドと引数
-        "environment": {},              # 追加で設定する任意で指定可能な環境変数
-        "wait-for-websocket": false,    # プロセスを開始する前に接続を待つかどうか
-        "record-output": false,         # 標準出力と標準エラー出力を記録するかどうか (wait-for-websocket=false のときのみ有効) (container_exec_recording API 拡張が必要)
-        "interactive": true,            # PIPE の代わりに pts デバイスを割り当てるかどうか
-        "width": 80,                    # 端末の初期の幅 (任意で指定可能)
-        "height": 25,                   # 端末の初期の高さ (任意で指定可能)
-        "user": 1000,                   # コマンドを実行するユーザー (任意で指定可能)
-        "group: 1000,                   # コマンドを実行するグループ (任意で指定可能)
-        "cwd": "/tmp"                   # 現在の作業ディレクトリ (任意で指定可能)
-    }
+```js
+{
+    "command": ["/bin/bash"],       // コマンドと引数
+    "environment": {},              // 追加で設定する任意で指定可能な環境変数
+    "wait-for-websocket": false,    // プロセスを開始する前に接続を待つかどうか
+    "record-output": false,         // 標準出力と標準エラー出力を記録するかどうか (wait-for-websocket=false のときのみ有効) (container_exec_recording API 拡張が必要)
+    "interactive": true,            // PIPE の代わりに pts デバイスを割り当てるかどうか
+    "width": 80,                    // 端末の初期の幅 (任意で指定可能)
+    "height": 25,                   // 端末の初期の高さ (任意で指定可能)
+    "user": 1000,                   // コマンドを実行するユーザー (任意で指定可能)
+    "group": 1000,                  // コマンドを実行するグループ (任意で指定可能)
+    "cwd": "/tmp"                   // 現在の作業ディレクトリ (任意で指定可能)
+}
+```
 
 <!--
-    {
-        "command": ["/bin/bash"],       # Command and arguments
-        "environment": {},              # Optional extra environment variables to set
-        "wait-for-websocket": false,    # Whether to wait for a connection before starting the process
-        "record-output": false,         # Whether to store stdout and stderr (only valid with wait-for-websocket=false) (requires API extension container_exec_recording)
-        "interactive": true,            # Whether to allocate a pts device instead of PIPEs
-        "width": 80,                    # Initial width of the terminal (optional)
-        "height": 25,                   # Initial height of the terminal (optional)
-        "user": 1000,                   # User to run the command as (optional)
-        "group: 1000,                   # Group to run the command as (optional)
-        "cwd": "/tmp"                   # Current working directory (optional)
-    }
+```js
+{
+    "command": ["/bin/bash"],       // Command and arguments
+    "environment": {},              // Optional extra environment variables to set
+    "wait-for-websocket": false,    // Whether to wait for a connection before starting the process
+    "record-output": false,         // Whether to store stdout and stderr (only valid with wait-for-websocket=false) (requires API extension container_exec_recording)
+    "interactive": true,            // Whether to allocate a pts device instead of PIPEs
+    "width": 80,                    // Initial width of the terminal (optional)
+    "height": 25,                   // Initial height of the terminal (optional)
+    "user": 1000,                   // User to run the command as (optional)
+    "group": 1000,                  // Group to run the command as (optional)
+    "cwd": "/tmp"                   // Current working directory (optional)
+}
+```
 -->
 
-`wait-for-websocket` は (ユーザが標準入力を渡し、標準出力を読み取れる
-ようにするために) 操作をブロックしウェブソケットの接続が開始するのを
-待つか、あるいは即座に開始するかを指示します。
+`wait-for-websocket` は操作をブロックしウェブソケットの接続が
+(オプショナルである `control` を除く) 全ての利用可能なファイルディスクリプタに対して
+開始するのを待つか、あるいは即座に開始するかを指示します。
+これによりユーザが標準入力を渡したり、標準出力や標準エラー出力の出力をバイト列として読み取る選択肢を提供します。
 <!--
 `wait-for-websocket` indicates whether the operation should block and wait for
-a websocket connection to start (so that users can pass stdin and read
-stdout), or start immediately.
+a websocket connection to start for all the available file descriptors (except `control`, which is optional), or start immediately.
+This gives the possibility to pass stdin inputs and read stdout/stderr outputs as bytes.
 -->
 
 即座に開始する場合、 /dev/null が標準入力、標準出力、標準エラー出力に
@@ -1504,62 +1617,72 @@ This is currently used for window size changes and for forwarding of signals.
 Control (window size change):
 -->
 
-    {
-        "command": "window-resize",
-        "args": {
-            "width": "80",
-            "height": "50"
-        }
+```json
+{
+    "command": "window-resize",
+    "args": {
+        "width": "80",
+        "height": "50"
     }
+}
+```
 
 制御 (SIGUSR1 シグナル)
 <!--
 Control (SIGUSR1 signal):
 -->
 
-    {
-        "command": "signal",
-        "signal": 10
-    }
+```json
+{
+    "command": "signal",
+    "signal": 10
+}
+```
 
 戻り値 (wait-for-websocket=true で interactive=false の場合)
 <!--
 Return (with wait-for-websocket=true and interactive=false):
 -->
 
-    {
-        "fds": {
-            "0": "f5b6c760c0aa37a6430dd2a00c456430282d89f6e1661a077a926ed1bf3d1c21",
-            "1": "464dcf9f8fdce29d0d6478284523a9f26f4a31ae365d94cd38bac41558b797cf",
-            "2": "25b70415b686360e3b03131e33d6d94ee85a7f19b0f8d141d6dca5a1fc7b00eb",
-            "control": "20c479d9532ab6d6c3060f6cdca07c1f177647c9d96f0c143ab61874160bd8a5"
-        }
+```json
+{
+    "fds": {
+        "0": "f5b6c760c0aa37a6430dd2a00c456430282d89f6e1661a077a926ed1bf3d1c21",
+        "1": "464dcf9f8fdce29d0d6478284523a9f26f4a31ae365d94cd38bac41558b797cf",
+        "2": "25b70415b686360e3b03131e33d6d94ee85a7f19b0f8d141d6dca5a1fc7b00eb",
+        "control": "20c479d9532ab6d6c3060f6cdca07c1f177647c9d96f0c143ab61874160bd8a5"
     }
+}
+```
 
 戻り値 (wait-for-websocket=true で interactive=true の場合)
 <!--
 Return (with wait-for-websocket=true and interactive=true):
 -->
 
-    {
-        "fds": {
-            "0": "f5b6c760c0aa37a6430dd2a00c456430282d89f6e1661a077a926ed1bf3d1c21",
-            "control": "20c479d9532ab6d6c3060f6cdca07c1f177647c9d96f0c143ab61874160bd8a5"
-        }
+```json
+{
+    "fds": {
+        "0": "f5b6c760c0aa37a6430dd2a00c456430282d89f6e1661a077a926ed1bf3d1c21",
+        "control": "20c479d9532ab6d6c3060f6cdca07c1f177647c9d96f0c143ab61874160bd8a5"
     }
+}
+```
 
 戻り値 (interactive=false で record-output=true の場合)
 <!--
 Return (with interactive=false and record-output=true):
 -->
 
-    {
-        "output": {
-            "1": "/1.0/containers/example/logs/exec_b0f737b4-2c8a-4edf-a7c1-4cc7e4e9e155.stdout",
-            "2": "/1.0/containers/example/logs/exec_b0f737b4-2c8a-4edf-a7c1-4cc7e4e9e155.stderr"
-        },
-        "return": 0
-    }
+```json
+{
+    "output": {
+        "1": "/1.0/containers/example/logs/exec_b0f737b4-2c8a-4edf-a7c1-4cc7e4e9e155.stdout",
+        "2": "/1.0/containers/example/logs/exec_b0f737b4-2c8a-4edf-a7c1-4cc7e4e9e155.stderr"
+    },
+    "return": 0
+}
+```
 
 実行コマンドが終了した時は、終了ステータスが操作のメタデータに
 含まれます。
@@ -1568,9 +1691,11 @@ When the exec command finishes, its exit status is available from the
 operation's metadata:
 -->
 
-    {
-        "return": 0
-    }
+```json
+{
+    "return": 0
+}
+```
 
 ### `/1.0/containers/<name>/files`
 #### GET (`?path=/path/inside/the/container`)
@@ -1641,8 +1766,10 @@ browser.
 Input (none at present):
 -->
 
-    {
-    }
+```json
+{
+}
+```
 
 ### `/1.0/containers/<name>/snapshots`
 #### GET
@@ -1656,9 +1783,11 @@ Input (none at present):
 Return value:
 -->
 
-    [
-        "/1.0/containers/blah/snapshots/snap0"
-    ]
+```json
+[
+    "/1.0/containers/blah/snapshots/snap0"
+]
+```
 
 #### POST
  * 説明: 新しいスナップショットを作成します <!-- Description: create a new snapshot -->
@@ -1671,16 +1800,20 @@ Return value:
 Input:
 -->
 
-    {
-        "name": "my-snapshot",          # スナップショットの名前
-        "stateful": true                # 状態も含めるかどうか
-    }
+```js
+{
+    "name": "my-snapshot",          // スナップショットの名前
+    "stateful": true                // 状態も含めるかどうか
+}
+```
 
 <!--
-    {
-        "name": "my-snapshot",          # Name of the snapshot
-        "stateful": true                # Whether to include state too
-    }
+```js
+{
+    "name": "my-snapshot",          // Name of the snapshot
+    "stateful": true                // Whether to include state too
+}
+```
 -->
 
 ### `/1.0/containers/<name>/snapshots/<name>`
@@ -1695,52 +1828,54 @@ Input:
 Return:
 -->
 
-    {
-        "architecture": "x86_64",
-        "config": {
-            "security.nesting": "true",
-            "volatile.base_image": "a49d26ce5808075f5175bf31f5cb90561f5023dcd408da8ac5e834096d46b2d8",
-            "volatile.eth0.hwaddr": "00:16:3e:ec:65:a8",
-            "volatile.last_state.idmap": "[{\"Isuid\":true,\"Isgid\":false,\"Hostid\":100000,\"Nsid\":0,\"Maprange\":65536},{\"Isuid\":false,\"Isgid\":true,\"Hostid\":100000,\"Nsid\":0,\"Maprange\":65536}]",
+```json
+{
+    "architecture": "x86_64",
+    "config": {
+        "security.nesting": "true",
+        "volatile.base_image": "a49d26ce5808075f5175bf31f5cb90561f5023dcd408da8ac5e834096d46b2d8",
+        "volatile.eth0.hwaddr": "00:16:3e:ec:65:a8",
+        "volatile.last_state.idmap": "[{\"Isuid\":true,\"Isgid\":false,\"Hostid\":100000,\"Nsid\":0,\"Maprange\":65536},{\"Isuid\":false,\"Isgid\":true,\"Hostid\":100000,\"Nsid\":0,\"Maprange\":65536}]",
+    },
+    "created_at": "2016-03-08T23:55:08Z",
+    "devices": {
+        "eth0": {
+            "name": "eth0",
+            "nictype": "bridged",
+            "parent": "lxdbr0",
+            "type": "nic"
         },
-        "created_at": "2016-03-08T23:55:08Z",
-        "devices": {
-            "eth0": {
-                "name": "eth0",
-                "nictype": "bridged",
-                "parent": "lxdbr0",
-                "type": "nic"
-            },
-            "root": {
-                "path": "/",
-                "type": "disk"
-            },
+        "root": {
+            "path": "/",
+            "type": "disk"
         },
-        "ephemeral": false,
-        "expanded_config": {
-            "security.nesting": "true",
-            "volatile.base_image": "a49d26ce5808075f5175bf31f5cb90561f5023dcd408da8ac5e834096d46b2d8",
-            "volatile.eth0.hwaddr": "00:16:3e:ec:65:a8",
-            "volatile.last_state.idmap": "[{\"Isuid\":true,\"Isgid\":false,\"Hostid\":100000,\"Nsid\":0,\"Maprange\":65536},{\"Isuid\":false,\"Isgid\":true,\"Hostid\":100000,\"Nsid\":0,\"Maprange\":65536}]",
+    },
+    "ephemeral": false,
+    "expanded_config": {
+        "security.nesting": "true",
+        "volatile.base_image": "a49d26ce5808075f5175bf31f5cb90561f5023dcd408da8ac5e834096d46b2d8",
+        "volatile.eth0.hwaddr": "00:16:3e:ec:65:a8",
+        "volatile.last_state.idmap": "[{\"Isuid\":true,\"Isgid\":false,\"Hostid\":100000,\"Nsid\":0,\"Maprange\":65536},{\"Isuid\":false,\"Isgid\":true,\"Hostid\":100000,\"Nsid\":0,\"Maprange\":65536}]",
+    },
+    "expanded_devices": {
+        "eth0": {
+            "name": "eth0",
+            "nictype": "bridged",
+            "parent": "lxdbr0",
+            "type": "nic"
         },
-        "expanded_devices": {
-            "eth0": {
-                "name": "eth0",
-                "nictype": "bridged",
-                "parent": "lxdbr0",
-                "type": "nic"
-            },
-            "root": {
-                "path": "/",
-                "type": "disk"
-            },
+        "root": {
+            "path": "/",
+            "type": "disk"
         },
-        "name": "blah",
-        "profiles": [
-            "default"
-        ],
-        "stateful": false
-    }
+    },
+    "name": "blah",
+    "profiles": [
+        "default"
+    ],
+    "stateful": false
+}
+```
 
 #### POST
  * 説明: スナップショットをリネーム／マイグレートします <!-- Description: used to rename/migrate the snapshot -->
@@ -1753,36 +1888,44 @@ Return:
 Input (rename the snapshot):
 -->
 
-    {
-        "name": "new-name"
-    }
+```json
+{
+    "name": "new-name"
+}
+```
 
 入力 (マイグレーション元をセットアップ)
 <!--
 Input (setup the migration source):
 -->
 
-    {
-        "name": "new-name"
-        "migration": true
-        "live": "true"
-    }
+```json
+{
+    "name": "new-name",
+    "migration": true,
+    "live": "true"
+}
+```
 
 戻り値 (migration=true の場合)
 <!--
 Return (with migration=true):
 -->
 
-    {
-        "control": "secret1",       # マイグレーション制御ソケット <!-- Migration control socket -->
-        "fs": "secret3"             # ファイルシステム転送ソケット <!-- Filesystem transfer socket -->
-    }
+```js
+{
+    "control": "secret1",       // マイグレーション制御ソケット
+    "fs": "secret3"             // ファイルシステム転送ソケット
+}
+```
 
 <!--
-    {
-        "control": "secret1",       # Migration control socket
-        "fs": "secret3"             # Filesystem transfer socket
-    }
+```js
+{
+    "control": "secret1",       // Migration control socket
+    "fs": "secret3"             // Filesystem transfer socket
+}
+```
 -->
 
 既に存在する名前にリネームしようとすると 409 (Conflict) という HTTP ステータスコードが返ります。
@@ -1806,8 +1949,10 @@ Attempting to rename the `default` profile will return the 403 (Forbidden) HTTP 
 Input (none at present):
 -->
 
-    {
-    }
+```json
+{
+}
+```
 
 #### PUT
  * 説明: スナップショットを更新します <!-- Description: update the snapshot -->
@@ -1817,9 +1962,11 @@ Input (none at present):
 
 Input:
 
-    {
-        "expires_at": "2019-01-16T12:34:56+02:00"
-    }
+```json
+{
+    "expires_at": "2019-01-16T12:34:56+02:00"
+}
+```
 
 この操作に対する HTTP ステータスコードは 202 (Accepted) です。
 <!--
@@ -1838,147 +1985,149 @@ HTTP code for this should be 202 (Accepted).
 Output:
 -->
 
-    {
-        "type": "sync",
-        "status": "Success",
-        "status_code": 200,
-        "metadata": {
-            "status": "Running",
-            "status_code": 103,
-            "cpu": {
-                "usage": 4986019722
-            },
-            "disk": {
-                "root": {
-                    "usage": 422330368
-                }
-            },
-            "memory": {
-                "usage": 51126272,
-                "usage_peak": 70246400,
-                "swap_usage": 0,
-                "swap_usage_peak": 0
-            },
-            "network": {
-                "eth0": {
-                    "addresses": [
-                        {
-                            "family": "inet",
-                            "address": "10.0.3.27",
-                            "netmask": "24",
-                            "scope": "global"
-                        },
-                        {
-                            "family": "inet6",
-                            "address": "fe80::216:3eff:feec:65a8",
-                            "netmask": "64",
-                            "scope": "link"
-                        }
-                    ],
-                    "counters": {
-                        "bytes_received": 33942,
-                        "bytes_sent": 30810,
-                        "packets_received": 402,
-                        "packets_sent": 178
+```json
+{
+    "type": "sync",
+    "status": "Success",
+    "status_code": 200,
+    "metadata": {
+        "status": "Running",
+        "status_code": 103,
+        "cpu": {
+            "usage": 4986019722
+        },
+        "disk": {
+            "root": {
+                "usage": 422330368
+            }
+        },
+        "memory": {
+            "usage": 51126272,
+            "usage_peak": 70246400,
+            "swap_usage": 0,
+            "swap_usage_peak": 0
+        },
+        "network": {
+            "eth0": {
+                "addresses": [
+                    {
+                        "family": "inet",
+                        "address": "10.0.3.27",
+                        "netmask": "24",
+                        "scope": "global"
                     },
-                    "hwaddr": "00:16:3e:ec:65:a8",
-                    "host_name": "vethBWTSU5",
-                    "mtu": 1500,
-                    "state": "up",
-                    "type": "broadcast"
+                    {
+                        "family": "inet6",
+                        "address": "fe80::216:3eff:feec:65a8",
+                        "netmask": "64",
+                        "scope": "link"
+                    }
+                ],
+                "counters": {
+                    "bytes_received": 33942,
+                    "bytes_sent": 30810,
+                    "packets_received": 402,
+                    "packets_sent": 178
                 },
-                "lo": {
-                    "addresses": [
-                        {
-                            "family": "inet",
-                            "address": "127.0.0.1",
-                            "netmask": "8",
-                            "scope": "local"
-                        },
-                        {
-                            "family": "inet6",
-                            "address": "::1",
-                            "netmask": "128",
-                            "scope": "local"
-                        }
-                    ],
-                    "counters": {
-                        "bytes_received": 86816,
-                        "bytes_sent": 86816,
-                        "packets_received": 1226,
-                        "packets_sent": 1226
-                    },
-                    "hwaddr": "",
-                    "host_name": "",
-                    "mtu": 65536,
-                    "state": "up",
-                    "type": "loopback"
-                },
-                "lxdbr0": {
-                    "addresses": [
-                        {
-                            "family": "inet",
-                            "address": "10.0.3.1",
-                            "netmask": "24",
-                            "scope": "global"
-                        },
-                        {
-                            "family": "inet6",
-                            "address": "fe80::68d4:87ff:fe40:7769",
-                            "netmask": "64",
-                            "scope": "link"
-                        }
-                    ],
-                    "counters": {
-                        "bytes_received": 0,
-                        "bytes_sent": 570,
-                        "packets_received": 0,
-                        "packets_sent": 7
-                    },
-                    "hwaddr": "6a:d4:87:40:77:69",
-                    "host_name": "",
-                    "mtu": 1500,
-                    "state": "up",
-                    "type": "broadcast"
-               },
-               "zt0": {
-                    "addresses": [
-                        {
-                            "family": "inet",
-                            "address": "29.17.181.59",
-                            "netmask": "7",
-                            "scope": "global"
-                        },
-                        {
-                            "family": "inet6",
-                            "address": "fd80:56c2:e21c:0:199:9379:e711:b3e1",
-                            "netmask": "88",
-                            "scope": "global"
-                        },
-                        {
-                            "family": "inet6",
-                            "address": "fe80::79:e7ff:fe0d:5123",
-                            "netmask": "64",
-                            "scope": "link"
-                        }
-                    ],
-                    "counters": {
-                        "bytes_received": 0,
-                        "bytes_sent": 806,
-                        "packets_received": 0,
-                        "packets_sent": 9
-                    },
-                    "hwaddr": "02:79:e7:0d:51:23",
-                    "host_name": "",
-                    "mtu": 2800,
-                    "state": "up",
-                    "type": "broadcast"
-                }
+                "hwaddr": "00:16:3e:ec:65:a8",
+                "host_name": "vethBWTSU5",
+                "mtu": 1500,
+                "state": "up",
+                "type": "broadcast"
             },
-            "pid": 13663,
-            "processes": 32
-        }
+            "lo": {
+                "addresses": [
+                    {
+                        "family": "inet",
+                        "address": "127.0.0.1",
+                        "netmask": "8",
+                        "scope": "local"
+                    },
+                    {
+                        "family": "inet6",
+                        "address": "::1",
+                        "netmask": "128",
+                        "scope": "local"
+                    }
+                ],
+                "counters": {
+                    "bytes_received": 86816,
+                    "bytes_sent": 86816,
+                    "packets_received": 1226,
+                    "packets_sent": 1226
+                },
+                "hwaddr": "",
+                "host_name": "",
+                "mtu": 65536,
+                "state": "up",
+                "type": "loopback"
+            },
+            "lxdbr0": {
+                "addresses": [
+                    {
+                        "family": "inet",
+                        "address": "10.0.3.1",
+                        "netmask": "24",
+                        "scope": "global"
+                    },
+                    {
+                        "family": "inet6",
+                        "address": "fe80::68d4:87ff:fe40:7769",
+                        "netmask": "64",
+                        "scope": "link"
+                    }
+                ],
+                "counters": {
+                    "bytes_received": 0,
+                    "bytes_sent": 570,
+                    "packets_received": 0,
+                    "packets_sent": 7
+                },
+                "hwaddr": "6a:d4:87:40:77:69",
+                "host_name": "",
+                "mtu": 1500,
+                "state": "up",
+                "type": "broadcast"
+           },
+           "zt0": {
+                "addresses": [
+                    {
+                        "family": "inet",
+                        "address": "29.17.181.59",
+                        "netmask": "7",
+                        "scope": "global"
+                    },
+                    {
+                        "family": "inet6",
+                        "address": "fd80:56c2:e21c:0:199:9379:e711:b3e1",
+                        "netmask": "88",
+                        "scope": "global"
+                    },
+                    {
+                        "family": "inet6",
+                        "address": "fe80::79:e7ff:fe0d:5123",
+                        "netmask": "64",
+                        "scope": "link"
+                    }
+                ],
+                "counters": {
+                    "bytes_received": 0,
+                    "bytes_sent": 806,
+                    "packets_received": 0,
+                    "packets_sent": 9
+                },
+                "hwaddr": "02:79:e7:0d:51:23",
+                "host_name": "",
+                "mtu": 2800,
+                "state": "up",
+                "type": "broadcast"
+            }
+        },
+        "pid": 13663,
+        "processes": 32
     }
+}
+```
 
 #### PUT
  * 説明: コンテナの状態を変更する <!-- Description: change the container state -->
@@ -1991,20 +2140,24 @@ Output:
 Input:
 -->
 
-    {
-        "action": "stop",       # 状態を変更するアクション (stop, start, restart, freeze, unfreeze のいずれか) <!-- State change action (stop, start, restart, freeze or unfreeze) -->
-        "timeout": 30,          # 状態の変更が失敗したと判定するまでのタイムアウト <!-- A timeout after which the state change is considered as failed -->
-        "force": true,          # 状態の変更を強制する (現状では stop と restart でのみ有効で、コンテナを強制停止することを意味します) <!-- Force the state change (currently only valid for stop and restart where it means killing the container) -->
-        "stateful": true        # 停止または開始する前の状態を保管または復元するかどうか (stop と start でのみ有効、デフォルトは false) <!-- Whether to store or restore runtime state before stopping or startiong (only valid for stop and start, defaults to false) -->
-    }
+```js
+{
+    "action": "stop",       // 状態を変更するアクション (stop, start, restart, freeze, unfreeze のいずれか)
+    "timeout": 30,          // 状態の変更が失敗したと判定するまでのタイムアウト
+    "force": true,          // 状態の変更を強制する (現状では stop と restart でのみ有効で、コンテナを強制停止することを意味します)
+    "stateful": true        // 停止または開始する前の状態を保管または復元するかどうか (stop と start でのみ有効、デフォルトは false)
+}
+```
 
 <!--
-    {
-        "action": "stop",       # State change action (stop, start, restart, freeze or unfreeze)
-        "timeout": 30,          # A timeout after which the state change is considered as failed
-        "force": true,          # Force the state change (currently only valid for stop and restart where it means killing the container)
-        "stateful": true        # Whether to store or restore runtime state before stopping or startiong (only valid for stop and start, defaults to false)
-    }
+```js
+{
+    "action": "stop",       // State change action (stop, start, restart, freeze or unfreeze)
+    "timeout": 30,          // A timeout after which the state change is considered as failed
+    "force": true,          // Force the state change (currently only valid for stop and restart where it means killing the container)
+    "stateful": true        // Whether to store or restore runtime state before stopping or startiong (only valid for stop and start, defaults to false)
+}
+```
 -->
 
 ### `/1.0/containers/<name>/logs`
@@ -2024,11 +2177,13 @@ Input:
 Return:
 -->
 
-    [
-        "/1.0/containers/blah/logs/forkstart.log",
-        "/1.0/containers/blah/logs/lxc.conf",
-        "/1.0/containers/blah/logs/lxc.log"
-    ]
+```json
+[
+    "/1.0/containers/blah/logs/forkstart.log",
+    "/1.0/containers/blah/logs/lxc.conf",
+    "/1.0/containers/blah/logs/lxc.log"
+]
+```
 
 ### `/1.0/containers/<name>/logs/<logfile>`
 #### GET
@@ -2056,27 +2211,29 @@ Return:
 Return:
 -->
 
-    {
+```json
+{
+    "architecture": "x86_64",
+    "creation_date": 1477146654,
+    "expiry_date": 0,
+    "properties": {
         "architecture": "x86_64",
-        "creation_date": 1477146654,
-        "expiry_date": 0,
-        "properties": {
-            "architecture": "x86_64",
-            "description": "Busybox x86_64",
-            "name": "busybox-x86_64",
-            "os": "Busybox"
-        },
-        "templates": {
-            "/template": {
-                "when": [
-                    ""
-                ],
-                "create_only": false,
-                "template": "template.tpl",
-                "properties": {}
-            }
+        "description": "Busybox x86_64",
+        "name": "busybox-x86_64",
+        "os": "Busybox"
+    },
+    "templates": {
+        "/template": {
+            "when": [
+                ""
+            ],
+            "create_only": false,
+            "template": "template.tpl",
+            "properties": {}
         }
     }
+}
+```
 
 #### PUT (ETag サポートあり) <!-- PUT (ETag supported) -->
  * 説明: コンテナのメタデータを置き換える <!-- Description: Replaces container metadata -->
@@ -2090,27 +2247,29 @@ Return:
 Input:
 -->
 
-    {
+```json
+{
+    "architecture": "x86_64",
+    "creation_date": 1477146654,
+    "expiry_date": 0,
+    "properties": {
         "architecture": "x86_64",
-        "creation_date": 1477146654,
-        "expiry_date": 0,
-        "properties": {
-            "architecture": "x86_64",
-            "description": "Busybox x86_64",
-            "name": "busybox-x86_64",
-            "os": "Busybox"
-        },
-        "templates": {
-            "/template": {
-                "when": [
-                    ""
-                ],
-                "create_only": false,
-                "template": "template.tpl",
-                "properties": {}
-            }
+        "description": "Busybox x86_64",
+        "name": "busybox-x86_64",
+        "os": "Busybox"
+    },
+    "templates": {
+        "/template": {
+            "when": [
+                ""
+            ],
+            "create_only": false,
+            "template": "template.tpl",
+            "properties": {}
         }
     }
+}
+```
 
 ### `/1.0/containers/<name>/metadata/templates`
 #### GET
@@ -2125,10 +2284,12 @@ Input:
 Return:
 -->
 
-    [
-        "template.tpl",
-        "hosts.tpl"
-    ]
+```json
+[
+    "template.tpl",
+    "hosts.tpl"
+]
+```
 
 #### GET (`?path=<template>`)
  * 説明: コンテナテンプレートの中身 <!-- Description: Content of a container template -->
@@ -2183,10 +2344,12 @@ Input:
 Return value:
 -->
 
-    [
-        "/1.0/containers/c1/backups/c1/backup0",
-        "/1.0/containers/c1/backups/c1/backup1",
-    ]
+```json
+[
+    "/1.0/containers/c1/backups/c1/backup0",
+    "/1.0/containers/c1/backups/c1/backup1",
+]
+```
 
 #### POST
  * 説明: 新しいバックアップを作成します <!-- Description: Create a new backup -->
@@ -2200,20 +2363,24 @@ Return value:
 Input:
 -->
 
-    {
-        "name": "backupName",      # バックアップのユニークな識別子 <!-- unique identifier for the backup -->
-        "expiry": 3600,            # いつ自動的にバックアップを削除するか <!-- when to delete the backup automatically -->
-        "container_only": true,    # true の場合、スナップショットは含まれません <!-- if True, snapshots aren't included -->
-        "optimized_storage": true  # true の場合 btrfs send または zfs send がコンテナとスナップショットに対して使用されます <!-- if True, btrfs send or zfs send is used for container and snapshots -->
-    }
+```js
+{
+    "name": "backupName",      // バックアップのユニークな識別子
+    "expiry": 3600,            // いつ自動的にバックアップを削除するか
+    "container_only": true,    // true の場合、スナップショットは含まれません
+    "optimized_storage": true  // true の場合 btrfs send または zfs send がコンテナとスナップショットに対して使用されます
+}
+```
 
 <!--
-    {
-        "name": "backupName",      # unique identifier for the backup
-        "expiry": 3600,            # when to delete the backup automatically
-        "container_only": true,    # if True, snapshots aren't included
-        "optimized_storage": true  # if True, btrfs send or zfs send is used for container and snapshots
-    }
+```js
+{
+    "name": "backupName",      // unique identifier for the backup
+    "expiry": 3600,            // when to delete the backup automatically
+    "container_only": true,    // if True, snapshots aren't included
+    "optimized_storage": true  // if True, btrfs send or zfs send is used for container and snapshots
+}
+```
 -->
 
 ### `/1.0/containers/<name>/backups/<name>`
@@ -2229,13 +2396,15 @@ Input:
 Output:
 -->
 
-    {
-        "name": "backupName",
-        "creation_date": "2018-04-23T12:16:09+02:00",
-        "expiry_date": "2018-04-23T12:16:09+02:00",
-        "container_only": false,
-        "optimized_storage": false
-    }
+```json
+{
+    "name": "backupName",
+    "creation_date": "2018-04-23T12:16:09+02:00",
+    "expiry_date": "2018-04-23T12:16:09+02:00",
+    "container_only": false,
+    "optimized_storage": false
+}
+```
 
 #### DELETE
  * 説明: バックアップを削除します <!-- Description: remove the backup -->
@@ -2256,9 +2425,11 @@ Output:
 Input:
 -->
 
-    {
-        "name": "new-name"
-    }
+```json
+{
+    "name": "new-name"
+}
+```
 
 ### `/1.0/containers/<name>/backups/<name>/export`
 #### GET
@@ -2273,9 +2444,11 @@ Input:
 Output:
 -->
 
-    {
-        "data": <byte-stream>
-    }
+```json
+{
+    "data": "<byte-stream>"
+}
+```
 
 ### `/1.0/events`
 この URL は真の REST API エンドポイントではなく、代わりに GET クエリを
@@ -2314,46 +2487,54 @@ The notification types are:
 This never returns. Each notification is sent as a separate JSON dict:
 -->
 
-    {
-        "timestamp": "2015-06-09T19:07:24.379615253-06:00",                # 現在のタイムスタンプ
-        "type": "operation",                                               # 通知の種別
-        "metadata": {}                                                     # リソースまたはタイプに特有な追加のメタデータ
-    }
+```js
+{
+    "timestamp": "2015-06-09T19:07:24.379615253-06:00",                // 現在のタイムスタンプ
+    "type": "operation",                                               // 通知の種別
+    "metadata": {}                                                     // リソースまたはタイプに特有な追加のメタデータ
+}
+```
 
-    {
-        "timestamp": "2016-02-17T11:44:28.572721913-05:00",
-        "type": "logging",
-        "metadata": {
-            "context": {
-                "ip": "@",
-                "method": "GET"
-                "url": "/1.0/containers/xen/snapshots",
-            },
-            "level": "info",
-            "message": "handling"
-        }
+```json
+{
+    "timestamp": "2016-02-17T11:44:28.572721913-05:00",
+    "type": "logging",
+    "metadata": {
+        "context": {
+            "ip": "@",
+            "method": "GET",
+            "url": "/1.0/containers/xen/snapshots",
+        },
+        "level": "info",
+        "message": "handling"
     }
+}
+```
 
 <!--
-    {
-        "timestamp": "2015-06-09T19:07:24.379615253-06:00",                # Current timestamp
-        "type": "operation",                                               # Notification type
-        "metadata": {}                                                     # Extra resource or type specific metadata
-    }
+```js
+{
+    "timestamp": "2015-06-09T19:07:24.379615253-06:00",                // Current timestamp
+    "type": "operation",                                               // Notification type
+    "metadata": {}                                                     // Extra resource or type specific metadata
+}
+```
 
-    {
-        "timestamp": "2016-02-17T11:44:28.572721913-05:00",
-        "type": "logging",
-        "metadata": {
-            "context": {
-                "ip": "@",
-                "method": "GET"
-                "url": "/1.0/containers/xen/snapshots",
-            },
-            "level": "info",
-            "message": "handling"
-        }
+```json
+{
+    "timestamp": "2016-02-17T11:44:28.572721913-05:00",
+    "type": "logging",
+    "metadata": {
+        "context": {
+            "ip": "@",
+            "method": "GET",
+            "url": "/1.0/containers/xen/snapshots",
+        },
+        "level": "info",
+        "message": "handling"
     }
+}
+```
 -->
 
 ### `/1.0/images`
@@ -2368,12 +2549,14 @@ This never returns. Each notification is sent as a separate JSON dict:
 Return:
 -->
 
-    [
-        "/1.0/images/54c8caac1f61901ed86c68f24af5f5d3672bdc62c71d04f06df3a59e95684473",
-        "/1.0/images/97d97a3d1d053840ca19c86cdd0596cf1be060c5157d31407f2a4f9f350c78cc",
-        "/1.0/images/a49d26ce5808075f5175bf31f5cb90561f5023dcd408da8ac5e834096d46b2d8",
-        "/1.0/images/c9b6e738fae75286d52f497415463a8ecc61bbcb046536f220d797b0e500a41f"
-    ]
+```json
+[
+    "/1.0/images/54c8caac1f61901ed86c68f24af5f5d3672bdc62c71d04f06df3a59e95684473",
+    "/1.0/images/97d97a3d1d053840ca19c86cdd0596cf1be060c5157d31407f2a4f9f350c78cc",
+    "/1.0/images/a49d26ce5808075f5175bf31f5cb90561f5023dcd408da8ac5e834096d46b2d8",
+    "/1.0/images/c9b6e738fae75286d52f497415463a8ecc61bbcb046536f220d797b0e500a41f"
+]
+```
 
 #### POST
  * 説明: 新しいイメージを作成し提供する <!-- Description: create and publish a new image -->
@@ -2406,52 +2589,56 @@ In the http file upload case, The following headers may be set by the client:
 In the source image case, the following dict must be used:
 -->
 
-    {
-        "filename": filename,                   # エクスポートの際に使用されます (任意で指定可能)
-        "public": true,                         # 信頼されないユーザがイメージをダウンロードしてよいか (デフォルトは false)
-        "auto_update": true,                    # イメージを自動更新するかどうか (任意で指定可能、デフォルトは false)
-        "properties": {                         # イメージのプロパティ (任意で指定可能、作成元のプロパティに追加して適用されます)
-            "os": "Ubuntu"
-        },
-        "aliases": [                            # 初期のエイリアスを設定します ("image_create_aliases" API 拡張)
-            {"name": "my-alias",
-             "description": "A description"}
-        ],
-        "source": {
-            "type": "image",
-            "mode": "pull",                     # 現在は pull のみがサポートされています
-            "server": "https://10.0.2.3:8443",  # リモートサーバ (pull モードのときのみ)
-            "protocol": "lxd",                  # プロトコル (lxd または simplestreams、デフォルトは lxd)
-            "secret": "my-secret-string",       # シークレット (pull モードのときのみ、 private なイメージのみ)
-            "certificate": "PEM certificate",   # 任意で指定可能な PEM 証明書。指定されない場合はシステム CA が使用されます
-            "fingerprint": "SHA256",            # イメージのフィンガープリント (エイリアスを指定しない場合は必須です)
-            "alias": "ubuntu/devel",            # エイリアスの名前 (フィンガープリントを指定しない場合は必須です)
-        }
+```js
+{
+    "filename": filename,                   // エクスポートの際に使用されます (任意で指定可能)
+    "public": true,                         // 信頼されないユーザがイメージをダウンロードしてよいか (デフォルトは false)
+    "auto_update": true,                    // イメージを自動更新するかどうか (任意で指定可能、デフォルトは false)
+    "properties": {                         // イメージのプロパティ (任意で指定可能、作成元のプロパティに追加して適用されます)
+        "os": "Ubuntu"
+    },
+    "aliases": [                            // 初期のエイリアスを設定します ("image_create_aliases" API 拡張)
+        {"name": "my-alias",
+         "description": "A description"}
+    ],
+    "source": {
+        "type": "image",
+        "mode": "pull",                     // 現在は pull のみがサポートされています
+        "server": "https://10.0.2.3:8443",  // リモートサーバ (pull モードのときのみ)
+        "protocol": "lxd",                  // プロトコル (lxd または simplestreams、デフォルトは lxd)
+        "secret": "my-secret-string",       // シークレット (pull モードのときのみ、 private なイメージのみ)
+        "certificate": "PEM certificate",   // 任意で指定可能な PEM 証明書。指定されない場合はシステム CA が使用されます
+        "fingerprint": "SHA256",            // イメージのフィンガープリント (エイリアスを指定しない場合は必須です)
+        "alias": "ubuntu/devel",            // エイリアスの名前 (フィンガープリントを指定しない場合は必須です)
     }
+}
+```
 
 <!--
-    {
-        "filename": filename,                   # Used for export (optional)
-        "public": true,                         # Whether the image can be downloaded by untrusted users (defaults to false)
-        "auto_update": true,                    # Whether the image should be auto-updated (optional; defaults to false)
-        "properties": {                         # Image properties (optional, applied on top of source properties)
-            "os": "Ubuntu"
-        },
-        "aliases": [                            # Set initial aliases ("image_create_aliases" API extension)
-            {"name": "my-alias",
-             "description": "A description"}
-        ],
-        "source": {
-            "type": "image",
-            "mode": "pull",                     # Only pull is supported for now
-            "server": "https://10.0.2.3:8443",  # Remote server (pull mode only)
-            "protocol": "lxd",                  # Protocol (one of lxd or simplestreams, defaults to lxd)
-            "secret": "my-secret-string",       # Secret (pull mode only, private images only)
-            "certificate": "PEM certificate",   # Optional PEM certificate. If not mentioned, system CA is used.
-            "fingerprint": "SHA256",            # Fingerprint of the image (must be set if alias isn't)
-            "alias": "ubuntu/devel",            # Name of the alias (must be set if fingerprint isn't)
-        }
+```js
+{
+    "filename": filename,                   // Used for export (optional)
+    "public": true,                         // Whether the image can be downloaded by untrusted users (defaults to false)
+    "auto_update": true,                    // Whether the image should be auto-updated (optional; defaults to false)
+    "properties": {                         // Image properties (optional, applied on top of source properties)
+        "os": "Ubuntu"
+    },
+    "aliases": [                            // Set initial aliases ("image_create_aliases" API extension)
+        {"name": "my-alias",
+         "description": "A description"}
+    ],
+    "source": {
+        "type": "image",
+        "mode": "pull",                     // Only pull is supported for now
+        "server": "https://10.0.2.3:8443",  // Remote server (pull mode only)
+        "protocol": "lxd",                  // Protocol (one of lxd or simplestreams, defaults to lxd)
+        "secret": "my-secret-string",       // Secret (pull mode only, private images only)
+        "certificate": "PEM certificate",   // Optional PEM certificate. If not mentioned, system CA is used.
+        "fingerprint": "SHA256",            // Fingerprint of the image (must be set if alias isn't)
+        "alias": "ubuntu/devel",            // Name of the alias (must be set if fingerprint isn't)
     }
+}
+```
 -->
 
 作成元にコンテナを使う場合、次の dict を使用する必要があります。
@@ -2459,40 +2646,44 @@ In the source image case, the following dict must be used:
 In the source container case, the following dict must be used:
 -->
 
-    {
-        "compression_algorithm": "xz",  # イメージの圧縮アルゴリズムをオーバーライドします (任意で指定可能)
-        "filename": filename,           # エクスポートの際に使用されます (任意で指定可能)
-        "public":   true,               # 信頼されないユーザがイメージをダウンロードしてよいか (デフォルトは false)
-        "properties": {                 # イメージのプロパティ (任意で指定可能)
-            "os": "Ubuntu"
-        },
-        "aliases": [                    # 初期のエイリアスを設定します ("image_create_aliases" API 拡張)
-            {"name": "my-alias",
-             "description": "A description"}
-        ],
-        "source": {
-            "type": "container",        # "container" か "snapshot" のいずれか
-            "name": "abc"
-        }
+```js
+{
+    "compression_algorithm": "xz",  // イメージの圧縮アルゴリズムをオーバーライドします (任意で指定可能)
+    "filename": filename,           // エクスポートの際に使用されます (任意で指定可能)
+    "public":   true,               // 信頼されないユーザがイメージをダウンロードしてよいか (デフォルトは false)
+    "properties": {                 // イメージのプロパティ (任意で指定可能)
+        "os": "Ubuntu"
+    },
+    "aliases": [                    // 初期のエイリアスを設定します ("image_create_aliases" API 拡張)
+        {"name": "my-alias",
+         "description": "A description""}
+    ],
+    "source": {
+        "type": "container",        // "container" か "snapshot" のいずれか
+        "name": "abc"
     }
+}
+```
 
 <!--
-    {
-        "compression_algorithm": "xz",  # Override the compression algorithm for the image (optional)
-        "filename": filename,           # Used for export (optional)
-        "public":   true,               # Whether the image can be downloaded by untrusted users (defaults to false)
-        "properties": {                 # Image properties (optional)
-            "os": "Ubuntu"
-        },
-        "aliases": [                    # Set initial aliases ("image_create_aliases" API extension)
-            {"name": "my-alias",
-             "description": "A description"}
-        ],
-        "source": {
-            "type": "container",        # One of "container" or "snapshot"
-            "name": "abc"
-        }
+```js
+{
+    "compression_algorithm": "xz",  // Override the compression algorithm for the image (optional)
+    "filename": filename,           // Used for export (optional)
+    "public":   true,               // Whether the image can be downloaded by untrusted users (defaults to false)
+    "properties": {                 // Image properties (optional)
+        "os": "Ubuntu"
+    },
+    "aliases": [                    // Set initial aliases ("image_create_aliases" API extension)
+        {"name": "my-alias",
+         "description": "A description"}
+    ],
+    "source": {
+        "type": "container",        // One of "container" or "snapshot"
+        "name": "abc"
     }
+}
+```
 -->
 
 リモートイメージの URL の場合は、次の dict を使用する必要があります。
@@ -2500,38 +2691,42 @@ In the source container case, the following dict must be used:
 In the remote image URL case, the following dict must be used:
 -->
 
-    {
-        "filename": filename,                           # エクスポートの際に使用されます (任意で指定可能)
-        "public":   true,                               # 信頼されないユーザがイメージをダウンロードしてよいか (デフォルトは false)
-        "properties": {                                 # イメージのプロパティ (任意で指定可能)
-            "os": "Ubuntu"
-        },
-        "aliases": [                                    # 初期のエイリアスを設定します ("image_create_aliases" API 拡張)
-            {"name": "my-alias",
-             "description": "A description"}
-        ],
-        "source": {
-            "type": "url",
-            "url": "https://www.some-server.com/image"  # イメージの URL
-        }
+```js
+{
+    "filename": filename,                           // エクスポートの際に使用されます (任意で指定可能)
+    "public":   true,                               // 信頼されないユーザがイメージをダウンロードしてよいか (デフォルトは false)
+    "properties": {                                 // イメージのプロパティ (任意で指定可能)
+        "os": "Ubuntu"
+    },
+    "aliases": [                                    // 初期のエイリアスを設定します ("image_create_aliases" API 拡張)
+        {"name": "my-alias",
+         "description": "A description"}
+    ],
+    "source": {
+        "type": "url",
+        "url": "https://www.some-server.com/image"  // イメージの URL
     }
+}
+```
 
 <!--
-    {
-        "filename": filename,                           # Used for export (optional)
-        "public":   true,                               # Whether the image can be downloaded by untrusted users  (defaults to false)
-        "properties": {                                 # Image properties (optional)
-            "os": "Ubuntu"
-        },
-        "aliases": [                                    # Set initial aliases ("image_create_aliases" API extension)
-            {"name": "my-alias",
-             "description": "A description"}
-        ],
-        "source": {
-            "type": "url",
-            "url": "https://www.some-server.com/image"  # URL for the image
-        }
+```js
+{
+    "filename": filename,                           // Used for export (optional)
+    "public":   true,                               // Whether the image can be downloaded by untrusted users  (defaults to false)
+    "properties": {                                 // Image properties (optional)
+        "os": "Ubuntu"
+    },
+    "aliases": [                                    // Set initial aliases ("image_create_aliases" API extension)
+        {"name": "my-alias",
+         "description": "A description"}
+    ],
+    "source": {
+        "type": "url",
+        "url": "https://www.some-server.com/image"  // URL for the image
     }
+}
+```
 -->
 
 LXD が入力を受け取った後、バックグラウンド操作が開始され、イメージを
@@ -2555,37 +2750,39 @@ filesystem-specific optimizations.
 Output:
 -->
 
-    {
-        "aliases": [
-            {
-                "name": "trusty",
-                "description": "",
-            }
-        ],
+```json
+{
+    "aliases": [
+        {
+            "name": "trusty",
+            "description": "",
+        }
+    ],
+    "architecture": "x86_64",
+    "auto_update": true,
+    "cached": false,
+    "fingerprint": "54c8caac1f61901ed86c68f24af5f5d3672bdc62c71d04f06df3a59e95684473",
+    "filename": "ubuntu-trusty-14.04-amd64-server-20160201.tar.xz",
+    "properties": {
         "architecture": "x86_64",
-        "auto_update": true,
-        "cached": false,
-        "fingerprint": "54c8caac1f61901ed86c68f24af5f5d3672bdc62c71d04f06df3a59e95684473",
-        "filename": "ubuntu-trusty-14.04-amd64-server-20160201.tar.xz",
-        "properties": {
-            "architecture": "x86_64",
-            "description": "Ubuntu 14.04 LTS server (20160201)",
-            "os": "ubuntu",
-            "release": "trusty"
-        },
-        "update_source": {
-            "server": "https://10.1.2.4:8443",
-            "protocol": "lxd",
-            "certificate": "PEM certificate",
-            "alias": "ubuntu/trusty/amd64"
-        },
-        "public": false,
-        "size": 123792592,
-        "created_at": "2016-02-01T21:07:41Z",
-        "expires_at": "1970-01-01T00:00:00Z",
-        "last_used_at": "1970-01-01T00:00:00Z",
-        "uploaded_at": "2016-02-16T00:44:47Z"
-    }
+        "description": "Ubuntu 14.04 LTS server (20160201)",
+        "os": "ubuntu",
+        "release": "trusty"
+    },
+    "update_source": {
+        "server": "https://10.1.2.4:8443",
+        "protocol": "lxd",
+        "certificate": "PEM certificate",
+        "alias": "ubuntu/trusty/amd64"
+    },
+    "public": false,
+    "size": 123792592,
+    "created_at": "2016-02-01T21:07:41Z",
+    "expires_at": "1970-01-01T00:00:00Z",
+    "last_used_at": "1970-01-01T00:00:00Z",
+    "uploaded_at": "2016-02-16T00:44:47Z"
+}
+```
 
 #### PUT (ETag サポートあり) <!-- PUT (ETag supported) -->
  * 説明: イメージのプロパティを置き換えたり、情報や公開状態を変更します <!-- Description: Replaces the image properties, update information and visibility -->
@@ -2598,16 +2795,18 @@ Output:
 Input:
 -->
 
-    {
-        "auto_update": true,
-        "properties": {
-            "architecture": "x86_64",
-            "description": "Ubuntu 14.04 LTS server (20160201)",
-            "os": "ubuntu",
-            "release": "trusty"
-        },
-        "public": true,
-    }
+```json
+{
+    "auto_update": true,
+    "properties": {
+        "architecture": "x86_64",
+        "description": "Ubuntu 14.04 LTS server (20160201)",
+        "os": "ubuntu",
+        "release": "trusty"
+    },
+    "public": true,
+}
+```
 
 #### PATCH (ETag サポートあり) <!-- PATCH (ETag supported) -->
  * 説明: イメージのプロパティを変更したり、情報や公開状態を変更します <!-- Description: Updates the image properties, update information and visibility -->
@@ -2621,13 +2820,15 @@ Input:
 Input:
 -->
 
-    {
-        "properties": {
-            "os": "ubuntu",
-            "release": "trusty"
-        },
-        "public": true,
-    }
+```json
+{
+    "properties": {
+        "os": "ubuntu",
+        "release": "trusty"
+    },
+    "public": true,
+}
+```
 
 #### DELETE
  * 説明: イメージを削除します <!-- Description: Remove an image -->
@@ -2640,8 +2841,10 @@ Input:
 Input (none at present):
 -->
 
-    {
-    }
+```json
+{
+}
+```
 
 この操作に対する HTTP ステータスコードは 202 (Accepted) です。
 <!--
@@ -2698,17 +2901,21 @@ This creates an operation to refresh the specified image from its origin.
 Input:
 -->
 
-    {
-    }
+```json
+{
+}
+```
 
 戻り値
 <!--
 Return:
 -->
 
-    {
-        "secret": "52e9ec5885562aa24d05d7b4846ebb8b5f1f7bf5cd6e285639b569d9eaf54c9b"
-    }
+```json
+{
+    "secret": "52e9ec5885562aa24d05d7b4846ebb8b5f1f7bf5cd6e285639b569d9eaf54c9b"
+}
+```
 
 メタデータ内の "secret" に生成されたシークレットの文字列が設定された
 標準のバックグランド操作です。
@@ -2738,11 +2945,13 @@ then hit /export with the same secret.
 Return:
 -->
 
-    [
-        "/1.0/images/aliases/sl6",
-        "/1.0/images/aliases/trusty",
-        "/1.0/images/aliases/xenial"
-    ]
+```json
+[
+    "/1.0/images/aliases/sl6",
+    "/1.0/images/aliases/trusty",
+    "/1.0/images/aliases/xenial"
+]
+```
 
 #### POST
  * 説明: 新しいエイリアスを作成します <!-- Description: create a new alias -->
@@ -2755,11 +2964,13 @@ Return:
 Input:
 -->
 
-    {
-        "description": "The alias description",
-        "target": "SHA-256",
-        "name": "alias-name"
-    }
+```json
+{
+    "description": "The alias description",
+    "target": "SHA-256",
+    "name": "alias-name"
+}
+```
 
 ### `/1.0/images/aliases/<name>`
 #### GET
@@ -2773,11 +2984,13 @@ Input:
 Output:
 -->
 
-    {
-        "name": "test",
-        "description": "my description",
-        "target": "c9b6e738fae75286d52f497415463a8ecc61bbcb046536f220d797b0e500a41f"
-    }
+```json
+{
+    "name": "test",
+    "description": "my description",
+    "target": "c9b6e738fae75286d52f497415463a8ecc61bbcb046536f220d797b0e500a41f"
+}
+```
 
 #### PUT (ETag サポートあり) <!-- PUT (ETag supported) -->
  * 説明: エイリアスのターゲットまたは説明を置き換えます <!-- Description: Replaces the alias target or description -->
@@ -2790,10 +3003,12 @@ Output:
 Input:
 -->
 
-    {
-        "description": "New description",
-        "target": "54c8caac1f61901ed86c68f24af5f5d3672bdc62c71d04f06df3a59e95684473"
-    }
+```json
+{
+    "description": "New description",
+    "target": "54c8caac1f61901ed86c68f24af5f5d3672bdc62c71d04f06df3a59e95684473"
+}
+```
 
 #### PATCH (ETag サポートあり) <!-- PATCH (ETag supported) -->
  * 説明: エイリアスのターゲットまたは説明を更新します <!-- Description: Updates the alias target or description -->
@@ -2807,9 +3022,11 @@ Input:
 Input:
 -->
 
-    {
-        "description": "New description"
-    }
+```json
+{
+    "description": "New description"
+}
+```
 
 #### POST
  * 説明: エイリアスをリネームします <!-- Description: rename an alias -->
@@ -2822,9 +3039,11 @@ Input:
 Input:
 -->
 
-    {
-        "name": "new-name"
-    }
+```json
+{
+    "name": "new-name"
+}
+```
 
 既に存在する名前にリネームしようとすると 409 (Conflict) の HTTP ステータスコードを返します。
 <!--
@@ -2842,8 +3061,10 @@ Renaming to an existing name must return the 409 (Conflict) HTTP code.
 Input (none at present):
 -->
 
-    {
-    }
+```json
+{
+}
+```
 
 ### `/1.0/networks`
 #### GET
@@ -2857,10 +3078,12 @@ Input (none at present):
 Return:
 -->
 
-    [
-        "/1.0/networks/eth0",
-        "/1.0/networks/lxdbr0"
-    ]
+```json
+[
+    "/1.0/networks/eth0",
+    "/1.0/networks/lxdbr0"
+]
+```
 
 #### POST
  * 説明: 新しいネットワークを定義します <!-- Description: define a new network -->
@@ -2874,15 +3097,17 @@ Return:
 Input:
 -->
 
-    {
-        "name": "my-network",
-        "description": "My network",
-        "config": {
-            "ipv4.address": "none",
-            "ipv6.address": "2001:470:b368:4242::1/64",
-            "ipv6.nat": "true"
-        }
+```json
+{
+    "name": "my-network",
+    "description": "My network",
+    "config": {
+        "ipv4.address": "none",
+        "ipv6.address": "2001:470:b368:4242::1/64",
+        "ipv6.nat": "true"
     }
+}
+```
 
 ### `/1.0/networks/<name>`
 #### GET
@@ -2896,15 +3121,17 @@ Input:
 Return:
 -->
 
-    {
-        "config": {},
-        "name": "lxdbr0",
-        "managed": false,
-        "type": "bridge",
-        "used_by": [
-            "/1.0/containers/blah"
-        ]
-    }
+```json
+{
+    "config": {},
+    "name": "lxdbr0",
+    "managed": false,
+    "type": "bridge",
+    "used_by": [
+        "/1.0/containers/blah"
+    ]
+}
+```
 
 #### PUT (ETag サポートあり) <!-- PUT (ETag supported) -->
  * 説明: ネットワークの情報を置き換えます <!-- Description: replace the network information -->
@@ -2918,13 +3145,15 @@ Return:
 Input:
 -->
 
-    {
-        "config": {
-            "bridge.driver": "openvswitch",
-            "ipv4.address": "10.0.3.1/24",
-            "ipv6.address": "fd1:6997:4939:495d::1/64"
-        }
+```json
+{
+    "config": {
+        "bridge.driver": "openvswitch",
+        "ipv4.address": "10.0.3.1/24",
+        "ipv6.address": "fd1:6997:4939:495d::1/64"
     }
+}
+```
 
 初期の作成や GET での情報取得結果と同じ dict です。ただし、
 config のキーだけが使用され、それ以外の全てのキーは無視されます。
@@ -2945,11 +3174,13 @@ config is used, everything else is ignored.
 Input:
 -->
 
-    {
-        "config": {
-            "dns.mode": "dynamic"
-        }
+```json
+{
+    "config": {
+        "dns.mode": "dynamic"
     }
+}
+```
 
 #### POST
  * 説明: ネットワークをリネームします <!-- Description: rename a network -->
@@ -2963,9 +3194,11 @@ Input:
 Input (rename a network):
 -->
 
-    {
-        "name": "new-name"
-    }
+```json
+{
+    "name": "new-name"
+}
+```
 
 HTTP ステータスコードは 204 (No content) で Location ヘッダは
 リネーム後のリソースの URL を指します。
@@ -2991,8 +3224,10 @@ Renaming to an existing name must return the 409 (Conflict) HTTP code.
 Input (none at present):
 -->
 
-    {
-    }
+```json
+{
+}
+```
 
 この操作に対する HTTP ステータスコードは 202 (Accepted) です。
 <!--
@@ -3011,55 +3246,63 @@ HTTP code for this should be 202 (Accepted).
 Return:
 -->
 
-    {
-        "addresses": [
-            {
-                "family": "inet",
-                "address": "10.87.252.1",
-                "netmask": "24",
-                "scope": "global"
-            },
-            {
-                "family": "inet6",
-                "address": "fd42:6e0e:6542:a212::1",
-                "netmask": "64",
-                "scope": "global"
-            },
-            {
-                "family": "inet6",
-                "address": "fe80::3419:9ff:fe9b:f9aa",
-                "netmask": "64",
-                "scope": "link"
-            }
-        ],
-        "counters": {
-            "bytes_received": 0,
-            "bytes_sent": 17724,
-            "packets_received": 0,
-            "packets_sent": 95
+```json
+{
+    "addresses": [
+        {
+            "family": "inet",
+            "address": "10.87.252.1",
+            "netmask": "24",
+            "scope": "global"
         },
-        "hwaddr": "36:19:09:9b:f9:aa",
-        "mtu": 1500,
-        "state": "up",
-        "type": "broadcast"
-    }
+        {
+            "family": "inet6",
+            "address": "fd42:6e0e:6542:a212::1",
+            "netmask": "64",
+            "scope": "global"
+        },
+        {
+            "family": "inet6",
+            "address": "fe80::3419:9ff:fe9b:f9aa",
+            "netmask": "64",
+            "scope": "link"
+        }
+    ],
+    "counters": {
+        "bytes_received": 0,
+        "bytes_sent": 17724,
+        "packets_received": 0,
+        "packets_sent": 95
+    },
+    "hwaddr": "36:19:09:9b:f9:aa",
+    "mtu": 1500,
+    "state": "up",
+    "type": "broadcast"
+}
+```
 
 ### `/1.0/operations`
 #### GET
  * 説明: 操作の一覧 <!-- Description: list of operations -->
  * 認証: trusted <!-- Authentication: trusted -->
  * 操作: 同期 <!-- Operation: sync -->
- * 戻り値: 現在実行中またはキューに追加された操作の URL の一覧 <!-- Return: list of URLs for operations that are currently going on/queued -->
+ * 戻り値: 状態ごとの現在実行中またはキューに追加された操作の URL の一覧を表す dict <!-- Return: dict representing a list of URLs for operations that are currently going on/queued according to their status -->
 
 戻り値
 <!--
 Return:
 -->
 
-    [
-        "/1.0/operations/c0fc0d0d-a997-462b-842b-f8bd0df82507",
+```json
+{
+    "success": [
+        "/1.0/operations/c0fc0d0d-a997-462b-842b-f8bd0df82507"
+    ],
+    "running": [
         "/1.0/operations/092a8755-fd90-4ce4-bf91-9f87d03fd5bc"
     ]
+}
+```
 
 ### `/1.0/operations/<uuid>`
 #### GET
@@ -3073,44 +3316,48 @@ Return:
 Return:
 -->
 
-    {
-        "id": "b8d84888-1dc2-44fd-b386-7f679e171ba5",
-        "class": "token",                                                                       # "task" (バックグラウンドのタスク), "websocket" (ウェブソケットと認証情報の組) あるいは "token" (一時的な認証情報)
-        "created_at": "2016-02-17T16:59:27.237628195-05:00",                                    # 作成時のタイムスタンプ
-        "updated_at": "2016-02-17T16:59:27.237628195-05:00",                                    # 最終更新時のタイムスタンプ
-        "status": "Running",
-        "status_code": 103,
-        "resources": {                                                                          # 影響を受けるリソースの一覧
-            "images": [
-                "/1.0/images/54c8caac1f61901ed86c68f24af5f5d3672bdc62c71d04f06df3a59e95684473"
-            ]
-        },
-        "metadata": {                                                                           # 操作についての追加情報 (action, target, ...)
-            "secret": "c9209bee6df99315be1660dd215acde4aec89b8e5336039712fc11008d918b0d"
-        },
-        "may_cancel": true,                                                                     # (DELETE で) 操作をキャンセルできるかどうか
-        "err": ""
-    }
+```js
+{
+    "id": "b8d84888-1dc2-44fd-b386-7f679e171ba5",
+    "class": "token",                                                                       // "task" (バックグラウンドのタスク), "websocket" (ウェブソケットと認証情報の組) あるいは "token" (一時的な認証情報)
+    "created_at": "2016-02-17T16:59:27.237628195-05:00",                                    // 作成時のタイムスタンプ
+    "updated_at": "2016-02-17T16:59:27.237628195-05:00",                                    // 最終更新時のタイムスタンプ
+    "status": "Running",
+    "status_code": 103,
+    "resources": {                                                                          // 影響を受けるリソースの一覧
+        "images": [
+            "/1.0/images/54c8caac1f61901ed86c68f24af5f5d3672bdc62c71d04f06df3a59e95684473"
+        ]
+    },
+    "metadata": {                                                                           // 操作についての追加情報 (action, target, ...)
+        "secret": "c9209bee6df99315be1660dd215acde4aec89b8e5336039712fc11008d918b0d"
+    },
+    "may_cancel": true,                                                                     // (DELETE で) 操作をキャンセルできるかどうか
+    "err": ""
+}
+```
 
 <!--
-    {
-        "id": "b8d84888-1dc2-44fd-b386-7f679e171ba5",
-        "class": "token",                                                                       # One of "task" (background task), "websocket" (set of websockets and crendentials) or "token" (temporary credentials)
-        "created_at": "2016-02-17T16:59:27.237628195-05:00",                                    # Creation timestamp
-        "updated_at": "2016-02-17T16:59:27.237628195-05:00",                                    # Last update timestamp
-        "status": "Running",
-        "status_code": 103,
-        "resources": {                                                                          # List of affected resources
-            "images": [
-                "/1.0/images/54c8caac1f61901ed86c68f24af5f5d3672bdc62c71d04f06df3a59e95684473"
-            ]
-        },
-        "metadata": {                                                                           # Extra information about the operation (action, target, ...)
-            "secret": "c9209bee6df99315be1660dd215acde4aec89b8e5336039712fc11008d918b0d"
-        },
-        "may_cancel": true,                                                                     # Whether it's possible to cancel the operation (DELETE)
-        "err": ""
-    }
+```js
+{
+    "id": "b8d84888-1dc2-44fd-b386-7f679e171ba5",
+    "class": "token",                                                                       // One of "task" (background task), "websocket" (set of websockets and crendentials) or "token" (temporary credentials)
+    "created_at": "2016-02-17T16:59:27.237628195-05:00",                                    // Creation timestamp
+    "updated_at": "2016-02-17T16:59:27.237628195-05:00",                                    // Last update timestamp
+    "status": "Running",
+    "status_code": 103,
+    "resources": {                                                                          // List of affected resources
+        "images": [
+            "/1.0/images/54c8caac1f61901ed86c68f24af5f5d3672bdc62c71d04f06df3a59e95684473"
+        ]
+    },
+    "metadata": {                                                                           // Extra information about the operation (action, target, ...)
+        "secret": "c9209bee6df99315be1660dd215acde4aec89b8e5336039712fc11008d918b0d"
+    },
+    "may_cancel": true,                                                                     // Whether it's possible to cancel the operation (DELETE)
+    "err": ""
+}
+```
 -->
 
 #### DELETE
@@ -3124,8 +3371,10 @@ Return:
 Input (none at present):
 -->
 
-    {
-    }
+```json
+{
+}
+```
 
 この操作に対する HTTP ステータスコードは 202 (Accepted) です。
 <!--
@@ -3182,9 +3431,11 @@ Input (similar but times out after 30s): ?timeout=30
 Return:
 -->
 
-    [
-        "/1.0/profiles/default"
-    ]
+```json
+[
+    "/1.0/profiles/default"
+]
+```
 
 #### POST
  * 説明: 新しいプロファイルを定義します <!-- Description: define a new profile -->
@@ -3197,19 +3448,21 @@ Return:
 Input:
 -->
 
-    {
-        "name": "my-profilename",
-        "description": "Some description string",
-        "config": {
-            "limits.memory": "2GB"
-        },
-        "devices": {
-            "kvm": {
-                "type": "unix-char",
-                "path": "/dev/kvm"
-            }
+```json
+{
+    "name": "my-profilename",
+    "description": "Some description string",
+    "config": {
+        "limits.memory": "2GB"
+    },
+    "devices": {
+        "kvm": {
+            "type": "unix-char",
+            "path": "/dev/kvm"
         }
     }
+}
+```
 
 ### `/1.0/profiles/<name>`
 #### GET
@@ -3223,22 +3476,24 @@ Input:
 Output:
 -->
 
-    {
-        "name": "test",
-        "description": "Some description string",
-        "config": {
-            "limits.memory": "2GB"
-        },
-        "devices": {
-            "kvm": {
-                "path": "/dev/kvm",
-                "type": "unix-char"
-            }
-        },
-        "used_by": [
-            "/1.0/containers/blah"
-        ]
-    }
+```json
+{
+    "name": "test",
+    "description": "Some description string",
+    "config": {
+        "limits.memory": "2GB"
+    },
+    "devices": {
+        "kvm": {
+            "path": "/dev/kvm",
+            "type": "unix-char"
+        }
+    },
+    "used_by": [
+        "/1.0/containers/blah"
+    ]
+}
+```
 
 #### PUT (ETag サポートあり) <!-- PUT (ETag supported) -->
  * 説明: プロファイルの情報を置き換えます <!-- Description: replace the profile information -->
@@ -3251,18 +3506,20 @@ Output:
 Input:
 -->
 
-    {
-        "config": {
-            "limits.memory": "4GB"
-        },
-        "description": "Some description string",
-        "devices": {
-            "kvm": {
-                "path": "/dev/kvm",
-                "type": "unix-char"
-            }
+```json
+{
+    "config": {
+        "limits.memory": "4GB"
+    },
+    "description": "Some description string",
+    "devices": {
+        "kvm": {
+            "path": "/dev/kvm",
+            "type": "unix-char"
         }
     }
+}
+```
 
 初期の作成や GET での情報取得結果と同じ dict です。
 name プロパティは変更できません (変更するには POST を参照してください)。
@@ -3283,18 +3540,20 @@ property can't be changed (see POST for that).
 Input:
 -->
 
-    {
-        "config": {
-            "limits.memory": "4GB"
-        },
-        "description": "Some description string",
-        "devices": {
-            "kvm": {
-                "path": "/dev/kvm",
-                "type": "unix-char"
-            }
+```json
+{
+    "config": {
+        "limits.memory": "4GB"
+    },
+    "description": "Some description string",
+    "devices": {
+        "kvm": {
+            "path": "/dev/kvm",
+            "type": "unix-char"
         }
     }
+}
+```
 
 #### POST
  * 説明: プロファイルをリネームします <!-- Description: rename a profile -->
@@ -3307,9 +3566,11 @@ Input:
 Input (rename a profile):
 -->
 
-    {
-        "name": "new-name"
-    }
+```json
+{
+    "name": "new-name"
+}
+```
 
 HTTP ステータスコードは 204 (No content) で Location ヘッダは
 リネーム後のリソースの URL を指します。
@@ -3334,8 +3595,10 @@ Renaming to an existing name must return the 409 (Conflict) HTTP code.
 Input (none at present):
 -->
 
-    {
-    }
+```json
+{
+}
+```
 
 この操作に対する HTTP ステータスコードは 202 (Accepted) です。
 <!--
@@ -3360,9 +3623,11 @@ Attempting to delete the `default` profile will return the 403 (Forbidden) HTTP 
 Return:
 -->
 
-    [
-        "/1.0/projects/default"
-    ]
+```json
+[
+    "/1.0/projects/default"
+]
+```
 
 #### POST
  * 説明: 新しいプロジェクトを定義します <!-- Description: define a new project -->
@@ -3376,14 +3641,16 @@ Return:
 Input:
 -->
 
-    {
-        "name": "test",
-        "config": {
-            "features.images": "true",
-            "features.profiles": "true",
-        },
-        "description": "Some description string"
-    }
+```json
+{
+    "name": "test",
+    "config": {
+        "features.images": "true",
+        "features.profiles": "true",
+    },
+    "description": "Some description string"
+}
+```
 
 ### `/1.0/projects/<name>`
 #### GET
@@ -3398,17 +3665,19 @@ Input:
 Output:
 -->
 
-    {
-        "name": "test",
-        "config": {
-            "features.images": "true",
-            "features.profiles": "true",
-        },
-        "description": "Some description string",
-        "used_by": [
-            "/1.0/containers/blah"
-        ]
-    }
+```json
+{
+    "name": "test",
+    "config": {
+        "features.images": "true",
+        "features.profiles": "true",
+    },
+    "description": "Some description string",
+    "used_by": [
+        "/1.0/containers/blah"
+    ]
+}
+```
 
 #### PUT (ETag サポートあり) <!-- PUT (ETag supported) -->
  * 説明: プロジェクトの情報を置き換えます <!-- Description: replace the project information -->
@@ -3422,13 +3691,15 @@ Output:
 Input:
 -->
 
-    {
-        "config": {
-            "features.images": "true",
-            "features.profiles": "true",
-        },
-        "description": "Some description string"
-    }
+```json
+{
+    "config": {
+        "features.images": "true",
+        "features.profiles": "true",
+    },
+    "description": "Some description string"
+}
+```
 
 初期作成への入力と GET の戻り値は同じ形式の dict が使用されます。
 name プロパティは変更できません (その用途には POST を参照してください)。
@@ -3449,12 +3720,14 @@ property can't be changed (see POST for that).
 Input:
 -->
 
-    {
-        "config": {
-            "features.images": "true",
-        },
-        "description": "Some description string"
-    }
+```json
+{
+    "config": {
+        "features.images": "true",
+    },
+    "description": "Some description string"
+}
+```
 
 #### POST
  * 説明: プロジェクトをリネームします <!-- Description: rename a project -->
@@ -3468,9 +3741,11 @@ Input:
 Input (rename a project):
 -->
 
-    {
-        "name": "new-name"
-    }
+```json
+{
+    "name": "new-name"
+}
+```
 
 HTTP ステータスコードは 204 (No content) で Location ヘッダは
 リネーム後のリソースの URL を指します。
@@ -3501,8 +3776,10 @@ Attempting to rename the `default` project will return the 403 (Forbidden) HTTP 
 Input (none at present):
 -->
 
-    {
-    }
+```json
+{
+}
+```
 
 この操作に対する HTTP ステータスコードは 202 (Accepted) です。
 <!--
@@ -3527,13 +3804,15 @@ Attempting to delete the `default` project will return the 403 (Forbidden) HTTP 
 Return:
 -->
 
-    [
-        "/1.0/storage-pools/default",
-        "/1.0/storage-pools/pool1"
-        "/1.0/storage-pools/pool2"
-        "/1.0/storage-pools/pool3"
-        "/1.0/storage-pools/pool4"
-    ]
+```json
+[
+    "/1.0/storage-pools/default",
+    "/1.0/storage-pools/pool1",
+    "/1.0/storage-pools/pool2",
+    "/1.0/storage-pools/pool3",
+    "/1.0/storage-pools/pool4"
+]
+```
 
 #### POST
  * 説明: 新しいストレージプールを作成します <!-- Description: create a new storage pool -->
@@ -3547,13 +3826,15 @@ Return:
 Input:
 -->
 
-    {
-        "config": {
-            "size": "10GB"
-        },
-        "driver": "zfs",
-        "name": "pool1"
-    }
+```json
+{
+    "config": {
+        "size": "10GB"
+    },
+    "driver": "zfs",
+    "name": "pool1"
+}
+```
 
 ### `/1.0/storage-pools/<name>`
 #### GET
@@ -3568,47 +3849,49 @@ Input:
 Return:
 -->
 
-    {
-        "type": "sync",
-        "status": "Success",
-        "status_code": 200,
-        "operation": "",
-        "error_code": 0,
-        "error": "",
-        "metadata": {
-            "name": "default",
-            "driver": "zfs",
-            "used_by": [
-                "/1.0/containers/alp1",
-                "/1.0/containers/alp10",
-                "/1.0/containers/alp11",
-                "/1.0/containers/alp12",
-                "/1.0/containers/alp13",
-                "/1.0/containers/alp14",
-                "/1.0/containers/alp15",
-                "/1.0/containers/alp16",
-                "/1.0/containers/alp17",
-                "/1.0/containers/alp18",
-                "/1.0/containers/alp19",
-                "/1.0/containers/alp2",
-                "/1.0/containers/alp20",
-                "/1.0/containers/alp3",
-                "/1.0/containers/alp4",
-                "/1.0/containers/alp5",
-                "/1.0/containers/alp6",
-                "/1.0/containers/alp7",
-                "/1.0/containers/alp8",
-                "/1.0/containers/alp9",
-                "/1.0/images/62e850a334bb9d99cac00b2e618e0291e5e7bb7db56c4246ecaf8e46fa0631a6"
-            ],
-            "config": {
-                "size": "61203283968",
-                "source": "/home/chb/mnt/l2/disks/default.img",
-                "volume.size": "0",
-                "zfs.pool_name": "default"
-            }
+```json
+{
+    "type": "sync",
+    "status": "Success",
+    "status_code": 200,
+    "operation": "",
+    "error_code": 0,
+    "error": "",
+    "metadata": {
+        "name": "default",
+        "driver": "zfs",
+        "used_by": [
+            "/1.0/containers/alp1",
+            "/1.0/containers/alp10",
+            "/1.0/containers/alp11",
+            "/1.0/containers/alp12",
+            "/1.0/containers/alp13",
+            "/1.0/containers/alp14",
+            "/1.0/containers/alp15",
+            "/1.0/containers/alp16",
+            "/1.0/containers/alp17",
+            "/1.0/containers/alp18",
+            "/1.0/containers/alp19",
+            "/1.0/containers/alp2",
+            "/1.0/containers/alp20",
+            "/1.0/containers/alp3",
+            "/1.0/containers/alp4",
+            "/1.0/containers/alp5",
+            "/1.0/containers/alp6",
+            "/1.0/containers/alp7",
+            "/1.0/containers/alp8",
+            "/1.0/containers/alp9",
+            "/1.0/images/62e850a334bb9d99cac00b2e618e0291e5e7bb7db56c4246ecaf8e46fa0631a6"
+        ],
+        "config": {
+            "size": "61203283968",
+            "source": "/home/chb/mnt/l2/disks/default.img",
+            "volume.size": "0",
+            "zfs.pool_name": "default"
         }
     }
+}
+```
 
 #### PUT (ETag サポートあり) <!-- PUT (ETag supported) -->
  * 説明: ストレージプールの情報を置き換えます <!-- Description: replace the storage pool information -->
@@ -3622,17 +3905,19 @@ Return:
  Input:
 -->
 
-    {
-        "config": {
-            "size": "15032385536",
-            "source": "pool1",
-            "volume.block.filesystem": "xfs",
-            "volume.block.mount_options": "discard",
-            "lvm.thinpool_name": "LXDThinPool",
-            "lvm.vg_name": "pool1",
-            "volume.size": "10737418240"
-        }
+```json
+{
+    "config": {
+        "size": "15032385536",
+        "source": "pool1",
+        "volume.block.filesystem": "xfs",
+        "volume.block.mount_options": "discard",
+        "lvm.thinpool_name": "LXDThinPool",
+        "lvm.vg_name": "pool1",
+        "volume.size": "10737418240"
     }
+}
+```
 
 #### PATCH
  * 説明: ストレージプールの設定を変更します <!-- Description: update the storage pool configuration -->
@@ -3646,11 +3931,13 @@ Return:
 Input:
 -->
 
-    {
-        "config": {
-            "volume.block.filesystem": "xfs",
-        }
+```json
+{
+    "config": {
+        "volume.block.filesystem": "xfs",
     }
+}
+```
 
 #### DELETE
  * 説明: ストレージプールを削除します <!-- Description: delete a storage pool -->
@@ -3664,8 +3951,10 @@ Input:
 Input (none at present):
 -->
 
-    {
-    }
+```json
+{
+}
+```
 
 ### `/1.0/storage-pools/<name>/resources`
 #### GET
@@ -3680,24 +3969,26 @@ Input (none at present):
 Return:
 -->
 
-    {
-        "type": "sync",
-        "status": "Success",
-        "status_code": 200,
-        "operation": "",
-        "error_code": 0,
-        "error": "",
-        "metadata": {
-            "space": {
-                "used": 207111192576,
-                "total": 306027577344
-            },
-            "inodes": {
-                "used": 3275333,
-                "total": 18989056
-            }
+```json
+{
+    "type": "sync",
+    "status": "Success",
+    "status_code": 200,
+    "operation": "",
+    "error_code": 0,
+    "error": "",
+    "metadata": {
+        "space": {
+            "used": 207111192576,
+            "total": 306027577344
+        },
+        "inodes": {
+            "used": 3275333,
+            "total": 18989056
         }
     }
+}
+```
 
 
 ### `/1.0/storage-pools/<name>/volumes`
@@ -3713,29 +4004,31 @@ Return:
 Return:
 -->
 
-    [
-        "/1.0/storage-pools/default/volumes/container/alp1",
-        "/1.0/storage-pools/default/volumes/container/alp10",
-        "/1.0/storage-pools/default/volumes/container/alp11",
-        "/1.0/storage-pools/default/volumes/container/alp12",
-        "/1.0/storage-pools/default/volumes/container/alp13",
-        "/1.0/storage-pools/default/volumes/container/alp14",
-        "/1.0/storage-pools/default/volumes/container/alp15",
-        "/1.0/storage-pools/default/volumes/container/alp16",
-        "/1.0/storage-pools/default/volumes/container/alp17",
-        "/1.0/storage-pools/default/volumes/container/alp18",
-        "/1.0/storage-pools/default/volumes/container/alp19",
-        "/1.0/storage-pools/default/volumes/container/alp2",
-        "/1.0/storage-pools/default/volumes/container/alp20",
-        "/1.0/storage-pools/default/volumes/container/alp3",
-        "/1.0/storage-pools/default/volumes/container/alp4",
-        "/1.0/storage-pools/default/volumes/container/alp5",
-        "/1.0/storage-pools/default/volumes/container/alp6",
-        "/1.0/storage-pools/default/volumes/container/alp7",
-        "/1.0/storage-pools/default/volumes/container/alp8",
-        "/1.0/storage-pools/default/volumes/container/alp9",
-        "/1.0/storage-pools/default/volumes/image/62e850a334bb9d99cac00b2e618e0291e5e7bb7db56c4246ecaf8e46fa0631a6"
-    ]
+```json
+[
+    "/1.0/storage-pools/default/volumes/container/alp1",
+    "/1.0/storage-pools/default/volumes/container/alp10",
+    "/1.0/storage-pools/default/volumes/container/alp11",
+    "/1.0/storage-pools/default/volumes/container/alp12",
+    "/1.0/storage-pools/default/volumes/container/alp13",
+    "/1.0/storage-pools/default/volumes/container/alp14",
+    "/1.0/storage-pools/default/volumes/container/alp15",
+    "/1.0/storage-pools/default/volumes/container/alp16",
+    "/1.0/storage-pools/default/volumes/container/alp17",
+    "/1.0/storage-pools/default/volumes/container/alp18",
+    "/1.0/storage-pools/default/volumes/container/alp19",
+    "/1.0/storage-pools/default/volumes/container/alp2",
+    "/1.0/storage-pools/default/volumes/container/alp20",
+    "/1.0/storage-pools/default/volumes/container/alp3",
+    "/1.0/storage-pools/default/volumes/container/alp4",
+    "/1.0/storage-pools/default/volumes/container/alp5",
+    "/1.0/storage-pools/default/volumes/container/alp6",
+    "/1.0/storage-pools/default/volumes/container/alp7",
+    "/1.0/storage-pools/default/volumes/container/alp8",
+    "/1.0/storage-pools/default/volumes/container/alp9",
+    "/1.0/storage-pools/default/volumes/image/62e850a334bb9d99cac00b2e618e0291e5e7bb7db56c4246ecaf8e46fa0631a6"
+]
+```
 
 #### POST
  * 説明: 指定されたストレージプール上に新しいストレージボリュームを作成します <!-- Description: create a new storage volume on a given storage pool -->
@@ -3749,57 +4042,65 @@ Return:
 Input:
 -->
 
-    {
-        "config": {},
-        "name": "vol1",
-        "type": "custom"
-    }
+```json
+{
+    "config": {},
+    "name": "vol1",
+    "type": "custom"
+}
+```
 
 入力 (ボリュームをコピーする場合)
 <!--
 Input (when copying a volume):
 -->
 
-    {
-        "config": {},
-        "name": "vol1",
-        "type": "custom"
-        "source": {
-            "pool": "pool2",
-            "name": "vol2",
-            "type": "copy"
-        }
+```json
+{
+    "config": {},
+    "name": "vol1",
+    "type": "custom",
+    "source": {
+        "pool": "pool2",
+        "name": "vol2",
+        "type": "copy"
     }
+}
+```
 
 入力 (ボリュームをマイグレーションする場合)
 <!--
 Input (when migrating a volume):
 -->
 
-    {
-        "config": {},
-        "name": "vol1",
-        "type": "custom"
-        "source": {
-            "pool": "pool2",
-            "name": "vol2",
-            "type": "migration"
-            "mode": "pull",                                                 # "pull" (デフォルト), "push", "relay" のいずれか
-        }
+```js
+{
+    "config": {},
+    "name": "vol1",
+    "type": "custom"
+    "source": {
+        "pool": "pool2",
+        "name": "vol2",
+        "type": "migration",
+        "mode": "pull"        // "pull" (デフォルト), "push", "relay" のいずれか
     }
+}
+```
 
 <!--
-    {
-        "config": {},
-        "name": "vol1",
-        "type": "custom"
-        "source": {
-            "pool": "pool2",
-            "name": "vol2",
-            "type": "migration"
-            "mode": "pull",                                                 # One of "pull" (default), "push", "relay"
-        }
+```js
+{
+    "config": {},
+    "name": "vol1",
+    "type": "custom"
+    "source": {
+        "pool": "pool2",
+        "name": "vol2",
+        "type": "migration",
+        "mode": "pull"        // One of "pull" (default), "push", "relay"
     }
+}
+```
 -->
 
 ### `/1.0/storage-pools/<pool>/volumes/<type>`
@@ -3815,53 +4116,61 @@ Input (when migrating a volume):
 Input:
 -->
 
-    {
-        "config": {},
-        "name": "vol1",
-    }
+```json
+{
+    "config": {},
+    "name": "vol1",
+}
+```
 
 入力 (ボリュームをコピーする場合)
 <!--
 Input (when copying a volume):
 -->
 
-    {
-        "config": {},
-        "name": "vol1",
-        "source": {
-            "pool": "pool2",
-            "name": "vol2",
-            "type": "copy"
-        }
+```json
+{
+    "config": {},
+    "name": "vol1",
+    "source": {
+        "pool": "pool2",
+        "name": "vol2",
+        "type": "copy"
     }
+}
+```
 
 入力 (ボリュームをマイグレーションする場合)
 <!--
 Input (when migrating a volume):
 -->
 
-    {
-        "config": {},
-        "name": "vol1",
-        "source": {
-            "pool": "pool2",
-            "name": "vol2",
-            "type": "migration"
-            "mode": "pull",                                                 # "pull" (デフォルト), "push", "relay" のいずれか
-        }
+```js
+{
+    "config": {},
+    "name": "vol1",
+    "source": {
+        "pool": "pool2",
+        "name": "vol2",
+        "type": "migration"
+        "mode": "pull",      // "pull" (デフォルト), "push", "relay" のいずれか
     }
+}
+```
 
 <!--
-    {
-        "config": {},
-        "name": "vol1",
-        "source": {
-            "pool": "pool2",
-            "name": "vol2",
-            "type": "migration"
-            "mode": "pull",                                                 # One of "pull" (default), "push", "relay"
-        }
+```js
+{
+    "config": {},
+    "name": "vol1",
+    "source": {
+        "pool": "pool2",
+        "name": "vol2",
+        "type": "migration"
+        "mode": "pull",      // One of "pull" (default), "push", "relay"
     }
+}
+```
 -->
 
 ### `/1.0/storage-pools/<pool>/volumes/<type>/<name>`
@@ -3877,21 +4186,25 @@ Input (when migrating a volume):
 Input:
 -->
 
-    {
-        "name": "vol1",
-        "pool": "pool3"
-    }
+```json
+{
+    "name": "vol1",
+    "pool": "pool3"
+}
+```
 
 入力 (lxd インスタンス間でマイグレーションする場合)
 <!--
 Input (migration across lxd instances):
 -->
 
-    {
-        "name": "vol1"
-        "pool": "pool3"
-        "migration": true
-    }
+```json
+{
+    "name": "vol1",
+    "pool": "pool3",
+    "migration": true
+}
+```
 
 誰か (つまり他の lxd インスタンス) が全てのウェブソケットに接続してソースと
 交渉を始めるまでは、マイグレーションは実際には開始されません。
@@ -3905,16 +4218,20 @@ connects to all the websockets and begins negotiation with the source.
 Output in metadata section (for migration):
 -->
 
-    {
-        "control": "secret1",       # マイグレーション制御ソケット
-        "fs": "secret2"             # ファイルシステム転送ソケット
-    }
+```js
+{
+    "control": "secret1",       // マイグレーション制御ソケット
+    "fs": "secret2"             // ファイルシステム転送ソケット
+}
+```
 
 <!--
-    {
-        "control": "secret1",       # Migration control socket
-        "fs": "secret2"             # Filesystem transfer socket
-    }
+```js
+{
+    "control": "secret1",       // Migration control socket
+    "fs": "secret2"             // Filesystem transfer socket
+}
+```
 -->
 
 これらは作成の呼び出し時に渡すべきシークレットです。
@@ -3934,23 +4251,25 @@ These are the secrets that should be passed to the create call.
 Return:
 -->
 
-    {
-        "type": "sync",
-        "status": "Success",
-        "status_code": 200,
-        "error_code": 0,
-        "error": "",
-        "metadata": {
-            "type": "custom",
-            "used_by": [],
-            "name": "vol1",
-            "config": {
-                "block.filesystem": "ext4",
-                "block.mount_options": "discard",
-                "size": "10737418240"
-            }
+```json
+{
+    "type": "sync",
+    "status": "Success",
+    "status_code": 200,
+    "error_code": 0,
+    "error": "",
+    "metadata": {
+        "type": "custom",
+        "used_by": [],
+        "name": "vol1",
+        "config": {
+            "block.filesystem": "ext4",
+            "block.mount_options": "discard",
+            "size": "10737418240"
         }
     }
+}
+```
 
 
 #### PUT (ETag サポートあり) <!-- PUT (ETag supported) -->
@@ -3967,24 +4286,28 @@ Return:
 
 (訳注: ストレージボリュームの情報を置き換える場合の入力)
 
-    {
-        "config": {
-            "size": "15032385536",
-            "source": "pool1",
-            "used_by": "",
-            "volume.block.filesystem": "xfs",
-            "volume.block.mount_options": "discard",
-            "lvm.thinpool_name": "LXDThinPool",
-            "lvm.vg_name": "pool1",
-            "volume.size": "10737418240"
-        }
+```json
+{
+    "config": {
+        "size": "15032385536",
+        "source": "pool1",
+        "used_by": "",
+        "volume.block.filesystem": "xfs",
+        "volume.block.mount_options": "discard",
+        "lvm.thinpool_name": "LXDThinPool",
+        "lvm.vg_name": "pool1",
+        "volume.size": "10737418240"
     }
+}
+```
 
 (訳注: スナップショットから復元する場合の入力)
 
-    {
-        "restore": "snapshot-name"
-    }
+```json
+{
+    "restore": "snapshot-name"
+}
+```
 
 #### PATCH (ETag サポートあり) <!-- PATCH (ETag supported) -->
  * 説明: ストレージボリュームの情報を変更します <!-- Description: update the storage volume information -->
@@ -3998,11 +4321,13 @@ Return:
  Input:
 -->
 
-    {
-        "config": {
-            "volume.block.mount_options": "",
-        }
+```json
+{
+    "config": {
+        "volume.block.mount_options": "",
     }
+}
+```
 
 #### DELETE
  * 説明: 指定したストレージプール上の指定したタイプのストレージボリュームを削除します <!-- Description: delete a storage volume of a given type on a given storage pool -->
@@ -4016,8 +4341,10 @@ Return:
 Input (none at present):
 -->
 
-    {
-    }
+```json
+{
+}
+```
 
 ### `/1.0/storage-pools/<pool>/volumes/<type>/<name>/snapshots`
 #### GET
@@ -4031,9 +4358,11 @@ Input (none at present):
 Return value:
 -->
 
-    [
-        "/1.0/storage-pools/default/volumes/custom/foo/snapshots/snap0"
-    ]
+```json
+[
+    "/1.0/storage-pools/default/volumes/custom/foo/snapshots/snap0"
+]
+```
 
 #### POST
  * 説明: 新規のボリュームスナップショットを作成する <!-- Description: create a new volume snapshot -->
@@ -4046,14 +4375,18 @@ Return value:
 Input:
 -->
 
-    {
-        "name": "my-snapshot",          # スナップショットの名前
-    }
+```js
+{
+    "name": "my-snapshot",          // スナップショットの名前
+}
+```
 
 <!--
-    {
-        "name": "my-snapshot",          # Name of the snapshot
-    }
+```js
+{
+    "name": "my-snapshot",          // Name of the snapshot
+}
+```
 -->
 
 ### `/1.0/storage-pools/<pool>/volumes/<type>/<volume>/snapshots/name`
@@ -4068,11 +4401,13 @@ Input:
 Return:
 -->
 
-    {
-        "config": {},
-        "description": "",
-        "name": "snap0"
-    }
+```json
+{
+    "config": {},
+    "description": "",
+    "name": "snap0"
+}
+```
 
 #### PUT
  * 説明: ボリュームスナップショットの情報 <!-- Description: Volume snapshot information -->
@@ -4085,9 +4420,11 @@ Return:
 Input:
 -->
 
-    {
-        "description": "new-description"
-    }
+```json
+{
+    "description": "new-description"
+}
+```
 
 #### POST
  * 説明: ボリュームスナップショットをリネームするのに使用されます <!-- Description: used to rename the volume snapshot -->
@@ -4100,9 +4437,11 @@ Input:
 Input:
 -->
 
-    {
-        "name": "new-name"
-    }
+```json
+{
+    "name": "new-name"
+}
+```
 
 #### DELETE
  * 説明: ボリュームスナップショットを削除します <!-- Description: remove the volume snapshot -->
@@ -4128,33 +4467,35 @@ HTTP code for this should be 202 (Accepted).
 Return:
 -->
 
-    {
-        "type": "sync",
-        "status": "Success",
-        "status_code": 200,
-        "operation": "",
-        "error_code": 0,
-        "error": "",
-        "metadata": {
-            "cpu": {
-                "sockets": [
-                   {
-                       "cores": 2,
-                       "frequency": 2691,
-                       "frequency_turbo": 3400,
-                       "name": "GenuineIntel",
-                       "vendor": "Intel(R) Core(TM) i5-3340M CPU @ 2.70GHz",
-                       "threads": 4
-                   }
-                ],
-                "total": 4
-            },
-            "memory": {
-                "used": 4454240256,
-                "total": 8271765504
-            }
+```json
+{
+    "type": "sync",
+    "status": "Success",
+    "status_code": 200,
+    "operation": "",
+    "error_code": 0,
+    "error": "",
+    "metadata": {
+        "cpu": {
+            "sockets": [
+               {
+                   "cores": 2,
+                   "frequency": 2691,
+                   "frequency_turbo": 3400,
+                   "name": "GenuineIntel",
+                   "vendor": "Intel(R) Core(TM) i5-3340M CPU @ 2.70GHz",
+                   "threads": 4
+               }
+            ],
+            "total": 4
+        },
+        "memory": {
+            "used": 4454240256,
+            "total": 8271765504
         }
     }
+}
+```
 
 ### `/1.0/cluster`
 #### GET
@@ -4169,24 +4510,26 @@ Return:
 Return:
 -->
 
-    {
-        "server_name": "node1",
-        "enabled": true,
-        "member_config": [
-            {
-                "entity": "storage-pool",
-                "name": "local",
-                "key": "source",
-                "description": "\"source\" property for storage pool \"local\"",
-            },
-            {
-                "entity": "network",
-                "name": "lxdbr0",
-                "key": "bridge.external_interfaces",
-                "description": "\"bridge.external_interfaces\" property for network \"lxdbr0\"",
-            },
-        ],
-    }
+```json
+{
+    "server_name": "node1",
+    "enabled": true,
+    "member_config": [
+        {
+            "entity": "storage-pool",
+            "name": "local",
+            "key": "source",
+            "description": "\"source\" property for storage pool \"local\"",
+        },
+        {
+            "entity": "network",
+            "name": "lxdbr0",
+            "key": "bridge.external_interfaces",
+            "description": "\"bridge.external_interfaces\" property for network \"lxdbr0\"",
+        },
+    ],
+}
+```
 
 #### PUT
  * 説明: このノード上のクラスタをブートストラップしたりクラスタに参加したり、クラスタリングを無効にします <!-- Description: bootstrap or join a cluster, or disable clustering on this node -->
@@ -4200,10 +4543,12 @@ Return:
 Input (bootstrap a new cluster):
 -->
 
-    {
-        "server_name": "lxd1",
-        "enabled": true,
-    }
+```json
+{
+    "server_name": "lxd1",
+    "enabled": true,
+}
+```
 
 バックグラウンド操作か標準のエラーを返します。
 <!--
@@ -4215,36 +4560,41 @@ Return background operation or standard error.
 Input (request to join an existing cluster):
 -->
 
-    {
-        "server_name": "node2",
-        "server_address": "10.1.1.102:8443",
-        "enabled": true,
-        "cluster_address": "10.1.1.101:8443",
-        "cluster_certificate": "-----BEGIN CERTIFICATE-----MIFf\n-----END CERTIFICATE-----",
-        "cluster_password": "sekret",
-        "member_config": [
-            {
-                "entity": "storage-pool",
-                "name": "local",
-                "key": "source",
-                "value": "/dev/sdb",
-            },
-            {
-                "entity": "network",
-                "name": "lxdbr0",
-                "key": "bridge.external_interfaces",
-                "value": "vlan0",
-            },
-    }
+```json
+{
+    "server_name": "node2",
+    "server_address": "10.1.1.102:8443",
+    "enabled": true,
+    "cluster_address": "10.1.1.101:8443",
+    "cluster_certificate": "-----BEGIN CERTIFICATE-----MIFf\n-----END CERTIFICATE-----",
+    "cluster_password": "sekret",
+    "member_config": [
+        {
+            "entity": "storage-pool",
+            "name": "local",
+            "key": "source",
+            "value": "/dev/sdb"
+        },
+        {
+            "entity": "network",
+            "name": "lxdbr0",
+            "key": "bridge.external_interfaces",
+            "value": "vlan0"
+        }
+    ]
+}
+```
 
 入力 (このノード上のクラスタリングを無効にする場合)
 <!--
 Input (disable clustering on the node):
 -->
 
-    {
-        "enabled": false,
-    }
+```json
+{
+    "enabled": false
+}
+```
 
 ### `/1.0/cluster/members`
 #### GET
@@ -4259,10 +4609,12 @@ Input (disable clustering on the node):
 Return:
 -->
 
-    [
-        "/1.0/cluster/members/lxd1",
-        "/1.0/cluster/members/lxd2"
-    ]
+```json
+[
+    "/1.0/cluster/members/lxd1",
+    "/1.0/cluster/members/lxd2"
+]
+```
 
 ### `/1.0/cluster/members/<name>`
 #### GET
@@ -4277,13 +4629,15 @@ Return:
 Return:
 -->
 
-    {
-        "server_name": "lxd1",
-        "url": "https://10.1.1.101:8443",
-        "database": true,
-        "status": "Online",
-        "message":"fully operational"
-    }
+```json
+{
+    "server_name": "lxd1",
+    "url": "https://10.1.1.101:8443",
+    "database": true,
+    "status": "Online",
+    "message":"fully operational"
+}
+```
 
 #### POST
  * 説明: クラスタメンバをリネームします <!-- Description: rename a cluster member -->
@@ -4297,9 +4651,11 @@ Return:
 Input:
 -->
 
-    {
-        "server_name": "node1",
-    }
+```json
+{
+    "server_name": "node1"
+}
+```
 
 #### DELETE (`?force=1` を任意で指定可能) <!-- DELETE (optional `?force=1`) -->
  * 説明: クラスタのメンバを削除します <!-- Description: remove a member of the cluster -->
@@ -4313,5 +4669,7 @@ Input:
 Input (none at present):
 -->
 
-    {
-    }
+```json
+{
+}
+```
