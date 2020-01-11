@@ -101,6 +101,23 @@ This behavior only happens if the current image is scheduled to be
 auto-updated and can be disabled by setting `images.auto_update_interval` to 0.
 -->
 
+## プロファイル <!-- Profiles -->
+`lxc image edit` コマンドを使ってイメージにプロファイルのリストを関連付けできます。
+イメージにプロファイルを関連付けた後に起動したコンテナはプロファイルを順番に適用します。
+プロファイルのリストとして `nil` を指定すると `default` プロファイルのみがイメージに関連付けされます。
+空のリストを指定すると、 `default` プロファイルさえ含まずどのプロファイルもイメージに適用されなくなります。
+イメージに関連付けされたプロファイルは `lxc launch` の `--profile` と `--no-profiles` オプションを使って起動時にオーバーライドできます。
+<!--
+A list of profiles can be associated with an image using the `lxc image edit`
+command. After associating profiles with an image, a container launched
+using the image will have the profiles applied in order. If `nil` is passed
+as the list of profiles, only the `default` profile will be associated with 
+the image. If an empty list is passed, then no profile will be associated
+with the image, not even the `default` profile. An image's associated
+profiles can be overridden when launching a container by using the 
+`-\-profile` and the `-\-no-profiles` flags to `lxc launch`.
+-->
+
 ## イメージの形式 <!-- Image format -->
 LXD は現状 2 つの LXD に特有なイメージの形式をサポートします。
 <!--
