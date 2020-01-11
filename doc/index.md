@@ -104,32 +104,75 @@ To run the testsuite, you'll also need:
 sudo apt install curl gettext jq sqlite3 uuid-runtime bzr socat
 ```
 
-
-### ツールのビルド <!-- Building the tools -->
+### ソースからの最新版のビルド <!-- From Source: Building the latest version -->
+この方法は LXD の最新版をビルドしたい開発者や Linux ディストリビューションで提供されない LXD の特定のリリースをビルドするためのものです。 Linux ディストリビューションへ統合するためのソースからのビルドはここでは説明しません。それは将来別のドキュメントで取り扱うかもしれません。
 <!--
-LXD consists of two binaries, a client called `lxc` and a server called `lxd`.
-These live in the source tree in the `lxc/` and `lxd/` dirs, respectively.
-To get the code, set up your go environment:
+These instructions for building from source are suitable for individual developers who want to build the latest version
+of LXD, or build a specific release of LXD which may not be offered by their Linux distribution. Source builds for
+integration into Linux distributions are not covered here and may be covered in detail in a separate document in the
+future.
 -->
-LXD にはふたつのバイナリが含まれます。クライアントである `lxc` と、サーバである `lxd` です。
-これらはソースツリーのそれぞれ `lxc/`、`lxd/` に含まれます。
-コードを取得するには、Go 環境をセットアップします:
+
+ソースからビルドする際は、ビルド対象のソースコードを含む `GOPATH` をカスタムで設定します。ソースをビルドしたら `lxc` と `lxd` の実行ファイルが `$GOPATH/bin` に生成され、あとは `LD_LIBRARY_PATH` を設定（後述）するだけで、これらの実行ファイルがビルドされたソースツリーから直接実行できます。
+<!--
+When building from source, it is customary to configure a `GOPATH` which contains the to-be-built source code. When 
+the sources are done building, the `lxc` and `lxd` binaries will be available at `$GOPATH/bin`, and with a little
+`LD_LIBRARY_PATH` magic (described later), these binaries can be run directly from the built source tree. 
+-->
+
+以下に GitHub の LXD のソースの最新版に対して `GOPATH` を設定する手順を示します。
+<!--
+The following lines demonstrate how to configure a `GOPATH` with the most recent LXD sources from GitHub:
+-->
 
 ```bash
 mkdir -p ~/go
 export GOPATH=~/go
+go get -d -v github.com/lxc/lxd/lxd
+cd $GOPATH/src/github.com/lxc/lxd
 ```
 
+ビルドプロセスが開始したら、 Makefile は `go get` と `git clean` を使ってビルドに必要な全ての依存ライブラリを取得します。
 <!--
-And then download it as usual:
+When the build process starts, the Makefile will use `go get` and `git clone` to grab all necessary dependencies 
+needed for building.
 -->
-そして次のようにダウンロードしてください:
+
+### ソースからのリリース版のビルド <!-- From Source: Building a Release -->
+
+LXD の公式リリースをビルドするには、リリース版の tarball をダウンロード、解凍し、その中の `_dist` ディレクトリを指すように GOPATH を設定してください。 `_dist` ディレクトリは GOPATH として使用できるように構成されており必要なソース全てのスナップショットを含んでいます。 LXD は `live` なソースを `go get` と `git clone` で取得する代わりにこれらのスナップショットを使ってビルドします。リリース版の tarball をダウンロード、解凍したら以下のように `GOPATH` を設定してください。
+<!--
+To build an official release of LXD, download and extract a release tarball, and then set up GOPATH to point to the
+`_dist` directory inside it, which is configured to be used as a GOPATH and contains snapshots of all necessary sources. LXD
+will then build using these snapshots rather than grabbing 'live' sources using `go get` and `git clone`. Once the release
+tarball is downloaded and extracted, set the `GOPATH` as follows:
+-->
+
+```bash
+cd lxd-3.18
+export GOPATH=$(pwd)/_dist
+```
+
+### ビルドの開始 <!-- Starting the Build -->
+
+`GOPATH` を設定したら、以下の手順で GitHub の最新版あるいは公式リリース版の LXD をビルド出来ます。
+<!--
+Once the `GOPATH` is configured, either to build the latest GitHub version or an official release, the following steps
+can be used to build LXD.
+-->
+
+実際のビルドは Makefile の 2 回の別々の実行により行われます。 1 つは `make deps` でこれは LXD に必要とされるライブラリをビルドします。もう 1 つは `make` で LXD 自体をビルドします。 `make deps` の最後に `make` の実行に必要な環境変数を設定するための手順が表示されます。新しいバージョンの LXD がリリースされたらこれらの環境変数の設定は変わるかもしれませんので、 `make deps` の最後に表示された手順を使うようにしてください。下記の手順（例示のために表示します）はあなたがビルドする LXD のバージョンのものとは一致しないかもしれません。
+<!--
+The actual building is done by two separate invocations of the Makefile: `make deps` - - which builds libraries required 
+by LXD - - and `make`, which builds LXD itself. At the end of `make deps`, a message will be displayed which will specify environment variables that should be set prior to invoking `make`. As new versions of LXD are released, these environment
+variable settings may change, so be sure to use the ones displayed at the end of the `make deps` process, as the ones
+below (shown for example purposes) may not exactly match what your version of LXD requires:
+-->
 
 
 ```bash
-go get -d -v github.com/lxc/lxd/lxd
-cd $GOPATH/src/github.com/lxc/lxd
 make deps
+# `make deps` が出力した export のコマンド列を使ってください。下記はあくまで例です。
 export CGO_CFLAGS="${CGO_CFLAGS} -I${GOPATH}/deps/sqlite/ -I${GOPATH}/deps/dqlite/include/ -I${GOPATH}/deps/raft/include/ -I${GOPATH}/deps/libco/"
 export CGO_LDFLAGS="${CGO_LDFLAGS} -L${GOPATH}/deps/sqlite/.libs/ -L${GOPATH}/deps/dqlite/.libs/ -L${GOPATH}/deps/raft/.libs -L${GOPATH}/deps/libco/"
 export LD_LIBRARY_PATH="${GOPATH}/deps/sqlite/.libs/:${GOPATH}/deps/dqlite/.libs/:${GOPATH}/deps/raft/.libs:${GOPATH}/deps/libco/:${LD_LIBRARY_PATH}"
@@ -137,10 +180,47 @@ make
 ```
 
 <!--
-...which will give you two binaries in `$GOPATH/bin`, `lxd` the daemon binary,
-and `lxc` a command line client to that daemon.
+```bash
+make deps
+# Use the export statements printed in the output of 'make deps' - - these are examples: 
+export CGO_CFLAGS="${CGO_CFLAGS} -I${GOPATH}/deps/sqlite/ -I${GOPATH}/deps/dqlite/include/ -I${GOPATH}/deps/raft/include/ -I${GOPATH}/deps/libco/"
+export CGO_LDFLAGS="${CGO_LDFLAGS} -L${GOPATH}/deps/sqlite/.libs/ -L${GOPATH}/deps/dqlite/.libs/ -L${GOPATH}/deps/raft/.libs -L${GOPATH}/deps/libco/"
+export LD_LIBRARY_PATH="${GOPATH}/deps/sqlite/.libs/:${GOPATH}/deps/dqlite/.libs/:${GOPATH}/deps/raft/.libs:${GOPATH}/deps/libco/:${LD_LIBRARY_PATH}"
+make
+```
 -->
-すると、ふたつのバイナリは `$GOPATH/bin` から取得できます。`lxd` はデーモンバイナリであり、このデーモンに接続するためのコマンドラインクライアントは `lxc` です。
+
+### ソースからのビルド結果のインストール
+
+ビルドが完了したら、ソースツリーを維持したまま、あなたのお使いのシェルのパスに `$GOPATH/bin` を追加し `LD_LIBRARY_PATH` 環境変数を `make deps` で表示された値に設定すれば、 LXD が利用できます。 `~/.bashrc` ファイルの場合は以下のようになります。
+<!--
+Once the build completes, you simply keep the source tree, add the directory referenced by `$GOPATH/bin` to 
+your shell path, and set the `LD_LIBRARY_PATH` variable printed by `make deps` to your environment. This might look
+something like this for a `~/.bashrc` file:
+-->
+
+```bash
+# GOPATH は export する必要はありません。
+GOPATH=~/go
+# But we need to export these:
+export PATH="$PATH:$GOPATH/bin"
+export LD_LIBRARY_PATH="${GOPATH}/deps/sqlite/.libs/:${GOPATH}/deps/dqlite/.libs/:${GOPATH}/deps/raft/.libs:${GOPATH}/deps/libco/:${LD_LIBRARY_PATH}"
+```
+
+<!--
+```bash
+# No need to export GOPATH:
+GOPATH=~/go
+# But we need to export these:
+export PATH="$PATH:$GOPATH/bin"
+export LD_LIBRARY_PATH="${GOPATH}/deps/sqlite/.libs/:${GOPATH}/deps/dqlite/.libs/:${GOPATH}/deps/raft/.libs:${GOPATH}/deps/libco/:${LD_LIBRARY_PATH}"
+```
+-->
+
+これで `lxd` と `lxc` コマンドの実行ファイルが利用可能になり LXD をセットアップするのに使用できます。 `LD_LIBRARY_PATH` 環境変数のおかげで実行ファイルは `$GOPATH/deps` にビルドされた依存ライブラリを自動的に見つけて使用します。
+<!--
+Now, the `lxd` and `lxc` binaries will be available to you and can be used to set up LXD. The binaries will automatically find and use the dependencies built in `$GOPATH/deps` thanks to the `LD_LIBRARY_PATH` environment variable.
+-->
 
 ### マシンセットアップ <!-- Machine Setup -->
 <!--
