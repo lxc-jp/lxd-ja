@@ -105,7 +105,7 @@ auto-updated and can be disabled by setting `images.auto_update_interval` to 0.
 `lxc image edit` コマンドを使ってイメージにプロファイルのリストを関連付けできます。
 イメージにプロファイルを関連付けた後に起動したコンテナはプロファイルを順番に適用します。
 プロファイルのリストとして `nil` を指定すると `default` プロファイルのみがイメージに関連付けされます。
-空のリストを指定すると、 `default` プロファイルさえ含まずどのプロファイルもイメージに適用されなくなります。
+空のリストを指定すると、 `default` プロファイルも含めて一切のプロファイルをイメージに適用しません。
 イメージに関連付けされたプロファイルは `lxc launch` の `--profile` と `--no-profiles` オプションを使って起動時にオーバーライドできます。
 <!--
 A list of profiles can be associated with an image using the `lxc image edit`
