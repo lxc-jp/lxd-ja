@@ -34,12 +34,15 @@ networks. The only configuration that can be node-specific are the
 クラスターに追加するノードはすべて、ストーレージプールとネットワークについて、ブートストラップノードと同じ構成を持たなければなりません。ノード特有の設定として持てる唯一の設定は、ストレージプールに対する `source` と `size`、ネットワークに対する `bridge.external_interface` です。
 
 <!--
-It is recommended that the number of nodes in the cluster be at least
-three, so the cluster can survive the loss of at least one node and
-still be able to establish quorum for its distributed state (which is
-kept in a SQLite database replicated using the Raft algorithm).
+It is strongly recommended that the number of nodes in the cluster be 
+at least three, so the cluster can survive the loss of at least one node 
+and still be able to establish quorum for its distributed state (which is
+kept in a SQLite database replicated using the Raft algorithm). If the 
+number of nodes is less than three, then only one node in the cluster
+will store the SQLite database. When the third node joins the cluster,
+both the second and third nodes will receive a replica of the database.
 -->
-クラスター内のノード数としては 3 以上を推奨します。これは少なくとも 1 ノードが落ちてもクラスターが生存でき、分散状態で必要な数の生存を確立できるからです（これは Raft アルゴリズムを使った SQLite データベースのレプリケーションを維持できるということです）
+クラスター内のノード数としては 3 以上を強く推奨します。これは少なくとも 1 ノードが落ちても分散状態のクオラムを確立できるからです（分散状態は Raft アルゴリズムを使ってレプリケーションされている SQLite データベースに保管されています）。ノード数が 3 より小さくなるとクラスタ内のただ 1 つのノードだけが SQLite データベースを保管します。第 3 のノードがクラスターに参加したときに、第 2 と第 3 のノードがデータベースの複製を受け取ります。
 
 ### インタラクティブに行う方法 <!-- Interactively -->
 
@@ -337,6 +340,14 @@ lxc launch --target node2 ubuntu:16.04 xenial
 will launch an Ubuntu 16.04 container on node2.
 -->
 のように実行すれば、node2 上で Ubuntu 16.04 コンテナが起動します。
+
+<!--
+When you launch a container without defining a target, the container will be 
+launched on the server which has the lowest number of containers.
+If all the servers have the same amount of containers, it will choose one 
+at random.
+-->
+ターゲットを指定せずにコンテナを起動したときは、コンテナの数が一番少ないサーバ上でコンテナが起動されます。全てのサーバが同じ数のコンテナを持っている場合はランダムに選ばれます。
 
 <!--
 You can list all containers in the cluster with:
