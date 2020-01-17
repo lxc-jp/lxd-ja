@@ -1,4 +1,5 @@
-# インスタンスの設定 <!-- Instance configuration -->
+# インスタンスの設定
+<!-- Instance configuration -->
 ## プロパティ <!-- Properties -->
 次のプロパティは、インスタンスに直接結びつくプロパティであり、プロファイルの一部ではありません:
 <!--
@@ -103,7 +104,7 @@ security.syscalls.intercept.mknod           | boolean   | false             | no
 security.syscalls.intercept.mount           | boolean   | false             | no            | container         | `mount` システムコールを処理するかどうか <!-- Handles the `mount` system call -->
 security.syscalls.intercept.mount.allowed   | string    | -                 | yes           | container         | インスタンス内のプロセスが安全にマウントできるファイルシステムのカンマ区切りリストを指定 <!-- Specify a comma-separated list of filesystems that are safe to mount for processes inside the instance -->
 security.syscalls.intercept.mount.fuse      | string    | -                 | yes           | container         | `mount` システムコールをインターセプトして処理対象のファイルシステムの上に shiftfs をマウントするかどうか <!-- Whether to mount shiftfs on top of filesystems handled through mount syscall interception -->
-security.syscalls.intercept.mount.shift     | boolean   | false             | yes           | container         | 指定されたファイルシステムのマウントを fuse 実装にリダ>イレクトするかどうか (例: ext4=fuse2fs) <!-- Whether to redirect mounts of a given filesystem to their fuse implemenation (e.g. ext4=fuse2fs) -->
+security.syscalls.intercept.mount.shift     | boolean   | false             | yes           | container         | 指定されたファイルシステムのマウントを fuse 実装にリダイレクトするかどうか (例: ext4=fuse2fs) <!-- Whether to redirect mounts of a given filesystem to their fuse implemenation (e.g. ext4=fuse2fs) -->
 security.syscalls.intercept.setxattr        | boolean   | false             | no            | container         | `setxattr` システムコールを処理するかどうか (限定されたサブセットの制限された拡張属性の設定を許可する) <!--Handles the `setxattr` system call (allows setting a limited subset of restricted extended attributes) -->
 security.syscalls.whitelist                 | string    | -                 | no            | container         | `\n` 区切りのシステムコールのホワイトリスト（`security.syscalls.blacklist\*)` と排他）<!-- A '\n' separated list of syscalls to whitelist (mutually exclusive with security.syscalls.blacklist\*) -->
 snapshots.schedule                          | string    | -                 | no            | -                 | Cron 表記 <!-- Cron expression --> (`<minute> <hour> <dom> <month> <dow>`)
@@ -355,7 +356,7 @@ LXD supports different kind of network devices:
  - [sriov](#nictype-sriov): SR-IOV が有効な物理ネットワークデバイスの仮想ファンクション（virtual function）をインスタンスに与えます。 <!-- Passes a virtual function of an SR-IOV enabled physical network device into the instance. -->
  - [routed](#nictype-routed): 仮想デバイスペアを作成し、ホストからインスタンスに繋いで静的ルートをセットアップし ARP/NDP エントリをプロキシします。これにより指定された親インタフェースのネットワークにインスタンスが参加できるようになります。 <!-- Creates a virtual device pair to connect the host to the instance and sets up static routes and proxy ARP/NDP entries to allow the instance to join the network of a designated parent interface. -->
 
-現状、仮想マシンでは `bridge` だけがサポートされます。
+現状、仮想マシンでは `bridged` だけがサポートされます。
 <!--
 Currently, only the `bridged` type is supported with virtual machines.
 -->
@@ -803,7 +804,7 @@ LXD では以下の追加のソースタイプをサポートします。
 <!--
 LXD supports the following additional source types:
 -->
-- Ceph-rbd: 外部で管理されている既存の ceph RBD デバイスからマウントします。 LXD は ceph をインスタンスの内部のファイルシステムを管理するのに使用できますが、ユーザが事前に既存の ceph RBD を持っておりそれをインスタンスに使いたい場合はこのコマンドを使用できます。<!-- Mount from existing ceph RBD device that is externally managed. LXD can use ceph to manage an internal file system for the instance, but in the event that a user has a previously existing ceph RBD that they would like use for this instance, they can use this command. -->
+- Ceph-rbd: 外部で管理されている既存の ceph RBD デバイスからマウントします。 LXD は ceph をインスタンスの内部のファイルシステムを管理するのに使用できます。ユーザが事前に既存の ceph RBD を持っておりそれをインスタンスに使いたい場合はこのコマンドを使用できます。<!-- Mount from existing ceph RBD device that is externally managed. LXD can use ceph to manage an internal file system for the instance, but in the event that a user has a previously existing ceph RBD that they would like use for this instance, they can use this command. -->
 コマンド例
 <!--
 Example command
@@ -811,7 +812,7 @@ Example command
 ```
 lxc config device add <instance> ceph-rbd1 disk source=ceph:<my_pool>/<my-volume> ceph.user_name=<username> ceph.cluster_name=<username> path=/ceph
 ```
-- Ceph-fs: 外部で管理されている既存の ceph FS からマウントします。 LXD は ceph をインスタンスの内部のファイルシステムを管理するのに使用できますが、ユーザが事前に既存の ceph ファイルシステムを持っておりそれをインスタンスに使いたい場合はこのコマンドを使用できます。<!-- Mount from existing ceph FS device that is externally managed. LXD can use ceph to manage an internal file system for the instance, but in the event that a user has a previously existing ceph file sys that they would like use for this instancer, they can use this command. -->
+- Ceph-fs: 外部で管理されている既存の ceph FS からマウントします。 LXD は ceph をインスタンスの内部のファイルシステムを管理するのに使用できます。ユーザが事前に既存の ceph ファイルシステムを持っておりそれをインスタンスに使いたい場合はこのコマンドを使用できます。<!-- Mount from existing ceph FS device that is externally managed. LXD can use ceph to manage an internal file system for the instance, but in the event that a user has a previously existing ceph file sys that they would like use for this instancer, they can use this command. -->
 コマンド例
 <!--
 Example command.
@@ -828,7 +829,7 @@ Example command.
 lxc config device add <instance> config disk source=cloud-init:config
 ```
 
-現状では仮想マシンではルートディスク (ath=/) と設定ドライブ (source=cloud-init:config) のみがサポートされます。
+現状では仮想マシンではルートディスク (path=/) と設定ドライブ (source=cloud-init:config) のみがサポートされます。
 <!--
 Currently only the root disk (path=/) and config drive (source=cloud-init:config) are supported with virtual machines.
 -->
