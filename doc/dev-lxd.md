@@ -207,28 +207,32 @@ This never returns. Each notification is sent as a separate JSON dict:
 この API は決して終了しません。それぞれの通知は別々の JSON の dict として
 送られます。
 
-    {
-        "timestamp": "2017-12-21T18:28:26.846603815-05:00",
-        "type": "device",
-        "metadata": {
-            "name": "kvm",
-            "action": "added",
-            "config": {
-                "type": "unix-char",
-                "path": "/dev/kvm"
-            }
+```json
+{
+    "timestamp": "2017-12-21T18:28:26.846603815-05:00",
+    "type": "device",
+    "metadata": {
+        "name": "kvm",
+        "action": "added",
+        "config": {
+            "type": "unix-char",
+            "path": "/dev/kvm"
         }
     }
+}
+```
 
-    {
-        "timestamp": "2017-12-21T18:28:26.846603815-05:00",
-        "type": "config",
-        "metadata": {
-            "key": "user.foo",
-            "old_value": "",
-            "value": "bar"
-        }
+```json
+{
+    "timestamp": "2017-12-21T18:28:26.846603815-05:00",
+    "type": "config",
+    "metadata": {
+        "key": "user.foo",
+        "old_value": "",
+        "value": "bar"
     }
+}
+```
 
 #### `/1.0/images/<FINGERPRINT>/export`
 ##### GET
