@@ -31,3 +31,5 @@ the user's environment and to turn some advanced features on and off.
 `LXD_LXC_TEMPLATE_CONFIG`       | LXC テンプレート設定ディレクトリ <!-- Path to the LXC template configuration directory -->
 `LXD_SECURITY_APPARMOR`         | `false` に設定すると AppArmor を無効にします <!-- If set to `false`, forces AppArmor off -->
 `LXD_UNPRIVILEGED_ONLY`         | `true` に設定すると非特権コンテナしか作れなくなるように強制します。 LXD_UNPRIVILEGED_ONLY を設定する前に作られた特権コンテナだけが引き続き特権を持つことに注意してください。このオプションを LXD デーモンを最初にセットアップするときに設定するのが実用的です。 <!-- If set to `true`, enforces that only unprivileged containers can be created. Note that any privileged containers that have been created before setting LXD_UNPRIVILEGED_ONLY will continue to be privileged. To use this option effectively it should be set when the LXD daemon is first setup. -->
+`LXD_OVMF_PATH`                 | `OVMF_CODE.fd` と `OVMF_VARS.ms.fd` を含む OVMF ビルドへのパス <!-- Path to an OVMF build including `OVMF_CODE.fd` and `OVMF_VARS.ms.fd` -->
+`LXD_SHIFTFS_DISABLE`           | shiftfs のサポートを無効にする（従来の UID シフトを試す際に有用です） <!-- Disable shiftfs support (useful when testing traditional UID shifting) -->
