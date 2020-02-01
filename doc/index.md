@@ -4,7 +4,7 @@
 LXD is a next generation system container and virtual machine manager.
 It offers a unified user experience around full Linux systems running inside containers or virtual machines.
 -->
-LXD は次世代のシステムおよび仮想マシンコンテナマネージャーです。
+LXD は次世代のシステムコンテナおよび仮想マシンのマネージャーです。
 コンテナあるいは仮想マシンの内部で稼働する完全な Linux システムに対して統一されたユーザーエクスペリエンスを提供します。
 
 <!--
