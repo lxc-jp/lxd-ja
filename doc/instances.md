@@ -221,19 +221,23 @@ lxc profile device add <profile> <name> <type> [key=value]...
 ## Device types
 LXD supports the following device types:
 
-ID (database)   | Name                              | Condition     | Description
-:--             | :--                               | :--           | :--
-0               | [none](#type-none)                | -             | Inheritance blocker
-1               | [nic](#type-nic)                  | -             | Network interface
-2               | [disk](#type-disk)                | -             | Mountpoint inside the instance
-3               | [unix-char](#type-unix-char)      | container     | Unix character device
-4               | [unix-block](#type-unix-block)    | container     | Unix block device
-5               | [usb](#type-usb)                  | container     | USB device
-6               | [gpu](#type-gpu)                  | container     | GPU device
-7               | [infiniband](#type-infiniband)    | container     | Infiniband device
-8               | [proxy](#type-proxy)              | container     | Proxy device
+ID (database)   | Name                               | Condition     | Description
+:--             | :--                                | :--           | :--
+0               | [none](#type-none)                 | -             | Inheritance blocker
+1               | [nic](#type-nic)                   | -             | Network interface
+2               | [disk](#type-disk)                 | -             | Mountpoint inside the instance
+3               | [unix-char](#type-unix-char)       | container     | Unix character device
+4               | [unix-block](#type-unix-block)     | container     | Unix block device
+5               | [usb](#type-usb)                   | container     | USB device
+6               | [gpu](#type-gpu)                   | container     | GPU device
+7               | [infiniband](#type-infiniband)     | container     | Infiniband device
+8               | [proxy](#type-proxy)               | container     | Proxy device
+9               | [unix-hotplug](#type-unix-hotplug) | container     | Unix hotplug device
 
 ### Type: none
+
+Supported instance types: container, VM
+
 A none type device doesn't have any property and doesn't create anything inside the instance.
 
 It's only purpose it to stop inheritance of devices coming from profiles.
@@ -259,6 +263,9 @@ Different network interface types have different additional properties.
 Each possible `nictype` value is documented below along with the relevant properties for nics of that type.
 
 #### nictype: physical
+
+Supported instance types: container, VM
+
 Straight physical device passthrough from the host. The targeted device will vanish from the host and appear in the instance.
 
 Device configuration properties:
@@ -272,8 +279,12 @@ hwaddr                  | string    | randomly assigned | no        | The MAC ad
 vlan                    | integer   | -                 | no        | The VLAN ID to attach to
 maas.subnet.ipv4        | string    | -                 | no        | MAAS IPv4 subnet to register the instance in
 maas.subnet.ipv6        | string    | -                 | no        | MAAS IPv6 subnet to register the instance in
+boot.priority           | integer   | -                 | no        | Boot priority for VMs (higher boots first)
 
 #### nictype: bridged
+
+Supported instance types: container, VM
+
 Uses an existing bridge on the host and creates a virtual device pair to connect the host bridge to the instance.
 
 Device configuration properties:
@@ -297,8 +308,12 @@ security.ipv4\_filtering | boolean   | false             | no        | Prevent t
 security.ipv6\_filtering | boolean   | false             | no        | Prevent the instance from spoofing another's IPv6 address (enables mac\_filtering)
 maas.subnet.ipv4         | string    | -                 | no        | MAAS IPv4 subnet to register the instance in
 maas.subnet.ipv6         | string    | -                 | no        | MAAS IPv6 subnet to register the instance in
+boot.priority            | integer   | -                 | no        | Boot priority for VMs (higher boots first)
 
 #### nictype: macvlan
+
+Supported instance types: container, VM
+
 Sets up a new network device based on an existing one but using a different MAC address.
 
 Device configuration properties:
@@ -312,8 +327,12 @@ hwaddr                  | string    | randomly assigned | no        | The MAC ad
 vlan                    | integer   | -                 | no        | The VLAN ID to attach to
 maas.subnet.ipv4        | string    | -                 | no        | MAAS IPv4 subnet to register the instance in
 maas.subnet.ipv6        | string    | -                 | no        | MAAS IPv6 subnet to register the instance in
+boot.priority           | integer   | -                 | no        | Boot priority for VMs (higher boots first)
 
 #### nictype: ipvlan
+
+Supported instance types: container
+
 Sets up a new network device based on an existing one using the same MAC address but a different IP.
 
 LXD currently supports IPVLAN in L3S mode.
@@ -350,6 +369,9 @@ ipv6.address            | string    | -                 | no        | Comma deli
 vlan                    | integer   | -                 | no        | The VLAN ID to attach to
 
 #### nictype: p2p
+
+Supported instance types: container, VM
+
 Creates a virtual device pair, putting one side in the instance and leaving the other side on the host.
 
 Device configuration properties:
@@ -365,8 +387,12 @@ limits.egress           | string    | -                 | no        | I/O limit 
 limits.max              | string    | -                 | no        | Same as modifying both limits.ingress and limits.egress
 ipv4.routes             | string    | -                 | no        | Comma delimited list of IPv4 static routes to add on host to nic
 ipv6.routes             | string    | -                 | no        | Comma delimited list of IPv6 static routes to add on host to nic
+boot.priority           | integer   | -                 | no        | Boot priority for VMs (higher boots first)
 
 #### nictype: sriov
+
+Supported instance types: container, VM
+
 Passes a virtual function of an SR-IOV enabled physical network device into the instance.
 
 Device configuration properties:
@@ -381,8 +407,12 @@ security.mac\_filtering | boolean   | false             | no        | Prevent th
 vlan                    | integer   | -                 | no        | The VLAN ID to attach to
 maas.subnet.ipv4        | string    | -                 | no        | MAAS IPv4 subnet to register the instance in
 maas.subnet.ipv6        | string    | -                 | no        | MAAS IPv6 subnet to register the instance in
+boot.priority           | integer   | -                 | no        | Boot priority for VMs (higher boots first)
 
 #### nictype: routed
+
+Supported instance types: container
+
 This NIC type is similar in operation to IPVLAN, in that it allows an instance to join an external network without needing to configure a bridge and shares the host's MAC address.
 
 However it differs from IPVLAN because it does not need IPVLAN support in the kernel and the host and instance can communicate with each other.
@@ -495,6 +525,9 @@ If you set the `ipv4.address` or `ipv6.address` keys on the nic, then
 those will be registered as static assignments in MAAS too.
 
 ### Type: infiniband
+
+Supported instance types: container
+
 LXD supports two different kind of network types for infiniband devices:
 
  - `physical`: Straight physical device passthrough from the host. The targeted device will vanish from the host and appear in the instance.
@@ -529,6 +562,9 @@ lxc config device add <instance> <device-name> infiniband nictype=sriov parent=<
 ```
 
 ### Type: disk
+
+Supported instance types: container, VM
+
 Disk entries are essentially mountpoints inside the instance. They can
 either be a bind-mount of an existing file or directory on the host, or
 if the source is a block device, a regular mount.
@@ -560,7 +596,7 @@ Key                 | Type      | Default   | Required  | Description
 limits.read         | string    | -         | no        | I/O limit in byte/s (various suffixes supported, see below) or in iops (must be suffixed with "iops")
 limits.write        | string    | -         | no        | I/O limit in byte/s (various suffixes supported, see below) or in iops (must be suffixed with "iops")
 limits.max          | string    | -         | no        | Same as modifying both limits.read and limits.write
-path                | string    | -         | yes       | Path inside the instance where the disk will be mounted
+path                | string    | -         | yes       | Path inside the instance where the disk will be mounted (only for containers).
 source              | string    | -         | yes       | Path on the host, either to a file/directory or to a block device
 required            | boolean   | true      | no        | Controls whether to fail if the source doesn't exist
 readonly            | boolean   | false     | no        | Controls whether to make the mount read-only
@@ -572,8 +608,12 @@ shift               | boolean   | false     | no        | Setup a shifting overl
 raw.mount.options   | string    | -         | no        | Filesystem specific mount options
 ceph.user\_name     | string    | admin     | no        | If source is ceph or cephfs then ceph user\_name must be specified by user for proper mount
 ceph.cluster\_name  | string    | admin     | no        | If source is ceph or cephfs then ceph cluster\_name must be specified by user for proper mount
+boot.priority       | integer   | -         | no        | Boot priority for VMs (higher boots first)
 
 ### Type: unix-char
+
+Supported instance types: container
+
 Unix character device entries simply make the requested character device
 appear in the instance's `/dev` and allow read/write operations to it.
 
@@ -591,6 +631,9 @@ mode        | int       | 0660              | no        | Mode of the device in 
 required    | boolean   | true              | no        | Whether or not this device is required to start the instance
 
 ### Type: unix-block
+
+Supported instance types: container
+
 Unix block device entries simply make the requested block device
 appear in the instance's `/dev` and allow read/write operations to it.
 
@@ -623,6 +666,9 @@ mode        | int       | 0660              | no        | Mode of the device in 
 required    | boolean   | false             | no        | Whether or not this device is required to start the instance. (The default is false, and all devices are hot-pluggable)
 
 ### Type: gpu
+
+Supported instance types: container
+
 GPU device entries simply make the requested gpu device appear in the
 instance.
 
@@ -639,6 +685,9 @@ gid         | int       | 0                 | no        | GID of the device owne
 mode        | int       | 0660              | no        | Mode of the device in the instance
 
 ### Type: proxy
+
+Supported instance types: container
+
 Proxy devices allow forwarding network connections between host and instance.
 This makes it possible to forward traffic hitting one of the host's
 addresses to an address inside the instance or to do the reverse and
@@ -671,6 +720,25 @@ security.gid    | int       | 0             | no        | What GID to drop privi
 ```
 lxc config device add <instance> <device-name> proxy listen=<type>:<addr>:<port>[-<port>][,<port>] connect=<type>:<addr>:<port> bind=<host/instance>
 ```
+
+### Type: unix-hotplug
+
+Supported instance types: container
+
+Unix hotplug device entries make the requested unix device appear in the
+instance's `/dev` and allow read/write operations to it if the device exists on
+the host system. Implementation depends on systemd-udev to be run on the host.
+
+The following properties exist:
+
+Key         | Type      | Default           | Required  | Description
+:--         | :--       | :--               | :--       | :--
+vendorid    | string    | -                 | no        | The vendor id of the unix device
+productid   | string    | -                 | no        | The product id of the unix device
+uid         | int       | 0                 | no        | UID of the device owner in the instance
+gid         | int       | 0                 | no        | GID of the device owner in the instance
+mode        | int       | 0660              | no        | Mode of the device in the instance
+required    | boolean   | false             | no        | Whether or not this device is required to start the instance. (The default is false, and all devices are hot-pluggable)
 
 ## Units for storage and network limits
 Any value representing bytes or bits can make use of a number of useful
@@ -729,7 +797,7 @@ For example, those 3 are equivalent:
 On the command line, this is passed like this:
 
 ```bash
-lxc launch ubuntu:16.04 my-instance -t t2.micro
+lxc launch ubuntu:18.04 my-instance -t t2.micro
 ```
 
 The list of supported clouds and instance types can be found here:

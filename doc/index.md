@@ -1,7 +1,7 @@
 [![LXD](https://linuxcontainers.org/static/img/containers.png)](https://linuxcontainers.org/lxd)
 # LXD
-LXD is a next generation system container manager.  
-It offers a user experience similar to virtual machines but using Linux containers instead.
+LXD is a next generation system container and virtual machine manager.  
+It offers a unified user experience around full Linux systems running inside containers or virtual machines.
 
 It's image based with pre-made images available for a [wide number of Linux distributions](https://images.linuxcontainers.org)  
 and is built around a very powerful, yet pretty simple, REST API.
@@ -42,7 +42,7 @@ later to work. On ubuntu, you can get those with:
 
 ```bash
 sudo apt update
-sudo apt install acl autoconf dnsmasq-base git golang libacl1-dev libcap-dev liblxc1 liblxc-dev libtool libuv1-dev make pkg-config rsync squashfs-tools tar tcl xz-utils ebtables
+sudo apt install acl autoconf dnsmasq-base git golang libacl1-dev libcap-dev liblxc1 liblxc-dev libtool libudev-dev libuv1-dev make pkg-config rsync squashfs-tools tar tcl xz-utils ebtables
 ```
 
 Note that when building LXC yourself, ensure to build it with the appropriate
@@ -119,6 +119,7 @@ make deps
 export CGO_CFLAGS="${CGO_CFLAGS} -I${GOPATH}/deps/sqlite/ -I${GOPATH}/deps/dqlite/include/ -I${GOPATH}/deps/raft/include/ -I${GOPATH}/deps/libco/"
 export CGO_LDFLAGS="${CGO_LDFLAGS} -L${GOPATH}/deps/sqlite/.libs/ -L${GOPATH}/deps/dqlite/.libs/ -L${GOPATH}/deps/raft/.libs -L${GOPATH}/deps/libco/"
 export LD_LIBRARY_PATH="${GOPATH}/deps/sqlite/.libs/:${GOPATH}/deps/dqlite/.libs/:${GOPATH}/deps/raft/.libs:${GOPATH}/deps/libco/:${LD_LIBRARY_PATH}"
+export CGO_LDFLAGS_ALLOW="-Wl,-wrap,pthread_create"
 make
 ```
 
@@ -139,8 +140,7 @@ export LD_LIBRARY_PATH="${GOPATH}/deps/sqlite/.libs/:${GOPATH}/deps/dqlite/.libs
 Now, the `lxd` and `lxc` binaries will be available to you and can be used to set up LXD. The binaries will automatically find and use the dependencies built in `$GOPATH/deps` thanks to the `LD_LIBRARY_PATH` environment variable.
 
 ### Machine Setup
-You'll need sub{u,g}ids for root, so that LXD can create the unprivileged
-containers:
+You'll need sub{u,g}ids for root, so that LXD can create the unprivileged containers:
 
 ```bash
 echo "root:1000000:65536" | sudo tee -a /etc/subuid /etc/subgid
@@ -154,7 +154,7 @@ sudo -E LD_LIBRARY_PATH=$LD_LIBRARY_PATH $GOPATH/bin/lxd --group sudo
 ```
 
 ## Security
-LXD, similar to other container managers provides a UNIX socket for local communication.
+LXD, similar to other container and VM managers provides a UNIX socket for local communication.
 
 **WARNING**: Anyone with access to that socket can fully control LXD, which includes
 the ability to attach host devices and filesystems, this should
@@ -364,7 +364,7 @@ The `hello-ubuntu.json` file referenced above could contain something like:
         "mode":"pull",
         "protocol":"simplestreams",
         "server":"https://cloud-images.ubuntu.com/releases",
-        "alias":"14.04"
+        "alias":"18.04"
     }
 }
 ```
