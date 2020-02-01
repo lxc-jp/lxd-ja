@@ -1,14 +1,14 @@
 # cloud-init でのカスタム・ネットワーク設定
 <!-- Custom network configuration with cloud-init -->
 
-コンテナのカスタム・ネットワークの設定には [cloud-init](https://launchpad.net/cloud-init) を
+インスタンスのカスタム・ネットワークの設定には [cloud-init](https://launchpad.net/cloud-init) を
 使うこともできます。
 <!--
-[cloud-init](https://launchpad.net/cloud-init) may be used for custom network configuration of containers.
+[cloud-init](https://launchpad.net/cloud-init) may be used for custom network configuration of instances.
 -->
 
 しかし、 cloud-init を使おうとする前に、これから使おうとするイメージ・ソース
-をどれにするかをまず決めてください。というのも、全てのコンテナ・イメージに
+をどれにするかをまず決めてください。というのも、全てのイメージに
 cloud-init パッケージがインストールされているわけではないからです。
 これを書いている時点では、 images.linuxcontainers.org で提供されている
 イメージには cloud-init パッケージはインストールされていません。そのため、
@@ -18,7 +18,7 @@ cloud-images.ubuntu.com で提供されているイメージには必要なパ�
 以下のファイル
 <!--
 Before trying to use it, however, first determine which image source you are
-about to use as not all container images have cloud-init package installed.
+about to use as not all images have cloud-init package installed.
 At the time of writing, images provided at images.linuxcontainers.org do not
 have the cloud-init package installed, therefore, any of the configuration
 options mentioned in this guide will not work. On the contrary, images
@@ -36,10 +36,10 @@ and also have a templates directory in their archive populated with
 and others not related to cloud-init.
 -->
 
-cloud-images.ubuntu.com にあるコンテナ・イメージで提供されるテンプレートは
+cloud-images.ubuntu.com にあるイメージで提供されるテンプレートは
 `metadata.yaml` に以下のような設定を含んでいます。
 <!--
-Templates provided with container images at cloud-images.ubuntu.com have
+Templates provided with images at cloud-images.ubuntu.com have
 the following in their `metadata.yaml`:
 -->
 
@@ -51,10 +51,10 @@ the following in their `metadata.yaml`:
   template: cloud-init-network.tpl
 ```
 
-そのため、コンテナを作成するかコピーすると、事前に定義したテンプレートから
+そのため、インスタンスを作成するかコピーすると、事前に定義したテンプレートから
 ネットワーク設定が新たに生成されます。
 <!--
-Therefore, either when you create or copy a container it gets a newly rendered
+Therefore, either when you create or copy an instance it gets a newly rendered
 network configuration from a pre-defined template.
 -->
 
@@ -67,10 +67,10 @@ configuration on the system using either ifupdown or netplan depending
 on the Ubuntu release.
 -->
 
-デフォルトではコンテナの eth0 インタフェースで DHCP クライアントを使うように
+デフォルトではインスタンスの eth0 インタフェースで DHCP クライアントを使うように
 なっています。
 <!--
-The default behavior is to use a DHCP client on a container's eth0 interface.
+The default behavior is to use a DHCP client on an instance's eth0 interface.
 -->
 
 これを変更するためには設定ディクショナリ内の user.network-config キーを
@@ -108,9 +108,9 @@ config:
         address: 10.10.10.254
 ```
 
-この結果、コンテナの rootfs には以下のファイルが作られます。
+この結果、インスタンスの rootfs には以下のファイルが作られます。
 <!--
-A container's rootfs will contain the following files as a result:
+An instance's rootfs will contain the following files as a result:
 -->
 
  * `/var/lib/cloud/seed/nocloud-net/network-config`
@@ -166,10 +166,10 @@ config:
 
 テンプレートの文法は pongo2 （訳注: https://github.com/flosch/pongo2 ）
 テンプレート・エンジンで使われているものです。 （訳注: LXD 用に） `config_get` と
-いうカスタム関数が定義されており、コンテナ設定から値を取得するのに使用できます。
+いうカスタム関数が定義されており、インスタンス設定から値を取得するのに使用できます。
 <!--
 The template syntax is the one used in the pongo2 template engine. A custom
-`config_get` function is defined to retrieve values from a container
+`config_get` function is defined to retrieve values from an instance
 configuration.
 -->
 
