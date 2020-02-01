@@ -16,15 +16,15 @@ the network on a TLS socket.
 -->
 
 **警告**: UNIX ソケット経由でのローカルアクセスは LXD へのフルのアクセスを
-常に許可します。これはあらゆるファイルシステムのパスやデバイスをコンテナ
-にアタッチする能力やコンテナの全てのセキュリティの機能を変更することも
+常に許可します。これはあらゆるファイルシステムのパスやデバイスをインスタンス
+にアタッチする能力やインスタンスの全てのセキュリティの機能を変更することも
 含みます。あなたのシステムに root 権限でアクセスを許可するほど信頼できる人
 だけにそのようなアクセスを許可するべきです。
 <!--
 **WARNING**: Local access to LXD through the UNIX socket always grants
 full access to LXD. This includes the ability to attach any filesystem
-paths or devices to any container as well as tweaking all security
-features on containers. You should only give such access to someone who
+paths or devices to any instance as well as tweaking all security
+features on instances. You should only give such access to someone who
 you'd trust with root access to your system.
 -->
 
@@ -104,10 +104,10 @@ The meaning of the roles when applied to a project is as follow:
 -->
 
  - auditor: プロジェクトへの読み取り専用のアクセス <!-- Read-only access to the project -->
- - user: 通常のライフサイクルアクション（起動、停止、…）の実行、コンテナ内でのコマンドの実行、コンソールへのアタッチ、スナップショットの管理、… を行う能力 <!-- Ability to do normal lifecycle actions (start, stop, ...),
-   execute commands in the containers, attach to console, manage snapshots, ... -->
- - operator: 上記のすべてに加えてコンテナとイメージを作成、再設定、そして削除する能力 <!-- All of the above + the ability to create, re-configure and
-   delete containers and images -->
+ - user: 通常のライフサイクルアクション（起動、停止、…）の実行、インスタンス内でのコマンドの実行、コンソールへのアタッチ、スナップショットの管理、… を行う能力 <!-- Ability to do normal lifecycle actions (start, stop, ...),
+   execute commands in the instances, attach to console, manage snapshots, ... -->
+ - operator: 上記のすべてに加えてインスタンスとイメージを作成、再設定、そして削除する能力 <!-- All of the above + the ability to create, re-configure and
+   delete instances and images -->
  - admin: 上記のすべてに加えてプロジェクト自体を再構成する能力 <!-- All of the above + the ability to reconfigure the project itself -->
 
 **警告**: これらのロールのうち現状では `auditor` と `user` だけが
