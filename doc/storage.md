@@ -27,9 +27,11 @@ ceph.user.name                  | string    | ceph driver                       
 cephfs.cluster\_name            | string    | cephfs driver                     | ceph                       | storage\_driver\_cephfs            | 新しいストレージプールを作成する ceph のクラスター名 <!-- Name of the ceph cluster in which to create new storage pools. -->
 cephfs.path                     | string    | cephfs driver                     | /                          | storage\_driver\_cephfs            | CEPHFS をマウントするベースのパス <!-- The base path for the CEPHFS mount -->
 cephfs.user.name                | string    | cephfs driver                     | admin                      | storage\_driver\_cephfs            | ストレージプールとボリュームを作成する際に用いる ceph のユーザ <!-- The ceph user to use when creating storage pools and volumes. -->
-lvm.thinpool\_name              | string    | lvm driver                        | LXDThinPool                | storage                            | イメージとコンテナを作る Thin pool 名 <!-- Thin pool where images and containers are created. -->
+lvm.thinpool\_name              | string    | lvm driver                        | LXDThinPool                | storage                            | イメージを作る Thin pool 名 <!-- Thin pool where images are created. -->
 lvm.use\_thinpool               | bool      | lvm driver                        | true                       | storage\_lvm\_use\_thinpool        | ストレージプールは論理ボリュームに Thinpool を使うかどうか <!-- Whether the storage pool uses a thinpool for logical volumes. -->
 lvm.vg\_name                    | string    | lvm driver                        | プール名 <!-- name of the pool --> | storage                            | 作成するボリュームグループ名 <!-- Name of the volume group to create. -->
+volume.lvm.stripes              | string    | lvm driver                        | -                          | storage\_lvm\_stripes              | 新しいボリューム (あるいは thin pool ボリューム) に使用するストライプ数 <!-- Number of stripes to use for new volumes (or thin pool volume). -->
+volume.lvm.stripes.size         | string    | lvm driver                        | -                          | storage\_lvm\_stripes              | 使用するストライプのサイズ (最低 4096 バイトで 512 バイトの倍数を指定) <!-- Size of stripes to use (at least 4096 bytes and multiple of 512bytes). -->
 rsync.bwlimit                   | string    | -                                 | 0 (no limit)               | storage\_rsync\_bwlimit            | ストレージエンティティーの転送にrsyncを使う場合、I/Oソケットに設定する制限を指定 <!-- Specifies the upper limit to be placed on the socket I/O whenever rsync has to be used to transfer storage entities. -->
 volatile.initial\_source        | string    | -                                 | -                          | storage\_volatile\_initial\_source | 作成時に与える実際のソースを記録 <!-- Records the actual source passed during creating -->(e.g. /dev/sdb).
 volatile.pool.pristine          | string    | -                                 | true                       | storage\_driver\_ceph              | プールが作成時に空かどうか <!-- Whether the pool has been empty on creation time. -->
@@ -51,15 +53,17 @@ lxc storage set [<remote>:]<pool> <key> <value>
 ```
 
 ## ストレージボリュームの設定 <!-- Storage volume configuration -->
-Key                     | Type      | Condition                 | Default                                             | API Extension     | Description
-:--                     | :---      | :--------                 | :------                                             | :------------     | :----------
-size                    | string    | appropriate driver        | <!-- same as -->volume.size と同じ                  | storage           | ストレージボリュームのサイズ <!-- Size of the storage volume -->
-block.filesystem        | string    | block based driver        | <!-- same as -->volume.block.filesystem と同じ      | storage           | ストレージボリュームのファイルシステム <!-- Filesystem of the storage volume -->
-block.mount\_options    | string    | block based driver        | <!-- same as -->volume.block.mount\_options と同じ  | storage           | ブロックデバイスのマウントオプション <!-- Mount options for block devices -->
-security.shifted        | bool      | custom volume             | false                                 | storage\_shifted  | shiftfs オーバーレイを使って id をシフトさせる（複数の隔離されたコンテナからアタッチしたストレージで、コンテナそれぞれで指定したidになるようにする） <!-- Enable id shifting overlay (allows attach by multiple isolated containers) -->
-security.unmapped       | bool      | custom volume             | false                                               | storage\_unmapped | ボリュームに対する ID マッピングを無効化する <!-- Disable id mapping for the volume -->
-zfs.remove\_snapshots   | string    | zfs driver                | <!-- same as -->volume.zfs.remove\_snapshots と同じ | storage           | 必要に応じてスナップショットを削除するかどうか <!-- Remove snapshots as needed -->
-zfs.use\_refquota       | string    | zfs driver                | <!-- same as -->volume.zfs.zfs\_requota と同じ      | storage           | 領域の quota の代わりに refquota を使うかどうか <!-- Use refquota instead of quota for space -->
+Key                     | Type      | Condition                 | Default                                             | API Extension         | Description
+:--                     | :---      | :--------                 | :------                                             | :------------         | :----------
+size                    | string    | appropriate driver        | <!-- same as -->volume.size と同じ                  | storage               | ストレージボリュームのサイズ <!-- Size of the storage volume -->
+block.filesystem        | string    | block based driver        | <!-- same as -->volume.block.filesystem と同じ      | storage               | ストレージボリュームのファイルシステム <!-- Filesystem of the storage volume -->
+block.mount\_options    | string    | block based driver        | <!-- same as -->volume.block.mount\_options と同じ  | storage               | ブロックデバイスのマウントオプション <!-- Mount options for block devices -->
+security.shifted        | bool      | custom volume             | false                                               | storage\_shifted      | shiftfs オーバーレイを使って id をシフトさせる（複数の隔離されたインスタンスからアタッチしたストレージで、インスタンスそれぞれで指定したidになるようにする） <!-- Enable id shifting overlay (allows attach by multiple isolated instances) -->
+security.unmapped       | bool      | custom volume             | false                                               | storage\_unmapped     | ボリュームに対する ID マッピングを無効化する <!-- Disable id mapping for the volume -->
+lvm.stripes             | string    | lvm driver                | -                                                   | storage\_lvm\_stripes | 新しいボリューム (あるいは thin pool ボリューム) に使用するストライプ数 <!-- Number of stripes to use for new volumes (or thin pool volume). -->
+lvm.stripes.size        | string    | lvm driver                | -                                                   | storage\_lvm\_stripes | 使用するストライプのサイズ (最低 4096 バイトで 512 バイトの倍数を指定) <!-- Size of stripes to use (at least 4096 bytes and multiple of 512bytes). -->
+zfs.remove\_snapshots   | string    | zfs driver                | <!-- same as -->volume.zfs.remove\_snapshots と同じ | storage               | 必要に応じてスナップショットを削除するかどうか <!-- Remove snapshots as needed -->
+zfs.use\_refquota       | string    | zfs driver                | <!-- same as -->volume.zfs.zfs\_requota と同じ      | storage               | 領域の quota の代わりに refquota を使うかどうか <!-- Use refquota instead of quota for space -->
 
 <!--
 Storage volume configuration keys can be set using the lxc tool with:
@@ -73,19 +77,19 @@ lxc storage volume set [<remote>:]<pool> <volume> <key> <value>
 # ストレージバックエンドとサポートされる機能 <!-- Storage Backends and supported functions -->
 ## 機能比較 <!-- Feature comparison -->
 <!--
-LXD supports using ZFS, btrfs, LVM or just plain directories for storage of images and containers.  
+LXD supports using ZFS, btrfs, LVM or just plain directories for storage of images, instances and custom volumes.  
 Where possible, LXD tries to use the advanced features of each system to optimize operations.
 -->
-LXD では、イメージやコンテナ用のストレージとして ZFS、btrfs、LVM、単なるディレクトリが使えます。
+LXD では、イメージ、インスタンス、カスタムボリューム用のストレージとして ZFS、btrfs、LVM、単なるディレクトリが使えます。
 可能であれば、各システムの高度な機能を使って、LXD は操作を最適化しようとします。
 
 機能 <!-- Feature -->                        | ディレクトリ <!-- Directory --> | Btrfs | LVM   | ZFS  | CEPH
 :---                                        | :---      | :---  | :---  | :--- | :---
 最適化されたイメージストレージ <!-- Optimized image storage -->   | no | yes | yes | yes | yes
-最適化されたコンテナの作成 <!-- Optimized container creation --> | no | yes | yes | yes | yes
+最適化されたインスタンスの作成 <!-- Optimized instance creation --> | no | yes | yes | yes | yes
 最適化されたスナップショットの作成 <!-- Optimized snapshot creation --> | no | yes | yes | yes | yes
 最適化されたイメージの転送 <!-- Optimized image transfer --> | no | yes | no | yes | yes
-最適化されたコンテナの転送 <!-- Optimized container transfer --> | no | yes | no | yes | yes
+最適化されたインスタンスの転送 <!-- Optimized instance transfer --> | no | yes | no | yes | yes
 コピーオンライト <!-- Copy on write --> | no | yes | yes | yes | yes
 ブロックデバイスベース <!-- Block based --> | no | no    | yes   | no   | yes
 インスタントクローン <!-- Instant cloning --> | no | yes | yes | yes | yes
@@ -111,34 +115,34 @@ LXD で loop ベースのストレージを作れますが、プロダクショ�
 <!--
 Similarly, the directory backend is to be considered as a last resort option.  
 It does support all main LXD features, but is terribly slow and inefficient as it can't perform  
-instant copies or snapshots and so needs to copy the entirety of the container's filesystem every time.
+instant copies or snapshots and so needs to copy the entirety of the instance's storage every time.
 -->
 同様に、ディレクトリバックエンドも最後の手段として考えるべきでしょう。  
-LXD の主な機能すべてが使えますが、インスタンスコピーやスナップショットが使えないので、毎回コンテナのファイルシステム全体をコピーする必要があり、恐ろしく遅くて役に立たないでしょう。
+LXD の主な機能すべてが使えますが、インスタントコピーやスナップショットが使えないので、毎回インスタンスのストレージ全体をコピーする必要があり、恐ろしく遅くて役に立たないでしょう。
 
 ## 最適化されたイメージストレージ <!-- Optimized image storage -->
 <!--
 All backends but the directory backend have some kind of optimized image storage format.  
-This is used by LXD to make container creation near instantaneous by simply cloning a pre-made  
+This is used by LXD to make instance creation near instantaneous by simply cloning a pre-made  
 image volume rather than unpack the image tarball from scratch.
 -->
 ディレクトリ以外のすべてのバックエンドには、ある種の最適化されたイメージ格納フォーマットがあります。  
-これは、一からイメージの tarball を展開するのではなく、あらかじめ作られたイメージボリュームから単にクローンして、瞬間的にコンテナを作るのに使われます。  
+これは、一からイメージの tarball を展開するのではなく、あらかじめ作られたイメージボリュームから単にクローンして、瞬間的にインスタンスを作るのに使われます。  
 
 <!--
 As it would be wasteful to prepare such a volume on a storage pool that may never be used with that image,  
-the volume is generated on demand, causing the first container to take longer to create than subsequent ones.
+the volume is generated on demand, causing the first instance to take longer to create than subsequent ones.
 -->
 そのイメージで使えないストレージプールの上にそのようなボリュームを準備することは無駄なので、ボリュームはオンデマンドで作成されます。  
-したがって、最初のコンテナはあとで作るコンテナよりは作成に時間がかかります。
+したがって、最初のインスタンスはあとで作るインスタンスよりは作成に時間がかかります。
 
-## 最適化されたコンテナの転送 <!-- Optimized container transfer -->
+## 最適化されたインスタンスの転送 <!-- Optimized instance transfer -->
 <!--
 ZFS, btrfs and CEPH RBD have an internal send/receive mechanisms which allow for optimized volume transfer.  
-LXD uses those features to transfer containers and snapshots between servers.
+LXD uses those features to transfer instances and snapshots between servers.
 -->
 ZFS、btrfs、Ceph RBD は内部で send/receive メカニズムを持っており、最適化されたボリュームの転送ができます。
-LXD はこのような機能を使い、サーバ間でコンテナやスナップショットを転送します。
+LXD はこのような機能を使い、サーバ間でインスタンスやスナップショットを転送します。
 
 <!--
 When such capabilities aren't available, either because the storage driver doesn't support it  
@@ -158,10 +162,10 @@ rsync を使う必要がある場合、LXD ではストレージプールのプ�
 ## デフォルトのストレージプール <!-- Default storage pool -->
 <!--
 There is no concept of a default storage pool in LXD.  
-Instead, the pool to use for the container's root is treated as just another "disk" device in LXD.
+Instead, the pool to use for the instance's root is treated as just another "disk" device in LXD.
 -->
 LXD にはデフォルトののストレージプールの概念はありません。  
-代わりに、コンテナのルートに使用するプールは、LXD 内で別の「ディスク」デバイスとして扱われます。
+代わりに、インスタンスのルートに使用するプールは、LXD 内で別の「ディスク」デバイスとして扱われます。
 
 <!--
 The device entry looks like:
@@ -176,10 +180,10 @@ The device entry looks like:
 ```
 
 <!--
-And it can be directly set on a container ("-s" option to "lxc launch" and "lxc init")  
+And it can be directly set on an instance ("-s" option to "lxc launch" and "lxc init")  
 or it can be set through LXD profiles.
 -->
-この設定はコンテナに直接指定できますし（"-s"オプションを "lxc launch" と "lxc init" に与えて）、LXD プロファイル経由でも設定できます。
+この設定はインスタンスに直接指定できますし（"-s"オプションを "lxc launch" と "lxc init" に与えて）、LXD プロファイル経由でも設定できます。
 
 <!--
 That latter option is what the default LXD setup (through "lxd init") will do for you.  
@@ -194,10 +198,10 @@ lxc profile device add default root disk path=/ pool=default
 
 ## I/O 制限 <!-- I/O limits -->
 <!--
-I/O limits in IOp/s or MB/s can be set on storage devices when attached to a
-container (see [Containers](containers.md)).
+I/O limits in IOp/s or MB/s can be set on storage devices when attached to an
+instance (see [Containers](containers.md)).
 -->
-ストレージデバイスをコンテナにアタッチする際に、IOPS や MB/s による I/O 制限を、ストレージデバイスに対して設定できます（詳しくは [Containers](containers.md) をご覧ください）。
+ストレージデバイスをインスタンスにアタッチする際に、IOPS や MB/s による I/O 制限を、ストレージデバイスに対して設定できます（詳しくは [インスタンス](instances.md) をご覧ください）。
 
 <!--
 Those are applied through the Linux `blkio` cgroup controller which makes it possible  
@@ -212,7 +216,7 @@ Because those apply to a whole physical disk rather than a partition or path, th
 
  - 制限は仮想デバイス（例えば device mapper）によって実現しているファイルシステムには適用されません <!-- Limits will not apply to filesystems that are backed by virtual devices (e.g. device mapper). -->
  - 複数のブロックデバイス上に存在するファイルシステムの場合、それぞれのデバイスは同じ制限が適用されます <!-- If a fileystem is backed by multiple block devices, each device will get the same limit. -->
- - 同じディスク上に存在するふたつのディスクデバイスをコンテナに与えた場合、ふたつのデバイスの制限は平均化されます <!-- If the container is passed two disk devices that are each backed by the same disk,  
+ - 同じディスク上に存在するふたつのディスクデバイスをインスタンスに与えた場合、ふたつのデバイスの制限は平均化されます <!-- If the instance is passed two disk devices that are each backed by the same disk,  
    the limits of the two devices will be averaged. -->
 
 <!--
@@ -227,10 +231,10 @@ This also means that access to cached data will not be affected by the limit.
 ### ディレクトリ <!-- Directory -->
 
  - このバックエンドでは全ての機能を使えますが、他のバックエンドに比べて非常に時間がかかります。
-   これは、イメージを展開したり、コンテナやスナップショットやイメージのその時点のコピーを作成する必要があるからです。
+   これは、イメージを展開したり、インスタンスやスナップショットやイメージのその時点のコピーを作成する必要があるからです。
    <!-- While this backend is fully functional, it's also much slower than
    all the others due to it having to unpack images or do instant copies of
-   containers, snapshots and images. -->
+   instances, snapshots and images. -->
  - ファイルシステムレベルでプロジェクトクォータが有効に設定されている ext4 もしくは XFS で実行している場合は、ディレクトリバックエンドでクォータがサポートされます。
    <!-- Quotas are supported with the directory backend when running on
    either ext4 or XFS with project quotas enabled at the filesystem level. -->
@@ -251,8 +255,8 @@ lxc storage create pool2 dir source=/data/lxd
 
 ### CEPH
 
-- イメージとして RBD イメージを使い、コンテナやスナップショットを作成するためにスナップショットやクローンを実行します
-  <!-- Uses RBD images for images, then snapshots and clones to create containers
+- イメージとして RBD イメージを使い、インスタンスやスナップショットを作成するためにスナップショットやクローンを実行します
+  <!-- Uses RBD images for images, then snapshots and clones to create instances
   and snapshots. -->
 - RBD でコピーオンライトが動作するため、すべての子がなくなるまでは、親のファイルシステムは削除できません。
   その結果、LXD は削除されたにもかかわらずまだ参照されているオブジェクトに、自動的に `zombie_` というプレフィックスを付与します。
@@ -268,12 +272,12 @@ lxc storage create pool2 dir source=/data/lxd
   It is recommended to not maintain any non-LXD owned filesystem entities in
   a LXD OSD storage pool since LXD might delete them. -->
 - 複数の LXD インスタンス間で、同じストレージプールを共有することはサポートしないことに注意してください。
-  `lxd import` を使って既存コンテナをバックアップする目的のときのみ、OSD ストレージプールを複数の LXD インスタンスで共有できます。
+  `lxd import` を使って既存インスタンスをバックアップする目的のときのみ、OSD ストレージプールを複数の LXD インスタンスで共有できます。
   このような場合には、`ceph.osd.force_reuse` プロパティを true に設定する必要があります。
   設定しない場合、LXD は他の LXD インスタンスが OSD ストレージプールを使っていることを検出した場合には、OSD ストレージプールの再利用を拒否します
   <!-- Note that sharing the same osd storage pool between multiple LXD instances is
   not supported. LXD only allows sharing of an OSD storage pool between
-  multiple LXD instances only for backup purposes of existing containers via
+  multiple LXD instances only for backup purposes of existing instances via
   `lxd import`. In line with this, LXD requires the "ceph.osd.force_reuse"
   property to be set to true. If not set, LXD will refuse to reuse an osd
   storage pool it detected as being in use by another LXD instance. -->
@@ -319,7 +323,7 @@ lxc storage create pool1 ceph source=my-already-existing-osd
 
 ### Btrfs
 
- - コンテナ、イメージ、スナップショットごとにサブボリュームを使い、新しいオブジェクトを作成する際に btrfs スナップショットを作成します <!-- Uses a subvolume per container, image and snapshot, creating btrfs snapshots when creating a new object. -->
+ - インスタンス、イメージ、スナップショットごとにサブボリュームを使い、新しいオブジェクトを作成する際に btrfs スナップショットを作成します <!-- Uses a subvolume per instance, image and snapshot, creating btrfs snapshots when creating a new object. -->
  - btrfs は、親コンテナ自身が btrfs 上に作成されているときには、コンテナ内のストレージバックエンドとして使えます（ネストコンテナ）（qgroup を使った btrfs クオータについての注意を参照してください） <!-- btrfs can be used as a storage backend inside a container (nesting), so long as the parent container is itself on btrfs. (But see notes about btrfs quota via qgroups.) -->
  - btrfs では qgroup を使ったストレージクオータが使えます。btrfs qgroup は階層構造ですが、新しいサブボリュームは自動的には親のサブボリュームの qgroup には追加されません。
    このことは、ユーザが設定されたクオータをエスケープできるということです。
@@ -363,31 +367,36 @@ sudo losetup -c <LOOPDEV>
 sudo btrfs filesystem resize max /var/lib/lxd/storage-pools/<POOL>/
 ```
 
+(注意: snap のユーザは `/var/lib/lxd/` の代わりに `/var/snap/lxd/common/lxd/` を使ってください)
+<!--
+(NOTE: For users of the snap, use `/var/snap/lxd/common/lxd/ instead of /var/lib/lxd/`)
+-->
+
 ### LVM
 
- - イメージ用に LV を使うと、コンテナとコンテナスナップショット用に LV のスナップショットを使います <!-- Uses LVs for images, then LV snapshots for containers and container snapshots. -->
+ - イメージ用に LV を使うと、インスタンスとインスタンススナップショット用に LV のスナップショットを使います <!-- Uses LVs for images, then LV snapshots for instances and instance snapshots. -->
  - LV で使われるファイルシステムは ext4 です（代わりに xfs を使うように設定できます） <!-- The filesystem used for the LVs is ext4 (can be configured to use xfs instead). -->
- - デフォルトでは、すべての LVM ストレージプールは LVM thinpool を使います。すべての LXD ストレージエンティティ（イメージやコンテナなど）のための論理ボリュームは、その LVM thinpool 内に作られます。
+ - デフォルトでは、すべての LVM ストレージプールは LVM thinpool を使います。すべての LXD ストレージエンティティ（イメージやインスタンスなど）のための論理ボリュームは、その LVM thinpool 内に作られます。
    この動作は、`lvm.use_thinpool` を "false" に設定して変更できます。
-   この場合、LXD はコンテナスナップショットではないすべてのストレージエンティティ（イメージやコンテナなど）に、通常の論理ボリュームを使います。
+   この場合、LXD はインスタンススナップショットではないすべてのストレージエンティティ（イメージやインスタンスなど）に、通常の論理ボリュームを使います。
    Thinpool 以外の論理ボリュームは、スナップショットのスナップショットをサポートしていないので、ほとんどのストレージ操作を rsync にフォールバックする必要があります。
    これは、LVM ドライバがスピードとストレージ操作の両面で DIR ドライバに近づくため、必然的にパフォーマンスに重大な影響を与えることに注意してください。
    このオプションは、必要な場合のみに選択してください。
    <!--
    By default, all LVM storage pools use an LVM thinpool in which logical
-   volumes for all LXD storage entities (images, containers, etc.) are created.
+   volumes for all LXD storage entities (images, instances, etc.) are created.
    This behavior can be changed by setting "lvm.use\_thinpool" to "false". In
-   this case, LXD will use normal logical volumes for all non-container
-   snapshot storage entities (images, containers etc.). This means most storage
+   this case, LXD will use normal logical volumes for all non-instance
+   snapshot storage entities (images, instances etc.). This means most storage
    operations will need to fallback to rsyncing since non-thinpool logical
    volumes do not support snapshots of snapshots. Note that this entails
    serious performance impacts for the LVM driver causing it to be close to the
    fallback DIR driver both in speed and storage usage. This option should only
    be chosen if the use-case renders it necessary.
    -->
- - 頻繁にコンテナとのやりとりが発生する環境（例えば継続的インテグレーション）では、`/etc/lvm/lvm.conf` 内の `retain_min` と `retain_days` を調整して、LXD とのやりとりが遅くならないようにすることが重要です。
+ - 頻繁にインスタンスとのやりとりが発生する環境（例えば継続的インテグレーション）では、`/etc/lvm/lvm.conf` 内の `retain_min` と `retain_days` を調整して、LXD とのやりとりが遅くならないようにすることが重要です。
    <!--
-   For environments with high container turn over (e.g continuous integration)
+   For environments with high instance turn over (e.g continuous integration)
    it may be important to tweak the archival `retain_min` and `retain_days`
    settings in `/etc/lvm/lvm.conf` to avoid slowdowns when interacting with
    LXD.
@@ -428,7 +437,7 @@ lxc storage create pool1 lvm source=/dev/sdX lvm.vg_name=my-pool
 ### ZFS
 
  - LXD が ZFS プールを作成した場合は、デフォルトで圧縮が有効になります <!-- When LXD creates a ZFS pool, compression is enabled by default. -->
- - イメージ用に ZFS を使うと、コンテナとスナップショットの作成にスナップショットとクローンを使います <!-- Uses ZFS filesystems for images, then snapshots and clones to create containers and snapshots. -->
+ - イメージ用に ZFS を使うと、インスタンスとスナップショットの作成にスナップショットとクローンを使います <!-- Uses ZFS filesystems for images, then snapshots and clones to create instances and snapshots. -->
  - ZFS でコピーオンライトが動作するため、すべての子のファイルシステムがなくなるまで、親のファイルシステムを削除できません。
    ですので、削除されたけれども、まだ参照されているオブジェクトを、LXD はランダムな `deleted/` なパスに自動的にリネームし、参照がなくなりオブジェクトを安全に削除できるようになるまで、そのオブジェクトを保持します。
    <!--
@@ -444,27 +453,27 @@ lxc storage create pool1 lvm source=/dev/sdX lvm.vg_name=my-pool
    container user. Upstream is actively working on this.
    -->
  - ZFS では最新のスナップショット以外からのリストアはできません。
-   しかし、古いスナップショットからコンテナを作成することはできます。
+   しかし、古いスナップショットから新しいインスタンスを作成することはできます。
    これにより、新しいスナップショットを削除する前に、スナップショットが確実にリストアしたいものかどうか確認できます。
    <!--
    ZFS doesn't support restoring from snapshots other than the latest
-   one. You can however create new containers from older snapshots which
+   one. You can however create new instances from older snapshots which
    makes it possible to confirm the snapshots is indeed what you want to
    restore before you remove the newer snapshots.
    -->
 
-   また、コンテナのコピーにスナップショットを使うので、コンテナのコピーを削除することなく、最後のコピーの前に取得したスナップショットにコンテナをリストアできないことにも注意が必要です。
+   また、インスタンスのコピーにスナップショットを使うので、インスタンスのコピーを削除することなく、最後のコピーの前に取得したスナップショットにインスタンスをリストアできないことにも注意が必要です。
    <!--
-   Also note that container copies use ZFS snapshots, so you also cannot
-   restore a container to a snapshot taken before the last copy without
-   having to also delete container copies.
+   Also note that instance copies use ZFS snapshots, so you also cannot
+   restore an instance to a snapshot taken before the last copy without
+   having to also delete instance copies.
    -->
 
-   必要なスナップショットを新しいコンテナにコピーした後に古いコンテナを削除できますが、コンテナが持っているかもしれない他のスナップショットを失ってしまいます。
+   必要なスナップショットを新しいインスタンスにコピーした後に古いインスタンスを削除できますが、インスタンスが持っているかもしれない他のスナップショットを失ってしまいます。
    <!--
-   Copying the wanted snapshot into a new container and then deleting
-   the old container does however work, at the cost of losing any other
-   snapshot the container may have had.
+   Copying the wanted snapshot into a new instance and then deleting
+   the old instance does however work, at the cost of losing any other
+   snapshot the instance may have had.
    -->
 
  - LXD は ZFS プールとデータセットがフルコントロールできると仮定していることに注意してください。
@@ -547,3 +556,8 @@ sudo zpool set autoexpand=on lxd
 sudo zpool online -e lxd /var/lib/lxd/disks/<POOL>.img
 sudo zpool set autoexpand=off lxd
 ```
+
+(注意: snap のユーザは `/var/lib/lxd/` の代わりに `/var/snap/lxd/common/lxd/` を使ってください)
+<!--
+(NOTE: For users of the snap, use `/var/snap/lxd/common/lxd/ instead of /var/lib/lxd/`)
+-->
