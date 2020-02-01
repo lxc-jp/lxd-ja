@@ -1,26 +1,26 @@
-# コンテナ〜ホスト間の通信
-<!-- Communication between container and host -->
+# インスタンス〜ホスト間の通信
+<!-- Communication between instance and host -->
 ## イントロダクション <!-- Introduction -->
 <!--
-Communication between the hosted workload (container) and its host while
+Communication between the hosted workload (instance) and its host while
 not strictly needed is a pretty useful feature.
 -->
-ホストされているワークロード (コンテナ) とそのホストのコミュニケーションは
+ホストされているワークロード (インスタンス) とそのホストのコミュニケーションは
 厳密には必要とされているわけではないですが、とても便利な機能です。
 
 <!--
 In LXD, this feature is implemented through a `/dev/lxd/sock` node which is
-created and setup for all LXD containers.
+created and setup for all LXD instances.
 -->
 LXD ではこの機能は `/dev/lxd/sock` というノードを通して実装されており、
-このノードは全ての LXD のコンテナに対して作成、セットアップされます。
+このノードは全ての LXD のインスタンスに対して作成、セットアップされます。
 
 <!--
-This file is a Unix socket which processes inside the container can
+This file is a Unix socket which processes inside the instance can
 connect to. It's multi-threaded so multiple clients can be connected at the
 same time.
 -->
-このファイルはコンテナ内部のプロセスが接続できる Unix ソケットです。
+このファイルはインスタンス内部のプロセスが接続できる Unix ソケットです。
 マルチスレッドで動いているので複数のクライアントが同時に接続できます。
 
 ## 実装詳細 <!-- Implementation details -->
@@ -32,31 +32,31 @@ connections on it.
 リッスンを開始します。
 
 <!--
-This socket is then bind-mounted into every single container started by
+This socket is then exposed into every single instance started by
 LXD at `/dev/lxd/sock`.
 -->
-このソケットは、LXD が開始させたすべてのコンテナ内の `/dev/lxd/sock` に
-bind mount されます。
+このソケットは、LXD が開始させたすべてのインスタンス内の `/dev/lxd/sock` に
+公開されます。
 
 <!--
-The bind-mount is required so we can exceed 4096 containers, otherwise,
-LXD would have to bind a different socket for every container, quickly
+The single socket is required so we can exceed 4096 instances, otherwise,
+LXD would have to bind a different socket for every instance, quickly
 reaching the FD limit.
 -->
-bind mount は 4096 を超えるコンテナを扱うのに必要です。そうでなければ、
-LXD は各々のコンテナに異なるソケットをバインドする必要があり、
+4096 を超えるインスタンスを扱うのに単一のソケットが必要です。そうでなければ、
+LXD は各々のインスタンスに異なるソケットをバインドする必要があり、
 ファイルディスクリプタ数の上限にすぐ到達してしまいます。
 
 ## 認証 <!-- Authentication -->
 <!--
 Queries on `/dev/lxd/sock` will only return information related to the
-requesting container. To figure out where a request comes from, LXD will
+requesting instance. To figure out where a request comes from, LXD will
 extract the initial socket ucred and compare that to the list of
-containers it manages.
+instances it manages.
 -->
-`/dev/lxd/sock` への問い合わせは依頼するコンテナに関連した情報のみを
+`/dev/lxd/sock` への問い合わせは依頼するインスタンスに関連した情報のみを
 返します。リクエストがどこから来たかを知るために、 LXD は初期のソケットの
-ucred 構造体を取り出し、 LXD が管理しているコンテナのリストと比較します。
+ucred 構造体を取り出し、 LXD が管理しているインスタンスのリストと比較します。
 
 ## プロトコル <!-- Protocol -->
 <!--
@@ -132,17 +132,19 @@ Return value:
  * 出力: 設定キー URL のリスト
 
 <!--
-Note that the configuration key names match those in the container
+Note that the configuration key names match those in the instance
 config, however not all configuration namespaces will be exported to
 `/dev/lxd/sock`.
-Currently only the `user.*` keys are accessible to the container.
+Currently only the `user.*` keys are accessible to the instance.
 
-At this time, there also aren't any container-writable namespace.
+At this time, there also aren't any instance-writable namespace.
 -->
-設定キーの名前はコンテナの設定の名前と一致するようにしています。
+設定キーの名前はインスタンスの設定の名前と一致するようにしています。
 しかし、設定の namespace の全てが `/dev/lxd/sock` にエクスポート
 されているわけではありません。
-現在は `user.*` キーのみがコンテナにアクセス可能となっています。
+現在は `user.*` キーのみがインスタンスにアクセス可能となっています。
+
+現時点ではインスタンスが書き込み可能な名前空間はありません。
 
 <!--
 Return value:
