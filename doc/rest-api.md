@@ -104,7 +104,7 @@ The body is a dict with the following structure:
     "type": "async",
     "status": "OK",
     "status_code": 100,
-    "operation": "/1.0/containers/<id>",                    // バックグラウンド操作の URL
+    "operation": "/1.0/instances/<id>",                     // バックグラウンド操作の URL
     "metadata": {}                                          // 操作のメタデータ (下記参照)
 }
 ```
@@ -115,7 +115,7 @@ The body is a dict with the following structure:
     "type": "async",
     "status": "OK",
     "status_code": 100,
-    "operation": "/1.0/containers/<id>",                    // URL to the background operation
+    "operation": "/1.0/instances/<id>",                     // URL to the background operation
     "metadata": {}                                          // Operation metadata (see below)
 }
 ```
@@ -136,7 +136,7 @@ The operation metadata structure looks like:
     "status_code": 103,                                     // 整数表記での操作の状態 (status ではなくこちらを利用してください。訳注: 詳しくは下記のステータスコードの項を参照)
     "resources": {                                          // リソース種別 (container, snapshots, images のいずれか) の dict を影響を受けるリソース
       "containers": [
-        "/1.0/containers/test"
+        "/1.0/instances/test"
       ]
     },
     "metadata": {                                           // 対象となっている (この例では exec) 操作に固有なメタデータ
@@ -161,7 +161,7 @@ The operation metadata structure looks like:
     "status_code": 103,                                     // Integer version of the operation's status (use this rather than status)
     "resources": {                                          // Dictionary of resource types (container, snapshots, images) and affected resources
       "containers": [
-        "/1.0/containers/test"
+        "/1.0/instances/test"
       ]
     },
     "metadata": {                                           // Metadata specific to the operation in question (in this case, exec)
@@ -303,6 +303,63 @@ Recursion is implemented by simply replacing any pointer to an job (URL)
 by the object itself.
 -->
 
+## フィルタ <!-- Filtering -->
+検索結果をある値でフィルタするために、コレクションにフィルタが実装されています。
+コレクションに対する GET クエリに `filter` 引数を渡せます。
+<!--
+To filter your results on certain values, filter is implemented for collections.
+A `filter` argument can be passed to a GET query against a collection.
+-->
+
+フィルタはインスタンスとイメージのエンドポイントに提供されています。
+<!--
+Filtering is available for the instance and image endpoints.
+-->
+
+フィルタにはデフォルト値はありません。これは見つかった全ての結果が返されることを意味します。
+フィルタの引数には以下のような言語を設定します。
+<!--
+There is no default value for filter which means that all results found will
+be returned. The following is the language used for the filter argument:
+-->
+
+?filter=field_name eq desired_field_assignment
+
+この言語は REST API のフィルタロジックを構成するための OData の慣習に従います。
+フィルタは下記の論理演算子もサポートします。
+not(not), equals(eq), not equals(ne), and(and), or(or)
+フィルタは左結合で評価されます。
+空白を含む値はクォートで囲むことができます。
+ネストしたフィルタもサポートされます。
+例えば config 内のフィールドに対してフィルタするには以下のように指定します。
+<!--
+The language follows the OData conventions for structuring REST API filtering
+logic. Logical operators are also supported for filtering: not(not), equals(eq),
+not equals(ne), and(and), or(or). Filters are evaluated with left associativity.
+Values with spaces can be surrounded with quotes. Nesting filtering is also supported. 
+For instance, to filter on a field in a config you would pass:
+-->
+
+?filter=config.field_name eq desired_field_assignment
+
+device の属性についてフィルタするには以下のように指定します。
+<!--
+For filtering on device attributes you would pass:
+-->
+
+?filter=devices.device_name.field_name eq desired_field_assignment
+
+以下に上記の異なるフィルタの方法を含む GET クエリをいくつか示します。
+<!--
+Here are a few GET query examples of the different filtering methods mentioned above:
+-->
+
+containers?filter=name eq "my container" and status eq Running
+
+containers?filter=config.image.os eq ubuntu or devices.eth0.nictype eq bridged
+
+images?filter=Properties.os eq Centos and not UpdateSource.Protocol eq simplestreams
+
 ## 非同期操作 <!-- Async operations -->
 完了までに 1 秒以上かかるかもしれない操作はバックグラウンドで実行しなければ
 なりません。そしてクライアントにはバックグラウンド操作 ID を返します。
@@ -367,26 +424,52 @@ it to empty will usually do the trick, but there are cases where PATCH
 won't work and PUT needs to be used instead.
 -->
 
+## インスタンス、コンテナと仮想マシン <!-- instances, containers and virtual-machines -->
+このドキュメントでは `/1.0/instances/...` のようなパスを常に示します。
+これらはかなり新しく、仮想マシンがサポートされた LXD 3.19 で導入されました。
+<!--
+This documentation will always show paths such as `/1.0/instances/...`.
+Those are fairly new, introduced with LXD 3.19 when virtual-machine support.
+-->
+
+コンテナのみをサポートする古いリリースでは全く同じ API を `/1.0/containers/...` で利用します。
+<!--
+Older releases that only supported containers will instead use the exact same API at `/1.0/containers/...`.
+-->
+
+後方互換性の理由で LXD は `/1.0/containers` API を引き続き公開しサポートしますが、簡潔さのため以下では両方をドキュメントはしないことにしました。
+<!--
+For backward compatibility reasons, LXD does still expose and support
+that `/1.0/containers` API, though for the sake of brevity, we decided
+not to double-document everything below.
+-->
+
+`/1.0/virtual-machines` に追加のエンドポイントも存在し、 `/1.0/containers` とほぼ同様ですが、仮想マシンのタイプのインスタンスのみを表示します。
+<!--
+An additional endpoint at `/1.0/virtual-machines` is also present and
+much like `/1.0/containers` will only show you instances of that type.
+-->
+
 ## API 構造 <!-- API structure -->
  * [`/`](#)
    * [`/1.0`](#10)
  * [`/1.0/certificates`](#10certificates)
    * [`/1.0/certificates/<fingerprint>`](#10certificatesfingerprint)
- * [`/1.0/containers`](#10containers)
-   * [`/1.0/containers/<name>`](#10containersname)
-     * [`/1.0/containers/<name>/console`](#10containersnameconsole)
-     * [`/1.0/containers/<name>/exec`](#10containersnameexec)
-     * [`/1.0/containers/<name>/files`](#10containersnamefiles)
-     * [`/1.0/containers/<name>/snapshots`](#10containersnamesnapshots)
-     * [`/1.0/containers/<name>/snapshots/<name>`](#10containersnamesnapshotsname)
-     * [`/1.0/containers/<name>/state`](#10containersnamestate)
-     * [`/1.0/containers/<name>/logs`](#10containersnamelogs)
-     * [`/1.0/containers/<name>/logs/<logfile>`](#10containersnamelogslogfile)
-     * [`/1.0/containers/<name>/metadata`](#10containersnamemetadata)
-     * [`/1.0/containers/<name>/metadata/templates`](#10containersnamemetadatatemplates)
-     * [`/1.0/containers/<name>/backups`](#10containersnamebackups)
-     * [`/1.0/containers/<name>/backups/<name>`](#10containersnamebackupsname)
-     * [`/1.0/containers/<name>/backups/<name>/export`](#10containersnamebackupsnameexport)
+ * [`/1.0/instances`](#10instances)
+   * [`/1.0/instances/<name>`](#10instancesname)
+     * [`/1.0/instances/<name>/console`](#10instancesnameconsole)
+     * [`/1.0/instances/<name>/exec`](#10instancesnameexec)
+     * [`/1.0/instances/<name>/files`](#10instancesnamefiles)
+     * [`/1.0/instances/<name>/snapshots`](#10instancesnamesnapshots)
+     * [`/1.0/instances/<name>/snapshots/<name>`](#10instancesnamesnapshotsname)
+     * [`/1.0/instances/<name>/state`](#10instancesnamestate)
+     * [`/1.0/instances/<name>/logs`](#10instancesnamelogs)
+     * [`/1.0/instances/<name>/logs/<logfile>`](#10instancesnamelogslogfile)
+     * [`/1.0/instances/<name>/metadata`](#10instancesnamemetadata)
+     * [`/1.0/instances/<name>/metadata/templates`](#10instancesnamemetadatatemplates)
+     * [`/1.0/instances/<name>/backups`](#10instancesnamebackups)
+     * [`/1.0/instances/<name>/backups/<name>`](#10instancesnamebackupsname)
+     * [`/1.0/instances/<name>/backups/<name>/export`](#10instancesnamebackupsnameexport)
  * [`/1.0/events`](#10events)
  * [`/1.0/images`](#10images)
    * [`/1.0/images/<fingerprint>`](#10imagesfingerprint)
@@ -707,12 +790,12 @@ Input:
 HTTP code for this should be 202 (Accepted).
 -->
 
-### `/1.0/containers`
+### `/1.0/instances`
 #### GET
- * 説明: コンテナの一覧 <!-- Description: List of containers -->
+ * 説明: インスタンスの一覧 <!-- Description: List of instances -->
  * 認証: trusted <!-- Authentication: trusted -->
  * 操作: 同期 <!-- Operation: sync -->
- * 戻り値: このサーバが公開しているコンテナの URL の一覧 <!-- Return: list of URLs for containers this server publishes -->
+ * 戻り値: このサーバがホストしているインスタンスの URL の一覧 <!-- Return: list of URLs for instances this server hosts -->
 
 戻り値
 <!--
@@ -721,30 +804,30 @@ Return value:
 
 ```json
 [
-    "/1.0/containers/blah",
-    "/1.0/containers/blah1"
+    "/1.0/instances/blah",
+    "/1.0/instances/blah1"
 ]
 ```
 
 #### POST (`?target=<member>` を任意で指定可能) <!-- POST (optional `?target=<member>`) -->
- * 説明: 新しいコンテナを作成します <!-- Description: Create a new container -->
+ * 説明: 新しいインスタンスを作成します <!-- Description: Create a new instance -->
  * 認証: trusted <!-- Authentication: trusted -->
  * 操作: 同期 <!-- Operation: sync -->
  * 戻り値: バックグラウンド操作または標準のエラー <!-- Return: background operation or standard error -->
 
-入力 ("ubuntu/devel" というエイリアスを持つローカルイメージをベースとするコンテナ)
+入力 ("ubuntu/devel" というエイリアスを持つローカルイメージをベースとするインスタンス)
 <!--
-Input (container based on a local image with the "ubuntu/devel" alias):
+Input (instance based on a local image with the "ubuntu/devel" alias):
 -->
 
 ```js
 {
-    "name": "my-new-container",                                         // 最大 64 文字、 ASCII が使用可、スラッシュ、コロン、カンマは使用不可
+    "name": "my-new-instance",                                          // 最大 64 文字、 ASCII が使用可、スラッシュ、コロン、カンマは使用不可
     "architecture": "x86_64",
     "profiles": ["default"],                                            // プロファイルの一覧
-    "ephemeral": true,                                                  // シャットダウン時にコンテナを破棄するかどうか
+    "ephemeral": true,                                                  // シャットダウン時にインスタンスを破棄するかどうか
     "config": {"limits.cpu": "2"},                                      // 設定のオーバーライド
-    "devices": {                                                        // コンテナが持つデバイスの任意で指定可能なリスト
+    "devices": {                                                        // インスタンスが持つデバイスの任意で指定可能なリスト
         "kvm": {
             "path": "/dev/kvm",
             "type": "unix-char"
@@ -759,12 +842,12 @@ Input (container based on a local image with the "ubuntu/devel" alias):
 <!--
 ```js
 {
-    "name": "my-new-container",                                         // 64 chars max, ASCII, no slash, no colon and no comma
+    "name": "my-new-instance",                                          // 64 chars max, ASCII, no slash, no colon and no comma
     "architecture": "x86_64",
     "profiles": ["default"],                                            // List of profiles
-    "ephemeral": true,                                                  // Whether to destroy the container on shutdown
+    "ephemeral": true,                                                  // Whether to destroy the instance on shutdown
     "config": {"limits.cpu": "2"},                                      // Config override.
-    "devices": {                                                        // optional list of devices the container should have
+    "devices": {                                                        // Optional list of devices the instance should have
         "kvm": {
             "path": "/dev/kvm",
             "type": "unix-char"
@@ -777,19 +860,19 @@ Input (container based on a local image with the "ubuntu/devel" alias):
 ```
 -->
 
-入力 (フィンガープリントで識別されるローカルのイメージをベースとするコンテナ)
+入力 (フィンガープリントで識別されるローカルのイメージをベースとするインスタンス)
 <!--
-Input (container based on a local image identified by its fingerprint):
+Input (instance based on a local image identified by its fingerprint):
 -->
 
 ```js
 {
-    "name": "my-new-container",                                         // 最大 64 文字、 ASCII が使用可、スラッシュ、コロン、カンマは使用不可
+    "name": "my-new-instance",                                          // 最大 64 文字、 ASCII が使用可、スラッシュ、コロン、カンマは使用不可
     "architecture": "x86_64",
     "profiles": ["default"],                                            // プロファイルの一覧
-    "ephemeral": true,                                                  // シャットダウン時にコンテナを破棄するかどうか
+    "ephemeral": true,                                                  // シャットダウン時にインスタンスを破棄するかどうか
     "config": {"limits.cpu": "2"},                                      // 設定のオーバーライド
-    "devices": {                                                        // コンテナが持つデバイスの任意で指定可能なリスト
+    "devices": {                                                        // インスタンスが持つデバイスの任意で指定可能なリスト
         "kvm": {
             "path": "/dev/kvm",
             "type": "unix-char"
@@ -803,12 +886,12 @@ Input (container based on a local image identified by its fingerprint):
 <!--
 ```js
 {
-    "name": "my-new-container",                                         // 64 chars max, ASCII, no slash, no colon and no comma
+    "name": "my-new-instance",                                          // 64 chars max, ASCII, no slash, no colon and no comma
     "architecture": "x86_64",
     "profiles": ["default"],                                            // List of profiles
-    "ephemeral": true,                                                  // Whether to destroy the container on shutdown
+    "ephemeral": true,                                                  // Whether to destroy the instance on shutdown
     "config": {"limits.cpu": "2"},                                      // Config override.
-    "devices": {                                                        // optional list of devices the container should have
+    "devices": {                                                        // Optional list of devices the instance should have
         "kvm": {
             "path": "/dev/kvm",
             "type": "unix-char"
@@ -820,19 +903,19 @@ Input (container based on a local image identified by its fingerprint):
 ```
 -->
 
-入力 (指定したイメージのプロパティに対して最も最近マッチしたイメージをベースとするコンテナ)
+入力 (指定したイメージのプロパティに対して最も最近マッチしたイメージをベースとするインスタンス)
 <!--
-Input (container based on most recent match based on image properties):
+Input (instance based on most recent match based on image properties):
 -->
 
 ```js
 {
-    "name": "my-new-container",                                         // 最大 64 文字、 ASCII が使用可、スラッシュ、コロン、カンマは使用不可
+    "name": "my-new-instance",                                          // 最大 64 文字、 ASCII が使用可、スラッシュ、コロン、カンマは使用不可
     "architecture": "x86_64",
     "profiles": ["default"],                                            // プロファイルの一覧
-    "ephemeral": true,                                                  // シャットダウン時にコンテナを破棄するかどうか
+    "ephemeral": true,                                                  // シャットダウン時にインスタンスを破棄するかどうか
     "config": {"limits.cpu": "2"},                                      // 設定のオーバーライド
-    "devices": {                                                        // コンテナが持つデバイスの任意で指定可能なリスト
+    "devices": {                                                        // インスタンスが持つデバイスの任意で指定可能なリスト
         "kvm": {
             "path": "/dev/kvm",
             "type": "unix-char"
@@ -841,7 +924,7 @@ Input (container based on most recent match based on image properties):
     "source": {"type": "image",                                         // "image", "migration", "copy", "none" のいずれかを指定可能
                "properties": {                                          // プロパティ
                     "os": "ubuntu",
-                    "release": "14.04",
+                    "release": "18.04",
                     "architecture": "x86_64"
                 }},
 }
@@ -850,12 +933,12 @@ Input (container based on most recent match based on image properties):
 <!--
 ```js
 {
-    "name": "my-new-container",                                         // 64 chars max, ASCII, no slash, no colon and no comma
+    "name": "my-new-instance",                                          // 64 chars max, ASCII, no slash, no colon and no comma
     "architecture": "x86_64",
     "profiles": ["default"],                                            // List of profiles
-    "ephemeral": true,                                                  // Whether to destroy the container on shutdown
+    "ephemeral": true,                                                  // Whether to destroy the instance on shutdown
     "config": {"limits.cpu": "2"},                                      // Config override.
-    "devices": {                                                        // optional list of devices the container should have
+    "devices": {                                                        // Optional list of devices the instance should have
         "kvm": {
             "path": "/dev/kvm",
             "type": "unix-char"
@@ -864,26 +947,26 @@ Input (container based on most recent match based on image properties):
     "source": {"type": "image",                                         // Can be: "image", "migration", "copy" or "none"
                "properties": {                                          // Properties
                     "os": "ubuntu",
-                    "release": "14.04",
+                    "release": "18.04",
                     "architecture": "x86_64"
                 }},
 }
 ```
 -->
 
-入力 (事前に作成済みの rootfs を除いたコンテナ、既存のコンテナにアタッチする際に有用)
+入力 (事前に作成済みの rootfs を除いたインスタンス、既存のインスタンスにアタッチする際に有用)
 <!--
-Input (container without a pre-populated rootfs, useful when attaching to an existing one):
+Input (instance without a pre-populated rootfs, useful when attaching to an existing one):
 -->
 
 ```js
 {
-    "name": "my-new-container",                                         // 最大 64 文字、 ASCII が使用可、スラッシュ、コロン、カンマは使用不可
+    "name": "my-new-instance",                                          // 最大 64 文字、 ASCII が使用可、スラッシュ、コロン、カンマは使用不可
     "architecture": "x86_64",
     "profiles": ["default"],                                            // プロファイルの一覧
-    "ephemeral": true,                                                  // シャットダウン時にコンテナを破棄するかどうか
+    "ephemeral": true,                                                  // シャットダウン時にインスタンスを破棄するかどうか
     "config": {"limits.cpu": "2"},                                      // 設定のオーバーライド
-    "devices": {                                                        // コンテナが持つデバイスの任意で指定可能なリスト
+    "devices": {                                                        // インスタンスが持つデバイスの任意で指定可能なリスト
         "kvm": {
             "path": "/dev/kvm",
             "type": "unix-char"
@@ -896,12 +979,12 @@ Input (container without a pre-populated rootfs, useful when attaching to an exi
 <!--
 ```js
 {
-    "name": "my-new-container",                                         // 64 chars max, ASCII, no slash, no colon and no comma
+    "name": "my-new-instance",                                          // 64 chars max, ASCII, no slash, no colon and no comma
     "architecture": "x86_64",
     "profiles": ["default"],                                            // List of profiles
-    "ephemeral": true,                                                  // Whether to destroy the container on shutdown
+    "ephemeral": true,                                                  // Whether to destroy the instance on shutdown
     "config": {"limits.cpu": "2"},                                      // Config override.
-    "devices": {                                                        // optional list of devices the container should have
+    "devices": {                                                        // Optional list of devices the instance should have
         "kvm": {
             "path": "/dev/kvm",
             "type": "unix-char"
@@ -919,12 +1002,12 @@ Input (using a public remote image):
 
 ```js
 {
-    "name": "my-new-container",                                         // 最大 64 文字、 ASCII が使用可、スラッシュ、コロン、カンマは使用不可
+    "name": "my-new-instance",                                          // 最大 64 文字、 ASCII が使用可、スラッシュ、コロン、カンマは使用不可
     "architecture": "x86_64",
     "profiles": ["default"],                                            // プロファイルの一覧
-    "ephemeral": true,                                                  // シャットダウン時にコンテナを破棄するかどうか
+    "ephemeral": true,                                                  // シャットダウン時にインスタンスを破棄するかどうか
     "config": {"limits.cpu": "2"},                                      // 設定のオーバーライド
-    "devices": {                                                        // コンテナが持つデバイスの任意で指定可能なリスト
+    "devices": {                                                        // インスタンスが持つデバイスの任意で指定可能なリスト
         "kvm": {
             "path": "/dev/kvm",
             "type": "unix-char"
@@ -942,12 +1025,12 @@ Input (using a public remote image):
 <!--
 ```js
 {
-    "name": "my-new-container",                                         // 64 chars max, ASCII, no slash, no colon and no comma
+    "name": "my-new-instance",                                          // 64 chars max, ASCII, no slash, no colon and no comma
     "architecture": "x86_64",
     "profiles": ["default"],                                            // List of profiles
-    "ephemeral": true,                                                  // Whether to destroy the container on shutdown
+    "ephemeral": true,                                                  // Whether to destroy the instance on shutdown
     "config": {"limits.cpu": "2"},                                      // Config override.
-    "devices": {                                                        // optional list of devices the container should have
+    "devices": {                                                        // Optional list of devices the instance should have
         "kvm": {
             "path": "/dev/kvm",
             "type": "unix-char"
@@ -970,12 +1053,12 @@ Input (using a private remote image after having obtained a secret for that imag
 
 ```js
 {
-    "name": "my-new-container",                                         // 最大 64 文字、 ASCII が使用可、スラッシュ、コロン、カンマは使用不可
+    "name": "my-new-instance",                                          // 最大 64 文字、 ASCII が使用可、スラッシュ、コロン、カンマは使用不可
     "architecture": "x86_64",
     "profiles": ["default"],                                            // プロファイルの一覧
-    "ephemeral": true,                                                  // シャットダウン時にコンテナを破棄するかどうか
+    "ephemeral": true,                                                  // シャットダウン時にインスタンスを破棄するかどうか
     "config": {"limits.cpu": "2"},                                      // 設定のオーバーライド
-    "devices": {                                                        // コンテナが持つデバイスの任意で指定可能なリスト
+    "devices": {                                                        // インスタンスが持つデバイスの任意で指定可能なリスト
         "kvm": {
             "path": "/dev/kvm",
             "type": "unix-char"
@@ -993,12 +1076,12 @@ Input (using a private remote image after having obtained a secret for that imag
 <!--
 ```js
 {
-    "name": "my-new-container",                                         // 64 chars max, ASCII, no slash, no colon and no comma
+    "name": "my-new-instance",                                          // 64 chars max, ASCII, no slash, no colon and no comma
     "architecture": "x86_64",
     "profiles": ["default"],                                            // List of profiles
-    "ephemeral": true,                                                  // Whether to destroy the container on shutdown
+    "ephemeral": true,                                                  // Whether to destroy the instance on shutdown
     "config": {"limits.cpu": "2"},                                      // Config override.
-    "devices": {                                                        // optional list of devices the container should have
+    "devices": {                                                        // Optional list of devices the instance should have
         "kvm": {
             "path": "/dev/kvm",
             "type": "unix-char"
@@ -1014,19 +1097,19 @@ Input (using a private remote image after having obtained a secret for that imag
 ```
 -->
 
-入力 (マイグレーション・ウェブソケットで送られるリモートのコンテナを使用)
+入力 (マイグレーション・ウェブソケットで送られるリモートのインスタンスを使用)
 <!--
-Input (using a remote container, sent over the migration websocket):
+Input (using a remote instance, sent over the migration websocket):
 -->
 
 ```js
 {
-    "name": "my-new-container",                                                     // 最大 64 文字、 ASCII が使用可、スラッシュ、コロン、カンマは使用不可
+    "name": "my-new-instance",                                                      // 最大 64 文字、 ASCII が使用可、スラッシュ、コロン、カンマは使用不可
     "architecture": "x86_64",
     "profiles": ["default"],                                                        // プロファイルの一覧
-    "ephemeral": true,                                                              // シャットダウン時にコンテナを破棄するかどうか
+    "ephemeral": true,                                                              // シャットダウン時にインスタンスを破棄するかどうか
     "config": {"limits.cpu": "2"},                                                  // 設定のオーバーライド
-    "devices": {                                                                    // コンテナが持つデバイスの任意で指定可能なリスト
+    "devices": {                                                                    // インスタンスが持つデバイスの任意で指定可能なリスト
         "kvm": {
             "path": "/dev/kvm",
             "type": "unix-char"
@@ -1036,8 +1119,8 @@ Input (using a remote container, sent over the migration websocket):
                "mode": "pull",                                                      // 現状 "pull" と "push" がサポートされる
                "operation": "https://10.0.2.3:8443/1.0/operations/<UUID>",          // リモート操作への完全な URL
                "certificate": "PEM certificate",                                    // PEM 証明書を指定可能。未指定の場合はシステムの CA が使用される。
-               "base-image": "<fingerprint>",                                       // 任意で指定可能。コンテナが作られたベースのイメージ
-               "container_only": true,                                              // スナップショットなしでコンテナだけをマイグレーションするかどうか。 "true" か "false" のいずれか。
+               "base-image": "<fingerprint>",                                       // 任意で指定可能。インスタンスが作られたベースのイメージ
+               "instance_only": true,                                               // スナップショットなしでインスタンスだけをマイグレーションするかどうか。 "true" か "false" のいずれか。
                "secrets": {"control": "my-secret-string",                           // マイグレーションのソースと通信する際に使用するシークレット
                            "criu":    "my-other-secret",
                            "fs":      "my third secret"}
@@ -1048,12 +1131,12 @@ Input (using a remote container, sent over the migration websocket):
 <!--
 ```js
 {
-    "name": "my-new-container",                                                     // 64 chars max, ASCII, no slash, no colon and no comma
+    "name": "my-new-instance",                                                      // 64 chars max, ASCII, no slash, no colon and no comma
     "architecture": "x86_64",
     "profiles": ["default"],                                                        // List of profiles
-    "ephemeral": true,                                                              // Whether to destroy the container on shutdown
+    "ephemeral": true,                                                              // Whether to destroy the instance on shutdown
     "config": {"limits.cpu": "2"},                                                  // Config override.
-    "devices": {                                                                    // optional list of devices the container should have
+    "devices": {                                                                    // optional list of devices the instance should have
         "kvm": {
             "path": "/dev/kvm",
             "type": "unix-char"
@@ -1063,8 +1146,8 @@ Input (using a remote container, sent over the migration websocket):
                "mode": "pull",                                                      // "pull" and "push" is supported for now
                "operation": "https://10.0.2.3:8443/1.0/operations/<UUID>",          // Full URL to the remote operation (pull mode only)
                "certificate": "PEM certificate",                                    // Optional PEM certificate. If not mentioned, system CA is used.
-               "base-image": "<fingerprint>",                                       // Optional, the base image the container was created from
-               "container_only": true,                                              // Whether to migrate only the container without snapshots. Can be "true" or "false".
+               "base-image": "<fingerprint>",                                       // Optional, the base image the instance was created from
+               "instance_only": true,                                               // Whether to migrate only the instance without snapshots. Can be "true" or "false".
                "secrets": {"control": "my-secret-string",                           // Secrets to use when talking to the migration source
                            "criu":    "my-other-secret",
                            "fs":      "my third secret"}
@@ -1073,62 +1156,62 @@ Input (using a remote container, sent over the migration websocket):
 ```
 -->
 
-入力 (ローカルのコンテナを使用)
+入力 (ローカルのインスタンスを使用)
 <!--
-Input (using a local container):
+Input (using a local instance):
 -->
 
 ```js
 {
-    "name": "my-new-container",                                                     // 最大 64 文字、 ASCII が使用可、スラッシュ、コロン、カンマは使用不可
+    "name": "my-new-instance",                                                      // 最大 64 文字、 ASCII が使用可、スラッシュ、コロン、カンマは使用不可
     "profiles": ["default"],                                                        // プロファイルの一覧
-    "ephemeral": true,                                                              // シャットダウン時にコンテナを破棄するかどうか
+    "ephemeral": true,                                                              // シャットダウン時にインスタンスを破棄するかどうか
     "config": {"limits.cpu": "2"},                                                  // 設定のオーバーライド
-    "devices": {                                                                    // コンテナが持つデバイスの任意で指定可能なリスト
+    "devices": {                                                                    // インスタンスが持つデバイスの任意で指定可能なリスト
         "kvm": {
             "path": "/dev/kvm",
             "type": "unix-char"
         },
     },
     "source": {"type": "copy",                                                      // "image", "migration", "copy", "none" のいずれかを指定可能
-               "container_only": true,                                              // スナップショットなしでコンテナだけをマイグレーションするかどうか。 "true" か "false" のいずれか。
-               "source": "my-old-container"}                                        // 作成元のコンテナの名前
+               "instance_only": true,                                               // スナップショットなしでインスタンスだけをマイグレーションするかどうか。 "true" か "false" のいずれか。
+               "source": "my-old-instance"}                                         // 作成元のインスタンスの名前
 }
 ```
 
 <!--
 ```js
 {
-    "name": "my-new-container",                                                     // 64 chars max, ASCII, no slash, no colon and no comma
+    "name": "my-new-instance",                                                      // 64 chars max, ASCII, no slash, no colon and no comma
     "profiles": ["default"],                                                        // List of profiles
-    "ephemeral": true,                                                              // Whether to destroy the container on shutdown
+    "ephemeral": true,                                                              // Whether to destroy the instance on shutdown
     "config": {"limits.cpu": "2"},                                                  // Config override.
-    "devices": {                                                                    // optional list of devices the container should have
+    "devices": {                                                                    // Optional list of devices the instance should have
         "kvm": {
             "path": "/dev/kvm",
             "type": "unix-char"
         },
     },
     "source": {"type": "copy",                                                      // Can be: "image", "migration", "copy" or "none"
-               "container_only": true,                                              // Whether to copy only the container without snapshots. Can be "true" or "false".
-               "source": "my-old-container"}                                        // Name of the source container
+               "instance_only": true,                                               // Whether to copy only the instance without snapshots. Can be "true" or "false".
+               "source": "my-old-instance"}                                         // Name of the source instance
 }
 ```
 -->
 
-入力 (クライアントプロキシ経由でマイグレーションウェブソケット越しに push モードで送られるリモートコンテナを使用)
+入力 (クライアントプロキシ経由でマイグレーションウェブソケット越しに push モードで送られるリモートインスタンスを使用)
 <!--
-Input (using a remote container, in push mode sent over the migration websocket via client proxying):
+Input (using a remote instance, in push mode sent over the migration websocket via client proxying):
 -->
 
 ```js
 {
-    "name": "my-new-container",                                                     // 最大 64 文字、 ASCII が使用可、スラッシュ、コロン、カンマは使用不可
+    "name": "my-new-instance",                                                      // 最大 64 文字、 ASCII が使用可、スラッシュ、コロン、カンマは使用不可
     "architecture": "x86_64",
     "profiles": ["default"],                                                        // プロファイルの一覧
-    "ephemeral": true,                                                              // シャットダウン時にコンテナを破棄するかどうか
+    "ephemeral": true,                                                              // シャットダウン時にインスタンスを破棄するかどうか
     "config": {"limits.cpu": "2"},                                                  // 設定のオーバーライド
-    "devices": {                                                                    // コンテナが持つデバイスの任意で指定可能なリスト
+    "devices": {                                                                    // インスタンスが持つデバイスの任意で指定可能なリスト
         "kvm": {
             "path": "/dev/kvm",
             "type": "unix-char"
@@ -1136,21 +1219,21 @@ Input (using a remote container, in push mode sent over the migration websocket 
     },
     "source": {"type": "migration",                                                 // "image", "migration", "copy", "none" のいずれかを指定可能
                "mode": "push",                                                      // "pull" と "push" がサポートされている
-               "base-image": "<fingerprint>",                                       // 任意で指定可能。コンテナが作られたベースのイメージ
+               "base-image": "<fingerprint>",                                       // 任意で指定可能。インスタンスが作られたベースのイメージ
                "live": true,                                                        // マイグレーションが live で実行されるかどうか
-               "container_only": true}                                              // スナップショットなしでコンテナだけをマイグレーションするかどうか。 "true" か "false" のいずれか。
+               "instance_only": true}                                               // スナップショットなしでインスタンスだけをマイグレーションするかどうか。 "true" か "false" のいずれか。
 }
 ```
 
 <!--
 ```js
 {
-    "name": "my-new-container",                                                     // 64 chars max, ASCII, no slash, no colon and no comma
+    "name": "my-new-instance",                                                      // 64 chars max, ASCII, no slash, no colon and no comma
     "architecture": "x86_64",
     "profiles": ["default"],                                                        // List of profiles
-    "ephemeral": true,                                                              // Whether to destroy the container on shutdown
+    "ephemeral": true,                                                              // Whether to destroy the instance on shutdown
     "config": {"limits.cpu": "2"},                                                  // Config override.
-    "devices": {                                                                    // optional list of devices the container should have
+    "devices": {                                                                    // Optional list of devices the instance should have
         "kvm": {
             "path": "/dev/kvm",
             "type": "unix-char"
@@ -1158,9 +1241,9 @@ Input (using a remote container, in push mode sent over the migration websocket 
     },
     "source": {"type": "migration",                                                 // Can be: "image", "migration", "copy" or "none"
                "mode": "push",                                                      // "pull" and "push" are supported
-               "base-image": "<fingerprint>",                                       // Optional, the base image the container was created from
+               "base-image": "<fingerprint>",                                       // Optional, the base image the instance was created from
                "live": true,                                                        // Whether migration is performed live
-               "container_only": true}                                              // Whether to migrate only the container without snapshots. Can be "true" or "false".
+               "instance_only": true}                                               // Whether to migrate only the instance without snapshots. Can be "true" or "false".
 }
 ```
 -->
@@ -1176,12 +1259,12 @@ Input (using a backup):
 Raw compressed tarball as provided by a backup download.
 -->
 
-### `/1.0/containers/<name>`
+### `/1.0/instances/<name>`
 #### GET
- * 説明: コンテナの情報 <!-- Description: Container information -->
+ * 説明: インスタンスの情報 <!-- Description: Instance information -->
  * 認証: trusted <!-- Authentication: trusted -->
  * 操作: 同期 <!-- Operation: sync -->
- * 戻り値: コンテナの設定と現在の状態の dict `<!-- Return: dict of the container configuration and current state. -->
+ * 戻り値: インスタンスの設定と現在の状態の dict `<!-- Return: dict of the instance configuration and current state. -->
 
 出力
 <!--
@@ -1204,12 +1287,12 @@ Output:
         }
     },
     "ephemeral": false,
-    "expanded_config": {    // プロファイルを展開したものにコンテナのローカルの設定を追加した結果
+    "expanded_config": {    // プロファイルを展開したものにインスタンスのローカルの設定を追加した結果
         "limits.cpu": "3",
         "volatile.base_image":  "97d97a3d1d053840ca19c86cdd0596cf1be060c5157d31407f2a4f9f350c78cc",
         "volatile.eth0.hwaddr":: "00:16:3e:1c:94:38"
     },
-    "expanded_devices": {   // プロファイルを展開したものにコンテナのローカルのデバイスを追加した結果
+    "expanded_devices": {   // プロファイルを展開したものにインスタンスのローカルのデバイスを追加した結果
         "eth0": {
             "name": "eth0",
             "nictype": "bridgedd",
@@ -1222,11 +1305,11 @@ Output:
         }
     },
     "last_used_at": "2016-02-166T01:05:05Z",
-    "name": "my-container",
+    "name": "my-instance",
     "profiles": [
         "default"
     ],
-    "stateful": false,      // true の場合はコンテナがスタートアップ時に復元できる何らかの保管された状態を持つことを意味する
+    "stateful": false,      // true の場合はインスタンスがスタートアップ時に復元できる何らかの保管された状態を持つことを意味する
     "status": "Running",
     "status_code": 103
 }
@@ -1249,12 +1332,12 @@ Output:
         }
     },
     "ephemeral": false,
-    "expanded_config": {    // the result of expanding profiles and adding the container's local config
+    "expanded_config": {    // the result of expanding profiles and adding the instance's local config
         "limits.cpu": "3",
         "volatile.base_image": "97d97a3d1d053840ca19c86cdd0596cf1be060c5157d31407f2a4f9f350c78cc",
         "volatile.eth0.hwaddr": "00:16:3e:1c:94:38"
     },
-    "expanded_devices": {   // the result of expanding profiles and adding the container's local devices
+    "expanded_devices": {   // the result of expanding profiles and adding the instance's local devices
         "eth0": {
             "name": "eth0",
             "nictype": "bridged",
@@ -1267,11 +1350,11 @@ Output:
         }
     },
     "last_used_at": "2016-02-16T01:05:05Z",
-    "name": "my-container",
+    "name": "my-instance",
     "profiles": [
         "default"
     ],
-    "stateful": false,      // If true, indicates that the container has some stored state that can be restored on startup
+    "stateful": false,      // If true, indicates that the instance has some stored state that can be restored on startup
     "status": "Running",
     "status_code": 103
 }
@@ -1279,14 +1362,14 @@ Output:
 -->
 
 #### PUT (ETag サポートあり) <!-- PUT (ETag supported) -->
- * 説明: コンテナの設定を置き換えるかスナップショットをリストアします <!-- Description: replaces container configuration or restore snapshot -->
+ * 説明: インスタンスの設定を置き換えるかスナップショットをリストアします <!-- Description: replaces instance configuration or restore snapshot -->
  * 認証: trusted <!-- Authentication: trusted -->
  * 操作: 非同期 <!-- Operation: async -->
  * 戻り値: バックグラウンド操作または標準のエラー <!-- Return: background operation or standard error -->
 
-入力 (コンテナの設定を更新します)
+入力 (インスタンスの設定を更新します)
 <!--
-Input (update container configuration):
+Input (update instance configuration):
 -->
 
 ```json
@@ -1331,7 +1414,7 @@ Input (restore snapshot):
 ```
 
 #### PATCH (ETag サポートあり) <!-- PATCH (ETag supported) -->
- * 説明: コンテナの設定を更新します <!-- Description: update container configuration -->
+ * 説明: インスタンスの設定を更新します <!-- Description: update instance configuration -->
  * 導入: `patch` API 拡張によって <!-- Introduced: with API extension `patch` -->
  * 認証: trusted <!-- Authentication: trusted -->
  * 操作: 同期 <!-- Operation: sync -->
@@ -1357,7 +1440,7 @@ Input:
 ```
 
 #### POST (`?target=<member>` を任意で指定可能) <!-- POST (optional `?target=<member>`) -->
- * 説明: コンテナをリネーム／マイグレーションするのに用いられます <!-- Description: used to rename/migrate the container -->
+ * 説明: インスタンスをリネーム／マイグレーションするのに用いられます <!-- Description: used to rename/migrate the instance -->
  * 認証: trusted <!-- Authentication: trusted -->
  * 操作: 非同期 <!-- Operation: async -->
  * 戻り値: バックグラウンド操作または標準のエラー <!-- Return: background operation or standard error -->
@@ -1433,7 +1516,7 @@ These are the secrets that should be passed to the create call.
 -->
 
 #### DELETE
- * 説明: コンテナを削除します <!-- Description: remove the container -->
+ * 説明: インスタンスを削除します <!-- Description: remove the instance -->
  * 認証: trusted <!-- Authentication: trusted -->
  * 操作: 非同期 <!-- Operation: async -->
  * 戻り値: バックグラウンド操作または標準のエラー <!-- Return: background operation or standard error -->
@@ -1453,15 +1536,15 @@ Input (none at present):
 HTTP code for this should be 202 (Accepted).
 -->
 
-### `/1.0/containers/<name>/console`
+### `/1.0/instances/<name>/console`
 #### GET
- * 説明: コンテナのコンソールログの内容を返します <!-- Description: returns the contents of the container's console  log -->
+ * 説明: インスタンスのコンソールログの内容を返します <!-- Description: returns the contents of the instance's console  log -->
  * 認証: trusted <!-- Authentication: trusted -->
  * 操作: 該当なし <!-- Operation: N/A -->
  * 戻り値: コンソールログの内容 <!-- Return: the contents of the console log -->
 
 #### POST
- * 説明: コンテナのコンソールデバイスにアタッチします <!-- Description: attach to a container's console devices -->
+ * 説明: インスタンスのコンソールデバイスにアタッチします <!-- Description: attach to an instance's console devices -->
  * 認証: trusted <!-- Authentication: trusted -->
  * 操作: 非同期 <!-- Operation: async -->
  * 戻り値: 標準のエラー <!-- Return: standard error -->
@@ -1510,12 +1593,12 @@ Control (window size change):
 ```
 
 #### DELETE
- * 説明: コンテナのコンソールログを空にします <!-- Description: empty the container's console log -->
+ * 説明: インスタンスのコンソールログを空にします <!-- Description: empty the instance's console log -->
  * 認証: trusted <!-- Authentication: trusted -->
  * 操作: 同期 <!-- Operation: Sync -->
  * 戻り値: 空のレスポンスまたは標準のエラー <!-- Return: empty response or standard error -->
 
-### `/1.0/containers/<name>/exec`
+### `/1.0/instances/<name>/exec`
 #### POST
  * 説明: リモートコマンドを実行します <!-- Description: run a remote command -->
  * 認証: trusted <!-- Authentication: trusted -->
@@ -1677,8 +1760,8 @@ Return (with interactive=false and record-output=true):
 ```json
 {
     "output": {
-        "1": "/1.0/containers/example/logs/exec_b0f737b4-2c8a-4edf-a7c1-4cc7e4e9e155.stdout",
-        "2": "/1.0/containers/example/logs/exec_b0f737b4-2c8a-4edf-a7c1-4cc7e4e9e155.stderr"
+        "1": "/1.0/instances/example/logs/exec_b0f737b4-2c8a-4edf-a7c1-4cc7e4e9e155.stdout",
+        "2": "/1.0/instances/example/logs/exec_b0f737b4-2c8a-4edf-a7c1-4cc7e4e9e155.stderr"
     },
     "return": 0
 }
@@ -1697,9 +1780,9 @@ operation's metadata:
 }
 ```
 
-### `/1.0/containers/<name>/files`
-#### GET (`?path=/path/inside/the/container`)
- * 説明: ファイルかディレクトリの内容をコンテナからダウンロードします <!-- Description: download a file or directory listing from the container -->
+### `/1.0/instances/<name>/files`
+#### GET (`?path=/path/inside/the/instance`)
+ * 説明: ファイルかディレクトリの内容をインスタンスからダウンロードします <!-- Description: download a file or directory listing from the instance -->
  * 認証: trusted <!-- Authentication: trusted -->
  * 操作: 同期 <!-- Operation: sync -->
  * 戻り値: ファイルの種別がディレクトリの場合、戻り値はメタデータにディレクトリの内容の一覧を
@@ -1724,8 +1807,8 @@ This is designed to be easily usable from the command line or even a web
 browser.
 -->
 
-#### POST (`?path=/path/inside/the/container`)
- * 説明: コンテナにファイルをアップロードします <!-- Description: upload a file to the container -->
+#### POST (`?path=/path/inside/the/instance`)
+ * 説明: インスタンスにファイルをアップロードします <!-- Description: upload a file to the instance -->
  * 認証: trusted <!-- Authentication: trusted -->
  * 操作: 同期 <!-- Operation: sync -->
  * 戻り値: 標準の戻り値または標準のエラー <!-- Return: standard return value or standard error -->
@@ -1754,8 +1837,8 @@ This is designed to be easily usable from the command line or even a web
 browser.
 -->
 
-#### DELETE (`?path=/path/inside/the/container`)
- * 説明: コンテナ内のファイルを削除します <!-- Description: delete a file in the container -->
+#### DELETE (`?path=/path/inside/the/instance`)
+ * 説明: インスタンス内のファイルを削除します <!-- Description: delete a file in the instance -->
  * 導入: `file_delete` API 拡張によって <!-- Introduced: with API extension `file_delete` -->
  * 認証: trusted <!-- Authentication: trusted -->
  * 操作: 同期 <!-- Operation: sync -->
@@ -1771,12 +1854,12 @@ Input (none at present):
 }
 ```
 
-### `/1.0/containers/<name>/snapshots`
+### `/1.0/instances/<name>/snapshots`
 #### GET
  * 説明: スナップショットの一覧 <!-- Description: List of snapshots -->
  * 認証: trusted <!-- Authentication: trusted -->
  * 操作: 同期 <!-- Operation: sync -->
- * 戻り値: このコンテナのスナップショットの URL の一覧 <!-- Return: list of URLs for snapshots for this container -->
+ * 戻り値: このインスタンスのスナップショットの URL の一覧 <!-- Return: list of URLs for snapshots for this instance -->
 
 戻り値
 <!--
@@ -1785,7 +1868,7 @@ Return value:
 
 ```json
 [
-    "/1.0/containers/blah/snapshots/snap0"
+    "/1.0/instances/blah/snapshots/snap0"
 ]
 ```
 
@@ -1816,7 +1899,7 @@ Input:
 ```
 -->
 
-### `/1.0/containers/<name>/snapshots/<name>`
+### `/1.0/instances/<name>/snapshots/<name>`
 #### GET
  * 説明: スナップショットの情報 <!-- Description: Snapshot information -->
  * 認証: trusted <!-- Authentication: trusted -->
@@ -1973,7 +2056,7 @@ Input:
 HTTP code for this should be 202 (Accepted).
 -->
 
-### `/1.0/containers/<name>/state`
+### `/1.0/instances/<name>/state`
 #### GET
  * 説明: 現在の状態 <!-- Description: current state -->
  * 認証: trusted <!-- Authentication: trusted -->
@@ -2130,7 +2213,7 @@ Output:
 ```
 
 #### PUT
- * 説明: コンテナの状態を変更する <!-- Description: change the container state -->
+ * 説明: インスタンスの状態を変更する <!-- Description: change the instance state -->
  * 認証: trusted <!-- Authentication: trusted -->
  * 操作: 非同期 <!-- Operation: async -->
  * 戻り値: バックグラウンド操作または標準のエラー <!-- Return: background operation or standard error -->
@@ -2144,7 +2227,7 @@ Input:
 {
     "action": "stop",       // 状態を変更するアクション (stop, start, restart, freeze, unfreeze のいずれか)
     "timeout": 30,          // 状態の変更が失敗したと判定するまでのタイムアウト
-    "force": true,          // 状態の変更を強制する (現状では stop と restart でのみ有効で、コンテナを強制停止することを意味します)
+    "force": true,          // 状態の変更を強制する (現状では stop と restart でのみ有効で、インスタンスを強制停止することを意味します)
     "stateful": true        // 停止または開始する前の状態を保管または復元するかどうか (stop と start でのみ有効、デフォルトは false)
 }
 ```
@@ -2154,19 +2237,19 @@ Input:
 {
     "action": "stop",       // State change action (stop, start, restart, freeze or unfreeze)
     "timeout": 30,          // A timeout after which the state change is considered as failed
-    "force": true,          // Force the state change (currently only valid for stop and restart where it means killing the container)
+    "force": true,          // Force the state change (currently only valid for stop and restart where it means killing the instance)
     "stateful": true        // Whether to store or restore runtime state before stopping or startiong (only valid for stop and start, defaults to false)
 }
 ```
 -->
 
-### `/1.0/containers/<name>/logs`
+### `/1.0/instances/<name>/logs`
 #### GET
- * 説明: このコンテナで利用可能なログファイルの一覧を返します。
+ * 説明: このインスタンスで利用可能なログファイルの一覧を返します。
    作成の失敗についてのログを取得できるようにするため、この操作は
-   削除が完了した (あるいは一度も作られなかった) コンテナに対しても
-   動作します。 <!-- Description: Returns a list of the log files available for this container.
-  Note that this works on containers that have been deleted (or were never
+   削除が完了した (あるいは一度も作られなかった) インスタンスに対しても
+   動作します。 <!-- Description: Returns a list of the log files available for this instance.
+  Note that this works on instances that have been deleted (or were never
   created) to enable people to get logs for failed creations. -->
  * 認証: trusted <!-- Authentication: trusted -->
  * 操作: 同期 <!-- Operation: Sync -->
@@ -2179,13 +2262,13 @@ Return:
 
 ```json
 [
-    "/1.0/containers/blah/logs/forkstart.log",
-    "/1.0/containers/blah/logs/lxc.conf",
-    "/1.0/containers/blah/logs/lxc.log"
+    "/1.0/instances/blah/logs/forkstart.log",
+    "/1.0/instances/blah/logs/lxc.conf",
+    "/1.0/instances/blah/logs/lxc.log"
 ]
 ```
 
-### `/1.0/containers/<name>/logs/<logfile>`
+### `/1.0/instances/<name>/logs/<logfile>`
 #### GET
  * 説明: 特定のログファイルの中身を返します <!-- Description: returns the contents of a particular log file. -->
  * 認証: trusted <!-- Authentication: trusted -->
@@ -2198,13 +2281,13 @@ Return:
  * 操作: 同期 <!-- Operation: Sync -->
  * 戻り値: 空のレスポンスまたは標準のエラー <!-- Return: empty response or standard error -->
 
-### `/1.0/containers/<name>/metadata`
+### `/1.0/instances/<name>/metadata`
 #### GET
- * 説明: コンテナのメタデータ <!-- Description: Container metadata -->
+ * 説明: インスタンスのメタデータ <!-- Description: Instance metadata -->
  * 導入: `container_edit_metadata` API 拡張によって <!-- Introduced: with API extension `container_edit_metadata` -->
  * 認証: trusted <!-- Authentication: trusted -->
  * 操作: 同期 <!-- Operation: Sync -->
- * 戻り値: コンテナのメタデータを表す dict <!-- Return: dict representing container metadata -->
+ * 戻り値: インスタンスのメタデータを表す dict <!-- Return: dict representing instance metadata -->
 
 戻り値
 <!--
@@ -2218,9 +2301,9 @@ Return:
     "expiry_date": 0,
     "properties": {
         "architecture": "x86_64",
-        "description": "Busybox x86_64",
+        "description": "BusyBox x86_64",
         "name": "busybox-x86_64",
-        "os": "Busybox"
+        "os": "BusyBox"
     },
     "templates": {
         "/template": {
@@ -2236,7 +2319,7 @@ Return:
 ```
 
 #### PUT (ETag サポートあり) <!-- PUT (ETag supported) -->
- * 説明: コンテナのメタデータを置き換える <!-- Description: Replaces container metadata -->
+ * 説明: インスタンスのメタデータを置き換える <!-- Description: Replaces instance metadata -->
  * 導入: `container_edit_metadata` API 拡張によって <!-- Introduced: with API extension `container_edit_metadata` -->
  * 認証: trusted <!-- Authentication: trusted -->
  * 操作: 同期 <!-- Operation: sync -->
@@ -2254,9 +2337,9 @@ Input:
     "expiry_date": 0,
     "properties": {
         "architecture": "x86_64",
-        "description": "Busybox x86_64",
+        "description": "BusyBox x86_64",
         "name": "busybox-x86_64",
-        "os": "Busybox"
+        "os": "BusyBox"
     },
     "templates": {
         "/template": {
@@ -2271,13 +2354,13 @@ Input:
 }
 ```
 
-### `/1.0/containers/<name>/metadata/templates`
+### `/1.0/instances/<name>/metadata/templates`
 #### GET
- * 説明: コンテナテンプレートの一覧 <!-- Description: List container templates -->
+ * 説明: インスタンステンプレートの一覧 <!-- Description: List instance templates -->
  * 導入: `container_edit_metadata` API 拡張によって <!-- Introduced: with API extension `container_edit_metadata` -->
  * 認証: trusted <!-- Authentication: trusted -->
  * 操作: 同期 <!-- Operation: Sync -->
- * 戻り値: コンテナテンプレート名の一覧 <!-- Return: a list with container template names -->
+ * 戻り値: インスタンステンプレート名の一覧 <!-- Return: a list with instance template names -->
 
 戻り値
 <!--
@@ -2292,14 +2375,14 @@ Return:
 ```
 
 #### GET (`?path=<template>`)
- * 説明: コンテナテンプレートの中身 <!-- Description: Content of a container template -->
+ * 説明: インスタンステンプレートの中身 <!-- Description: Content of an instance template -->
  * 導入: `container_edit_metadata` API 拡張によって <!-- Introduced: with API extension `container_edit_metadata` -->
  * 認証: trusted <!-- Authentication: trusted -->
  * 操作: 同期 <!-- Operation: Sync -->
  * 戻り値: テンプレートの中身 <!-- Return: the content of the template -->
 
 #### POST (`?path=<template>`)
- * 説明: コンテナテンプレートを追加します <!-- Description: Add a continer template -->
+ * 説明: インスタンステンプレートを追加します <!-- Description: Add an instance template -->
  * 導入: `container_edit_metadata` API 拡張によって <!-- Introduced: with API extension `container_edit_metadata` -->
  * 認証: trusted <!-- Authentication: trusted -->
  * 操作: 同期 <!-- Operation: Sync -->
@@ -2331,13 +2414,13 @@ Input:
  * 操作: 同期 <!-- Operation: Sync -->
  * 戻り値: 標準の戻り値または標準のエラー <!-- Return: standard return value or standard error -->
 
-### `/1.0/containers/<name>/backups`
+### `/1.0/instances/<name>/backups`
 #### GET
- * 説明: コンテナのバックアップの一覧 <!-- Description: List of backups for the container -->
+ * 説明: インスタンスのバックアップの一覧 <!-- Description: List of backups for the instance -->
  * 導入: `container_backup` API 拡張によって <!-- Introduced: with API extension `container_backup` -->
  * 認証: trusted <!-- Authentication: trusted -->
  * 操作: 同期 <!-- Operation: sync -->
- * 戻り値: コンテナのバックアップの一覧 <!-- Return: a list of backups for the container -->
+ * 戻り値: インスタンスのバックアップの一覧 <!-- Return: a list of backups for the instance -->
 
 戻り値
 <!--
@@ -2346,8 +2429,8 @@ Return value:
 
 ```json
 [
-    "/1.0/containers/c1/backups/c1/backup0",
-    "/1.0/containers/c1/backups/c1/backup1",
+    "/1.0/instances/c1/backups/c1/backup0",
+    "/1.0/instances/c1/backups/c1/backup1",
 ]
 ```
 
@@ -2367,8 +2450,8 @@ Input:
 {
     "name": "backupName",      // バックアップのユニークな識別子
     "expiry": 3600,            // いつ自動的にバックアップを削除するか
-    "container_only": true,    // true の場合、スナップショットは含まれません
-    "optimized_storage": true  // true の場合 btrfs send または zfs send がコンテナとスナップショットに対して使用されます
+    "instance_only": true,     // true の場合、スナップショットは含まれません
+    "optimized_storage": true  // true の場合 btrfs send または zfs send がインスタンスとスナップショットに対して使用されます
 }
 ```
 
@@ -2377,13 +2460,13 @@ Input:
 {
     "name": "backupName",      // unique identifier for the backup
     "expiry": 3600,            // when to delete the backup automatically
-    "container_only": true,    // if True, snapshots aren't included
-    "optimized_storage": true  // if True, btrfs send or zfs send is used for container and snapshots
+    "instance_only": true,     // if True, snapshots aren't included
+    "optimized_storage": true  // if True, btrfs send or zfs send is used for instance and snapshots
 }
 ```
 -->
 
-### `/1.0/containers/<name>/backups/<name>`
+### `/1.0/instances/<name>/backups/<name>`
 #### GET
  * 説明: バックアップの情報 <!-- Description: Backup information -->
  * 導入: `container_backup` API 拡張によって <!-- Introduced: with API extension `container_backup` -->
@@ -2401,7 +2484,7 @@ Output:
     "name": "backupName",
     "creation_date": "2018-04-23T12:16:09+02:00",
     "expiry_date": "2018-04-23T12:16:09+02:00",
-    "container_only": false,
+    "instance_only": false,
     "optimized_storage": false
 }
 ```
@@ -2431,7 +2514,7 @@ Input:
 }
 ```
 
-### `/1.0/containers/<name>/backups/<name>/export`
+### `/1.0/instances/<name>/backups/<name>/export`
 #### GET
  * 説明: バックアップの tarball を取得します <!-- Description: fetch the backup tarball -->
  * 導入: `container_backup` API 拡張によって <!-- Introduced: with API extension `container_backup` -->
@@ -2480,7 +2563,7 @@ The notification types are:
 
  * operation (作成、更新、終了という全てのバックグラウンド操作についての通知) <!-- operation (notification about creation, updates and termination of all background operations) -->
  * logging (サーバからの全てのログエントリ) <!-- logging (every log entry from the server) -->
- * lifecycle (コンテナのライフサイクルイベント) <!-- lifecycle (container lifecycle events) -->
+ * lifecycle (インスタンスのライフサイクルイベント) <!-- lifecycle (instance lifecycle events) -->
 
 このエンドポイントの出力が完了することはありません。それぞれの通知は個別の JSON dict として送られます。
 <!--
@@ -2503,7 +2586,7 @@ This never returns. Each notification is sent as a separate JSON dict:
         "context": {
             "ip": "@",
             "method": "GET",
-            "url": "/1.0/containers/xen/snapshots",
+            "url": "/1.0/instances/xen/snapshots",
         },
         "level": "info",
         "message": "handling"
@@ -2571,7 +2654,7 @@ Input (one of):
 
  * 標準の HTTP ファイルアップロード <!-- Standard http file upload -->
  * 作成元のイメージの dict (リモートのイメージを転送する場合) <!-- Source image dictionary (transfers a remote image) -->
- * 作成元のコンテナの dict (ローカルコンテナからイメージを作成する場合) <!-- Source container dictionary (makes an image out of a local container) -->
+ * 作成元のインスタンスの dict (ローカルインスタンスからイメージを作成する場合) <!-- Source instance dictionary (makes an image out of a local instance) -->
  * リモートのイメージの URL の dict (リモートのイメージをダウンロードする場合) <!-- Remote image URL dictionary (downloads a remote image) -->
 
 HTTP ファイルアップロードの場合、次のヘッダがクライアントにより設定可能です。
@@ -2641,9 +2724,9 @@ In the source image case, the following dict must be used:
 ```
 -->
 
-作成元にコンテナを使う場合、次の dict を使用する必要があります。
+作成元にインスタンスを使う場合、次の dict を使用する必要があります。
 <!--
-In the source container case, the following dict must be used:
+In the source instance case, the following dict must be used:
 -->
 
 ```js
@@ -2659,7 +2742,7 @@ In the source container case, the following dict must be used:
          "description": "A description""}
     ],
     "source": {
-        "type": "container",        // "container" か "snapshot" のいずれか
+        "type": "instance",         // "instance" か "snapshot" のいずれか
         "name": "abc"
     }
 }
@@ -2679,7 +2762,7 @@ In the source container case, the following dict must be used:
          "description": "A description"}
     ],
     "source": {
-        "type": "container",        // One of "container" or "snapshot"
+        "type": "instance",         // One of "instance" or "snapshot"
         "name": "abc"
     }
 }
@@ -2754,7 +2837,7 @@ Output:
 {
     "aliases": [
         {
-            "name": "trusty",
+            "name": "bionic",
             "description": "",
         }
     ],
@@ -2762,18 +2845,18 @@ Output:
     "auto_update": true,
     "cached": false,
     "fingerprint": "54c8caac1f61901ed86c68f24af5f5d3672bdc62c71d04f06df3a59e95684473",
-    "filename": "ubuntu-trusty-14.04-amd64-server-20160201.tar.xz",
+    "filename": "ubuntu-bionic-18.04-amd64-server-20180201.tar.xz",
     "properties": {
         "architecture": "x86_64",
-        "description": "Ubuntu 14.04 LTS server (20160201)",
+        "description": "Ubuntu 18.04 LTS server (20180601)",
         "os": "ubuntu",
-        "release": "trusty"
+        "release": "bionic"
     },
     "update_source": {
         "server": "https://10.1.2.4:8443",
         "protocol": "lxd",
         "certificate": "PEM certificate",
-        "alias": "ubuntu/trusty/amd64"
+        "alias": "ubuntu/bionic/amd64"
     },
     "public": false,
     "size": 123792592,
@@ -2800,9 +2883,9 @@ Input:
     "auto_update": true,
     "properties": {
         "architecture": "x86_64",
-        "description": "Ubuntu 14.04 LTS server (20160201)",
+        "description": "Ubuntu 18.04 LTS server (20180601)",
         "os": "ubuntu",
-        "release": "trusty"
+        "release": "bionic"
     },
     "public": true,
 }
@@ -2824,7 +2907,7 @@ Input:
 {
     "properties": {
         "os": "ubuntu",
-        "release": "trusty"
+        "release": "bionic"
     },
     "public": true,
 }
@@ -2859,10 +2942,10 @@ HTTP code for this should be 202 (Accepted).
  * 戻り値: 生のファイルまたは標準のエラー <!-- Return: Raw file or standard error -->
 
 信頼されていない LXD が別の LXD に保管されている private なイメージから
-新しいコンテナを起動する場合は secret の文字列が必要です。
+新しいインスタンスを起動する場合は secret の文字列が必要です。
 <!--
 The secret string is required when an untrusted LXD is spawning a new
-container from a private image stored on a different LXD.
+instance from a private image stored on a different LXD.
 -->
 
 2 つの LXD の間で信頼関係を要求する代わりに、クライアントは
@@ -2948,7 +3031,7 @@ Return:
 ```json
 [
     "/1.0/images/aliases/sl6",
-    "/1.0/images/aliases/trusty",
+    "/1.0/images/aliases/bionic",
     "/1.0/images/aliases/xenial"
 ]
 ```
@@ -3128,7 +3211,7 @@ Return:
     "managed": false,
     "type": "bridge",
     "used_by": [
-        "/1.0/containers/blah"
+        "/1.0/instances/blah"
     ]
 }
 ```
@@ -3402,7 +3485,7 @@ Input (similar but times out after 30s): ?timeout=30
 #### GET (`?secret=SECRET`)
  * 説明: この接続はウェブソケットの接続にアップグレードされ、操作の種別毎に
    定義されたプロトコルを話します。例えば exec 操作の場合、ウェブソケットは
-   標準入力／標準出力／標準エラー出力のための双方向のパイプになり、コンテナ
+   標準入力／標準出力／標準エラー出力のための双方向のパイプになり、インスタンス
    内のプロセスの入出力をやりとりします。 migration の場合はマイグレーション
    情報を通信するプライマリのインターフェースになります。ここで使用する
    シークレットは操作を作るときに指定していたのと同じものを指定します。
@@ -3410,7 +3493,7 @@ Input (similar but times out after 30s): ?timeout=30
    <!-- Description: This connection is upgraded into a websocket connection
    speaking the protocol defined by the operation type. For example, in the
    case of an exec operation, the websocket is the bidirectional pipe for
-   stdin/stdout/stderr to flow to and from the process inside the container.
+   stdin/stdout/stderr to flow to and from the process inside the instance.
    In the case of migration, it will be the primary interface over which the
    migration information is communicated. The secret here is the one that was
    provided when the operation was created. Guests are allowed to connect
@@ -3490,7 +3573,7 @@ Output:
         }
     },
     "used_by": [
-        "/1.0/containers/blah"
+        "/1.0/instances/blah"
     ]
 }
 ```
@@ -3674,7 +3757,7 @@ Output:
     },
     "description": "Some description string",
     "used_by": [
-        "/1.0/containers/blah"
+        "/1.0/instances/blah"
     ]
 }
 ```
@@ -3861,26 +3944,26 @@ Return:
         "name": "default",
         "driver": "zfs",
         "used_by": [
-            "/1.0/containers/alp1",
-            "/1.0/containers/alp10",
-            "/1.0/containers/alp11",
-            "/1.0/containers/alp12",
-            "/1.0/containers/alp13",
-            "/1.0/containers/alp14",
-            "/1.0/containers/alp15",
-            "/1.0/containers/alp16",
-            "/1.0/containers/alp17",
-            "/1.0/containers/alp18",
-            "/1.0/containers/alp19",
-            "/1.0/containers/alp2",
-            "/1.0/containers/alp20",
-            "/1.0/containers/alp3",
-            "/1.0/containers/alp4",
-            "/1.0/containers/alp5",
-            "/1.0/containers/alp6",
-            "/1.0/containers/alp7",
-            "/1.0/containers/alp8",
-            "/1.0/containers/alp9",
+            "/1.0/instances/alp1",
+            "/1.0/instances/alp10",
+            "/1.0/instances/alp11",
+            "/1.0/instances/alp12",
+            "/1.0/instances/alp13",
+            "/1.0/instances/alp14",
+            "/1.0/instances/alp15",
+            "/1.0/instances/alp16",
+            "/1.0/instances/alp17",
+            "/1.0/instances/alp18",
+            "/1.0/instances/alp19",
+            "/1.0/instances/alp2",
+            "/1.0/instances/alp20",
+            "/1.0/instances/alp3",
+            "/1.0/instances/alp4",
+            "/1.0/instances/alp5",
+            "/1.0/instances/alp6",
+            "/1.0/instances/alp7",
+            "/1.0/instances/alp8",
+            "/1.0/instances/alp9",
             "/1.0/images/62e850a334bb9d99cac00b2e618e0291e5e7bb7db56c4246ecaf8e46fa0631a6"
         ],
         "config": {
