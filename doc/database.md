@@ -7,35 +7,35 @@ So first of all, why a database?
 そもそも、なぜデータベースなのでしょう？
 
 <!--
-Rather than keeping the configuration and state within each container's
+Rather than keeping the configuration and state within each instance's
 directory as is traditionally done by LXC, LXD has an internal database
 which stores all of that information. This allows very quick queries
-against all containers configuration.
+against all instances configuration.
 -->
-従来 LXC で行われていたように設定と状態をそれぞれのコンテナのディレクトリに
+従来 LXC で行われていたように設定と状態をそれぞれのインスタンスのディレクトリに
 保存するのではなく、 LXD ではそれら全ての情報を保管する内部的なデータベースを
-持っています。これによりすべてのコンテナの設定に対する問い合わせをとても
+持っています。これによりすべてのインスタンスの設定に対する問い合わせをとても
 高速に行えます。
 
 
 <!--
-An example is the rather obvious question "what containers are using br0?".
+An example is the rather obvious question "what instances are using br0?".
 To answer that question without a database, LXD would have to iterate
-through every single container, load and parse its configuration and
+through every single instance, load and parse its configuration and
 then look at what network devices are defined in there.
 -->
-例えば、 「どのコンテナが br0 を使っているのか」というかなり分かりやすい問いが
+例えば、 「どのインスタンスが br0 を使っているのか」というかなり分かりやすい問いが
 あります。この問いにデータベース無しで答えるとすると、 LXD は一つ一つの
-コンテナに対して、設定を読み込んでパースし、そこにどのネットワークデバイスが
+インスタンスに対して、設定を読み込んでパースし、そこにどのネットワークデバイスが
 定義されているかを見るということを繰り返し行わなければなりません。
 
 <!--
-While that may be quick with a few containers, imagine how many
-filesystem access would be required for 2000 containers. Instead with a
+While that may be quick with a few instances, imagine how many
+filesystem access would be required for 2000 instances. Instead with a
 database, it's only a matter of accessing the already cached database
 with a pretty simple query.
 -->
-コンテナの数が少なければ、その処理は速いかもしれませんが、2000 個のコンテナに
+インスタンスの数が少なければ、その処理は速いかもしれませんが、2000 個のインスタンスに
 対してどれだけ多くのファイルシステムへのアクセスが必要かを想像してみてください。
 代わりにデータベースを使うことで、非常に単純なクエリでキャッシュ済みの
 データベースにアクセスするだけで良くなるのです。
