@@ -312,19 +312,26 @@ LXD では次のデバイスタイプが使えます:
 LXD supports the following device types:
 -->
 
-ID (database)   | Name                              | Condition     | Description
-:--             | :--                               | :--           | :--
-0               | [none](#type-none)                | -             | 継承ブロッカー <!-- Inheritance blocker -->
-1               | [nic](#type-nic)                  | -             | ネットワークインターフェース <!-- Network interface -->
-2               | [disk](#type-disk)                | -             | インスタンス内のマウントポイント <!-- Mountpoint inside the instance -->
-3               | [unix-char](#type-unix-char)      | container     | Unix キャラクターデバイス <!-- Unix character device -->
-4               | [unix-block](#type-unix-block)    | container     | Unix ブロックデバイス <!-- Unix block device -->
-5               | [usb](#type-usb)                  | container     | USB デバイス <!-- USB device -->
-6               | [gpu](#type-gpu)                  | container     | GPU デバイス <!-- GPU device -->
-7               | [infiniband](#type-infiniband)    | container     | インフィニバンドデバイス <!-- Infiniband device -->
-8               | [proxy](#type-proxy)              | container     | プロキシデバイス <!-- Proxy device -->
+ID (database)   | Name                               | Condition     | Description
+:--             | :--                                | :--           | :--
+0               | [none](#type-none)                 | -             | 継承ブロッカー <!-- Inheritance blocker -->
+1               | [nic](#type-nic)                   | -             | ネットワークインターフェース <!-- Network interface -->
+2               | [disk](#type-disk)                 | -             | インスタンス内のマウントポイント <!-- Mountpoint inside the instance -->
+3               | [unix-char](#type-unix-char)       | container     | Unix キャラクターデバイス <!-- Unix character device -->
+4               | [unix-block](#type-unix-block)     | container     | Unix ブロックデバイス <!-- Unix block device -->
+5               | [usb](#type-usb)                   | container     | USB デバイス <!-- USB device -->
+6               | [gpu](#type-gpu)                   | container     | GPU デバイス <!-- GPU device -->
+7               | [infiniband](#type-infiniband)     | container     | インフィニバンドデバイス <!-- Infiniband device -->
+8               | [proxy](#type-proxy)               | container     | プロキシデバイス <!-- Proxy device -->
+9               | [unix-hotplug](#type-unix-hotplug) | container     | Unix ホットプラグデバイス <!-- Unix hotplug device -->
 
 ### Type: none
+
+サポートされるインスタンスタイプ: コンテナ, VM
+<!--
+Supported instance types: container, VM
+-->
+
 none タイプのデバイスはプロパティを一切持たず、インスタンス内に何も作成しません。
 <!--
 A none type device doesn't have any property and doesn't create anything inside the instance.
@@ -372,6 +379,12 @@ Each possible `nictype` value is documented below along with the relevant proper
 -->
 
 #### nictype: physical
+
+サポートされるインスタンスタイプ: コンテナ, VM
+<!--
+Supported instance types: container, VM
+-->
+
 物理デバイスそのものをパススルー。対象のデバイスはホストからは消失し、インスタンス内に出現します。
 <!--
 Straight physical device passthrough from the host. The targeted device will vanish from the host and appear in the instance.
@@ -391,8 +404,15 @@ hwaddr                  | string    | ランダムに割り当て <!-- randomly 
 vlan                    | integer   | -                 | no        | アタッチ先の VLAN ID <!-- The VLAN ID to attach to -->
 maas.subnet.ipv4        | string    | -                 | no        | インスタンスを登録する MAAS IPv4 サブネット <!-- MAAS IPv4 subnet to register the instance in -->
 maas.subnet.ipv6        | string    | -                 | no        | インスタンスを登録する MAAS IPv6 サブネット <!-- MAAS IPv6 subnet to register the instance in -->
+boot.priority           | integer   | -                 | no        | VM のブート優先度 (高いほうが先にブート) <!-- Boot priority for VMs (higher boots first) -->
 
 #### nictype: bridged
+
+サポートされるインスタンスタイプ: コンテナ, VM
+<!--
+Supported instance types: container, VM
+-->
+
 ホストの既存のブリッジを使用し、ホストのブリッジをインスタンスに接続するための仮想デバイスのペアを作成します。
 <!--
 Uses an existing bridge on the host and creates a virtual device pair to connect the host bridge to the instance.
@@ -422,8 +442,15 @@ security.ipv4\_filtering | boolean   | false             | no        | インス
 security.ipv6\_filtering | boolean   | false             | no        | インスタンスが他の IPv6 アドレスになりすますのを防ぐ (これを設定すると mac\_filtering も有効になります） <!-- Prevent the instance from spoofing another's IPv6 address (enables mac\_filtering) -->
 maas.subnet.ipv4         | string    | -                 | no        | インスタンスを登録する MAAS IPv4 サブネット <!-- MAAS IPv4 subnet to register the instance in -->
 maas.subnet.ipv6         | string    | -                 | no        | インスタンスを登録する MAAS IPv6 サブネット <!-- MAAS IPv6 subnet to register the instance in -->
+boot.priority            | integer   | -                 | no        | VM のブート優先度 (高いほうが先にブート) <!-- Boot priority for VMs (higher boots first) -->
 
 #### nictype: macvlan
+
+サポートされるインスタンスタイプ: コンテナ, VM
+<!--
+Supported instance types: container, VM
+-->
+
 既存のネットワークデバイスを元に新しいネットワークデバイスをセットアップしますが、異なる MAC アドレスを用います。
 <!--
 Sets up a new network device based on an existing one but using a different MAC address.
@@ -443,8 +470,15 @@ hwaddr                  | string    | ランダムに割り当て <!-- randomly 
 vlan                    | integer   | -                 | no        | アタッチ先の VLAN ID <!-- The VLAN ID to attach to -->
 maas.subnet.ipv4        | string    | -                 | no        | インスタンスを登録する MAAS IPv4 サブネット <!-- MAAS IPv4 subnet to register the instance in -->
 maas.subnet.ipv6        | string    | -                 | no        | インスタンスを登録する MAAS IPv6 サブネット <!-- MAAS IPv6 subnet to register the instance in -->
+boot.priority           | integer   | -                 | no        | VM のブート優先度 (高いほうが先にブート) <!-- Boot priority for VMs (higher boots first) -->
 
 #### nictype: ipvlan
+
+サポートされるインスタンスタイプ: コンテナ
+<!--
+Supported instance types: container
+-->
+
 既存のネットワークデバイスを元に新しいネットワークデバイスをセットアップしますが、異なる IP アドレスを用います。
 <!--
 Sets up a new network device based on an existing one using the same MAC address but a different IP.
@@ -506,6 +540,12 @@ ipv6.address            | string    | -                 | no        | インス�
 vlan                    | integer   | -                 | no        | アタッチ先の VLAN ID <!-- The VLAN ID to attach to -->
 
 #### nictype: p2p
+
+サポートされるインスタンスタイプ: コンテナ, VM
+<!--
+Supported instance types: container, VM
+-->
+
 仮想デバイスペアを作成し、片方はインスタンス内に配置し、もう片方はホストに残します。
 <!--
 Creates a virtual device pair, putting one side in the instance and leaving the other side on the host.
@@ -527,8 +567,15 @@ limits.egress           | string    | -                 | no        | 出力ト�
 limits.max              | string    | -                 | no        | `limits.ingress` と `limits.egress` の両方を同じ値に変更する <!-- Same as modifying both limits.ingress and limits.egress -->
 ipv4.routes             | string    | -                 | no        | ホスト上で nic に追加する IPv4 静的ルートのカンマ区切りリスト <!-- Comma delimited list of IPv4 static routes to add on host to nic -->
 ipv6.routes             | string    | -                 | no        | ホスト上で nic に追加する IPv6 静的ルートのカンマ区切りリスト <!-- Comma delimited list of IPv6 static routes to add on host to nic -->
+boot.priority           | integer   | -                 | no        | VM のブート優先度 (高いほうが先にブート) <!-- Boot priority for VMs (higher boots first) -->
 
 #### nictype: sriov
+
+サポートされるインスタンスタイプ: コンテナ, VM
+<!--
+Supported instance types: container, VM
+-->
+
 SR-IOV を有効にした物理ネットワークデバイスの仮想ファンクションをインスタンスに渡します。
 <!--
 Passes a virtual function of an SR-IOV enabled physical network device into the instance.
@@ -549,8 +596,15 @@ security.mac\_filtering | boolean   | false             | no        | インス�
 vlan                    | integer   | -                 | no        | アタッチ先の VLAN ID <!-- The VLAN ID to attach to -->
 maas.subnet.ipv4        | string    | -                 | no        | インスタンスを登録する MAAS IPv4 サブネット <!-- MAAS IPv4 subnet to register the instance in -->
 maas.subnet.ipv6        | string    | -                 | no        | インスタンスを登録する MAAS IPv6 サブネット <!-- MAAS IPv6 subnet to register the instance in -->
+boot.priority           | integer   | -                 | no        | VM のブート優先度 (高いほうが先にブート) <!-- Boot priority for VMs (higher boots first) -->
 
 #### nictype: routed
+
+サポートされるインスタンスタイプ: コンテナ
+<!--
+Supported instance types: container
+-->
+
 この NIC タイプは運用上は IPVLAN に似ていて、ブリッジを作成することなくホストの MAC アドレスを共用してインスタンスが外部ネットワークに参加できるようにします。
 <!--
 This NIC type is similar in operation to IPVLAN, in that it allows an instance to join an external network without needing to configure a bridge and shares the host's MAC address.
@@ -743,6 +797,12 @@ those will be registered as static assignments in MAAS too.
 -->
 
 ### Type: infiniband
+
+サポートされるインスタンスタイプ: コンテナ
+<!--
+Supported instance types: container
+-->
+
 LXD では、InfiniBand デバイスに対する 2 種類の異なったネットワークタイプが使えます:
 <!--
 LXD supports two different kind of network types for infiniband devices:
@@ -793,6 +853,12 @@ lxc config device add <instance> <device-name> infiniband nictype=sriov parent=<
 ```
 
 ### Type: disk
+
+サポートされるインスタンスタイプ: コンテナ, VM
+<!--
+Supported instance types: container, VM
+-->
+
 ディスクエントリーは基本的にインスタンス内のマウントポイントです。ホスト上の既存ファイルやディレクトリのバインドマウントでも構いませんし、ソースがブロックデバイスであるなら、通常のマウントでも構いません。
 <!--
 Disk entries are essentially mountpoints inside the instance. They can
@@ -856,8 +922,15 @@ shift               | boolean   | false     | no        | ソースの uid/gid �
 raw.mount.options   | string    | -         | no        | ファイルシステム固有のマウントオプション <!-- Filesystem specific mount options -->
 ceph.user\_name     | string    | admin     | no        | ソースが ceph か cephfs の場合に適切にマウントするためにユーザが ceph user\_name を指定しなければなりません <!-- If source is ceph or cephfs then ceph user\_name must be specified by user for proper mount -->
 ceph.cluster\_name  | string    | admin     | no        | ソースが ceph か cephfs の場合に適切にマウントするためにユーザが ceph cluster\_name を指定しなければなりません <!-- If source is ceph or cephfs then ceph cluster\_name must be specified by user for proper mount -->
+boot.priority       | integer   | -         | no        | VM のブート優先度 (高いほうが先にブート) <!-- Boot priority for VMs (higher boots first) -->
 
 ### Type: unix-char
+
+サポートされるインスタンスタイプ: コンテナ
+<!--
+Supported instance types: container
+-->
+
 UNIX キャラクターデバイスエントリーは、シンプルにインスタンスの `/dev` に、リクエストしたキャラクターデバイスを出現させます。そしてそれに対して読み書き操作を許可します。
 <!--
 Unix character device entries simply make the requested character device
@@ -881,6 +954,12 @@ mode        | int       | 0660              | no        | インスタンス内�
 required    | boolean   | true              | no        | このデバイスがインスタンスの起動に必要かどうか <!-- Whether or not this device is required to start the instance -->
 
 ### Type: unix-block
+
+サポートされるインスタンスタイプ: コンテナ
+<!--
+Supported instance types: container
+-->
+
 UNIX ブロックデバイスエントリーは、シンプルにインスタンスの `/dev` に、リクエストしたブロックデバイスを出現させます。そしてそれに対して読み書き操作を許可します。
 <!--
 Unix block device entries simply make the requested block device
@@ -925,6 +1004,12 @@ mode        | int       | 0660              | no        | インスタンス内�
 required    | boolean   | false             | no        | このデバイスがインスタンスの起動に必要かどうか（デフォルトは false で、すべてのデバイスがホットプラグ可能です） <!-- Whether or not this device is required to start the instance. (The default is false, and all devices are hot-pluggable) -->
 
 ### Type: gpu
+
+サポートされるインスタンスタイプ: コンテナ
+<!--
+Supported instance types: container
+-->
+
 GPU デバイスエントリーは、シンプルにリクエストのあった GPU デバイスをインスタンスに出現させます。
 <!--
 GPU device entries simply make the requested gpu device appear in the
@@ -947,6 +1032,12 @@ gid         | int       | 0                 | no        | インスタンス内�
 mode        | int       | 0660              | no        | インスタンス内のデバイスのモード <!-- Mode of the device in the instance -->
 
 ### Type: proxy
+
+サポートされるインスタンスタイプ: コンテナ
+<!--
+Supported instance types: container
+-->
+
 プロキシーデバイスにより、ホストとインスタンス間のネットワーク接続を転送できます。
 このデバイスを使って、ホストのアドレスの一つに到達したトラフィックをインスタンス内のアドレスに転送したり、その逆を行ったりして、ホストを通してインスタンス内にアドレスを持てます。
 <!--
@@ -986,6 +1077,35 @@ security.gid    | int       | 0             | no        | 特権を落とす GID
 ```
 lxc config device add <instance> <device-name> proxy listen=<type>:<addr>:<port>[-<port>][,<port>] connect=<type>:<addr>:<port> bind=<host/instance>
 ```
+
+### Type: unix-hotplug
+
+サポートされるインスタンスタイプ: コンテナ
+<!--
+Supported instance types: container
+-->
+
+Unix ホットプラグデバイスのエントリは依頼された unix デバイスをインスタンスの `/dev` に出現させ、デバイスがホストシステムに存在する場合はデバイスへの読み書き操作を許可します。
+実装はホスト上で稼働する systemd-udev に依存します。
+<!--
+Unix hotplug device entries make the requested unix device appear in the
+instance's `/dev` and allow read/write operations to it if the device exists on
+the host system. Implementation depends on systemd-udev to be run on the host.
+-->
+
+以下の設定があります。
+<!--
+The following properties exist:
+-->
+
+Key         | Type      | Default           | Required  | Description
+:--         | :--       | :--               | :--       | :--
+vendorid    | string    | -                 | no        | unix デバイスのベンダー ID <!-- The vendor id of the unix device -->
+productid   | string    | -                 | no        | unix デバイスの製品 ID <!-- The product id of the unix device -->
+uid         | int       | 0                 | no        | インスタンス内でのデバイスオーナーの UID <!-- UID of the device owner in the instance -->
+gid         | int       | 0                 | no        | インスタンス内でのデバイスオーナーの GID <!-- GID of the device owner in the instance -->
+mode        | int       | 0660              | no        | インスタンス内でのデバイスのモード {<!-- Mode of the device in the instance -->
+required    | boolean   | false             | no        | このデバイスがインスタンスを起動するのに必要かどうか。(デフォルトは false で全てのデバイスはホットプラグ可能です) <!-- Whether or not this device is required to start the instance. (The default is false, and all devices are hot-pluggable) -->
 
 ## ストレージとネットワーク制限の単位 <!-- Units for storage and network limits -->
 バイト数とビット数を表す値は全ていくつかの有用な単位を使用し特定の制限がどういう値かをより理解しやすいようにできます。
@@ -1068,7 +1188,7 @@ On the command line, this is passed like this:
 -->
 
 ```bash
-lxc launch ubuntu:16.04 my-instance -t t2.micro
+lxc launch ubuntu:18.04 my-instance -t t2.micro
 ```
 
 使えるクラウドとインスタンスタイプのリストは次をご覧ください:
