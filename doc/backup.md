@@ -8,16 +8,16 @@ When planning to backup a LXD server, consider all the different objects
 that are stored/managed by LXD:
 -->
 
- - コンテナ (データベースのレコードとファイルシステム) <!-- Containers (database records and filesystems) -->
+ - インスタンス (データベースのレコードとファイルシステム) <!-- Instances (database records and filesystems) -->
  - イメージ (データベースのレコード、イメージファイル、そしてファイルシステム) <!-- Images (database records, image files and filesystems) -->
  - ネットワーク (データベースのレコードと状態ファイル) <!-- Networks (database records and state files) -->
  - プロファイル (データベースのレコード) <!-- Profiles (database records) -->
  - ストレージボリューム (データベースのレコードとファイルシステム) <!-- Storage volumes (database records and filesystems) -->
 
-データベースだけをバックアップあるいはコンテナのファイルシステムだけを
+データベースだけをバックアップあるいはインスタンスだけを
 バックアップしても完全に機能するバックアップにはなりません。
 <!--
-Only backing up the database or only backing up the container filesystem
+Only backing up the database or only backing up the instances
 will not get you a fully functional backup.
 -->
 
@@ -60,30 +60,30 @@ Then start LXD again and check that everything works fine.
 -->
 
 ## LXD サーバのセカンダリバックアップ <!-- Secondary backup LXD server -->
-LXD は 2 つのホスト間でコンテナとストレージボリュームのコピーと移動を
+LXD は 2 つのホスト間でインスタンスとストレージボリュームのコピーと移動を
 サポートしています。
 <!--
-LXD supports copying and moving containers and storage volumes between two hosts.
+LXD supports copying and moving instances and storage volumes between two hosts.
 -->
 
-ですので予備のサーバがあれば、コンテナとストレージボリュームを時々
+ですので予備のサーバがあれば、インスタンスとストレージボリュームを時々
 そのセカンダリサーバにコピーしておき、オフラインの予備あるいは単なる
 ストレージサーバとして稼働させることが可能です。そして必要ならばそこから
-コンテナをコピーして戻すことができます。
+インスタンスをコピーして戻すことができます。
 <!--
-So with a spare server, you can copy your containers and storage volumes
+So with a spare server, you can copy your instances and storage volumes
 to that secondary server every so often, allowing it to act as either an
 offline spare or just as a storage server that you can copy your
-containers back from if needed.
+instances back from if needed.
 -->
 
-## コンテナのバックアップ <!-- Container backups -->
-`lxc export` コマンドがコンテナをバックアップの tarball にエクスポートする
+## インスタンスのバックアップ <!-- Instance backups -->
+`lxc export` コマンドがインスタンスをバックアップの tarball にエクスポートする
 のに使えます。これらの tarball はデフォルトで全てのスナップショットを含みますが、
 同じストレージプールバックエンドを使っている LXD サーバにリストアすることが
 わかっていれば「最適化」された tarball を取得することもできます。
 <!--
-The `lxc export` command can be used to export containers to a backup tarball.
+The `lxc export` command can be used to export instances to a backup tarball.
 Those tarballs will include all snapshots by default and an "optimized"
 tarball can be obtained if you know that you'll be restoring on a LXD
 server using the same storage pool backend.
@@ -98,13 +98,13 @@ and can be imported back into LXD using the `lxc import` command.
 -->
 
 ## ディザスタリカバリ <!-- Disaster recovery -->
-さらに、 LXD は各コンテナのストレージボリューム内に `backup.yaml` ファイルを
-保管しています。このファイルはコンテナの設定やアタッチされたデバイスや
-ストレージなど、コンテナを復元するのに必要な全ての情報を含んでいます。
+さらに、 LXD は各インスタンスのストレージボリューム内に `backup.yaml` ファイルを
+保管しています。このファイルはインスタンスの設定やアタッチされたデバイスや
+ストレージなど、インスタンスを復元するのに必要な全ての情報を含んでいます。
 <!--
-Additionally, LXD maintains a `backup.yaml` file in each container's storage
+Additionally, LXD maintains a `backup.yaml` file in each instance's storage
 volume. This file contains all necessary information to recover a given
-container, such as container configuration, attached devices and storage.
+instance, such as instance configuration, attached devices and storage.
 -->
 
 このファイルは `lxd import` コマンドで処理できます。 `lxc import` コマンドと
@@ -114,11 +114,11 @@ This file can be processed by the `lxd import` command, not to
 be confused with `lxc import`.
 -->
 
-ディザスタリカバリ機構を使うためには、コンテナのストレージを期待される場所、
-通常は `storage-pools/NAME-OF-POOL/containers/コンテナ名` にマウントしておく
+ディザスタリカバリ機構を使うためには、インスタンスのストレージを期待される場所、
+通常は `storage-pools/NAME-OF-POOL/containers/インスタンス名` にマウントしておく
 必要があります。
 <!--
-To use the disaster recovery mechanism, you must mount the container's
+To use the disaster recovery mechanism, you must mount the instance's
 storage to its expected location, usually under
 `storage-pools/NAME-OF-POOL/containers/NAME-OF-CONTAINER`.
 -->
@@ -131,10 +131,10 @@ any snapshot you want to restore (needed for `dir` and `btrfs`).
 -->
 
 `backup.yaml` に宣言されているリソースに対応するデータベースエントリがインポート
-中に見つかったら、コマンドはコンテナをリストアすることを拒絶します。これは
+中に見つかったら、コマンドはインスタンスをリストアすることを拒絶します。これは
 `--force` を渡すことでオーバーライドできます。
 <!--
 If any matching database entry for resources declared in `backup.yaml` is found
-during import, the command will refuse to restore the container.  This can be
+during import, the command will refuse to restore the instance.  This can be
 overridden by passing `\-\-force`.
 -->
