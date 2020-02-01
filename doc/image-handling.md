@@ -14,36 +14,36 @@ where the user or external tools can import images.
 Containers are then started from those images.
 -->
 
-ローカルのイメージを使ってリモートのコンテナを起動できますし、リモートの
-イメージを使ってローカルのコンテナを起動することもできます。こういった
+ローカルのイメージを使ってリモートのインスタンスを起動できますし、リモートの
+イメージを使ってローカルのインスタンスを起動することもできます。こういった
 ケースではイメージはターゲットの LXD にキャッシュされます。
 <!--
-It's possible to spawn remote containers using local images or local
-containers using remote images. In such cases, the image may be cached
+It's possible to spawn remote instances using local images or local
+instances using remote images. In such cases, the image may be cached
 on the target LXD.
 -->
 
 ## キャッシュ <!-- Caching -->
-リモートのイメージからコンテナを起動する時、リモートのイメージが
+リモートのイメージからインスタンスを起動する時、リモートのイメージが
 ローカルのイメージ・ストアにキャッシュ・ビットをセットした状態で
 ダウンロードされます。イメージは、 `images.remote_cache_expiry` に
-設定された日数だけ使われない (新たなコンテナが起動されない) か、
+設定された日数だけ使われない (新たなインスタンスが起動されない) か、
 イメージが期限を迎えるか、どちらか早いほうが来るまで、プライベートな
 イメージとしてローカルに保存されます。
 <!--
-When spawning a container from a remote image, the remote image is
+When spawning an instance from a remote image, the remote image is
 downloaded into the local image store with the cached bit set. The image
 will be kept locally as a private image until either it's been unused
-(no new container spawned) for the number of days set in
+(no new instance spawned) for the number of days set in
 `images.remote_cache_expiry` or until the image's expiry is reached
 whichever comes first.
 -->
 
-LXD はイメージから新しいコンテナが起動される度にイメージの `last_used_at` 
+LXD はイメージから新しいインスタンスが起動される度にイメージの `last_used_at` 
 プロパティを更新することで、イメージの利用状況を記録しています。
 <!--
 LXD keeps track of image usage by updating the `last_used_at` image
-property every time a new container is spawned from the image.
+property every time a new instance is spawned from the image.
 -->
 
 ## 自動更新 <!-- Auto-update -->
@@ -83,15 +83,15 @@ The user can also request a particular image be kept up to date when
 manually copying an image from a remote server.
 -->
 
-ユーザがイメージのキャッシュから新しいコンテナを作成しようとした時に、
+ユーザがイメージのキャッシュから新しいインスタンスを作成しようとした時に、
 アップストリームの新しいイメージ更新が公開されており、ローカルの LXD が
-キャッシュに古いイメージを持っている場合は、 LXD はコンテナの作成を
+キャッシュに古いイメージを持っている場合は、 LXD はインスタンスの作成を
 遅らせるのではなく、古いバージョンのイメージを使います。
 <!--
 If a new upstream image update is published and the local LXD has the
-previous image in its cache when the user requests a new container to be
+previous image in its cache when the user requests a new instance to be
 created from it, LXD will use the previous version of the image rather
-than delay the container creation.
+than delay the instance creation.
 -->
 
 この振る舞いは現在のイメージが自動更新されるように設定されている時のみに
@@ -103,18 +103,18 @@ auto-updated and can be disabled by setting `images.auto_update_interval` to 0.
 
 ## プロファイル <!-- Profiles -->
 `lxc image edit` コマンドを使ってイメージにプロファイルのリストを関連付けできます。
-イメージにプロファイルを関連付けた後に起動したコンテナはプロファイルを順番に適用します。
+イメージにプロファイルを関連付けた後に起動したインスタンスはプロファイルを順番に適用します。
 プロファイルのリストとして `nil` を指定すると `default` プロファイルのみがイメージに関連付けされます。
 空のリストを指定すると、 `default` プロファイルも含めて一切のプロファイルをイメージに適用しません。
-イメージに関連付けされたプロファイルは `lxc launch` の `--profile` と `--no-profiles` オプションを使って起動時にオーバーライドできます。
+イメージに関連付けされたプロファイルは `lxc launch` の `--profile` と `--no-profiles` オプションを使ってインスタンス起動時にオーバーライドできます。
 <!--
 A list of profiles can be associated with an image using the `lxc image edit`
-command. After associating profiles with an image, a container launched
+command. After associating profiles with an image, an instance launched
 using the image will have the profiles applied in order. If `nil` is passed
 as the list of profiles, only the `default` profile will be associated with 
 the image. If an empty list is passed, then no profile will be associated
 with the image, not even the `default` profile. An image's associated
-profiles can be overridden when launching a container by using the 
+profiles can be overridden when launching an instance by using the 
 `-\-profile` and the `-\-no-profiles` flags to `lxc launch`.
 -->
 
@@ -124,18 +124,18 @@ LXD は現状 2 つの LXD に特有なイメージの形式をサポートし�
 LXD currently supports two LXD-specific image formats.
 -->
 
-1 つめは統合された tarball で、単一の tarball がコンテナの rootfs と
+1 つめは統合された tarball で、単一の tarball がインスタンスの root と
 必要なメタデータの両方を含みます。
 <!--
 The first is a unified tarball, where a single tarball
-contains both the container rootfs and the needed metadata.
+contains both the instance root and the needed metadata.
 -->
 
-2 つめは分離されたモデルで、 2 つの tarball を使い、 1 つは rootfs を
-含み、もう一つはコンテナのメタデータを含みます。
+2 つめは分離されたモデルで、 2 つのファイルを使い、 1 つは root を
+含み、もう一つはメタデータを含みます。
 <!--
-The second is a split model, using two tarballs instead, one containing
-the rootfs, the other containing the metadata.
+The second is a split model, using two files instead, one containing
+the root, the other containing the metadata.
 -->
 
 LXD 自身によって生成されるのは前者の形式で、 LXD 特有のイメージを使う
@@ -202,10 +202,11 @@ it can also be a squashfs image.
 -->
 
 ### 中身 <!-- Content -->
-rootfs のディレクトリ (あるいは tarball) は完全なファイルシステムのツリーを含み、
-それがコンテナの `/` になります。
+コンテナでは rootfs のディレクトリ (あるいは tarball) は完全なファイルシステムのツリーを含み、それが `/` になります。
+VM ではこれは代わりに `root.img` ファイルでメインのディスクデバイスになります。
 <!--
-The rootfs directory (or tarball) contains a full file system tree of what will become the container's `/`.
+For containers, the rootfs directory (or tarball) contains a full file system tree of what will become the `/`.
+For VMs, this is instead a `root.img` file which becomes the main disk device.
 -->
 
 テンプレートのディレクトリはコンテナ内で使用される pongo2 形式のテンプレート・ファイルを含みます。
@@ -224,9 +225,9 @@ LXD, at the moment, this contains:
 architecture: x86_64
 creation_date: 1424284563
 properties:
-  description: Ubuntu 14.04 LTS Intel 64bit
+  description: Ubuntu 18.04 LTS Intel 64bit
   os: Ubuntu
-  release: trusty 14.04
+  release: bionic 18.04
 templates:
   /etc/hosts:
     when:
@@ -261,9 +262,9 @@ pretty common.
 For templates, the `when` key can be one or more of:
 -->
 
- - `create` (そのイメージから新しいコンテナが作成されたときに実行される) <!-- (run at the time a new container is created from the image) -->
- - `copy` (既存のコンテナから新しいコンテナが作成されたときに実行される) <!-- (run when a container is created from an existing one) -->
- - `start` (コンテナが開始される度に実行される) <!-- (run every time the container is started) -->
+ - `create` (そのイメージから新しいインスタンスが作成されたときに実行される) <!-- (run at the time a new instance is created from the image) -->
+ - `copy` (既存のインスタンスから新しいインスタンスが作成されたときに実行される) <!-- (run when an instance is created from an existing one) -->
+ - `start` (インスタンスが開始される度に実行される) <!-- (run every time the instance is started) -->
 
 テンプレートは常に以下のコンテキストを受け取ります。
 <!--
@@ -272,9 +273,10 @@ The templates will always receive the following context:
 
  - `trigger`: テンプレートを呼び出したイベントの名前 <!-- name of the event which triggered the template --> (string)
  - `path`: テンプレート出力先のファイルのパス <!-- path of the file being templated --> (string)
- - `container`: コンテナのプロパティ (name, architecture, privileged そして ephemeral) の key/value の map <!-- key/value map of container properties (name, architecture, privileged and ephemeral) --> (map[string]string)
- - `config`: コンテナの設定の key/value の map <!-- key/value map of the container's configuration --> (map[string]string)
- - `devices`: コンテナに割り当てられたデバイスの key/value の map <!-- key/value map of the devices assigned to this container --> (map[string]map[string]string)
+ - `container`: インスタンスのプロパティ (name, architecture, privileged そして ephemeral) の key/value の map <!-- key/value map of instance properties (name, architecture, privileged and ephemeral) --> (map[string]string) (廃止予定。代わりに `instance` を使用してください) <!-- (deprecated in favor of `instance`) -->
+ - `instance`: インスタンスのプロパティ (name, architecture, privileged そして ephemeral) の key/value の map <!-- key/value map of instance properties (name, architecture, privileged and ephemeral) --> (map[string]string)
+ - `config`: インスタンスの設定の key/value の map <!-- key/value map of the instance's configuration --> (map[string]string)
+ - `devices`: インスタンスに割り当てられたデバイスの key/value の map <!-- key/value map of the devices assigned to this instance --> (map[string]map[string]string)
  - `properties`: metadata.yaml に指定されたテンプレートのプロパティの key/value の map <!-- key/value map of the template properties specified in metadata.yaml --> (map[string]string)
 
 `create_only` キーを設定すると LXD が存在しないファイルだけを生成し、
@@ -284,12 +286,12 @@ The `create_only` key can be set to have LXD only only create missing files but 
 -->
 
 一般的な規範として、パッケージで管理されているファイルをテンプレートの
-生成対象とすべきではないです。そうしてしまうとコンテナの通常の操作で
+生成対象とすべきではないです。そうしてしまうとインスタンスの通常の操作で
 上書きされてしまうでしょう。
 <!--
 As a general rule, you should never template a file which is owned by a
 package or is otherwise expected to be overwritten by normal operation
-of the container.
+of the instance.
 -->
 
 利便性のため、以下の関数が pongo のテンプレートで利用可能となっています。
