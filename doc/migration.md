@@ -5,14 +5,14 @@
 
 <!--
 Migration has two pieces, a "source", that is, the host that already has the
-container, and a "sink", the host that's getting the container. Currently,
+instance, and a "sink", the host that's getting the instance. Currently,
 in the `pull` mode, the source sets up an operation, and the sink connects
-to the source and pulls the container.
+to the source and pulls the instance.
 -->
 マイグレーションには 2 つの要素があります。1 つは「ソース」、つまり
-既にコンテナを保持しているホストです。もう 1 つは「シンク」、コンテナを
+既にインスタンスを保持しているホストです。もう 1 つは「シンク」、インスタンスを
 受け取るホストです。現在、 `pull` モードでは、ソースが操作をセットアップし、
-シンクがソースに接続してコンテナを pull します。
+シンクがソースに接続してインスタンスを pull します。
 
 <!--
 There are three websockets (channels) used in migration:
@@ -28,16 +28,16 @@ There are three websockets (channels) used in migration:
   3. ファイルシステム・ストリーム
 
 <!--
-When a migration is initiated, information about the container, its
+When a migration is initiated, information about the instance, its
 configuration, etc. are sent over the control channel (a full
-description of this process is below), the criu images and container
+description of this process is below), the criu images and instance
 filesystem are synced over their respective channels, and the result of
 the restore operation is sent from the sink to the source over the
 control channel.
 -->
-マイグレーションが開始されると、コンテナに関する情報、コンテナの設定などが
+マイグレーションが開始されると、インスタンスに関する情報、インスタンスの設定などが
 コントロール・チャンネル上を流れます (このプロセスの完全な説明は後述します)。
-criu イメージとコンテナのファイルシステムはそれぞれ個別のチャンネルを
+criu イメージとインスタンスのファイルシステムはそれぞれ個別のチャンネルを
 使って同期され、リストア操作の結果はシンクからソースにコントロール・チャンネル
 上で送られます。
 
@@ -61,12 +61,12 @@ p.haul プロトコルはいつか criu ソケット上で実現されるでし�
 <!--
 Once all three websockets are connected between the two endpoints, the
 source sends a MigrationHeader (protobuf description found in
-`/lxd/migration/migrate.proto`). This header contains the container
-configuration which will be added to the new container.
+`/lxd/migration/migrate.proto`). This header contains the instance
+configuration which will be added to the new instance.
 -->
 2 つのエンドポイント間で 3 つの websocket が全て接続されたら、ソースは
 MigrationHeader (protobuf の記述が `/lxd/migration/migrate.proto` にあります)
-を送ります。このヘッダはコンテナの設定を含んでおり、それは新しいコンテナに
+を送ります。このヘッダはインスタンスの設定を含んでおり、それは新しいインスタンスに
 追加されます。
 
 <!--
