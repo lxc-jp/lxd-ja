@@ -44,11 +44,11 @@ under the `bridge` namespace can be used to configure it.
 -->
 
 さらに、 LXD は既存の Linux ブリッジを利用することも出来ます。
-この場合、ブリッジは `lxd network` で作成する必要はなく、コンテナかプロファイルのデバイス設定で下記のように単に参照できます。
+この場合、ブリッジは `lxd network` で作成する必要はなく、インスタンスかプロファイルのデバイス設定で下記のように単に参照できます。
 <!--
 Additionally, LXD can utilize a pre-existing Linux
 bridge. In this case, the bridge does not need to be created via
-`lxd network` and can simply be referenced in a container or
+`lxd network` and can simply be referenced in an instance or
 profile device configuration as follows:
 -->
 
