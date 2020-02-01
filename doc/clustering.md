@@ -2,11 +2,11 @@
 <!-- Clustering -->
 
 <!--
-LXD can be run in clustering mode, where any number of LXD instances
+LXD can be run in clustering mode, where any number of LXD servers
 share the same distributed database and can be managed uniformly using
 the lxc client or the REST API.
 -->
-LXD はクラスタリングモードで実行できます。クラスタリングモードでは複数台の LXD インスタンスが同じ分散データベースを共有し、REST API や lxc クライアントで統合管理できます。
+LXD はクラスタリングモードで実行できます。クラスタリングモードでは複数台の LXD サーバが同じ分散データベースを共有し、REST API や lxc クライアントで統合管理できます。
 
 <!--
 Note that this feature was introduced as part of the API extension 
@@ -18,11 +18,11 @@ Note that this feature was introduced as part of the API extension
 
 <!--
 First you need to choose a bootstrap LXD node. It can be an existing
-LXD instance or a brand new one. Then you need to initialize the
+LXD server or a brand new one. Then you need to initialize the
 bootstrap node and join further nodes to the cluster. This can be done
 interactively or with a preseed file.
 -->
-まず、ブートストラップノードを選択する必要があります。既存の LXD インスタンスでも新しいインスタンスでもブートストラップノードになれます。ブートストラップノードとなるインスタンスを決めた後は、ブートストラップノードを初期化し、それからクラスターへ追加ノードを参加させます。この処理はインタラクティブに行えますし、前もって定義ファイルを作成しても行えます。
+まず、ブートストラップノードを選択する必要があります。既存の LXD サーバでも新しいインスタンスでもブートストラップノードになれます。ブートストラップノードとなるサーバを決めた後は、ブートストラップノードを初期化し、それからクラスターへ追加ノードを参加させます。この処理はインタラクティブに行えますし、前もって定義ファイルを作成しても行えます。
 
 <!--
 Note that all further nodes joining the cluster must have identical
@@ -59,11 +59,11 @@ available on your network.
 
 <!--
 You can now join further nodes to the cluster. Note however that these
-nodes should be brand new LXD instances, or alternatively you should
+nodes should be brand new LXD servers, or alternatively you should
 clear their contents before joining, since any existing data on them
 will be lost.
 -->
-更に追加のノードをクラスターに追加できます。しかし、追加ノードの既存データはすべて失われるため、追加のノードは完全に新しい LXD インスタンスであるか、追加前にすべての情報をクリアしたノードである必要があります。
+更に追加のノードをクラスターに追加できます。しかし、追加ノードの既存データはすべて失われるため、追加のノードは完全に新しい LXD サーバであるか、追加前にすべての情報をクリアしたノードである必要があります。
 
 <!--
 To add an additional node, run `lxd init` and answer `yes` to the question
@@ -232,9 +232,9 @@ if there are still nodes in the cluster that have not been upgraded
 and that are running an older version. When a node is in the
 Blocked state it will not serve any LXD API requests (in particular,
 lxc commands on that node will not work, although any running
-container will continue to run).
+instance will continue to run).
 -->
-デーモンの新バージョンでデータベーススキーマや API が変更になった場合は、再起動したノードは Blocked 状態に移行する可能性があります。これは、クラスタ内にまだアップグレードされていないノードが存在し、その上で古いバージョンが動作している場合に起こります。ノードが Blocked 状態にあるとき、このノードは LXD API リクエストを一切受け付けません（詳しく言うと、実行中のコンテナは動き続けますが、ノード上の lxc コマンドは動きません）。
+デーモンの新バージョンでデータベーススキーマや API が変更になった場合は、再起動したノードは Blocked 状態に移行する可能性があります。これは、クラスタ内にまだアップグレードされていないノードが存在し、その上で古いバージョンが動作している場合に起こります。ノードが Blocked 状態にあるとき、このノードは LXD API リクエストを一切受け付けません（詳しく言うと、実行中のインスタンスは動き続けますが、ノード上の lxc コマンドは動きません）。
 
 <!--
 You can see if some nodes are blocked by running `lxc cluster list` on
@@ -299,13 +299,13 @@ At this point you can restart the LXD daemon and the database should be back
 online.
 -->
 
-データベースからは何の情報も削除されていないことに注意してください。特に失われたクラスタメンバーに関する情報は、それらのコンテナについてのメタデータも含めて、まだそこに残っています。
-この情報は失われたコンテナを再度作成する必要がある場合に、さらなるリカバーのステップで利用することができます。
+データベースからは何の情報も削除されていないことに注意してください。特に失われたクラスタメンバーに関する情報は、それらのインスタンスについてのメタデータも含めて、まだそこに残っています。
+この情報は失われたインスタンスを再度作成する必要がある場合に、さらなるリカバーのステップで利用することができます。
 <!--
 Note that no information has been deleted from the database, in particular all
 information about the cluster members that you have lost is still there,
-including the metadata about their containers. This can help you with further
-recovery steps in case you need to re-create the lost containers.
+including the metadata about their instances. This can help you with further
+recovery steps in case you need to re-create the lost instances.
 -->
 
 失われたクラスタメンバーを恒久的に削除するためには、次のコマンドが利用できます。
@@ -324,35 +324,35 @@ Note that this time you have to use the regular ```lxc``` command line tool, not
 ```lxd```.
 -->
 
-## コンテナ <!-- Containers -->
+## インスタンス <!-- Instances -->
 
 <!--
-You can launch a container on any node in the cluster from any node in
+You can launch an instance on any node in the cluster from any node in
 the cluster. For example, from node1:
 -->
-クラスタ上の任意のノード上でコンテナを起動できます。例えば、node1 から:
+クラスタ上の任意のノード上でインスタンスを起動できます。例えば、node1 から:
 
 ```bash
-lxc launch --target node2 ubuntu:16.04 xenial
+lxc launch --target node2 ubuntu:18.04 bionic
 ```
 
 <!--
-will launch an Ubuntu 16.04 container on node2.
+will launch an Ubuntu 18.04 container on node2.
 -->
-のように実行すれば、node2 上で Ubuntu 16.04 コンテナが起動します。
+のように実行すれば、node2 上で Ubuntu 18.04 コンテナが起動します。
 
 <!--
-When you launch a container without defining a target, the container will be 
-launched on the server which has the lowest number of containers.
-If all the servers have the same amount of containers, it will choose one 
+When you launch an instance without defining a target, the instance will be 
+launched on the server which has the lowest number of instances.
+If all the servers have the same amount of instances, it will choose one 
 at random.
 -->
-ターゲットを指定せずにコンテナを起動したときは、コンテナの数が一番少ないサーバ上でコンテナが起動されます。全てのサーバが同じ数のコンテナを持っている場合はランダムに選ばれます。
+ターゲットを指定せずにインスタンスを起動したときは、インスタンスの数が一番少ないサーバ上でインスタンスが起動されます。全てのサーバが同じ数のインスタンスを持っている場合はランダムに選ばれます。
 
 <!--
-You can list all containers in the cluster with:
+You can list all instances in the cluster with:
 -->
-以下のように実行すると、クラスタ上のすべてのコンテナをリストできます:
+以下のように実行すると、インスタンス上のすべてのコンテナをリストできます:
 
 ```bash
 lxc list
@@ -364,16 +364,16 @@ The NODE column will indicate on which node they are running.
 NODE 列がコンテナが実行中のノードを示します。
 
 <!--
-After a container is launched, you can operate it from any node. For
+After an instance is launched, you can operate it from any node. For
 example, from node1:
 -->
-コンテナが起動後、任意のノードからそのコンテナを操作できます。例えば、node1 から:
+インスタンスが起動後、任意のノードからそのコンテナを操作できます。例えば、node1 から:
 
 ```bash
-lxc exec xenial ls /
-lxc stop xenial
-lxc delete xenial
-lxc pull file xenial/etc/hosts .
+lxc exec bionic ls /
+lxc stop bionic
+lxc delete bionic
+lxc pull file bionic/etc/hosts .
 ```
 
 のように操作できます。
@@ -415,9 +415,9 @@ lxc config set cluster.images_minimal_replica 1
 <!--
 As mentioned above, all nodes must have identical storage pools. The
 only difference between pools on different nodes might be their
-`source`, `size` or `zfs.pool_name` configuration keys.
+`source`, `size` or `zfs.pool\_name` configuration keys.
 -->
-先に述べたように、すべてのノードは同一のストレージプールを持たなければなりません。異なるノード上のプール間の違いは、設定項目、`source`、`size`、`zfs.pool_name` のみです。
+先に述べたように、すべてのノードは同一のストレージプールを持たなければなりません。異なるノード上のプール間の違いは、設定項目、`source`、`size`、`zfs.pool\_name` のみです。
 
 <!--
 To create a new storage pool, you first have to define it across all
