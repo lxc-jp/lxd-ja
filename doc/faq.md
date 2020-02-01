@@ -174,12 +174,12 @@ safe to do.
 ### 'port security' に気をつける <!-- Beware of 'port security' -->
 
 スイッチは MAC アドレスの変更を許さず、不正な MAC アドレスのトラフィックをドロップするか、ポートを完全に無効にするものが多いです。
-ホストから LXD コンテナに ping できたとしても、_異なった_ ホストから ping できない場合は、これが原因の可能性があります。
+ホストから LXD インスタンスに ping できたとしても、_異なった_ ホストから ping できない場合は、これが原因の可能性があります。
 この原因を突き止める方法は、アップリンク（この場合は eth1）で tcpdump を実行することです。
 すると、応答は送るが ACK を取得できない 'ARP Who has xx.xx.xx.xx tell yy.yy.yy.yy'、もしくは ICMP パケットが行き来しているものの、決して他のホストで受け取られないのが見えるでしょう。
 <!--
 Many switches do *not* allow MAC address changes, and will either drop traffic
-with an incorrect MAC, or, disable the port totally. If you can ping a LXD container
+with an incorrect MAC, or, disable the port totally. If you can ping a LXD instance
 from the host, but are not able to ping it from a _different_ host, this could be
 the cause.  The way to diagnose this is to run a tcpdump on the uplink (in this case,
 eth1), and you will see either 'ARP Who has xx.xx.xx.xx tell yy.yy.yy.yy', with you
