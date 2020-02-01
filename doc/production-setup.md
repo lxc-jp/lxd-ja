@@ -11,10 +11,10 @@ and now you want to try doing some serious work with LXD.
 -->
 
 何万ものファイル操作を必要とするコンテナを使用する際の典型的な落とし穴を
-避けるために、 Ubuntu Server 16.04 の素のインストール状態では、サーバ設定に
+避けるために、 Ubuntu Server 18.04 の素のインストール状態では、サーバ設定に
 いくつかの設定変更が必要です。
 <!--
-With the vanilla installation of Ubuntu Server 16.04, some modifications
+With the vanilla installation of Ubuntu Server 18.04, some modifications
 to the server configuration will be needed, to avoid common pitfalls when
 using containers that require tens of thousands of file operations.
 -->
@@ -70,22 +70,30 @@ LXD ホスト上に 1GbE 以上の NIC をお持ちか、 LXD ホストに 1GbE 
 お持ちでしたら、 txqueuelen を調整する価値があります。これらの設定は 10GbE NIC ではさらに
 よく機能します。
 <!--
-If you have at least 1GbE NIC on your lxd host with a lot of local activity (container - container connections, or host - container connections), or you have 1GbE or better internet connection on your lxd host it worth play with txqueuelen. These settings work even better with 10GbE NIC.
+If you have at least 1GbE NIC on your lxd host with a lot of local
+activity (container - container connections, or host - container
+connections), or you have 1GbE or better internet connection on your lxd
+host it worth play with txqueuelen. These settings work even better with
+10GbE NIC.
 -->
 
 #### サーバの変更 <!-- Server Changes -->
 
 ##### txqueuelen 
-
 (あなたにとっての最適な値はわかりませんが) あなたの実 NIC の `txqueuelen` を
 10000 に変える必要がある場合、 lxdbr0 インタフェースの `txqueuelen` も 10000 に
 変更してください。
+<!--
+You need to change `txqueuelen` of your real NIC to 10000 (not sure
+about the best possible value for you), and change and change lxdbr0
+interface `txqueuelen` to 10000.  
+-->
+
 Debian ベースのディストリビューションでは `/etc/network/interfaces` 内で
 `txqueuelen` を恒久的に変更できます。
 例えば `up ip link set eth0 txqueuelen 10000` という設定を加えることで
 起動時にインタフェースの txqueuelen の値を設定できます。
 <!--
-You need to change `txqueuelen` of your real NIC to 10000 (not sure about the best possible value for you), and change and change lxdbr0 interface `txqueuelen` to 10000.  
 In Debian-based distros you can change `txqueuelen` permanently in `/etc/network/interfaces`  
 You can add for ex.: `up ip link set eth0 txqueuelen 10000` to your interface configuration to set txqueuelen value on boot.  
 You could set it txqueuelen temporary (for test purpose) with `ifconfig <interface> txqueuelen 10000`
@@ -133,7 +141,12 @@ txqueuelen の値の調整の良いところは、使用するコンテナ数が
 調整の恩恵を受けられることです。そして、この値はいつでも一時的に変更することができ、
 あなたの環境で LXD ホストの再起動無しに変更の結果を確認することができます。
 <!--
-10000 txqueuelen value commonly used with 10GbE NICs. Basically small txqueuelen values used with slow devices with a high latency, and higher with devices with low latency. I personally have like 3-5% improvement with these settings for local (host with container, container vs container) and internet connections. Good thing about txqueuelen value tweak, the more containers you use, the more you can be can benefit from this tweak. And you can always temporary set this values and check this tweak in your environment without lxd host reboot.
+10000 txqueuelen value commonly used with 10GbE NICs. Basically small
+txqueuelen values used with slow devices with a high latency, and higher
+with devices with low latency. I personally have like 3-5% improvement
+with these settings for local (host with container, container vs
+container) and internet connections. Good thing about txqueuelen value
+tweak, the more containers you use, the more you can be can benefit from
+this tweak. And you can always temporary set this values and check this
+tweak in your environment without lxd host reboot.
 -->
-
-
