@@ -1697,3 +1697,41 @@ Add virtual machine support.
 <!--
 Allows a list of profiles to be applied to an image when launching a new container. 
 -->
+
+## clustering\_architecture
+クラスタメンバーに `architecture` 属性を追加します。
+この属性はクラスタメンバーのアーキテクチャを示します。
+<!--
+This adds a new `architecture` attribute to cluster members which indicates a cluster
+member's architecture.
+-->
+
+## resources\_disk\_id
+リソース API のディスクのエントリに device\_id フィールドを追加します。
+<!--
+Add a new device\_id field in the disk entries on the resources API.
+-->
+
+## storage\_lvm\_stripes
+通常のボリュームと thin pool ボリューム上で LVM ストライプを使う機能を追加します。
+<!--
+This adds the ability to use LVM stripes on normal volumes and thin pool volumes.
+-->
+
+## vm\_boot\_priority
+ブートの順序を制御するため nic とディスクデバイスに `boot.priority` プロパティを追加します。
+<!--
+Adds a `boot.priority` property on nic and disk devices to control the boot order.
+-->
+
+## unix\_hotplug\_devices
+UNIX のキャラクタデバイスとブロックデバイスのホットプラグのサポートを追加します。
+<!--
+Adds support for unix char and block device hotplugging.
+-->
+
+## api\_filtering
+インスタンスとイメージに対する GET リクエストの結果をフィルタリングする機能を追加します。
+<!--
+Adds support for filtering the result of a GET request for instances and images.
+-->
