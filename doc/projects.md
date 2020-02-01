@@ -1,11 +1,11 @@
 # プロジェクト設定
 <!-- Project configuration -->
 LXD はあなたの LXD サーバを分割する方法としてプロジェクトをサポートしています。
-それぞれのプロジェクトはプロジェクトに固有なコンテナのセットを持ち、また
+それぞれのプロジェクトはプロジェクトに固有なインスタンスのセットを持ち、また
 プロジェクトに固有なイメージやプロファイルを持つこともできます。
 <!--
 LXD supports projects as a way to split your LXD server.
-Each project holds its own set of containers and may also have its own images and profiles.
+Each project holds its own set of instances and may also have its own images and profiles.
 -->
 
 プロジェクトに何を含めるかは `features` 設定キーによって決められます。
