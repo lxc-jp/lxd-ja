@@ -1,11 +1,11 @@
 [![LXD](https://linuxcontainers.org/static/img/containers.png)](https://linuxcontainers.org/lxd)
 # LXD
 <!--
-LXD is a next generation system container manager.
-It offers a user experience similar to virtual machines but using Linux containers instead.
+LXD is a next generation system container and virtual machine manager.
+It offers a unified user experience around full Linux systems running inside containers or virtual machines.
 -->
-LXD は次世代のシステムコンテナマネージャーです。
-仮想マシンと同様のユーザーエクスペリエンスを提供しますが、仮想マシンの代わりに Linux コンテナを使用します。
+LXD は次世代のシステムコンテナおよび仮想マシンのマネージャーです。
+コンテナあるいは仮想マシンの内部で稼働する完全な Linux システムに対して統一されたユーザーエクスペリエンスを提供します。
 
 <!--
 It's image based with pre-made images available for a [wide number of Linux distributions](https://images.linuxcontainers.org)  
@@ -67,7 +67,7 @@ Ubuntu では次のようにインストールできます:
 
 ```bash
 sudo apt update
-sudo apt install acl autoconf dnsmasq-base git golang libacl1-dev libcap-dev liblxc1 liblxc-dev libtool libuv1-dev make pkg-config rsync squashfs-tools tar tcl xz-utils ebtables
+sudo apt install acl autoconf dnsmasq-base git golang libacl1-dev libcap-dev liblxc1 liblxc-dev libtool libudev-dev libuv1-dev make pkg-config rsync squashfs-tools tar tcl xz-utils ebtables
 ```
 
 <!--
@@ -176,6 +176,7 @@ make deps
 export CGO_CFLAGS="${CGO_CFLAGS} -I${GOPATH}/deps/sqlite/ -I${GOPATH}/deps/dqlite/include/ -I${GOPATH}/deps/raft/include/ -I${GOPATH}/deps/libco/"
 export CGO_LDFLAGS="${CGO_LDFLAGS} -L${GOPATH}/deps/sqlite/.libs/ -L${GOPATH}/deps/dqlite/.libs/ -L${GOPATH}/deps/raft/.libs -L${GOPATH}/deps/libco/"
 export LD_LIBRARY_PATH="${GOPATH}/deps/sqlite/.libs/:${GOPATH}/deps/dqlite/.libs/:${GOPATH}/deps/raft/.libs:${GOPATH}/deps/libco/:${LD_LIBRARY_PATH}"
+export CGO_LDFLAGS_ALLOW="-Wl,-wrap,pthread_create"
 make
 ```
 
@@ -224,8 +225,7 @@ Now, the `lxd` and `lxc` binaries will be available to you and can be used to se
 
 ### マシンセットアップ <!-- Machine Setup -->
 <!--
-You'll need sub{u,g}ids for root, so that LXD can create the unprivileged
-containers:
+You'll need sub{u,g}ids for root, so that LXD can create the unprivileged containers:
 -->
 LXD が非特権コンテナを作成できるように、root ユーザに対する sub{u,g}id の設定が必要です:
 
@@ -245,9 +245,9 @@ sudo -E LD_LIBRARY_PATH=$LD_LIBRARY_PATH $GOPATH/bin/lxd --group sudo
 
 ## セキュリティ <!-- Security -->
 <!--
-LXD, similar to other container managers provides a UNIX socket for local communication.
+LXD, similar to other container and VM managers provides a UNIX socket for local communication.
 -->
-LXD は他のコンテナ管理システムと同様にローカル通信用に UNIX ソケットを提供します。
+LXD は他のコンテナおよびVMの管理システムと同様にローカル通信用に UNIX ソケットを提供します。
 
 <!--
 **WARNING**: Anyone with access to that socket can fully control LXD, which includes
@@ -567,7 +567,7 @@ The `hello-ubuntu.json` file referenced above could contain something like:
         "mode":"pull",
         "protocol":"simplestreams",
         "server":"https://cloud-images.ubuntu.com/releases",
-        "alias":"14.04"
+        "alias":"18.04"
     }
 }
 ```
