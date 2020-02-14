@@ -42,7 +42,7 @@ number of nodes is less than three, then only one node in the cluster
 will store the SQLite database. When the third node joins the cluster,
 both the second and third nodes will receive a replica of the database.
 -->
-クラスター内のノード数としては 3 以上を強く推奨します。これは少なくとも 1 ノードが落ちても分散状態のクオラムを確立できるからです（分散状態は Raft アルゴリズムを使ってレプリケーションされている SQLite データベースに保管されています）。ノード数が 3 より小さくなるとクラスタ内のただ 1 つのノードだけが SQLite データベースを保管します。第 3 のノードがクラスターに参加したときに、第 2 と第 3 のノードがデータベースの複製を受け取ります。
+クラスター内のノード数としては 3 以上を強く推奨します。これは少なくとも 1 ノードが落ちても分散状態のクオラムを確立できるからです（分散状態は Raft アルゴリズムを使ってレプリケーションされている SQLite データベースに保管されています）。ノード数が 3 より小さくなるとクラスター内のただ 1 つのノードだけが SQLite データベースを保管します。第 3 のノードがクラスターに参加したときに、第 2 と第 3 のノードがデータベースの複製を受け取ります。
 
 ### インタラクティブに行う方法 <!-- Interactively -->
 
@@ -172,15 +172,70 @@ Once your cluster is formed you can see a list of its nodes and their
 status by running `lxc cluster list`. More detailed information about
 an individual node is available with `lxc cluster show <node name>`.
 -->
-クラスタが形成されると、`lxc cluster list` を実行して、ノードのリストと状態を見ることができます。ノードそれぞれのもっと詳細な情報は `lxc cluster show <node name>` を実行して取得できます。
+クラスターが形成されると、`lxc cluster list` を実行して、ノードのリストと状態を見ることができます。ノードそれぞれのもっと詳細な情報は `lxc cluster show <node name>` を実行して取得できます。
 
+### 投票 (voting) メンバーとスタンバイメンバー <!-- Voting and stand-by members -->
+
+クラスターは状態を保管するために分散 [データベース](database.md) を使用します。
+クラスター内の全てのノードはユーザのリクエストに応えるためにそのような分散データベースにアクセスする必要があります。
+<!--
+The cluster uses a distributed [database](database.md) to store its state. All
+nodes in the cluster need to access such distributed database in order to serve
+user requests.
+-->
+
+クラスター内に多くのノードがある場合、それらのうちいくつかだけがデータベースのデータを複製するために選ばれます。
+選ばれた各オンードは投票者 (voter) としてあるいはスタンバイとしてデータを複製できます。
+データベース（とそれに由来するクラスター）は投票者の過半数がオンラインである限り利用可能です。
+別の投票者が正常にシャットダウンした時やオフラインであると検出された時はスタンバイノードが自動的に投票者に昇格されます。
+<!--
+If the cluster has many nodes, only some of them will be picked to replicate
+database data. Each node that is picked can replicate data either as "voter" or
+as "stand-by". The database (and hence the cluster) will remain available as
+long as a majority of voters is online. A stand-by node will automatically be
+promoted to voter when another voter is shutdown gracefully or when its detected
+to be offline.
+-->
+
+投票ノードのデフォルト数は 3 で、スタンバイノードのデフォルト数は 2 です。
+これは 1 度に最大で 1 つの投票ノードの電源を切る限りあなたのクラスターは稼働し続けることを意味します。
+<!--
+The default number of voting nodes is 3 and the default number of stand-by nodes
+is 2. This means that your cluster will remain operation as long as you switch
+off at most one voting node at a time.
+-->
+
+投票ノードとスタンバイノードの望ましい数は以下のように変更できます。
+<!--
+You can change the desired number of voting and stand-by nodes with:
+-->
+
+```bash
+lxc config set cluster.max_voters <n>
+```
+
+そして
+<!--
+and
+-->
+
+```bash
+lxc config set cluster.max_standby <n>
+```
+
+投票者の最大数は奇数で最低でも 3 であるという制約があります。
+一方、スタンバイノードは 0 から 5 の間でなければなりません。
+<!--
+with the constraint that the maximum number of voters must be odd and must be
+least 3, while the maximum number of stand-by nodes must be between 0 and 5.
+-->
 
 ### ノードの削除 <!-- Deleting nodes -->
 
 <!--
 To cleanly delete a node from the cluster use `lxc cluster remove <node name>`.
 -->
-クラスタからノードをクリーンに削除するには、`lxc cluster remove <node name>` を使います。
+クラスターからノードをクリーンに削除するには、`lxc cluster remove <node name>` を使います。
 
 ### オフラインノードとフォールトトレランス <!-- Offline nodes and fault tolerance -->
 
@@ -191,7 +246,7 @@ seconds, its status will be marked as OFFLINE and no operation will be
 possible on it, as well as operations that require a state change
 across all nodes.
 -->
-都度、選出されたクラスタリーダーが存在し、そのリーダーが他のノードの健全性をモニタリングします。20 秒以上ノードがダウンした場合は、ステータスは OFFLINE とマークされ、そのノード上での操作はできなくなります。また、すべてのノードで状態の変更が必要な操作が可能です。
+都度、選出されたクラスターリーダーが存在し、そのリーダーが他のノードの健全性をモニタリングします。20 秒以上ノードがダウンした場合は、ステータスは OFFLINE とマークされ、そのノード上での操作はできなくなります。また、すべてのノードで状態の変更が必要な操作が可能です。
 
 <!--
 If the node that goes offline is the leader itself, the other nodes
@@ -210,6 +265,21 @@ If you can't or don't want to bring the node back online, you can
 delete it from the cluster using `lxc cluster remove \-\-force <node name>`.
 -->
 ノードをオンラインに戻せないとき、ノードをオンラインに戻したくないときは、`lxc cluster remove --force <node name>` を使ってクラスターからノードを削除できます。
+
+反応しないノードがオフラインと認識されるまでの秒数は以下のようにして変更できます。
+<!--
+You can tweak the amount of seconds after which a non-responding node will be
+considered offline by running:
+-->
+
+```bash
+lxc config set cluster.offline_threshold <n seconds>
+```
+
+最小値は 10 秒です。
+<!--
+The minimum value is 10 seconds.
+-->
 
 ### ノードのアップグレード <!-- Upgrading nodes -->
 
@@ -234,7 +304,7 @@ Blocked state it will not serve any LXD API requests (in particular,
 lxc commands on that node will not work, although any running
 instance will continue to run).
 -->
-デーモンの新バージョンでデータベーススキーマや API が変更になった場合は、再起動したノードは Blocked 状態に移行する可能性があります。これは、クラスタ内にまだアップグレードされていないノードが存在し、その上で古いバージョンが動作している場合に起こります。ノードが Blocked 状態にあるとき、このノードは LXD API リクエストを一切受け付けません（詳しく言うと、実行中のインスタンスは動き続けますが、ノード上の lxc コマンドは動きません）。
+デーモンの新バージョンでデータベーススキーマや API が変更になった場合は、再起動したノードは Blocked 状態に移行する可能性があります。これは、クラスター内にまだアップグレードされていないノードが存在し、その上で古いバージョンが動作している場合に起こります。ノードが Blocked 状態にあるとき、このノードは LXD API リクエストを一切受け付けません（詳しく言うと、実行中のインスタンスは動き続けますが、ノード上の lxc コマンドは動きません）。
 
 <!--
 You can see if some nodes are blocked by running `lxc cluster list` on
@@ -252,9 +322,9 @@ out-of-date node left and will become operational again.
 
 ### ディザスターリカバリー <!-- Disaster recovery -->
 
-各 LXD クラスタはデータベースノードとして機能するメンバーを最大 3 つまで持つことができます。
-恒久的にデータベースノードとして機能するクラスタメンバーの過半数を失った場合 (例えば 3 メンバーのクラスタで 2 メンバーを失った場合)、
-クラスタは利用不可能になります。しかし、 1 つでもデータベースノードが生き残っていれば、クラスタをリカバーすることができます。
+各 LXD クラスターはデータベースノードとして機能するメンバーを最大 3 つまで持つことができます。
+恒久的にデータベースノードとして機能するクラスターメンバーの過半数を失った場合 (例えば 3 メンバーのクラスターで 2 メンバーを失った場合)、
+クラスターは利用不可能になります。しかし、 1 つでもデータベースノードが生き残っていれば、クラスターをリカバーすることができます。
 <!--
 Every LXD cluster has up to 3 members that serve as database nodes. If you
 permanently lose a majority of the cluster members that are serving as database
@@ -263,7 +333,7 @@ cluster will become unavailable. However, if at least one database node has
 survived, you will be able to recover the cluster.
 -->
 
-クラスタメンバーがデータベースノードとして設定されているかどうかをチェックするには、クラスタのいずれかの生き残っているメンバーにログオンして以下のコマンドを実行します。
+クラスターメンバーがデータベースノードとして設定されているかどうかをチェックするには、クラスターのいずれかの生き残っているメンバーにログオンして以下のコマンドを実行します。
 <!--
 In order to check which cluster members are configured as database nodes, log on
 any survived member of your cluster and run the command:
@@ -299,7 +369,7 @@ At this point you can restart the LXD daemon and the database should be back
 online.
 -->
 
-データベースからは何の情報も削除されていないことに注意してください。特に失われたクラスタメンバーに関する情報は、それらのインスタンスについてのメタデータも含めて、まだそこに残っています。
+データベースからは何の情報も削除されていないことに注意してください。特に失われたクラスターメンバーに関する情報は、それらのインスタンスについてのメタデータも含めて、まだそこに残っています。
 この情報は失われたインスタンスを再度作成する必要がある場合に、さらなるリカバーのステップで利用することができます。
 <!--
 Note that no information has been deleted from the database, in particular all
@@ -308,7 +378,7 @@ including the metadata about their instances. This can help you with further
 recovery steps in case you need to re-create the lost instances.
 -->
 
-失われたクラスタメンバーを恒久的に削除するためには、次のコマンドが利用できます。
+失われたクラスターメンバーを恒久的に削除するためには、次のコマンドが利用できます。
 <!--
 In order to permanently delete the cluster members that you have lost, you can
 run the command:
@@ -330,7 +400,7 @@ Note that this time you have to use the regular ```lxc``` command line tool, not
 You can launch an instance on any node in the cluster from any node in
 the cluster. For example, from node1:
 -->
-クラスタ上の任意のノード上でインスタンスを起動できます。例えば、node1 から:
+クラスター上の任意のノード上でインスタンスを起動できます。例えば、node1 から:
 
 ```bash
 lxc launch --target node2 ubuntu:18.04 bionic
@@ -380,8 +450,8 @@ lxc pull file bionic/etc/hosts .
 
 ## イメージ <!-- Images -->
 
-デフォルトではデータベースメンバを持っているのと同じ数のクラスタに
-LXD はイメージを複製します。これは通常はクラスタ内で最大3つのコピーを
+デフォルトではデータベースメンバを持っているのと同じ数のクラスターに
+LXD はイメージを複製します。これは通常はクラスター内で最大3つのコピーを
 持つことを意味します。
 <!--
 By default, LXD will replicate images on as many cluster members as you
@@ -481,7 +551,7 @@ volumes in the same way you do in non-clustered deployments, except
 that you'll have to pass a `\-\-target <node name>` parameter to volume
 commands if more than one node has a volume with the given name.
 -->
-異なるボリュームは、異なるノード（例えば image volumes）上に存在する限りは同じ名前を持てます。複数のノードが与えた名前のボリュームを持つ場合には、ボリュームコマンドに `--target <node name>` を与える必要がある点を除いて、ストレージボリュームはクラスタ化されていない場合と同じ方法で管理できます。
+異なるボリュームは、異なるノード（例えば image volumes）上に存在する限りは同じ名前を持てます。複数のノードが与えた名前のボリュームを持つ場合には、ボリュームコマンドに `--target <node name>` を与える必要がある点を除いて、ストレージボリュームはクラスター化されていない場合と同じ方法で管理できます。
 
 <!--
 For example:
@@ -555,9 +625,9 @@ which is not node-specific (see above).
 -->
 この最後の ``network create`` コマンドには、ノード固有ではない（上記参照）任意の設定項目を与えることができます。
 
-## 分離した REST API とクラスタネットワーク <!-- Separate REST API and clustering networks -->
+## 分離した REST API とクラスターネットワーク <!-- Separate REST API and clustering networks -->
 
-クライアントの REST API エンドポイントとクラスタ内のノード間の内部的なトラフィック
+クライアントの REST API エンドポイントとクラスター内のノード間の内部的なトラフィック
 （例えば REST API に DNS ラウンドロビンとともに仮想 IP アドレスを使うために）
 で別のネットワークを設定できます。
 <!--
@@ -566,7 +636,7 @@ and for internal traffic between the nodes of your cluster (for example in order
 to use a virtual address for your REST API, with DNS round robin).
 -->
 
-このためには、クラスタの最初のノードを ```cluster.https_address``` 設定キーを
+このためには、クラスターの最初のノードを ```cluster.https_address``` 設定キーを
 使ってブートストラップする必要があります。例えば以下の定義ファイルを使うと
 <!--
 To do that, you need to bootstrap the first node of the cluster using the
