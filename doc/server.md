@@ -14,7 +14,7 @@ currently supported:
 
  - `backups` バックアップ設定 <!-- (backups configuration) -->
  - `candid` Candid 認証の統合 <!-- (Candid authentication integration) -->
- - `cluster` クラスタ設定 <!-- (cluster configuration) -->
+ - `cluster` クラスター設定 <!-- (cluster configuration) -->
  - `core` コア・デーモン設定 <!-- (core daemon configuration) -->
  - `images` イメージ設定 <!-- (image configuration) -->
  - `maas` MAAS 統合 <!-- (MAAS integration) -->
@@ -27,9 +27,11 @@ candid.api.key                      | string    | global    | -         | candid
 candid.api.url                      | string    | global    | -         | candid\_authentication   | Candid を使用する外部認証エンドポイントの URL <!-- URL of the the external authentication endpoint using Candid -->
 candid.expiry                       | integer   | global    | 3600      | candid\_config           | Canded macaroon の有効期間 (秒で指定) <!-- Candid macaroon expiry in seconds -->
 candid.domains                      | string    | global    | -         | candid\_config           | 許可される Candid ドメインのカンマ区切りリスト (空文字は全てのドメインが有効という意味になります) <!-- Comma-separated list of allowed Candid domains (empty string means all domains are valid) -->
-cluster.https\_address              | string    | local     | -         | clustering\_server\_address       | クラスタのトラフィックに使用すべきサーバのアドレス <!-- Address the server should using for clustering traffic -->
+cluster.https\_address              | string    | local     | -         | clustering\_server\_address       | クラスターのトラフィックに使用すべきサーバのアドレス <!-- Address the server should using for clustering traffic -->
 cluster.offline\_threshold          | integer   | global    | 20        | clustering               | 無反応なノードをオフラインとみなす秒数 <!-- Number of seconds after which an unresponsive node is considered offline -->
-cluster.images\_minimal\_replica    | integer   | global    | 3         | clustering\_image\_replication    | 特定のイメージのコピーを持つべきクラスタメンバの最小数 (リプリケーションなしは 1 を、全メンバにコピーは -1 を設定) <!-- Minimal numbers of cluster members with a copy of a particular image (set 1 for no replication, -1 for all members) -->
+cluster.images\_minimal\_replica    | integer   | global    | 3         | clustering\_image\_replication    | 特定のイメージのコピーを持つべきクラスターメンバーの最小数 (リプリケーションなしは 1 を、全メンバーにコピーは -1 を設定) <!-- Minimal numbers of cluster members with a copy of a particular image (set 1 for no replication, -1 for all members) -->
+cluster.max\_voters                 | integer   | global    | 3         | clustering\_sizing                | データベースの投票者の役割を割り当てられるクラスターメンバーの最大数 <!-- Maximum number of cluster members that will be assigned the database voter role -->
+cluster.max\_standby                | integer   | global    | 2         | clustering\_sizing                | データベースのスタンバイの役割を割り当てられるクラスターメンバーの最大数 <!-- Maximum number of cluster members that will be assigned the database stand-by role -->
 core.debug\_address                 | string    | local     | -         | pprof\_http              | pprof デバッグサーバがバインドするアドレス (HTTP) <!-- Address to bind the pprof debug server to (HTTP) -->
 core.https\_address                 | string    | local     | -         | -                        | リモート API がバインドするアドレス (HTTPS) <!-- Address to bind for the remote API (HTTPS) -->
 core.https\_allowed\_credentials    | boolean   | global    | -         | -                        | Access-Control-Allow-Credentials HTTP ヘッダの値を "true" にするかどうか <!-- Whether to set Access-Control-Allow-Credentials http header value to "true" -->
@@ -63,7 +65,7 @@ storage.images\_volume              | string    | local     | -         | daemon
 lxc config set <key> <value>
 ```
 
-クラスタの一部として動作するときは、上記の表でスコープが `global` のキーは全てのクラスタメンバーに即座に反映されます。スコープが `local` のキーはコマンドラインツールの `\-\-target` オプションを使ってメンバーごとに設定する必要があります。
+クラスターの一部として動作するときは、上記の表でスコープが `global` のキーは全てのクラスターメンバーに即座に反映されます。スコープが `local` のキーはコマンドラインツールの `\-\-target` オプションを使ってメンバーごとに設定する必要があります。
 <!--
 When operating as part of a cluster, the keys marked with a `global`
 scope will immediately be applied to all the cluster members. Those keys
