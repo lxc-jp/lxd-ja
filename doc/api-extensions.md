@@ -1735,3 +1735,20 @@ Adds support for unix char and block device hotplugging.
 <!--
 Adds support for filtering the result of a GET request for instances and images.
 -->
+
+## instance\_nic\_network
+NIC デバイスの `network` プロパティのサポートを追加し、管理されたネットワークへ NIC をリンクできるようにします。
+これによりネットワーク設定の一部を引き継ぎ、 IP 設定のより良い検証を行うことができます。
+<!--
+Adds support for the `network` property on a NIC device to allow a NIC to be linked to a managed network.
+This allows it to inherit some of the network's settings and allows better validation of IP settings.
+-->
+
+## clustering\_sizing
+データベースの投票者とスタンバイに対してカスタムの値を指定するサポートです。
+cluster.max\_voters と cluster.max\_standby という新しい設定キーが導入され、データベースの投票者とスタンバイの理想的な数を指定できます。
+<!--
+Support specifying a custom values for database voters and standbys.
+The new cluster.max_voters and cluster.max_standby configuration keys were introduced
+to specify to the ideal number of database voter and standbys.
+-->
