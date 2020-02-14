@@ -426,6 +426,7 @@ Device configuration properties:
 Key                      | Type      | Default           | Required  | Description
 :--                      | :--       | :--               | :--       | :--
 parent                   | string    | -                 | yes       | ホストデバイスの名前 <!-- The name of the host device -->
+network                  | string    | -                 | yes       | （parent の代わりに）デバイスをリンクする先の LXD ネットワーク <!-- The LXD network to link device to (instead of parent) -->
 name                     | string    | カーネルが割り当て <!-- kernel assigned -->   | no        | インスタンス内でのインタフェースの名前 <!-- The name of the interface inside the instance -->
 mtu                      | integer   | 親の MTU <!-- parent MTU -->        | no        | 新しいインタフェースの MTU <!-- The MTU of the new interface -->
 hwaddr                   | string    | ランダムに割り当て <!-- randomly assigned --> | no        | 新しいインタフェースの MAC アドレス <!-- The MAC address of the new interface -->
