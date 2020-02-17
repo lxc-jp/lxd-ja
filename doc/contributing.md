@@ -48,6 +48,7 @@ and depending on complexity, things may be split into even smaller chunks.
 When updating strings in the CLI tool (`lxc/`), you may need a commit to update the templates:
 -->
 CLI ツール (`lxc/`) 内の文字列を更新する際は、テンプレートを更新してコミットする必要があるでしょう:
+
  - make i18n
  - git commit -a -s -m "i18n: Update translation templates" po/
 
