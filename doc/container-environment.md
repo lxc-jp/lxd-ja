@@ -23,10 +23,12 @@ LXD は何であれ `/sbin/init` に置かれているものをコンテナの�
 
 <!--
 LXD's communication with PID1 in the container is limited to two signals:
+
  - `SIGINT` to trigger a reboot of the container
  - `SIGPWR` (or alternatively `SIGRTMIN`+3) to trigger a clean shutdown of the container
 -->
 LXD がコンテナの PID1 とコミュニケーションするのは以下の2つのシグナルだけです。
+
  - `SIGINT` コンテナのリブートをトリガーする
  - `SIGPWR` (かあるいは `SIGRTMIN`+3) コンテナのクリーンなシャットダウンをトリガーする
 

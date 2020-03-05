@@ -1389,6 +1389,7 @@ used to track the current mapping for the container.
 <!--
 This effectively gives us:
 -->
+
  - `volatile.last\_state.idmap` => ディスク上の idmap <!-- On-disk idmap -->
  - `volatile.idmap.current` => 現在のカーネルマップ <!-- Current kernel map -->
  - `volatile.idmap.next` => 次のディスク上の idmap <!-- Next on-disk idmap -->
@@ -1595,6 +1596,7 @@ This introduces support for a new Type field on images, indicating what type of 
 <!--
 Extends the disk resource API struct to include:
 -->
+
  - sata デバイス(種別)の適切な検出 <!-- Proper detection of sata devices (type) -->
  - デバイスパス <!-- Device path -->
  - ドライブの RPM <!-- Drive RPM -->
