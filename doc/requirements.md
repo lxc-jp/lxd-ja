@@ -81,6 +81,7 @@ LXD はデータベースとして `dqlite` を使用しています。そのた
 LXD itself also uses a number of (usually packaged) C libraries:
 -->
 LXD は他にもいくつかの (たいていはパッケージ化されている) C ライブラリを使用しています。
+
  - libacl1
  - libcap2
  - libuv1 (`dqlite` で使用) <!-- (for `dqlite`) -->
