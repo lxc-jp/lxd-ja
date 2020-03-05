@@ -11,6 +11,7 @@ pages:
 - 設定:
     - 設定: configuration.md
     - コンテナ: containers.md
+    - インスタンス: instances.md
     - ネットワーク: networks.md
     - preseeded YAML: preseed.md
     - プロファイル: profiles.md
