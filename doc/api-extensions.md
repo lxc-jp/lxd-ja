@@ -716,6 +716,7 @@ This introduces a new internal `volatile.idmap.current` key which is
 used to track the current mapping for the container.
 
 This effectively gives us:
+
  - `volatile.last\_state.idmap` => On-disk idmap
  - `volatile.idmap.current` => Current kernel map
  - `volatile.idmap.next` => Next on-disk idmap
@@ -779,6 +780,7 @@ This introduces container IP filtering (`security.ipv4\_filtering` and `security
 
 ## resources\_v2
 Rework the resources API at /1.0/resources, especially:
+
  - CPU
    - Fix reporting to track sockets, cores and threads
    - Track NUMA node per core
@@ -832,6 +834,7 @@ This introduces support for a new Type field on images, indicating what type of 
 
 ## resources\_disk\_sata
 Extends the disk resource API struct to include:
+
  - Proper detection of sata devices (type)
  - Device path
  - Drive RPM
@@ -915,6 +918,27 @@ This allows it to inherit some of the network's settings and allows better valid
 
 ## clustering\_sizing
 Support specifying a custom values for database voters and standbys.
-The new cluster.max_voters and cluster.max_standby configuration keys were introduced
+The new cluster.max\_voters and cluster.max\_standby configuration keys were introduced
 to specify to the ideal number of database voter and standbys.
 
+## firewall\_driver
+Adds the `Firewall` property to the ServerEnvironment struct indicating the firewall driver being used.
+
+## storage\_lvm\_vg\_force\_reuse
+Introduces the ability to create a storage pool from an existing non-empty volume group.
+This option should be used with care, as LXD can then not guarantee that volume name conflicts won't occur
+with non-LXD created volumes in the same volume group.
+This could also potentially lead to LXD deleting a non-LXD volume should name conflicts occur.
+
+## container\_syscall\_intercept\_hugetlbfs
+When mount syscall interception is enabled and hugetlbfs is specified as an
+allowed filesystem type LXD will mount a separate hugetlbfs instance for the
+container with the uid and gid mount options set to the container's root uid
+and gid. This ensures that processes in the container can use hugepages.
+
+## limits\_hugepages
+This allows to limit the number of hugepages a container can use through the
+hugetlb cgroup. This means the hugetlb cgroup needs to be available. Note, that
+limiting hugepages is recommended when intercepting the mount syscall for the
+hugetlbfs filesystem to avoid allowing the container to exhaust the host's
+hugepages resources.
