@@ -29,6 +29,7 @@ Separate commits should be used for:
  - LXD daemon (`lxd/<package>: Add support for XYZ` for changes to `lxd/`)
  - Tests (`tests: Add test for XYZ` for changes to `tests/`)
 -->
+
  - API 拡張 (`doc/api-extensions.md` と `shared/version.api.go` を含む変更に対して `api: Add XYZ extension`)
  - ドキュメント (`doc/` 内のファイルに対して `doc: Update XYZ`)
  - API 構造 (`shared/api/` の変更に対して `shared/api: Add XYZ`)

@@ -1751,6 +1751,46 @@ This allows it to inherit some of the network's settings and allows better valid
 cluster.max\_voters と cluster.max\_standby という新しい設定キーが導入され、データベースの投票者とスタンバイの理想的な数を指定できます。
 <!--
 Support specifying a custom values for database voters and standbys.
-The new cluster.max_voters and cluster.max_standby configuration keys were introduced
+The new cluster.max\_voters and cluster.max\_standby configuration keys were introduced
 to specify to the ideal number of database voter and standbys.
+-->
+
+## firewall\_driver
+ServerEnvironment 構造体にファイアーウォールのドライバーが使用されていることを示す `Firewall` プロパティを追加します。
+<!--
+Adds the `Firewall` property to the ServerEnvironment struct indicating the firewall driver being used.
+-->
+
+## storage\_lvm\_vg\_force\_reuse
+既存の空でないボリュームグループからストレージボリュームを作成する機能を追加します。
+このオプションの使用には注意が必要です。
+というのは、同じボリュームグループ内に LXD 以外で作成されたボリュームとボリューム名が衝突しないことを LXD が保証できないからです。
+このことはもし名前の衝突が起きたときは LXD 以外で作成されたボリュームを LXD が削除してしまう可能性があることを意味します。
+<!--
+Introduces the ability to create a storage pool from an existing non-empty volume group.
+This option should be used with care, as LXD can then not guarantee that volume name conflicts won't occur
+with non-LXD created volumes in the same volume group.
+This could also potentially lead to LXD deleting a non-LXD volume should name conflicts occur.
+-->
+
+## container\_syscall\_intercept\_hugetlbfs
+mount システムコール・インターセプションが有効にされ hugetlbfs が許可されたファイルシステムとして指定された場合、 LXD は別の hugetlbfs インスタンスを uid と gid をコンテナーの root の uid と gid に設定するマウントオプションを指定してコンテナーにマウントします。
+これによりコンテナー内のプロセスが hugepage を確実に利用できるようにします。
+<!--
+When mount syscall interception is enabled and hugetlbfs is specified as an
+allowed filesystem type LXD will mount a separate hugetlbfs instance for the
+container with the uid and gid mount options set to the container's root uid
+and gid. This ensures that processes in the container can use hugepages.
+-->
+
+## limits\_hugepages
+コンテナーが使用できる hugepage の数を hugetlb cgroup を使って制限できるようにします。
+この機能を使用するには hugetlb cgroup が利用可能になっている必要があります。
+注意: hugetlbfs ファイルシステムの mount システムコールをインターセプトするときは、ホストの hugepage のリソースをコンテナーが使い切ってしまわないように hugepage を制限することを推奨します。
+<!--
+This allows to limit the number of hugepages a container can use through the
+hugetlb cgroup. This means the hugetlb cgroup needs to be available. Note, that
+limiting hugepages is recommended when intercepting the mount syscall for the
+hugetlbfs filesystem to avoid allowing the container to exhaust the host's
+hugepages resources.
 -->
