@@ -12,7 +12,7 @@ LXD はちょうど LXC と同じように Linux カーネルと Go でサポー
 Some objects in LXD are tied to an architecture, like the container,
 container snapshots and images.
 -->
-コンテナ、コンテナのスナップショットやイメージのように LXD のいくつか
+コンテナー、コンテナーのスナップショットやイメージのように LXD のいくつか
 のオブジェクトはアーキテクチャに依存しています。
 
 <!--
@@ -40,7 +40,7 @@ allowing easy query.
 -->
 これは LXD は armv7 hard-float を armv7 soft-float と同じとして扱い、
 両方を "armv7" として参照することを意味します。もしユーザにとって有用で
-あれば正確なユーザスペースの ABI がイメージとコンテナプロパティとして
+あれば正確なユーザスペースの ABI がイメージとコンテナープロパティとして
 設定可能となり、簡単に問い合わせすることを許可します。
 
 ## アーキテクチャ <!-- Architectures -->

@@ -1,23 +1,23 @@
-# コンテナ実行環境
+# コンテナー実行環境
 <!-- Container runtime environment -->
 <!--
 LXD attempts to present a consistent environment to the container it runs.
 -->
-LXD は実行するコンテナに一貫性のある環境を提供しようとします。
+LXD は実行するコンテナーに一貫性のある環境を提供しようとします。
 
 <!--
 The exact environment will differ slightly based on kernel features and user
 configuration but will otherwise be identical for all containers.
 -->
 正確な環境はカーネルの機能やユーザの設定によって若干異なりますが、それ以外は
-全てのコンテナに対して同一です。
+全てのコンテナーに対して同一です。
 
 ## PID1
 <!--
 LXD spawns whatever is located at `/sbin/init` as the initial process of the container (PID 1).
 This binary should act as a proper init system, including handling re-parented processes.
 -->
-LXD は何であれ `/sbin/init` に置かれているものをコンテナの初期プロセス (PID 1) として起動します。
+LXD は何であれ `/sbin/init` に置かれているものをコンテナーの初期プロセス (PID 1) として起動します。
 このバイナリは親が変更されたプロセス (訳注: ゾンビプロセスなど) の処理を含めて適切な init
 システムとして振る舞う必要があります。
 
@@ -27,10 +27,10 @@ LXD's communication with PID1 in the container is limited to two signals:
  - `SIGINT` to trigger a reboot of the container
  - `SIGPWR` (or alternatively `SIGRTMIN`+3) to trigger a clean shutdown of the container
 -->
-LXD がコンテナの PID1 とコミュニケーションするのは以下の2つのシグナルだけです。
+LXD がコンテナーの PID1 とコミュニケーションするのは以下の2つのシグナルだけです。
 
- - `SIGINT` コンテナのリブートをトリガーする
- - `SIGPWR` (かあるいは `SIGRTMIN`+3) コンテナのクリーンなシャットダウンをトリガーする
+ - `SIGINT` コンテナーのリブートをトリガーする
+ - `SIGPWR` (かあるいは `SIGRTMIN`+3) コンテナーのクリーンなシャットダウンをトリガーする
 
 <!--
 The initial environment of PID1 is blank except for `container=lxc` which can
@@ -49,7 +49,7 @@ PID1 が起動される前に閉じられます。
 <!--
 LXD assumes that any image it uses to create a new container from will come with at least:
 -->
-LXD は使用するどのイメージから生成する新規のコンテナは少なくとも以下のファイルシステムを
+LXD は使用するどのイメージから生成する新規のコンテナーは少なくとも以下のファイルシステムを
 含むことを前提とします。
 
  - `/dev` (空のディレクトリ) <!-- (empty) -->
@@ -62,7 +62,7 @@ LXD は使用するどのイメージから生成する新規のコンテナは�
 LXD containers have a minimal and ephemeral `/dev` based on a tmpfs filesystem.
 Since this is a tmpfs and not a devtmpfs, device nodes will only appear if manually created.
 -->
-LXD のコンテナは tmpfs ファイルシステムをベースとする最低限で一時的な `/dev` を
+LXD のコンテナーは tmpfs ファイルシステムをベースとする最低限で一時的な `/dev` を
 持ちます。これは tmpfs であって devtmpfs ではないので、デバイスノードは手動で作成
 されたときのみ現れます。
 
@@ -120,7 +120,7 @@ The following paths will also be automatically mounted if present on the host:
 The reason for passing all of those is legacy init systems which require
 those to be mounted or be mountabled inside the container.
 -->
-これらを引き渡す理由は、これらがマウントされているか、コンテナ内でマウント
+これらを引き渡す理由は、これらがマウントされているか、コンテナー内でマウント
 できるようになっているかが必要とされているレガシーな init システムのためです。
 
 <!--
@@ -128,23 +128,23 @@ The majority of those will not be writable (or even readable) from inside an
 unprivileged container and will be blocked by our AppArmor policy inside
 privileged containers.
 -->
-これらのほとんどは非特権コンテナ内からは書き込み可能ではなく (あるいは読み取り可能
-ですらなく)、特権コンテナ内では LXD の AppArmor ポリシーによってブロックされます。
+これらのほとんどは非特権コンテナー内からは書き込み可能ではなく (あるいは読み取り可能
+ですらなく)、特権コンテナー内では LXD の AppArmor ポリシーによってブロックされます。
 
 ## ネットワーク <!-- Network -->
 <!--
 LXD containers may have any number of network devices attached to them.
 The naming for those unless overridden by the user is ethX where X is an incrementing number.
 -->
-LXD コンテナはネットワークデバイスをいくつでもアタッチできます。
+LXD コンテナーはネットワークデバイスをいくつでもアタッチできます。
 これらの名前はユーザにオーバーライドされない限りは ethX で X は
 連番です。
 
-## コンテナからホストへのコミュニケーション <!-- Container to host communication -->
+## コンテナーからホストへのコミュニケーション <!-- Container to host communication -->
 <!--
 LXD sets up a socket at `/dev/lxd/sock` which root in the container can use to communicate with LXD on the host.
 -->
-LXD は `/dev/lxd/sock` にソケットをセットアップし、コンテナ内の root ユーザはこれを使ってホストの
+LXD は `/dev/lxd/sock` にソケットをセットアップし、コンテナー内の root ユーザはこれを使ってホストの
 LXD とコミュニケーションできます。
 
 <!--
@@ -156,7 +156,7 @@ API は [ここにドキュメント化されています](dev-lxd.md).
 <!--
 If LXCFS is present on the host, it will automatically be setup for the container.
 -->
-ホストに LXCFS がある場合は、コンテナ用に自動的にセットアップされます。
+ホストに LXCFS がある場合は、コンテナー用に自動的にセットアップされます。
 
 <!--
 This normally results in a number of `/proc` files being overridden through bind-mounts.

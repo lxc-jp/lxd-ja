@@ -5,7 +5,7 @@ LXD supports intercepting some specific system calls from unprivileged
 containers and if they're considered to be safe, will executed with
 elevated privileges on the host.
 -->
-LXD では非特権コンテナで、いくつか特定のシステムコールをインターセプトできます。もし、それが安全であると見なせるのであれば、ホスト上で特権を昇格させて実行します。
+LXD では非特権コンテナーで、いくつか特定のシステムコールをインターセプトできます。もし、それが安全であると見なせるのであれば、ホスト上で特権を昇格させて実行します。
 
 <!--
 Doing so comes with a performance impact for the syscall in question and
@@ -28,14 +28,14 @@ Creating such devices isn't allowed in unprivileged containers as this
 is a very easy way to escalate privileges by allowing direct write
 access to resources like disks or memory.
 -->
-もっとも一般的にはコンテナ内部で、ブロックデバイスやキャラクターデバイスを作成するために呼び出されます。このようなデバイスを作成することは、非特権コンテナ内では許可されません。これは、ディスクやメモリのようなリソースに直接書き込みのアクセスを許可することになり、特権を昇格するのに非常に簡単な方法であるためです。　
+もっとも一般的にはコンテナー内部で、ブロックデバイスやキャラクターデバイスを作成するために呼び出されます。このようなデバイスを作成することは、非特権コンテナー内では許可されません。これは、ディスクやメモリのようなリソースに直接書き込みのアクセスを許可することになり、特権を昇格するのに非常に簡単な方法であるためです。　
 
 <!--
 But there are files which are safe to create. For those, intercepting
 this syscall may unblock some specific workloads and allow them to run
 inside an unprivileged containers.
 -->
-しかし、作成しても安全であるファイルもあります。このような場合に、システムコールをインターセプトすることで、特定の処理のブロックが解除され、非特権コンテナ内部で実行できるようになります。
+しかし、作成しても安全であるファイルもあります。このような場合に、システムコールをインターセプトすることで、特定の処理のブロックが解除され、非特権コンテナー内部で実行できるようになります。
 
 <!--
 The devices which are currently allowed are:

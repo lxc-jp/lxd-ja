@@ -1,9 +1,9 @@
 # FAQ
 <!-- # Frequently Asked Questions -->
 
-## コンテナ起動時の問題 <!-- Container Startup Issues -->
+## コンテナー起動時の問題 <!-- Container Startup Issues -->
 
-もしコンテナが起動しない場合や、期待通りの動きをしない場合に最初にすべきことは、コンテナが生成したコンソールログを見ることです。
+もしコンテナーが起動しない場合や、期待通りの動きをしない場合に最初にすべきことは、コンテナーが生成したコンソールログを見ることです。
 これには `lxc console --show-log CONTAINERNAME` コマンドを使います。
 <!--
 If your container is not starting, or not behaving as you would expect,
@@ -26,7 +26,7 @@ can not start.
     Failed to mount proc at /proc: Operation not permitted
     [!!!!!!] Failed to mount API filesystems, freezing.
 
-ここでのエラーは、/sys と /proc がマウントできないというエラーです。これは非特権コンテナでは正しい動きです。
+ここでのエラーは、/sys と /proc がマウントできないというエラーです。これは非特権コンテナーでは正しい動きです。
 しかし、LXD は _可能であれば_ 自動的にこれらのファイルシステムをマウントします。
 <!--
 The errors here say that /sys and /proc can not be mounted - which is
@@ -34,9 +34,9 @@ correct in an unprivileged container.  However, LXD does mount these
 filesystems automatically _if it can_. 
 -->
 
-[コンテナの要件](container-environment.md) では、コンテナには `/sbin/init` が存在するだけでなく、空の `/dev`、`/proc`、`/sys` フォルダーが存在していなければならないと定められています。
+[コンテナーの要件](container-environment.md) では、コンテナーには `/sbin/init` が存在するだけでなく、空の `/dev`、`/proc`、`/sys` フォルダーが存在していなければならないと定められています。
 もしこれらのフォルダーが存在しなければ、LXD はこれらをマウントできません。そして、systemd がこれらをマウントしようとします。
-非特権コンテナでは、systemd はこれを行う権限はなく、フリーズしてしまいます。
+非特権コンテナーでは、systemd はこれを行う権限はなく、フリーズしてしまいます。
 <!--
 The [container requirements](container-environment.md) specify that
 every container must come with an empty `/dev`, `/proc`, and `/sys`
@@ -46,7 +46,7 @@ try to. As this is an unprivileged container, systemd does not have
 the ability to do this, and it then freezes.
 -->
 
-何かが変更される前に環境を見ることはできます。`raw.lxc` 設定パラメーターを使って、明示的にコンテナ内の init を変更できます。
+何かが変更される前に環境を見ることはできます。`raw.lxc` 設定パラメーターを使って、明示的にコンテナー内の init を変更できます。
 これは Linux カーネルコマンドラインに `init=/bin/bash` を設定するのと同じです。
 <!--
 So you can see the environment before anything is changed, you can
@@ -71,7 +71,7 @@ Here is what it looks like:
     [root@systemd /]#
     root@lxc-01:~#
 
-コンテナが起動しましたので、コンテナ内で期待通りに動いていないことを確認できます。
+コンテナーが起動しましたので、コンテナー内で期待通りに動いていないことを確認できます。
 <!--
 Now that the container has started, you can look in it and see that things are
 not running as well as expected.
@@ -86,7 +86,7 @@ not running as well as expected.
     sys
     [root@systemd /]# exit
 
-LXD は自動修復を試みますので、起動時に作成されたフォルダもあります。コンテナをシャットダウンして再起動すると問題は解決されます。
+LXD は自動修復を試みますので、起動時に作成されたフォルダもあります。コンテナーをシャットダウンして再起動すると問題は解決されます。
 しかし問題の根源は依然として存在しています。**テンプレートに必要なファイルが含まれていないという問題です**。
 <!--
 Because LXD tries to auto-heal, it *did* create some of the folders when it was
@@ -187,11 +187,11 @@ sending responses but them not getting acknowledged, or, ICMP packets going in a
 out successfully, but never being received by the other host.
 -->
 
-### 不必要に特権コンテナを実行しない <!-- Do not run privileged containers unless necessary -->
+### 不必要に特権コンテナーを実行しない <!-- Do not run privileged containers unless necessary -->
 
-特権コンテナはホスト全体に影響する処理を行うことができます。例えば、ネットワークカードをリセットするために、/sys 内のものを使えます。
+特権コンテナーはホスト全体に影響する処理を行うことができます。例えば、ネットワークカードをリセットするために、/sys 内のものを使えます。
 これは **ホスト全体** に対してリセットを行い、ネットワークの切断を引き起こします。
-ほぼすべてのことが非特権コンテナで実行できます。コンテナ内から NFS マウントしたいというような、通常とは異なる特権が必要なケースでは、バインドマウントを使う必要があるかもしれません。
+ほぼすべてのことが非特権コンテナーで実行できます。コンテナー内から NFS マウントしたいというような、通常とは異なる特権が必要なケースでは、バインドマウントを使う必要があるかもしれません。
 <!--
 A privileged container can do things that effect the entire host - for example, it
 can use things in /sys to reset the network card, which will reset it for **the entire

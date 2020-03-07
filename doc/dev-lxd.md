@@ -264,7 +264,7 @@ Return value:
  * Description: Container meta-data compatible with cloud-init
  * Return: cloud-init meta-data
 -->
- * 説明: cloud-init と互換性のあるコンテナのメタデータ
+ * 説明: cloud-init と互換性のあるコンテナーのメタデータ
  * 出力: cloud-init のメタデータ
 
 <!--

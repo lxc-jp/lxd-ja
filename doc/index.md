@@ -4,8 +4,8 @@
 LXD is a next generation system container and virtual machine manager.
 It offers a unified user experience around full Linux systems running inside containers or virtual machines.
 -->
-LXD は次世代のシステムコンテナおよび仮想マシンのマネージャーです。
-コンテナあるいは仮想マシンの内部で稼働する完全な Linux システムに対して統一されたユーザーエクスペリエンスを提供します。
+LXD は次世代のシステムコンテナーおよび仮想マシンのマネージャーです。
+コンテナーあるいは仮想マシンの内部で稼働する完全な Linux システムに対して統一されたユーザーエクスペリエンスを提供します。
 
 <!--
 It's image based with pre-made images available for a [wide number of Linux distributions](https://images.linuxcontainers.org)  
@@ -227,7 +227,7 @@ Now, the `lxd` and `lxc` binaries will be available to you and can be used to se
 <!--
 You'll need sub{u,g}ids for root, so that LXD can create the unprivileged containers:
 -->
-LXD が非特権コンテナを作成できるように、root ユーザに対する sub{u,g}id の設定が必要です:
+LXD が非特権コンテナーを作成できるように、root ユーザに対する sub{u,g}id の設定が必要です:
 
 ```bash
 echo "root:1000000:65536" | sudo tee -a /etc/subuid /etc/subgid
@@ -247,7 +247,7 @@ sudo -E LD_LIBRARY_PATH=$LD_LIBRARY_PATH $GOPATH/bin/lxd --group sudo
 <!--
 LXD, similar to other container and VM managers provides a UNIX socket for local communication.
 -->
-LXD は他のコンテナおよびVMの管理システムと同様にローカル通信用に UNIX ソケットを提供します。
+LXD は他のコンテナーおよびVMの管理システムと同様にローカル通信用に UNIX ソケットを提供します。
 
 <!--
 **WARNING**: Anyone with access to that socket can fully control LXD, which includes
@@ -423,7 +423,7 @@ instead both for performance and reliability reasons.
 -->
 プロダクション環境では、パフォーマンスと信頼性を確保するために、loop ベースではなく、ブロックストレージを使うべきです。
 
-#### LXD を使ってコンテナのライブマイグレーションはできますか? <!-- How can I live migrate a container using LXD? -->
+#### LXD を使ってコンテナーのライブマイグレーションはできますか? <!-- How can I live migrate a container using LXD? -->
 <!--
 Live migration requires a tool installed on both hosts called
 [CRIU](https://criu.org), which is available in Ubuntu via:
@@ -438,7 +438,7 @@ sudo apt install criu
 <!--
 Then, launch your container with the following,
 -->
-そして、次のようにコンテナを起動します。
+そして、次のようにコンテナーを起動します。
 
 ```bash
 lxc launch ubuntu $somename
@@ -451,23 +451,23 @@ And with luck you'll have migrated the container :). Migration is still in
 experimental stages and may not work for all workloads. Please report bugs on
 lxc-devel, and we can escalate to CRIU lists as necessary.
 -->
-運が良ければ、コンテナがマイグレーションされるでしょう :)
+運が良ければ、コンテナーがマイグレーションされるでしょう :)
 マイグレーションはまだ実験段階のステージで、すべてのケースで動作しないかもしれません。
 そういう場合は lxc-devel にバグレポートをしてください。必要であれば CRIU にもエスカレーションします。
 
-#### 私のホームディレクトリをコンテナ内にバインドマウントできますか? <!-- Can I bind mount my home directory in a container? -->
+#### 私のホームディレクトリをコンテナー内にバインドマウントできますか? <!-- Can I bind mount my home directory in a container? -->
 <!--
 Yes. The easiest way to do that is using a privileged container to avoid file ownership issues:
 -->
-はい。もっとも簡単に行うには、特権コンテナを使って、ファイルの所有権の問題を回避します:
+はい。もっとも簡単に行うには、特権コンテナーを使って、ファイルの所有権の問題を回避します:
 
-1.a) コンテナを作成します <!-- create a container. -->
+1.a) コンテナーを作成します <!-- create a container. -->
 
 ```bash
 lxc launch ubuntu privilegedContainerName -c security.privileged=true
 ```
 
-1.b) もしくは既存のコンテナがある場合には以下のように実行します: <!-- or, if your container already exists. -->
+1.b) もしくは既存のコンテナーがある場合には以下のように実行します: <!-- or, if your container already exists. -->
 
 ```bash
 lxc config set privilegedContainerName security.privileged true
@@ -479,11 +479,11 @@ lxc config set privilegedContainerName security.privileged true
 lxc config device add privilegedContainerName shareName disk source=/home/$USER path=/home/ubuntu
 ```
 
-#### LXD コンテナ内で docker を実行できますか? <!-- How can I run docker inside a LXD container? -->
+#### LXD コンテナー内で docker を実行できますか? <!-- How can I run docker inside a LXD container? -->
 <!--
 In order to run Docker inside a LXD container the `security.nesting` property of the container should be set to `true`. 
 -->
-LXD コンテナ内で Docker を実行するには、コンテナの `security.nesting` プロパティを `true` に設定します。
+LXD コンテナー内で Docker を実行するには、コンテナーの `security.nesting` プロパティを `true` に設定します。
 
 ```bash
 lxc config set <container> security.nesting true
@@ -494,12 +494,12 @@ Note that LXD containers cannot load kernel modules, so depending on your
 Docker configuration you may need to have the needed extra kernel modules
 loaded by the host.
 -->
-LXD コンテナ内ではカーネルモジュールはロードできませんので、Docker の設定に従って、ホスト側で必要なカーネルモジュールをロードしておく必要があることに注意してください。
+LXD コンテナー内ではカーネルモジュールはロードできませんので、Docker の設定に従って、ホスト側で必要なカーネルモジュールをロードしておく必要があることに注意してください。
 
 <!--
 You can do so by setting a comma separate list of kernel modules that your container needs with:
 -->
-コンテナで必要なカーネルモジュールをカンマ区切りのリストで次のように設定しておけます:
+コンテナーで必要なカーネルモジュールをカンマ区切りのリストで次のように設定しておけます:
 
 ```bash
 lxc config set <container> linux.kernel_modules <modules>
@@ -510,7 +510,7 @@ We have also received some reports that creating a `/.dockerenv` file in your
 container can help Docker ignore some errors it's getting due to running in a
 nested environment.
 -->
-コンテナ内に `/.dockerenv` ファイルを作ることで、ネストされた環境内で実行することによりおこるエラーのいくつかを Docker に無視させることができるというレポートをいくつか受け取っています。
+コンテナー内に `/.dockerenv` ファイルを作ることで、ネストされた環境内で実行することによりおこるエラーのいくつかを Docker に無視させることができるというレポートをいくつか受け取っています。
 
 ## LXD のハック <!-- Hacking on LXD -->
 ### 直接 REST API を使って <!-- Directly using the REST API -->

@@ -35,12 +35,12 @@ This is needed as ZFS will only let you restore the latest snapshot.
 -->
 
 ## container\_host\_shutdown\_timeout
-`boot.host_shutdown_timeout` というコンテナ設定キーが導入されました。
+`boot.host_shutdown_timeout` というコンテナー設定キーが導入されました。
 <!--
 A `boot.host_shutdown_timeout` container configuration key was introduced.
 -->
 
-値の型は integer でコンテナを停止しようとした後 kill するまでどれだけ
+値の型は integer でコンテナーを停止しようとした後 kill するまでどれだけ
 待つかを LXD に指示します。
 <!--
 It's an integer which indicates how long LXD should wait for the container
@@ -54,28 +54,28 @@ Its value is only used on clean LXD daemon shutdown. It defaults to 30s.
 -->
 
 ## container\_stop\_priority
-`boot.stop.priority` というコンテナ設定キーが導入されました。
+`boot.stop.priority` というコンテナー設定キーが導入されました。
 <!--
 A `boot.stop.priority` container configuration key was introduced.
 -->
 
-値の型は integer でシャットダウン時のコンテナの優先度を指示します。
+値の型は integer でシャットダウン時のコンテナーの優先度を指示します。
 <!--
 It's an integer which indicates the priority of a container during shutdown.
 -->
 
-コンテナは優先度レベルの高いものからシャットダウンを開始します。
+コンテナーは優先度レベルの高いものからシャットダウンを開始します。
 <!--
 Containers will shutdown starting with the highest priority level.
 -->
 
-同じ優先度のコンテナは並列にシャットダウンします。デフォルトは 0 です。
+同じ優先度のコンテナーは並列にシャットダウンします。デフォルトは 0 です。
 <!--
 Containers with the same priority will shutdown in parallel.  It defaults to 0.
 -->
 
 ## container\_syscall\_filtering
-コンテナ設定キーに関するいくつかの新しい syscall が導入されました。
+コンテナー設定キーに関するいくつかの新しい syscall が導入されました。
 <!--
 A number of new syscalls related container configuration keys were introduced.
 -->
@@ -112,12 +112,12 @@ See [security.md](security.md) for details.
 A `last_used_at` field was added to the `GET /1.0/containers/<name>` endpoint.
 -->
 
-これはコンテナが開始した最新の時刻のタイムスタンプです。
+これはコンテナーが開始した最新の時刻のタイムスタンプです。
 <!--
 It is a timestamp of the last time the container was started.
 -->
 
-コンテナが作成されたが開始はされていない場合は `last_used_at` フィールドは
+コンテナーが作成されたが開始はされていない場合は `last_used_at` フィールドは
 `1970-01-01T00:00:00Z` になります。
 <!--
 If a container has been created but not started yet, `last_used_at` field
@@ -215,14 +215,14 @@ the file type via the X-LXD-type header, which can be either "file" or
 -->
 
 ## container\_cpu\_time
-この拡張により実行中のコンテナの CPU 時間を取得できます。
+この拡張により実行中のコンテナーの CPU 時間を取得できます。
 <!--
 This adds support for retrieving cpu time for a running container.
 -->
 
 ## storage\_zfs\_use\_refquota
 この拡張により新しいサーバプロパティ `storage.zfs_use_refquota` が追加されます。
-これはコンテナにサイズ制限を設定する際に "quota" の代わりに "refquota" を設定する
+これはコンテナーにサイズ制限を設定する際に "quota" の代わりに "refquota" を設定する
 ように LXD に指示します。また LXD はディスク使用量を調べる際に "used" の代わりに
 "usedbydataset" を使うようになります。
 <!--
@@ -232,7 +232,7 @@ on a container. LXD will also then use "usedbydataset" in place of "used"
 when being queried about disk utilization.
 -->
 
-これはスナップショットによるディスク消費をコンテナのディスク利用の一部と
+これはスナップショットによるディスク消費をコンテナーのディスク利用の一部と
 みなすかどうかを実質的に切り替えることになります。
 <!--
 This effectively controls whether disk usage by snapshots should be
@@ -271,14 +271,14 @@ This includes:
  * "nic" タイプのデバイスの `security.mac_filtering` プロパティ (nictype が "bridged" の場合) <!-- `security.mac_filtering` property on "nic" type devices (when nictype is "bridged") -->
 
 ## profile\_usedby
-プロファイルを使用しているコンテナをプロファイルエントリの一覧の used\_by フィールド
+プロファイルを使用しているコンテナーをプロファイルエントリの一覧の used\_by フィールド
 として新たに追加します。
 <!--
 Adds a new used\_by field to profile entries listing the containers that are using it.
 -->
 
 ## container\_push
-コンテナが push モードで作成される時、クライアントは作成元と作成先のサーバ間の
+コンテナーが push モードで作成される時、クライアントは作成元と作成先のサーバ間の
 プロキシとして機能します。作成先のサーバが NAT やファイアウォールの後ろにいて
 作成元のサーバと直接通信できず pull モードで作成できないときにこれは便利です。
 <!--
@@ -321,7 +321,7 @@ Adds the following to the REST API:
  * 証明書エントリの PATCH <!-- PATCH of certificate entries -->
 
 ## container\_exec\_signal\_handling
-クライアントに送られたシグナルをコンテナ内で実行中のプロセスにフォワーディング
+クライアントに送られたシグナルをコンテナー内で実行中のプロセスにフォワーディング
 するサポートを `/1.0/containers/<name>/exec` に追加します。現状では SIGTERM と
 SIGHUP がフォワードされます。フォワード出来るシグナルは今後さらに追加される
 かもしれません。
@@ -333,7 +333,7 @@ later.
 -->
 
 ## gpu\_devices
-コンテナに GPU を追加できるようにします。
+コンテナーに GPU を追加できるようにします。
 <!--
 Enables adding GPUs to a container.
 -->
@@ -486,7 +486,7 @@ Setting it to false tells LXD not to attempt running state transfer.
 
 ## container\_only\_migration
 `container_only` という boolean 型の属性を導入します。 true に設定すると
-コンテナだけがコピーや移動されるようになります。
+コンテナーだけがコピーや移動されるようになります。
 <!--
 Introduces a new boolean `container_only` attribute. When set to true only the
 container will be copied or moved.
@@ -494,8 +494,8 @@ container will be copied or moved.
 
 ## storage\_zfs\_clone\_copy
 ZFS ストレージプールに `storage_zfs_clone_copy` という boolean 型のプロパティを導入します。
-false に設定すると、コンテナのコピーは zfs send と receive 経由で行われる
-ようになります。これにより作成先のコンテナは作成元のコンテナに依存しないように
+false に設定すると、コンテナーのコピーは zfs send と receive 経由で行われる
+ようになります。これにより作成先のコンテナーは作成元のコンテナーに依存しないように
 なり、 ZFS プールに依存するスナップショットを維持する必要がなくなります。
 しかし、これは影響するプールのストレージの使用状況が以前より非効率的になる
 という結果を伴います。
@@ -513,7 +513,7 @@ will be used unless explicitly set to "false".
 -->
 
 ## unix\_device\_rename
-`path` を設定することによりコンテナ内部で unix-block/unix-char デバイスをリネーム
+`path` を設定することによりコンテナー内部で unix-block/unix-char デバイスをリネーム
 できるようにし、ホスト上のデバイスを指定する `source` 属性が追加されます。
 `path` を設定せずに `source` を設定すると、 `path` は `source` と同じものとして
 扱います。 `source` や `major`/`minor` を設定せずに `path` を設定すると
@@ -561,7 +561,7 @@ This key controls what mount options will be used for the btrfs storage pool.
 -->
 
 ## entity\_description
-これはエンティティにコンテナ、スナップショット、ストレージプール、ボリュームの
+これはエンティティにコンテナー、スナップショット、ストレージプール、ボリュームの
 ような説明を追加します。
 <!--
 This adds descriptions to entities like containers, snapshots, networks, storage pools and volumes.
@@ -574,7 +574,7 @@ This allows forcing a refresh for an existing image.
 -->
 
 ## storage\_lvm\_lv\_resizing
-これはコンテナの root ディスクデバイス内に `size` プロパティを設定することで
+これはコンテナーの root ディスクデバイス内に `size` プロパティを設定することで
 論理ボリュームをリサイズできるようにします。
 <!--
 This introduces the ability to resize logical volumes by setting the `size`
@@ -582,7 +582,7 @@ property in the containers root disk device.
 -->
 
 ## id\_map\_base
-これは `security.idmap.base` を新しく導入します。これにより分離されたコンテナ
+これは `security.idmap.base` を新しく導入します。これにより分離されたコンテナー
 に map auto-selection するプロセスをスキップし、ホストのどの uid/gid をベース
 として使うかをユーザが指定できるようにします。
 <!--
@@ -619,7 +619,7 @@ Allows use of `vlan` property with `physical` network devices.
 LXD に指示します。 LXD はホスト上でその `parent` と VLAN を既存のインタフェース
 で探します。
 見つからない場合は作成します。
-その後コンテナにこのインタフェースを直接アタッチします。
+その後コンテナーにこのインタフェースを直接アタッチします。
 <!--
 When set, this will instruct LXD to attach to the specified VLAN on the `parent` interface.
 LXD will look for an existing interface for that `parent` and VLAN on the host.
@@ -636,9 +636,9 @@ a specific storage pool.
 -->
 
 ## container\_edit\_metadata
-これはコンテナの metadata.yaml と関連するテンプレートを
+これはコンテナーの metadata.yaml と関連するテンプレートを
 `/1.0/containers/<name>/metadata` 配下の URL にアクセスすることにより
-API で編集できるようにします。コンテナからイメージを発行する前にコンテナを
+API で編集できるようにします。コンテナーからイメージを発行する前にコンテナーを
 編集できるようになります。
 <!--
 This adds support for editing a container metadata.yaml and related templates
@@ -647,7 +647,7 @@ to edit a container before publishing an image from it.
 -->
 
 ## container\_snapshot\_stateful\_migration
-これは stateful なコンテナのスナップショットを新しいコンテナにマイグレート
+これは stateful なコンテナーのスナップショットを新しいコンテナーにマイグレート
 できるようにします。
 <!--
 This enables migrating stateful container snapshots to new containers.
@@ -666,7 +666,7 @@ This adds the ability to specify the ceph user.
 -->
 
 ## instance\_types
-これはコンテナの作成リクエストに `instance_type` フィールドを追加します。
+これはコンテナーの作成リクエストに `instance_type` フィールドを追加します。
 値は LXD のリソース制限に展開されます。
 <!--
 This adds the `instance_type` field to the container creation request.
@@ -705,7 +705,7 @@ available.
 -->
 
 ## kernel\_limits
-これは `nofile` でコンテナがオープンできるファイルの最大数といったプロセスの
+これは `nofile` でコンテナーがオープンできるファイルの最大数といったプロセスの
 リミットを設定できるようにします。形式は `limits.kernel.[リミット名]` です。
 <!--
 This adds support for setting process limits such as maximum number of open
@@ -731,15 +731,15 @@ This adds support for SR-IOV enabled network devices.
 -->
 
 ## console
-これはコンテナのコンソールデバイスとコンソールログを利用可能にします。
+これはコンテナーのコンソールデバイスとコンソールログを利用可能にします。
 <!--
 This adds support to interact with the container console device and console log.
 -->
 
 ## restrict\_devlxd
-security.devlxd コンテナ設定キーを新たに導入します。このキーは /dev/lxd
-インタフェースがコンテナで利用可能になるかを制御します。
-false に設定すると、コンテナが LXD デーモンと連携するのを実質無効に
+security.devlxd コンテナー設定キーを新たに導入します。このキーは /dev/lxd
+インタフェースがコンテナーで利用可能になるかを制御します。
+false に設定すると、コンテナーが LXD デーモンと連携するのを実質無効に
 することになります。
 <!--
 A new security.devlxd container configuration key was introduced.
@@ -786,8 +786,8 @@ getting a stream of events over websocket.
 -->
 
 ## proxy
-これはコンテナに `proxy` という新しいデバイスタイプを追加します。
-これによりホストとコンテナ間で接続をフォワーディングできるようになります。
+これはコンテナーに `proxy` という新しいデバイスタイプを追加します。
+これによりホストとコンテナー間で接続をフォワーディングできるようになります。
 <!--
 This adds a new `proxy` device type to containers, allowing forwarding
 of connections between the host and container.
@@ -885,8 +885,8 @@ This adds the ability to copy and move custom storage volumes between remote.
 -->
 
 ## nvidia\_runtime
-コンテナに `nvidia_runtime` という設定オプションを追加します。これを true に
-設定すると NVIDIA ランタイムと CUDA ライブラリがコンテナに渡されます。
+コンテナーに `nvidia_runtime` という設定オプションを追加します。これを true に
+設定すると NVIDIA ランタイムと CUDA ライブラリがコンテナーに渡されます。
 <!--
 Adds a `nvidia_runtime` config option for containers, setting this to
 true will have the NVIDIA runtime and CUDA libraries passed to the
@@ -902,7 +902,7 @@ the configuration of kernel mount propagation.
 -->
 
 ## container\_backup
-コンテナのバックアップサポートを追加します。
+コンテナーのバックアップサポートを追加します。
 <!--
 Add container backup support.
 -->
@@ -929,9 +929,9 @@ The following existing endpoint has been modified:
  * `POST /1.0/containers` 新たな作成元の種別 `backup` を受け付けるようになります <!-- accepts the new source type `backup` -->
 
 ## devlxd\_images
-コンテナに `security.devlxd.images` 設定オプションを追加します。これに
+コンテナーに `security.devlxd.images` 設定オプションを追加します。これに
 より devlxd 上で `/1.0/images/FINGERPRINT/export` API が利用可能に
-なります。 nested LXD を動かすコンテナがホストから生のイメージを
+なります。 nested LXD を動かすコンテナーがホストから生のイメージを
 取得するためにこれは利用できます。
 <!--
 Adds a `security.devlxd.images` config option for containers which
@@ -941,7 +941,7 @@ images from the host.
 -->
 
 ## container\_local\_cross\_pool\_handling
-これは同じ LXD インスタンス上のストレージプール間でコンテナをコピー・移動
+これは同じ LXD インスタンス上のストレージプール間でコンテナーをコピー・移動
 できるようにします。
 <!--
 This enables copying or moving containers between storage pools on the same LXD
@@ -1037,7 +1037,7 @@ sockets.
 
 ## container\_protection\_delete
 `security.protection.delete` フィールドを設定できるようにします。 true に設定すると
-コンテナが削除されるのを防ぎます。スナップショットはこの設定により影響を受けません。
+コンテナーが削除されるのを防ぎます。スナップショットはこの設定により影響を受けません。
 <!--
 Enables setting the `security.protection.delete` field which prevents containers
 from being deleted if set to true. Snapshots are not affected by this setting.
@@ -1100,7 +1100,7 @@ Those keys control whether to put the LXD rules before or after any pre-existing
 
 ## container\_full
 これは `GET /1.0/containers` に recursion=2 という新しいモードを導入します。
-これにより状態、スナップショットとバックアップの構造を含むコンテナの全ての構造を
+これにより状態、スナップショットとバックアップの構造を含むコンテナーの全ての構造を
 取得できるようになります。
 <!--
 This introduces a new recursion=2 mode for `GET /1.0/containers` which allows for the retrieval of
@@ -1157,7 +1157,7 @@ Those keys translate pretty much directly to the matching nvidia-container envir
 
 ## storage\_api\_volume\_snapshots
 ストレージボリュームスナップショットのサポートを追加します。これらは
-コンテナスナップショットのように振る舞いますが、ボリュームに対してのみ
+コンテナースナップショットのように振る舞いますが、ボリュームに対してのみ
 作成できます。
 <!--
 Add support for storage volume snapshots. They work like container snapshots,
@@ -1190,8 +1190,8 @@ Setting it to true will flush the current map on the volume and prevent
 any further idmap tracking and remapping on the volume.
 -->
 
-これは隔離されたコンテナ間でデータを共有するために使用できます。
-この際コンテナを書き込みアクセスを要求するコンテナにアタッチした
+これは隔離されたコンテナー間でデータを共有するために使用できます。
+この際コンテナーを書き込みアクセスを要求するコンテナーにアタッチした
 後にデータを共有します。
 <!--
 This can be used to share data between isolated containers after
@@ -1204,7 +1204,7 @@ attaching it to the container which requires write access.
 Add a new project API, supporting creation, update and deletion of projects.
 -->
 
-現時点では、プロジェクトは、コンテナ、プロファイル、イメージを保持できます。そして、プロジェクトを切り替えることで、独立した LXD リソースのビューを見せられます。
+現時点では、プロジェクトは、コンテナー、プロファイル、イメージを保持できます。そして、プロジェクトを切り替えることで、独立した LXD リソースのビューを見せられます。
 <!--
 Projects can hold containers, profiles or images at this point and let
 you get a separate view of your LXD resources by switching to it.
@@ -1226,8 +1226,8 @@ makes it possible to raise the ttl on VXLAN tunnels.
 -->
 
 ## container\_incremental\_copy
-新たにコンテナのインクリメンタルコピーができるようになります。`--refresh` オプションを指定してコンテナをコピーすると、見つからないファイルや、更新されたファイルのみを
-コピーします。コンテナが存在しない場合は、通常のコピーを実行します。
+新たにコンテナーのインクリメンタルコピーができるようになります。`--refresh` オプションを指定してコンテナーをコピーすると、見つからないファイルや、更新されたファイルのみを
+コピーします。コンテナーが存在しない場合は、通常のコピーを実行します。
 <!--
 This adds support for incremental container copy. When copying a container
 using the `\-\-refresh` flag, only the missing or outdated files will be
@@ -1236,9 +1236,9 @@ is performed.
 -->
 
 ## usb\_optional\_vendorid
-名前が暗示しているように、コンテナにアタッチされた USB デバイスの
+名前が暗示しているように、コンテナーにアタッチされた USB デバイスの
 `vendorid` フィールドが省略可能になります。これにより全ての USB デバイスが
-コンテナに渡されます (GPU に対してなされたのと同様)。
+コンテナーに渡されます (GPU に対してなされたのと同様)。
 <!--
 As the name implies, the `vendorid` field on USB devices attached to
 containers has now been made optional, allowing for all USB devices to
@@ -1257,8 +1257,8 @@ configuration keys: `snapshots.schedule`, `snapshots.schedule.stopped`, and
 -->
 
 ## container\_copy\_project
-コピー元のコンテナの dict に `project` フィールドを導入します。これにより
-プロジェクト間でコンテナをコピーあるいは移動できるようになります。
+コピー元のコンテナーの dict に `project` フィールドを導入します。これにより
+プロジェクト間でコンテナーをコピーあるいは移動できるようになります。
 <!--
 Introduces a `project` field to the container source dict, allowing for
 copy/move of containers between projects.
@@ -1298,7 +1298,7 @@ to specify to the minimal numbers of nodes for image replication.
 -->
 
 ## container\_protection\_shift
-`security.protection.shift` の設定を可能にします。これによりコンテナの
+`security.protection.shift` の設定を可能にします。これによりコンテナーの
 ファイルシステム上で uid/gid をシフト (再マッピング) させることを防ぎます。
 <!--
 Enables setting the `security.protection.shift` option which prevents containers
@@ -1338,7 +1338,7 @@ This adds the following new endpoint (see [RESTful API](rest-api.md) for details
 * `PUT /1.0/containers/<name>/snapshots/<name>`
 
 ## snapshot\_expiry\_creation
-コンテナ作成に `expires\_at` を追加し、作成時にスナップショットの有効期限を上書きできます。
+コンテナー作成に `expires\_at` を追加し、作成時にスナップショットの有効期限を上書きできます。
 <!--
 Adds `expires\_at` to container creation, allowing for override of a
 snapshot's expiry at creation time.
@@ -1378,7 +1378,7 @@ Exposes the state of optional kernel features through the server environment.
 -->
 
 ## id\_map\_current
-内部的な `volatile.idmap.current` キーを新規に導入します。これはコンテナに
+内部的な `volatile.idmap.current` キーを新規に導入します。これはコンテナーに
 対する現在のマッピングを追跡するのに使われます。
 <!--
 This introduces a new internal `volatile.idmap.current` key which is
@@ -1423,7 +1423,7 @@ Those keys control the source address used for outbound traffic from the bridge.
 
 ## container\_nic\_routes
 これは "nic" タイプのデバイスに `ipv4.routes` と `ipv6.routes` プロパティを導入します。
-ホストからコンテナへの nic への静的ルートが追加できます。
+ホストからコンテナーへの nic への静的ルートが追加できます。
 <!--
 This introduces the `ipv4.routes` and `ipv6.routes` properties on "nic" type devices.
 This allows adding static routes on host to container's nic.
@@ -1446,7 +1446,7 @@ Adds support for RBAC (role based access control). This introduces new config ke
 
 ## cluster\_internal\_copy
 これは通常の "POST /1.0/containers" を実行することでクラスタノード間で
-コンテナをコピーすることを可能にします。この際 LXD はマイグレーションが
+コンテナーをコピーすることを可能にします。この際 LXD はマイグレーションが
 必要かどうかを内部的に判定します。
 <!--
 This makes it possible to do a normal "POST /1.0/containers" to copy a
@@ -1456,7 +1456,7 @@ migration is required.
 
 ## seccomp\_notify
 カーネルが seccomp ベースの syscall インターセプトをサポートする場合に
-登録された syscall が実行されたことをコンテナから LXD に通知することが
+登録された syscall が実行されたことをコンテナーから LXD に通知することが
 できます。 LXD はそれを受けて様々なアクションをトリガーするかを決定します。
 <!--
 If the kernel supports seccomp-based syscall interception LXD can be notified
@@ -1488,7 +1488,7 @@ This introduces VLAN (`vlan`) and MAC filtering (`security.mac\_filtering`) supp
 
 ## storage\_cephfs
 ストレージプールドライバとして CEPHFS のサポートを追加します。これは
-カスタムボリュームとしての利用のみが可能になり、イメージとコンテナは
+カスタムボリュームとしての利用のみが可能になり、イメージとコンテナーは
 CEPHFS ではなく CEPH (RBD) 上に構築する必要があります。
 <!--
 Add support for CEPHFS as a storage pool driver. This can only be used
@@ -1497,7 +1497,7 @@ instead.
 -->
 
 ## container\_nic\_ipfilter
-これは `bridged` の NIC デバイスに対してコンテナの IP フィルタリング
+これは `bridged` の NIC デバイスに対してコンテナーの IP フィルタリング
 (`security.ipv4\_filtering` and `security.ipv6\_filtering`) を導入します。
 <!--
 This introduces container IP filtering (`security.ipv4\_filtering` and `security.ipv6\_filtering`) support for `bridged` nic devices.
@@ -1552,7 +1552,7 @@ Adds the `shift` property on `disk` devices which controls the use of the shiftf
 Introduces a new `security.shifted` boolean on storage volumes.
 -->
 
-これを true に設定すると複数の隔離されたコンテナが、それら全てがファイルシステムに
+これを true に設定すると複数の隔離されたコンテナーが、それら全てがファイルシステムに
 書き込み可能にしたまま、同じストレージボリュームにアタッチするのを許可します。
 <!--
 Setting it to true will allow multiple isolated containers to attach the
@@ -1683,7 +1683,7 @@ redirect filesystem mounts to their fuse implementation. To this end, set e.g.
 -->
 
 ## container\_disk\_ceph
-既存の CEPH RDB もしくは FS を直接 LXD コンテナに接続できます。
+既存の CEPH RDB もしくは FS を直接 LXD コンテナーに接続できます。
 <!--
 This allows for existing a CEPH RDB or FS to be directly connected to a LXD container.
 -->
@@ -1695,7 +1695,7 @@ Add virtual machine support.
 -->
 
 ## image\_profiles
-新しいコンテナを起動するときに、イメージに適用するプロファイルのリストが指定できます。
+新しいコンテナーを起動するときに、イメージに適用するプロファイルのリストが指定できます。
 <!--
 Allows a list of profiles to be applied to an image when launching a new container. 
 -->

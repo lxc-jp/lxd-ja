@@ -331,7 +331,7 @@ ID (database)   | Name                               | Condition     | Descripti
 
 ### Type: none
 
-サポートされるインスタンスタイプ: コンテナ, VM
+サポートされるインスタンスタイプ: コンテナー, VM
 <!--
 Supported instance types: container, VM
 -->
@@ -384,7 +384,7 @@ Each possible `nictype` value is documented below along with the relevant proper
 
 #### nictype: physical
 
-サポートされるインスタンスタイプ: コンテナ, VM
+サポートされるインスタンスタイプ: コンテナー, VM
 <!--
 Supported instance types: container, VM
 -->
@@ -412,7 +412,7 @@ boot.priority           | integer   | -                 | no        | VM のブ�
 
 #### nictype: bridged
 
-サポートされるインスタンスタイプ: コンテナ, VM
+サポートされるインスタンスタイプ: コンテナー, VM
 <!--
 Supported instance types: container, VM
 -->
@@ -451,7 +451,7 @@ boot.priority            | integer   | -                 | no        | VM のブ
 
 #### nictype: macvlan
 
-サポートされるインスタンスタイプ: コンテナ, VM
+サポートされるインスタンスタイプ: コンテナー, VM
 <!--
 Supported instance types: container, VM
 -->
@@ -479,7 +479,7 @@ boot.priority           | integer   | -                 | no        | VM のブ�
 
 #### nictype: ipvlan
 
-サポートされるインスタンスタイプ: コンテナ
+サポートされるインスタンスタイプ: コンテナー
 <!--
 Supported instance types: container
 -->
@@ -546,7 +546,7 @@ vlan                    | integer   | -                 | no        | アタッ�
 
 #### nictype: p2p
 
-サポートされるインスタンスタイプ: コンテナ, VM
+サポートされるインスタンスタイプ: コンテナー, VM
 <!--
 Supported instance types: container, VM
 -->
@@ -576,7 +576,7 @@ boot.priority           | integer   | -                 | no        | VM のブ�
 
 #### nictype: sriov
 
-サポートされるインスタンスタイプ: コンテナ, VM
+サポートされるインスタンスタイプ: コンテナー, VM
 <!--
 Supported instance types: container, VM
 -->
@@ -605,7 +605,7 @@ boot.priority           | integer   | -                 | no        | VM のブ�
 
 #### nictype: routed
 
-サポートされるインスタンスタイプ: コンテナ
+サポートされるインスタンスタイプ: コンテナー
 <!--
 Supported instance types: container
 -->
@@ -803,7 +803,7 @@ those will be registered as static assignments in MAAS too.
 
 ### Type: infiniband
 
-サポートされるインスタンスタイプ: コンテナ
+サポートされるインスタンスタイプ: コンテナー
 <!--
 Supported instance types: container
 -->
@@ -859,7 +859,7 @@ lxc config device add <instance> <device-name> infiniband nictype=sriov parent=<
 
 ### Type: disk
 
-サポートされるインスタンスタイプ: コンテナ, VM
+サポートされるインスタンスタイプ: コンテナー, VM
 <!--
 Supported instance types: container, VM
 -->
@@ -932,7 +932,7 @@ boot.priority       | integer   | -         | no        | VM のブート優先�
 
 ### Type: unix-char
 
-サポートされるインスタンスタイプ: コンテナ
+サポートされるインスタンスタイプ: コンテナー
 <!--
 Supported instance types: container
 -->
@@ -961,7 +961,7 @@ required    | boolean   | true              | no        | このデバイスが�
 
 ### Type: unix-block
 
-サポートされるインスタンスタイプ: コンテナ
+サポートされるインスタンスタイプ: コンテナー
 <!--
 Supported instance types: container
 -->
@@ -1011,7 +1011,7 @@ required    | boolean   | false             | no        | このデバイスが�
 
 ### Type: gpu
 
-サポートされるインスタンスタイプ: コンテナ
+サポートされるインスタンスタイプ: コンテナー
 <!--
 Supported instance types: container
 -->
@@ -1039,7 +1039,7 @@ mode        | int       | 0660              | no        | インスタンス内�
 
 ### Type: proxy
 
-サポートされるインスタンスタイプ: コンテナ
+サポートされるインスタンスタイプ: コンテナー
 <!--
 Supported instance types: container
 -->
@@ -1086,7 +1086,7 @@ lxc config device add <instance> <device-name> proxy listen=<type>:<addr>:<port>
 
 ### Type: unix-hotplug
 
-サポートされるインスタンスタイプ: コンテナ
+サポートされるインスタンスタイプ: コンテナー
 <!--
 Supported instance types: container
 -->
