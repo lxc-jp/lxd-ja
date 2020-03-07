@@ -66,6 +66,10 @@ limits.cpu                                  | string    | - (all)           | ye
 limits.cpu.allowance                        | string    | 100%              | yes           | -                 | どれくらい CPU を使えるか。ソフトリミットとしてパーセント指定（例、50%）か固定値として単位時間内に使える時間（25ms/100ms）を指定できます <!-- How much of the CPU can be used. Can be a percentage (e.g. 50%) for a soft limit or hard a chunk of time (25ms/100ms) -->
 limits.cpu.priority                         | integer   | 10 (maximum)      | yes           | -                 | 同じ CPU をシェアする他のインスタンスと比較した CPU スケジューリングの優先度（オーバーコミット）（0 〜 10 の整数） <!-- CPU scheduling priority compared to other instances sharing the same CPUs (overcommit) (integer between 0 and 10) -->
 limits.disk.priority                        | integer   | 5 (medium)        | yes           | -                 | 負荷がかかった状態で、インスタンスの I/O リクエストに割り当てる優先度（0 〜 10 の整数） <!-- When under load, how much priority to give to the instance's I/O requests (integer between 0 and 10) -->
+limits.hugepages.64KB                       | string    | -                 | yes           | container         | 64 KB hugepages の数を制限するため（利用可能な hugepage のサイズはアーキテクチャー依存）のサイズの固定値（さまざまな単位が指定可能、下記参照） <!-- Fixed value in bytes (various suffixes supported, see below) to limit number of 64 KB hugepages (Available hugepage sizes are architecture dependent.) -->
+limits.hugepages.1MB                        | string    | -                 | yes           | container         | 1 MB hugepages の数を制限するため（利用可能な hugepage のサイズはアーキテクチャー依存）のサイズの固定値（さまざまな単位が指定可能、下記参照） <!-- Fixed value in bytes (various suffixes supported, see below) to limit number of 1 MB hugepages (Available hugepage sizes are architecture dependent.) -->
+limits.hugepages.2MB                        | string    | -                 | yes           | container         | 2 MB hugepages の数を制限するため（利用可能な hugepage のサイズはアーキテクチャー依存）のサイズの固定値（さまざまな単位が指定可能、下記参照） <!-- Fixed value in bytes (various suffixes supported, see below) to limit number of 2 MB hugepages (Available hugepage sizes are architecture dependent.) -->
+limits.hugepages.1GB                        | string    | -                 | yes           | container         | 1 GB hugepages の数を制限するため（利用可能な hugepage のサイズはアーキテクチャー依存）のサイズの固定値（さまざまな単位が指定可能、下記参照） <!-- Fixed value in bytes (various suffixes supported, see below) to limit number of 1 GB hugepages (Available hugepage sizes are architecture dependent.) -->
 limits.kernel.\*                            | string    | -                 | no            | container         | インスタンスごとのカーネルリソースの制限（例、オープンできるファイルの数）<!-- This limits kernel resources per instance (e.g. number of open files) -->
 limits.memory                               | string    | - (all)           | yes           | -                 | ホストメモリに対する割合（パーセント）もしくはメモリサイズの固定値（さまざまな単位が指定可能、下記参照） <!-- Percentage of the host's memory or fixed value in bytes (various suffixes supported, see below) -->
 limits.memory.enforce                       | string    | hard              | yes           | container         | hard に設定すると、インスタンスはメモリー制限値を超過できません。soft に設定すると、ホストでメモリに余裕がある場合は超過できる可能性があります <!-- If hard, instance can't exceed its memory limit. If soft, the instance can exceed its memory limit when extra host memory is available -->
@@ -249,7 +253,7 @@ profile configuration and may not be overridden.
 
 このデバイスには次のようなデバイスが含まれます:
 <!--
-Those includes:
+Those include:
 -->
 
  - `/dev/null` (キャラクターデバイス<!-- character device -->)
@@ -871,6 +875,7 @@ LXD では以下の追加のソースタイプをサポートします。
 <!--
 LXD supports the following additional source types:
 -->
+
 - Ceph-rbd: 外部で管理されている既存の ceph RBD デバイスからマウントします。 LXD は ceph をインスタンスの内部のファイルシステムを管理するのに使用できます。ユーザが事前に既存の ceph RBD を持っておりそれをインスタンスに使いたい場合はこのコマンドを使用できます。<!-- Mount from existing ceph RBD device that is externally managed. LXD can use ceph to manage an internal file system for the instance, but in the event that a user has a previously existing ceph RBD that they would like use for this instance, they can use this command. -->
 コマンド例
 <!--
@@ -1199,6 +1204,37 @@ The list of supported clouds and instance types can be found here:
 -->
 
   https://github.com/dustinkirkland/instance-type
+
+## `limits.hugepages.[size]` を使った hugepage の制限 <!-- Hugepage limits via `limits.hugepages.[size]` -->
+LXD では `limits.hugepage.[size]` キーを使ってコンテナーが利用できる hugepage の数を制限できます。
+hugepage の制限は hugetlb cgroup コントローラーを使って行われます。
+これはつまりこれらの制限を適用するためにホストシステムが hugetlb コントローラーを legacy あるいは unified cgroup の階層に公開する必要があることを意味します。
+アーキテクチャーによって複数の hugepage のサイズを公開していることに注意してください。
+さらに、アーキテクチャーによっては他のアーキテクチャーとは異なる hugepage のサイズを公開しているかもしれません。
+<!--
+LXD allows to limit the number of hugepages available to a container through
+the `limits.hugepage.[size]` key. Limiting hugepages is done through the
+hugetlb cgroup controller. This means the host system needs to expose the
+hugetlb controller in the legacy or unified cgroup hierarchy for these limits
+to apply.
+Note that architectures often expose multiple hugepage sizes. In addition,
+architectures may expose different hugepage sizes than other architectures.
+-->
+
+hugepage の制限は非特権コンテナー内で `hugetlbfs` ファイルシステムの mount システムコールをインターセプトするように LXD を設定しているときには特に有用です。
+LXD が `hugetlbfs` mount システムコールをインターセプトすると LXD は正しい `uid` と `gid` の値を mount オプションに指定して `hugetblfs` ファイルシステムをコンテナーにマウントします。
+これにより非特権コンテナーからも hugepage が利用可能となります。
+しかし、ホストで利用可能な hugepage をコンテナーが使い切ってしまうのを防ぐため、 `limits.hugepages.[size]` を使ってコンテナーが利用可能な hugepage の数を制限することを推奨します。
+<!--
+Limiting hugepages is especially useful when LXD is configured to intercept the
+mount syscall for the `hugetlbfs` filesystem in unprivileged containers. When
+LXD intercepts a `hugetlbfs` mount  syscall, it will mount the `hugetlbfs`
+filesystem for a container with correct `uid` and `gid` values as mount
+options. This makes it possible to use hugepages from unprivileged containers.
+However, it is recommended to limit the number of hugepages available to the
+container through `limits.hugepages.[size]` to stop the container from being
+able to exhaust the hugepages available to the host.
+-->
 
 ## `limits.kernel.[limit name]` を使ったリソース制限 <!-- Resource limits via `limits.kernel.[limit name]`-->
 LXD では、指定したインスタンスのリソース制限を設定するのに、 `limits.kernel.*` という名前空間のキーが使えます。
