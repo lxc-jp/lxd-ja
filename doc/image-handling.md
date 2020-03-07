@@ -9,7 +9,7 @@ LXD uses an image based workflow. It comes with a built-in image store
 where the user or external tools can import images.
 -->
 
-その後、それらのイメージからコンテナが起動されます。
+その後、それらのイメージからコンテナーが起動されます。
 <!--
 Containers are then started from those images.
 -->
@@ -202,14 +202,14 @@ it can also be a squashfs image.
 -->
 
 ### 中身 <!-- Content -->
-コンテナでは rootfs のディレクトリ (あるいは tarball) は完全なファイルシステムのツリーを含み、それが `/` になります。
+コンテナーでは rootfs のディレクトリ (あるいは tarball) は完全なファイルシステムのツリーを含み、それが `/` になります。
 VM ではこれは代わりに `root.img` ファイルでメインのディスクデバイスになります。
 <!--
 For containers, the rootfs directory (or tarball) contains a full file system tree of what will become the `/`.
 For VMs, this is instead a `root.img` file which becomes the main disk device.
 -->
 
-テンプレートのディレクトリはコンテナ内で使用される pongo2 形式のテンプレート・ファイルを含みます。
+テンプレートのディレクトリはコンテナー内で使用される pongo2 形式のテンプレート・ファイルを含みます。
 <!--
 The templates directory contains pongo2-formatted templates of files inside the container.
 -->

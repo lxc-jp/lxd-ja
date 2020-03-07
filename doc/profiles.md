@@ -41,7 +41,7 @@ specify a different profiles list.
 As profiles aren't specific to containers or virtual machines, they may
 contain configuration and devices that are valid for either type.
 -->
-プロファイルはコンテナや仮想マシンに固有なものではないため、どちらのインスタンスタイプでも有効な設定やデバイスを含めることができます。
+プロファイルはコンテナーや仮想マシンに固有なものではないため、どちらのインスタンスタイプでも有効な設定やデバイスを含めることができます。
 
 <!--
 This differs from the behavior when applying those config/devices

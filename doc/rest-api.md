@@ -424,7 +424,7 @@ it to empty will usually do the trick, but there are cases where PATCH
 won't work and PUT needs to be used instead.
 -->
 
-## インスタンス、コンテナと仮想マシン <!-- instances, containers and virtual-machines -->
+## インスタンス、コンテナーと仮想マシン <!-- instances, containers and virtual-machines -->
 このドキュメントでは `/1.0/instances/...` のようなパスを常に示します。
 これらはかなり新しく、仮想マシンがサポートされた LXD 3.19 で導入されました。
 <!--
@@ -432,7 +432,7 @@ This documentation will always show paths such as `/1.0/instances/...`.
 Those are fairly new, introduced with LXD 3.19 when virtual-machine support.
 -->
 
-コンテナのみをサポートする古いリリースでは全く同じ API を `/1.0/containers/...` で利用します。
+コンテナーのみをサポートする古いリリースでは全く同じ API を `/1.0/containers/...` で利用します。
 <!--
 Older releases that only supported containers will instead use the exact same API at `/1.0/containers/...`.
 -->
@@ -2408,7 +2408,7 @@ Input:
  * 標準的な HTTP のファイルアップロード <!-- Standard http file upload -->
 
 #### DELETE (`?path=<template>`)
- * 説明: コンテナテンプレートを削除します <!-- Description: Delete a container template -->
+ * 説明: コンテナーテンプレートを削除します <!-- Description: Delete a container template -->
  * 導入: `container_edit_metadata` API 拡張によって <!-- Introduced: with API extension `container_edit_metadata` -->
  * 認証: trusted <!-- Authentication: trusted -->
  * 操作: 同期 <!-- Operation: Sync -->

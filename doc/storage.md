@@ -94,7 +94,7 @@ LXD では、イメージ、インスタンス、カスタムボリューム用�
 コピーオンライト <!-- Copy on write --> | no | yes | yes | yes | yes
 ブロックデバイスベース <!-- Block based --> | no | no    | yes   | no   | yes
 インスタントクローン <!-- Instant cloning --> | no | yes | yes | yes | yes
-コンテナ内でストレージドライバの使用 <!-- Storage driver usable inside a container --> | yes | yes | no | no | no
+コンテナー内でストレージドライバの使用 <!-- Storage driver usable inside a container --> | yes | yes | no | no | no
 古い（最新ではない）スナップショットからのリストア <!-- Restore from older snapshots (not latest) --> | yes | yes | yes | no | yes
 ストレージクオータ <!-- Storage quotas --> | yes(\*) | yes | no | yes | no
 
@@ -325,7 +325,7 @@ lxc storage create pool1 ceph source=my-already-existing-osd
 ### Btrfs
 
  - インスタンス、イメージ、スナップショットごとにサブボリュームを使い、新しいオブジェクトを作成する際に btrfs スナップショットを作成します <!-- Uses a subvolume per instance, image and snapshot, creating btrfs snapshots when creating a new object. -->
- - btrfs は、親コンテナ自身が btrfs 上に作成されているときには、コンテナ内のストレージバックエンドとして使えます（ネストコンテナ）（qgroup を使った btrfs クオータについての注意を参照してください） <!-- btrfs can be used as a storage backend inside a container (nesting), so long as the parent container is itself on btrfs. (But see notes about btrfs quota via qgroups.) -->
+ - btrfs は、親コンテナー自身が btrfs 上に作成されているときには、コンテナー内のストレージバックエンドとして使えます（ネストコンテナー）（qgroup を使った btrfs クオータについての注意を参照してください） <!-- btrfs can be used as a storage backend inside a container (nesting), so long as the parent container is itself on btrfs. (But see notes about btrfs quota via qgroups.) -->
  - btrfs では qgroup を使ったストレージクオータが使えます。btrfs qgroup は階層構造ですが、新しいサブボリュームは自動的には親のサブボリュームの qgroup には追加されません。
    このことは、ユーザが設定されたクオータをエスケープできるということです。
    もし、クオータを厳格に遵守させたいときは、ユーザはこのことに留意し、refquota を使った zfs ストレージを使うことを検討してください。
@@ -448,7 +448,7 @@ lxc storage create pool1 lvm source=/dev/sdX lvm.vg_name=my-pool
    deleted/ path and keep it until such time the references are gone and it
    can safely be removed.
    -->
- - 現時点では、ZFS では、プールの一部をコンテナユーザに権限委譲できません。開発元では、この問題に積極的に取り組んでいます。
+ - 現時点では、ZFS では、プールの一部をコンテナーユーザに権限委譲できません。開発元では、この問題に積極的に取り組んでいます。
    <!--
    ZFS as it is today doesn't support delegating part of a pool to a
    container user. Upstream is actively working on this.

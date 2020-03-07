@@ -19,7 +19,7 @@ navigation:
     - title: 設定 # Configuration
       location: configuration.md
       children:
-        - title: コンテナ # Containers
+        - title: コンテナー # Containers
           location: containers.md
 
         - title: インスタンス # Instances
@@ -76,15 +76,15 @@ navigation:
         - title: メインの API 拡張 # Main API extensions
           location: api-extensions.md
 
-        - title: コンテナ API ドキュメント # Container API documentation
+        - title: コンテナー API ドキュメント # Container API documentation
           location: dev-lxd.md
 
     - title: 内部動作とデバッグ # Internals & debugging
       children:
-        - title: コンテナ環境 # Container environment
+        - title: コンテナー環境 # Container environment
           location: container-environment.md
 
-        - title: コンテナのマイグレーション # Container migration
+        - title: コンテナーのマイグレーション # Container migration
           location: migration.md
 
         - title: デーモンの動作 # Daemon behavior

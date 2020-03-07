@@ -10,7 +10,7 @@ or on a server scavenged from random parts. You like what you see,
 and now you want to try doing some serious work with LXD.
 -->
 
-何万ものファイル操作を必要とするコンテナを使用する際の典型的な落とし穴を
+何万ものファイル操作を必要とするコンテナーを使用する際の典型的な落とし穴を
 避けるために、 Ubuntu Server 18.04 の素のインストール状態では、サーバ設定に
 いくつかの設定変更が必要です。
 <!--
@@ -51,10 +51,10 @@ fs.inotify.max\_queued\_events     | 1048576   | 16384   | これは対応する
 fs.inotify.max\_user\_instances    | 1048576   | 128     | これは実ユーザ ID 毎に作成可能な ionotify のインスタンス数の上限を指定します。 <!-- This specifies an upper limit on the number of inotify instances that can be created per real user ID. --> [1]
 fs.inotify.max\_user\_watches      | 1048576   | 8192    | これは実ユーザ ID 枚に作成可能な watch 数の上限を指定します。 <!-- This specifies an upper limit on the number of watches that can be created per real user ID. --> [1]
 vm.max\_map\_count                 | 262144    | 65530   | このファイルはプロセスが持つメモリマップ領域の最大数を含みます。malloc の呼び出しの副作用として、 直接的にはmmap と mprotect によって、また、共有ライブラリをロードすることによって、メモリマップ領域を使います。  <!-- This file contains the maximum number of memory map areas a process may have. Memory map areas are used as a side-effect of calling malloc, directly by mmap and mprotect, and also when loading shared libraries. -->
-kernel.dmesg\_restrict             | 1         | 0       | この設定を有効にするとコンテナがカーネルのリングバッファ内のメッセージにアクセスするのを拒否します。この設定はホスト・システム上の非 root ユーザへのアクセスも拒否することに注意してください。 <!-- This denies container access to the messages in the kernel ring buffer. Please note that this also will deny access to non-root users on the host system. -->
-net.ipv4.neigh.default.gc_thresh3  | 8192     | 1024    | これは ARP テーブル (IPv4) 内のエントリの最大数です。1024 個を超えるコンテナを作成するなら増やすべきです。増やさなければ ARP テーブルがフルになったときに `neighbour: ndisc_cache: neighbor table overflow!` というエラーが発生し、コンテナがネットワーク設定を取得できなくなります。 [2] <!-- This is the maximum number of entries in ARP table (IPv4). You should increase this if you create over 1024 containers. Otherwise, you will get the error `neighbour: ndisc_cache: neighbor table overflow!` when the ARP table gets full and those containers will not be able to get a network configuration. [2] -->
-net.ipv6.neigh.default.gc_thresh3  | 8192     | 1024    | これは ARP テーブル (IPv6) 内のエントリの最大数です。1024 個を超えるコンテナを作成するなら増やすべきです。増やさなければ ARP テーブルがフルになったときに `neighbour: ndisc_cache: neighbor table overflow!` というエラーが発生し、コンテナがネットワーク設定を取得できなくなります。 [2] <!-- This is the maximum number of entries in ARP table (IPv6). You should increase this if you plan to create over 1024 containers. Otherwise, you will get the error `neighbour: ndisc_cache: neighbor table overflow!` when the ARP table gets full and those containers will not be able to get a network configuration. [2] -->
-kernel.keys.maxkeys                | 2000      | 200     | 非 root ユーザーが使用できるキーの最大数で、コンテナ数より大きくなければなりません <!-- This is the maximum number of keys a non-root user can use, should be higher than the number of containers -->
+kernel.dmesg\_restrict             | 1         | 0       | この設定を有効にするとコンテナーがカーネルのリングバッファ内のメッセージにアクセスするのを拒否します。この設定はホスト・システム上の非 root ユーザへのアクセスも拒否することに注意してください。 <!-- This denies container access to the messages in the kernel ring buffer. Please note that this also will deny access to non-root users on the host system. -->
+net.ipv4.neigh.default.gc_thresh3  | 8192     | 1024    | これは ARP テーブル (IPv4) 内のエントリの最大数です。1024 個を超えるコンテナーを作成するなら増やすべきです。増やさなければ ARP テーブルがフルになったときに `neighbour: ndisc_cache: neighbor table overflow!` というエラーが発生し、コンテナーがネットワーク設定を取得できなくなります。 [2] <!-- This is the maximum number of entries in ARP table (IPv4). You should increase this if you create over 1024 containers. Otherwise, you will get the error `neighbour: ndisc_cache: neighbor table overflow!` when the ARP table gets full and those containers will not be able to get a network configuration. [2] -->
+net.ipv6.neigh.default.gc_thresh3  | 8192     | 1024    | これは ARP テーブル (IPv6) 内のエントリの最大数です。1024 個を超えるコンテナーを作成するなら増やすべきです。増やさなければ ARP テーブルがフルになったときに `neighbour: ndisc_cache: neighbor table overflow!` というエラーが発生し、コンテナーがネットワーク設定を取得できなくなります。 [2] <!-- This is the maximum number of entries in ARP table (IPv6). You should increase this if you plan to create over 1024 containers. Otherwise, you will get the error `neighbour: ndisc_cache: neighbor table overflow!` when the ARP table gets full and those containers will not be able to get a network configuration. [2] -->
+kernel.keys.maxkeys                | 2000      | 200     | 非 root ユーザーが使用できるキーの最大数で、コンテナー数より大きくなければなりません <!-- This is the maximum number of keys a non-root user can use, should be higher than the number of containers -->
 
 設定後、サーバの再起動が必要です。
 <!--
@@ -65,7 +65,7 @@ Then, reboot the server.
 [2]: https://www.kernel.org/doc/Documentation/networking/ip-sysctl.txt
 
 ### ネットワーク帯域の調整 <!-- Network Bandwidth Tweaking -->
-大量の (コンテナ・コンテナ間、あるいはホスト・コンテナ間の) ローカル・アクティビティを持つ
+大量の (コンテナー・コンテナー間、あるいはホスト・コンテナー間の) ローカル・アクティビティを持つ
 LXD ホスト上に 1GbE 以上の NIC をお持ちか、 LXD ホストに 1GbE 以上のインターネット接続を
 お持ちでしたら、 txqueuelen を調整する価値があります。これらの設定は 10GbE NIC ではさらに
 よく機能します。
@@ -117,9 +117,9 @@ Note: You can find this value too high, most people prefer set `netdev_max_backl
 For example I use this values `net.ipv4.tcp_mem = 182757 243679 365514`
 -->
 
-#### コンテナの変更 <!-- Containers changes -->
+#### コンテナーの変更 <!-- Containers changes -->
 
-コンテナ内のイーサネット・インタフェース全ての txqueuelen の値を変更する必要も
+コンテナー内のイーサネット・インタフェース全ての txqueuelen の値を変更する必要も
 あります。
 Debian ベースのディストリビューションでは `/etc/network/interfaces` 内で恒久的に
 txqueuelen を変更できます。
@@ -135,9 +135,9 @@ You can add for ex.: `up ip link set eth0 txqueuelen 10000` to your interface co
 
 10000 という txqueuelen の値は 10GbE NIC ではよく使われます。基本的には、 小さな
 txqueuelen の値は高レイテンシで低速なデバイスと低レイテンシで高速なデバイスで
-使われます。個人的にはこれらの設定で (ホスト・コンテナ間、コンテナ・コンテナ間の)
+使われます。個人的にはこれらの設定で (ホスト・コンテナー間、コンテナー・コンテナー間の)
 ローカル通信とインターネット接続が 3〜5% 改善しています。
-txqueuelen の値の調整の良いところは、使用するコンテナ数が増えれば増えるほど、この
+txqueuelen の値の調整の良いところは、使用するコンテナー数が増えれば増えるほど、この
 調整の恩恵を受けられることです。そして、この値はいつでも一時的に変更することができ、
 あなたの環境で LXD ホストの再起動無しに変更の結果を確認することができます。
 <!--

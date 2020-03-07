@@ -120,14 +120,14 @@ host.
 -->
 
 ## Container security
-LXD コンテナはかなり広い範囲のセキュリティの機能を利用可能です。
+LXD コンテナーはかなり広い範囲のセキュリティの機能を利用可能です。
 <!--
 LXD containers can use a pretty wide range of features for security.
 -->
 
-デフォルトではコンテナは非特権 (`unprivileged`) です。これはコンテナが
-ユーザ名前空間で稼働することを意味し、コンテナ内のユーザの能力をホスト上の
-通常ユーザの能力に制限し、コンテナが所有するデバイスにも限定した権限しか
+デフォルトではコンテナーは非特権 (`unprivileged`) です。これはコンテナーが
+ユーザ名前空間で稼働することを意味し、コンテナー内のユーザの能力をホスト上の
+通常ユーザの能力に制限し、コンテナーが所有するデバイスにも限定した権限しか
 与えないことを意味します。
 <!--
 By default containers are `unprivileged`, meaning that they operate
@@ -136,9 +136,9 @@ container to that of regular users on the host with limited privileges
 on the devices that the container owns.
 -->
 
-コンテナ間のデータ共有が不要であれば、 `security.idmap.isolated` を
-有効にすることで各コンテナに対する uid/gid のマッピングをオーバーラップ
-しないようにでき、他のコンテナへの潜在的な DoS 攻撃を防ぐことができます。
+コンテナー間のデータ共有が不要であれば、 `security.idmap.isolated` を
+有効にすることで各コンテナーに対する uid/gid のマッピングをオーバーラップ
+しないようにでき、他のコンテナーへの潜在的な DoS 攻撃を防ぐことができます。
 <!--
 If data sharing between containers isn't needed, it is possible to
 enable `security.idmap.isolated` which will use non-overlapping uid/gid
@@ -146,17 +146,17 @@ maps for each container, preventing potential DoS attacks on other
 containers.
 -->
 
-もし望む場合は LXD は特権 (`privileged`) コンテナを実行することもできます。
+もし望む場合は LXD は特権 (`privileged`) コンテナーを実行することもできます。
 ただし、これらは root 権限を取得しようとする行為に対して安全ではないこと、
-特権コンテナ内の root 権限を持つユーザはホストに DoS をすることができ、
-コンテナ内への監禁から脱出する方法を見つけるかもしれないことに注意してください。
+特権コンテナー内の root 権限を持つユーザはホストに DoS をすることができ、
+コンテナー内への監禁から脱出する方法を見つけるかもしれないことに注意してください。
 <!--
 LXD can also run `privileged` containers if you so wish, do note that
 those aren't root safe and a user with root in such a container will be
 able to DoS the host as well as find ways to escape confinement.
 -->
 
-コンテナのセキュリティとカーネル機能についてのより詳細は
+コンテナーのセキュリティとカーネル機能についてのより詳細は
 [LXC のセキュリティページ](https://linuxcontainers.org/ja/lxc/security/).
 を参照してください。
 <!--

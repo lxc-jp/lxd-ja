@@ -409,7 +409,7 @@ lxc launch --target node2 ubuntu:18.04 bionic
 <!--
 will launch an Ubuntu 18.04 container on node2.
 -->
-のように実行すれば、node2 上で Ubuntu 18.04 コンテナが起動します。
+のように実行すれば、node2 上で Ubuntu 18.04 コンテナーが起動します。
 
 <!--
 When you launch an instance without defining a target, the instance will be 
@@ -422,7 +422,7 @@ at random.
 <!--
 You can list all instances in the cluster with:
 -->
-以下のように実行すると、インスタンス上のすべてのコンテナをリストできます:
+以下のように実行すると、インスタンス上のすべてのコンテナーをリストできます:
 
 ```bash
 lxc list
@@ -431,13 +431,13 @@ lxc list
 <!--
 The NODE column will indicate on which node they are running.
 -->
-NODE 列がコンテナが実行中のノードを示します。
+NODE 列がコンテナーが実行中のノードを示します。
 
 <!--
 After an instance is launched, you can operate it from any node. For
 example, from node1:
 -->
-インスタンスが起動後、任意のノードからそのコンテナを操作できます。例えば、node1 から:
+インスタンスが起動後、任意のノードからそのコンテナーを操作できます。例えば、node1 から:
 
 ```bash
 lxc exec bionic ls /
