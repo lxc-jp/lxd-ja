@@ -942,3 +942,23 @@ hugetlb cgroup. This means the hugetlb cgroup needs to be available. Note, that
 limiting hugepages is recommended when intercepting the mount syscall for the
 hugetlbfs filesystem to avoid allowing the container to exhaust the host's
 hugepages resources.
+
+## container\_nic\_routed\_gateway
+This introduces the `ipv4.gateway` and `ipv6.gateway` NIC config keys that can take a value of either "auto" or
+"none". The default value for the key if unspecified is "auto". This will cause the current behaviour of a default
+gateway being added inside the container and the same gateway address being added to the host-side interface.
+If the value is set to "none" then no default gateway nor will the address be added to the host-side interface.
+This allows multiple routed NIC devices to be added to a container.
+
+## projects\_restrictions
+This introduces support for the `restricted` configuration key on project, which
+can prevent the use of security-sensitive features in a project.
+
+## custom\_volume\_snapshot\_expiry
+This allows custom volume snapshots to expiry.
+Expiry dates can be set individually, or by setting the `snapshots.expiry` config key on the parent custom volume which then automatically applies to all created snapshots.
+
+## volume\_snapshot\_scheduling
+This adds support for custom volume snapshot scheduling. It introduces two new
+configuration keys: `snapshots.schedule` and
+`snapshots.pattern`. Snapshots can be created automatically up to every minute.
