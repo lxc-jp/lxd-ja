@@ -54,17 +54,20 @@ lxc storage set [<remote>:]<pool> <key> <value>
 ```
 
 ## ストレージボリュームの設定 <!-- Storage volume configuration -->
-Key                     | Type      | Condition                 | Default                                             | API Extension         | Description
-:--                     | :---      | :--------                 | :------                                             | :------------         | :----------
-size                    | string    | appropriate driver        | <!-- same as -->volume.size と同じ                  | storage               | ストレージボリュームのサイズ <!-- Size of the storage volume -->
-block.filesystem        | string    | block based driver        | <!-- same as -->volume.block.filesystem と同じ      | storage               | ストレージボリュームのファイルシステム <!-- Filesystem of the storage volume -->
-block.mount\_options    | string    | block based driver        | <!-- same as -->volume.block.mount\_options と同じ  | storage               | ブロックデバイスのマウントオプション <!-- Mount options for block devices -->
-security.shifted        | bool      | custom volume             | false                                               | storage\_shifted      | shiftfs オーバーレイを使って id をシフトさせる（複数の隔離されたインスタンスからアタッチしたストレージで、インスタンスそれぞれで指定したidになるようにする） <!-- Enable id shifting overlay (allows attach by multiple isolated instances) -->
-security.unmapped       | bool      | custom volume             | false                                               | storage\_unmapped     | ボリュームに対する ID マッピングを無効化する <!-- Disable id mapping for the volume -->
-lvm.stripes             | string    | lvm driver                | -                                                   | storage\_lvm\_stripes | 新しいボリューム (あるいは thin pool ボリューム) に使用するストライプ数 <!-- Number of stripes to use for new volumes (or thin pool volume). -->
-lvm.stripes.size        | string    | lvm driver                | -                                                   | storage\_lvm\_stripes | 使用するストライプのサイズ (最低 4096 バイトで 512 バイトの倍数を指定) <!-- Size of stripes to use (at least 4096 bytes and multiple of 512bytes). -->
-zfs.remove\_snapshots   | string    | zfs driver                | <!-- same as -->volume.zfs.remove\_snapshots と同じ | storage               | 必要に応じてスナップショットを削除するかどうか <!-- Remove snapshots as needed -->
-zfs.use\_refquota       | string    | zfs driver                | <!-- same as -->volume.zfs.zfs\_requota と同じ      | storage               | 領域の quota の代わりに refquota を使うかどうか <!-- Use refquota instead of quota for space -->
+Key                     | Type      | Condition                 | Default                                             | API Extension                    | Description
+:--                     | :---      | :--------                 | :------                                             | :------------                    | :----------
+size                    | string    | appropriate driver        | <!-- same as -->volume.size と同じ                  | storage                          | ストレージボリュームのサイズ <!-- Size of the storage volume -->
+block.filesystem        | string    | block based driver        | <!-- same as -->volume.block.filesystem と同じ      | storage                          | ストレージボリュームのファイルシステム <!-- Filesystem of the storage volume -->
+block.mount\_options    | string    | block based driver        | <!-- same as -->volume.block.mount\_options と同じ  | storage                          | ブロックデバイスのマウントオプション <!-- Mount options for block devices -->
+security.shifted        | bool      | custom volume             | false                                               | storage\_shifted                 | shiftfs オーバーレイを使って id をシフトさせる（複数の隔離されたインスタンスからアタッチしたストレージで、インスタンスそれぞれで指定したidになるようにする） <!-- Enable id shifting overlay (allows attach by multiple isolated instances) -->
+security.unmapped       | bool      | custom volume             | false                                               | storage\_unmapped                | ボリュームに対する ID マッピングを無効化する <!-- Disable id mapping for the volume -->
+lvm.stripes             | string    | lvm driver                | -                                                   | storage\_lvm\_stripes            | 新しいボリューム (あるいは thin pool ボリューム) に使用するストライプ数 <!-- Number of stripes to use for new volumes (or thin pool volume). -->
+lvm.stripes.size        | string    | lvm driver                | -                                                   | storage\_lvm\_stripes            | 使用するストライプのサイズ (最低 4096 バイトで 512 バイトの倍数を指定) <!-- Size of stripes to use (at least 4096 bytes and multiple of 512bytes). -->
+snapshots.expiry        | string    | custom volume             | -                                                   | custom\_volume\_snapshot\_expiry | スナップショットがいつ削除されるかを制御する（ `1M 2H 3d 4w 5m 6y` のような式を受け付ける） <!-- Controls when snapshots are to be deleted (expects expression like `1M 2H 3d 4w 5m 6y`) -->
+snapshots.schedule      | string    | custom volume             | -                                                   | volume\_snapshot\_scheduling     | Cron の書式 (`<minute> <hour> <dom> <month> <dow>`) <!-- Cron expression (`<minute> <hour> <dom> <month> <dow>`) -->
+snapshots.pattern       | string    | custom volume             | snap%d                                              | volume\_snapshot\_scheduling     | スナップショットの名前を表す Pongo2 のテンプレート文字列（スケジュールされたスナップショットと無名のスナップショットに使用される） <!-- Pongo2 template string which represents the snapshot name (used for scheduled snapshots and unnamed snapshots) -->
+zfs.remove\_snapshots   | string    | zfs driver                | <!-- same as -->volume.zfs.remove\_snapshots と同じ | storage                          | 必要に応じてスナップショットを削除するかどうか <!-- Remove snapshots as needed -->
+zfs.use\_refquota       | string    | zfs driver                | <!-- same as -->volume.zfs.zfs\_requota と同じ      | storage                          | 領域の quota の代わりに refquota を使うかどうか <!-- Use refquota instead of quota for space -->
 
 <!--
 Storage volume configuration keys can be set using the lxc tool with:

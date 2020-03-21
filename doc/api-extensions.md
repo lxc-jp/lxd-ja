@@ -1794,3 +1794,44 @@ limiting hugepages is recommended when intercepting the mount syscall for the
 hugetlbfs filesystem to avoid allowing the container to exhaust the host's
 hugepages resources.
 -->
+
+## container\_nic\_routed\_gateway
+この拡張は `ipv4.gateway` と `ipv6.gateway` という NIC の設定キーを追加します。
+指定可能な値は auto か none のいずれかです。
+値を指定しない場合のデフォルト値は auto です。
+auto に設定した場合は、デフォルトゲートウェイがコンテナー内部に追加され、ホスト側のインタフェースにも同じゲートウェイアドレスが追加されるという現在の挙動と同じになります。
+none に設定すると、デフォルトゲートウェイもアドレスもホスト側のインターフェースには追加されません。
+これにより複数のルートを持つ NIC デバイスをコンテナーに追加できます。
+<!--
+This introduces the `ipv4.gateway` and `ipv6.gateway` NIC config keys that can take a value of either "auto" or
+"none". The default value for the key if unspecified is "auto". This will cause the current behaviour of a default
+gateway being added inside the container and the same gateway address being added to the host-side interface.
+If the value is set to "none" then no default gateway nor will the address be added to the host-side interface.
+This allows multiple routed NIC devices to be added to a container.
+-->
+
+## projects\_restrictions
+この拡張はプロジェクトに `restricted` という設定キーを追加します。
+これによりプロジェクト内でセキュリティセンシティブな機能を使うのを防ぐことができます。
+<!--
+This introduces support for the `restricted` configuration key on project, which
+can prevent the use of security-sensitive features in a project.
+-->
+
+## custom\_volume\_snapshot\_expiry
+この拡張はカスタムボリュームのスナップショットに有効期限を設定できるようにします。
+有効期限は `snapshots.expiry` 設定キーにより個別に設定することも出来ますし、親のカスタムボリュームに設定してそこから作成された全てのスナップショットに自動的にその有効期限を適用することも出来ます。
+<!--
+This allows custom volume snapshots to expiry.
+Expiry dates can be set individually, or by setting the `snapshots.expiry` config key on the parent custom volume which then automatically applies to all created snapshots.
+-->
+
+## volume\_snapshot\_scheduling
+この拡張はカスタムボリュームのスナップショットにスケジュール機能を追加します。
+`snapshots.schedule` と `snapshots.pattern` という 2 つの設定キーが新たに追加されます。
+スナップショットは最短で 1 分毎に作成可能です。
+<!--
+This adds support for custom volume snapshot scheduling. It introduces two new
+configuration keys: `snapshots.schedule` and
+`snapshots.pattern`. Snapshots can be created automatically up to every minute.
+-->

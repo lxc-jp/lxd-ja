@@ -57,13 +57,14 @@ More instructions on installing LXD for a wide variety of Linux distributions an
 さまざまな Linux ディストリビューションとオペレーティングシステムで LXD をインストールするためのより詳細な方法は、[公式サイト](https://linuxcontainers.org/lxd/getting-started-cli/) をご覧ください。
 
 ## LXD のソースからのインストール <!-- Installing LXD from source -->
+LXD の開発には liblxc の最新バージョン（3.0.0 以上が必要）を使用することをおすすめします。
+さらに LXD が動作するためには Golang 1.13 以上が必要です。
+Ubuntu では次のようにインストールできます:
 <!--
-We recommend having the latest versions of liblxc (>= 2.0.0 required)
-available for LXD development. Additionally, LXD requires Golang 1.10 or
+We recommend having the latest versions of liblxc (>= 3.0.0 required)
+available for LXD development. Additionally, LXD requires Golang 1.13 or
 later to work. On ubuntu, you can get those with:
 -->
-LXD の開発には liblxc の最新バージョン（2.0.0 以上が必要）を使用することをおすすめします。さらに Golang 1.10 以上が動作する必要があります。
-Ubuntu では次のようにインストールできます:
 
 ```bash
 sudo apt update

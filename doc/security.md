@@ -417,3 +417,94 @@ server should be available (rather than any address on the host), and firewall
 rules should be set to only allow access to the LXD port from authorized
 hosts/subnets.
 -->
+
+## ネットワークのセキュリティ <!-- Network security -->
+
+LXD のデフォルトのネットワークのモードはそれぞれのインスタンスが接続する「管理された」プライベートなネットワークブリッジを提供するためのものです。
+このモードではホスト上に `lxdbr0` と呼ばれるインターフェースが存在し、それぞれのインスタンスに対してブリッジとして振る舞います。
+<!--
+The default networking mode in LXD is to provide a 'managed' private network bridge that each instance connects to.
+In this mode, there is an interface on the host called `lxdbr0` that acts as the bridge for the instances.
+-->
+
+ホストはそれぞれの管理されたブリッジに対して `dnsmasq` のインスタンスを稼働します。
+それが IP アドレスを割り当て、 DNS の権威サーバーとキャッシュサーバーの両方のサービスを提供します。
+<!--
+The host runs an instance of `dnsmasq` for each managed bridge, which is responsible for allocating IP addresses
+and providing both authoritative and recursive DNS services.
+-->
+
+DHCPv4 を使うインスタンスには IPv4 アドレスが割り当てられ、インスタンス名に対する DNS レコードが作成されます。
+これによりインスタンスが DHCP リクエスト内に虚偽のホスト名を含めて DNS レコードをスプーフィングできないようにしています。
+<!--
+Instances using DHCPv4 will be allocated an IPv4 address and a DNS record will be created for their instance name.
+This prevents instances from being able to spoof DNS records by providing false hostname info in the DHCP request.
+-->
+
+さらに `dnsmasq` サービスは IPv6 のルーター広告の機能も提供します。
+これはインスタンスが SLAAC を使って自身の IPv6 アドレスを自動設定することを意味し、 `dnsmasq` による割り当ては行いません。
+しかしインスタンスは同等の SLAAC IPv6 アドレスに対して作成された AAAA DNS レコードを DHCPv4 を使って取得することもできます。
+これにはインスタンスが IPv6 アドレスを生成する際に IPv6 のプライバシー拡張を使っていないことが前提となります。
+<!--
+The `dnsmasq` service also provides IPv6 router advertisement capabilities. This means that instances will auto
+configure their own IPv6 address using SLAAC, so no allocation is made by `dnsmasq`. However instances that are
+also using DHCPv4 will also get an AAAA DNS record created for the equivalent SLAAC IPv6 address.
+This assumes that the instances are not using any IPv6 privacy extensions when generating IPv6 addresses.
+-->
+
+このデフォルトの設定では DNS の名前はスプーフィングできませんが、インスタンスは Ethernet ブリッジに接続しており、 Layer 2 の希望するトラフィックを送信できますので、信頼できないインスタンスが実質的にはブリッジ上の MAC アドレスあるいは IP アドレスをスプーフィングできることを意味します。
+<!--
+In this default configuration, whilst DNS names cannot not be spoofed, the instance is connected to an Ethernet
+bridge and can transmit any layer 2 traffic that it wishes, which means an untrusted instance can effectively do
+MAC or IP spoofing on the bridge.
+-->
+
+しかし LXD はいくつかの `bridged` NIC セキュリティ機能を提供しており、インスタンスがネットワークに送信できるトラフィックの種類を制限するのに使用できます。
+これらの NIC 設定はインスタンスが使用するプロファイルに設定するべきですが、以下に示すように個々のインスタンスに追加することもできます。
+<!--
+However LXD offers several `bridged` NIC security features that can be used to control the type of traffic that
+an instance is allowed to send onto the network. These NIC settings should be added to the profile that the
+instance is using, or can be added to individual instances, as shown below.
+-->
+
+`bridged` NIC に対して以下のセキュリティ機能が利用可能です。
+<!--
+The following security features are available for `bridged` NICs:
+-->
+
+Key                      | Type      | Default           | Required  | Description
+:--                      | :--       | :--               | :--       | :--
+security.mac\_filtering  | boolean   | false             | no        | インスタンスが別のインスタンスの MAC アドレスを詐称するのを防ぐ <!-- Prevent the instance from spoofing another's MAC address -->
+security.ipv4\_filtering | boolean   | false             | no        | インスタンスが別のインスタンスの IPv4 アドレスを詐称するのを防ぐ（これを有効にすると mac\_filtering も有効になります）  <!-- Prevent the instance from spoofing another's IPv4 address (enables mac\_filtering) -->
+security.ipv6\_filtering | boolean   | false             | no        | インスタンスが別のインスタンスの IPv6 アドレスを詐称するのを防ぐ（これを有効にすると mac\_filtering も有効になります）  <!-- Prevent the instance from spoofing another's IPv6 address (enables mac\_filtering) -->
+
+プロファイルに設定されたデフォルトの `bridged` NIC 設定を以下のコマンドでインスタンスごとにオーバーライドできます。
+<!--
+One can override the default `bridged` NIC settings from the profile on a per-instance basis using:
+-->
+
+```
+lxc config device override <instance> <NIC> security.mac_filtering=true
+```
+
+これらの機能を合わせて使うとブリッジに接続されたインスタンスが MAC アドレスや IP アドレスを詐称するのを防ぐことができます。
+これらは `xtables` (iptables, ip6tables そして ebtables) あるいは `nftables` のいずれかを使って実装されていて、どちらが使われるかはホストでどちらが利用可能かによって決まります。
+<!--
+Used together these features can prevent an instance connected to a bridge from spoofing MAC and IP addresses.
+These are implemented using either `xtables` (iptables, ip6tables and ebtables) or `nftables`, depending on what is
+available on the host.
+-->
+
+これらのオプションを使うと、ネストしたコンテナー、少なくとも親と同じネットワーク上のネストしたコンテナーを実質的に使えなくなることに注意が必要です。
+<!--
+It's worth noting that those options effectively prevent nested containers, at least nested containers on the
+same network as their parent.
+-->
+
+IP フィルタリング機能は詐称されたソースアドレスを含む全てのパケットをブロックするだけでなく、詐称された IP を含む ARP と NDP 広告もブロックします。
+<!--
+The IP filtering features block ARP and NDP advertisements that contain a spoofed IP, as well as blocking any
+packets that contain a spoofed source address.
+-->
+
+

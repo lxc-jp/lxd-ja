@@ -3,9 +3,9 @@
 ## Go
 
 <!--
-LXD requires Go 1.10 or higher and is only tested with the golang compiler.
+LXD requires Go 1.13 or higher and is only tested with the golang compiler.
 -->
-LXD は Go 1.10 以上を必要とし、 golang のコンパイラのみでテストされています。
+LXD は Go 1.13 以上を必要とし、 golang のコンパイラのみでテストされています。
 (訳注: 以前は gccgo もサポートされていましたが golang のみになりました)
 
 ## 必要なカーネルバージョン <!-- Kernel requirements -->
@@ -50,9 +50,9 @@ As well as any other kernel feature required by the LXC version in use.
 
 ## LXC
 <!--
-LXD requires LXC 2.0.0 or higher with the following build options:
+LXD requires LXC 3.0.0 or higher with the following build options:
 -->
-LXD は以下のビルドオプションでビルドされた LXC 2.0.0 以上を必要とします。
+LXD は以下のビルドオプションでビルドされた LXC 3.0.0 以上を必要とします。
 
 <!--
  * apparmor (if using LXD's apparmor support)
@@ -67,6 +67,16 @@ should also be installed.
 -->
 Ubuntu を含む、さまざまなディストリビューションの最近のバージョンを
 動かすためには、 LXCFS もインストールする必要があります。
+
+## QEMU
+仮想マシンを利用するには QEMU 4.2 以降が望ましいです。
+それより古いバージョンは QEMU 2.11 までは動作報告がありますが、古いバージョンのサポートは将来の LXD のリリースで誤ってリグレッションが起きる可能性があります。
+<!--
+For virtual machines, QEMU 4.2 or higher is preferred.
+Older versions, as far back as QEMU 2.11 have been reported to work
+properly, but support for those may accidentally regress in future LXD
+releases.
+-->
 
 ## 追加のライブラリ(と開発用のヘッダ) <!-- Additional libraries (and development headers) -->
 <!--

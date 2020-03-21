@@ -692,11 +692,14 @@ Device configuration properties:
 Key                     | Type      | Default           | Required  | Description
 :--                     | :--       | :--               | :--       | :--
 parent                  | string    | -                 | no        | インスタンスが参加するホストデバイス名 <!-- The name of the host device to join the instance to -->
-name                    | string    | カーネルが割り当て <!-- kernel assigned -->   | no        | インスタンス内部のインタフェース名 <!-- The name of the interface inside the instance -->
+name                    | string    | カーネルが割り当て <!-- kernel assigned -->   | no        | インスタンス内でのインタフェース名 <!-- The name of the interface inside the instance -->
+host\_name              | string    | ランダムに割り当て <!-- randomly assigned --> | no        | ホスト内でのインターフェース名 <!-- The name of the interface inside the host -->
 mtu                     | integer   | 親の MTU <!-- parent MTU -->        | no        | 新しいインタフェースの MTU <!-- The MTU of the new interface -->
 hwaddr                  | string    | ランダムに割り当て <!-- randomly assigned --> | no        | 新しいインタフェースの MAC アドレス <!-- The MAC address of the new interface -->
 ipv4.address            | string    | -                 | no        | インスタンスに追加する IPv4 静的アドレスのカンマ区切りリスト <!-- Comma delimited list of IPv4 static addresses to add to the instance -->
+ipv4.gateway            | string    | auto              | no        | 自動的に IPv4 のデフォルトゲートウェイを追加するかどうか（ auto か none を指定可能） <!-- Whether to add an automatic default IPv4 gateway, can be "auto" or "none" -->
 ipv6.address            | string    | -                 | no        | インスタンスに追加する IPv6 静的アドレスのカンマ区切りリスト <!-- Comma delimited list of IPv6 static addresses to add to the instance -->
+ipv6.gateway            | string    | auto              | no        | 自動的に IPv6 のデフォルトゲートウェイを追加するかどうか（ auto か none を指定可能） <!-- Whether to add an automatic default IPv6 gateway, can be "auto" or "none" -->
 vlan                    | integer   | -                 | no        | アタッチ先の VLAN ID <!-- The VLAN ID to attach to -->
 
 #### ブリッジ、ipvlan、macvlan を使った物理ネットワークへの接続 <!-- bridged, macvlan or ipvlan for connection to physical network -->
