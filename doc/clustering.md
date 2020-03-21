@@ -177,7 +177,7 @@ an individual node is available with `lxc cluster show <node name>`.
 ### 投票 (voting) メンバーとスタンバイメンバー <!-- Voting and stand-by members -->
 
 クラスターは状態を保管するために分散 [データベース](database.md) を使用します。
-クラスター内の全てのノードはユーザのリクエストに応えるためにそのような分散データベースにアクセスする必要があります。
+クラスター内の全てのノードはユーザーのリクエストに応えるためにそのような分散データベースにアクセスする必要があります。
 <!--
 The cluster uses a distributed [database](database.md) to store its state. All
 nodes in the cluster need to access such distributed database in order to serve

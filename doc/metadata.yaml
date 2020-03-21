@@ -102,7 +102,7 @@ navigation:
         - title: システムコールのインターセプション # System call interception
           location: syscall-interception.md
 
-        - title: ユーザ名前空間の設定 # User namespace setup
+        - title: ユーザー名前空間の設定 # User namespace setup
           location: userns-idmap.md
 
     - title: 外部リソース # External resources

@@ -45,7 +45,7 @@ currently supported:
  - `nvidia` (NVIDIA と CUDA の設定<!-- NVIDIA and CUDA configuration -->)
  - `raw` (生のインスタンス設定を上書きする<!-- raw container configuration overrides -->)
  - `security` (セキュリティーポリシー<!-- security policies -->)
- - `user` (ユーザの指定するプロパティを保持。検索可能<!-- storage for user properties, searchable -->)
+ - `user` (ユーザーの指定するプロパティを保持。検索可能<!-- storage for user properties, searchable -->)
  - `volatile` (インスタンス固有の内部データを格納するために LXD が内部的に使用する設定<!-- used internally by LXD to store internal data specific to an instance -->)
 
 現在設定できる項目は次のものです:
@@ -115,7 +115,7 @@ snapshots.schedule                          | string    | -                 | no
 snapshots.schedule.stopped                  | bool      | false             | no            | -                 | 停止したインスタンスのスナップショットを自動的に作成するかどうか <!-- Controls whether or not stopped instances are to be snapshoted automatically -->
 snapshots.pattern                           | string    | snap%d            | no            | -                 | スナップショット名を表す Pongo2 テンプレート（スケジュールされたスナップショットと名前を指定されないスナップショットに使用される） <!-- Pongo2 template string which represents the snapshot name (used for scheduled snapshots and unnamed snapshots) -->
 snapshots.expiry                            | string    | -                 | no            | -                 | スナップショットをいつ削除するかを設定します（`1M 2H 3d 4w 5m 6y` のような書式で設定します）<!-- Controls when snapshots are to be deleted (expects expression like `1M 2H 3d 4w 5m 6y`) -->
-user.\*                                     | string    | -                 | n/a           | -                 | 自由形式のユーザ定義の key/value の設定の組（検索に使えます） <!-- Free form user key/value storage (can be used in search) -->
+user.\*                                     | string    | -                 | n/a           | -                 | 自由形式のユーザー定義の key/value の設定の組（検索に使えます） <!-- Free form user key/value storage (can be used in search) -->
 
 LXD は内部的に次の揮発性の設定を使います:
 <!--
@@ -144,7 +144,7 @@ volatile.\<name\>.last\_state.vf.hwaddr     | string    | -             | SR-IOV
 volatile.\<name\>.last\_state.vf.vlan       | string    | -             | SR-IOV の仮想ファンクション（VF）をインスタンスに移動したときに使われていた VF の元の VLAN <!-- SR-IOV Virtual function original VLAN used when moving a VF into an instance -->
 volatile.\<name\>.last\_state.vf.spoofcheck | string    | -             | SR-IOV の仮想ファンクション（VF）をインスタンスに移動したときに使われていた VF の元の spoof チェックの設定 <!-- SR-IOV Virtual function original spoof check setting used when moving a VF into an instance -->
 
-加えて、次のユーザ設定がイメージで共通になっています（サポートを保証するものではありません）:
+加えて、次のユーザー設定がイメージで共通になっています（サポートを保証するものではありません）:
 <!--
 Additionally, those user keys have become common with images (support isn't guaranteed):
 -->
@@ -174,7 +174,7 @@ Those keys can be set using the lxc tool with:
 lxc config set <instance> <key> <value>
 ```
 
-揮発性（volatile）の設定はユーザは設定できません。そして、インスタンスに対してのみ直接設定できます。
+揮発性（volatile）の設定はユーザーは設定できません。そして、インスタンスに対してのみ直接設定できます。
 <!--
 Volatile keys can't be set by the user and can only be set directly against an instance.
 -->
@@ -879,7 +879,7 @@ LXD では以下の追加のソースタイプをサポートします。
 LXD supports the following additional source types:
 -->
 
-- Ceph-rbd: 外部で管理されている既存の ceph RBD デバイスからマウントします。 LXD は ceph をインスタンスの内部のファイルシステムを管理するのに使用できます。ユーザが事前に既存の ceph RBD を持っておりそれをインスタンスに使いたい場合はこのコマンドを使用できます。<!-- Mount from existing ceph RBD device that is externally managed. LXD can use ceph to manage an internal file system for the instance, but in the event that a user has a previously existing ceph RBD that they would like use for this instance, they can use this command. -->
+- Ceph-rbd: 外部で管理されている既存の ceph RBD デバイスからマウントします。 LXD は ceph をインスタンスの内部のファイルシステムを管理するのに使用できます。ユーザーが事前に既存の ceph RBD を持っておりそれをインスタンスに使いたい場合はこのコマンドを使用できます。<!-- Mount from existing ceph RBD device that is externally managed. LXD can use ceph to manage an internal file system for the instance, but in the event that a user has a previously existing ceph RBD that they would like use for this instance, they can use this command. -->
 コマンド例
 <!--
 Example command
@@ -887,7 +887,7 @@ Example command
 ```
 lxc config device add <instance> ceph-rbd1 disk source=ceph:<my_pool>/<my-volume> ceph.user_name=<username> ceph.cluster_name=<username> path=/ceph
 ```
-- Ceph-fs: 外部で管理されている既存の ceph FS からマウントします。 LXD は ceph をインスタンスの内部のファイルシステムを管理するのに使用できます。ユーザが事前に既存の ceph ファイルシステムを持っておりそれをインスタンスに使いたい場合はこのコマンドを使用できます。<!-- Mount from existing ceph FS device that is externally managed. LXD can use ceph to manage an internal file system for the instance, but in the event that a user has a previously existing ceph file sys that they would like use for this instancer, they can use this command. -->
+- Ceph-fs: 外部で管理されている既存の ceph FS からマウントします。 LXD は ceph をインスタンスの内部のファイルシステムを管理するのに使用できます。ユーザーが事前に既存の ceph ファイルシステムを持っておりそれをインスタンスに使いたい場合はこのコマンドを使用できます。<!-- Mount from existing ceph FS device that is externally managed. LXD can use ceph to manage an internal file system for the instance, but in the event that a user has a previously existing ceph file sys that they would like use for this instancer, they can use this command. -->
 コマンド例
 <!--
 Example command.
@@ -929,8 +929,8 @@ pool                | string    | -         | no        | ディスクデバイ�
 propagation         | string    | -         | no        | バインドマウントをインスタンスとホストでどのように共有するかを管理する（デフォルトである `private`, `shared`, `slave`, `unbindable`,  `rshared`, `rslave`, `runbindable`,  `rprivate` のいずれか。詳しくは Linux kernel の文書 [shared subtree](https://www.kernel.org/doc/Documentation/filesystems/sharedsubtree.txt) をご覧ください）<!-- Controls how a bind-mount is shared between the instance and the host. (Can be one of `private`, the default, or `shared`, `slave`, `unbindable`,  `rshared`, `rslave`, `runbindable`,  `rprivate`. Please see the Linux Kernel [shared subtree](https://www.kernel.org/doc/Documentation/filesystems/sharedsubtree.txt) documentation for a full explanation) -->
 shift               | boolean   | false     | no        | ソースの uid/gid をインスタンスにマッチするように変換させるためにオーバーレイの shift を設定するか <!-- Setup a shifting overlay to translate the source uid/gid to match the instance -->
 raw.mount.options   | string    | -         | no        | ファイルシステム固有のマウントオプション <!-- Filesystem specific mount options -->
-ceph.user\_name     | string    | admin     | no        | ソースが ceph か cephfs の場合に適切にマウントするためにユーザが ceph user\_name を指定しなければなりません <!-- If source is ceph or cephfs then ceph user\_name must be specified by user for proper mount -->
-ceph.cluster\_name  | string    | admin     | no        | ソースが ceph か cephfs の場合に適切にマウントするためにユーザが ceph cluster\_name を指定しなければなりません <!-- If source is ceph or cephfs then ceph cluster\_name must be specified by user for proper mount -->
+ceph.user\_name     | string    | admin     | no        | ソースが ceph か cephfs の場合に適切にマウントするためにユーザーが ceph user\_name を指定しなければなりません <!-- If source is ceph or cephfs then ceph user\_name must be specified by user for proper mount -->
+ceph.cluster\_name  | string    | admin     | no        | ソースが ceph か cephfs の場合に適切にマウントするためにユーザーが ceph cluster\_name を指定しなければなりません <!-- If source is ceph or cephfs then ceph cluster\_name must be specified by user for proper mount -->
 boot.priority       | integer   | -         | no        | VM のブート優先度 (高いほうが先にブート) <!-- Boot priority for VMs (higher boots first) -->
 
 ### Type: unix-char
@@ -1270,7 +1270,7 @@ limits.kernel.nice       | RLIMIT\_NICE       | 引き上げることができ�
 limits.kernel.nofile     | RLIMIT\_NOFILE     | プロセスがオープンできるファイルの最大値 <!-- Maximum number of open files for the process -->
 limits.kernel.nproc      | RLIMIT\_NPROC      | 呼び出し元プロセスのユーザーが作れるプロセスの最大数 <!-- Maximum number of processes that can be created for the user of the calling process -->
 limits.kernel.rtprio     | RLIMIT\_RTPRIO     | プロセスに対して設定できるリアルタイム優先度の最大値 <!-- Maximum value on the real-time-priority that maybe set for this process -->
-limits.kernel.sigpending | RLIMIT\_SIGPENDING | 呼び出し元プロセスのユーザがキューに入れられるシグナルの最大数 <!-- Maximum number of signals that maybe queued for the user of the calling process -->
+limits.kernel.sigpending | RLIMIT\_SIGPENDING | 呼び出し元プロセスのユーザーがキューに入れられるシグナルの最大数 <!-- Maximum number of signals that maybe queued for the user of the calling process -->
 
 指定できる制限の完全なリストは `getrlimit(2)`/`setrlimit(2)`システムコールの man ページで確認できます。
 `limits.kernel.*` 名前空間内で制限を指定するには、`RLIMIT_` を付けずに、リソース名を小文字で指定します。

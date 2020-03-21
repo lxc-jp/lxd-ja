@@ -17,7 +17,7 @@ Not all of the REST interface requires authentication:
  * `/` への `GET` は認証なしで誰でも実行可能です (API エンドポイント一覧を返します) <!-- `GET` to `/` is allowed for everyone (lists the API endpoints) -->
  * `/1.0` への GET は認証なしで誰でも実行可能です (ですが結果は認証ありの場合と異なります) <!-- `GET` to `/1.0` is allowed for everyone (but result varies) -->
  * `/1.0/certificates` への `POST` はクライアント証明書があれば誰でも実行可能です <!-- `POST` to `/1.0/certificates` is allowed for everyone with a client certificate -->
- * `/1.0/images/*` への `GET` は認証なしで誰でも実行可能ですが、その場合認証なしのユーザに対して公開されているイメージだけを返します。 <!-- `GET` to `/1.0/images/*` is allowed for everyone but only returns public images for unauthenticated users -->
+ * `/1.0/images/*` への `GET` は認証なしで誰でも実行可能ですが、その場合認証なしのユーザーに対して公開されているイメージだけを返します。 <!-- `GET` to `/1.0/images/*` is allowed for everyone but only returns public images for unauthenticated users -->
 
 以下では認証なしで利用できるエンドポイントはそのように明記します。
 <!--
@@ -177,7 +177,7 @@ The operation metadata structure looks like:
 -->
 
 対象の操作に対して追加のリクエストを送って情報を取り出さなくても、
-何が起こっているかユーザにとってわかりやすい形でボディは構成されています。
+何が起こっているかユーザーにとってわかりやすい形でボディは構成されています。
 ボディに含まれる全ての情報はバックグラウンド操作の URL から取得する
 こともできます。
 <!--
@@ -242,7 +242,7 @@ happening.
 -->
 
 ほとんどのケースでこれらは `status` と `status_code` と呼ばれ、前者は
-ユーザフレンドリーな文字列表記で後者は固定の数値です。
+ユーザーフレンドリーな文字列表記で後者は固定の数値です。
 <!--
 In most cases, those will be called status and `status_code`, the former
 being the user-friendly string representation and the latter the fixed
@@ -1645,7 +1645,7 @@ Input (run bash):
 `wait-for-websocket` は操作をブロックしウェブソケットの接続が
 (オプショナルである `control` を除く) 全ての利用可能なファイルディスクリプタに対して
 開始するのを待つか、あるいは即座に開始するかを指示します。
-これによりユーザが標準入力を渡したり、標準出力や標準エラー出力の出力をバイト列として読み取る選択肢を提供します。
+これによりユーザーが標準入力を渡したり、標準出力や標準エラー出力の出力をバイト列として読み取る選択肢を提供します。
 <!--
 `wait-for-websocket` indicates whether the operation should block and wait for
 a websocket connection to start for all the available file descriptors (except `control`, which is optional), or start immediately.
@@ -2675,7 +2675,7 @@ In the source image case, the following dict must be used:
 ```js
 {
     "filename": filename,                   // エクスポートの際に使用されます (任意で指定可能)
-    "public": true,                         // 信頼されないユーザがイメージをダウンロードしてよいか (デフォルトは false)
+    "public": true,                         // 信頼されないユーザーがイメージをダウンロードしてよいか (デフォルトは false)
     "auto_update": true,                    // イメージを自動更新するかどうか (任意で指定可能、デフォルトは false)
     "properties": {                         // イメージのプロパティ (任意で指定可能、作成元のプロパティに追加して適用されます)
         "os": "Ubuntu"
@@ -2733,7 +2733,7 @@ In the source instance case, the following dict must be used:
 {
     "compression_algorithm": "xz",  // イメージの圧縮アルゴリズムをオーバーライドします (任意で指定可能)
     "filename": filename,           // エクスポートの際に使用されます (任意で指定可能)
-    "public":   true,               // 信頼されないユーザがイメージをダウンロードしてよいか (デフォルトは false)
+    "public":   true,               // 信頼されないユーザーがイメージをダウンロードしてよいか (デフォルトは false)
     "properties": {                 // イメージのプロパティ (任意で指定可能)
         "os": "Ubuntu"
     },
@@ -2777,7 +2777,7 @@ In the remote image URL case, the following dict must be used:
 ```js
 {
     "filename": filename,                           // エクスポートの際に使用されます (任意で指定可能)
-    "public":   true,                               // 信頼されないユーザがイメージをダウンロードしてよいか (デフォルトは false)
+    "public":   true,                               // 信頼されないユーザーがイメージをダウンロードしてよいか (デフォルトは false)
     "properties": {                                 // イメージのプロパティ (任意で指定可能)
         "os": "Ubuntu"
     },

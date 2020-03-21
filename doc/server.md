@@ -50,7 +50,7 @@ maas.api.key                        | string    | global    | -         | maas\_
 maas.api.url                        | string    | global    | -         | maas\_network            | MAAS サーバの URL <!-- URL of the MAAS server -->
 maas.machine                        | string    | local     | hostname  | maas\_network            | この LXD ホストの MAAS での名前 <!-- Name of this LXD host in MAAS -->
 rbac.agent.url                      | string    | global    | -         | rbac                              | RBAC 登録中に提供される Candid エージェントの URL <!-- The Candid agent url as provided during RBAC registration -->
-rbac.agent.username                 | string    | global    | -         | rbac                              | RBAC 登録中に提供される Candid エージェントのユーザ名 <!-- The Candid agent username as provided during RBAC registration -->
+rbac.agent.username                 | string    | global    | -         | rbac                              | RBAC 登録中に提供される Candid エージェントのユーザー名 <!-- The Candid agent username as provided during RBAC registration -->
 rbac.agent.public\_key              | string    | global    | -         | rbac                              | RBAC 登録中に提供される Candid エージェントの公開鍵 <!-- The Candid agent public key as provided during RBAC registration -->
 rbac.agent.private\_key             | string    | global    | -         | rbac                              | RBAC 登録中に提供される Candid エージェントの秘密鍵 <!-- The Candid agent private key as provided during RBAC registration -->
 rbac.api.expiry                     | integer   | global    | -         | rbac                              | RBAC の macaroon の有効期限 (秒) <!-- RBAC macaroon expiry in seconds -->

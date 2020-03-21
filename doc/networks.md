@@ -14,7 +14,7 @@ currently supported:
  - `ipv6` (L3 IPv6 設定) <!-- (L3 IPv6 configuration) -->
  - `dns` (DNS サーバと名前解決の設定) <!-- (DNS server and resolution configuration) -->
  - `raw` (raw の設定のファイルの内容) <!-- (raw configuration file content) -->
- - `user` (ユーザのメタデータに対する自由形式の key/value) <!-- (free form key/value for user metadata) -->
+ - `user` (ユーザーのメタデータに対する自由形式の key/value) <!-- (free form key/value for user metadata) -->
 
 ## ブリッジ <!-- Bridges -->
 

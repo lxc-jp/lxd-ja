@@ -31,7 +31,7 @@ LXD you're using.
 -->
 
 ## フルバックアップ <!-- Full backup -->
-フルバックアップは `/var/lib/lxd` あるいは snap ユーザの場合は
+フルバックアップは `/var/lib/lxd` あるいは snap ユーザーの場合は
 `/var/snap/lxd/common/lxd` の全体を含みます。
 <!--
 A full backup would include the entirety of `/var/lib/lxd` or

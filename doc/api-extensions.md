@@ -135,7 +135,7 @@ Add support for the ETag header on all relevant endpoints.
 This adds the following HTTP header on answers to GET:
 -->
 
- - ETag (ユーザが変更可能なコンテンツの SHA-256) <!-- ETag (SHA-256 of user modifiable content) -->
+ - ETag (ユーザーが変更可能なコンテンツの SHA-256) <!-- ETag (SHA-256 of user modifiable content) -->
 
 また PUT リクエストに次の HTTP ヘッダのサポートが追加されます。
 <!--
@@ -242,7 +242,7 @@ considered as part of the container's disk space usage.
 ## storage\_lvm\_mount\_options
 この拡張は `storage.lvm_mount_options` という新しいデーモン設定オプションを
 追加します。デフォルト値は "discard" で、このオプションにより LVM LV で使用する
-ファイルシステムの追加マウントオプションをユーザが指定できるようになります。
+ファイルシステムの追加マウントオプションをユーザーが指定できるようになります。
 <!--
 Adds a new `storage.lvm_mount_options` daemon configuration option
 which defaults to "discard" and allows the user to set addition mount
@@ -584,7 +584,7 @@ property in the containers root disk device.
 ## id\_map\_base
 これは `security.idmap.base` を新しく導入します。これにより分離されたコンテナー
 に map auto-selection するプロセスをスキップし、ホストのどの uid/gid をベース
-として使うかをユーザが指定できるようにします。
+として使うかをユーザーが指定できるようにします。
 <!--
 This introduces a new `security.idmap.base` allowing the user to skip the
 map auto-selection process for isolated containers and specify what host
@@ -660,7 +660,7 @@ This adds a ceph storage driver.
 -->
 
 ## storage\_ceph\_user\_name
-これは ceph ユーザを指定できるようにします。
+これは ceph ユーザーを指定できるようにします。
 <!--
 This adds the ability to specify the ceph user.
 -->

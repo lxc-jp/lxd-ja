@@ -1,7 +1,7 @@
 # セキュリティー
 <!-- Security -->
 ## イントロダクション <!-- Introduction -->
-LXD は root ユーザで実行するデーモンです。
+LXD は root ユーザーで実行するデーモンです。
 <!--
 LXD is a daemon running as root.
 -->
@@ -89,7 +89,7 @@ LXD は Canonical RBAC サービスとの統合をサポートします。
 LXD supports integrating with the Canonical RBAC service.
 -->
 
-これは Candid ベースの認証を用い、 RBAC サービスがユーザ／グループと
+これは Candid ベースの認証を用い、 RBAC サービスがユーザー／グループと
 ロールの関係を管理します。ロールは個々のプロジェクト、全てのプロジェクト、
 あるいは LXD インスタンス全体に割り当てることができます。
 <!--
@@ -111,7 +111,7 @@ The meaning of the roles when applied to a project is as follow:
  - admin: 上記のすべてに加えてプロジェクト自体を再構成する能力 <!-- All of the above + the ability to reconfigure the project itself -->
 
 **警告**: これらのロールのうち現状では `auditor` と `user` だけが
-ホストへの root 権限のアクセスを渡す信頼が持てないユーザに適した
+ホストへの root 権限のアクセスを渡す信頼が持てないユーザーに適した
 ロールです。
 <!--
 **WARNING**: Of those roles, only `auditor` and `user` are currently
@@ -126,8 +126,8 @@ LXD containers can use a pretty wide range of features for security.
 -->
 
 デフォルトではコンテナーは非特権 (`unprivileged`) です。これはコンテナーが
-ユーザ名前空間で稼働することを意味し、コンテナー内のユーザの能力をホスト上の
-通常ユーザの能力に制限し、コンテナーが所有するデバイスにも限定した権限しか
+ユーザー名前空間で稼働することを意味し、コンテナー内のユーザーの能力をホスト上の
+通常ユーザーの能力に制限し、コンテナーが所有するデバイスにも限定した権限しか
 与えないことを意味します。
 <!--
 By default containers are `unprivileged`, meaning that they operate
@@ -148,7 +148,7 @@ containers.
 
 もし望む場合は LXD は特権 (`privileged`) コンテナーを実行することもできます。
 ただし、これらは root 権限を取得しようとする行為に対して安全ではないこと、
-特権コンテナー内の root 権限を持つユーザはホストに DoS をすることができ、
+特権コンテナー内の root 権限を持つユーザーはホストに DoS をすることができ、
 コンテナー内への監禁から脱出する方法を見つけるかもしれないことに注意してください。
 <!--
 LXD can also run `privileged` containers if you so wish, do note that
@@ -165,18 +165,18 @@ More details on container security and the kernel features we use can be found o
 -->
 
 ## TLS クライアント証明書での認証を使ってリモートを追加する <!-- Adding a remote with TLS client certificate authentication -->
-デフォルトのセットアップでは、ユーザが `lxd remote add` で新しいサーバを
+デフォルトのセットアップでは、ユーザーが `lxd remote add` で新しいサーバを
 追加する際、サーバに https で通信し、証明書がダウンロードされ、
-フィンガープリントがユーザに表示されます。
+フィンガープリントがユーザーに表示されます。
 <!--
 In the default setup, when the user adds a new server with `lxc remote add`,
 the server will be contacted over HTTPS, its certificate downloaded and the
 fingerprint will be shown to the user.
 -->
 
-ユーザは、これが本当にサーバのフィンガープリントなのかの確認を求められます。
+ユーザーは、これが本当にサーバのフィンガープリントなのかの確認を求められます。
 これは接続してみて手動で確認するか、既にそのサーバに接続可能になっている
-別のユーザに info コマンドを実行してもらい、表示されたフィンガープリント
+別のユーザーに info コマンドを実行してもらい、表示されたフィンガープリント
 と比較することで確認できます。
 <!--
 The user will then be asked to confirm that this is indeed the server's
@@ -185,7 +185,7 @@ someone with access to the server to run the info command and compare
 the fingerprints.
 -->
 
-その後ユーザはそのサーバのトラスト・パスワード
+その後ユーザーはそのサーバのトラスト・パスワード
 (訳注: サーバに接続できる権限があることを確認するためのパスワード) を
 入力する必要があります。正しいパスワードを入力すると、クライアント証明書が
 サーバのトラスト・ストア (訳注: 信頼済みクライアントストア) に追加され、
@@ -238,13 +238,13 @@ mechanism.
 -->
 
 サーバ証明書が有効で CA によって署名されていれば、その証明書について
-ユーザにプロンプトを表示することなく接続は続行します。
+ユーザーにプロンプトを表示することなく接続は続行します。
 <!--
 If the server certificate is valid and signed by the CA, then the
 connection continues without prompting the user for the certificate.
 -->
 
-その後、ユーザはそのサーバのトラスト・パスワード
+その後、ユーザーはそのサーバのトラスト・パスワード
 を入力する必要があります。
 正しいパスワードを入力すると、クライアント証明書がサーバのトラスト・ストアに追加され、
 今後はクライアントは追加の機密情報を提供することなく、サーバに接続できます。
@@ -291,7 +291,7 @@ The authentication server certificate needs to be trusted by the LXD server.
 
 Macaroon 認証を設定された LXD にリモートを追加するには
 `lxd remote add REMOTE ENDPOINT --auth-type=candid`
-を実行します。クライアントはユーザを検証するために認証サーバに要求される
+を実行します。クライアントはユーザーを検証するために認証サーバに要求される
 機密情報を入力するためのプロンプトを表示します。認証が成功したら、
 認証サーバから受け取ったトークンを LXD サーバに渡して接続します。
 LXD サーバはトークンを検証し、リクエストを認証します。トークンはクッキーとして
@@ -346,8 +346,8 @@ A remote add operation should therefore go like this:
 -->
 
  1. API の GET /1.0 を呼びます。 <!-- Call GET /1.0 -->
- 2. PKI のセットアップをしていなければ、フィンガープリントを確認するプロンプトがユーザに表示されます。 <!-- If we're not in a PKI setup ask the user to confirm the fingerprint. -->
- 3. サーバから返された dict を見て、 "auth" が "untrusted" だった場合、ユーザにサーバのパスワードを入力させ、 `/1.0/certificates` に `POST` のリクエストを送り、その後再び `/1.0` のリクエストを送って本当に信頼されたかを確認します。 <!-- Look at the dict we received back from the server. If "auth" is
+ 2. PKI のセットアップをしていなければ、フィンガープリントを確認するプロンプトがユーザーに表示されます。 <!-- If we're not in a PKI setup ask the user to confirm the fingerprint. -->
+ 3. サーバから返された dict を見て、 "auth" が "untrusted" だった場合、ユーザーにサーバのパスワードを入力させ、 `/1.0/certificates` に `POST` のリクエストを送り、その後再び `/1.0` のリクエストを送って本当に信頼されたかを確認します。 <!-- Look at the dict we received back from the server. If "auth" is
     "untrusted", ask the user for the server's password and do a `POST` to
     `/1.0/certificates`, then call `/1.0` again to check that we're indeed
     trusted. -->
@@ -372,7 +372,7 @@ certificate fringerprint will not match that in the config for this
 remote.
 -->
 
-後はユーザの責任でサーバ管理者に連絡し、サーバ証明書が本当に変更されたのか
+後はユーザーの責任でサーバ管理者に連絡し、サーバ証明書が本当に変更されたのか
 確認する必要があります。変更されたのであれば証明書を新しいもので置き換えるか、
 リモートを一旦削除して再度追加できます。
 <!--

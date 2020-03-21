@@ -30,7 +30,7 @@ Please note that what LXD cares about is the kernel architecture, not
 the particular userspace flavor as determined by the toolchain.
 -->
 LXD が問題とするのはカーネルアーキテクチャであり、ツールチェインで
-決定される特定のユーザスペースのフレーバーではないことに注意してください。
+決定される特定のユーザースペースのフレーバーではないことに注意してください。
 
 <!--
 That means that LXD considers armv7 hard-float to be the same as armv7
@@ -39,8 +39,8 @@ exact userspace ABI may be set as an image and container property,
 allowing easy query.
 -->
 これは LXD は armv7 hard-float を armv7 soft-float と同じとして扱い、
-両方を "armv7" として参照することを意味します。もしユーザにとって有用で
-あれば正確なユーザスペースの ABI がイメージとコンテナープロパティとして
+両方を "armv7" として参照することを意味します。もしユーザーにとって有用で
+あれば正確なユーザースペースの ABI がイメージとコンテナープロパティとして
 設定可能となり、簡単に問い合わせすることを許可します。
 
 ## アーキテクチャ <!-- Architectures -->

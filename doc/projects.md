@@ -32,7 +32,7 @@ currently supported:
 
  - `features` プロジェクトのフィーチャーセットのどの部分が使用中か <!-- (What part of the project featureset is in use) -->
  - `limits` プロジェクトに属するコンテナーと VM に適用されるリソース制限 <!-- (Resource limits applied on containers and VMs belonging to the project) -->
- - `user` ユーザメタデータに対する自由形式の key/value <!-- (free form key/value for user metadata) -->
+ - `user` ユーザーメタデータに対する自由形式の key/value <!-- (free form key/value for user metadata) -->
 
 キー <!-- Key -->                    | 型 <!-- Type --> | 条件 <!-- Condition -->             | デフォルト値 <!-- Default -->                   | 説明 <!-- Description -->
 :--                                  | :--       | :--                   | :--                       | :--

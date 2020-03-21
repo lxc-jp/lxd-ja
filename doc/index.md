@@ -228,7 +228,7 @@ Now, the `lxd` and `lxc` binaries will be available to you and can be used to se
 <!--
 You'll need sub{u,g}ids for root, so that LXD can create the unprivileged containers:
 -->
-LXD が非特権コンテナーを作成できるように、root ユーザに対する sub{u,g}id の設定が必要です:
+LXD が非特権コンテナーを作成できるように、root ユーザーに対する sub{u,g}id の設定が必要です:
 
 ```bash
 echo "root:1000000:65536" | sudo tee -a /etc/subuid /etc/subgid
@@ -259,7 +259,7 @@ to the host.
 **警告**: このソケットにアクセスできる人は LXD を完全に制御できます。
 これはホストのデバイスやファイルシステムにアタッチする能力も含みます。
 ですので、ホストに root 権限でアクセスを許可するほどに信頼できる
-ユーザだけにこのソケットを与えるようにすべきです。
+ユーザーだけにこのソケットを与えるようにすべきです。
 
 <!--
 When listening on the network, the same API is available on a TLS socket
@@ -305,7 +305,7 @@ A discussion forum is available at: <https://discuss.linuxcontainers.org>
 We use the LXC mailing-lists for developer and user discussions, you can
 find and subscribe to those at: <https://lists.linuxcontainers.org>
 -->
-開発者向けとユーザ向けのディスカッションに LXC のメーリングリストを使っています。次の URL から見つけられますし、購読もできます: <https://lists.linuxcontainers.org>
+開発者向けとユーザー向けのディスカッションに LXC のメーリングリストを使っています。次の URL から見つけられますし、購読もできます: <https://lists.linuxcontainers.org>
 
 ### IRC
 <!--
