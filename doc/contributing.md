@@ -153,19 +153,19 @@ Follow the steps below to set up your development environment to get started wor
 -->
 開発環境をセットアップし LXD の新機能に取り組みを開始するには以下の手順に従ってください。
 
-### 依存ライブラリのビルド <!-- Building Dependencies -->
+### 依存ライブラリーのビルド <!-- Building Dependencies -->
 
 <!--
 To build dependencies, you can follow the instructions in [the README.md](index.md) under the "Installing LXD from Source" section.
 -->
-依存ライブラリをビルドするには [README.md](index.md) の「LXD のソースからのインストール」のセクションの手順に従ってください。
+依存ライブラリーをビルドするには [README.md](index.md) の「LXD のソースからのインストール」のセクションの手順に従ってください。
 
 ### あなたの fork の remote を追加 <!-- Adding Your Fork Remote -->
 
 <!--
 After building your dependencies, you can now add your GitHub fork as a remote and switch to it:
 -->
-依存ライブラリをビルドし終わったら、 GitHub の fork を remote として追加しその fork  にスイッチできます。
+依存ライブラリーをビルドし終わったら、 GitHub の fork を remote として追加しその fork  にスイッチできます。
 ```bash
 git remote add myfork git@github.com:<your_username>/lxd.git
 git remote update

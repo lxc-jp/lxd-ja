@@ -78,7 +78,7 @@ properly, but support for those may accidentally regress in future LXD
 releases.
 -->
 
-## 追加のライブラリ(と開発用のヘッダ) <!-- Additional libraries (and development headers) -->
+## 追加のライブラリー(と開発用のヘッダ) <!-- Additional libraries (and development headers) -->
 <!--
 LXD uses `dqlite` for its database, to build and setup the custom
 `sqlite3` and `dqlite` needed for it, you can run `make deps`.
@@ -90,7 +90,7 @@ LXD はデータベースとして `dqlite` を使用しています。そのた
 <!--
 LXD itself also uses a number of (usually packaged) C libraries:
 -->
-LXD は他にもいくつかの (たいていはパッケージ化されている) C ライブラリを使用しています。
+LXD は他にもいくつかの (たいていはパッケージ化されている) C ライブラリーを使用しています。
 
  - libacl1
  - libcap2
@@ -100,5 +100,5 @@ LXD は他にもいくつかの (たいていはパッケージ化されてい�
 Make sure you have both the libraries themselves and their development
 headers (-dev packages) installed.
 -->
-ライブラリそのものとライブラリの開発用ヘッダ (-dev パッケージ)の両方を
+ライブラリーそのものとライブラリーの開発用ヘッダ (-dev パッケージ)の両方を
 インストールしたことを確認してください。

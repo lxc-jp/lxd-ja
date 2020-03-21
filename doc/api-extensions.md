@@ -886,7 +886,7 @@ This adds the ability to copy and move custom storage volumes between remote.
 
 ## nvidia\_runtime
 コンテナーに `nvidia_runtime` という設定オプションを追加します。これを true に
-設定すると NVIDIA ランタイムと CUDA ライブラリがコンテナーに渡されます。
+設定すると NVIDIA ランタイムと CUDA ライブラリーがコンテナーに渡されます。
 <!--
 Adds a `nvidia_runtime` config option for containers, setting this to
 true will have the NVIDIA runtime and CUDA libraries passed to the
@@ -1143,7 +1143,7 @@ macaroon's expiry configurable. The `lxc remote add` command now has a
 -->
 
 ## nvidia\_runtime\_config
-これは nvidia.runtime と libnvidia-container ライブラリを使用する際に追加の
+これは nvidia.runtime と libnvidia-container ライブラリーを使用する際に追加の
 いくつかの設定キーを導入します。これらのキーは nvidia-container の対応する
 環境変数にほぼそのまま置き換えられます。
 <!--
@@ -1466,7 +1466,7 @@ decide to trigger various actions.
 
 ## lxc\_features
 これは `GET /1.0/` ルート経由で `lxc info` コマンドの出力に `lxc\_features`
-セクションを導入します。配下の LXC ライブラリに存在するキー・フィーチャーに
+セクションを導入します。配下の LXC ライブラリーに存在するキー・フィーチャーに
 対するチェックの結果を出力します。
 <!--
 This introduces the `lxc\_features` section output from the `lxc info` command
