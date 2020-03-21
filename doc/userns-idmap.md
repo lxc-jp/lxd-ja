@@ -1,4 +1,4 @@
-# ユーザ名前空間 (user namespace) 用の ID のマッピング
+# ユーザー名前空間 (user namespace) 用の ID のマッピング
 <!-- Idmaps for user namespace -->
 ## イントロダクション <!-- Introduction -->
 <!--
@@ -55,7 +55,7 @@ On most hosts, LXD will check `/etc/subuid` and `/etc/subgid` for
 allocations for the "lxd" user and on first start, set the default
 profile to use the first 65536 uids and gids from that range.
 -->
-ほとんどのホストでは、 LXD は初回起動時に "lxd" ユーザの割当のために
+ほとんどのホストでは、 LXD は初回起動時に "lxd" ユーザーの割当のために
 `/etc/subuid` と `/etc/subgid` をチェックし、そこで指定されている範囲の
 最初の 65536 個の uid と gid をデフォルト・プロファイルで使用するように
 設定します。
@@ -86,7 +86,7 @@ uid/gid range starting at a base uid/gid of 1000000.
 -->
 
 これは最もよくあるケースであり、完全に非特権なコンテナーをホストするシステム上で稼働するのではない場合
-（コンテナーランタイム自身はユーザ権限で実行するような場合）に、通常は推奨される設定です。
+（コンテナーランタイム自身はユーザー権限で実行するような場合）に、通常は推奨される設定です。
 <!--
 This is the most common case and is usually the recommended setup when
 not running on a system which also hosts fully unprivileged containers
@@ -131,7 +131,7 @@ container.
 `security.idmap.size` が設定されたコンテナーはこのサイズに ID の範囲が設定
 されます。このプロパティが設定されていない隔離されたコンテナーは ID の範囲が
 デフォルトのサイズ 65536 に設定されます。これにより POSIX に準拠し、コンテナー内で
-"nobody" ユーザが使用できます。
+"nobody" ユーザーが使用できます。
 
 <!--
 To select a specific map, the `security.idmap.base` key will let you
@@ -156,7 +156,7 @@ uid-shifting filesystem. The per-container configuration key for this is
 -->
 さらに LXD は ID マッピングの一部をカスタマイズすることをサポートします。例えば、
 uid を変更するファイルシステムを必要とせずに、ホストのファイルシステムの一部を
-コンテナーに bind mount することをユーザに許可できます。このためのコンテナー毎の
+コンテナーに bind mount することをユーザーに許可できます。このためのコンテナー毎の
 設定項目は `raw.idmap` で、設定例は以下のようになります。
 
     both 1000 1000
@@ -169,7 +169,7 @@ The first line configures both the uid and gid 1000 on the host to map to uid
 home directory into a container).
 -->
 1 行目は、ホストの uid と gid 1000 の両方をコンテナー内の uid 1000 にマッピング
-する設定です (これは例えばユーザのホームディレクトリをコンテナー内に bind mount
+する設定です (これは例えばユーザーのホームディレクトリをコンテナー内に bind mount
 するのに使用できます)。
 
 <!--
@@ -179,8 +179,8 @@ host, and the third entry is the range inside the container. These ranges must
 be the same size.
 -->
 2 行目と 3 行目は uid または gid のどちらかだけをコンテナー内にマッピングする設定
-です。行の中の 2 番目のエントリはソース ID 、 つまりホスト上の ID で、 3 番目の
-エントリはコンテナー内部での範囲です。これらの範囲は同じサイズでなければなりません。
+です。行の中の 2 番目のエントリーはソース ID 、 つまりホスト上の ID で、 3 番目の
+エントリーはコンテナー内部での範囲です。これらの範囲は同じサイズでなければなりません。
 
 <!--
 This property requires a container reboot to take effect.

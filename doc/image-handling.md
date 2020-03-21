@@ -2,7 +2,7 @@
 <!-- Image handling -->
 ## イントロダクション <!-- Introduction -->
 LXD はイメージをベースとしたワークフローを使用します。 LXD にはビルトイン
-のイメージ・ストアがあり、ユーザが外部のツールがそこからイメージをインポート
+のイメージ・ストアがあり、ユーザーが外部のツールがそこからイメージをインポート
 できます。
 <!--
 LXD uses an image based workflow. It comes with a built-in image store
@@ -83,7 +83,7 @@ The user can also request a particular image be kept up to date when
 manually copying an image from a remote server.
 -->
 
-ユーザがイメージのキャッシュから新しいインスタンスを作成しようとした時に、
+ユーザーがイメージのキャッシュから新しいインスタンスを作成しようとした時に、
 アップストリームの新しいイメージ更新が公開されており、ローカルの LXD が
 キャッシュに古いイメージを持っている場合は、 LXD はインスタンスの作成を
 遅らせるのではなく、古いバージョンのイメージを使います。

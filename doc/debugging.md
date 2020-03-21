@@ -52,7 +52,7 @@ lxd --debug --group lxd
 `\-\-group lxd` is needed to grant access to unprivileged users in this
 group.
 -->
-上記の `--group lxd` は非特権ユーザにアクセス権限を与えるために必要です。
+上記の `--group lxd` は非特権ユーザーにアクセス権限を与えるために必要です。
 
 
 ### ローカルソケット経由でのREST API <!-- REST API through local socket -->

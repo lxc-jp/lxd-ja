@@ -14,7 +14,7 @@ currently supported:
  - `ipv6` (L3 IPv6 設定) <!-- (L3 IPv6 configuration) -->
  - `dns` (DNS サーバと名前解決の設定) <!-- (DNS server and resolution configuration) -->
  - `raw` (raw の設定のファイルの内容) <!-- (raw configuration file content) -->
- - `user` (ユーザのメタデータに対する自由形式の key/value) <!-- (free form key/value for user metadata) -->
+ - `user` (ユーザーのメタデータに対する自由形式の key/value) <!-- (free form key/value for user metadata) -->
 
 ## ブリッジ <!-- Bridges -->
 
@@ -128,3 +128,73 @@ Those keys can be set using the lxc tool with:
 ```bash
 lxc network set <network> <key> <value>
 ```
+
+## systemd-resolved との統合 <!-- Integration with systemd-resolved -->
+
+LXD が動いているシステムが DNS のルックアップに systemd-resolved を使用している場合、 LXD が名前解決できるドメインを systemd-resolved に指定することができます。
+これには systemd-resolved にどのブリッジ、ネームサーバーのアドレス、そして DNS ドメインかを伝える必要があります。
+<!--
+If the system running LXD uses systemd-resolved to perform DNS
+lookups, it's possible to notify resolved of the domain(s) that
+LXD is able to resolve.  This requires telling resolved the
+specific bridge(s), nameserver address(es), and dns domain(s).
+-->
+
+例えば、 LXD が `lxdbr0` インターフェースを使用している場合、 `lxc network get lxdbr0 ipv4.address` コマンドで IPv4 アドレス（IPv4 アドレスの代わりに IPv6 アドレスを使うこともできますし、 IPv4 アドレスと IPv6 アドレスの両方を使うこともできます）と `lxc network get lxdbr0 dns.domain` （ドメインが設定されていない場合は上記の表に示されているデフォルト値の `lxd` が使用されます）でドメインを取得します。
+そして systemd-resolved に以下のように指定します。
+<!--
+For example, if LXD is using the `lxdbr0` interface, get the
+ipv4 address with `lxc network get lxdbr0 ipv4.address` command
+(the ipv6 can be used instead or in addition), and the domain
+with `lxc network get lxdbr0 dns.domain` (if unset, the domain
+is `lxd` as shown in the table above).  Then notify resolved:
+-->
+
+```
+systemd-resolve --interface lxdbr0 --set-domain '~lxd' --set-dns 1.2.3.4
+```
+
+上記の `lxdbr0` は実際のブリッジの名前に、 `1.2.3.4` はネームサーバーの実際の（サブネットマスクを除いた） アドレスに置き換えて実行してください。
+<!--
+Replace `lxdbr0` with the actual bridge name, and `1.2.3.4` with
+the actual address of the nameserver (without the subnet netmask).
+-->
+
+さらに `lxd` はドメイン名に置き換えてください。
+ドメイン名の前の `~` が重要ですので注意してください。
+`~` はこのドメインだけをルックアップするためにこのネームサーバーを使うように systemd-resolved に指定します。
+実際のドメイン名が何であるかにかかわらず `~` を前につけるべきです。
+また、 `~` という文字はシェルが展開するかもしれないので、クォートに囲んでエスケープする必要があるかもしれません。
+<!--
+Also replace `lxd` with the domain name.  Note the `~` before the
+domain name is important; it tells resolved to use this
+nameserver to look up only this domain; no matter what your
+actual domain name is, you should prefix it with `~`.  Also,
+since the shell may expand the `~` character, you may need to
+include it in quotes.
+-->
+
+systemd のより新しいリリースでは `systemd-resolve` コマンドは deprecated になっていますが、（これを書いている時点では）後方互換性のためまだ提供されています。
+systemd-resolved に伝えるための新しい方法は `resolvectl` コマンドを使うことです。
+これは以下の 2 ステップで実行します。
+<!--
+In newer releases of systemd, the `systemd-resolve` command has been
+deprecated, however it is still provided for backwards compatibility
+(as of this writing).  The newer method to notify resolved is using
+the `resolvectl` command, which would be done in two steps:
+-->
+
+```
+resolvectl dns lxdbr0 1.2.3.4
+resolvectl domain lxdbr0 '~lxd'
+```
+
+この systemd-resolved の設定はブリッジが存在する間のみ存続します。
+ですので、リブートと LXD が再起動するたびにこのコマンドを繰り返し実行する必要があります。
+また、これはブリッジの `dns.mode` が `none` でないときにしか機能しないことに注意してください。
+<!--
+This resolved configuration will persist as long as the bridge
+exists, so you must repeat this command each reboot and after
+LXD is restarted.  Also note this only works if the bridge
+`dns.mode` is not `none`.
+-->

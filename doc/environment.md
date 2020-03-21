@@ -2,7 +2,7 @@
 <!-- Environment variables -->
 ## イントロダクション <!-- Introduction -->
 以下の環境変数を設定することで、 LXD のクライアントとデーモンを
-ユーザの環境に適合させることができ、いくつかの高度な機能を有効または
+ユーザーの環境に適合させることができ、いくつかの高度な機能を有効または
 無効にすることができます。
 <!--
 The LXD client and daemon respect some environment variables to adapt to

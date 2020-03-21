@@ -32,17 +32,31 @@ currently supported:
 
  - `features` プロジェクトのフィーチャーセットのどの部分が使用中か <!-- (What part of the project featureset is in use) -->
  - `limits` プロジェクトに属するコンテナーと VM に適用されるリソース制限 <!-- (Resource limits applied on containers and VMs belonging to the project) -->
- - `user` ユーザメタデータに対する自由形式の key/value <!-- (free form key/value for user metadata) -->
+ - `user` ユーザーメタデータに対する自由形式の key/value <!-- (free form key/value for user metadata) -->
 
-キー <!-- Key -->               | 型 <!-- Type --> | 条件 <!-- Condition -->             | デフォルト値 <!-- Default -->                   | 説明 <!-- Description -->
-:--                             | :--       | :--                   | :--                       | :--
-features.images                 | boolean   | -                     | true                      | プロジェクト用のイメージとイメージエイリアスのセットを分離する <!-- Separate set of images and image aliases for the project -->
-features.profiles               | boolean   | -                     | true                      | プロジェクト用のプロファイルを分離する <!-- Separate set of profiles for the project -->
-limits.containers               | integer   | -                     | -                         | プロジェクト内に作成可能なコンテナーの最大数 <!-- Maximum number of containers that can be created in the project -->
-limits.virtual-machines         | integer   | -                     | -                         | プロジェクト内に作成可能な VM の最大数 <!-- Maximum number of VMs that can be created in the project -->
-limits.cpu                      | integer   | -                     | -                         | プロジェクトのインスタンスに設定する個々の "limits.cpu" 設定の合計の最大値 <!-- Maximum value for the sum of individual "limits.cpu" configs set on the instances of the project -->
-limits.memory                   | integer   | -                     | -                         | プロジェクトのインスタンスに設定する個々の "limits.memory" 設定の合計の最大値 <!-- Maximum value for the sum of individual "limits.memory" configs set on the instances of the project -->
-limits.processes                | integer   | -                     | -                         | プロジェクトのインスタンスに設定する個々の "limits.processes" 設定の合計の最大値 <!-- Maximum value for the sum of individual "limits.processes" configs set on the instances of the project -->
+キー <!-- Key -->                    | 型 <!-- Type --> | 条件 <!-- Condition -->             | デフォルト値 <!-- Default -->                   | 説明 <!-- Description -->
+:--                                  | :--       | :--                   | :--                       | :--
+features.images                      | boolean   | -                     | true                      | プロジェクト用のイメージとイメージエイリアスのセットを分離する <!-- Separate set of images and image aliases for the project -->
+features.profiles                    | boolean   | -                     | true                      | プロジェクト用のプロファイルを分離する <!-- Separate set of profiles for the project -->
+features.storage.volumes             | boolean   | -                     | true                      | プロジェクトごとに個別のストレージボリュームのセットを使うかどうか <!-- Separate set of storage volumes for the project -->
+limits.containers                    | integer   | -                     | -                         | プロジェクト内に作成可能なコンテナーの最大数 <!-- Maximum number of containers that can be created in the project -->
+limits.virtual-machines              | integer   | -                     | -                         | プロジェクト内に作成可能な VM の最大数 <!-- Maximum number of VMs that can be created in the project -->
+limits.cpu                           | integer   | -                     | -                         | プロジェクトのインスタンスに設定する個々の "limits.cpu" 設定の合計の最大値 <!-- Maximum value for the sum of individual "limits.cpu" configs set on the instances of the project -->
+limits.memory                        | integer   | -                     | -                         | プロジェクトのインスタンスに設定する個々の "limits.memory" 設定の合計の最大値 <!-- Maximum value for the sum of individual "limits.memory" configs set on the instances of the project -->
+limits.processes                     | integer   | -                     | -                         | プロジェクトのインスタンスに設定する個々の "limits.processes" 設定の合計の最大値 <!-- Maximum value for the sum of individual "limits.processes" configs set on the instances of the project -->
+restricted                           | boolean   | -                     | true                      | セキュリティセンシティブな機能へのアクセスをブロックするかどうか <!-- Block access to security-sensitive features -->
+restricted.containers.nesting        | string    | -                     | block                     | block と設定すると security.nesting=true と設定するのを防ぐ <!-- Prevents setting security.nesting=true. -->
+restricted.containers.privilege      | string    | -                     | unpriviliged              | unpriviliged と設定すると security.privileged=true と設定するのを防ぐ。 isolated と設定すると security.privileged=true に加えて security.idmap.isolated=true と設定するのを防ぐ。 allow と設定すると制限なし。 <!-- If "unpriviliged", prevents setting security.privileged=true. If "isolated", prevents setting security.privileged=true and also security.idmap.isolated=true. If "allow", no restriction apply. -->
+restricted.containers.lowlevel       | string    | -                     | block                     | block と設定すると raw.lxc, raw.idmap, volatile などの低レベルのコンテナーオプションを防ぐ。 <!-- Prevents use of low-level container options like raw.lxc, raw.idmap, volatile, etc. -->
+restricted.virtual-machines.lowlevel | string    | -                     | block                     | block と設定すると raw.qemu, volatile などの低レベルの仮想マシンオプションを防ぐ。 <!-- Prevents use of low-level virtual-machine options like raw.qemu, volatile, etc. -->
+restricted.devices.disk              | string    | -                     | managed                   | block と設定すると root 以外のディスクデバイスを使用できなくする。 managed に設定すると pool= が設定されているときだけディスクデバイスの使用を許可する。  allow と設定すると制限なし。 <!-- If "block" prevent use of disk devices except the root one. If "managed" allow use of disk devices only if "pool=" is set. If "allow", no restrictions apply. -->
+restricted.devices.gpu               | string    | -                     | block                     | block と設定すると gpu タイプのデバイスの使用を防ぐ <!-- Prevents use of devices of type "gpu" -->
+restricted.devices.usb               | string    | -                     | block                     | block と設定すると usb タイプのデバイスの使用を防ぐ <!-- Prevents use of devices of type "usb" -->
+restricted.devices.nic               | string    | -                     | managed                   | block と設定すると全てのネットワークデバイスの使用を防ぐ。 managed と設定すると network= が設定されているときだけネットワークデバイスの使用を許可する。  allow と設定すると制限なし。 <!-- If "block" prevent use of all network devices. If "managed" allow use of network devices only if "network=" is set. If "allow", no restrictions apply. -->
+restricted.devices.infiniband        | string    | -                     | block                     | block と設定すると infiniband タイプのデバイスの使用を防ぐ <!-- Prevents use of devices of type "infiniband" -->
+restricted.devices.unix-char         | string    | -                     | block                     | block と設定すると unix-char タイプのデバイスの使用を防ぐ <!-- Prevents use of devices of type "unix-char" -->
+restricted.devices.unix-block        | string    | -                     | block                     | block と設定すると unix-block タイプのデバイスの使用を防ぐ <!-- Prevents use of devices of type "unix-block" -->
+restricted.devices.unix-hotplug      | string    | -                     | block                     | block と設定すると unix-hotplug タイプのデバイスの使用を防ぐ <!-- Prevents use of devices of type "unix-hotplug" -->
 
 これらのキーは lxc ツールを使って以下のように設定できます。
 <!--
@@ -90,4 +104,72 @@ exceed `50GB`, will result in an error.
 <!--
 Similarly, setting the project's `limits.cpu` config key to `100`, means that
 the **sum** of individual `limits.cpu` values will be kept below `100`.
+-->
+
+## プロジェクトに対する制限 <!-- Project restrictions -->
+
+`restricted` 設定キーが `true` に設定されると、プロジェクトのインスタンスはコンテナーネスティングや生の LXC 設定といったセキュリティセンシティブな機能にアクセスできなくなります。
+<!--
+If the `restricted` config key is set to `true`, then the instances of the
+project won't be able to access security-sensitive features, such as container
+nesting, raw LXC configuration, etc.
+-->
+
+`restricted` 設定キーがブロックする機能の正確な組み合わせは LXD の今後のリリースに伴って、より多くの機能がセキュリティセンシテイブであると判断されて増えていく可能性があります。
+<!--
+The exact set of features that the `restricted` config key blocks may grow
+across LXD releases, as more features are added that are considered
+security-sensitive.
+-->
+
+さまざまな `restricted.*` サブキーを使うことで通常なら `restricted` でブロックされるはずの個々の機能を選んでホワイトリストに入れ、プロジェクトのインスタンスで使えるようにできます。
+<!--
+Using the various `restricted.*` sub-keys, it's possible to pick individual
+features which would be normally blocked by `restricted` and white-list them, so
+they can be used by instances of the project.
+-->
+
+例えば
+<!--
+For example:
+-->
+
+```bash
+lxc project set <project> restricted=true
+lxc project set <project> restricted.containers.nesting=allow
+```
+
+はコンテナーネスティング **以外の** 全てのセキュリティセンシティブな機能をブロックします。
+<!--
+will block all security-sensitive features **except** container nesting.
+-->
+
+それぞれのセキュリティセンシティブな機能は対応する `restricted.*` プロジェクト設定サブキーを持ち、その機能をホワイトリストに入れプロジェクトで使えるようにするにはデフォルト値から変更する必要があります。
+<!--
+Each security-sensitive feature has an associated `restricted.*` project config
+sub-key whose default value needs to be explicitly changed if you want for that
+feature to be white-listed and allow it in the project.
+-->
+
+個々の `restricted.*` 設定キーの値の変更が有効になるのはトップレベルの `restricted` キーが `true` に設定されているときのみであることに注意してください。
+`restricted` が `false` に設定されている場合、 `restricted.*` サブキーを変更しても実質的には変更していないのと同じです。
+<!--
+Note that changing the value of a specific `restricted.*` config key has an
+effect only if the top-level `restricted` key itself is currently set to
+`true`. If `restricted` is set to `false`, changing a `restricted.*` sub-key is
+effectively a no-op.
+-->
+
+ほとんどの `restricted.*` 設定キーは `block` （デフォルト値）か `allow` のいずれかの値を設定可能なバイナリースイッチです。
+しかし一部の `restricted.*` 設定キーはより細かい制御のために他の値をサポートします。
+<!--
+Most `'restricted.*` config keys are binary switches that can be set to either
+`block` (the default) or `allow`. However some of them support other values for
+more fine-grained control.
+-->
+
+全ての `restricted.*` キーを `allow` に設定すると `restricted` 自体を `false` に設定するのと実質同じことになります。
+<!--
+Setting all `restricted.*` keys to `allow` is effectively equivalent to setting
+`restricted` itself to `false`.
 -->

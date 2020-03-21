@@ -1,7 +1,7 @@
 # セキュリティー
 <!-- Security -->
 ## イントロダクション <!-- Introduction -->
-LXD は root ユーザで実行するデーモンです。
+LXD は root ユーザーで実行するデーモンです。
 <!--
 LXD is a daemon running as root.
 -->
@@ -89,7 +89,7 @@ LXD は Canonical RBAC サービスとの統合をサポートします。
 LXD supports integrating with the Canonical RBAC service.
 -->
 
-これは Candid ベースの認証を用い、 RBAC サービスがユーザ／グループと
+これは Candid ベースの認証を用い、 RBAC サービスがユーザー／グループと
 ロールの関係を管理します。ロールは個々のプロジェクト、全てのプロジェクト、
 あるいは LXD インスタンス全体に割り当てることができます。
 <!--
@@ -111,7 +111,7 @@ The meaning of the roles when applied to a project is as follow:
  - admin: 上記のすべてに加えてプロジェクト自体を再構成する能力 <!-- All of the above + the ability to reconfigure the project itself -->
 
 **警告**: これらのロールのうち現状では `auditor` と `user` だけが
-ホストへの root 権限のアクセスを渡す信頼が持てないユーザに適した
+ホストへの root 権限のアクセスを渡す信頼が持てないユーザーに適した
 ロールです。
 <!--
 **WARNING**: Of those roles, only `auditor` and `user` are currently
@@ -126,8 +126,8 @@ LXD containers can use a pretty wide range of features for security.
 -->
 
 デフォルトではコンテナーは非特権 (`unprivileged`) です。これはコンテナーが
-ユーザ名前空間で稼働することを意味し、コンテナー内のユーザの能力をホスト上の
-通常ユーザの能力に制限し、コンテナーが所有するデバイスにも限定した権限しか
+ユーザー名前空間で稼働することを意味し、コンテナー内のユーザーの能力をホスト上の
+通常ユーザーの能力に制限し、コンテナーが所有するデバイスにも限定した権限しか
 与えないことを意味します。
 <!--
 By default containers are `unprivileged`, meaning that they operate
@@ -148,7 +148,7 @@ containers.
 
 もし望む場合は LXD は特権 (`privileged`) コンテナーを実行することもできます。
 ただし、これらは root 権限を取得しようとする行為に対して安全ではないこと、
-特権コンテナー内の root 権限を持つユーザはホストに DoS をすることができ、
+特権コンテナー内の root 権限を持つユーザーはホストに DoS をすることができ、
 コンテナー内への監禁から脱出する方法を見つけるかもしれないことに注意してください。
 <!--
 LXD can also run `privileged` containers if you so wish, do note that
@@ -165,18 +165,18 @@ More details on container security and the kernel features we use can be found o
 -->
 
 ## TLS クライアント証明書での認証を使ってリモートを追加する <!-- Adding a remote with TLS client certificate authentication -->
-デフォルトのセットアップでは、ユーザが `lxd remote add` で新しいサーバを
+デフォルトのセットアップでは、ユーザーが `lxd remote add` で新しいサーバを
 追加する際、サーバに https で通信し、証明書がダウンロードされ、
-フィンガープリントがユーザに表示されます。
+フィンガープリントがユーザーに表示されます。
 <!--
 In the default setup, when the user adds a new server with `lxc remote add`,
 the server will be contacted over HTTPS, its certificate downloaded and the
 fingerprint will be shown to the user.
 -->
 
-ユーザは、これが本当にサーバのフィンガープリントなのかの確認を求められます。
+ユーザーは、これが本当にサーバのフィンガープリントなのかの確認を求められます。
 これは接続してみて手動で確認するか、既にそのサーバに接続可能になっている
-別のユーザに info コマンドを実行してもらい、表示されたフィンガープリント
+別のユーザーに info コマンドを実行してもらい、表示されたフィンガープリント
 と比較することで確認できます。
 <!--
 The user will then be asked to confirm that this is indeed the server's
@@ -185,7 +185,7 @@ someone with access to the server to run the info command and compare
 the fingerprints.
 -->
 
-その後ユーザはそのサーバのトラスト・パスワード
+その後ユーザーはそのサーバのトラスト・パスワード
 (訳注: サーバに接続できる権限があることを確認するためのパスワード) を
 入力する必要があります。正しいパスワードを入力すると、クライアント証明書が
 サーバのトラスト・ストア (訳注: 信頼済みクライアントストア) に追加され、
@@ -238,13 +238,13 @@ mechanism.
 -->
 
 サーバ証明書が有効で CA によって署名されていれば、その証明書について
-ユーザにプロンプトを表示することなく接続は続行します。
+ユーザーにプロンプトを表示することなく接続は続行します。
 <!--
 If the server certificate is valid and signed by the CA, then the
 connection continues without prompting the user for the certificate.
 -->
 
-その後、ユーザはそのサーバのトラスト・パスワード
+その後、ユーザーはそのサーバのトラスト・パスワード
 を入力する必要があります。
 正しいパスワードを入力すると、クライアント証明書がサーバのトラスト・ストアに追加され、
 今後はクライアントは追加の機密情報を提供することなく、サーバに接続できます。
@@ -291,7 +291,7 @@ The authentication server certificate needs to be trusted by the LXD server.
 
 Macaroon 認証を設定された LXD にリモートを追加するには
 `lxd remote add REMOTE ENDPOINT --auth-type=candid`
-を実行します。クライアントはユーザを検証するために認証サーバに要求される
+を実行します。クライアントはユーザーを検証するために認証サーバに要求される
 機密情報を入力するためのプロンプトを表示します。認証が成功したら、
 認証サーバから受け取ったトークンを LXD サーバに渡して接続します。
 LXD サーバはトークンを検証し、リクエストを認証します。トークンはクッキーとして
@@ -346,8 +346,8 @@ A remote add operation should therefore go like this:
 -->
 
  1. API の GET /1.0 を呼びます。 <!-- Call GET /1.0 -->
- 2. PKI のセットアップをしていなければ、フィンガープリントを確認するプロンプトがユーザに表示されます。 <!-- If we're not in a PKI setup ask the user to confirm the fingerprint. -->
- 3. サーバから返された dict を見て、 "auth" が "untrusted" だった場合、ユーザにサーバのパスワードを入力させ、 `/1.0/certificates` に `POST` のリクエストを送り、その後再び `/1.0` のリクエストを送って本当に信頼されたかを確認します。 <!-- Look at the dict we received back from the server. If "auth" is
+ 2. PKI のセットアップをしていなければ、フィンガープリントを確認するプロンプトがユーザーに表示されます。 <!-- If we're not in a PKI setup ask the user to confirm the fingerprint. -->
+ 3. サーバから返された dict を見て、 "auth" が "untrusted" だった場合、ユーザーにサーバのパスワードを入力させ、 `/1.0/certificates` に `POST` のリクエストを送り、その後再び `/1.0` のリクエストを送って本当に信頼されたかを確認します。 <!-- Look at the dict we received back from the server. If "auth" is
     "untrusted", ask the user for the server's password and do a `POST` to
     `/1.0/certificates`, then call `/1.0` again to check that we're indeed
     trusted. -->
@@ -372,7 +372,7 @@ certificate fringerprint will not match that in the config for this
 remote.
 -->
 
-後はユーザの責任でサーバ管理者に連絡し、サーバ証明書が本当に変更されたのか
+後はユーザーの責任でサーバ管理者に連絡し、サーバ証明書が本当に変更されたのか
 確認する必要があります。変更されたのであれば証明書を新しいもので置き換えるか、
 リモートを一旦削除して再度追加できます。
 <!--
@@ -392,7 +392,7 @@ trusted.
 -->
 
 これは別の信頼されたクライアントかローカルのサーバ管理者がサーバ上の
-信頼エントリを削除したときに起こります。
+信頼エントリーを削除したときに起こります。
 <!--
 This happens if another trusted client or the local server administrator
 removed the trust entry on the server.
@@ -417,3 +417,94 @@ server should be available (rather than any address on the host), and firewall
 rules should be set to only allow access to the LXD port from authorized
 hosts/subnets.
 -->
+
+## ネットワークのセキュリティ <!-- Network security -->
+
+LXD のデフォルトのネットワークのモードはそれぞれのインスタンスが接続する「管理された」プライベートなネットワークブリッジを提供するためのものです。
+このモードではホスト上に `lxdbr0` と呼ばれるインターフェースが存在し、それぞれのインスタンスに対してブリッジとして振る舞います。
+<!--
+The default networking mode in LXD is to provide a 'managed' private network bridge that each instance connects to.
+In this mode, there is an interface on the host called `lxdbr0` that acts as the bridge for the instances.
+-->
+
+ホストはそれぞれの管理されたブリッジに対して `dnsmasq` のインスタンスを稼働します。
+それが IP アドレスを割り当て、 DNS の権威サーバーとキャッシュサーバーの両方のサービスを提供します。
+<!--
+The host runs an instance of `dnsmasq` for each managed bridge, which is responsible for allocating IP addresses
+and providing both authoritative and recursive DNS services.
+-->
+
+DHCPv4 を使うインスタンスには IPv4 アドレスが割り当てられ、インスタンス名に対する DNS レコードが作成されます。
+これによりインスタンスが DHCP リクエスト内に虚偽のホスト名を含めて DNS レコードをスプーフィングできないようにしています。
+<!--
+Instances using DHCPv4 will be allocated an IPv4 address and a DNS record will be created for their instance name.
+This prevents instances from being able to spoof DNS records by providing false hostname info in the DHCP request.
+-->
+
+さらに `dnsmasq` サービスは IPv6 のルーター広告の機能も提供します。
+これはインスタンスが SLAAC を使って自身の IPv6 アドレスを自動設定することを意味し、 `dnsmasq` による割り当ては行いません。
+しかしインスタンスは同等の SLAAC IPv6 アドレスに対して作成された AAAA DNS レコードを DHCPv4 を使って取得することもできます。
+これにはインスタンスが IPv6 アドレスを生成する際に IPv6 のプライバシー拡張を使っていないことが前提となります。
+<!--
+The `dnsmasq` service also provides IPv6 router advertisement capabilities. This means that instances will auto
+configure their own IPv6 address using SLAAC, so no allocation is made by `dnsmasq`. However instances that are
+also using DHCPv4 will also get an AAAA DNS record created for the equivalent SLAAC IPv6 address.
+This assumes that the instances are not using any IPv6 privacy extensions when generating IPv6 addresses.
+-->
+
+このデフォルトの設定では DNS の名前はスプーフィングできませんが、インスタンスは Ethernet ブリッジに接続しており、 Layer 2 の希望するトラフィックを送信できますので、信頼できないインスタンスが実質的にはブリッジ上の MAC アドレスあるいは IP アドレスをスプーフィングできることを意味します。
+<!--
+In this default configuration, whilst DNS names cannot not be spoofed, the instance is connected to an Ethernet
+bridge and can transmit any layer 2 traffic that it wishes, which means an untrusted instance can effectively do
+MAC or IP spoofing on the bridge.
+-->
+
+しかし LXD はいくつかの `bridged` NIC セキュリティ機能を提供しており、インスタンスがネットワークに送信できるトラフィックの種類を制限するのに使用できます。
+これらの NIC 設定はインスタンスが使用するプロファイルに設定するべきですが、以下に示すように個々のインスタンスに追加することもできます。
+<!--
+However LXD offers several `bridged` NIC security features that can be used to control the type of traffic that
+an instance is allowed to send onto the network. These NIC settings should be added to the profile that the
+instance is using, or can be added to individual instances, as shown below.
+-->
+
+`bridged` NIC に対して以下のセキュリティ機能が利用可能です。
+<!--
+The following security features are available for `bridged` NICs:
+-->
+
+Key                      | Type      | Default           | Required  | Description
+:--                      | :--       | :--               | :--       | :--
+security.mac\_filtering  | boolean   | false             | no        | インスタンスが別のインスタンスの MAC アドレスを詐称するのを防ぐ <!-- Prevent the instance from spoofing another's MAC address -->
+security.ipv4\_filtering | boolean   | false             | no        | インスタンスが別のインスタンスの IPv4 アドレスを詐称するのを防ぐ（これを有効にすると mac\_filtering も有効になります）  <!-- Prevent the instance from spoofing another's IPv4 address (enables mac\_filtering) -->
+security.ipv6\_filtering | boolean   | false             | no        | インスタンスが別のインスタンスの IPv6 アドレスを詐称するのを防ぐ（これを有効にすると mac\_filtering も有効になります）  <!-- Prevent the instance from spoofing another's IPv6 address (enables mac\_filtering) -->
+
+プロファイルに設定されたデフォルトの `bridged` NIC 設定を以下のコマンドでインスタンスごとにオーバーライドできます。
+<!--
+One can override the default `bridged` NIC settings from the profile on a per-instance basis using:
+-->
+
+```
+lxc config device override <instance> <NIC> security.mac_filtering=true
+```
+
+これらの機能を合わせて使うとブリッジに接続されたインスタンスが MAC アドレスや IP アドレスを詐称するのを防ぐことができます。
+これらは `xtables` (iptables, ip6tables そして ebtables) あるいは `nftables` のいずれかを使って実装されていて、どちらが使われるかはホストでどちらが利用可能かによって決まります。
+<!--
+Used together these features can prevent an instance connected to a bridge from spoofing MAC and IP addresses.
+These are implemented using either `xtables` (iptables, ip6tables and ebtables) or `nftables`, depending on what is
+available on the host.
+-->
+
+これらのオプションを使うと、ネストしたコンテナー、少なくとも親と同じネットワーク上のネストしたコンテナーを実質的に使えなくなることに注意が必要です。
+<!--
+It's worth noting that those options effectively prevent nested containers, at least nested containers on the
+same network as their parent.
+-->
+
+IP フィルタリング機能は詐称されたソースアドレスを含む全てのパケットをブロックするだけでなく、詐称された IP を含む ARP と NDP 広告もブロックします。
+<!--
+The IP filtering features block ARP and NDP advertisements that contain a spoofed IP, as well as blocking any
+packets that contain a spoofed source address.
+-->
+
+

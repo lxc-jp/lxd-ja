@@ -57,13 +57,14 @@ More instructions on installing LXD for a wide variety of Linux distributions an
 さまざまな Linux ディストリビューションとオペレーティングシステムで LXD をインストールするためのより詳細な方法は、[公式サイト](https://linuxcontainers.org/lxd/getting-started-cli/) をご覧ください。
 
 ## LXD のソースからのインストール <!-- Installing LXD from source -->
+LXD の開発には liblxc の最新バージョン（3.0.0 以上が必要）を使用することをおすすめします。
+さらに LXD が動作するためには Golang 1.13 以上が必要です。
+Ubuntu では次のようにインストールできます:
 <!--
-We recommend having the latest versions of liblxc (>= 2.0.0 required)
-available for LXD development. Additionally, LXD requires Golang 1.10 or
+We recommend having the latest versions of liblxc (>= 3.0.0 required)
+available for LXD development. Additionally, LXD requires Golang 1.13 or
 later to work. On ubuntu, you can get those with:
 -->
-LXD の開発には liblxc の最新バージョン（2.0.0 以上が必要）を使用することをおすすめします。さらに Golang 1.10 以上が動作する必要があります。
-Ubuntu では次のようにインストールできます:
 
 ```bash
 sudo apt update
@@ -75,7 +76,7 @@ Note that when building LXC yourself, ensure to build it with the appropriate
 security related libraries installed which our testsuite tests. Again, on
 ubuntu, you can get those with:
 -->
-LXC を自分でビルドする場合は、テストスイートがテストする、関連する適切なセキュリティ関連のライブラリがインストールされていることを確認してください。
+LXC を自分でビルドする場合は、テストスイートがテストする、関連する適切なセキュリティ関連のライブラリーがインストールされていることを確認してください。
 Ubuntu であれば次のようにインストールできます:
 
 ```bash
@@ -132,7 +133,7 @@ go get -d -v github.com/lxc/lxd/lxd
 cd $GOPATH/src/github.com/lxc/lxd
 ```
 
-ビルドプロセスが開始したら、 Makefile は `go get` と `git clean` を使ってビルドに必要な全ての依存ライブラリを取得します。
+ビルドプロセスが開始したら、 Makefile は `go get` と `git clean` を使ってビルドに必要な全ての依存ライブラリーを取得します。
 <!--
 When the build process starts, the Makefile will use `go get` and `git clone` to grab all necessary dependencies 
 needed for building.
@@ -161,7 +162,7 @@ Once the `GOPATH` is configured, either to build the latest GitHub version or an
 can be used to build LXD.
 -->
 
-実際のビルドは Makefile の 2 回の別々の実行により行われます。 1 つは `make deps` でこれは LXD に必要とされるライブラリをビルドします。もう 1 つは `make` で LXD 自体をビルドします。 `make deps` の最後に `make` の実行に必要な環境変数を設定するための手順が表示されます。新しいバージョンの LXD がリリースされたらこれらの環境変数の設定は変わるかもしれませんので、 `make deps` の最後に表示された手順を使うようにしてください。下記の手順（例示のために表示します）はあなたがビルドする LXD のバージョンのものとは一致しないかもしれません。
+実際のビルドは Makefile の 2 回の別々の実行により行われます。 1 つは `make deps` でこれは LXD に必要とされるライブラリーをビルドします。もう 1 つは `make` で LXD 自体をビルドします。 `make deps` の最後に `make` の実行に必要な環境変数を設定するための手順が表示されます。新しいバージョンの LXD がリリースされたらこれらの環境変数の設定は変わるかもしれませんので、 `make deps` の最後に表示された手順を使うようにしてください。下記の手順（例示のために表示します）はあなたがビルドする LXD のバージョンのものとは一致しないかもしれません。
 <!--
 The actual building is done by two separate invocations of the Makefile: `make deps` - - which builds libraries required 
 by LXD - - and `make`, which builds LXD itself. At the end of `make deps`, a message will be displayed which will specify environment variables that should be set prior to invoking `make`. As new versions of LXD are released, these environment
@@ -218,7 +219,7 @@ export LD_LIBRARY_PATH="${GOPATH}/deps/sqlite/.libs/:${GOPATH}/deps/dqlite/.libs
 ```
 -->
 
-これで `lxd` と `lxc` コマンドの実行ファイルが利用可能になり LXD をセットアップするのに使用できます。 `LD_LIBRARY_PATH` 環境変数のおかげで実行ファイルは `$GOPATH/deps` にビルドされた依存ライブラリを自動的に見つけて使用します。
+これで `lxd` と `lxc` コマンドの実行ファイルが利用可能になり LXD をセットアップするのに使用できます。 `LD_LIBRARY_PATH` 環境変数のおかげで実行ファイルは `$GOPATH/deps` にビルドされた依存ライブラリーを自動的に見つけて使用します。
 <!--
 Now, the `lxd` and `lxc` binaries will be available to you and can be used to set up LXD. The binaries will automatically find and use the dependencies built in `$GOPATH/deps` thanks to the `LD_LIBRARY_PATH` environment variable.
 -->
@@ -227,7 +228,7 @@ Now, the `lxd` and `lxc` binaries will be available to you and can be used to se
 <!--
 You'll need sub{u,g}ids for root, so that LXD can create the unprivileged containers:
 -->
-LXD が非特権コンテナーを作成できるように、root ユーザに対する sub{u,g}id の設定が必要です:
+LXD が非特権コンテナーを作成できるように、root ユーザーに対する sub{u,g}id の設定が必要です:
 
 ```bash
 echo "root:1000000:65536" | sudo tee -a /etc/subuid /etc/subgid
@@ -258,7 +259,7 @@ to the host.
 **警告**: このソケットにアクセスできる人は LXD を完全に制御できます。
 これはホストのデバイスやファイルシステムにアタッチする能力も含みます。
 ですので、ホストに root 権限でアクセスを許可するほどに信頼できる
-ユーザだけにこのソケットを与えるようにすべきです。
+ユーザーだけにこのソケットを与えるようにすべきです。
 
 <!--
 When listening on the network, the same API is available on a TLS socket
@@ -304,7 +305,7 @@ A discussion forum is available at: <https://discuss.linuxcontainers.org>
 We use the LXC mailing-lists for developer and user discussions, you can
 find and subscribe to those at: <https://lists.linuxcontainers.org>
 -->
-開発者向けとユーザ向けのディスカッションに LXC のメーリングリストを使っています。次の URL から見つけられますし、購読もできます: <https://lists.linuxcontainers.org>
+開発者向けとユーザー向けのディスカッションに LXC のメーリングリストを使っています。次の URL から見つけられますし、購読もできます: <https://lists.linuxcontainers.org>
 
 ### IRC
 <!--

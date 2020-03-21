@@ -134,7 +134,7 @@ create a YAML-compatible entry for the ``cluster_certificate`` key you can use a
 command like `sed ':a;N;$!ba;s/\n/\n\n/g' /var/lib/lxd/server.crt`, which you
 have to run on the bootstrap node.
 -->
-ターゲットとなるブートストラップノードのアドレスと証明書を必ず含めてください。``cluster_certificate`` に対する YAML 互換のエントリを作成するには、`sed ':a;N;$!ba;s/\n/\n\n/g' /var/lib/lxd/server.crt` のようにコマンドを実行します。このコマンドはブートストラップノードで実行する必要があります。
+ターゲットとなるブートストラップノードのアドレスと証明書を必ず含めてください。``cluster_certificate`` に対する YAML 互換のエントリーを作成するには、`sed ':a;N;$!ba;s/\n/\n\n/g' /var/lib/lxd/server.crt` のようにコマンドを実行します。このコマンドはブートストラップノードで実行する必要があります。
 
 <!--
 For example:
@@ -177,7 +177,7 @@ an individual node is available with `lxc cluster show <node name>`.
 ### 投票 (voting) メンバーとスタンバイメンバー <!-- Voting and stand-by members -->
 
 クラスターは状態を保管するために分散 [データベース](database.md) を使用します。
-クラスター内の全てのノードはユーザのリクエストに応えるためにそのような分散データベースにアクセスする必要があります。
+クラスター内の全てのノードはユーザーのリクエストに応えるためにそのような分散データベースにアクセスする必要があります。
 <!--
 The cluster uses a distributed [database](database.md) to store its state. All
 nodes in the cluster need to access such distributed database in order to serve

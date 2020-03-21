@@ -135,7 +135,7 @@ Add support for the ETag header on all relevant endpoints.
 This adds the following HTTP header on answers to GET:
 -->
 
- - ETag (ユーザが変更可能なコンテンツの SHA-256) <!-- ETag (SHA-256 of user modifiable content) -->
+ - ETag (ユーザーが変更可能なコンテンツの SHA-256) <!-- ETag (SHA-256 of user modifiable content) -->
 
 また PUT リクエストに次の HTTP ヘッダのサポートが追加されます。
 <!--
@@ -242,7 +242,7 @@ considered as part of the container's disk space usage.
 ## storage\_lvm\_mount\_options
 この拡張は `storage.lvm_mount_options` という新しいデーモン設定オプションを
 追加します。デフォルト値は "discard" で、このオプションにより LVM LV で使用する
-ファイルシステムの追加マウントオプションをユーザが指定できるようになります。
+ファイルシステムの追加マウントオプションをユーザーが指定できるようになります。
 <!--
 Adds a new `storage.lvm_mount_options` daemon configuration option
 which defaults to "discard" and allows the user to set addition mount
@@ -260,7 +260,7 @@ Network management API for LXD.
 This includes:
 -->
 
- * `/1.0/networks` エントリに "managed" プロパティを追加 <!-- Addition of the "managed" property on `/1.0/networks` entries -->
+ * `/1.0/networks` エントリーに "managed" プロパティを追加 <!-- Addition of the "managed" property on `/1.0/networks` entries -->
  * ネットワーク設定オプションの全て (詳細は[configuration.md](configuration.md) を参照) <!-- All the network configuration options (see [configuration.md](configuration.md) for details) -->
  * `POST /1.0/networks` (詳細は [RESTful API](rest-api.md) を参照) <!-- `POST /1.0/networks` (see [RESTful API](rest-api.md) for details) -->
  * `PUT /1.0/networks/<entry>` (詳細は [RESTful API](rest-api.md) を参照) <!-- `PUT /1.0/networks/<entry>` (see [RESTful API](rest-api.md)for details) -->
@@ -271,7 +271,7 @@ This includes:
  * "nic" タイプのデバイスの `security.mac_filtering` プロパティ (nictype が "bridged" の場合) <!-- `security.mac_filtering` property on "nic" type devices (when nictype is "bridged") -->
 
 ## profile\_usedby
-プロファイルを使用しているコンテナーをプロファイルエントリの一覧の used\_by フィールド
+プロファイルを使用しているコンテナーをプロファイルエントリーの一覧の used\_by フィールド
 として新たに追加します。
 <!--
 Adds a new used\_by field to profile entries listing the containers that are using it.
@@ -317,8 +317,8 @@ Adds the following to the REST API:
 -->
 
  * 証明書の GET に ETag ヘッダ <!-- ETag header on GET of a certificate -->
- * 証明書エントリの PUT <!-- PUT of certificate entries -->
- * 証明書エントリの PATCH <!-- PATCH of certificate entries -->
+ * 証明書エントリーの PUT <!-- PUT of certificate entries -->
+ * 証明書エントリーの PATCH <!-- PATCH of certificate entries -->
 
 ## container\_exec\_signal\_handling
 クライアントに送られたシグナルをコンテナー内で実行中のプロセスにフォワーディング
@@ -584,7 +584,7 @@ property in the containers root disk device.
 ## id\_map\_base
 これは `security.idmap.base` を新しく導入します。これにより分離されたコンテナー
 に map auto-selection するプロセスをスキップし、ホストのどの uid/gid をベース
-として使うかをユーザが指定できるようにします。
+として使うかをユーザーが指定できるようにします。
 <!--
 This introduces a new `security.idmap.base` allowing the user to skip the
 map auto-selection process for isolated containers and specify what host
@@ -660,7 +660,7 @@ This adds a ceph storage driver.
 -->
 
 ## storage\_ceph\_user\_name
-これは ceph ユーザを指定できるようにします。
+これは ceph ユーザーを指定できるようにします。
 <!--
 This adds the ability to specify the ceph user.
 -->
@@ -886,7 +886,7 @@ This adds the ability to copy and move custom storage volumes between remote.
 
 ## nvidia\_runtime
 コンテナーに `nvidia_runtime` という設定オプションを追加します。これを true に
-設定すると NVIDIA ランタイムと CUDA ライブラリがコンテナーに渡されます。
+設定すると NVIDIA ランタイムと CUDA ライブラリーがコンテナーに渡されます。
 <!--
 Adds a `nvidia_runtime` config option for containers, setting this to
 true will have the NVIDIA runtime and CUDA libraries passed to the
@@ -1143,7 +1143,7 @@ macaroon's expiry configurable. The `lxc remote add` command now has a
 -->
 
 ## nvidia\_runtime\_config
-これは nvidia.runtime と libnvidia-container ライブラリを使用する際に追加の
+これは nvidia.runtime と libnvidia-container ライブラリーを使用する際に追加の
 いくつかの設定キーを導入します。これらのキーは nvidia-container の対応する
 環境変数にほぼそのまま置き換えられます。
 <!--
@@ -1466,7 +1466,7 @@ decide to trigger various actions.
 
 ## lxc\_features
 これは `GET /1.0/` ルート経由で `lxc info` コマンドの出力に `lxc\_features`
-セクションを導入します。配下の LXC ライブラリに存在するキー・フィーチャーに
+セクションを導入します。配下の LXC ライブラリーに存在するキー・フィーチャーに
 対するチェックの結果を出力します。
 <!--
 This introduces the `lxc\_features` section output from the `lxc info` command
@@ -1605,7 +1605,7 @@ Extends the disk resource API struct to include:
  - シリアルナンバー <!-- Serial number -->
 
 ## clustering\_roles
-これはクラスタのエントリに `roles` という新しい属性を追加し、クラスタ内のメンバーが提供する role の一覧を公開します。
+これはクラスタのエントリーに `roles` という新しい属性を追加し、クラスタ内のメンバーが提供する role の一覧を公開します。
 <!--
 This adds a new `roles` attribute to cluster entries, exposing a list of
 roles that the member serves in the cluster.
@@ -1618,7 +1618,7 @@ This allows for editing of the expiry date on images.
 -->
 
 ## resources\_network\_firmware
-ネットワークカードのエントリに FirmwareVersion フィールドを追加します。
+ネットワークカードのエントリーに FirmwareVersion フィールドを追加します。
 <!--
 Adds a FirmwareVersion field to network card entries.
 -->
@@ -1709,7 +1709,7 @@ member's architecture.
 -->
 
 ## resources\_disk\_id
-リソース API のディスクのエントリに device\_id フィールドを追加します。
+リソース API のディスクのエントリーに device\_id フィールドを追加します。
 <!--
 Add a new device\_id field in the disk entries on the resources API.
 -->
@@ -1793,4 +1793,45 @@ hugetlb cgroup. This means the hugetlb cgroup needs to be available. Note, that
 limiting hugepages is recommended when intercepting the mount syscall for the
 hugetlbfs filesystem to avoid allowing the container to exhaust the host's
 hugepages resources.
+-->
+
+## container\_nic\_routed\_gateway
+この拡張は `ipv4.gateway` と `ipv6.gateway` という NIC の設定キーを追加します。
+指定可能な値は auto か none のいずれかです。
+値を指定しない場合のデフォルト値は auto です。
+auto に設定した場合は、デフォルトゲートウェイがコンテナー内部に追加され、ホスト側のインタフェースにも同じゲートウェイアドレスが追加されるという現在の挙動と同じになります。
+none に設定すると、デフォルトゲートウェイもアドレスもホスト側のインターフェースには追加されません。
+これにより複数のルートを持つ NIC デバイスをコンテナーに追加できます。
+<!--
+This introduces the `ipv4.gateway` and `ipv6.gateway` NIC config keys that can take a value of either "auto" or
+"none". The default value for the key if unspecified is "auto". This will cause the current behaviour of a default
+gateway being added inside the container and the same gateway address being added to the host-side interface.
+If the value is set to "none" then no default gateway nor will the address be added to the host-side interface.
+This allows multiple routed NIC devices to be added to a container.
+-->
+
+## projects\_restrictions
+この拡張はプロジェクトに `restricted` という設定キーを追加します。
+これによりプロジェクト内でセキュリティセンシティブな機能を使うのを防ぐことができます。
+<!--
+This introduces support for the `restricted` configuration key on project, which
+can prevent the use of security-sensitive features in a project.
+-->
+
+## custom\_volume\_snapshot\_expiry
+この拡張はカスタムボリュームのスナップショットに有効期限を設定できるようにします。
+有効期限は `snapshots.expiry` 設定キーにより個別に設定することも出来ますし、親のカスタムボリュームに設定してそこから作成された全てのスナップショットに自動的にその有効期限を適用することも出来ます。
+<!--
+This allows custom volume snapshots to expiry.
+Expiry dates can be set individually, or by setting the `snapshots.expiry` config key on the parent custom volume which then automatically applies to all created snapshots.
+-->
+
+## volume\_snapshot\_scheduling
+この拡張はカスタムボリュームのスナップショットにスケジュール機能を追加します。
+`snapshots.schedule` と `snapshots.pattern` という 2 つの設定キーが新たに追加されます。
+スナップショットは最短で 1 分毎に作成可能です。
+<!--
+This adds support for custom volume snapshot scheduling. It introduces two new
+configuration keys: `snapshots.schedule` and
+`snapshots.pattern`. Snapshots can be created automatically up to every minute.
 -->

@@ -9,7 +9,7 @@ LXD は実行するコンテナーに一貫性のある環境を提供しよう�
 The exact environment will differ slightly based on kernel features and user
 configuration but will otherwise be identical for all containers.
 -->
-正確な環境はカーネルの機能やユーザの設定によって若干異なりますが、それ以外は
+正確な環境はカーネルの機能やユーザーの設定によって若干異なりますが、それ以外は
 全てのコンテナーに対して同一です。
 
 ## PID1
@@ -137,14 +137,14 @@ LXD containers may have any number of network devices attached to them.
 The naming for those unless overridden by the user is ethX where X is an incrementing number.
 -->
 LXD コンテナーはネットワークデバイスをいくつでもアタッチできます。
-これらの名前はユーザにオーバーライドされない限りは ethX で X は
+これらの名前はユーザーにオーバーライドされない限りは ethX で X は
 連番です。
 
 ## コンテナーからホストへのコミュニケーション <!-- Container to host communication -->
 <!--
 LXD sets up a socket at `/dev/lxd/sock` which root in the container can use to communicate with LXD on the host.
 -->
-LXD は `/dev/lxd/sock` にソケットをセットアップし、コンテナー内の root ユーザはこれを使ってホストの
+LXD は `/dev/lxd/sock` にソケットをセットアップし、コンテナー内の root ユーザーはこれを使ってホストの
 LXD とコミュニケーションできます。
 
 <!--
