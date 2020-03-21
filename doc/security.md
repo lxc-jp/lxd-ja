@@ -392,7 +392,7 @@ trusted.
 -->
 
 これは別の信頼されたクライアントかローカルのサーバ管理者がサーバ上の
-信頼エントリを削除したときに起こります。
+信頼エントリーを削除したときに起こります。
 <!--
 This happens if another trusted client or the local server administrator
 removed the trust entry on the server.

@@ -130,7 +130,7 @@ Depending on your storage backend you will also need to do the same for
 any snapshot you want to restore (needed for `dir` and `btrfs`).
 -->
 
-`backup.yaml` に宣言されているリソースに対応するデータベースエントリがインポート
+`backup.yaml` に宣言されているリソースに対応するデータベースエントリーがインポート
 中に見つかったら、コマンドはインスタンスをリストアすることを拒絶します。これは
 `--force` を渡すことでオーバーライドできます。
 <!--

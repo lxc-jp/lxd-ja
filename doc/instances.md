@@ -285,7 +285,7 @@ instance, or to a profile.
 Devices may be added or removed while the instance is running.
 -->
 
-各デバイスエントリーは一意な名前で識別されます。もし同じ名前が後続のプロファイルやインスタンス自身の設定で使われている場合、エントリ全体が新しい定義で上書きされます。
+各デバイスエントリーは一意な名前で識別されます。もし同じ名前が後続のプロファイルやインスタンス自身の設定で使われている場合、エントリー全体が新しい定義で上書きされます。
 <!--
 Every device entry is identified by a unique name. If the same name is used in
 a subsequent profile or in the instance's own configuration, the whole entry
@@ -365,7 +365,7 @@ LXD supports different kind of network devices:
  - [ipvlan](#nictype-ipvlan): 既存のネットワークデバイスをベースに MAC アドレスは同じですが IP アドレスが異なる新しいネットワークデバイスを作成します。 <!-- Sets up a new network device based on an existing one using the same MAC address but a different IP. -->
  - [p2p](#nictype-p2p): 仮想デバイスペアを作成し、片方をインスタンス内に置き、残りの片方をホスト上に残します。 <!-- Creates a virtual device pair, putting one side in the instance and leaving the other side on the host. -->
  - [sriov](#nictype-sriov): SR-IOV が有効な物理ネットワークデバイスの仮想ファンクション（virtual function）をインスタンスに与えます。 <!-- Passes a virtual function of an SR-IOV enabled physical network device into the instance. -->
- - [routed](#nictype-routed): 仮想デバイスペアを作成し、ホストからインスタンスに繋いで静的ルートをセットアップし ARP/NDP エントリをプロキシします。これにより指定された親インタフェースのネットワークにインスタンスが参加できるようになります。 <!-- Creates a virtual device pair to connect the host to the instance and sets up static routes and proxy ARP/NDP entries to allow the instance to join the network of a designated parent interface. -->
+ - [routed](#nictype-routed): 仮想デバイスペアを作成し、ホストからインスタンスに繋いで静的ルートをセットアップし ARP/NDP エントリーをプロキシします。これにより指定された親インタフェースのネットワークにインスタンスが参加できるようになります。 <!-- Creates a virtual device pair to connect the host to the instance and sets up static routes and proxy ARP/NDP entries to allow the instance to join the network of a designated parent interface. -->
 
 現状、仮想マシンでは `bridged` だけがサポートされます。
 <!--
@@ -648,7 +648,7 @@ It then configures static routes on the host pointing to the instance's veth int
 This nic can operate with and without a `parent` network interface set.
 -->
 
-`parent` ネットワークインタフェースのセットがある場合、インスタンスの IP の ARP/NDP のプロキシエントリが親のインタフェースに追加され、インスタンスが親のインタフェースのネットワークにレイヤ 2 で参加できるようにします。
+`parent` ネットワークインタフェースのセットがある場合、インスタンスの IP の ARP/NDP のプロキシエントリーが親のインタフェースに追加され、インスタンスが親のインタフェースのネットワークにレイヤ 2 で参加できるようにします。
 <!--
 With the `parent` network interface set proxy ARP/NDP entries of the instance's IPs are added to the parent interface allowing the instance to join the parent interface's network at layer 2.
 -->
@@ -1094,7 +1094,7 @@ lxc config device add <instance> <device-name> proxy listen=<type>:<addr>:<port>
 Supported instance types: container
 -->
 
-Unix ホットプラグデバイスのエントリは依頼された unix デバイスをインスタンスの `/dev` に出現させ、デバイスがホストシステムに存在する場合はデバイスへの読み書き操作を許可します。
+Unix ホットプラグデバイスのエントリーは依頼された unix デバイスをインスタンスの `/dev` に出現させ、デバイスがホストシステムに存在する場合はデバイスへの読み書き操作を許可します。
 実装はホスト上で稼働する systemd-udev に依存します。
 <!--
 Unix hotplug device entries make the requested unix device appear in the

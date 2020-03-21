@@ -179,8 +179,8 @@ host, and the third entry is the range inside the container. These ranges must
 be the same size.
 -->
 2 行目と 3 行目は uid または gid のどちらかだけをコンテナー内にマッピングする設定
-です。行の中の 2 番目のエントリはソース ID 、 つまりホスト上の ID で、 3 番目の
-エントリはコンテナー内部での範囲です。これらの範囲は同じサイズでなければなりません。
+です。行の中の 2 番目のエントリーはソース ID 、 つまりホスト上の ID で、 3 番目の
+エントリーはコンテナー内部での範囲です。これらの範囲は同じサイズでなければなりません。
 
 <!--
 This property requires a container reboot to take effect.

@@ -134,7 +134,7 @@ create a YAML-compatible entry for the ``cluster_certificate`` key you can use a
 command like `sed ':a;N;$!ba;s/\n/\n\n/g' /var/lib/lxd/server.crt`, which you
 have to run on the bootstrap node.
 -->
-ターゲットとなるブートストラップノードのアドレスと証明書を必ず含めてください。``cluster_certificate`` に対する YAML 互換のエントリを作成するには、`sed ':a;N;$!ba;s/\n/\n\n/g' /var/lib/lxd/server.crt` のようにコマンドを実行します。このコマンドはブートストラップノードで実行する必要があります。
+ターゲットとなるブートストラップノードのアドレスと証明書を必ず含めてください。``cluster_certificate`` に対する YAML 互換のエントリーを作成するには、`sed ':a;N;$!ba;s/\n/\n\n/g' /var/lib/lxd/server.crt` のようにコマンドを実行します。このコマンドはブートストラップノードで実行する必要があります。
 
 <!--
 For example:

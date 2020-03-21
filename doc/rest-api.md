@@ -2562,7 +2562,7 @@ The notification types are:
 -->
 
  * operation (作成、更新、終了という全てのバックグラウンド操作についての通知) <!-- operation (notification about creation, updates and termination of all background operations) -->
- * logging (サーバからの全てのログエントリ) <!-- logging (every log entry from the server) -->
+ * logging (サーバからの全てのログエントリー) <!-- logging (every log entry from the server) -->
  * lifecycle (インスタンスのライフサイクルイベント) <!-- lifecycle (instance lifecycle events) -->
 
 このエンドポイントの出力が完了することはありません。それぞれの通知は個別の JSON dict として送られます。
@@ -3444,7 +3444,7 @@ Return:
 -->
 
 #### DELETE
- * 説明: 操作をキャンセルします。この API を呼び出すとエントリを実際に削除するのではなく状態を "cancelling" に変更します <!-- Description: cancel an operation. Calling this will change the state to "cancelling" rather than actually removing the entry. -->
+ * 説明: 操作をキャンセルします。この API を呼び出すとエントリーを実際に削除するのではなく状態を "cancelling" に変更します <!-- Description: cancel an operation. Calling this will change the state to "cancelling" rather than actually removing the entry. -->
  * 認証: trusted <!-- Authentication: trusted -->
  * 操作: 同期 <!-- Operation: sync -->
  * 戻り値: 標準の戻り値または標準のエラー <!-- Return: standard return value or standard error -->

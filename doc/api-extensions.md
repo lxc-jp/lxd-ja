@@ -260,7 +260,7 @@ Network management API for LXD.
 This includes:
 -->
 
- * `/1.0/networks` エントリに "managed" プロパティを追加 <!-- Addition of the "managed" property on `/1.0/networks` entries -->
+ * `/1.0/networks` エントリーに "managed" プロパティを追加 <!-- Addition of the "managed" property on `/1.0/networks` entries -->
  * ネットワーク設定オプションの全て (詳細は[configuration.md](configuration.md) を参照) <!-- All the network configuration options (see [configuration.md](configuration.md) for details) -->
  * `POST /1.0/networks` (詳細は [RESTful API](rest-api.md) を参照) <!-- `POST /1.0/networks` (see [RESTful API](rest-api.md) for details) -->
  * `PUT /1.0/networks/<entry>` (詳細は [RESTful API](rest-api.md) を参照) <!-- `PUT /1.0/networks/<entry>` (see [RESTful API](rest-api.md)for details) -->
@@ -271,7 +271,7 @@ This includes:
  * "nic" タイプのデバイスの `security.mac_filtering` プロパティ (nictype が "bridged" の場合) <!-- `security.mac_filtering` property on "nic" type devices (when nictype is "bridged") -->
 
 ## profile\_usedby
-プロファイルを使用しているコンテナーをプロファイルエントリの一覧の used\_by フィールド
+プロファイルを使用しているコンテナーをプロファイルエントリーの一覧の used\_by フィールド
 として新たに追加します。
 <!--
 Adds a new used\_by field to profile entries listing the containers that are using it.
@@ -317,8 +317,8 @@ Adds the following to the REST API:
 -->
 
  * 証明書の GET に ETag ヘッダ <!-- ETag header on GET of a certificate -->
- * 証明書エントリの PUT <!-- PUT of certificate entries -->
- * 証明書エントリの PATCH <!-- PATCH of certificate entries -->
+ * 証明書エントリーの PUT <!-- PUT of certificate entries -->
+ * 証明書エントリーの PATCH <!-- PATCH of certificate entries -->
 
 ## container\_exec\_signal\_handling
 クライアントに送られたシグナルをコンテナー内で実行中のプロセスにフォワーディング
@@ -1605,7 +1605,7 @@ Extends the disk resource API struct to include:
  - シリアルナンバー <!-- Serial number -->
 
 ## clustering\_roles
-これはクラスタのエントリに `roles` という新しい属性を追加し、クラスタ内のメンバーが提供する role の一覧を公開します。
+これはクラスタのエントリーに `roles` という新しい属性を追加し、クラスタ内のメンバーが提供する role の一覧を公開します。
 <!--
 This adds a new `roles` attribute to cluster entries, exposing a list of
 roles that the member serves in the cluster.
@@ -1618,7 +1618,7 @@ This allows for editing of the expiry date on images.
 -->
 
 ## resources\_network\_firmware
-ネットワークカードのエントリに FirmwareVersion フィールドを追加します。
+ネットワークカードのエントリーに FirmwareVersion フィールドを追加します。
 <!--
 Adds a FirmwareVersion field to network card entries.
 -->
@@ -1709,7 +1709,7 @@ member's architecture.
 -->
 
 ## resources\_disk\_id
-リソース API のディスクのエントリに device\_id フィールドを追加します。
+リソース API のディスクのエントリーに device\_id フィールドを追加します。
 <!--
 Add a new device\_id field in the disk entries on the resources API.
 -->
