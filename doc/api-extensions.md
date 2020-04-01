@@ -962,3 +962,41 @@ Expiry dates can be set individually, or by setting the `snapshots.expiry` confi
 This adds support for custom volume snapshot scheduling. It introduces two new
 configuration keys: `snapshots.schedule` and
 `snapshots.pattern`. Snapshots can be created automatically up to every minute.
+
+## trust\_ca\_certificates
+This allows for checking client certificates trusted by the provided CA (`server.ca`).
+It can be enabled by setting `core.trust\_ca\_certificates` to true.
+If enabled, it will perform the check, and bypass the trusted password if true.
+An exception will be made if the connecting client certificate is in the provided CRL (`ca.crl`).
+In this case, it will ask for the password.
+
+## snapshot\_disk\_usage
+This adds a new `size` field to the output of `/1.0/instances/<name>/snapshots/<snapshot>` which represents the disk usage of the snapshot.
+
+## clustering\_edit\_roles
+This adds a writable endpoint for cluster members, allowing the editing of their roles.
+
+## container\_nic\_routed\_host\_address
+This introduces the `ipv4.host_address` and `ipv6.host_address` NIC config keys that can be used to control the
+host-side veth interface's IP addresses. This can be useful when using multiple routed NICs at the same time and
+needing a predictable next-hop address to use.
+
+This also alters the behaviour of `ipv4.gateway` and `ipv6.gateway` NIC config keys. When they are set to "auto"
+the container will have its default gateway set to the value of `ipv4.host_address` or `ipv6.host_address` respectively.
+
+The default values are:
+
+`ipv4.host_address`: 169.254.0.1
+`ipv6.host_address`: fe80::1
+
+This is backward compatible with the previous default behaviour.
+
+## container\_nic\_ipvlan\_gateway
+This introduces the `ipv4.gateway` and `ipv6.gateway` NIC config keys that can take a value of either "auto" or
+"none". The default value for the key if unspecified is "auto". This will cause the current behaviour of a default
+gateway being added inside the container and the same gateway address being added to the host-side interface.
+If the value is set to "none" then no default gateway nor will the address be added to the host-side interface.
+This allows multiple ipvlan NIC devices to be added to a container.
+
+## resources\_usb\_pci
+This adds USB and PCI devices to the output of `/1.0/resources`.
