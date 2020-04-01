@@ -541,7 +541,9 @@ name                    | string    | カーネルが割り当て <!-- kernel as
 mtu                     | integer   | 親の MTU <!-- parent MTU -->        | no        | 新しいインタフェースの MTU <!-- The MTU of the new interface -->
 hwaddr                  | string    | ランダムに割り当て <!-- randomly assigned --> | no        | 新しいインタフェースの MAC アドレス <!-- The MAC address of the new interface -->
 ipv4.address            | string    | -                 | no        | インスタンスに追加する IPv4 静的アドレスのカンマ区切りリスト <!-- Comma delimited list of IPv4 static addresses to add to the instance -->
+ipv4.gateway            | string    | auto              | no        | デフォルト IPv4 ゲートウェイを自動的に追加するかどうか (auto か none を指定可能) <!-- Whether to add an automatic default IPv4 gateway, can be "auto" or "none" -->
 ipv6.address            | string    | -                 | no        | インスタンスに追加する IPv6 静的アドレスのカンマ区切りリスト <!-- Comma delimited list of IPv6 static addresses to add to the instance -->
+ipv6.gateway            | string    | auto              | no        | デフォルト IPv6 ゲートウェイを自動的に追加するかどうか (auto か none を指定可能) <!-- Whether to add an automatic default IPv6 gateway, can be "auto" or "none" -->
 vlan                    | integer   | -                 | no        | アタッチ先の VLAN ID <!-- The VLAN ID to attach to -->
 
 #### nictype: p2p
@@ -684,6 +686,15 @@ net.ipv6.conf.all.proxy_ndp=1
 net.ipv6.conf.<parent>.proxy_ndp=1
 ```
 
+それぞれの NIC デバイスに複数の IP アドレスを追加できます。しかし複数の `routed` NIC インターフェースを使うほうが望ましいかもしれません。
+その場合はデフォルトゲ－トウェイの衝突を避けるため、後続のインターフェースで `ipv4.gateway` と `ipv6.gateway` の値を none に設定するべきです。
+さらにこれらの後続のインタフェースには `ipv4.host_address` と `ipv6.host_address` を用いて異なるホスト側のアドレスを設定することが有用かもしれません。
+<!--
+Each NIC device can have multiple IP addresses added to them. However it may be desirable to utilise multiple `routed` NIC interfaces.
+In these cases one should set the `ipv4.gateway` and `ipv6.gateway` values to "none" on any subsequent interfaces to avoid default gateway conflicts.
+It may also be useful to specify a different host-side address for these subsequent interfaces using `ipv4.host_address` and `ipv6.host_address` respectively.
+-->
+
 デバイス設定プロパティ
 <!--
 Device configuration properties:
@@ -698,8 +709,10 @@ mtu                     | integer   | 親の MTU <!-- parent MTU -->        | no
 hwaddr                  | string    | ランダムに割り当て <!-- randomly assigned --> | no        | 新しいインタフェースの MAC アドレス <!-- The MAC address of the new interface -->
 ipv4.address            | string    | -                 | no        | インスタンスに追加する IPv4 静的アドレスのカンマ区切りリスト <!-- Comma delimited list of IPv4 static addresses to add to the instance -->
 ipv4.gateway            | string    | auto              | no        | 自動的に IPv4 のデフォルトゲートウェイを追加するかどうか（ auto か none を指定可能） <!-- Whether to add an automatic default IPv4 gateway, can be "auto" or "none" -->
+ipv4.host_address       | string    | 169.254.0.1       | no        | ホスト側の veth インターフェースに追加する IPv4 アドレス <!-- The IPv4 address to add to the host-side veth interface. -->
 ipv6.address            | string    | -                 | no        | インスタンスに追加する IPv6 静的アドレスのカンマ区切りリスト <!-- Comma delimited list of IPv6 static addresses to add to the instance -->
 ipv6.gateway            | string    | auto              | no        | 自動的に IPv6 のデフォルトゲートウェイを追加するかどうか（ auto か none を指定可能） <!-- Whether to add an automatic default IPv6 gateway, can be "auto" or "none" -->
+ipv6.host_address       | string    | fe80::1           | no        | ホスト側の veth インターフェースに追加する IPv6 アドレス <!-- The IPv6 address to add to the host-side veth interface. -->
 vlan                    | integer   | -                 | no        | アタッチ先の VLAN ID <!-- The VLAN ID to attach to -->
 
 #### ブリッジ、ipvlan、macvlan を使った物理ネットワークへの接続 <!-- bridged, macvlan or ipvlan for connection to physical network -->

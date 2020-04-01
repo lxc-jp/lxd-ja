@@ -1956,6 +1956,7 @@ Return:
     "profiles": [
         "default"
     ],
+    "size": 738476032,
     "stateful": false
 }
 ```

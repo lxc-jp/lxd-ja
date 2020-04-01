@@ -1835,3 +1835,78 @@ This adds support for custom volume snapshot scheduling. It introduces two new
 configuration keys: `snapshots.schedule` and
 `snapshots.pattern`. Snapshots can be created automatically up to every minute.
 -->
+
+## trust\_ca\_certificates
+この拡張により提供された CA (`server.ca`) によって信頼されたクライアント証明書のチェックが可能になります。
+`core.trust\_ca\_certificates` を true に設定すると有効にできます。
+有効な場合、クライアント証明書のチェックを行い、チェックが OK であれば信頼されたパスワードの要求はスキップします。
+ただし、提供された CRL (`ca.crl`) に接続してきたクライアント証明書が含まれる場合は例外です。
+この場合は、パスワードが求められます。
+<!--
+This allows for checking client certificates trusted by the provided CA (`server.ca`).
+It can be enabled by setting `core.trust\_ca\_certificates` to true.
+If enabled, it will perform the check, and bypass the trusted password if true.
+An exception will be made if the connecting client certificate is in the provided CRL (`ca.crl`).
+In this case, it will ask for the password.
+-->
+
+## snapshot\_disk\_usage
+この拡張はスナップショットのディスク使用量を示す `/1.0/instances/<name>/snapshots/<snapshot>` の出力に `size` フィールドを新たに追加します。
+<!--
+This adds a new `size` field to the output of `/1.0/instances/<name>/snapshots/<snapshot>` which represents the disk usage of the snapshot.
+-->
+
+## clustering\_edit\_roles
+この拡張はクラスターメンバーに書き込み可能なエンドポイントを追加し、ロールの編集を可能にします。
+<!--
+This adds a writable endpoint for cluster members, allowing the editing of their roles.
+-->
+
+## container\_nic\_routed\_host\_address
+この拡張は NIC の設定キーに `ipv4.host_address` と `ipv6.host_address` を追加し、ホスト側の veth インターフェースの IP アドレスを制御できるようにします。
+これは同時に複数の routed NIC を使用し、予測可能な next-hop のアドレスを使用したい場合に有用です。
+<!--
+This introduces the `ipv4.host_address` and `ipv6.host_address` NIC config keys that can be used to control the
+host-side veth interface's IP addresses. This can be useful when using multiple routed NICs at the same time and
+needing a predictable next-hop address to use.
+-->
+
+さらにこの拡張は `ipv4.gateway` と `ipv6.gateway` の NIC 設定キーの振る舞いを変更します。
+auto に設定するとコンテナーはデフォルトゲートウェイをそれぞれ `ipv4.host_address` と `ipv6.host_address` で指定した値にします。
+<!--
+This also alters the behaviour of `ipv4.gateway` and `ipv6.gateway` NIC config keys. When they are set to "auto"
+the container will have its default gateway set to the value of `ipv4.host_address` or `ipv6.host_address` respectively.
+-->
+
+デフォルト値は次の通りです。
+<!--
+The default values are:
+-->
+
+`ipv4.host_address`: 169.254.0.1
+`ipv6.host_address`: fe80::1
+
+これは以前のデフォルトの挙動と後方互換性があります。
+<!--
+This is backward compatible with the previous default behaviour.
+-->
+
+## container\_nic\_ipvlan\_gateway
+この拡張は `ipv4.gateway` と `ipv6.gateway` の NIC 設定キーを追加し auto か none の値を指定できます。
+指定しない場合のデフォルト値は auto です。
+この場合は従来同様の挙動になりコンテナー内部に追加されるデフォルトゲートウェイと同じアドレスがホスト側のインターフェースにも追加されます。
+none に設定された場合、ホスト側のインターフェースにはデフォルトゲートウェイもアドレスも追加されません。
+これによりコンテナーに ipvlan の NIC デバイスを複数追加することができます。
+<!--
+This introduces the `ipv4.gateway` and `ipv6.gateway` NIC config keys that can take a value of either "auto" or
+"none". The default value for the key if unspecified is "auto". This will cause the current behaviour of a default
+gateway being added inside the container and the same gateway address being added to the host-side interface.
+If the value is set to "none" then no default gateway nor will the address be added to the host-side interface.
+This allows multiple ipvlan NIC devices to be added to a container.
+-->
+
+## resources\_usb\_pci
+この拡張は `/1.0/resources` の出力に USB と PC デバイスを追加します。
+<!--
+This adds USB and PCI devices to the output of `/1.0/resources`.
+-->
