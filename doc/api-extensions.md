@@ -1910,3 +1910,35 @@ This allows multiple ipvlan NIC devices to be added to a container.
 <!--
 This adds USB and PCI devices to the output of `/1.0/resources`.
 -->
+
+## resources\_cpu\_threads\_numa
+この拡張は numa\_node フィールドをコアごとではなくスレッドごとに記録するように変更します。
+これは一部のハードウェアでスレッドを異なる NUMA ドメインに入れる場合があるようなのでそれに対応するためのものです。
+<!--
+This indicates that the numa\_node field is now recorded per-thread
+rather than per core as some hardware apparently puts threads in
+different NUMA domains.
+-->
+
+## resources\_cpu\_core\_die
+それぞれのコアごとに die\_id 情報を公開します。
+<!--
+Exposes the die\_id information on each core.
+-->
+
+## api\_os
+この拡張は `/1.0` 内に `os` と `os\_version` の 2 つのフィールドを追加します。
+<!--
+This introduces two new fields in `/1.0`, `os` and `os\_version`.
+-->
+
+これらの値はシステム上の os-release のデータから取得されます。
+<!--
+Those are taken from the os-release data on the system.
+-->
+
+## resources\_system
+この拡張は `/1.0/resources` の出力にシステム情報を追加します。
+<!--
+This adds system information to the output of `/1.0/resources`.
+-->
