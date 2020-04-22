@@ -1000,3 +1000,19 @@ This allows multiple ipvlan NIC devices to be added to a container.
 
 ## resources\_usb\_pci
 This adds USB and PCI devices to the output of `/1.0/resources`.
+
+## resources\_cpu\_threads\_numa
+This indicates that the numa\_node field is now recorded per-thread
+rather than per core as some hardware apparently puts threads in
+different NUMA domains.
+
+## resources\_cpu\_core\_die
+Exposes the die\_id information on each core.
+
+## api\_os
+This introduces two new fields in `/1.0`, `os` and `os\_version`.
+
+Those are taken from the os-release data on the system.
+
+## resources\_system
+This adds system information to the output of `/1.0/resources`.
