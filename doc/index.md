@@ -241,7 +241,7 @@ group to talk to LXD; you can create your own group if you want):
 これでデーモンを実行できます（`sudo` グループに属する全員が LXD とやりとりできるように `--group sudo` を指定します。別に指定したいグループを作ることもできます）:
 
 ```bash
-sudo -E LD_LIBRARY_PATH=$LD_LIBRARY_PATH $GOPATH/bin/lxd --group sudo
+sudo -E PATH=$PATH LD_LIBRARY_PATH=$LD_LIBRARY_PATH $GOPATH/bin/lxd --group sudo
 ```
 
 ## セキュリティ <!-- Security -->
@@ -457,28 +457,39 @@ lxc-devel, and we can escalate to CRIU lists as necessary.
 そういう場合は lxc-devel にバグレポートをしてください。必要であれば CRIU にもエスカレーションします。
 
 #### 私のホームディレクトリをコンテナー内にバインドマウントできますか? <!-- Can I bind mount my home directory in a container? -->
+はい。ディスクデバイスを使用して以下のように出来ます。
 <!--
-Yes. The easiest way to do that is using a privileged container to avoid file ownership issues:
+Yes. This can be done using a disk device:
 -->
-はい。もっとも簡単に行うには、特権コンテナーを使って、ファイルの所有権の問題を回避します:
-
-1.a) コンテナーを作成します <!-- create a container. -->
 
 ```bash
-lxc launch ubuntu privilegedContainerName -c security.privileged=true
+lxc config device add container-name home disk source=/home/$USER path=/home/ubuntu
 ```
 
-1.b) もしくは既存のコンテナーがある場合には以下のように実行します: <!-- or, if your container already exists. -->
+非特権コンテナーの場合は、さらに以下のいずれかが必要です。
+<!--
+For unprivileged containers, you will also need one of:
+-->
 
-```bash
-lxc config set privilegedContainerName security.privileged true
-```
+ - `lxc config device add` の実行時に `shifted=true` を指定する。これは `shiftfs` がサポートされている場合にのみ使えます（ `lxc info` 参照）。 <!-- Pass `shifted=true` to the `lxc config device add` call. This depends on `shiftfs` being supported (see `lxc info`) -->
+ - raw.idmap エントリー（[ユーザー名前空間 (user namespace) 用の ID のマッピング](userns-idmap.md) 参照） <!-- raw.idmap entry (see [Idmaps for user namespace](userns-idmap.md)) -->
+ - ホームディレクトリーに配置した再帰的な POSIX ACL <!-- Recursive POSIX ACLs placed on your home directory -->
 
-2) それから次のように実行します。 <!-- then. -->
+これらのいずれかにより、コンテナー内のユーザーが実際に効果のある read/write パーミッションを持てるようになります。
+これらの 1 つも設定しないときは、すべてが uid/gid がオーバーフロー (65536:65536) ように見えて、 world リーダブルでないものへのアクセスは全て失敗します。
+<!--
+Either of those can be used to allow the user in the container to have working read/write permissions.
+When not setting one of those, everything will show up as the overflow uid/gid (65536:65536)
+and access to anything that's not world readable will fail.
+-->
 
-```bash
-lxc config device add privilegedContainerName shareName disk source=/home/$USER path=/home/ubuntu
-```
+
+特権コンテナーではコンテナー内の全ての uid/gid が外部と同じためこの問題はありません。
+しかし、このことは特権コンテナーに関するセキュリティーの問題の主な原因でもあります。
+<!--
+Privileged containers do not have this issue as all uid/gid inthe container are the same outside.
+But that's also the cause of most of the security issues with such privileged containers.
+-->
 
 #### LXD コンテナー内で docker を実行できますか? <!-- How can I run docker inside a LXD container? -->
 <!--

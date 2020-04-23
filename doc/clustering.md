@@ -320,7 +320,7 @@ out-of-date node left and will become operational again.
 -->
 残りのノードのアップグレードを進めると、最後のノードをアップグレードするまでは、ノードはすべて Blocked 状態に移行します。その時点で、Blocked ノードは古いノードが残っていないかを確認し、再度操作できるようになります。
 
-### ディザスターリカバリー <!-- Disaster recovery -->
+### クォーラム消失からの復旧 <!-- Recover from quorum loss -->
 
 各 LXD クラスターはデータベースノードとして機能するメンバーを最大 3 つまで持つことができます。
 恒久的にデータベースノードとして機能するクラスターメンバーの過半数を失った場合 (例えば 3 メンバーのクラスターで 2 メンバーを失った場合)、
@@ -447,6 +447,37 @@ lxc pull file bionic/etc/hosts .
 ```
 
 のように操作できます。
+
+### Raft メンバーシップの手動での変更 <!-- Manually altering Raft membership -->
+
+何か予期せぬ出来事が起こった場合など、クラスターの Raft メンバーシップの設定を手動で変更する必要がある状況があるかもしれません。
+<!--
+There might be situations in which you need to manually alter the Raft
+membership configuration of the cluster because some unexpected behavior
+occurred.
+-->
+
+例えばクリーンに削除できなかったクラスターメンバーがある場合、 `lxc cluster list` に表示されないですが、引き続き Raft 設定の一部になってしまう場合があるかもしれません
+（この状況は `lxd sql local "SELECT * FROM raft_nodes"` で確認できます）。
+<!--
+For example if you have a cluster member that was removed uncleanly it might not
+show up in `lxc cluster list` but still be part of the Raft configuration (you
+can see that with `lxd sql local "SELECT * FROM raft_nodes").
+-->
+
+この場合は以下のように実行すると
+<!--
+In that case you can run:
+-->
+
+```bash
+lxd cluster remove-raft-node <address>
+```
+
+残ってしまったノードを削除できます。
+<!--
+to remove the leftover node.
+-->
 
 ## イメージ <!-- Images -->
 
