@@ -363,17 +363,20 @@ net.ipv6.conf.<parent>.proxy_ndp=1
 
 Device configuration properties:
 
-Key                     | Type      | Default           | Required  | Description
-:--                     | :--       | :--               | :--       | :--
-parent                  | string    | -                 | yes       | The name of the host device
-name                    | string    | kernel assigned   | no        | The name of the interface inside the instance
-mtu                     | integer   | parent MTU        | no        | The MTU of the new interface
-hwaddr                  | string    | randomly assigned | no        | The MAC address of the new interface
-ipv4.address            | string    | -                 | no        | Comma delimited list of IPv4 static addresses to add to the instance
-ipv4.gateway            | string    | auto              | no        | Whether to add an automatic default IPv4 gateway, can be "auto" or "none"
-ipv6.address            | string    | -                 | no        | Comma delimited list of IPv6 static addresses to add to the instance
-ipv6.gateway            | string    | auto              | no        | Whether to add an automatic default IPv6 gateway, can be "auto" or "none"
-vlan                    | integer   | -                 | no        | The VLAN ID to attach to
+Key                     | Type      | Default            | Required  | Description
+:--                     | :--       | :--                | :--       | :--
+parent                  | string    | -                  | yes       | The name of the host device
+name                    | string    | kernel assigned    | no        | The name of the interface inside the instance
+mtu                     | integer   | parent MTU         | no        | The MTU of the new interface
+mode                    | string    | l3s                | no        | The IPVLAN mode (either `l2` or `l3s`)
+hwaddr                  | string    | randomly assigned  | no        | The MAC address of the new interface
+ipv4.address            | string    | -                  | no        | Comma delimited list of IPv4 static addresses to add to the instance. In `l2` mode these can be specified as CIDR values or singular addresses (if singular a subnet of /24 is used).
+ipv4.gateway            | string    | auto               | no        | In `l3s` mode, whether to add an automatic default IPv4 gateway, can be `auto` or `none`. In `l2` mode specifies the IPv4 address of the gateway.
+ipv4.host\_table        | integer   | -                  | no        | The custom policy routing table ID to add IPv4 static routes to (in addition to main routing table).
+ipv6.address            | string    | -                  | no        | Comma delimited list of IPv6 static addresses to add to the instance. In `l2` mode these can be specified as CIDR values or singular addresses (if singular a subnet of /64 is used).
+ipv6.gateway            | string    | auto (l3s), - (l2) | no        | In `l3s` mode, whether to add an automatic default IPv6 gateway, can be `auto` or `none`. In `l2` mode specifies the IPv6 address of the gateway.
+ipv6.host\_table        | integer   | -                  | no        | The custom policy routing table ID to add IPv6 static routes to (in addition to main routing table).
+vlan                    | integer   | -                  | no        | The VLAN ID to attach to
 
 #### nictype: p2p
 
@@ -474,9 +477,11 @@ hwaddr                  | string    | randomly assigned | no        | The MAC ad
 ipv4.address            | string    | -                 | no        | Comma delimited list of IPv4 static addresses to add to the instance
 ipv4.gateway            | string    | auto              | no        | Whether to add an automatic default IPv4 gateway, can be "auto" or "none"
 ipv4.host\_address      | string    | 169.254.0.1       | no        | The IPv4 address to add to the host-side veth interface.
+ipv4.host\_table        | integer   | -                 | no        | The custom policy routing table ID to add IPv4 static routes to (in addition to main routing table).
 ipv6.address            | string    | -                 | no        | Comma delimited list of IPv6 static addresses to add to the instance
 ipv6.gateway            | string    | auto              | no        | Whether to add an automatic default IPv6 gateway, can be "auto" or "none"
 ipv6.host\_address      | string    | fe80::1           | no        | The IPv6 address to add to the host-side veth interface.
+ipv6.host\_table        | integer   | -                 | no        | The custom policy routing table ID to add IPv6 static routes to (in addition to main routing table).
 vlan                    | integer   | -                 | no        | The VLAN ID to attach to
 
 #### bridged, macvlan or ipvlan for connection to physical network
