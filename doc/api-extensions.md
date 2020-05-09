@@ -1937,8 +1937,54 @@ This introduces two new fields in `/1.0`, `os` and `os\_version`.
 Those are taken from the os-release data on the system.
 -->
 
+## container\_nic\_routed\_host\_table
+この拡張は `ipv4.host_table` と `ipv6.host_table` という NIC の設定キーを導入します。
+これで指定した ID のカスタムポリシーのルーティングテーブルにインスタンスの IP のための静的ルートを追加できます。
+<!--
+This introduces the `ipv4.host_table` and `ipv6.host_table` NIC config keys that can be used to add static routes
+for the instance's IPs to a custom policy routing table by ID.
+-->
+
+## container\_nic\_ipvlan\_host\_table
+この拡張は `ipv4.host_table` と `ipv6.host_table` という NIC の設定キーを導入します。
+これで指定した ID のカスタムポリシーのルーティングテーブルにインスタンスの IP のための静的ルートを追加できます。
+<!--
+This introduces the `ipv4.host_table` and `ipv6.host_table` NIC config keys that can be used to add static routes
+for the instance's IPs to a custom policy routing table by ID.
+-->
+
+## container\_nic\_ipvlan\_mode
+この拡張は `mode` という NIC の設定キーを導入します。
+これにより `ipvlan` モードを `l2` か `l3s` のいずれかに切り替えられます。
+指定しない場合、デフォルトは `l3s` （従来の挙動）です。
+<!--
+This introduces the `mode` NIC config key that can be used to switch the `ipvlan` mode into either `l2` or `l3s`.
+If not specified, the default value is `l3s` (which is the old behavior).
+-->
+
+`l2` モードでは `ipv4.address` と `ipv6.address` キーは CIDR か単一アドレスの形式を受け付けます。
+単一アドレスの形式を使う場合、デフォルトのサブネットのサイズは IPv4 では /24 、 IPv6 では /64 となります。
+<!--
+In `l2` mode the `ipv4.address` and `ipv6.address` keys will accept addresses in either CIDR or singular formats.
+If singular format is used, the default subnet size is taken to be /24 and /64 for IPv4 and IPv6 respectively.
+-->
+
+`l2` モードでは `ipv4.gateway` と `ipv6.gateway` キーは単一の IP アドレスのみを受け付けます。
+<!--
+In `l2` mode the `ipv4.gateway` and `ipv6.gateway` keys accept only a singular IP address.
+-->
+
 ## resources\_system
 この拡張は `/1.0/resources` の出力にシステム情報を追加します。
 <!--
 This adds system information to the output of `/1.0/resources`.
 -->
+
+## images\_push\_relay
+この拡張はイメージのコピーに push と relay モードを追加します。
+また以下の新しいエンドポイントも追加します。
+<!--
+This adds the push and relay modes to image copy.
+It also introduces the following new endpoint:
+-->
+ - `POST 1.0/images/<fingerprint>/export`

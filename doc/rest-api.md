@@ -2961,6 +2961,32 @@ token which it'll then pass to the target LXD. That target LXD will then
 GET the image as a guest, passing the secret token.
 -->
 
+#### POST
+ * 説明: イメージ tarball をアップロードします <!-- Description: Upload the image tarball -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 非同期 <!-- Operation: async -->
+ * 戻り値: バックグラウンド操作または標準のエラー <!-- Return: background operation or standard error -->
+
+これはイメージを source から target にコピーします。
+<!--
+This copies an image from the source to the target.
+-->
+
+入力。
+<!--
+Input:
+-->
+
+```json
+{
+    "target": "target URL",
+    "secret": "secret",
+    "certificate": "target certificate",
+    "aliases": ["alias"]
+}
+```
+
+
 ### `/1.0/images/<fingerprint>/refresh`
 #### POST
  * 説明: イメージをオリジンからリフレッシュします <!-- Description: Refresh an image from its origin -->

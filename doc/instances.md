@@ -534,17 +534,20 @@ net.ipv6.conf.<parent>.proxy_ndp=1
 Device configuration properties:
 -->
 
-Key                     | Type      | Default           | Required  | Description
-:--                     | :--       | :--               | :--       | :--
-parent                  | string    | -                 | yes       | ホストデバイスの名前 <!-- The name of the host device -->
+Key                     | Type      | Default           | Required   | Description
+:--                     | :--       | :--               | :--        | :--
+parent                  | string    | -                 | yes        | ホストデバイスの名前 <!-- The name of the host device -->
 name                    | string    | カーネルが割り当て <!-- kernel assigned -->   | no        | インスタンス内部でのインタフェース名 <!-- The name of the interface inside the instance -->
 mtu                     | integer   | 親の MTU <!-- parent MTU -->        | no        | 新しいインタフェースの MTU <!-- The MTU of the new interface -->
+mode                    | string    | l3s                | no        | IPVLAN のモード (`l2` か `l3s` のいずれか） <!-- The IPVLAN mode (either `l2` or `l3s`) -->
 hwaddr                  | string    | ランダムに割り当て <!-- randomly assigned --> | no        | 新しいインタフェースの MAC アドレス <!-- The MAC address of the new interface -->
-ipv4.address            | string    | -                 | no        | インスタンスに追加する IPv4 静的アドレスのカンマ区切りリスト <!-- Comma delimited list of IPv4 static addresses to add to the instance -->
-ipv4.gateway            | string    | auto              | no        | デフォルト IPv4 ゲートウェイを自動的に追加するかどうか (auto か none を指定可能) <!-- Whether to add an automatic default IPv4 gateway, can be "auto" or "none" -->
-ipv6.address            | string    | -                 | no        | インスタンスに追加する IPv6 静的アドレスのカンマ区切りリスト <!-- Comma delimited list of IPv6 static addresses to add to the instance -->
-ipv6.gateway            | string    | auto              | no        | デフォルト IPv6 ゲートウェイを自動的に追加するかどうか (auto か none を指定可能) <!-- Whether to add an automatic default IPv6 gateway, can be "auto" or "none" -->
-vlan                    | integer   | -                 | no        | アタッチ先の VLAN ID <!-- The VLAN ID to attach to -->
+ipv4.address            | string    | -                  | no        | インスタンスに追加する IPv4 静的アドレスのカンマ区切りリスト。 `l2` モードでは CIDR 形式か単一アドレス形式で指定可能（単一アドレスの場合はサブネットは /24） <!-- Comma delimited list of IPv4 static addresses to add to the instance. In `l2` mode these can be specified as CIDR values or singular addresses (if singular a subnet of /24 is used). -->
+ipv4.gateway            | string    | auto               | no        | `l3s` モードではデフォルト IPv4 ゲートウェイを自動的に追加するかどうか (auto か none を指定可能)。 `l2` モードではゲートウェイの IPv4 アドレスを指定。  <!-- In `l3s` mode, whether to add an automatic default IPv4 gateway, can be `auto` or `none`. In `l2` mode specifies the IPv4 address of the gateway. -->
+ipv4.host\_table        | integer   | -                  | no        | （メインのルーティングテーブルに加えて） IPv4 の静的ルートを追加する先のルーティングテーブル ID <!-- The custom policy routing table ID to add IPv4 static routes to (in addition to main routing table). -->
+ipv6.address            | string    | -                  | no        | インスタンスに追加する IPv6 静的アドレスのカンマ区切りリスト。 `l2` モードでは CIDR 形式か単一アドレス形式で指定可能（単一アドレスの場合はサブネットは /64）  <!-- Comma delimited list of IPv6 static addresses to add to the instance. In `l2` mode these can be specified as CIDR values or singular addresses (if singular a subnet of /64 is used). -->
+ipv6.gateway            | string    | auto (l3s), - (l2) | no        | `l3s` モードではデフォルト IPv6 ゲートウェイを自動的に追加するかどうか (auto か none を指定可能)。 `l2` モードではゲートウェイの IPv6 アドレスを指定。 <!-- In `l3s` mode, whether to add an automatic default IPv6 gateway, can be `auto` or `none`. In `l2` mode specifies the IPv6 address of the gateway. -->
+ipv6.host\_table        | integer   | -                  | no        | （メインのルーティングテーブルに加えて） IPv6 の静的ルートを追加する先のルーティングテーブル ID <!-- The custom policy routing table ID to add IPv6 static routes to (in addition to main routing table). -->
+vlan                    | integer   | -                  | no        | アタッチ先の VLAN ID <!-- The VLAN ID to attach to -->
 
 #### nictype: p2p
 
@@ -709,10 +712,12 @@ mtu                     | integer   | 親の MTU <!-- parent MTU -->        | no
 hwaddr                  | string    | ランダムに割り当て <!-- randomly assigned --> | no        | 新しいインタフェースの MAC アドレス <!-- The MAC address of the new interface -->
 ipv4.address            | string    | -                 | no        | インスタンスに追加する IPv4 静的アドレスのカンマ区切りリスト <!-- Comma delimited list of IPv4 static addresses to add to the instance -->
 ipv4.gateway            | string    | auto              | no        | 自動的に IPv4 のデフォルトゲートウェイを追加するかどうか（ auto か none を指定可能） <!-- Whether to add an automatic default IPv4 gateway, can be "auto" or "none" -->
-ipv4.host\_address       | string    | 169.254.0.1       | no        | ホスト側の veth インターフェースに追加する IPv4 アドレス <!-- The IPv4 address to add to the host-side veth interface. -->
+ipv4.host\_address      | string    | 169.254.0.1       | no        | ホスト側の veth インターフェースに追加する IPv4 アドレス <!-- The IPv4 address to add to the host-side veth interface. -->
+ipv4.host\_table        | integer   | -                 | no        | （メインのルーティングテーブルに加えて） IPv4 の静的ルートを追加する先のルーティングテーブル ID <!-- The custom policy routing table ID to add IPv4 static routes to (in addition to main routing table). -->
 ipv6.address            | string    | -                 | no        | インスタンスに追加する IPv6 静的アドレスのカンマ区切りリスト <!-- Comma delimited list of IPv6 static addresses to add to the instance -->
 ipv6.gateway            | string    | auto              | no        | 自動的に IPv6 のデフォルトゲートウェイを追加するかどうか（ auto か none を指定可能） <!-- Whether to add an automatic default IPv6 gateway, can be "auto" or "none" -->
-ipv6.host\_address       | string    | fe80::1           | no        | ホスト側の veth インターフェースに追加する IPv6 アドレス <!-- The IPv6 address to add to the host-side veth interface. -->
+ipv6.host\_address      | string    | fe80::1           | no        | ホスト側の veth インターフェースに追加する IPv6 アドレス <!-- The IPv6 address to add to the host-side veth interface. -->
+ipv6.host\_table        | integer   | -                 | no        | （メインのルーティングテーブルに加えて） IPv6 の静的ルートを追加する先のルーティングテーブル ID <!-- The custom policy routing table ID to add IPv6 static routes to (in addition to main routing table). -->
 vlan                    | integer   | -                 | no        | アタッチ先の VLAN ID <!-- The VLAN ID to attach to -->
 
 #### ブリッジ、ipvlan、macvlan を使った物理ネットワークへの接続 <!-- bridged, macvlan or ipvlan for connection to physical network -->
