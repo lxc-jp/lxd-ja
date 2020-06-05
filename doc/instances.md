@@ -260,8 +260,6 @@ LXD supports different kind of network devices:
  - [sriov](#nictype-sriov): Passes a virtual function of an SR-IOV enabled physical network device into the instance.
  - [routed](#nictype-routed): Creates a virtual device pair to connect the host to the instance and sets up static routes and proxy ARP/NDP entries to allow the instance to join the network of a designated parent interface.
 
-Currently, only the `bridged` type is supported with virtual machines.
-
 Different network interface types have different additional properties.
 
 Each possible `nictype` value is documented below along with the relevant properties for nics of that type.
@@ -314,6 +312,8 @@ security.ipv6\_filtering | boolean   | false             | no        | Prevent t
 maas.subnet.ipv4         | string    | -                 | no        | MAAS IPv4 subnet to register the instance in
 maas.subnet.ipv6         | string    | -                 | no        | MAAS IPv6 subnet to register the instance in
 boot.priority            | integer   | -                 | no        | Boot priority for VMs (higher boots first)
+vlan                     | integer   | -                 | no        | The VLAN ID to use for untagged traffic (Can be `none` to remove port from default VLAN)
+vlan.tagged              | integer   | -                 | no        | Comma delimited list of VLAN IDs to join for tagged traffic
 
 #### nictype: macvlan
 
@@ -340,7 +340,7 @@ Supported instance types: container
 
 Sets up a new network device based on an existing one using the same MAC address but a different IP.
 
-LXD currently supports IPVLAN in L3S mode.
+LXD currently supports IPVLAN in L2 and L3S mode.
 
 In this mode, the gateway is automatically set by LXD, however IP addresses must be manually specified using either one or both of `ipv4.address` and `ipv6.address` settings before instance is started.
 
@@ -474,6 +474,9 @@ name                    | string    | kernel assigned   | no        | The name o
 host\_name              | string    | randomly assigned | no        | The name of the interface inside the host
 mtu                     | integer   | parent MTU        | no        | The MTU of the new interface
 hwaddr                  | string    | randomly assigned | no        | The MAC address of the new interface
+limits.ingress          | string    | -                 | no        | I/O limit in bit/s for incoming traffic (various suffixes supported, see below)
+limits.egress           | string    | -                 | no        | I/O limit in bit/s for outgoing traffic (various suffixes supported, see below)
+limits.max              | string    | -                 | no        | Same as modifying both limits.ingress and limits.egress
 ipv4.address            | string    | -                 | no        | Comma delimited list of IPv4 static addresses to add to the instance
 ipv4.gateway            | string    | auto              | no        | Whether to add an automatic default IPv4 gateway, can be "auto" or "none"
 ipv4.host\_address      | string    | 169.254.0.1       | no        | The IPv4 address to add to the host-side veth interface.
