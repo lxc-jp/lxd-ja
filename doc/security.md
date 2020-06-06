@@ -420,6 +420,8 @@ hosts/subnets.
 
 ## ネットワークのセキュリティ <!-- Network security -->
 
+### bridged NIC のセキュリティ <!-- Bridged NIC security -->
+
 LXD のデフォルトのネットワークのモードはそれぞれのインスタンスが接続する「管理された」プライベートなネットワークブリッジを提供するためのものです。
 このモードではホスト上に `lxdbr0` と呼ばれるインターフェースが存在し、それぞれのインスタンスに対してブリッジとして振る舞います。
 <!--
@@ -457,6 +459,16 @@ This assumes that the instances are not using any IPv6 privacy extensions when g
 In this default configuration, whilst DNS names cannot not be spoofed, the instance is connected to an Ethernet
 bridge and can transmit any layer 2 traffic that it wishes, which means an untrusted instance can effectively do
 MAC or IP spoofing on the bridge.
+-->
+
+デフォルトの設定ではブリッジに接続されたインスタンスがブリッジに （場合によっては悪意のある） IPv6 ルーター広告を送ることで LXD ホストの IPv6 ルーティングテーブルを変更することも可能です。
+これは `lxdbr0` インターフェースが `/proc/sys/net/ipv6/conf/lxdbr0/accept_ra` を `2` に設定して作られており、それは LXD ホストが `forwarding` を有効にしているときでさえもルーター広告を受け付けることを意味しているからです（より詳細な情報については https://www.kernel.org/doc/Documentation/networking/ip-sysctl.txt を参照）。
+<!--
+It is also possible in the default configuration for instances connected to the bridge to modify the LXD host's
+IPv6 routing table by sending (potentially malicious) IPv6 router advertisements to the bridge. This is because
+the `lxdbr0` interface is created with `/proc/sys/net/ipv6/conf/lxdbr0/accept_ra` set to `2` meaning that the
+LXD host will accept router advertisements even though `forwarding` is enabled (see
+https://www.kernel.org/doc/Documentation/networking/ip-sysctl.txt for more info).
 -->
 
 しかし LXD はいくつかの `bridged` NIC セキュリティ機能を提供しており、インスタンスがネットワークに送信できるトラフィックの種類を制限するのに使用できます。
@@ -507,4 +519,35 @@ The IP filtering features block ARP and NDP advertisements that contain a spoofe
 packets that contain a spoofed source address.
 -->
 
+`security.ipv4\_filtering` か `security.ipv6\_filtering` が有効で （ `ipvX.address=none`  であるかブリッジで DHCP サービスが有効になっていないために）インスタンスに IP アドレスが割り当てられない場合、そのインスタンスからの（訳注： `security.ipv4\_filtering` なら IPv4 、 `security.ipv6\_filtering` なら IPv6 と）設定に対応するプロトコルの全ての IP トラフィックはブロックされます。
+<!--
+If `security.ipv4\_filtering` or `security.ipv6\_filtering` is enabled and the instance cannot be allocated an IP
+address (because `ipvX.address=none` or there is no DHCP service enabled on the bridge) then all IP traffic for
+that protocol is blocked from the instance.
+-->
 
+`security.ipv6\_filtering` が有効な場合、インスタンスからの IPv6 ルーター広告はブロックされます。
+<!--
+When `security.ipv6\_filtering` is enabled IPv6 router advertisements are blocked from the instance.
+-->
+
+### routed NIC のセキュリティ <!-- Routed NIC security -->
+
+`routed` という別のネットワークモードが使用でき、これはコンテナーとホストの間に veth のペアを提供します。
+このネットワークモードでは LXD ホストはルーターとして機能し、ホストに静的ルートが追加され、コンテナの IP アドレスへのトラフィックはコンテナーの veth インタフェースに向けられます。
+<!--
+An alternative networking mode is available called `routed` that provides a veth pair between container and host.
+In this networking mode the LXD host functions as a router and static routes are added to the host directing
+traffic for the container's IPs towards the container's veth interface.
+-->
+
+デフォルトではホスト上に作成される veth インタフェースは `accept_ra` 設定が無効になっています。
+これは LXD ホストの IPv6 ルーティングテーブルをコンテナーからのルーター広告で変更されないようにするためです。
+さらにホスト上の `rp_filter` は `1` に設定されます。
+これはコンテナーが持っているとホストが知らない IP アドレスに対してソースアドレスのスプーフィングを防ぐためです。
+<!--
+By default the veth interface created on the host has its `accept_ra` setting disabled to prevent router
+advertisements from the container modifying the IPv6 routing table on the LXD host. In addition to that the
+`rp_filter` on the host is set to `1` to prevent source address spoofing for IPs that the host does not know the
+container has.
+-->

@@ -471,7 +471,7 @@ lxc config device add container-name home disk source=/home/$USER path=/home/ubu
 For unprivileged containers, you will also need one of:
 -->
 
- - `lxc config device add` の実行時に `shifted=true` を指定する。これは `shiftfs` がサポートされている場合にのみ使えます（ `lxc info` 参照）。 <!-- Pass `shifted=true` to the `lxc config device add` call. This depends on `shiftfs` being supported (see `lxc info`) -->
+ - `lxc config device add` の実行時に `shift=true` を指定する。これは `shiftfs` がサポートされている場合にのみ使えます（ `lxc info` 参照）。 <!-- Pass `shift=true` to the `lxc config device add` call. This depends on `shiftfs` being supported (see `lxc info`) -->
  - raw.idmap エントリー（[ユーザー名前空間 (user namespace) 用の ID のマッピング](userns-idmap.md) 参照） <!-- raw.idmap entry (see [Idmaps for user namespace](userns-idmap.md)) -->
  - ホームディレクトリーに配置した再帰的な POSIX ACL <!-- Recursive POSIX ACLs placed on your home directory -->
 
