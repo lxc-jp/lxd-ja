@@ -204,7 +204,7 @@ LXD is restarted.  Also note this only works if the bridge
 
 ## IPv6 プリフィクスサイズ <!-- IPv6 prefix size -->
 最適な動作には 64 のプリフィクスサイズが望ましいです。
-より大きなサブネット（ 64 より小さいプリフィクス）も動作はするはずですが、通常は SLAAC に対するほど有用ではありません。
+より大きなサブネット（ 64 より小さいプリフィクス）も正しく動作するでしょうが、SLAAC環境下では有用ではないことが多いでしょう。
 <!--
 For optimal operation, a prefix size of 64 is preferred.
 Larger subnets (prefix smaller than 64) should work properly too but

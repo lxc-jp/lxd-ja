@@ -533,7 +533,7 @@ When `security.ipv6\_filtering` is enabled IPv6 router advertisements are blocke
 
 ### routed NIC のセキュリティ <!-- Routed NIC security -->
 
-別のネットワークモードは `routed` と呼ばれ、これはコンテナーとホストの間に veth のペアを提供します。
+`routed` という別のネットワークモードが使用でき、これはコンテナーとホストの間に veth のペアを提供します。
 このネットワークモードでは LXD ホストはルーターとして機能し、ホストに静的ルートが追加され、コンテナの IP アドレスへのトラフィックはコンテナーの veth インタフェースに向けられます。
 <!--
 An alternative networking mode is available called `routed` that provides a veth pair between container and host.
