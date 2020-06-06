@@ -1988,3 +1988,56 @@ This adds the push and relay modes to image copy.
 It also introduces the following new endpoint:
 -->
  - `POST 1.0/images/<fingerprint>/export`
+
+## network\_dns\_search
+この拡張はネットワークに `dns.search` という設定オプションを追加します。
+<!--
+This introduces the `dns.search` config option on networks.
+-->
+
+## container\_nic\_routed\_limits
+この拡張は routed NIC に `limits.ingress`, `limits.egress`, `limits.max` を追加します。
+<!--
+This introduces `limits.ingress`, `limits.egress` and `limits.max` for routed NICs.
+-->
+
+## instance\_nic\_bridged\_vlan
+この拡張は `bridged` NIC に `vlan` と `vlan.tagged` の設定を追加します。
+<!--
+This introduces the `vlan` and `vlan.tagged` settings for `bridged` NICs.
+-->
+
+`vlan` には参加するタグなし VLAN を指定し、 `vlan.tagged` は参加するタグ VLAN のカンマ区切りリストを指定します。
+<!--
+`vlan` specifies the untagged VLAN to join, and `vlan.tagged` is a comma delimited list of tagged VLANs to join.
+-->
+
+## network\_state\_bond\_bridge
+この拡張は /1.0/networks/NAME/state API に bridge と bond のセクションを追加します。
+<!--
+This adds a "bridge" and "bond" section to the /1.0/networks/NAME/state API.
+-->
+
+これらはそれぞれの特定のタイプに関連する追加の状態の情報を含みます。
+<!--
+Those contain additional state information relevant to those particular types.
+-->
+
+Bond:
+
+ - Mode
+ - Transmit hash
+ - Up delay
+ - Down delay
+ - MII frequency
+ - MII state
+ - Lower devices
+
+Bridge:
+
+ - ID
+ - Forward delay
+ - STP mode
+ - Default VLAN
+ - VLAN filtering
+ - Upper devices

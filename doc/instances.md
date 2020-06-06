@@ -367,11 +367,6 @@ LXD supports different kind of network devices:
  - [sriov](#nictype-sriov): SR-IOV が有効な物理ネットワークデバイスの仮想ファンクション（virtual function）をインスタンスに与えます。 <!-- Passes a virtual function of an SR-IOV enabled physical network device into the instance. -->
  - [routed](#nictype-routed): 仮想デバイスペアを作成し、ホストからインスタンスに繋いで静的ルートをセットアップし ARP/NDP エントリーをプロキシします。これにより指定された親インタフェースのネットワークにインスタンスが参加できるようになります。 <!-- Creates a virtual device pair to connect the host to the instance and sets up static routes and proxy ARP/NDP entries to allow the instance to join the network of a designated parent interface. -->
 
-現状、仮想マシンでは `bridged` だけがサポートされます。
-<!--
-Currently, only the `bridged` type is supported with virtual machines.
--->
-
 ネットワークインターフェースの種類が異なると追加のプロパティが異なります。
 <!--
 Different network interface types have different additional properties.
@@ -448,6 +443,8 @@ security.ipv6\_filtering | boolean   | false             | no        | インス
 maas.subnet.ipv4         | string    | -                 | no        | インスタンスを登録する MAAS IPv4 サブネット <!-- MAAS IPv4 subnet to register the instance in -->
 maas.subnet.ipv6         | string    | -                 | no        | インスタンスを登録する MAAS IPv6 サブネット <!-- MAAS IPv6 subnet to register the instance in -->
 boot.priority            | integer   | -                 | no        | VM のブート優先度 (高いほうが先にブート) <!-- Boot priority for VMs (higher boots first) -->
+vlan                     | integer   | -                 | no        | タグなしのトラフィックに使用する VLAN ID （デフォルトの VLAN からポートを削除するには `none` を指定） <!-- The VLAN ID to use for untagged traffic (Can be `none` to remove port from default VLAN) -->
+vlan.tagged              | integer   | -                 | no        | タグありのトラフィックに参加する VLAN ID のカンマ区切りリスト <!-- Comma delimited list of VLAN IDs to join for tagged traffic -->
 
 #### nictype: macvlan
 
@@ -489,9 +486,9 @@ Supported instance types: container
 Sets up a new network device based on an existing one using the same MAC address but a different IP.
 -->
 
-LXD は現状 L3S モードで IPVLAN をサポートします。
+LXD は現状 L2 と L3S モードで IPVLAN をサポートします。
 <!--
-LXD currently supports IPVLAN in L3S mode.
+LXD currently supports IPVLAN in L2 and L3S mode.
 -->
 
 このモードではゲートウェイは LXD により自動的に設定されますが、インスタンスが起動する前に
@@ -710,6 +707,9 @@ name                    | string    | カーネルが割り当て <!-- kernel as
 host\_name              | string    | ランダムに割り当て <!-- randomly assigned --> | no        | ホスト内でのインターフェース名 <!-- The name of the interface inside the host -->
 mtu                     | integer   | 親の MTU <!-- parent MTU -->        | no        | 新しいインタフェースの MTU <!-- The MTU of the new interface -->
 hwaddr                  | string    | ランダムに割り当て <!-- randomly assigned --> | no        | 新しいインタフェースの MAC アドレス <!-- The MAC address of the new interface -->
+limits.ingress          | string    | -                 | no        | 内向きトラフィックに対する bit/s での I/O 制限（さまざまな単位をサポート、下記参照） <!-- I/O limit in bit/s for incoming traffic (various suffixes supported, see below) -->
+limits.egress           | string    | -                 | no        | 外向きトラフィックに対する bit/s での I/O 制限（さまざまな単位をサポート、下記参照） <!-- I/O limit in bit/s for outgoing traffic (various suffixes supported, see below) -->
+limits.max              | string    | -                 | no        | limits.ingress と limits.egress の両方を指定するのと同じ <!-- Same as modifying both limits.ingress and limits.egress -->
 ipv4.address            | string    | -                 | no        | インスタンスに追加する IPv4 静的アドレスのカンマ区切りリスト <!-- Comma delimited list of IPv4 static addresses to add to the instance -->
 ipv4.gateway            | string    | auto              | no        | 自動的に IPv4 のデフォルトゲートウェイを追加するかどうか（ auto か none を指定可能） <!-- Whether to add an automatic default IPv4 gateway, can be "auto" or "none" -->
 ipv4.host\_address      | string    | 169.254.0.1       | no        | ホスト側の veth インターフェースに追加する IPv4 アドレス <!-- The IPv4 address to add to the host-side veth interface. -->

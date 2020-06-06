@@ -83,6 +83,7 @@ bridge.hwaddr                   | string    | -                     | -         
 bridge.mode                     | string    | -                     | standard                  | ブリッジの稼働モード ("standard" か "fan") <!-- Bridge operation mode ("standard" or "fan") -->
 bridge.mtu                      | integer   | -                     | 1500                      | ブリッジの MTU (tunnel か fan かでデフォルト値は変わります) <!-- Bridge MTU (default varies if tunnel or fan setup) -->
 dns.domain                      | string    | -                     | lxd                       | DHCP のクライアントに広告し DNS の名前解決に使用するドメイン <!-- Domain to advertise to DHCP clients and use for DNS resolution -->
+dns.search                      | string    | -                     | -                         | 完全なドメインサーチのカンマ区切りリスト（デフォルトは dns.domain ） <!-- Full comma eparate domain search list, defaulting to dns.domain -->
 dns.mode                        | string    | -                     | managed                   | DNS の登録モード ("none" は DNS レコード無し、 "managed" は LXD が静的レコードを生成、 "dynamic" はクライアントがレコードを生成) <!-- DNS registration mode ("none" for no DNS record, "managed" for LXD generated static records or "dynamic" for client generated records) -->
 fan.overlay\_subnet             | string    | fan mode              | 240.0.0.0/8               | FAN の overlay として使用するサブネット (CIDR 形式) <!-- Subnet to use as the overlay for the FAN (CIDR notation) -->
 fan.type                        | string    | fan mode              | vxlan                     | FAN のトンネル・タイプ ("vxlan" か "ipip") <!-- The tunneling type for the FAN ("vxlan" or "ipip") -->
@@ -199,6 +200,24 @@ This resolved configuration will persist as long as the bridge
 exists, so you must repeat this command each reboot and after
 LXD is restarted.  Also note this only works if the bridge
 `dns.mode` is not `none`.
+-->
+
+## IPv6 プリフィクスサイズ <!-- IPv6 prefix size -->
+最適な動作には 64 のプリフィクスサイズが望ましいです。
+より大きなサブネット（ 64 より小さいプリフィクス）も動作はするはずですが、通常は SLAAC に対するほど有用ではありません。
+<!--
+For optimal operation, a prefix size of 64 is preferred.
+Larger subnets (prefix smaller than 64) should work properly too but
+aren't typically that useful for SLAAC.
+-->
+
+IPv6 アドレスの割り当てにステートフル DHCPv6 を使用している場合は、より小さなサブネットも理論的には利用可能ですが、 dnsmasq にきちんとサポートされておらず問題が起きるかもしれません。
+これらの 1 つをどうしても使わなければならない場合、静的割り当てか別のスタンドアロンの RA デーモンを使用可能です。
+<!--
+Smaller subnets while in theory possible when using stateful DHCPv6 for
+IPv6 allocation aren't properly supported by dnsmasq and may be the
+source of issue. If you must use one of those, static allocation or
+another standalone RA daemon be used.
 -->
 
 ## Firewalld で DHCP, DNS を許可する <!-- Allow DHCP, DNS with Firewalld -->

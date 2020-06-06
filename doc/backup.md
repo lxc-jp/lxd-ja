@@ -89,6 +89,14 @@ tarball can be obtained if you know that you'll be restoring on a LXD
 server using the same storage pool backend.
 -->
 
+サーバー上にインストールされたどんな圧縮ツールでも `--compression` を指定することで利用可能です。
+LXD 側でのバリデーションはなく、 LXD から実行可能で `-c` オプションで標準出力への出力をサポートしているコマンドであれば動作します。
+<!--
+You can use any compressor installed on the server using the `-\-compression` 
+flag. There is no validation on the LXD side, any command that is available
+to LXD and supports `-c` for stdout should work.
+-->
+
 これらの tarball はあなたが望むどんなファイルシステム上にどのようにでも
 保存することができ、 `lxc import` コマンドを使って LXD にインポートして
 戻すことができます。
