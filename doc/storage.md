@@ -78,6 +78,84 @@ Storage volume configuration keys can be set using the lxc tool with:
 lxc storage volume set [<remote>:]<pool> <volume> <key> <value>
 ```
 
+## ストレージボリュームのコンテンツタイプ <!-- Storage volume content types -->
+ストレージボリュームは `filesystem` か `block` のいずれかのタイプが指定可能です。
+<!--
+Storage volumes can be either `filesystem` or `block` type.
+-->
+
+コンテナーとコンテナーイメージは常に `filesystem` を使います。
+仮想マシンと仮想マシンイメージは常に `block` を使います。
+<!--
+Containers and container images are always going to be using `filesystem`.
+Virtual machines and virtual machine images are always going to be using `block`.
+-->
+
+カスタムストレージボリュームはどちらのタイプも利用可能でデフォルトは `filesystem` です。
+タイプが `block` のカスタムストレージボリュームは仮想マシンにのみアタッチできます。
+<!--
+Custom storage volumes can be either types with the default being `filesystem`.
+Those custom storage volumes of type `block` can only be attached to virtual machines.
+-->
+
+ブロックカスタムストレージボリュームは以下のようにして作成できます。
+<!--
+Block custom storage volumes can be created with:
+-->
+
+```bash
+lxc storage volume create [<remote>]:<pool> <name> --type=block
+```
+
+# LXD のデータをどこに保管するか <!-- Where to store LXD data -->
+使用しているストレージバックエンドによって LXD はファイルシステムをホストと共有するかあるいはデータを分離しておくことができます。
+<!--
+Depending on the storage backends used, LXD can either share the filesystem with its host or keep its data separate.
+-->
+
+## ホストと共有する <!-- Sharing with the host -->
+これは通常最もスペース効率良く LXD を動かす方法で、管理もおそらく一番容易でしょう。
+以下の方法で実現できます。
+<!--
+This is usually the most space efficient way to run LXD and possibly the easiest to manage.
+It can be done with:
+-->
+
+ - 任意のファイルシステム上の `dir` バックエンド <!-- `dir` backend on any backing filesystem -->
+ - `btrfs` バックエンドでホストが btrfs で LXD に専用のサブボリュームを与えている場合 <!-- `btrfs` backend if the host is btrfs and you point LXD to a dedicated subvolume -->
+ - `zfs` バックエンドでホストが zfs で zpool 上で専用のデータセットを LXD に与えている場合 <!-- `zfs` backend if the host is zfs and you point LXD to a dedicated dataset on your zpool -->
+
+## 専用のディスク／パーティション <!-- Dedicated disk/partition -->
+このモードでは LXD のストレージはホストから完全に独立しています。
+これはメインのディスク上で空のパーティションを LXD に使用させるか、ディスク全体を専用で使用させるかで実現できます。
+<!--
+In this mode, LXD's storage will be completely independent from the host.
+This can be done by having LXD use an empty partition on your main disk or by having it use a full dedicated disk.
+-->
+
+これは `dir`, `ceph`, `cephfs` 以外の全てのストレージドライバーでサポートされます。
+<!--
+This is supported by all storage drivers except `dir`, `ceph` and `cephfs`.
+-->
+
+## ループディスク <!-- Loop disk -->
+上記のどちらの選択肢も利用できない場合、 LXD はメインのドライブ上にループファイルを作成し、選択したストレージドライバーにそれを使わせることができます。
+<!--
+If neither of the options above are possible for you, LXD can create a loop file
+on your main drive and then have the selected storage driver use that.
+-->
+
+これはディスク／パーティションを使う方法と似ていますが、メインのドライブ上の大きなファイルを代わりに使います。
+この方法は全ての書き込みがストレージドライバーとさらにメインドライブのファイルシステムの両方で処理される必要があるため、パフォーマンス上のペナルティーを受けます。
+またループファイルは通常は縮小できません。
+設定した上限までサイズが拡大しますが、インスタンスやイメージを削除してもファイルは縮小しません。
+<!--
+This is functionally similar to using a disk/partition but uses a large file on your main drive instead.
+This comes at a performance penalty as every writes need to go through the storage driver and then your main
+drive's filesystem. The loop files also usually cannot be shrunk.
+They will grow up to the limit you select but deleting instances or images will not cause the file to shrink.
+-->
+
 # ストレージバックエンドとサポートされる機能 <!-- Storage Backends and supported functions -->
 ## 機能比較 <!-- Feature comparison -->
 <!--
