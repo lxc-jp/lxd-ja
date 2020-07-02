@@ -1863,19 +1863,19 @@ This adds a writable endpoint for cluster members, allowing the editing of their
 -->
 
 ## container\_nic\_routed\_host\_address
-この拡張は NIC の設定キーに `ipv4.host_address` と `ipv6.host_address` を追加し、ホスト側の veth インターフェースの IP アドレスを制御できるようにします。
+この拡張は NIC の設定キーに `ipv4.host\_address` と `ipv6.host\_address` を追加し、ホスト側の veth インターフェースの IP アドレスを制御できるようにします。
 これは同時に複数の routed NIC を使用し、予測可能な next-hop のアドレスを使用したい場合に有用です。
 <!--
-This introduces the `ipv4.host_address` and `ipv6.host_address` NIC config keys that can be used to control the
+This introduces the `ipv4.host\_address` and `ipv6.host\_address` NIC config keys that can be used to control the
 host-side veth interface's IP addresses. This can be useful when using multiple routed NICs at the same time and
 needing a predictable next-hop address to use.
 -->
 
 さらにこの拡張は `ipv4.gateway` と `ipv6.gateway` の NIC 設定キーの振る舞いを変更します。
-auto に設定するとコンテナーはデフォルトゲートウェイをそれぞれ `ipv4.host_address` と `ipv6.host_address` で指定した値にします。
+auto に設定するとコンテナーはデフォルトゲートウェイをそれぞれ `ipv4.host\_address` と `ipv6.host\_address` で指定した値にします。
 <!--
 This also alters the behaviour of `ipv4.gateway` and `ipv6.gateway` NIC config keys. When they are set to "auto"
-the container will have its default gateway set to the value of `ipv4.host_address` or `ipv6.host_address` respectively.
+the container will have its default gateway set to the value of `ipv4.host\_address` or `ipv6.host\_address` respectively.
 -->
 
 デフォルト値は次の通りです。
@@ -1883,8 +1883,8 @@ the container will have its default gateway set to the value of `ipv4.host_addre
 The default values are:
 -->
 
-`ipv4.host_address`: 169.254.0.1
-`ipv6.host_address`: fe80::1
+`ipv4.host\_address`: 169.254.0.1
+`ipv6.host\_address`: fe80::1
 
 これは以前のデフォルトの挙動と後方互換性があります。
 <!--
@@ -1938,18 +1938,18 @@ Those are taken from the os-release data on the system.
 -->
 
 ## container\_nic\_routed\_host\_table
-この拡張は `ipv4.host_table` と `ipv6.host_table` という NIC の設定キーを導入します。
+この拡張は `ipv4.host\_table` と `ipv6.host\_table` という NIC の設定キーを導入します。
 これで指定した ID のカスタムポリシーのルーティングテーブルにインスタンスの IP のための静的ルートを追加できます。
 <!--
-This introduces the `ipv4.host_table` and `ipv6.host_table` NIC config keys that can be used to add static routes
+This introduces the `ipv4.host\_table` and `ipv6.host\_table` NIC config keys that can be used to add static routes
 for the instance's IPs to a custom policy routing table by ID.
 -->
 
 ## container\_nic\_ipvlan\_host\_table
-この拡張は `ipv4.host_table` と `ipv6.host_table` という NIC の設定キーを導入します。
+この拡張は `ipv4.host\_table` と `ipv6.host\_table` という NIC の設定キーを導入します。
 これで指定した ID のカスタムポリシーのルーティングテーブルにインスタンスの IP のための静的ルートを追加できます。
 <!--
-This introduces the `ipv4.host_table` and `ipv6.host_table` NIC config keys that can be used to add static routes
+This introduces the `ipv4.host\_table` and `ipv6.host\_table` NIC config keys that can be used to add static routes
 for the instance's IPs to a custom policy routing table by ID.
 -->
 
@@ -2041,3 +2041,37 @@ Bridge:
  - Default VLAN
  - VLAN filtering
  - Upper devices
+
+## resources\_cpu\_isolated
+この拡張は CPU スレッドに `Isolated` プロパティーを追加します。
+これはスレッドが物理的には `Online` ですがタスクを受け付けないように設定しているかを示します。
+<!--
+Add an `Isolated` property on CPU threads to indicate if the thread is
+physically `Online` but is configured not to accept tasks.
+-->
+
+## usedby\_consistency
+この拡張により、可能な時は UsedBy が適切な ?project= と ?target= に対して一貫性があるようになるはずです。
+<!--
+This extension indicates that UsedBy should now be consistent with
+suitable ?project= and ?target= when appropriate.
+-->
+
+UsedBy を持つ 5 つのエンティティーは以下の通りです。
+<!--
+The 5 entities that have UsedBy are:
+-->
+
+ - プロファイル <!-- Profiles -->
+ - プロジェクト <!-- Projects -->
+ - ネットワーク <!-- Networks -->
+ - ストレージプール <!-- Storage pools -->
+ - ストレージボリューム <!-- Storage volumes -->
+
+## custom\_block\_volumes
+この拡張によりカスタムブロックボリュームを作成しインスタンスにアタッチできるようになります。
+カスタムストレージボリュームの作成時に `--type` フラグが新規追加され、 `fs` と `block` の値を受け付けます。
+<!--
+This adds support for creating and attaching custom block volumes to instances.
+It introduces the new `-\-type` flag when creating custom storage volumes, and accepts the values `fs` and `block`.
+-->

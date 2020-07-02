@@ -1032,9 +1032,9 @@ required    | boolean   | false             | no        | このデバイスが�
 
 ### Type: gpu
 
-サポートされるインスタンスタイプ: コンテナー
+サポートされるインスタンスタイプ: コンテナー, VM
 <!--
-Supported instance types: container
+Supported instance types: container, VM
 -->
 
 GPU デバイスエントリーは、シンプルにリクエストのあった GPU デバイスをインスタンスに出現させます。
@@ -1054,9 +1054,9 @@ vendorid    | string    | -                 | no        | GPU デバイスのベ
 productid   | string    | -                 | no        | GPU デバイスのプロダクト ID <!-- The product id of the GPU device -->
 id          | string    | -                 | no        | GPU デバイスのカード ID <!-- The card id of the GPU device -->
 pci         | string    | -                 | no        | GPU デバイスの PCI アドレス <!-- The pci address of the GPU device -->
-uid         | int       | 0                 | no        | インスタンス内のデバイス所有者の UID <!-- UID of the device owner in the instance -->
-gid         | int       | 0                 | no        | インスタンス内のデバイス所有者の GID <!-- GID of the device owner in the instance -->
-mode        | int       | 0660              | no        | インスタンス内のデバイスのモード <!-- Mode of the device in the instance -->
+uid         | int       | 0                 | no        | インスタンス（コンテナーのみ）内のデバイス所有者の UID <!-- UID of the device owner in the instance (container only) -->
+gid         | int       | 0                 | no        | インスタンス（コンテナーのみ）内のデバイス所有者の GID <!-- GID of the device owner in the instance (container only) -->
+mode        | int       | 0660              | no        | インスタンス（コンテナーのみ）内のデバイスのモード <!-- Mode of the device in the instance (container only) -->
 
 ### Type: proxy
 
