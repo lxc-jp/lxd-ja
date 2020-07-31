@@ -81,16 +81,16 @@ security.privileged                         | boolean   | false             | no
 security.protection.delete                  | boolean   | false             | yes           | -                         | Prevents the instance from being deleted
 security.protection.shift                   | boolean   | false             | yes           | container                 | Prevents the instance's filesystem from being uid/gid shifted on startup
 security.secureboot                         | boolean   | true              | no            | virtual-machine           | Controls whether UEFI secure boot is enabled with the default Microsoft keys
-security.syscalls.blacklist                 | string    | -                 | no            | container                 | A '\n' separated list of syscalls to blacklist
-security.syscalls.blacklist\_compat         | boolean   | false             | no            | container                 | On x86\_64 this enables blocking of compat\_\* syscalls, it is a no-op on other arches
-security.syscalls.blacklist\_default        | boolean   | true              | no            | container                 | Enables the default syscall blacklist
+security.syscalls.allow                     | string    | -                 | no            | container                 | A '\n' separated list of syscalls to allow (mutually exclusive with security.syscalls.deny\*)
+security.syscalls.deny                      | string    | -                 | no            | container                 | A '\n' separated list of syscalls to deny
+security.syscalls.deny\_compat              | boolean   | false             | no            | container                 | On x86\_64 this enables blocking of compat\_\* syscalls, it is a no-op on other arches
+security.syscalls.deny\_default             | boolean   | true              | no            | container                 | Enables the default syscall deny
 security.syscalls.intercept.mknod           | boolean   | false             | no            | container                 | Handles the `mknod` and `mknodat` system calls (allows creation of a limited subset of char/block devices)
 security.syscalls.intercept.mount           | boolean   | false             | no            | container                 | Handles the `mount` system call
 security.syscalls.intercept.mount.allowed   | string    | -                 | yes           | container                 | Specify a comma-separated list of filesystems that are safe to mount for processes inside the instance
 security.syscalls.intercept.mount.fuse      | string    | -                 | yes           | container                 | Whether to redirect mounts of a given filesystem to their fuse implemenation (e.g. ext4=fuse2fs)
 security.syscalls.intercept.mount.shift     | boolean   | false             | yes           | container                 | Whether to mount shiftfs on top of filesystems handled through mount syscall interception
 security.syscalls.intercept.setxattr        | boolean   | false             | no            | container                 | Handles the `setxattr` system call (allows setting a limited subset of restricted extended attributes)
-security.syscalls.whitelist                 | string    | -                 | no            | container                 | A '\n' separated list of syscalls to whitelist (mutually exclusive with security.syscalls.blacklist\*)
 snapshots.schedule                          | string    | -                 | no            | -                         | Cron expression (`<minute> <hour> <dom> <month> <dow>`)
 snapshots.schedule.stopped                  | bool      | false             | no            | -                         | Controls whether or not stopped instances are to be snapshoted automatically
 snapshots.pattern                           | string    | snap%d            | no            | -                         | Pongo2 template string which represents the snapshot name (used for scheduled snapshots and unnamed snapshots)
@@ -326,6 +326,7 @@ Device configuration properties:
 Key                     | Type      | Default           | Required  | Description
 :--                     | :--       | :--               | :--       | :--
 parent                  | string    | -                 | yes       | The name of the host device
+network                 | string    | -                 | yes       | The LXD network to link device to (instead of parent)
 name                    | string    | kernel assigned   | no        | The name of the interface inside the instance
 mtu                     | integer   | parent MTU        | no        | The MTU of the new interface
 hwaddr                  | string    | randomly assigned | no        | The MAC address of the new interface
@@ -410,6 +411,7 @@ Device configuration properties:
 Key                     | Type      | Default           | Required  | Description
 :--                     | :--       | :--               | :--       | :--
 parent                  | string    | -                 | yes       | The name of the host device
+network                 | string    | -                 | yes       | The LXD network to link device to (instead of parent)
 name                    | string    | kernel assigned   | no        | The name of the interface inside the instance
 mtu                     | integer   | kernel assigned   | no        | The MTU of the new interface
 hwaddr                  | string    | randomly assigned | no        | The MAC address of the new interface
@@ -729,15 +731,46 @@ The supported connection types are:
 * `UDP <-> UNIX`
 * `UNIX <-> UDP`
 
+The proxy device also supports a `nat` mode where packets are forwarded using NAT rather than being proxied through
+a separate connection. This has benefit that the client address is maintained without the need for the target
+destination to support the `PROXY` protocol (which is the only way to pass the client address through when using
+the proxy device in non-nat mode).
+
+When configuring a proxy device with `nat=true`, you will need to ensure that the target instance has a static IP
+configured in LXD on its NIC device. E.g.
+
+```
+lxc config device set <instance> <nic> ipv4.address=<ipv4.address> ipv6.address=<ipv6.address>
+```
+
+In order to define a static IPv6 address, the parent managed network needs to have `ipv6.dhcp.stateful` enabled.
+
+In NAT mode the supported connection types are:
+
+* `TCP <-> TCP`
+* `UDP <-> UDP`
+
+When defining IPv6 addresses use square bracket notation, e.g.
+
+```
+connect=tcp:[2001:db8::1]:80
+```
+
+You can specify that the connect address should be the IP of the instance by setting the connect IP to the wildcard
+address (`0.0.0.0` for IPv4 and `[::]` for IPv6).
+
+The listen address can also use wildcard addresses when using non-NAT mode. However when using `nat` mode you must
+specify an IP address on the LXD host.
+
 Key             | Type      | Default       | Required  | Description
 :--             | :--       | :--           | :--       | :--
-listen          | string    | -             | yes       | The address and port to bind and listen
-connect         | string    | -             | yes       | The address and port to connect to
+listen          | string    | -             | yes       | The address and port to bind and listen (`<type>:<addr>:<port>[-<port>][,<port>]`)
+connect         | string    | -             | yes       | The address and port to connect to (`<type>:<addr>:<port>[-<port>][,<port>]`)
 bind            | string    | host          | no        | Which side to bind on (host/guest)
 uid             | int       | 0             | no        | UID of the owner of the listening Unix socket
 gid             | int       | 0             | no        | GID of the owner of the listening Unix socket
 mode            | int       | 0644          | no        | Mode for the listening Unix socket
-nat             | bool      | false         | no        | Whether to optimize proxying via NAT
+nat             | bool      | false         | no        | Whether to optimize proxying via NAT (requires instance NIC has static IP address)
 proxy\_protocol | bool      | false         | no        | Whether to use the HAProxy PROXY protocol to transmit sender information
 security.uid    | int       | 0             | no        | What UID to drop privilege to
 security.gid    | int       | 0             | no        | What GID to drop privilege to

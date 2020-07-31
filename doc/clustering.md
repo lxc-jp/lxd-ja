@@ -217,6 +217,17 @@ transition to the Blocked state, until you upgrade the very last
 one. At that point the blocked nodes will notice that there is no
 out-of-date node left and will become operational again.
 
+### Failure domains
+
+Failure domains can be used to indicate which nodes should be given preference
+when trying to assign roles to a cluster member that has been shutdown or has
+crashed. For example, if a cluster member that currently has the database role
+gets shutdown, LXD will try to assign its database role to another cluster
+member in the same failure domain, if one is available.
+
+To change the failure domain of a cluster member you can use the `lxc cluster
+edit <member>` command line tool, or the `PUT /1.0/cluster/<member>` REST API.
+
 ### Recover from quorum loss
 
 Every LXD cluster has up to 3 members that serve as database nodes. If you
@@ -390,24 +401,22 @@ lxc storage volume show default web --target node2
 
 ## Networks
 
-As mentioned above, all nodes must have identical networks defined. The only
-difference between networks on different nodes might be their
-`bridge.external_interfaces` optional configuration key (see also documentation
-about [network configuration](networks.md)).
+As mentioned above, all nodes must have identical networks defined.
 
-To create a new network, you first have to define it across all
-nodes, for example:
+The only difference between networks on different nodes might be their optional configuration keys.
+When defining a new network on a specific clustered node the only valid optional configuration keys you can pass
+are `bridge.external_interfaces` and `parent`, as these can be different on each node (see documentation about
+[network configuration](networks.md) for a definition of each).
+
+To create a new network, you first have to define it across all nodes, for example:
 
 ```bash
 lxc network create --target node1 my-network
 lxc network create --target node2 my-network
 ```
 
-Note that when defining a new network on a node the only valid configuration
-key you can pass is `bridge.external_interfaces`, as mentioned above.
-
-At this point the network hasn't been actually created yet, but just
-defined (it's state is marked as Pending if you run `lxc network list`).
+At this point the network hasn't been actually created yet, but just defined
+(it's state is marked as Pending if you run `lxc network list`).
 
 Now run:
 
@@ -415,12 +424,10 @@ Now run:
 lxc network create my-network
 ```
 
-and the network will be instantiated on all nodes. If you didn't
-define it on a particular node, or a node is down, an error will be
-returned.
+The network will be instantiated on all nodes. If you didn't define it on a particular node, or a node is down,
+an error will be returned.
 
-You can pass to this final ``network create`` command any configuration key
-which is not node-specific (see above).
+You can pass to this final ``network create`` command any configuration key which is not node-specific (see above).
 
 ## Separate REST API and clustering networks
 
