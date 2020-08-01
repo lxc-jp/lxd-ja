@@ -330,7 +330,7 @@ Warning: what is exposed above is not a fool-proof approach and may end up inadv
 ## ネットワーク: macvlan <!-- network: macvlan -->
 
 macvlan ネットワークタイプではインスタンスを macvlan NIC を使って親のインターフェースに接続する際に使用するプリセットを指定可能です。
-これによりインスタンスの NIC 自体は下層の設定詳細を一切知ることなく、接続する `network` を単に指定するだけで設定できます。
+これによりインスタンスの NIC 自体は下層の詳しい設定を一切知ることなく、接続する `network` を単に指定するだけで設定できます。
 <!--
 The macvlan network type allows one to specify presets to use when connecting instances to a parent interface
 using macvlan NICs. This allows the instance NIC itself to simply specify the `network` it is connecting to without
@@ -353,7 +353,7 @@ maas.subnet.ipv6                | string    | ipv6 アドレス <!-- address -->
 ## ネットワーク: sriov <!-- network: sriov -->
 
 sriov ネットワークタイプではインスタンスを sriov NIC を使って親のインターフェースに接続する際に使用するプリセットを指定可能です。
-これによりインスタンスの NIC 自体は下層の設定詳細を一切知ることなく、接続する `network` を単に指定するだけで設定できます。
+これによりインスタンスの NIC 自体は下層の詳しい設定を一切知ることなく、接続する `network` を単に指定するだけで設定できます。
 <!--
 The sriov network type allows one to specify presets to use when connecting instances to a parent interface
 using sriov NICs. This allows the instance NIC itself to simply specify the `network` it is connecting to without

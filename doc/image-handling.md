@@ -40,7 +40,7 @@ This is the most common source of images and the only one of the three
 options which is supported directly at instance creation time.
 -->
 
-この選択肢では、イメージサーバーはターゲットの LXD サーバーに任意の必要な証明書とともに提供され、証明書は検証される必要があります（ HTTPS のみがサポートされます）。
+この選択肢では、イメージサーバーは検証されるために必要な証明書（HTTPS のみがサポートされます）と共にターゲットの LXD サーバーに提供されます。
 <!--
 With this option, an image server is provided to the target LXD server
 along with any needed certificate to validate it (only HTTPS is supported).

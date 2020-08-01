@@ -2134,7 +2134,7 @@ specify which parent interface should be used for creating NIC device interfaces
 -->
 
 さらに `macvlan` の NIC に `network` 設定キーを追加します。
-これは NIC デバイスの基盤として使う同じタイプの関連するネットワークを指定します。
+これは NIC デバイスの設定の基礎として使う network を指定します。
 <!--
 Also adds `network` configuration key support for `macvlan` NICs to allow them to specify the associated network of
 the same type that they should use as the basis for the NIC device.
@@ -2149,7 +2149,7 @@ specify which parent interface should be used for creating NIC device interfaces
 -->
 
 さらに `sriov` の NIC に `network` 設定キーを追加します。
-これは NIC デバイスの基盤として使う同じタイプの関連するネットワークを指定します。
+これは NIC デバイスの設定の基礎として使う network を指定します。
 <!--
 Also adds `network` configuration key support for `sriov` NICs to allow them to specify the associated network of
 the same type that they should use as the basis for the NIC device.
