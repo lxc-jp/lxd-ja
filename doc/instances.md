@@ -101,16 +101,16 @@ security.privileged                         | boolean   | false             | no
 security.protection.delete                  | boolean   | false             | yes           | -                 | インスタンスを削除から保護する <!-- Prevents the instance from being deleted -->
 security.protection.shift                   | boolean   | false             | yes           | container         | インスタンスのファイルシステムが起動時に uid/gid がシフト（再マッピング） されるのを防ぐ <!-- Prevents the instance's filesystem from being uid/gid shifted on startup -->
 security.secureboot                         | boolean   | true              | no            | virtual-machine   | UEFI セキュアブートがデフォルトの Microsoft のキーで有効になるかを制御する <!-- Controls whether UEFI secure boot is enabled with the default Microsoft keys -->
-security.syscalls.blacklist                 | string    | -                 | no            | container         | `\n` 区切りのシステムコールのブラックリスト <!-- A '\n' separated list of syscalls to blacklist -->
-security.syscalls.blacklist\_compat         | boolean   | false             | no            | container         | `x86_64` で `compat_*` システムコールのブロックを有効にするかどうか。他のアーキテクチャでは何もしません <!-- On x86\_64 this enables blocking of compat\_\* syscalls, it is a no-op on other arches -->
-security.syscalls.blacklist\_default        | boolean   | true              | no            | container         | デフォルトのシステムコールブラックリストを有効にするかどうか <!-- Enables the default syscall blacklist -->
+security.syscalls.allow                     | string    | -                 | no            | container         | `\n` 区切りのシステムコールの許可リスト（security.syscalls.deny\* を使う場合は使用不可）  <!-- A '\n' separated list of syscalls to allow (mutually exclusive with security.syscalls.deny\*) -->
+security.syscalls.deny                      | string    | -                 | no            | container         | `\n` 区切りのシステムコールの拒否リスト <!-- A '\n' separated list of syscalls to deny -->
+security.syscalls.deny\_compat              | boolean   | false             | no            | container         | `x86_64` で `compat_*` システムコールのブロックを有効にするかどうか。他のアーキテクチャでは何もしません <!-- On x86\_64 this enables blocking of compat\_\* syscalls, it is a no-op on other arches -->
+security.syscalls.deny\_default             | boolean   | true              | no            | container         | デフォルトのシステムコールの拒否リストを有効にするかどうか <!-- Enables the default syscall deny -->
 security.syscalls.intercept.mknod           | boolean   | false             | no            | container         | `mknod` と `mknodat` システムコールを処理するかどうか (限定されたサブセットのキャラクタ／ブロックデバイスの作成を許可する) <!-- Handles the `mknod` and `mknodat` system calls (allows creation of a limited subset of char/block devices) -->
 security.syscalls.intercept.mount           | boolean   | false             | no            | container         | `mount` システムコールを処理するかどうか <!-- Handles the `mount` system call -->
 security.syscalls.intercept.mount.allowed   | string    | -                 | yes           | container         | インスタンス内のプロセスが安全にマウントできるファイルシステムのカンマ区切りリストを指定 <!-- Specify a comma-separated list of filesystems that are safe to mount for processes inside the instance -->
 security.syscalls.intercept.mount.fuse      | string    | -                 | yes           | container         | 指定されたファイルシステムを対応する fuse 実装にリダイレクトするかどうか（例: ext4-fuse2fs）<!-- Whether to redirect mounts of a given filesystem to their fuse implemenation (e.g. ext4=fuse2fs) -->
 security.syscalls.intercept.mount.shift     | boolean   | false             | yes           | container         | `mount` システムコールをインターセプトして処理対象のファイルシステムの上に shiftfs をマウントするかどうか <!-- Whether to mount shiftfs on top of filesystems handled through mount syscall interception -->
 security.syscalls.intercept.setxattr        | boolean   | false             | no            | container         | `setxattr` システムコールを処理するかどうか (限定されたサブセットの制限された拡張属性の設定を許可する) <!--Handles the `setxattr` system call (allows setting a limited subset of restricted extended attributes) -->
-security.syscalls.whitelist                 | string    | -                 | no            | container         | `\n` 区切りのシステムコールのホワイトリスト（`security.syscalls.blacklist\*)` と排他）<!-- A '\n' separated list of syscalls to whitelist (mutually exclusive with security.syscalls.blacklist\*) -->
 snapshots.schedule                          | string    | -                 | no            | -                 | Cron 表記 <!-- Cron expression --> (`<minute> <hour> <dom> <month> <dow>`)
 snapshots.schedule.stopped                  | bool      | false             | no            | -                 | 停止したインスタンスのスナップショットを自動的に作成するかどうか <!-- Controls whether or not stopped instances are to be snapshoted automatically -->
 snapshots.pattern                           | string    | snap%d            | no            | -                 | スナップショット名を表す Pongo2 テンプレート（スケジュールされたスナップショットと名前を指定されないスナップショットに使用される） <!-- Pongo2 template string which represents the snapshot name (used for scheduled snapshots and unnamed snapshots) -->
@@ -466,6 +466,7 @@ Device configuration properties:
 Key                     | Type      | Default           | Required  | Description
 :--                     | :--       | :--               | :--       | :--
 parent                  | string    | -                 | yes       | ホストデバイスの名前 <!-- The name of the host device -->
+network                 | string    | -                 | yes       | （parent の代わりに）デバイスをリンクする先の LXD ネットワーク <!-- The LXD network to link device to (instead of parent) -->
 name                    | string    | カーネルが割り当て <!-- kernel assigned -->   | no        | インスタンス内部でのインタフェース名 <!-- The name of the interface inside the instance -->
 mtu                     | integer   | 親の MTU <!-- parent MTU -->        | no        | 新しいインタフェースの MTU <!-- The MTU of the new interface -->
 hwaddr                  | string    | ランダムに割り当て <!-- randomly assigned --> | no        | 新しいインタフェースの MAC アドレス <!-- The MAC address of the new interface -->
@@ -596,6 +597,7 @@ Device configuration properties:
 Key                     | Type      | Default           | Required  | Description
 :--                     | :--       | :--               | :--       | :--
 parent                  | string    | -                 | yes       | ホストデバイスの名前 <!-- The name of the host device -->
+network                 | string    | -                 | yes       | （parent の代わりに）デバイスをリンクする先の LXD ネットワーク <!-- The LXD network to link device to (instead of parent) -->
 name                    | string    | カーネルが割り当て <!-- kernel assigned -->   | no        | インスタンス内部でのインタフェース名 <!-- The name of the interface inside the instance -->
 mtu                     | integer   | カーネルが割り当て <!-- kernel assigned -->   | no        | 新しいインタフェースの MTU <!-- The MTU of the new interface -->
 hwaddr                  | string    | ランダムに割り当て <!-- randomly assigned --> | no        | 新しいインタフェースの MAC アドレス <!-- The MAC address of the new interface -->
@@ -1088,15 +1090,70 @@ The supported connection types are:
 * `UDP <-> UNIX`
 * `UNIX <-> UDP`
 
+プロキシーデバイスは `nat` モードもサポートします。
+`nat` モードではパケットは別の接続を通してプロキシーされるのではなく NAT を使ってフォワードされます。
+これはターゲットの送り先が `PROXY` プロトコル（非 nat モードでプロキシーデバイスを使う場合はこれはクライアントアドレスを渡す唯一の方法です）をサポートする必要なく、クライアントのアドレスを維持できるという利点があります。
+<!--
+The proxy device also supports a `nat` mode where packets are forwarded using NAT rather than being proxied through
+a separate connection. This has benefit that the client address is maintained without the need for the target
+destination to support the `PROXY` protocol (which is the only way to pass the client address through when using
+the proxy device in non-nat mode).
+-->
+
+プロキシーデバイスを `nat=true` に設定する際は、以下のようにターゲットのインスタンスが NIC デバイス上に静的 IP を持つよう LXD で設定する必要があります。
+<!--
+When configuring a proxy device with `nat=true`, you will need to ensure that the target instance has a static IP
+configured in LXD on its NIC device. E.g.
+-->
+
+```
+lxc config device set <instance> <nic> ipv4.address=<ipv4.address> ipv6.address=<ipv6.address>
+```
+
+静的な IPv6 アドレスを設定するためには、親のマネージドネットワークは `ipv6.dhcp.stateful` を有効にする必要があります。
+<!--
+In order to define a static IPv6 address, the parent managed network needs to have `ipv6.dhcp.stateful` enabled.
+-->
+
+NAT モードでサポートされる接続のタイプは以下の通りです。
+<!--
+In NAT mode the supported connection types are:
+-->
+
+* `TCP <-> TCP`
+* `UDP <-> UDP`
+
+IPv6 アドレスを設定する場合は以下のような角括弧の記法を使います。
+<!--
+When defining IPv6 addresses use square bracket notation, e.g.
+-->
+
+```
+connect=tcp:[2001:db8::1]:80
+```
+
+connect のアドレスをワイルドカード (IPv4 では `0.0.0.0` 、 IPv6 では `[::]` にします）に設定することで、インスタンスの IP アドレスを指定できます。
+<!--
+You can specify that the connect address should be the IP of the instance by setting the connect IP to the wildcard
+address (`0.0.0.0` for IPv4 and `[::]` for IPv6).
+-->
+
+listen のアドレスも非 NAT モードではワイルドカードのアドレスが使用できます。
+しかし `nat` モードを使う際は LXD ホスト上の IP アドレスを指定する必要があります。
+<!--
+The listen address can also use wildcard addresses when using non-NAT mode. However when using `nat` mode you must
+specify an IP address on the LXD host.
+-->
+
 Key             | Type      | Default       | Required  | Description
 :--             | :--       | :--           | :--       | :--
-listen          | string    | -             | yes       | バインドし、接続を待ち受けるアドレスとポート <!-- The address and port to bind and listen -->
-connect         | string    | -             | yes       | 接続するアドレスとポート <!-- The address and port to connect to -->
+listen          | string    | -             | yes       | バインドし、接続を待ち受けるアドレスとポート (`<type>:<addr>:<port>[-<port>][,<port>]`) <!-- The address and port to bind and listen (`<type>:<addr>:<port>[-<port>][,<port>]`) -->
+connect         | string    | -             | yes       | 接続するアドレスとポート (`<type>:<addr>:<port>[-<port>][,<port>]`) <!-- The address and port to connect to (`<type>:<addr>:<port>[-<port>][,<port>]`) -->
 bind            | string    | host          | no        | ホスト/ゲストのどちら側にバインドするか <!-- Which side to bind on (host/guest) -->
 uid             | int       | 0             | no        | listen する Unix ソケットの所有者の UID <!-- UID of the owner of the listening Unix socket -->
 gid             | int       | 0             | no        | listen する Unix ソケットの所有者の GID <!-- GID of the owner of the listening Unix socket -->
 mode            | int       | 0644          | no        | listen する Unix ソケットのモード <!-- Mode for the listening Unix socket -->
-nat             | bool      | false         | no        | NAT 経由でプロキシーを最適化するかどうか <!-- Whether to optimize proxying via NAT -->
+nat             | bool      | false         | no        | NAT 経由でプロキシーを最適化するかどうか（インスタンスの NIC が静的 IP を持つ必要あり） <!-- Whether to optimize proxying via NAT (requires instance NIC has static IP address) -->
 proxy\_protocol | bool      | false         | no        | 送信者情報を送信するのに HAProxy の PROXY プロトコルを使用するかどうか <!-- Whether to use the HAProxy PROXY protocol to transmit sender information -->
 security.uid    | int       | 0             | no        | 特権を落とす UID <!-- What UID to drop privilege to -->
 security.gid    | int       | 0             | no        | 特権を落とす GID <!-- What GID to drop privilege to -->

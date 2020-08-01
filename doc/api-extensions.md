@@ -2075,3 +2075,82 @@ The 5 entities that have UsedBy are:
 This adds support for creating and attaching custom block volumes to instances.
 It introduces the new `-\-type` flag when creating custom storage volumes, and accepts the values `fs` and `block`.
 -->
+
+## clustering\_failure\_domains
+この拡張は `PUT /1.0/cluster/<node>` API に `failure\_domain` フィールドを追加します。
+これはノードの failure domain を設定するのに使えます。
+<!--
+This extension adds a new `failure\_domain` field to the `PUT /1.0/cluster/<node>` API,
+which can be used to set the failure domain of a node.
+-->
+
+## container\_syscall\_filtering\_allow\_deny\_syntax
+いくつかのシステムコールに関連したコンテナーの設定キーが更新されました。
+<!--
+A number of new syscalls related container configuration keys were updated.
+-->
+
+ * `security.syscalls.deny_default`
+ * `security.syscalls.deny_compat`
+ * `security.syscalls.deny`
+ * `security.syscalls.allow`
+
+## resources\_gpu\_mdev
+/1.0/resources の利用可能な媒介デバイス (mediated device) のプロファイルとデバイスを公開します。
+<!--
+Expose available mediated device profiles and devices in /1.0/resources.
+-->
+
+## console\_vga\_type
+この拡張は `/1.0/console` エンドポイントが `?type=` 引数を取るように拡張します。
+これは `console` (デフォルト) か `vga` (この拡張で追加される新しいタイプ) を指定可能です。
+<!--
+This extends the `/1.0/console` endpoint to take a `?type=` argument, which can
+be set to `console` (default) or `vga` (the new type added by this extension).
+-->
+
+`/1.0/<instance name>/console?type=vga` に POST する際はメタデータフィールド内の操作の結果ウェブソケットにより返されるデータはターゲットの仮想マシンの SPICE unix ソケットにアタッチされた双方向のプロキシーになります。
+<!--
+When POST'ing to `/1.0/<instance name>/console?type=vga` the data websocket
+returned by the operation in the metadata field will be a bidirectional proxy
+attached to a SPICE unix socket of the target virtual machine.
+-->
+
+## projects\_limits\_disk
+利用可能なプロジェクトの設定キーに `limits.disk` を追加します。
+これが設定されるとプロジェクト内でインスタンスボリューム、カスタムボリューム、イメージボリュームが使用できるディスクスペースの合計の量を制限できます。
+<!--
+Add `limits.disk` to the available project configuration keys. If set, it limits
+the total amount of disk space that instances volumes, custom volumes and images
+volumes can use in the project.
+-->
+
+## network\_type\_macvlan
+ネットワークタイプ `macvlan` のサポートを追加し、このネットワークタイプに `parent` 設定キーを追加します。
+これは NIC デバイスインターフェースを作る際にどの親インターフェースを使用するべきかを指定します。
+<!--
+Adds support for additional network type `macvlan` and adds `parent` configuration key for this network type to
+specify which parent interface should be used for creating NIC device interfaces on top of.
+-->
+
+さらに `macvlan` の NIC に `network` 設定キーを追加します。
+これは NIC デバイスの基盤として使う同じタイプの関連するネットワークを指定します。
+<!--
+Also adds `network` configuration key support for `macvlan` NICs to allow them to specify the associated network of
+the same type that they should use as the basis for the NIC device.
+-->
+
+## network\_type\_sriov
+ネットワークタイプ `sriov` のサポートを追加し、このネットワークタイプに `parent` 設定キーを追加します。
+これは NIC デバイスインターフェースを作る際にどの親インターフェースを使用するべきかを指定します。
+<!--
+Adds support for additional network type `sriov` and adds `parent` configuration key for this network type to
+specify which parent interface should be used for creating NIC device interfaces on top of.
+-->
+
+さらに `sriov` の NIC に `network` 設定キーを追加します。
+これは NIC デバイスの基盤として使う同じタイプの関連するネットワークを指定します。
+<!--
+Also adds `network` configuration key support for `sriov` NICs to allow them to specify the associated network of
+the same type that they should use as the basis for the NIC device.
+-->

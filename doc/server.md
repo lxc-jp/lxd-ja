@@ -13,12 +13,12 @@ currently supported:
 -->
 
  - `backups` バックアップ設定 <!-- (backups configuration) -->
- - `candid` Candid 認証の統合 <!-- (Candid authentication integration) -->
+ - `candid` Candid を使った外部のユーザー認証 (External user authentication through Candid)
  - `cluster` クラスター設定 <!-- (cluster configuration) -->
  - `core` コア・デーモン設定 <!-- (core daemon configuration) -->
  - `images` イメージ設定 <!-- (image configuration) -->
  - `maas` MAAS 統合 <!-- (MAAS integration) -->
- - `rbac`  ロールベースのアクセス制御の統合 <!-- (Role Based Access Control integration) -->
+ - `rbac` 外部の Candid と Canonical の RBAC を使ったロールベースのアクセス制御 (Role Based Access Control) <!-- (Role Based Access Control through external Candid + Canonical RBAC) -->
 
 キー <!-- Key -->                   | 型 <!-- Type --> | スコープ <!-- Scope --> | デフォルト値 <!-- Default -->   | API 拡張 <!-- API extension -->            | 説明 <!-- Description -->
 :--                                 | :---      | :----     | :------   | :------------            | :----------
@@ -72,4 +72,67 @@ When operating as part of a cluster, the keys marked with a `global`
 scope will immediately be applied to all the cluster members. Those keys
 with a `local` scope must be set on a per member basis using the
 `\-\-target` option of the command line tool.
+-->
+
+## LXD をネットワーク上に公開する <!-- Exposing LXD to the network -->
+デフォルトでは LXD は UNIX ソケット経由でローカルのユーザーのみが使用できます。
+<!--
+By default, LXD can only be used by local users through a UNIX socket.
+-->
+
+LXD をネットワーク上に公開するには `core.https_address` を設定する必要があります。
+すると全てのリモートクライアントが LXD に接続でき、公開利用可能とマークされた全てのイメージにアクセスできます。
+<!--
+To expose LXD to the network, you'll need to set `core.https_address`.
+All remote clients can then connect to LXD and access any image which
+was marked for public use.
+-->
+
+信頼されたクライアントはサーバーのトラストストアーに手動で追加できます。
+`lxc config trust add` を実行するか `core.trust_password` キーを設定し、設定したパスワードを接続時に提供することでクライアントがトラストストアーに追加されます。
+<!--
+Trusted clients can be manually added to the trust store on the server
+with `lxc config trust add` or the `core.trust_password` key can be set
+allowing for clients to self-enroll into the trust store at connection
+time by providing the confgiured password.
+-->
+
+認証についての詳細は [セキュリティー](security.md) を参照してください。
+<!--
+More details about authentication can be found [here](security.md).
+-->
+
+## 外部認証 <!-- External authentication -->
+ネットワーク経由で LXD にアクセスする場合は [Candid](https://github.com/canonical/candid) による外部認証を使うように設定できます。
+<!--
+LXD when accessed over the network can be configured to use external
+authentication through [Candid](https://github.com/canonical/candid).
+-->
+
+上記の `candid.*` 設定キーをデプロイ済みの Candid に対応する値に設定することでユーザーはウェブブラウザーで認証し LXD に信頼されることができます。
+<!--
+Setting the `candid.*` configuration keys above to the values matching
+your Candid deployment will allow users to authenticate through their
+web browsers and then get trusted by LXD.
+-->
+
+Candid サーバーの手前に Canonical RBAC サーバーがある場合、 `candid.*` の代わりにそれらのスーパーセットである `rbac.*` 設定キーを設定でき、これにより LXD を RBAC サービスと統合できます。
+<!--
+For those that have a Canonical RBAC server in front of their Candid
+server, they can instead set the `rbac.*` configuration keys which are a
+superset of the `candid.*` ones and allow for LXD to integrate with the
+RBAC service.
+-->
+
+RBAC と統合されると、個々のユーザーとグループはプロジェクト単位にさまざまなアクセスレベルで許可が与えられます。
+これらは全て RBAC サービスにより外部で制御されます。
+<!--
+When integrated with RBAC, individual users and groups can be granted
+various level of access on a per-project basis. All of this is driven
+externally through the RBAC service.
+-->
+
+認証についての詳細は [セキュリティー](security.md) を参照してください。
+<!--
+More details about authentication can be found [here](security.md).
 -->

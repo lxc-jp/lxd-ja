@@ -1,55 +1,65 @@
 # ネットワーク設定
 <!-- Network configuration -->
 
-次のネームスペースの key/value 設定が現在サポートされています。
+LXDは以下のネットワークタイプをサポートします。
 <!--
-The key/value configuration is namespaced with the following namespaces
-currently supported:
+LXD supports the following network types:
 -->
 
- - `bridge` (L2 インタフェースの設定) <!-- (L2 interface configuration) -->
- - `fan` (Ubuntu FAN overlay に特有な設定) <!-- (configuration specific to the Ubuntu FAN overlay) -->
- - `tunnel` (ホスト間のトンネリングの設定) <!-- (cross-host tunneling configuration) -->
- - `ipv4` (L3 IPv4 設定) <!-- (L3 IPv4 configuration) -->
- - `ipv6` (L3 IPv6 設定) <!-- (L3 IPv6 configuration) -->
- - `dns` (DNS サーバと名前解決の設定) <!-- (DNS server and resolution configuration) -->
- - `raw` (raw の設定のファイルの内容) <!-- (raw configuration file content) -->
+ - [bridge](#network-bridge): インスタンスを接続する L2 ブリッジを作成（ローカルの DHCP と DNS を提供可能）。これがデフォルトです。 <!-- Creates an L2 bridge for connecting instances to (can provide local DHCP and DNS). This is the default. -->
+ - [macvlan](#network-macvlan): インスタンスを親の macvlan インターフェースに接続する際に使用するプリセットの設定を提供。 <!-- Provides preset configuration to use when connecting instances to a parent macvlan interface. -->
+ - [sriov](#network-sriov): インスタンスを親の SR-IOV インターフェースに接続する際に使用するプリセットの設定を提供。 <!-- Provides preset configuration to use when connecting instances to a parent SR-IOV interface. -->
+
+希望するタイプは以下のように `--type` 引数で指定できます。
+<!--
+The desired type can be specified using the `-\-type` argument, e.g.
+-->
+
+```bash
+lxc network create <name> --type=bridge [options...]
+```
+
+`--type` 引数が指定されない場合は、デフォルトの `bridge` が使用されます。
+<!--
+If no `-\-type` argument is specified, the default type of `bridge` is used.
+-->
+
+設定キーは現状では全てのネットワークタイプでサポートされている以下のネームスペースによって名前空間が分けられています。
+<!--
+The configuration keys are namespaced with the following namespaces currently supported for all network types:
+-->
+
+ - `maas` (MAAS ネットワーク識別) <!-- (MAAS network identification) -->
  - `user` (ユーザーのメタデータに対する自由形式の key/value) <!-- (free form key/value for user metadata) -->
 
-## ブリッジ <!-- Bridges -->
+## ネットワーク: ブリッジ <!-- network: bridge -->
 
 LXD でのネットワークの設定タイプの 1 つとして、 LXD はネットワークブリッジの作成と管理をサポートしています。
 LXD のブリッジは下層のネイティブな Linux のブリッジと Open vSwitch を利用できます。
 <!--
-As one of the possible network configuration types under LXD,
-LXD supports creating and managing network bridges. LXD bridges 
-can leverage underlying native Linux bridges and Open vSwitch. 
+As one of the possible network configuration types under LXD, LXD supports creating and managing network bridges.
+LXD bridges can leverage underlying native Linux bridges and Open vSwitch.
 -->
 
 LXD のブリッジの作成と管理は `lxc network` コマンドで行えます。
 LXD で作成されたブリッジはデフォルトでは "managed" です。
 というのは LXD はさらにローカルの `dnsmasq` DHCP サーバをセットアップし、希望すれば (これがデフォルトです) ブリッジに対して NAT も行います。
 <!--
-Creation and management of LXD bridges is performed via the `lxc network`
-command. A bridge created by LXD is by default "managed" which 
-means that LXD also will additionally set up a local `dnsmasq` 
-DHCP server and if desired also perform NAT for the bridge (this 
-is the default.)
+Creation and management of LXD bridges is performed via the `lxc network` command.
+A bridge created by LXD is by default "managed" which means that LXD also will additionally set up a local `dnsmasq`
+DHCP server and if desired also perform NAT for the bridge (this is the default.)
 -->
 
 ブリッジが LXD に管理されているときは、 `bridge` ネームスペースを使って設定値を変更できます。
 <!--
-When a bridge is managed by LXD, configuration values
-under the `bridge` namespace can be used to configure it.
+When a bridge is managed by LXD, configuration values under the `bridge` namespace can be used to configure it.
 -->
 
 さらに、 LXD は既存の Linux ブリッジを利用することも出来ます。
 この場合、ブリッジは `lxc network` で作成する必要はなく、インスタンスかプロファイルのデバイス設定で下記のように単に参照できます。
 <!--
-Additionally, LXD can utilize a pre-existing Linux
-bridge. In this case, the bridge does not need to be created via
-`lxc network` and can simply be referenced in an instance or
-profile device configuration as follows:
+Additionally, LXD can utilize a pre-existing Linux bridge. In this case, the bridge does not need to be created via
+`lxc network` and can simply be referenced in an instance or profile device configuration as follows:
 -->
 
 ```
@@ -61,17 +71,33 @@ devices:
      type: nic
 ```
 
-## 設定項目 <!-- Configuration Settings -->
+ネットワークの設定プロパティー: <!-- Network configuration properties: -->
 
 LXD のネットワークの設定項目の完全なリストは以下の通りです。
 <!--
-A complete list of configuration settings for LXD networks can
-be found below.
+A complete list of configuration settings for LXD networks can be found below.
 -->
 
-IP アドレスとサブネットは CIDR 形式 (`1.1.1.1/24` や `fd80:1234::1/64`) で指定することを想定しています。例外としてトンネルのローカルとリモートのアドレスは単なるアドレス (`1.1.1.1` や `fd80:1234::1`) を指定します。
+ブリッジネットワークでは以下の設定キーネームスペースが現状サポートされています。
+<!--
+The following configuration key namespaces are currently supported for bridge networks:
+-->
+
+ - `bridge` (L2 インタフェースの設定) <!-- (L2 interface configuration) -->
+ - `fan` (Ubuntu FAN overlay に特有な設定) <!-- (configuration specific to the Ubuntu FAN overlay) -->
+ - `tunnel` (ホスト間のトンネリングの設定) <!-- (cross-host tunneling configuration) -->
+ - `ipv4` (L3 IPv4 設定) <!-- (L3 IPv4 configuration) -->
+ - `ipv6` (L3 IPv6 設定) <!-- (L3 IPv6 configuration) -->
+ - `dns` (DNS サーバと名前解決の設定) <!-- (DNS server and resolution configuration) -->
+ - `raw` (raw の設定のファイルの内容) <!-- (raw configuration file content) -->
+
+IP アドレスとサブネットは CIDR 形式 (`1.1.1.1/24` や `fd80:1234::1/64`) で指定することを想定しています。
 <!--
 It is expected that IP addresses and subnets are given using CIDR notation (`1.1.1.1/24` or `fd80:1234::1/64`).
+-->
+
+例外としてトンネルのローカルとリモートのアドレスは単なるアドレス (`1.1.1.1` や `fd80:1234::1`) を指定します。
+<!--
 The exception being tunnel local and remote addresses which are just plain addresses (`1.1.1.1` or `fd80:1234::1`).
 -->
 
@@ -122,7 +148,6 @@ tunnel.NAME.protocol            | string    | standard mode         | -         
 tunnel.NAME.remote              | string    | gre or vxlan          | -                         | トンネルに使用するリモートアドレス (マルチキャスト vxlan の場合は不要) <!-- Remote address for the tunnel (not necessary for multicast vxlan) -->
 tunnel.NAME.ttl                 | integer   | vxlan                 | 1                         | マルチキャストルーティングトポロジーに使用する固有の TTL <!-- Specific TTL to use for multicast routing topologies -->
 
-
 これらのキーは lxc コマンドで以下のように設定できます。
 <!--
 Those keys can be set using the lxc tool with:
@@ -132,7 +157,7 @@ Those keys can be set using the lxc tool with:
 lxc network set <network> <key> <value>
 ```
 
-## systemd-resolved との統合 <!-- Integration with systemd-resolved -->
+### systemd-resolved との統合 <!-- Integration with systemd-resolved -->
 
 LXD が動いているシステムが DNS のルックアップに systemd-resolved を使用している場合、 LXD が名前解決できるドメインを systemd-resolved に指定することができます。
 これには systemd-resolved にどのブリッジ、ネームサーバーのアドレス、そして DNS ドメインかを伝える必要があります。
@@ -202,7 +227,7 @@ LXD is restarted.  Also note this only works if the bridge
 `dns.mode` is not `none`.
 -->
 
-## IPv6 プリフィクスサイズ <!-- IPv6 prefix size -->
+### IPv6 プリフィクスサイズ <!-- IPv6 prefix size -->
 最適な動作には 64 のプリフィクスサイズが望ましいです。
 より大きなサブネット（ 64 より小さいプリフィクス）も正しく動作するでしょうが、SLAAC環境下では有用ではないことが多いでしょう。
 <!--
@@ -220,7 +245,7 @@ source of issue. If you must use one of those, static allocation or
 another standalone RA daemon be used.
 -->
 
-## Firewalld で DHCP, DNS を許可する <!-- Allow DHCP, DNS with Firewalld -->
+### Firewalld で DHCP, DNS を許可する <!-- Allow DHCP, DNS with Firewalld -->
 
 firewalld を使用しているホストで LXD が実行する DHCP と DNS サーバーにインスタンスがアクセスできるようにするには、ホストのブリッジインターフェースを firewalld の `trusted` ゾーンに追加する必要があります。
 <!--
@@ -252,13 +277,13 @@ This will then allow LXD's own firewall rules to take effect.
 -->
 
 
-## Firewalld に LXD の iptables ルールを制御させるには <!-- How to let Firewalld control the LXD's iptables rules -->
+### Firewalld に LXD の iptables ルールを制御させるには <!-- How to let Firewalld control the LXD's iptables rules -->
 
 firewalld と LXD を一緒に使う場合、 iptables のルールがオーバーラップするかもしれません。例えば firewalld が LXD デーモンより後に起動すると firewalld が LXD の iptables ルールを削除し、 LXD コンテナーが外向きのインターネットアクセスが全くできなくなるかもしれません。
 これを修正する 1 つの方法は LXD の iptables ルールを firewalld に移譲し、 LXD の iptables ルールは無効にすることです。
 <!--
 When using firewalld and LXD together, iptables rules can overlaps. For example, firewalld could erase LXD iptables rules if it is started after LXD daemon, then LXD container will not be able to do any oubound internet access.
-On way to fix it is to delegate to firewalld the LXD's iptables rules and to disable the LXD ones.
+One way to fix it is to delegate to firewalld the LXD's iptables rules and to disable the LXD ones.
 -->
 
 最初のステップは [Firewalld で DHCP, DNS を許可する](#allow-dhcp-dns-with-firewalld) ことです。
@@ -301,3 +326,49 @@ firewall-cmd --direct --get-all-rules
 <!--
 Warning: what is exposed above is not a fool-proof approach and may end up inadvertently introducing a security risk.
 -->
+
+## ネットワーク: macvlan <!-- network: macvlan -->
+
+macvlan ネットワークタイプではインスタンスを macvlan NIC を使って親のインターフェースに接続する際に使用するプリセットを指定可能です。
+これによりインスタンスの NIC 自体は下層の設定詳細を一切知ることなく、接続する `network` を単に指定するだけで設定できます。
+<!--
+The macvlan network type allows one to specify presets to use when connecting instances to a parent interface
+using macvlan NICs. This allows the instance NIC itself to simply specify the `network` it is connecting to without
+knowing any of the underlying configuration details.
+-->
+
+ネットワーク設定プロパティー:
+<!--
+Network configuration properties:
+-->
+
+Key                             | Type      | Condition             | Default                   | Description
+:--                             | :--       | :--                   | :--                       | :--
+parent                          | string    | -                     | -                         | macvlan NIC を作成する親のインターフェース <!-- Parent interface to create macvlan NICs on -->
+mtu                             | integer   | -                     | -                         | 作成するインターフェースの MTU <!-- The MTU of the new interface -->
+vlan                            | integer   | -                     | -                         | アタッチする先の VLAN ID <!-- The VLAN ID to attach to -->
+maas.subnet.ipv4                | string    | ipv4 アドレス <!-- address --> | -                | インスタンスを登録する MAAS IPv4 サブネット（nic の `network` プロパティを使用する場合） <!-- MAAS IPv4 subnet to register instances in (when using `network` property on nic) -->
+maas.subnet.ipv6                | string    | ipv6 アドレス <!-- address --> | -                | インスタンスを登録する MAAS IPv6 サブネット（nic の `network` プロパティを使用する場合） <!-- MAAS IPv6 subnet to register instances in (when using `network` property on nic) -->
+
+## ネットワーク: sriov <!-- network: sriov -->
+
+sriov ネットワークタイプではインスタンスを sriov NIC を使って親のインターフェースに接続する際に使用するプリセットを指定可能です。
+これによりインスタンスの NIC 自体は下層の設定詳細を一切知ることなく、接続する `network` を単に指定するだけで設定できます。
+<!--
+The sriov network type allows one to specify presets to use when connecting instances to a parent interface
+using sriov NICs. This allows the instance NIC itself to simply specify the `network` it is connecting to without
+knowing any of the underlying configuration details.
+-->
+
+ネットワーク設定プロパティー:
+<!--
+Network configuration properties:
+-->
+
+Key                             | Type      | Condition             | Default                   | Description
+:--                             | :--       | :--                   | :--                       | :--
+parent                          | string    | -                     | -                         | sriov NIC を作成する親のインターフェース <!-- Parent interface to create sriov NICs on -->
+mtu                             | integer   | -                     | -                         | 作成するインターフェースの MTU <!-- The MTU of the new interface -->
+vlan                            | integer   | -                     | -                         | アタッチする先の VLAN ID <!-- The VLAN ID to attach to -->
+maas.subnet.ipv4                | string    | ipv4 アドレス <!-- address --> | -                | インスタンスを登録する MAAS IPv4 サブネット（nic の `network` プロパティを使用する場合） <!-- MAAS IPv4 subnet to register instances in (when using `network` property on nic) -->
+maas.subnet.ipv6                | string    | ipv6 アドレス <!-- address --> | -                | インスタンスを登録する MAAS IPv6 サブネット（nic の `network` プロパティを使用する場合） <!-- MAAS IPv6 subnet to register instances in (when using `network` property on nic) -->
