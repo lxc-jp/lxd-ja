@@ -320,6 +320,24 @@ out-of-date node left and will become operational again.
 -->
 残りのノードのアップグレードを進めると、最後のノードをアップグレードするまでは、ノードはすべて Blocked 状態に移行します。その時点で、Blocked ノードは古いノードが残っていないかを確認し、再度操作できるようになります。
 
+### Failure domains
+
+Failure domain はシャットダウンしたかクラッシュしたクラスターメンバーに role を割り当てる際にどのノードが優先されるかを指示するのに使います。
+例えば、現在 database role を持つクラスターメンバーがシャットダウンした場合、 LXD は同じ failure domain 内の別のクラスターメンバーが存在すればそれに database role を割り当てようと試みます。
+<!--
+Failure domains can be used to indicate which nodes should be given preference
+when trying to assign roles to a cluster member that has been shutdown or has
+crashed. For example, if a cluster member that currently has the database role
+gets shutdown, LXD will try to assign its database role to another cluster
+member in the same failure domain, if one is available.
+-->
+
+クラスターメンバーの failure domain を変更するには `lxc cluster edit <member>` コマンドラインツールか、 `PUT /1.0/cluster/<member>` REST API が使用できます。
+<!--
+To change the failure domain of a cluster member you can use the `lxc cluster
+edit <member>` command line tool, or the `PUT /1.0/cluster/<member>` REST API.
+-->
+
 ### クォーラム消失からの復旧 <!-- Recover from quorum loss -->
 
 各 LXD クラスターはデータベースノードとして機能するメンバーを最大 3 つまで持つことができます。
@@ -604,16 +622,22 @@ lxc storage volume show default web --target node2
 ## ネットワーク <!-- Networks -->
 
 <!--
-As mentioned above, all nodes must have identical networks defined. The only
-difference between networks on different nodes might be their
-`bridge.external_interfaces` optional configuration key (see also documentation
-about [network configuration](networks.md)).
+As mentioned above, all nodes must have identical networks defined.
 -->
-先に述べたように、すべてのノードは同じネットワークを定義しなければなりません。異なるノード間のネットワークで異なっても良い設定は、`bridge.external_interfaces` というオプショナルの設定項目です（[ネットワーク設定](networks.md)の文書を参照してください）
+先に述べたように、すべてのノードは同じネットワークを定義しなければなりません。
 
 <!--
-To create a new network, you first have to define it across all
-nodes, for example:
+The only difference between networks on different nodes might be their optional configuration keys.
+When defining a new network on a specific clustered node the only valid optional configuration keys you can pass
+are `bridge.external_interfaces` and `parent`, as these can be different on each node (see documentation about
+[network configuration](networks.md) for a definition of each).
+-->
+異なるノード間のネットワークで異なっても良い設定は、それらのオプショナルの設定項目だけです。
+特定のクラスターノード上に新しいネットワークを定義する際、設定可能な有効なオプショナルな設定項目は `bridge.external_interfaces` と `parent` だけです。
+これらは各ノード上で異なる値が設定可能です（それぞれの定義については [ネットワーク設定](networks.md) の文書を参照してください）。
+
+<!--
+To create a new network, you first have to define it across all nodes, for example:
 -->
 新しいネットワークを作成するには、最初にすべてのノードで以下のように定義を行う必要があります:
 
@@ -623,14 +647,8 @@ lxc network create --target node2 my-network
 ```
 
 <!--
-Note that when defining a new network on a node the only valid configuration
-key you can pass is `bridge.external_interfaces`, as mentioned above.
--->
-ノード上に新しいネットワークを定義する場合、先に述べたように `bridge.external_interfaces` のみ有効な設定として与えることができます。
-
-<!--
-At this point the network hasn't been actually created yet, but just
-defined (it's state is marked as Pending if you run `lxc network list`).
+At this point the network hasn't been actually created yet, but just defined
+(it's state is marked as Pending if you run `lxc network list`).
 -->
 この時点では、ネットワークはまだ実際には作成されていません。しかし定義はされています（`lxc network list` を実行すると、状態が Pending とマークされています）。
 
@@ -644,15 +662,13 @@ lxc network create my-network
 ```
 
 <!--
-and the network will be instantiated on all nodes. If you didn't
-define it on a particular node, or a node is down, an error will be
-returned.
+and the network will be instantiated on all nodes. If you didn't define it on a particular node, or a node is down,
+an error will be returned.
 -->
 するとネットワークがすべてのノード上でインスタンス化されます。特定のノードで定義していない場合、もしくはノードがダウンしている場合は、エラーが返ります。
 
 <!--
-You can pass to this final ``network create`` command any configuration key
-which is not node-specific (see above).
+You can pass to this final ``network create`` command any configuration key which is not node-specific (see above).
 -->
 この最後の ``network create`` コマンドには、ノード固有ではない（上記参照）任意の設定項目を与えることができます。
 

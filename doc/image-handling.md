@@ -23,6 +23,132 @@ instances using remote images. In such cases, the image may be cached
 on the target LXD.
 -->
 
+## ソース <!-- Sources -->
+LXD は 3 つの異なるソースからのイメージのインポートをサポートします。
+<!--
+LXD supports importing images from three different sources:
+-->
+
+ - リモートのイメージサーバー (LXD か simplestreams) <!-- Remote image server (LXD or simplestreams) -->
+ - イメージファイルの direct push <!-- Direct pushing of the image files -->
+ - リモートのウェブサーバー上のファイル <!-- File on a remote web server -->
+
+### リモートのイメージサーバー (LXD か simplestreams) <!-- Remote image server (LXD or simplestreams) -->
+これは最も一般的なイメージソースで 3 つの選択肢のうちインスタンスの作成時に直接サポートされている唯一の選択肢です。
+<!--
+This is the most common source of images and the only one of the three
+options which is supported directly at instance creation time.
+-->
+
+この選択肢では、イメージサーバーは検証されるために必要な証明書（HTTPS のみがサポートされます）と共にターゲットの LXD サーバーに提供されます。
+<!--
+With this option, an image server is provided to the target LXD server
+along with any needed certificate to validate it (only HTTPS is supported).
+-->
+
+次にイメージそのものがフィンガープリント (SHA256) あるいはエイリアスによって選択されます。
+<!--
+The image itself is then selected either by its fingerprint (SHA256) or
+one of its aliases.
+-->
+
+CLI の視点では、これは以下の一般的なアクションによって実行されます。
+<!--
+From a CLI point of view, this is what's done behind those common actions:
+-->
+
+ - lxc launch ubuntu:20.04 u1
+ - lxc launch images:centos/8 c1
+ - lxc launch my-server:SHA256 a1
+ - lxc image copy images:gentoo local: --copy-aliases --auto-update
+
+上記の `ubuntu` と `images` のケースではリモートは simplestreams を読み取り専用のサーバープロトコルとして使用し、イメージの複数のエイリアスの 1 つによりイメージを選択します。
+<!--
+In the cases of `ubuntu` and `images` above, those remotes use
+simplestreams as a read-only image server protocol and select images by
+one of their aliases.
+-->
+
+`my-server` リモートのケースでは別の LXD サーバーがあり、上記の例ではフィンガープリントによってイメージを選択します。
+<!--
+The `my-server` remote there is another LXD server and in that example
+selects an image based on its fingerprint.
+-->
+
+### イメージファイルの direct push <!-- Direct pushing of the image files -->
+これは主に外部サーバーから直接イメージを取得できない隔離された環境で有用です。
+<!--
+This is mostly useful for air-gapped environments where images cannot be
+directly retrieved from an external server.
+-->
+
+そのような状況ではイメージファイルは他のシステムで以下のコマンドを使ってダウンロードできます。
+<!--
+In such a scenario, image files can be downloaded on another system using:
+-->
+
+ - lxc image export ubuntu:20.04
+
+その後ターゲットのシステムにイメージを転送してローカルイメージストアーに手動でインポートします。
+<!--
+Then transferred to the target system and manually imported into the
+local image store with:
+-->
+
+ - lxc image import META ROOTFS --alias ubuntu-20.04
+
+`lxc image import` は統合イメージ (単一ファイル) と分割イメージ (2つのファイル) の両方をサポートします。
+上の例では後者を使用しています。
+<!--
+`lxc image import` supports both unified images (single file) and split
+images (two files) with the example above using the latter.
+-->
+
+### リモートのウェブサーバー上のファイル <!-- File on a remote web server -->
+単一のイメージをユーザーに配布するためだけにフルのイメージサーバーを動かすことの代替として、 LXD は URL を指定してイメージをインポートするのもサポートしています。
+<!--
+As an alternative to running a full image server only to distribute a
+single image to users, LXD also supports importing images by URL.
+-->
+
+ただし、この方法にはいくつか制限があります。
+<!--
+There are a few limitations to that method though:
+-->
+
+ - 統合ファイル（単一ファイル）のみがサポートされます <!-- Only unified (single file) images are supported -->
+ - リモートサーバーが追加の http ヘッダーを返す必要があります <!-- Additional http headers must be returned by the remote server -->
+
+LXD はサーバーに問い合わせをする際に以下のヘッダーを設定します。
+<!--
+LXD will set the following headers when querying the server:
+-->
+
+ - `LXD-Server-Architectures` にはクライアントがサポートするアーキテクチャーのカンマ区切りリストを設定します <!-- `LXD-Server-Architectures` to a comma separate list of architectures the client supports -->
+ - `LXD-Server-Version` には使用している LXD のバージョンを設定します <!-- `LXD-Server-Version` to the version of LXD in use -->
+
+
+リモートサーバーが `LXD-Image-Hash` と `LXD-Image-URL` を設定することを期待します。
+前者はダウンロードされるイメージの SHA256 ハッシュで後者はイメージをダウンロードする URL です。
+<!--
+And expects `LXD-Image-Hash` and `LXD-Image-URL` to be set by the remote server.
+The former being the SHA256 of the image being downloaded and the latter
+the URL to download the image from.
+-->
+
+これによりかなり複雑なイメージサーバーがカスタムヘッダーをサポートする基本的なウェブサーバーだけで実装できます。
+<!--
+This allows for reasonably complex image servers to be implemented using
+only a basic web server with support for custom headers.
+-->
+
+クライアント側では以下のように使用できます。
+<!--
+On the client side, this is used with:
+-->
+
+`lxc image import URL --alias some-name`
+
 ## キャッシュ <!-- Caching -->
 リモートのイメージからインスタンスを起動する時、リモートのイメージが
 ローカルのイメージ・ストアにキャッシュ・ビットをセットした状態で

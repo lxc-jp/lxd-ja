@@ -1577,7 +1577,8 @@ Input (attach to /dev/console):
 ```js
 {
     "width": 80,                    // 端末の初期の幅 (任意で指定可能)
-    "height": 25                    // 端末の初期の高さ (任意で指定可能)
+    "height": 25,                   // 端末の初期の高さ (任意で指定可能)
+    "type": "console"               // 接続タイプ ("console" か "vga")
 }
 ```
 
@@ -1585,9 +1586,15 @@ Input (attach to /dev/console):
 ```js
 {
     "width": 80,                    // Initial width of the terminal (optional)
-    "height": 25                    // Initial height of the terminal (optional)
+    "height": 25,                   // Initial height of the terminal (optional)
+    "type": "console"               // Connection type ("console" or "vga").
 }
 ```
+-->
+
+"vga" 接続タイプは仮想マシンでのみサポートされます。
+<!--
+The "vga" connection type is supported only for virtual machines.
 -->
 
 制御用ウェブソケットがコンソールセッションの out-of-band メッセージの送信に使用されます。
@@ -1636,7 +1643,7 @@ Input (run bash):
     "environment": {},              // 追加で設定する任意で指定可能な環境変数
     "wait-for-websocket": false,    // プロセスを開始する前に接続を待つかどうか
     "record-output": false,         // 標準出力と標準エラー出力を記録するかどうか (wait-for-websocket=false のときのみ有効) (container_exec_recording API 拡張が必要)
-    "interactive": true,            // PIPE の代わりに pts デバイスを割り当てるかどうか
+    "interactive": true,            // PIPE の代わりに pty デバイスを割り当てるかどうか
     "width": 80,                    // 端末の初期の幅 (任意で指定可能)
     "height": 25,                   // 端末の初期の高さ (任意で指定可能)
     "user": 1000,                   // コマンドを実行するユーザー (任意で指定可能)
@@ -1652,7 +1659,7 @@ Input (run bash):
     "environment": {},              // Optional extra environment variables to set
     "wait-for-websocket": false,    // Whether to wait for a connection before starting the process
     "record-output": false,         // Whether to store stdout and stderr (only valid with wait-for-websocket=false) (requires API extension container_exec_recording)
-    "interactive": true,            // Whether to allocate a pts device instead of PIPEs
+    "interactive": true,            // Whether to allocate a pty device instead of PIPEs
     "width": 80,                    // Initial width of the terminal (optional)
     "height": 25,                   // Initial height of the terminal (optional)
     "user": 1000,                   // User to run the command as (optional)
@@ -1683,11 +1690,11 @@ stdout and stderr will be redirected to a log file.
 -->
 
 interactive が true に設定される場合は、 1 つのウェブソケットが返され、
-それが実行されたプロセスの標準入力、標準出力、標準エラー出力用の pts
+それが実行されたプロセスの標準入力、標準出力、標準エラー出力用の pty
 デバイスにマッピングされます。
 <!--
 If interactive is set to true, a single websocket is returned and is mapped to a
-pts device for stdin, stdout and stderr of the execed process.
+pty device for stdin, stdout and stderr of the execed process.
 -->
 
 interactive が false (デフォルト) に設定される場合は、標準入力、標準出力、
