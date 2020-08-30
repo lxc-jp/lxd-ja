@@ -2156,7 +2156,7 @@ the same type that they should use as the basis for the NIC device.
 -->
 
 ## container\_syscall\_intercept\_bpf\_devices
-この拡張はコンテナー内で bpf のシステムコールをインターセプトする機能を提供します。具体的にはデバイスの cgroup の bpf のプログラムを管理できるようにします。
+この拡張はコンテナー内で bpf のシステムコールをインターセプトする機能を提供します。具体的には device cgroup の bpf のプログラムを管理できるようにします。
 <!--
 This adds support to intercept the bpf syscall in containers. Specifically, it allows to manage device cgroup bpf programs.
 -->
@@ -2167,7 +2167,7 @@ This adds support to intercept the bpf syscall in containers. Specifically, it a
 Adds support for additional network type `ovn` with the ability to specify a `bridge` type network as the `parent`.
 -->
 
-`ovn` という新しい NIC のデバイスタイプを追加します。これにより `network` 設定キーにどの `ovn` の種別のネットワークに接続すべきかを指定できます。
+`ovn` という新しい NIC のデバイスタイプを追加します。これにより `network` 設定キーにどの `ovn` のタイプのネットワークに接続すべきかを指定できます。
 <!--
 Introduces a new NIC device type of `ovn` which allows the `network` configuration key to specify which `ovn`
 type network they should connect to.

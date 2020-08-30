@@ -507,7 +507,7 @@ These are implemented using either `xtables` (iptables, ip6tables and ebtables) 
 available on the host.
 -->
 
-これらのオプションを使うと、ネストシタコンテナーでは異なる MAC アドレス (例えばブリッジされているか macvlan の NICを使うなど) を持つ親のネットワークを実質的に使えなくなることに注意が必要です。
+これらのオプションを使うと、ネストしたコンテナーでは異なる MAC アドレス (例えばブリッジされているか macvlan の NICを使うなど) を持つ親のネットワークを実質的に使えなくなることに注意が必要です。
 ネストしたコンテナー、少なくとも親と同じネットワーク上のネストしたコンテナーを実質的に使えなくなることに注意が必要です。
 <!--
 It's worth noting that those options effectively prevent nested containers from using the parent network with a
