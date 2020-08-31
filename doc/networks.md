@@ -9,6 +9,7 @@ LXD supports the following network types:
  - [bridge](#network-bridge): インスタンスを接続する L2 ブリッジを作成（ローカルの DHCP と DNS を提供可能）。これがデフォルトです。 <!-- Creates an L2 bridge for connecting instances to (can provide local DHCP and DNS). This is the default. -->
  - [macvlan](#network-macvlan): インスタンスを親の macvlan インターフェースに接続する際に使用するプリセットの設定を提供。 <!-- Provides preset configuration to use when connecting instances to a parent macvlan interface. -->
  - [sriov](#network-sriov): インスタンスを親の SR-IOV インターフェースに接続する際に使用するプリセットの設定を提供。 <!-- Provides preset configuration to use when connecting instances to a parent SR-IOV interface. -->
+ - [ovn](#network-ovn): OVN SDN (software defined network) システムを使って論理的なネットワークを作成。 <!-- Creates a logical network using the OVN software defined networking system. -->
 
 希望するタイプは以下のように `--type` 引数で指定できます。
 <!--
@@ -101,7 +102,7 @@ It is expected that IP addresses and subnets are given using CIDR notation (`1.1
 The exception being tunnel local and remote addresses which are just plain addresses (`1.1.1.1` or `fd80:1234::1`).
 -->
 
-キー <!-- Key -->                            | 型 <!-- Type -->      | 条件 <!-- Condition -->             | デフォルト <!-- Default -->                   | 説明 <!-- Description -->
+キー <!-- Key -->        | 型 <!-- Type --> | 条件 <!-- Condition --> | デフォルト <!-- Default --> | 説明 <!-- Description -->
 :--                             | :--       | :--                   | :--                       | :--
 bridge.driver                   | string    | -                     | native                    | ブリッジのドライバ ("native" か "openvswitch") <!-- Bridge driver ("native" or "openvswitch") -->
 bridge.external\_interfaces     | string    | -                     | -                         | ブリッジに含める未設定のネットワークインタフェースのカンマ区切りリスト <!-- Comma separate list of unconfigured network interfaces to include in the bridge -->
@@ -109,8 +110,8 @@ bridge.hwaddr                   | string    | -                     | -         
 bridge.mode                     | string    | -                     | standard                  | ブリッジの稼働モード ("standard" か "fan") <!-- Bridge operation mode ("standard" or "fan") -->
 bridge.mtu                      | integer   | -                     | 1500                      | ブリッジの MTU (tunnel か fan かでデフォルト値は変わります) <!-- Bridge MTU (default varies if tunnel or fan setup) -->
 dns.domain                      | string    | -                     | lxd                       | DHCP のクライアントに広告し DNS の名前解決に使用するドメイン <!-- Domain to advertise to DHCP clients and use for DNS resolution -->
-dns.search                      | string    | -                     | -                         | 完全なドメインサーチのカンマ区切りリスト（デフォルトは dns.domain ） <!-- Full comma eparate domain search list, defaulting to dns.domain -->
 dns.mode                        | string    | -                     | managed                   | DNS の登録モード ("none" は DNS レコード無し、 "managed" は LXD が静的レコードを生成、 "dynamic" はクライアントがレコードを生成) <!-- DNS registration mode ("none" for no DNS record, "managed" for LXD generated static records or "dynamic" for client generated records) -->
+dns.search                      | string    | -                     | -                         | 完全なドメインサーチのカンマ区切りリスト（デフォルトは `dns.domain` の値） <!-- Full comma separated domain search list, defaulting to `dns.domain` value -->
 fan.overlay\_subnet             | string    | fan mode              | 240.0.0.0/8               | FAN の overlay として使用するサブネット (CIDR 形式) <!-- Subnet to use as the overlay for the FAN (CIDR notation) -->
 fan.type                        | string    | fan mode              | vxlan                     | FAN のトンネル・タイプ ("vxlan" か "ipip") <!-- The tunneling type for the FAN ("vxlan" or "ipip") -->
 fan.underlay\_subnet            | string    | fan mode              | デフォルトゲートウェイのサブネット <!-- default gateway subnet -->    | FAN の underlay として使用するサブネット (CIDR 形式) <!-- Subnet to use as the underlay for the FAN (CIDR notation) -->
@@ -120,9 +121,10 @@ ipv4.dhcp.expiry                | string    | ipv4 dhcp             | 1h        
 ipv4.dhcp.gateway               | string    | ipv4 dhcp             | ipv4.address              | サブネットのゲートウェイのアドレス <!-- Address of the gateway for the subnet -->
 ipv4.dhcp.ranges                | string    | ipv4 dhcp             | 全てのアドレス <!-- all addresses -->             | DHCP に使用する IPv4 の範囲 (開始-終了 形式) のカンマ区切りリスト <!-- Comma separated list of IP ranges to use for DHCP (FIRST-LAST format) -->
 ipv4.firewall                   | boolean   | ipv4 address          | true                      | このネットワークに対するファイアウォールのフィルタリングルールを生成するかどうか <!-- Whether to generate filtering firewall rules for this network -->
+ipv4.nat.address                | string    | ipv4 address          | -                         | ブリッジからの送信時に使うソースアドレス <!-- The source address used for outbound traffic from the bridge -->
 ipv4.nat                        | boolean   | ipv4 address          | false                     | NAT にするかどうか (未設定の場合はデフォルト値は true になりランダムな ipv4.address が生成されます) <!-- Whether to NAT (will default to true if unset and a random ipv4.address is generated) -->
 ipv4.nat.order                  | string    | ipv4 address          | before                    | 必要な NAT のルールを既存のルールの前に追加するか後に追加するか <!-- Whether to add the required NAT rules before or after any pre-existing rules -->
-ipv4.nat.address                | string    | ipv4 address          | -                         | ブリッジからの送信時に使うソースアドレス <!-- The source address used for outbound traffic from the bridge -->
+ipv4.ovn.ranges                 | string    | -                     | none                      | 子供の OVN ネットワークに使用する IPv4 アドレスの範囲（開始-終了 形式) のカンマ区切りリスト <!-- Comma separate list of IPv4 ranges to use for child OVN networks (FIRST-LAST format) -->
 ipv4.routes                     | string    | ipv4 address          | -                         | ブリッジへルーティングする追加の IPv4 CIDR サブネットのカンマ区切りリスト <!-- Comma separated list of additional IPv4 CIDR subnets to route to the bridge -->
 ipv4.routing                    | boolean   | ipv4 address          | true                      | ブリッジの内外にトラフィックをルーティングするかどうか <!-- Whether to route traffic in and out of the bridge -->
 ipv6.address                    | string    | standard mode         | ランダムな未使用のサブネット <!-- random unused subnet -->      | ブリッジの IPv6 アドレス (CIDR 形式)。 IPv6 をオフにするには "none" 、新しいアドレスを生成するには "auto" を指定。 <!-- IPv6 address for the bridge (CIDR notation). Use "none" to turn off IPv6 or "auto" to generate a new one -->
@@ -131,9 +133,10 @@ ipv6.dhcp.expiry                | string    | ipv6 dhcp             | 1h        
 ipv6.dhcp.ranges                | string    | ipv6 stateful dhcp    | 全てのアドレス <!-- all addresses -->             | DHCP に使用する IPv6 の範囲 (開始-終了 形式) のカンマ区切りリスト <!-- Comma separated list of IPv6 ranges to use for DHCP (FIRST-LAST format) -->
 ipv6.dhcp.stateful              | boolean   | ipv6 dhcp             | false                     | DHCP を使ってアドレスを割り当てるかどうか <!-- Whether to allocate addresses using DHCP -->
 ipv6.firewall                   | boolean   | ipv6 address          | true                      | このネットワークに対するファイアウォールのフィルタリングルールを生成するかどうか <!-- Whether to generate filtering firewall rules for this network -->
+ipv6.nat.address                | string    | ipv6 address          | -                         | ブリッジからの送信時に使うソースアドレス <!-- The source address used for outbound traffic from the bridge -->
 ipv6.nat                        | boolean   | ipv6 address          | false                     | NAT にするかどうか (未設定の場合はデフォルト値は true になりランダムな ipv6.address が生成されます) <!-- Whether to NAT (will default to true if unset and a random ipv6.address is generated) -->
 ipv6.nat.order                  | string    | ipv6 address          | before                    | 必要な NAT のルールを既存のルールの前に追加するか後に追加するか <!-- Whether to add the required NAT rules before or after any pre-existing rules -->
-ipv6.nat.address                | string    | ipv6 address          | -                         | ブリッジからの送信時に使うソースアドレス <!-- The source address used for outbound traffic from the bridge -->
+ipv6.ovn.ranges                 | string    | -                     | none                      | 子供の OVN ネットワークに使用する IPv6 アドレスの範囲（開始-終了 形式) のカンマ区切りリスト <!-- Comma separate list of IPv6 ranges to use for child OVN networks (FIRST-LAST format) -->
 ipv6.routes                     | string    | ipv6 address          | -                         | ブリッジへルーティングする追加の IPv4 CIDR サブネットのカンマ区切りリスト <!-- Comma separated list of additional IPv6 CIDR subnets to route to the bridge -->
 ipv6.routing                    | boolean   | ipv6 address          | true                      | ブリッジの内外にトラフィックをルーティングするかどうか <!-- Whether to route traffic in and out of the bridge -->
 maas.subnet.ipv4                | string    | ipv4 address          | -                         | インスタンスを登録する MAAS IPv4 サブネット (NIC で `network` プロパティを使う場合に有効) <!-- MAAS IPv4 subnet to register instances in (when using `network` property on nic) -->
@@ -342,13 +345,13 @@ knowing any of the underlying configuration details.
 Network configuration properties:
 -->
 
-Key                             | Type      | Condition             | Default                   | Description
+キー <!-- Key -->        | 型 <!-- Type --> | 条件 <!-- Condition -->  | デフォルト <!-- Default --> | 説明 <!-- Description -->
 :--                             | :--       | :--                   | :--                       | :--
-parent                          | string    | -                     | -                         | macvlan NIC を作成する親のインターフェース <!-- Parent interface to create macvlan NICs on -->
-mtu                             | integer   | -                     | -                         | 作成するインターフェースの MTU <!-- The MTU of the new interface -->
-vlan                            | integer   | -                     | -                         | アタッチする先の VLAN ID <!-- The VLAN ID to attach to -->
 maas.subnet.ipv4                | string    | ipv4 アドレス <!-- address --> | -                | インスタンスを登録する MAAS IPv4 サブネット（nic の `network` プロパティを使用する場合） <!-- MAAS IPv4 subnet to register instances in (when using `network` property on nic) -->
 maas.subnet.ipv6                | string    | ipv6 アドレス <!-- address --> | -                | インスタンスを登録する MAAS IPv6 サブネット（nic の `network` プロパティを使用する場合） <!-- MAAS IPv6 subnet to register instances in (when using `network` property on nic) -->
+mtu                             | integer   | -                     | -                         | 作成するインターフェースの MTU <!-- The MTU of the new interface -->
+parent                          | string    | -                     | -                         | macvlan NIC を作成する親のインターフェース <!-- Parent interface to create macvlan NICs on -->
+vlan                            | integer   | -                     | -                         | アタッチする先の VLAN ID <!-- The VLAN ID to attach to -->
 
 ## ネットワーク: sriov <!-- network: sriov -->
 
@@ -365,10 +368,85 @@ knowing any of the underlying configuration details.
 Network configuration properties:
 -->
 
-Key                             | Type      | Condition             | Default                   | Description
+キー <!-- Key -->        | 型 <!-- Type --> | 条件 <!-- Condition -->  | デフォルト <!-- Default --> | 説明 <!-- Description -->
 :--                             | :--       | :--                   | :--                       | :--
-parent                          | string    | -                     | -                         | sriov NIC を作成する親のインターフェース <!-- Parent interface to create sriov NICs on -->
-mtu                             | integer   | -                     | -                         | 作成するインターフェースの MTU <!-- The MTU of the new interface -->
-vlan                            | integer   | -                     | -                         | アタッチする先の VLAN ID <!-- The VLAN ID to attach to -->
 maas.subnet.ipv4                | string    | ipv4 アドレス <!-- address --> | -                | インスタンスを登録する MAAS IPv4 サブネット（nic の `network` プロパティを使用する場合） <!-- MAAS IPv4 subnet to register instances in (when using `network` property on nic) -->
 maas.subnet.ipv6                | string    | ipv6 アドレス <!-- address --> | -                | インスタンスを登録する MAAS IPv6 サブネット（nic の `network` プロパティを使用する場合） <!-- MAAS IPv6 subnet to register instances in (when using `network` property on nic) -->
+mtu                             | integer   | -                     | -                         | 作成するインターフェースの MTU <!-- The MTU of the new interface -->
+parent                          | string    | -                     | -                         | sriov NIC を作成する親のインターフェース <!-- Parent interface to create sriov NICs on -->
+vlan                            | integer   | -                     | -                         | アタッチする先の VLAN ID <!-- The VLAN ID to attach to -->
+
+## ネットワーク: ovn <!-- network: ovn -->
+
+ovn ネットワークタイプは OVN SDN を使って論理的なネットワークの作成を可能にします。
+これは複数の個別のネットワーク内で同じ論理ネットワークのサブネットを使うような検証環境やマルチテナントの環境で便利です。
+<!--
+The ovn network type allows the creation of logical networks using the OVN SDN. This can be useful for labs and
+multi-tenant environments where the same logical subnets are used in multiple discrete networks.
+-->
+
+LXD の OVN ネットワークはより広いネットワークへの外向きのアクセスを可能にするため既存の管理された LXD のブリッジネットワークに接続できます。
+OVN 論理ネットワークからの全ての接続は親のネットワークによって割り当てられた動的 IP に NAT されます。
+<!--
+A LXD OVN network can be connected to an existing managed LXD bridge network in order for it to gain outbound
+access to the wider network. All connections from the OVN logical networks are NATed to a dynamic IP allocated by
+the parent network.
+-->
+
+### スタンドアロンの LXD での OVN の設定 <!-- Standalone LXD OVN setup -->
+
+これは外向きの通信のために親のネットワーク lxdbr0 に接続されたスタンドアロンの OVN ネットワークを作成する手順です。
+<!--
+This will create a standalone OVN network that is connected to the parent network lxdbr0 for outbound connectivity.
+-->
+
+OVN のツールをインストールし、ローカルノードで OVN の統合ブリッジを設定します。
+<!--
+Install the OVN tools and configure the OVN integration bridge on the local node:
+-->
+
+```
+apt install ovn-host ovn-central
+ovs-vsctl set open_vswitch . \
+  external_ids:ovn-remote=unix:/var/run/ovn/ovnsb_db.sock \
+  external_ids:ovn-encap-type=geneve \
+  external_ids:ovn-encap-ip=n.n.n.n \ # LAN 上の LXD ホストの IP
+```
+
+<!--
+```
+apt install ovn-host ovn-central
+ovs-vsctl set open_vswitch . \
+  external_ids:ovn-remote=unix:/var/run/ovn/ovnsb_db.sock \
+  external_ids:ovn-encap-type=geneve \
+  external_ids:ovn-encap-ip=n.n.n.n \ # The IP of your LXD host on the LAN
+```
+-->
+
+以下を使用して OVN ネットワークとインスタンスを作成します。
+<!--
+Create an OVN network and an instance using it:
+-->
+
+```
+lxc network create ovntest --type=ovn network=lxdbr0
+lxc init images:ubuntu/focal c1
+lxc config device override c1 eth0 network=ovntest
+lxc start c1
+lxc ls
++------+---------+---------------------+----------------------------------------------+-----------+-----------+
+| NAME |  STATE  |        IPV4         |                     IPV6                     |   TYPE    | SNAPSHOTS |
++------+---------+---------------------+----------------------------------------------+-----------+-----------+
+| c1   | RUNNING | 10.254.118.2 (eth0) | fd42:887:cff3:5089:216:3eff:fef0:549f (eth0) | CONTAINER | 0         |
++------+---------+---------------------+----------------------------------------------+-----------+-----------+
+```
+
+キー <!-- Key -->        | 型 <!-- Type --> | 条件 <!-- Condition -->  | デフォルト <!-- Default --> | 説明 <!-- Description -->
+:--                             | :--       | :--                   | :--                       | :--
+bridge.hwaddr                   | string    | -                     | -                         | ブリッジの MAC アドレス <!-- MAC address for the bridge -->
+bridge.mtu                      | integer   | -                     | 1442                      | ブリッジの MTU (デフォルトではホストからホストへの geneve トンネルを許可します) <!-- Bridge MTU (default allows host to host geneve tunnels) -->
+dns.domain                      | string    | -                     | lxd                       | DHCP のクライアントに広告し DNS の名前解決に使用するドメイン <!-- Domain to advertise to DHCP clients and use for DNS resolution -->
+dns.search                      | string    | -                     | -                         | 完全なドメインサーチのカンマ区切りリスト（デフォルトは `dns.domain` の値） <!-- Full comma separated domain search list, defaulting to `dns.domain` value -->
+ipv4.address                    | string    | standard mode         | ランダムな未使用のサブネット <!-- random unused subnet -->      | ブリッジの IPv4 アドレス (CIDR 形式)。 IPv4 をオフにするには "none" 、新しいアドレスを生成するには "auto" を指定。 <!-- IPv4 address for the bridge (CIDR notation). Use "none" to turn off IPv4 or "auto" to generate a new one -->
+ipv6.address                    | string    | standard mode         | ランダムな未使用のサブネット <!-- random unused subnet -->      | ブリッジの IPv6 アドレス (CIDR 形式)。 IPv6 をオフにするには "none" 、新しいアドレスを生成するには "auto" を指定。 <!-- IPv6 address for the bridge (CIDR notation). Use "none" to turn off IPv6 or "auto" to generate a new one -->
+network                         | string    | -                     | -                         | 外部ネットワークへの外向きのアクセスに使う親のネットワーク <!-- Parent network to use for outbound external network access -->

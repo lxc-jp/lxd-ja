@@ -507,10 +507,11 @@ These are implemented using either `xtables` (iptables, ip6tables and ebtables) 
 available on the host.
 -->
 
-これらのオプションを使うと、ネストしたコンテナー、少なくとも親と同じネットワーク上のネストしたコンテナーを実質的に使えなくなることに注意が必要です。
+これらのオプションを使うと、ネストしたコンテナーでは異なる MAC アドレス (例えばブリッジされているか macvlan の NICを使うなど) を持つ親のネットワークを実質的に使えなくなることに注意が必要です。
+ネストしたコンテナー、少なくとも親と同じネットワーク上のネストしたコンテナーを実質的に使えなくなることに注意が必要です。
 <!--
-It's worth noting that those options effectively prevent nested containers, at least nested containers on the
-same network as their parent.
+It's worth noting that those options effectively prevent nested containers from using the parent network with a
+different MAC address (i.e using bridged or macvlan NICs).
 -->
 
 IP フィルタリング機能は詐称されたソースアドレスを含む全てのパケットをブロックするだけでなく、詐称された IP を含む ARP と NDP 広告もブロックします。
@@ -529,6 +530,13 @@ that protocol is blocked from the instance.
 `security.ipv6\_filtering` が有効な場合、インスタンスからの IPv6 ルーター広告はブロックされます。
 <!--
 When `security.ipv6\_filtering` is enabled IPv6 router advertisements are blocked from the instance.
+-->
+
+`security.ipv4\_filtering` か `security.ipv6\_filtering` が有効な場合は ARP、IPv4、IPv6 以外の全ての Ethernet フレームがドロップされます。
+これはスタックされた VLAN QinQ (802.1ad) のフレームが IP フィルタリングをバイパスするのを防ぎます。
+<!--
+When `security.ipv4\_filtering` or `security.ipv6\_filtering` is enabled, any Ethernet frames that are not ARP,
+IPv4 or IPv6 are dropped. This prevents stacked VLAN QinQ (802.1ad) frames from bypassing the IP filtering.
 -->
 
 ### routed NIC のセキュリティ <!-- Routed NIC security -->

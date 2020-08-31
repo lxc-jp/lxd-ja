@@ -76,7 +76,7 @@ navigation:
         - title: メインの API 拡張 # Main API extensions
           location: api-extensions.md
 
-        - title: コンテナー API ドキュメント # Container API documentation
+        - title: インスタンス API ドキュメント # Instance API documentation
           location: dev-lxd.md
 
     - title: 内部動作とデバッグ # Internals & debugging
@@ -84,7 +84,7 @@ navigation:
         - title: コンテナー環境 # Container environment
           location: container-environment.md
 
-        - title: コンテナーのマイグレーション # Container migration
+        - title: インスタンスのマイグレーション # Instance migration
           location: migration.md
 
         - title: デーモンの動作 # Daemon behavior

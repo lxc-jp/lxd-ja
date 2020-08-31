@@ -894,7 +894,7 @@ container.
 -->
 
 ## container\_mount\_propagation
-これはディスクデバイス種別に "propagation" オプションを新たに追加します。
+これはディスクデバイスタイプに "propagation" オプションを新たに追加します。
 これによりカーネルのマウントプロパゲーションの設定ができるようになります。
 <!--
 This adds a new "propagation" option to the disk device type, allowing
@@ -1668,7 +1668,7 @@ This adds support for passing in raw mount options for disk devices.
 -->
 
 ## container\_nic\_routed
-`routed` "nic" デバイス種別を導入します。
+`routed` "nic" デバイスタイプを導入します。
 <!--
 This introduces the `routed` "nic" device type.
 -->
@@ -2154,3 +2154,29 @@ specify which parent interface should be used for creating NIC device interfaces
 Also adds `network` configuration key support for `sriov` NICs to allow them to specify the associated network of
 the same type that they should use as the basis for the NIC device.
 -->
+
+## container\_syscall\_intercept\_bpf\_devices
+この拡張はコンテナー内で bpf のシステムコールをインターセプトする機能を提供します。具体的には device cgroup の bpf のプログラムを管理できるようにします。
+<!--
+This adds support to intercept the bpf syscall in containers. Specifically, it allows to manage device cgroup bpf programs.
+-->
+
+## network\_type\_ovn
+ネットワークタイプ `ovn` のサポートを追加し、 `bridge` タイプのネットワークを `parent` として設定できるようにします。
+<!--
+Adds support for additional network type `ovn` with the ability to specify a `bridge` type network as the `parent`.
+-->
+
+`ovn` という新しい NIC のデバイスタイプを追加します。これにより `network` 設定キーにどの `ovn` のタイプのネットワークに接続すべきかを指定できます。
+<!--
+Introduces a new NIC device type of `ovn` which allows the `network` configuration key to specify which `ovn`
+type network they should connect to.
+-->
+
+さらに全ての `ovn` ネットワークと NIC デバイスに適用される 2 つのグローバルの設定キーを追加します。
+<!--
+Also introduces two new global config keys that apply to all `ovn` networks and NIC devices:
+-->
+
+ - network.ovn.integration\_bridge - 使用する OVS 統合ブリッジ <!-- the OVS integration bridge to use. -->
+ - network.ovn.northbound\_connection - OVN northbound データベース接続文字列 <!-- the OVN northbound database connection string. -->
