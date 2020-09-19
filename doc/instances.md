@@ -66,7 +66,7 @@ nvidia.driver.capabilities                  | string    | compute,utility   | no
 nvidia.runtime                              | boolean   | false             | no            | container                 | Pass the host NVIDIA and CUDA runtime libraries into the instance
 nvidia.require.cuda                         | string    | -                 | no            | container                 | Version expression for the required CUDA version (sets libnvidia-container NVIDIA\_REQUIRE\_CUDA)
 nvidia.require.driver                       | string    | -                 | no            | container                 | Version expression for the required driver version (sets libnvidia-container NVIDIA\_REQUIRE\_DRIVER)
-raw.apparmor                                | blob      | -                 | yes           | container                 | Apparmor profile entries to be appended to the generated profile
+raw.apparmor                                | blob      | -                 | yes           | -                         | Apparmor profile entries to be appended to the generated profile
 raw.idmap                                   | blob      | -                 | no            | unprivileged container    | Raw idmap configuration (e.g. "both 1000 1000")
 raw.lxc                                     | blob      | -                 | no            | container                 | Raw LXC configuration to be appended to the generated one
 raw.qemu                                    | blob      | -                 | no            | virtual-machine           | Raw Qemu configuration to be appended to the generated command line
@@ -723,15 +723,15 @@ addresses to an address inside the instance or to do the reverse and
 have an address in the instance connect through the host.
 
 The supported connection types are:
-* `TCP <-> TCP`
-* `UDP <-> UDP`
-* `UNIX <-> UNIX`
-* `TCP <-> UNIX`
-* `UNIX <-> TCP`
-* `UDP <-> TCP`
-* `TCP <-> UDP`
-* `UDP <-> UNIX`
-* `UNIX <-> UDP`
+* `tcp <-> tcp`
+* `udp <-> udp`
+* `unix <-> unix`
+* `tcp <-> unix`
+* `unix <-> tcp`
+* `udp <-> tcp`
+* `tcp <-> udp`
+* `udp <-> unix`
+* `unix <-> udp`
 
 The proxy device also supports a `nat` mode where packets are forwarded using NAT rather than being proxied through
 a separate connection. This has benefit that the client address is maintained without the need for the target
@@ -749,8 +749,8 @@ In order to define a static IPv6 address, the parent managed network needs to ha
 
 In NAT mode the supported connection types are:
 
-* `TCP <-> TCP`
-* `UDP <-> UDP`
+* `tcp <-> tcp`
+* `udp <-> udp`
 
 When defining IPv6 addresses use square bracket notation, e.g.
 
@@ -768,7 +768,7 @@ Key             | Type      | Default       | Required  | Description
 :--             | :--       | :--           | :--       | :--
 listen          | string    | -             | yes       | The address and port to bind and listen (`<type>:<addr>:<port>[-<port>][,<port>]`)
 connect         | string    | -             | yes       | The address and port to connect to (`<type>:<addr>:<port>[-<port>][,<port>]`)
-bind            | string    | host          | no        | Which side to bind on (host/guest)
+bind            | string    | host          | no        | Which side to bind on (host/instance)
 uid             | int       | 0             | no        | UID of the owner of the listening Unix socket
 gid             | int       | 0             | no        | GID of the owner of the listening Unix socket
 mode            | int       | 0644          | no        | Mode for the listening Unix socket
