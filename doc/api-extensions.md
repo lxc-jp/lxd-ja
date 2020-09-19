@@ -1122,10 +1122,10 @@ core.macaroon.endpoint.
 -->
 
 ## backup\_compression
-これは新たに backups.compression\_algorithm 設定キーを導入します。
+これは新たに `backups.compression_algorithm` 設定キーを導入します。
 これによりバックアップの圧縮の設定が可能になります。
 <!--
-This introduces a new backups.compression\_algorithm config key which
+This introduces a new `backups.compression_algorithm` config key which
 allows configuration of backup compression.
 -->
 
@@ -1317,15 +1317,15 @@ parts have to be used.
 -->
 
 作成されるスナップショットには、指定した式に基づいて有効期限が設定されます。
-`expires\_at` で定義される有効期限は、API や `lxc config edit` コマンドを使って手動で編集できます。
+`expires_at` で定義される有効期限は、API や `lxc config edit` コマンドを使って手動で編集できます。
 有効な有効期限が設定されたスナップショットはタスク実行時に削除されます。
-有効期限は `expires\_at` に空文字列や `0001-01-01T00:00:00Z`（zero time）を設定することで無効化できます。
+有効期限は `expires_at` に空文字列や `0001-01-01T00:00:00Z`（zero time）を設定することで無効化できます。
 `snapshots.expiry` が設定されていない場合はこれがデフォルトです。
 <!--
 Snapshots which are then created will be given an expiry date based on the
-expression. This expiry date, defined by `expires\_at`, can be manually edited
+expression. This expiry date, defined by `expires_at`, can be manually edited
 using the API or `lxc config edit`. Snapshots with a valid expiry date will be
-removed when the task in run. Expiry can be disabled by setting `expires\_at` to
+removed when the task in run. Expiry can be disabled by setting `expires_at` to
 an empty string or `0001-01-01T00:00:00Z` (zero time). This is the default if
 `snapshots.expiry` is not set.
 -->
@@ -1390,7 +1390,7 @@ used to track the current mapping for the container.
 This effectively gives us:
 -->
 
- - `volatile.last\_state.idmap` => ディスク上の idmap <!-- On-disk idmap -->
+ - `volatile.last_state.idmap` => ディスク上の idmap <!-- On-disk idmap -->
  - `volatile.idmap.current` => 現在のカーネルマップ <!-- Current kernel map -->
  - `volatile.idmap.next` => 次のディスク上の idmap <!-- Next on-disk idmap -->
 
@@ -1465,11 +1465,11 @@ decide to trigger various actions.
 -->
 
 ## lxc\_features
-これは `GET /1.0/` ルート経由で `lxc info` コマンドの出力に `lxc\_features`
+これは `GET /1.0/` ルート経由で `lxc info` コマンドの出力に `lxc_features`
 セクションを導入します。配下の LXC ライブラリーに存在するキー・フィーチャーに
 対するチェックの結果を出力します。
 <!--
-This introduces the `lxc\_features` section output from the `lxc info` command
+This introduces the `lxc_features` section output from the `lxc info` command
 via the `GET /1.0/` route. It outputs the result of checks for key features being present in the
 underlying LXC library.
 -->
@@ -1481,9 +1481,9 @@ This introduces the `ipvlan` "nic" device type.
 -->
 
 ## network\_vlan\_sriov
-これは SR-IOV デバイスに VLAN (`vlan`) と MAC フィルタリング (`security.mac\_filtering`) のサポートを導入します。
+これは SR-IOV デバイスに VLAN (`vlan`) と MAC フィルタリング (`security.mac_filtering`) のサポートを導入します。
 <!--
-This introduces VLAN (`vlan`) and MAC filtering (`security.mac\_filtering`) support for SR-IOV devices.
+This introduces VLAN (`vlan`) and MAC filtering (`security.mac_filtering`) support for SR-IOV devices.
 -->
 
 ## storage\_cephfs
@@ -1498,9 +1498,9 @@ instead.
 
 ## container\_nic\_ipfilter
 これは `bridged` の NIC デバイスに対してコンテナーの IP フィルタリング
-(`security.ipv4\_filtering` and `security.ipv6\_filtering`) を導入します。
+(`security.ipv4_filtering` and `security.ipv6_filtering`) を導入します。
 <!--
-This introduces container IP filtering (`security.ipv4\_filtering` and `security.ipv6\_filtering`) support for `bridged` nic devices.
+This introduces container IP filtering (`security.ipv4_filtering` and `security.ipv6_filtering`) support for `bridged` nic devices.
 -->
 
 ## resources\_v2
@@ -1572,10 +1572,10 @@ Export infiniband character device information (issm, umad, uverb) as part of th
 -->
 
 ## daemon\_storage
-これは `storage.images\_volume` と `storage.backups\_volume` という 2 つの新しい設定項目を導入します。これらは既存のプール上のストレージボリュームがデーモン全体のイメージとバックアップを保管するのに使えるようにします。
+これは `storage.images_volume` と `storage.backups_volume` という 2 つの新しい設定項目を導入します。これらは既存のプール上のストレージボリュームがデーモン全体のイメージとバックアップを保管するのに使えるようにします。
 <!--
-This introduces two new configuration keys `storage.images\_volume` and
-`storage.backups\_volume` to allow for a storage volume on an existing
+This introduces two new configuration keys `storage.images_volume` and
+`storage.backups_volume` to allow for a storage volume on an existing
 pool be used for storing the daemon-wide images and backups artifacts.
 -->
 
@@ -1624,24 +1624,24 @@ Adds a FirmwareVersion field to network card entries.
 -->
 
 ## backup\_compression\_algorithm
-バックアップを作成する (`POST /1.0/containers/<name>/backups`) 際に `compression\_algorithm` プロパティのサポートを追加します。
+バックアップを作成する (`POST /1.0/containers/<name>/backups`) 際に `compression_algorithm` プロパティのサポートを追加します。
 <!--
-This adds support for a `compression\_algorithm` property when creating a backup (`POST /1.0/containers/<name>/backups`).
+This adds support for a `compression_algorithm` property when creating a backup (`POST /1.0/containers/<name>/backups`).
 -->
 
-このプロパティを設定するとデフォルト値 (`backups.compression\_algorithm`) をオーバーライドすることができます。
+このプロパティを設定するとデフォルト値 (`backups.compression_algorithm`) をオーバーライドすることができます。
 <!--
-Setting this property overrides the server default value (`backups.compression\_algorithm`).
+Setting this property overrides the server default value (`backups.compression_algorithm`).
 -->
 
 ## ceph\_data\_pool\_name
-Ceph RBD を使ってストレージプールを作成する際にオプショナルな引数 (`ceph.osd.data\_pool\_name`) のサポートを追加します。
-この引数が指定されると、プールはメタデータは `pool\_name` で指定されたプールに保持しつつ実際のデータは `data\_pool\_name` で指定されたプールに保管するようになります。
+Ceph RBD を使ってストレージプールを作成する際にオプショナルな引数 (`ceph.osd.data_pool_name`) のサポートを追加します。
+この引数が指定されると、プールはメタデータは `pool_name` で指定されたプールに保持しつつ実際のデータは `data_pool_name` で指定されたプールに保管するようになります。
 <!--
-This adds support for an optional argument (`ceph.osd.data\_pool\_name`) when creating
+This adds support for an optional argument (`ceph.osd.data_pool_name`) when creating
 storage pools using Ceph RBD, when this argument is used the pool will store it's
-actual data in the pool specified with `data\_pool\_name` while keeping the metadata
-in the pool specified by `pool\_name`.
+actual data in the pool specified with `data_pool_name` while keeping the metadata
+in the pool specified by `pool_name`.
 -->
 
 ## container\_syscall\_intercept\_mount
@@ -1748,10 +1748,10 @@ This allows it to inherit some of the network's settings and allows better valid
 
 ## clustering\_sizing
 データベースの投票者とスタンバイに対してカスタムの値を指定するサポートです。
-cluster.max\_voters と cluster.max\_standby という新しい設定キーが導入され、データベースの投票者とスタンバイの理想的な数を指定できます。
+`cluster.max_voters` と `cluster.max_standby` という新しい設定キーが導入され、データベースの投票者とスタンバイの理想的な数を指定できます。
 <!--
 Support specifying a custom values for database voters and standbys.
-The new cluster.max\_voters and cluster.max\_standby configuration keys were introduced
+The new `cluster.max_voters` and `cluster.max_standby` configuration keys were introduced
 to specify to the ideal number of database voter and standbys.
 -->
 
@@ -1838,13 +1838,13 @@ configuration keys: `snapshots.schedule` and
 
 ## trust\_ca\_certificates
 この拡張により提供された CA (`server.ca`) によって信頼されたクライアント証明書のチェックが可能になります。
-`core.trust\_ca\_certificates` を true に設定すると有効にできます。
+`core.trust_ca_certificates` を true に設定すると有効にできます。
 有効な場合、クライアント証明書のチェックを行い、チェックが OK であれば信頼されたパスワードの要求はスキップします。
 ただし、提供された CRL (`ca.crl`) に接続してきたクライアント証明書が含まれる場合は例外です。
 この場合は、パスワードが求められます。
 <!--
 This allows for checking client certificates trusted by the provided CA (`server.ca`).
-It can be enabled by setting `core.trust\_ca\_certificates` to true.
+It can be enabled by setting `core.trust_ca_certificates` to true.
 If enabled, it will perform the check, and bypass the trusted password if true.
 An exception will be made if the connecting client certificate is in the provided CRL (`ca.crl`).
 In this case, it will ask for the password.
@@ -1863,19 +1863,19 @@ This adds a writable endpoint for cluster members, allowing the editing of their
 -->
 
 ## container\_nic\_routed\_host\_address
-この拡張は NIC の設定キーに `ipv4.host\_address` と `ipv6.host\_address` を追加し、ホスト側の veth インターフェースの IP アドレスを制御できるようにします。
+この拡張は NIC の設定キーに `ipv4.host_address` と `ipv6.host_address` を追加し、ホスト側の veth インターフェースの IP アドレスを制御できるようにします。
 これは同時に複数の routed NIC を使用し、予測可能な next-hop のアドレスを使用したい場合に有用です。
 <!--
-This introduces the `ipv4.host\_address` and `ipv6.host\_address` NIC config keys that can be used to control the
+This introduces the `ipv4.host_address` and `ipv6.host_address` NIC config keys that can be used to control the
 host-side veth interface's IP addresses. This can be useful when using multiple routed NICs at the same time and
 needing a predictable next-hop address to use.
 -->
 
 さらにこの拡張は `ipv4.gateway` と `ipv6.gateway` の NIC 設定キーの振る舞いを変更します。
-auto に設定するとコンテナーはデフォルトゲートウェイをそれぞれ `ipv4.host\_address` と `ipv6.host\_address` で指定した値にします。
+auto に設定するとコンテナーはデフォルトゲートウェイをそれぞれ `ipv4.host_address` と `ipv6.host_address` で指定した値にします。
 <!--
 This also alters the behaviour of `ipv4.gateway` and `ipv6.gateway` NIC config keys. When they are set to "auto"
-the container will have its default gateway set to the value of `ipv4.host\_address` or `ipv6.host\_address` respectively.
+the container will have its default gateway set to the value of `ipv4.host_address` or `ipv6.host_address` respectively.
 -->
 
 デフォルト値は次の通りです。
@@ -1883,8 +1883,8 @@ the container will have its default gateway set to the value of `ipv4.host\_addr
 The default values are:
 -->
 
-`ipv4.host\_address`: 169.254.0.1
-`ipv6.host\_address`: fe80::1
+`ipv4.host_address`: 169.254.0.1
+`ipv6.host_address`: fe80::1
 
 これは以前のデフォルトの挙動と後方互換性があります。
 <!--
@@ -1921,15 +1921,15 @@ different NUMA domains.
 -->
 
 ## resources\_cpu\_core\_die
-それぞれのコアごとに die\_id 情報を公開します。
+それぞれのコアごとに `die_id` 情報を公開します。
 <!--
-Exposes the die\_id information on each core.
+Exposes the `die_id` information on each core.
 -->
 
 ## api\_os
-この拡張は `/1.0` 内に `os` と `os\_version` の 2 つのフィールドを追加します。
+この拡張は `/1.0` 内に `os` と `os_version` の 2 つのフィールドを追加します。
 <!--
-This introduces two new fields in `/1.0`, `os` and `os\_version`.
+This introduces two new fields in `/1.0`, `os` and `os_version`.
 -->
 
 これらの値はシステム上の os-release のデータから取得されます。
@@ -1938,18 +1938,18 @@ Those are taken from the os-release data on the system.
 -->
 
 ## container\_nic\_routed\_host\_table
-この拡張は `ipv4.host\_table` と `ipv6.host\_table` という NIC の設定キーを導入します。
+この拡張は `ipv4.host_table` と `ipv6.host_table` という NIC の設定キーを導入します。
 これで指定した ID のカスタムポリシーのルーティングテーブルにインスタンスの IP のための静的ルートを追加できます。
 <!--
-This introduces the `ipv4.host\_table` and `ipv6.host\_table` NIC config keys that can be used to add static routes
+This introduces the `ipv4.host_table` and `ipv6.host_table` NIC config keys that can be used to add static routes
 for the instance's IPs to a custom policy routing table by ID.
 -->
 
 ## container\_nic\_ipvlan\_host\_table
-この拡張は `ipv4.host\_table` と `ipv6.host\_table` という NIC の設定キーを導入します。
+この拡張は `ipv4.host_table` と `ipv6.host_table` という NIC の設定キーを導入します。
 これで指定した ID のカスタムポリシーのルーティングテーブルにインスタンスの IP のための静的ルートを追加できます。
 <!--
-This introduces the `ipv4.host\_table` and `ipv6.host\_table` NIC config keys that can be used to add static routes
+This introduces the `ipv4.host_table` and `ipv6.host_table` NIC config keys that can be used to add static routes
 for the instance's IPs to a custom policy routing table by ID.
 -->
 
