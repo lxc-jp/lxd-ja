@@ -86,7 +86,7 @@ nvidia.driver.capabilities                  | string    | compute,utility   | no
 nvidia.runtime                              | boolean   | false             | no            | container         | ホストの NVIDIA と CUDA ラインタイムライブラリーをインスタンス内でも使えるようにする <!-- Pass the host NVIDIA and CUDA runtime libraries into the instance -->
 nvidia.require.cuda                         | string    | -                 | no            | container         | 必要となる CUDA バージョン（libnvidia-container に環境変数 NVIDIA\_REQUIRE\_CUDA を設定） <!-- Version expression for the required CUDA version (sets libnvidia-container NVIDIA\_REQUIRE\_CUDA) -->
 nvidia.require.driver                       | string    | -                 | no            | container         | 必要となるドライバーバージョン（libnvidia-container に環境変数 NVIDIA\_REQUIRE\_DRIVER を設定） <!-- Version expression for the required driver version (sets libnvidia-container NVIDIA\_REQUIRE\_DRIVER) -->
-raw.apparmor                                | blob      | -                 | yes           | container         | 生成されたプロファイルに追加する Apparmor プロファイルエントリー <!-- Apparmor profile entries to be appended to the generated profile -->
+raw.apparmor                                | blob      | -                 | yes           | -                 | 生成されたプロファイルに追加する Apparmor プロファイルエントリー <!-- Apparmor profile entries to be appended to the generated profile -->
 raw.idmap                                   | blob      | -                 | no            | unprivileged container | 生（raw）の idmap 設定（例: "both 1000 1000"） <!-- Raw idmap configuration (e.g. "both 1000 1000") -->
 raw.lxc                                     | blob      | -                 | no            | container         | 生成された設定に追加する生（raw）の LXC 設定 <!-- Raw LXC configuration to be appended to the generated one -->
 raw.qemu                                    | blob      | -                 | no            | virtual-machine   | 生成されたコマンドラインに追加される生（raw）の Qemu 設定 <!-- Raw Qemu configuration to be appended to the generated command line -->
@@ -1082,15 +1082,15 @@ have an address in the instance connect through the host.
 <!--
 The supported connection types are:
 -->
-* `TCP <-> TCP`
-* `UDP <-> UDP`
-* `UNIX <-> UNIX`
-* `TCP <-> UNIX`
-* `UNIX <-> TCP`
-* `UDP <-> TCP`
-* `TCP <-> UDP`
-* `UDP <-> UNIX`
-* `UNIX <-> UDP`
+* `tcp <-> tcp`
+* `udp <-> udp`
+* `unix <-> unix`
+* `tcp <-> unix`
+* `unix <-> tcp`
+* `udp <-> tcp`
+* `tcp <-> udp`
+* `udp <-> unix`
+* `unix <-> udp`
 
 プロキシーデバイスは `nat` モードもサポートします。
 `nat` モードではパケットは別の接続を通してプロキシーされるのではなく NAT を使ってフォワードされます。
@@ -1122,8 +1122,8 @@ NAT モードでサポートされる接続のタイプは以下の通りです�
 In NAT mode the supported connection types are:
 -->
 
-* `TCP <-> TCP`
-* `UDP <-> UDP`
+* `tcp <-> tcp`
+* `udp <-> udp`
 
 IPv6 アドレスを設定する場合は以下のような角括弧の記法を使います。
 <!--
@@ -1151,7 +1151,7 @@ Key             | Type      | Default       | Required  | Description
 :--             | :--       | :--           | :--       | :--
 listen          | string    | -             | yes       | バインドし、接続を待ち受けるアドレスとポート (`<type>:<addr>:<port>[-<port>][,<port>]`) <!-- The address and port to bind and listen (`<type>:<addr>:<port>[-<port>][,<port>]`) -->
 connect         | string    | -             | yes       | 接続するアドレスとポート (`<type>:<addr>:<port>[-<port>][,<port>]`) <!-- The address and port to connect to (`<type>:<addr>:<port>[-<port>][,<port>]`) -->
-bind            | string    | host          | no        | ホスト/ゲストのどちら側にバインドするか <!-- Which side to bind on (host/guest) -->
+bind            | string    | host          | no        | ホスト/インスタンスのどちら側にバインドするか <!-- Which side to bind on (host/instance) -->
 uid             | int       | 0             | no        | listen する Unix ソケットの所有者の UID <!-- UID of the owner of the listening Unix socket -->
 gid             | int       | 0             | no        | listen する Unix ソケットの所有者の GID <!-- GID of the owner of the listening Unix socket -->
 mode            | int       | 0644          | no        | listen する Unix ソケットのモード <!-- Mode for the listening Unix socket -->
