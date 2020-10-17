@@ -497,6 +497,9 @@ much like `/1.0/containers` will only show you instances of that type.
          * [`/1.0/storage-pools/<pool>/volumes/<type>/<name>`](#10storage-poolspoolvolumestypename)
            * [`/1.0/storage-pools/<pool>/volumes/<type>/<name>/snapshots`](#10storage-poolspoolvolumestypenamesnapshots)
              * [`/1.0/storage-pools/<pool>/volumes/<type>/<volume>/snapshots/<name>`](#10storage-poolspoolvolumestypevolumesnapshotsname)
+            * [`/1.0/storage-pools/<pool>/volumes/<type>/<name>/backups`](#10storage-poolspoolvolumestypenamebackups)
+             * [`/1.0/storage-pools/<pool>/volumes/<type>/<volume>/backups/<name>`](#10storage-poolspoolvolumestypevolumebackupsname)
+               * [`/1.0/storage-pools/<pool>/volumes/<type>/<volume>/backups/<name>/export`](#10storage-poolspoolvolumestypevolumebackupsnameexport)
  * [`/1.0/resources`](#10resources)
  * [`/1.0/cluster`](#10cluster)
    * [`/1.0/cluster/members`](#10clustermembers)
@@ -4590,6 +4593,125 @@ Input:
 <!--
 HTTP code for this should be 202 (Accepted).
 -->
+
+### `/1.0/storage-pools/<pool>/volumes/<type>/<name>/backups`
+#### GET
+ * 説明: ボリュームのバックアップの一覧 <!-- Description: List of backups for the volume -->
+ * 導入: `custom_volume_backup` API 拡張によって <!-- Introduced: with API extension `custom_volume_backup` -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻り値: ボリュームのバックアップの一覧 <!-- Return: a list of backups for the volume -->
+
+戻り値
+<!--
+Return value:
+-->
+
+```json
+[
+    "/1.0/storage-pools/pool1/custom/vol1/backups/backup0",
+    "/1.0/storage-pools/pool1/custom/vol1/backups/backup1",
+]
+```
+
+#### POST
+ * 説明: 新しいバックアップを作成します <!-- Description: Create a new backup -->
+ * 導入: `custom_volume_backup` API 拡張によって <!-- Introduced: with API extension `custom_volume_backup` -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 非同期 <!-- Operation: async -->
+ * 戻り値: バックグラウンド操作または標準のエラー <!-- Return: background operation or standard error -->
+
+入力
+<!--
+Input:
+-->
+
+```js
+{
+    "name": "backupName",      // バックアップに対するユニークな識別子
+    "expiry": 3600,            // バックアップをいつ自動で削除するか
+    "volume_only": true,       // true ならスナップショットは含めない
+    "optimized_storage": true  // true なら btrfs send か zfs send がボリュームとスナップショットに使用される
+}
+```
+
+<!--
+```js
+{
+    "name": "backupName",      // unique identifier for the backup
+    "expiry": 3600,            // when to delete the backup automatically
+    "volume_only": true,     // if True, snapshots aren't included
+    "optimized_storage": true  // if True, btrfs send or zfs send is used for volume and snapshots
+}
+```
+-->
+
+### `/1.0/storage-pools/<pool>/volumes/<type>/<volume>/backups/<name>`
+#### GET
+ * 説明: バックアップの情報 <!-- Description: Backup information -->
+ * 導入: `custom_volume_backup` API 拡張によって <!-- Introduced: with API extension `custom_volume_backup` -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻り値: バックアップの dict <!-- Returns: dict of the backup -->
+
+出力
+<!--
+Output:
+-->
+
+```json
+{
+    "name": "backupName",
+    "creation_date": "2018-04-23T12:16:09+02:00",
+    "expiry_date": "2018-04-23T12:16:09+02:00",
+    "instance_only": false,
+    "optimized_storage": false
+}
+```
+
+#### DELETE
+ * 説明: バックアップを削除します <!-- Description: remove the backup -->
+ * 導入: `custom_volume_backup` API 拡張によって <!-- Introduced: with API extension `custom_volume_backup` -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 非同期 <!-- Operation: async -->
+ * 戻り値: バックグラウンド操作または標準のエラー <!-- Return: background operation or standard error -->
+
+#### POST
+ * 説明: バックアップをリネームします <!-- Description: used to rename the backup -->
+ * 導入: `custom_volume_backup` API 拡張によって <!-- Introduced: with API extension `custom_volume_backup` -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 非同期 <!-- Operation: async -->
+ * 戻り値: バックグラウンド操作または標準のエラー <!-- Return: background operation or standard error -->
+
+入力
+<!--
+Input:
+-->
+
+```json
+{
+    "name": "new-name"
+}
+```
+
+### `storage-pools/<pool>/volumes/<type>/<volume>/backups/<name>/export`
+#### GET
+ * 説明: バックアップの tarball を取得します <!-- Description: fetch the backup tarball -->
+ * 導入: `custom_volume_backup` API 拡張によって <!-- Introduced: with API extension `custom_volume_backup` -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻り値: バックアップの tarball を含む dict <!-- Return: dict containing the backup tarball -->
+
+出力
+<!--
+Output:
+-->
+
+```json
+{
+    "data": "<byte-stream>"
+}
+```
 
 ### `/1.0/resources`
 #### GET

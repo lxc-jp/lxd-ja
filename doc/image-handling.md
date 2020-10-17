@@ -149,6 +149,31 @@ On the client side, this is used with:
 
 `lxc image import URL --alias some-name`
 
+### インスタンスやスナップショットを新しいイメージとして公開する <!-- Publishing an instance or snapshot as a new image -->
+インスタンスやスナップショットの 1 つを新しいイメージに変換できます。
+これは `lxc publish` で CLI 上で実行できます。
+<!--
+An instance or one of its snapshots can be turned into a new image.
+This is done on the CLI with `lxc publish`.
+-->
+
+これを行う際には、たいていの場合公開する前にインスタンスのメタデータやテンプレートを `lxc config metadata` と `lxc config template` コマンドを使って整理するのが良いでしょう。
+さらにホストの SSH キーや dbus/systemd の machine-id などインスタンスに固有な状態も削除するのが良いでしょう。
+<!--
+When doing this, you will most likely first want to cleanup metadata and
+templates on the instance you're publishing using the `lxc config metadata`
+and `lxc config template` commands. You will also want to remove any
+instance-specific state like host SSH keys, dbus/systemd machine-id, ...
+-->
+
+インスタンスから tarball を生成した後圧縮する必要があるので、公開のプロセスはかなり時間がかかるかもしれません。
+この操作は特に I/O と CPU の負荷が高いので、公開操作は LXD により 1 つずつ順に実行されます。
+<!--
+The publishing process can take quite a while as a tarball must be
+generated from the instance and then be compressed. As this can be
+particularly I/O and CPU intensive, publish operations are serialized by LXD.
+-->
+
 ## キャッシュ <!-- Caching -->
 リモートのイメージからインスタンスを起動する時、リモートのイメージが
 ローカルのイメージ・ストアにキャッシュ・ビットをセットした状態で

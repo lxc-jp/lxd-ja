@@ -520,22 +520,22 @@ The IP filtering features block ARP and NDP advertisements that contain a spoofe
 packets that contain a spoofed source address.
 -->
 
-`security.ipv4\_filtering` か `security.ipv6\_filtering` が有効で （ `ipvX.address=none`  であるかブリッジで DHCP サービスが有効になっていないために）インスタンスに IP アドレスが割り当てられない場合、そのインスタンスからの（訳注： `security.ipv4\_filtering` なら IPv4 、 `security.ipv6\_filtering` なら IPv6 と）設定に対応するプロトコルの全ての IP トラフィックはブロックされます。
+`security.ipv4_filtering` か `security.ipv6_filtering` が有効で （ `ipvX.address=none`  であるかブリッジで DHCP サービスが有効になっていないために）インスタンスに IP アドレスが割り当てられない場合、そのインスタンスからの（訳注： `security.ipv4_filtering` なら IPv4 、 `security.ipv6_filtering` なら IPv6 と）設定に対応するプロトコルの全ての IP トラフィックはブロックされます。
 <!--
-If `security.ipv4\_filtering` or `security.ipv6\_filtering` is enabled and the instance cannot be allocated an IP
+If `security.ipv4_filtering` or `security.ipv6_filtering` is enabled and the instance cannot be allocated an IP
 address (because `ipvX.address=none` or there is no DHCP service enabled on the bridge) then all IP traffic for
 that protocol is blocked from the instance.
 -->
 
-`security.ipv6\_filtering` が有効な場合、インスタンスからの IPv6 ルーター広告はブロックされます。
+`security.ipv6_filtering` が有効な場合、インスタンスからの IPv6 ルーター広告はブロックされます。
 <!--
-When `security.ipv6\_filtering` is enabled IPv6 router advertisements are blocked from the instance.
+When `security.ipv6_filtering` is enabled IPv6 router advertisements are blocked from the instance.
 -->
 
-`security.ipv4\_filtering` か `security.ipv6\_filtering` が有効な場合は ARP、IPv4、IPv6 以外の全ての Ethernet フレームがドロップされます。
+`security.ipv4_filtering` か `security.ipv6_filtering` が有効な場合は ARP、IPv4、IPv6 以外の全ての Ethernet フレームがドロップされます。
 これはスタックされた VLAN QinQ (802.1ad) のフレームが IP フィルタリングをバイパスするのを防ぎます。
 <!--
-When `security.ipv4\_filtering` or `security.ipv6\_filtering` is enabled, any Ethernet frames that are not ARP,
+When `security.ipv4_filtering` or `security.ipv6_filtering` is enabled, any Ethernet frames that are not ARP,
 IPv4 or IPv6 are dropped. This prevents stacked VLAN QinQ (802.1ad) frames from bypassing the IP filtering.
 -->
 

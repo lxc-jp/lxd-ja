@@ -356,62 +356,80 @@ It can be added in a profile being applied after the profile it originated from 
 -->
 
 ### Type: nic
-LXD では、様々な種類のネットワークデバイスが使えます:
+LXD では、様々な種類のネットワークデバイス（ネットワークインターフェースコントローラーや NIC と呼びます）が使えます:
 <!--
-LXD supports different kind of network devices:
+LXD supports several different kinds of network devices (referred to as Network Interface Controller or NIC).
+-->
+
+インスタンスにネットワークデバイスを追加する際には、追加したいデバイスのタイプを選択するのに 2 つの方法があります。
+`nictype` プロパティーを指定するか `network` プロパティーを使うかです。
+<!--
+When adding a network device to an instance, there are two ways to specify the type of device you want to add;
+either by specifying the `nictype` property or using the `network` property.
+-->
+
+#### `network` プロパティーを使って NIC を指定する <!-- Specifying a NIC using the `network` property -->
+
+`network` プロパティーを指定する場合、 NIC は既存の管理されたネットワークにリンクされ、 `nictype` はネットワークのタイプに応じて自動的に検出されます。
+<!--
+When specifying the `network` property, the NIC is linked to an existing managed network and the `nictype` is
+automatically detected based on the network's type.
+-->
+
+NIC の設定の一部は個々の NIC で変更可能ではなくネットワークから継承されます。
+<!--
+Some of the NICs properties are inherited from the network rather than being customisable for each NIC.
+-->
+
+これらの詳細は下記の NIC 固有のセクションの "Managed" カラムに記載します。
+<!--
+These are detailed in the "Managed" column in the NIC specific sections below.
+-->
+
+#### 利用可能な NIC <!-- NICs Available: -->
+
+NIC ごとにどのプロパティーが設定可能かの詳細については下記を参照してください。
+<!--
+See the NIC's settings below for details about which properties are available.
+-->
+
+次の NIC は `nictype` か `network` プロパティーを使って選択できます。
+<!--
+The following NICs can be specified using the `nictype` or `network` properties:
+-->
+
+ - [bridged](#nictype-bridged): ホスト上に存在するブリッジを使います。ホストのブリッジとインスタンスを接続する仮想デバイスペアを作成します。 <!-- Uses an existing bridge on the host and creates a virtual device pair to connect the host bridge to the instance. -->
+ - [macvlan](#nictype-macvlan): 既存のネットワークデバイスをベースに MAC が異なる新しいネットワークデバイスを作成します。 <!-- Sets up a new network device based on an existing one but using a different MAC address. -->
+ - [sriov](#nictype-sriov): SR-IOV が有効な物理ネットワークデバイスの仮想ファンクション（virtual function）をインスタンスに与えます。 <!-- Passes a virtual function of an SR-IOV enabled physical network device into the instance. -->
+
+次の NIC は `network` プロパティーのみを使って選択できます。
+<!--
+The following NICs can be specified using only the `network` property:
+-->
+
+ - [ovn](#nic-ovn): 既存の OVN ネットワークを使用し、インスタンスが接続する仮想デバイスペアを作成します。 <!-- Uses an existing OVN network and creates a virtual device pair to connect the instance to it. -->
+
+次の NIC は `nictype` プロパティーのみを使って選択できます。
+<!--
+The following NICs can be specified using only the `nictype` property:
 -->
 
  - [physical](#nictype-physical): ホストの物理デバイスを直接使います。対象のデバイスはホスト上では見えなくなり、インスタンス内に出現します。 <!-- Straight physical device passthrough from the host. The targeted device will vanish from the host and appear in the instance. -->
- - [bridged](#nictype-bridged): ホスト上に存在するブリッジを使います。ホストのブリッジとインスタンスを接続する仮想デバイスペアを作成します。 <!-- Uses an existing bridge on the host and creates a virtual device pair to connect the host bridge to the instance. -->
- - [macvlan](#nictype-macvlan): 既存のネットワークデバイスをベースに MAC が異なる新しいネットワークデバイスを作成します。 <!-- Sets up a new network device based on an existing one but using a different MAC address. -->
  - [ipvlan](#nictype-ipvlan): 既存のネットワークデバイスをベースに MAC アドレスは同じですが IP アドレスが異なる新しいネットワークデバイスを作成します。 <!-- Sets up a new network device based on an existing one using the same MAC address but a different IP. -->
  - [p2p](#nictype-p2p): 仮想デバイスペアを作成し、片方をインスタンス内に置き、残りの片方をホスト上に残します。 <!-- Creates a virtual device pair, putting one side in the instance and leaving the other side on the host. -->
- - [sriov](#nictype-sriov): SR-IOV が有効な物理ネットワークデバイスの仮想ファンクション（virtual function）をインスタンスに与えます。 <!-- Passes a virtual function of an SR-IOV enabled physical network device into the instance. -->
- - [routed](#nictype-routed): 仮想デバイスペアを作成し、ホストからインスタンスに繋いで静的ルートをセットアップし ARP/NDP エントリーをプロキシします。これにより指定された親インタフェースのネットワークにインスタンスが参加できるようになります。 <!-- Creates a virtual device pair to connect the host to the instance and sets up static routes and proxy ARP/NDP entries to allow the instance to join the network of a designated parent interface. -->
+ - [routed](#nictype-routed): 仮想デバイスペアを作成し、ホストからインスタンスに繋いで静的ルートをセットアップし ARP/NDP エントリーをプロキシします。これにより指定された親インタフェースのネットワークに
+インスタンスが参加できるようになります。 <!-- Creates a virtual device pair to connect the host to the instance and sets up static routes and proxy ARP/NDP entries to allow the instance to join the network of a designated parent interface. -->
 
-ネットワークインターフェースの種類が異なると追加のプロパティが異なります。
-<!--
-Different network interface types have different additional properties.
--->
-
-`nictype` の設定可能な値は、そのタイプの NIC に対応するプロパティとともに以下に記載します。
-<!--
-Each possible `nictype` value is documented below along with the relevant properties for nics of that type.
--->
-
-#### nictype: physical
+#### nic: bridged
 
 サポートされるインスタンスタイプ: コンテナー, VM
 <!--
 Supported instance types: container, VM
 -->
 
-物理デバイスそのものをパススルー。対象のデバイスはホストからは消失し、インスタンス内に出現します。
+この NIC の指定に使えるプロパティー: `nictype`, `network`
 <!--
-Straight physical device passthrough from the host. The targeted device will vanish from the host and appear in the instance.
--->
-
-デバイス設定プロパティは以下の通りです。
-<!--
-Device configuration properties:
--->
-
-Key                     | Type      | Default           | Required  | Description
-:--                     | :--       | :--               | :--       | :--
-parent                  | string    | -                 | yes       | ホストデバイスの名前 <!-- The name of the host device -->
-name                    | string    | カーネルが割り当て <!-- kernel assigned -->   | no        | インスタンス内部でのインタフェース名 <!-- The name of the interface inside the instance -->
-mtu                     | integer   | 親の MTU <!-- parent MTU -->        | no        | 新しいインタフェースの MTU <!-- The MTU of the new interface -->
-hwaddr                  | string    | ランダムに割り当て <!-- randomly assigned --> | no        | 新しいインタフェースの MAC アドレス <!-- The MAC address of the new interface -->
-vlan                    | integer   | -                 | no        | アタッチ先の VLAN ID <!-- The VLAN ID to attach to -->
-maas.subnet.ipv4        | string    | -                 | no        | インスタンスを登録する MAAS IPv4 サブネット <!-- MAAS IPv4 subnet to register the instance in -->
-maas.subnet.ipv6        | string    | -                 | no        | インスタンスを登録する MAAS IPv6 サブネット <!-- MAAS IPv6 subnet to register the instance in -->
-boot.priority           | integer   | -                 | no        | VM のブート優先度 (高いほうが先にブート) <!-- Boot priority for VMs (higher boots first) -->
-
-#### nictype: bridged
-
-サポートされるインスタンスタイプ: コンテナー, VM
-<!--
-Supported instance types: container, VM
+Selected using: `nictype`, `network`
 -->
 
 ホストの既存のブリッジを使用し、ホストのブリッジをインスタンスに接続するための仮想デバイスのペアを作成します。
@@ -424,35 +442,40 @@ Uses an existing bridge on the host and creates a virtual device pair to connect
 Device configuration properties:
 -->
 
-Key                      | Type      | Default           | Required  | Description
-:--                      | :--       | :--               | :--       | :--
-parent                   | string    | -                 | yes       | ホストデバイスの名前 <!-- The name of the host device -->
-network                  | string    | -                 | yes       | （parent の代わりに）デバイスをリンクする先の LXD ネットワーク <!-- The LXD network to link device to (instead of parent) -->
-name                     | string    | カーネルが割り当て <!-- kernel assigned -->   | no        | インスタンス内でのインタフェースの名前 <!-- The name of the interface inside the instance -->
-mtu                      | integer   | 親の MTU <!-- parent MTU -->        | no        | 新しいインタフェースの MTU <!-- The MTU of the new interface -->
-hwaddr                   | string    | ランダムに割り当て <!-- randomly assigned --> | no        | 新しいインタフェースの MAC アドレス <!-- The MAC address of the new interface -->
-host\_name               | string    | ランダムに割り当て <!-- randomly assigned --> | no        | ホスト内でのインタフェースの名前 <!-- The name of the interface inside the host -->
-limits.ingress           | string    | -                 | no        | 入力トラフィックの I/O 制限値（さまざまな単位が使用可能、下記参照）<!-- I/O limit in bit/s for incoming traffic (various suffixes supported, see below) -->
-limits.egress            | string    | -                 | no        | 出力トラフィックの I/O 制限値（さまざまな単位が使用可能、下記参照）<!-- I/O limit in bit/s for outgoing traffic (various suffixes supported, see below) -->
-limits.max               | string    | -                 | no        | `limits.ingress` と `limits.egress` の両方を同じ値に変更する <!-- Same as modifying both limits.ingress and limits.egress -->
-ipv4.address             | string    | -                 | no        | DHCP でインスタンスに割り当てる IPv4 アドレス <!-- An IPv4 address to assign to the instance through DHCP -->
-ipv6.address             | string    | -                 | no        | DHCP でインスタンスに割り当てる IPv6 アドレス <!-- An IPv6 address to assign to the instance through DHCP -->
-ipv4.routes              | string    | -                 | no        | ホスト上で nic に追加する IPv4 静的ルートのカンマ区切りリスト <!-- Comma delimited list of IPv4 static routes to add on host to nic -->
-ipv6.routes              | string    | -                 | no        | ホスト上で nic に追加する IPv6 静的ルートのカンマ区切りリスト <!-- Comma delimited list of IPv6 static routes to add on host to nic -->
-security.mac\_filtering  | boolean   | false             | no        | インスタンスが他の MAC アドレスになりすますのを防ぐ <!-- Prevent the instance from spoofing another's MAC address -->
-security.ipv4\_filtering | boolean   | false             | no        | インスタンスが他の IPv4 アドレスになりすますのを防ぐ (これを設定すると mac\_filtering も有効になります） <!-- Prevent the instance from spoofing another's IPv4 address (enables mac\_filtering) -->
-security.ipv6\_filtering | boolean   | false             | no        | インスタンスが他の IPv6 アドレスになりすますのを防ぐ (これを設定すると mac\_filtering も有効になります） <!-- Prevent the instance from spoofing another's IPv6 address (enables mac\_filtering) -->
-maas.subnet.ipv4         | string    | -                 | no        | インスタンスを登録する MAAS IPv4 サブネット <!-- MAAS IPv4 subnet to register the instance in -->
-maas.subnet.ipv6         | string    | -                 | no        | インスタンスを登録する MAAS IPv6 サブネット <!-- MAAS IPv6 subnet to register the instance in -->
-boot.priority            | integer   | -                 | no        | VM のブート優先度 (高いほうが先にブート) <!-- Boot priority for VMs (higher boots first) -->
-vlan                     | integer   | -                 | no        | タグなしのトラフィックに使用する VLAN ID （デフォルトの VLAN からポートを削除するには `none` を指定） <!-- The VLAN ID to use for untagged traffic (Can be `none` to remove port from default VLAN) -->
-vlan.tagged              | integer   | -                 | no        | タグありのトラフィックに参加する VLAN ID のカンマ区切りリスト <!-- Comma delimited list of VLAN IDs to join for tagged traffic -->
+Key                      | Type      | Default                                       | Required | Managed | Description
+:--                      | :--       | :--                                           | :--      | :--     | :--
+parent                   | string    | -                                             | yes      | yes     | ホストデバイスの名前 <!-- The name of the host device -->
+network                  | string    | -                                             | yes      | no      | （parent の代わりに）デバイスをリンクする先の LXD ネットワーク <!-- The LXD network to link device to (instead of parent) -->
+name                     | string    | カーネルが割り当て <!-- kernel assigned -->   | no       | no      | インスタンス内でのインタフェースの名前 <!-- The name of the interface inside the instance -->
+mtu                      | integer   | 親の MTU <!-- parent MTU -->                  | no       | yes     | 新しいインタフェースの MTU <!-- The MTU of the new interface -->
+hwaddr                   | string    | ランダムに割り当て <!-- randomly assigned --> | no       | no      | 新しいインタフェースの MAC アドレス <!-- The MAC address of the new interface -->
+host\_name               | string    | ランダムに割り当て <!-- randomly assigned --> | no       | no      | ホスト内でのインタフェースの名前 <!-- The name of the interface inside the host -->
+limits.ingress           | string    | -                                             | no       | no      | 入力トラフィックの I/O 制限値（さまざまな単位が使用可能、下記参照）<!-- I/O limit in bit/s for incoming traffic (various suffixes supported, see below) -->
+limits.egress            | string    | -                                             | no       | no      | 出力トラフィックの I/O 制限値（さまざまな単位が使用可能、下記参照）<!-- I/O limit in bit/s for outgoing traffic (various suffixes supported, see below) -->
+limits.max               | string    | -                                             | no       | no      | `limits.ingress` と `limits.egress` の両方を同じ値に変更する <!-- Same as modifying both limits.ingress and limits.egress -->
+ipv4.address             | string    | -                                             | no       | no      | DHCP でインスタンスに割り当てる IPv4 アドレス <!-- An IPv4 address to assign to the instance through DHCP -->
+ipv6.address             | string    | -                                             | no       | no      | DHCP でインスタンスに割り当てる IPv6 アドレス <!-- An IPv6 address to assign to the instance through DHCP -->
+ipv4.routes              | string    | -                                             | no       | no      | ホスト上で nic に追加する IPv4 静的ルートのカンマ区切りリスト <!-- Comma delimited list of IPv4 static routes to add on host to nic -->
+ipv6.routes              | string    | -                                             | no       | no      | ホスト上で nic に追加する IPv6 静的ルートのカンマ区切りリスト <!-- Comma delimited list of IPv6 static routes to add on host to nic -->
+security.mac\_filtering  | boolean   | false                                         | no       | no      | インスタンスが他の MAC アドレスになりすますのを防ぐ <!-- Prevent the instance from spoofing another's MAC address -->
+security.ipv4\_filtering | boolean   | false                                         | no       | no      | インスタンスが他の IPv4 アドレスになりすますのを防ぐ (これを設定すると mac\_filtering も有効になります） <!-- Prevent the instance from spoofing another's IPv4 address (enables mac\_filtering) -->
+security.ipv6\_filtering | boolean   | false                                         | no       | no      | インスタンスが他の IPv6 アドレスになりすますのを防ぐ (これを設定すると mac\_filtering も有効になります） <!-- Prevent the instance from spoofing another's IPv6 address (enables mac\_filtering) -->
+maas.subnet.ipv4         | string    | -                                             | no       | yes     | インスタンスを登録する MAAS IPv4 サブネット <!-- MAAS IPv4 subnet to register the instance in -->
+maas.subnet.ipv6         | string    | -                                             | no       | yes     | インスタンスを登録する MAAS IPv6 サブネット <!-- MAAS IPv6 subnet to register the instance in -->
+boot.priority            | integer   | -                                             | no       | no      | VM のブート優先度 (高いほうが先にブート) <!-- Boot priority for VMs (higher boots first) -->
+vlan                     | integer   | -                                             | no       | no      | タグなしのトラフィックに使用する VLAN ID （デフォルトの VLAN からポートを削除するには `none` を指定） <!-- The VLAN ID to use for untagged traffic (Can be `none` to remove port from default VLAN) -->
+vlan.tagged              | integer   | -                                             | no       | no      | タグありのトラフィックに参加する VLAN ID のカンマ区切りリスト <!-- Comma delimited list of VLAN IDs to join for tagged traffic -->
 
-#### nictype: macvlan
+#### nic: macvlan
 
 サポートされるインスタンスタイプ: コンテナー, VM
 <!--
 Supported instance types: container, VM
+-->
+
+この NIC の指定に使えるプロパティー: `nictype`, `network`
+<!--
+Selected using: `nictype`, `network`
 -->
 
 既存のネットワークデバイスを元に新しいネットワークデバイスをセットアップしますが、異なる MAC アドレスを用います。
@@ -465,23 +488,130 @@ Sets up a new network device based on an existing one but using a different MAC 
 Device configuration properties:
 -->
 
-Key                     | Type      | Default           | Required  | Description
-:--                     | :--       | :--               | :--       | :--
-parent                  | string    | -                 | yes       | ホストデバイスの名前 <!-- The name of the host device -->
-network                 | string    | -                 | yes       | （parent の代わりに）デバイスをリンクする先の LXD ネットワーク <!-- The LXD network to link device to (instead of parent) -->
-name                    | string    | カーネルが割り当て <!-- kernel assigned -->   | no        | インスタンス内部でのインタフェース名 <!-- The name of the interface inside the instance -->
-mtu                     | integer   | 親の MTU <!-- parent MTU -->        | no        | 新しいインタフェースの MTU <!-- The MTU of the new interface -->
-hwaddr                  | string    | ランダムに割り当て <!-- randomly assigned --> | no        | 新しいインタフェースの MAC アドレス <!-- The MAC address of the new interface -->
-vlan                    | integer   | -                 | no        | アタッチ先の VLAN ID <!-- The VLAN ID to attach to -->
-maas.subnet.ipv4        | string    | -                 | no        | インスタンスを登録する MAAS IPv4 サブネット <!-- MAAS IPv4 subnet to register the instance in -->
-maas.subnet.ipv6        | string    | -                 | no        | インスタンスを登録する MAAS IPv6 サブネット <!-- MAAS IPv6 subnet to register the instance in -->
-boot.priority           | integer   | -                 | no        | VM のブート優先度 (高いほうが先にブート) <!-- Boot priority for VMs (higher boots first) -->
+Key                     | Type      | Default                                       | Required | Managed | Description
+:--                     | :--       | :--                                           | :--      | :--     | :--
+parent                  | string    | -                                             | yes      | yes     | ホストデバイスの名前 <!-- The name of the host device -->
+network                 | string    | -                                             | yes      | no      | （parent の代わりに）デバイスをリンクする先の LXD ネットワーク <!-- The LXD network to link device to (instead of parent) -->
+name                    | string    | カーネルが割り当て <!-- kernel assigned -->   | no       | no      | インスタンス内部でのインタフェース名 <!-- The name of the interface inside the instance -->
+mtu                     | integer   | 親の MTU <!-- parent MTU -->                  | no       | yes     | 新しいインタフェースの MTU <!-- The MTU of the new interface -->
+hwaddr                  | string    | ランダムに割り当て <!-- randomly assigned --> | no       | no      | 新しいインタフェースの MAC アドレス <!-- The MAC address of the new interface -->
+vlan                    | integer   | -                                             | no       | no      | アタッチ先の VLAN ID <!-- The VLAN ID to attach to -->
+maas.subnet.ipv4        | string    | -                                             | no       | yes     | インスタンスを登録する MAAS IPv4 サブネット <!-- MAAS IPv4 subnet to register the instance in -->
+maas.subnet.ipv6        | string    | -                                             | no       | yes     | インスタンスを登録する MAAS IPv6 サブネット <!-- MAAS IPv6 subnet to register the instance in -->
+boot.priority           | integer   | -                                             | no       | no      | VM のブート優先度 (高いほうが先にブート) <!-- Boot priority for VMs (higher boots first) -->
 
-#### nictype: ipvlan
+#### nic: sriov
+
+サポートされるインスタンスタイプ: コンテナー, VM
+<!--
+Supported instance types: container, VM
+-->
+
+この NIC の指定に使えるプロパティー: `nictype`, `network`
+<!--
+Selected using: `nictype`, `network`
+-->
+
+SR-IOV を有効にした物理ネットワークデバイスの仮想ファンクションをインスタンスに渡します。
+<!--
+Passes a virtual function of an SR-IOV enabled physical network device into the instance.
+-->
+
+デバイス設定プロパティは以下の通りです。
+<!--
+Device configuration properties:
+-->
+
+Key                     | Type      | Default                                       | Required | Managed | Description
+:--                     | :--       | :--                                           | :--      | :--     | :--
+parent                  | string    | -                                             | yes      | yes     | ホストデバイスの名前 <!-- The name of the host device -->
+network                 | string    | -                                             | yes      | no      | （parent の代わりに）デバイスをリンクする先の LXD ネットワーク <!-- The LXD network to link device to (instead of parent) -->
+name                    | string    | カーネルが割り当て <!-- kernel assigned -->   | no       | no      | インスタンス内部でのインタフェース名 <!-- The name of the interface inside the instance -->
+mtu                     | integer   | カーネルが割り当て <!-- kernel assigned -->   | no       | yes     | 新しいインタフェースの MTU <!-- The MTU of the new interface -->
+hwaddr                  | string    | ランダムに割り当て <!-- randomly assigned --> | no       | no      | 新しいインタフェースの MAC アドレス <!-- The MAC address of the new interface -->
+security.mac\_filtering | boolean   | false                                         | no       | no      | インスタンスが他の MAC アドレスになりすますのを防ぐ <!-- Prevent the instance from spoofing another's MAC address -->
+vlan                    | integer   | -                                             | no       | no      | アタッチ先の VLAN ID <!-- The VLAN ID to attach to -->
+maas.subnet.ipv4        | string    | -                                             | no       | yes     | インスタンスを登録する MAAS IPv4 サブネット <!-- MAAS IPv4 subnet to register the instance in -->
+maas.subnet.ipv6        | string    | -                                             | no       | yes     | インスタンスを登録する MAAS IPv6 サブネット <!-- MAAS IPv6 subnet to register the instance in -->
+boot.priority           | integer   | -                                             | no       | no      | VM のブート優先度 (高いほうが先にブート) <!-- Boot priority for VMs (higher boots first) -->
+
+#### nic: ovn
+
+サポートされるインスタンスタイプ: コンテナー, VM
+<!--
+Supported instance types: container, VM
+-->
+
+この NIC の指定に使えるプロパティー: `network`
+<!--
+Selected using: `network`
+-->
+
+既存の OVN ネットワークを使用し、インスタンスが接続する仮想デバイスペアを作成します。
+<!--
+Uses an existing OVN network and creates a virtual device pair to connect the instance to it.
+-->
+
+デバイス設定プロパティは以下の通りです。
+<!--
+Device configuration properties:
+-->
+
+Key                     | Type    | Default                                       | Required | Managed | Description
+:--                     | :--     | :--                                           | :--      | :--     | :--
+network                 | string  | -                                             | yes      | yes     | デバイスの接続先の LXD ネットワーク <!-- The LXD network to link device to -->
+name                    | string  | カーネルが割り当て <!-- kernel assigned -->   | no       | no      | インスタンス内部でのインタフェース名 <!-- The name of the interface inside the instance -->
+host\_name              | string  | ランダムに割り当て <!-- randomly assigned --> | no       | no      | ホスト内部でのインタフェース名 <!-- The name of the interface inside the host -->
+hwaddr                  | string  | ランダムに割り当て <!-- randomly assigned --> | no       | no      | 新しいインターフェースの MAC アドレス <!-- The MAC address of the new interface -->
+ipv4.address            | string  | -                                             | no       | no      | DHCP でインスタンスに割り当てる IPv4 アドレス <!-- An IPv4 address to assign to the instance through DHCP -->
+ipv6.address            | string  | -                                             | no       | no      | DHCP でインスタンスに割り当てる IPv6 アドレス <!-- An IPv6 address to assign to the instance through DHCP -->
+ipv4.routes.external    | string  | -                                             | no       | no      | NIC へのルートとアップリンクネットワークでの公開に使用する IPv4 静的ルートのカンマ区切りリスト <!-- Comma delimited list of IPv4 static routes to route to the NIC and publish on uplink network -->
+ipv6.routes.external    | string  | -                                             | no       | no      | NIC へのルートとアップリンクネットワークでの公開に使用する IPv6 静的ルートのカンマ区切りリスト <!-- Comma delimited list of IPv6 static routes to route to the NIC and publish on uplink network -->
+boot.priority           | integer | -                                             | no       | no      | VM のブート優先度 (高いほうが先にブート) <!-- Boot priority for VMs (higher boots first) -->
+
+#### nic: physical
+
+サポートされるインスタンスタイプ: コンテナー, VM
+<!--
+Supported instance types: container, VM
+-->
+
+この NIC の指定に使えるプロパティー: `nictype`
+<!--
+Selected using: `nictype`
+-->
+
+物理デバイスそのものをパススルー。対象のデバイスはホストからは消失し、インスタンス内に出現します。
+<!--
+Straight physical device passthrough from the host. The targeted device will vanish from the host and appear in the instance.
+-->
+
+デバイス設定プロパティは以下の通りです。
+<!--
+Device configuration properties:
+-->
+
+Key                     | Type      | Default                                       | Required | Description
+:--                     | :--       | :--                                           | :--      | :--
+parent                  | string    | -                                             | yes      | ホストデバイスの名前 <!-- The name of the host device -->
+name                    | string    | カーネルが割り当て <!-- kernel assigned -->   | no       | インスタンス内部でのインタフェース名 <!-- The name of the interface inside the instance -->
+mtu                     | integer   | 親の MTU <!-- parent MTU -->                  | no       | 新しいインタフェースの MTU <!-- The MTU of the new interface -->
+hwaddr                  | string    | ランダムに割り当て <!-- randomly assigned --> | no       | 新しいインタフェースの MAC アドレス <!-- The MAC address of the new interface -->
+vlan                    | integer   | -                                             | no       | アタッチ先の VLAN ID <!-- The VLAN ID to attach to -->
+maas.subnet.ipv4        | string    | -                                             | no       | インスタンスを登録する MAAS IPv4 サブネット <!-- MAAS IPv4 subnet to register the instance in -->
+maas.subnet.ipv6        | string    | -                                             | no       | インスタンスを登録する MAAS IPv6 サブネット <!-- MAAS IPv6 subnet to register the instance in -->
+boot.priority           | integer   | -                                             | no       | VM のブート優先度 (高いほうが先にブート) <!-- Boot priority for VMs (higher boots first) -->
+
+#### nic: ipvlan
 
 サポートされるインスタンスタイプ: コンテナー
 <!--
 Supported instance types: container
+-->
+
+この NIC の指定に使えるプロパティー: `nictype`
+<!--
+Selected using: `nictype`
 -->
 
 既存のネットワークデバイスを元に新しいネットワークデバイスをセットアップしますが、異なる IP アドレスを用います。
@@ -534,26 +664,31 @@ net.ipv6.conf.<parent>.proxy_ndp=1
 Device configuration properties:
 -->
 
-Key                     | Type      | Default           | Required   | Description
-:--                     | :--       | :--               | :--        | :--
-parent                  | string    | -                 | yes        | ホストデバイスの名前 <!-- The name of the host device -->
-name                    | string    | カーネルが割り当て <!-- kernel assigned -->   | no        | インスタンス内部でのインタフェース名 <!-- The name of the interface inside the instance -->
-mtu                     | integer   | 親の MTU <!-- parent MTU -->        | no        | 新しいインタフェースの MTU <!-- The MTU of the new interface -->
-mode                    | string    | l3s                | no        | IPVLAN のモード (`l2` か `l3s` のいずれか） <!-- The IPVLAN mode (either `l2` or `l3s`) -->
-hwaddr                  | string    | ランダムに割り当て <!-- randomly assigned --> | no        | 新しいインタフェースの MAC アドレス <!-- The MAC address of the new interface -->
-ipv4.address            | string    | -                  | no        | インスタンスに追加する IPv4 静的アドレスのカンマ区切りリスト。 `l2` モードでは CIDR 形式か単一アドレス形式で指定可能（単一アドレスの場合はサブネットは /24） <!-- Comma delimited list of IPv4 static addresses to add to the instance. In `l2` mode these can be specified as CIDR values or singular addresses (if singular a subnet of /24 is used). -->
-ipv4.gateway            | string    | auto               | no        | `l3s` モードではデフォルト IPv4 ゲートウェイを自動的に追加するかどうか (auto か none を指定可能)。 `l2` モードではゲートウェイの IPv4 アドレスを指定。  <!-- In `l3s` mode, whether to add an automatic default IPv4 gateway, can be `auto` or `none`. In `l2` mode specifies the IPv4 address of the gateway. -->
-ipv4.host\_table        | integer   | -                  | no        | （メインのルーティングテーブルに加えて） IPv4 の静的ルートを追加する先のルーティングテーブル ID <!-- The custom policy routing table ID to add IPv4 static routes to (in addition to main routing table). -->
-ipv6.address            | string    | -                  | no        | インスタンスに追加する IPv6 静的アドレスのカンマ区切りリスト。 `l2` モードでは CIDR 形式か単一アドレス形式で指定可能（単一アドレスの場合はサブネットは /64）  <!-- Comma delimited list of IPv6 static addresses to add to the instance. In `l2` mode these can be specified as CIDR values or singular addresses (if singular a subnet of /64 is used). -->
-ipv6.gateway            | string    | auto (l3s), - (l2) | no        | `l3s` モードではデフォルト IPv6 ゲートウェイを自動的に追加するかどうか (auto か none を指定可能)。 `l2` モードではゲートウェイの IPv6 アドレスを指定。 <!-- In `l3s` mode, whether to add an automatic default IPv6 gateway, can be `auto` or `none`. In `l2` mode specifies the IPv6 address of the gateway. -->
-ipv6.host\_table        | integer   | -                  | no        | （メインのルーティングテーブルに加えて） IPv6 の静的ルートを追加する先のルーティングテーブル ID <!-- The custom policy routing table ID to add IPv6 static routes to (in addition to main routing table). -->
-vlan                    | integer   | -                  | no        | アタッチ先の VLAN ID <!-- The VLAN ID to attach to -->
+Key                     | Type      | Default                                       | Required | Description
+:--                     | :--       | :--                                           | :--      | :--
+parent                  | string    | -                                             | yes      | ホストデバイスの名前 <!-- The name of the host device -->
+name                    | string    | カーネルが割り当て <!-- kernel assigned -->   | no       | インスタンス内部でのインタフェース名 <!-- The name of the interface inside the instance -->
+mtu                     | integer   | 親の MTU <!-- parent MTU -->                  | no       | 新しいインタフェースの MTU <!-- The MTU of the new interface -->
+mode                    | string    | l3s                                           | no       | IPVLAN のモード (`l2` か `l3s` のいずれか） <!-- The IPVLAN mode (either `l2` or `l3s`) -->
+hwaddr                  | string    | ランダムに割り当て <!-- randomly assigned --> | no       | 新しいインタフェースの MAC アドレス <!-- The MAC address of the new interface -->
+ipv4.address            | string    | -                                             | no       | インスタンスに追加する IPv4 静的アドレスのカンマ区切りリスト。 `l2` モードでは CIDR 形式か単一アドレス形式で指定可能（単一アドレスの場合はサブネットは /24） <!-- Comma delimited list of IPv4 static addresses to add to the instance. In `l2` mode these can be specified as CIDR values or singular addresses (if singular a subnet of /24 is used). -->
+ipv4.gateway            | string    | auto                                          | no       | `l3s` モードではデフォルト IPv4 ゲートウェイを自動的に追加するかどうか (auto か none を指定可能)。 `l2` モードではゲートウェイの IPv4 アドレスを指定。  <!-- In `l3s` mode, whether to add an automatic default IPv4 gateway, can be `auto` or `none`. In `l2` mode specifies the IPv4 address of the gateway. -->
+ipv4.host\_table        | integer   | -                                             | no       | （メインのルーティングテーブルに加えて） IPv4 の静的ルートを追加する先のルーティングテーブル ID <!-- The custom policy routing table ID to add IPv4 static routes to (in addition to main routing table). -->
+ipv6.address            | string    | -                                             | no       | インスタンスに追加する IPv6 静的アドレスのカンマ区切りリスト。 `l2` モードでは CIDR 形式か単一アドレス形式で指定可能（単一アドレスの場合はサブネットは /64）  <!-- Comma delimited list of IPv6 static addresses to add to the instance. In `l2` mode these can be specified as CIDR values or singular addresses (if singular a subnet of /64 is used). -->
+ipv6.gateway            | string    | auto (l3s), - (l2)                            | no       | `l3s` モードではデフォルト IPv6 ゲートウェイを自動的に追加するかどうか (auto か none を指定可能)。 `l2` モードではゲートウェイの IPv6 アドレスを指定。 <!-- In `l3s` mode, whether to add an automatic default IPv6 gateway, can be `auto` or `none`. In `l2` mode specifies the IPv6 address of the gateway. -->
+ipv6.host\_table        | integer   | -                                             | no       | （メインのルーティングテーブルに加えて） IPv6 の静的ルートを追加する先のルーティングテーブル ID <!-- The custom policy routing table ID to add IPv6 static routes to (in addition to main routing table). -->
+vlan                    | integer   | -                                             | no       | アタッチ先の VLAN ID <!-- The VLAN ID to attach to -->
 
-#### nictype: p2p
+#### nic: p2p
 
 サポートされるインスタンスタイプ: コンテナー, VM
 <!--
 Supported instance types: container, VM
+-->
+
+この NIC の指定に使えるプロパティー: `nictype`
+<!--
+Selected using: `nictype`
 -->
 
 仮想デバイスペアを作成し、片方はインスタンス内に配置し、もう片方はホストに残します。
@@ -566,54 +701,29 @@ Creates a virtual device pair, putting one side in the instance and leaving the 
 Device configuration properties:
 -->
 
-Key                     | Type      | Default           | Required  | Description
-:--                     | :--       | :--               | :--       | :--
-name                    | string    | カーネルが割り当て <!-- kernel assigned -->   | no        | インスタンス内部でのインタフェース名 <!-- The name of the interface inside the instance -->
-mtu                     | integer   | カーネルが割り当て <!-- kernel assigned -->   | no        | 新しいインタフェースの MTU <!-- The MTU of the new interface -->
-hwaddr                  | string    | ランダムに割り当て <!-- randomly assigned --> | no        | 新しいインタフェースの MAC アドレス <!-- The MAC address of the new interface -->
-host\_name              | string    | ランダムに割り当て <!-- randomly assigned --> | no        | ホスト内でのインタフェースの名前 <!-- The name of the interface inside the host -->
-limits.ingress          | string    | -                 | no        | 入力トラフィックの I/O 制限値（さまざまな単位が使用可能、下記参照）<!-- I/O limit in bit/s for incoming traffic (various suffixes supported, see below) -->
-limits.egress           | string    | -                 | no        | 出力トラフィックの I/O 制限値（さまざまな単位が使用可能、下記参照）<!-- I/O limit in bit/s for outgoing traffic (various suffixes supported, see below) -->
-limits.max              | string    | -                 | no        | `limits.ingress` と `limits.egress` の両方を同じ値に変更する <!-- Same as modifying both limits.ingress and limits.egress -->
-ipv4.routes             | string    | -                 | no        | ホスト上で nic に追加する IPv4 静的ルートのカンマ区切りリスト <!-- Comma delimited list of IPv4 static routes to add on host to nic -->
-ipv6.routes             | string    | -                 | no        | ホスト上で nic に追加する IPv6 静的ルートのカンマ区切りリスト <!-- Comma delimited list of IPv6 static routes to add on host to nic -->
-boot.priority           | integer   | -                 | no        | VM のブート優先度 (高いほうが先にブート) <!-- Boot priority for VMs (higher boots first) -->
+Key                     | Type      | Default                                       | Required | Description
+:--                     | :--       | :--                                           | :--      | :--
+name                    | string    | カーネルが割り当て <!-- kernel assigned -->   | no       | インスタンス内部でのインタフェース名 <!-- The name of the interface inside the instance -->
+mtu                     | integer   | カーネルが割り当て <!-- kernel assigned -->   | no       | 新しいインタフェースの MTU <!-- The MTU of the new interface -->
+hwaddr                  | string    | ランダムに割り当て <!-- randomly assigned --> | no       | 新しいインタフェースの MAC アドレス <!-- The MAC address of the new interface -->
+host\_name              | string    | ランダムに割り当て <!-- randomly assigned --> | no       | ホスト内でのインタフェースの名前 <!-- The name of the interface inside the host -->
+limits.ingress          | string    | -                                             | no       | 入力トラフィックの I/O 制限値（さまざまな単位が使用可能、下記参照）<!-- I/O limit in bit/s for incoming traffic (various suffixes supported, see below) -->
+limits.egress           | string    | -                                             | no       | 出力トラフィックの I/O 制限値（さまざまな単位が使用可能、下記参照）<!-- I/O limit in bit/s for outgoing traffic (various suffixes supported, see below) -->
+limits.max              | string    | -                                             | no       | `limits.ingress` と `limits.egress` の両方を同じ値に変更する <!-- Same as modifying both limits.ingress and limits.egress -->
+ipv4.routes             | string    | -                                             | no       | ホスト上で nic に追加する IPv4 静的ルートのカンマ区切りリスト <!-- Comma delimited list of IPv4 static routes to add on host to nic -->
+ipv6.routes             | string    | -                                             | no       | ホスト上で nic に追加する IPv6 静的ルートのカンマ区切りリスト <!-- Comma delimited list of IPv6 static routes to add on host to nic -->
+boot.priority           | integer   | -                                             | no       | VM のブート優先度 (高いほうが先にブート) <!-- Boot priority for VMs (higher boots first) -->
 
-#### nictype: sriov
-
-サポートされるインスタンスタイプ: コンテナー, VM
-<!--
-Supported instance types: container, VM
--->
-
-SR-IOV を有効にした物理ネットワークデバイスの仮想ファンクションをインスタンスに渡します。
-<!--
-Passes a virtual function of an SR-IOV enabled physical network device into the instance.
--->
-
-デバイス設定プロパティは以下の通りです。
-<!--
-Device configuration properties:
--->
-
-Key                     | Type      | Default           | Required  | Description
-:--                     | :--       | :--               | :--       | :--
-parent                  | string    | -                 | yes       | ホストデバイスの名前 <!-- The name of the host device -->
-network                 | string    | -                 | yes       | （parent の代わりに）デバイスをリンクする先の LXD ネットワーク <!-- The LXD network to link device to (instead of parent) -->
-name                    | string    | カーネルが割り当て <!-- kernel assigned -->   | no        | インスタンス内部でのインタフェース名 <!-- The name of the interface inside the instance -->
-mtu                     | integer   | カーネルが割り当て <!-- kernel assigned -->   | no        | 新しいインタフェースの MTU <!-- The MTU of the new interface -->
-hwaddr                  | string    | ランダムに割り当て <!-- randomly assigned --> | no        | 新しいインタフェースの MAC アドレス <!-- The MAC address of the new interface -->
-security.mac\_filtering | boolean   | false             | no        | インスタンスが他の MAC アドレスになりすますのを防ぐ <!-- Prevent the instance from spoofing another's MAC address -->
-vlan                    | integer   | -                 | no        | アタッチ先の VLAN ID <!-- The VLAN ID to attach to -->
-maas.subnet.ipv4        | string    | -                 | no        | インスタンスを登録する MAAS IPv4 サブネット <!-- MAAS IPv4 subnet to register the instance in -->
-maas.subnet.ipv6        | string    | -                 | no        | インスタンスを登録する MAAS IPv6 サブネット <!-- MAAS IPv6 subnet to register the instance in -->
-boot.priority           | integer   | -                 | no        | VM のブート優先度 (高いほうが先にブート) <!-- Boot priority for VMs (higher boots first) -->
-
-#### nictype: routed
+#### nic: routed
 
 サポートされるインスタンスタイプ: コンテナー
 <!--
 Supported instance types: container
+-->
+
+この NIC の指定に使えるプロパティー: `nictype`
+<!--
+Selected using: `nictype`
 -->
 
 この NIC タイプは運用上は IPVLAN に似ていて、ブリッジを作成することなくホストの MAC アドレスを共用してインスタンスが外部ネットワークに参加できるようにします。
@@ -704,59 +814,52 @@ It may also be useful to specify a different host-side address for these subsequ
 Device configuration properties:
 -->
 
-Key                     | Type      | Default           | Required  | Description
-:--                     | :--       | :--               | :--       | :--
-parent                  | string    | -                 | no        | インスタンスが参加するホストデバイス名 <!-- The name of the host device to join the instance to -->
-name                    | string    | カーネルが割り当て <!-- kernel assigned -->   | no        | インスタンス内でのインタフェース名 <!-- The name of the interface inside the instance -->
-host\_name              | string    | ランダムに割り当て <!-- randomly assigned --> | no        | ホスト内でのインターフェース名 <!-- The name of the interface inside the host -->
-mtu                     | integer   | 親の MTU <!-- parent MTU -->        | no        | 新しいインタフェースの MTU <!-- The MTU of the new interface -->
-hwaddr                  | string    | ランダムに割り当て <!-- randomly assigned --> | no        | 新しいインタフェースの MAC アドレス <!-- The MAC address of the new interface -->
-limits.ingress          | string    | -                 | no        | 内向きトラフィックに対する bit/s での I/O 制限（さまざまな単位をサポート、下記参照） <!-- I/O limit in bit/s for incoming traffic (various suffixes supported, see below) -->
-limits.egress           | string    | -                 | no        | 外向きトラフィックに対する bit/s での I/O 制限（さまざまな単位をサポート、下記参照） <!-- I/O limit in bit/s for outgoing traffic (various suffixes supported, see below) -->
-limits.max              | string    | -                 | no        | limits.ingress と limits.egress の両方を指定するのと同じ <!-- Same as modifying both limits.ingress and limits.egress -->
-ipv4.address            | string    | -                 | no        | インスタンスに追加する IPv4 静的アドレスのカンマ区切りリスト <!-- Comma delimited list of IPv4 static addresses to add to the instance -->
-ipv4.gateway            | string    | auto              | no        | 自動的に IPv4 のデフォルトゲートウェイを追加するかどうか（ auto か none を指定可能） <!-- Whether to add an automatic default IPv4 gateway, can be "auto" or "none" -->
-ipv4.host\_address      | string    | 169.254.0.1       | no        | ホスト側の veth インターフェースに追加する IPv4 アドレス <!-- The IPv4 address to add to the host-side veth interface. -->
-ipv4.host\_table        | integer   | -                 | no        | （メインのルーティングテーブルに加えて） IPv4 の静的ルートを追加する先のルーティングテーブル ID <!-- The custom policy routing table ID to add IPv4 static routes to (in addition to main routing table). -->
-ipv6.address            | string    | -                 | no        | インスタンスに追加する IPv6 静的アドレスのカンマ区切りリスト <!-- Comma delimited list of IPv6 static addresses to add to the instance -->
-ipv6.gateway            | string    | auto              | no        | 自動的に IPv6 のデフォルトゲートウェイを追加するかどうか（ auto か none を指定可能） <!-- Whether to add an automatic default IPv6 gateway, can be "auto" or "none" -->
-ipv6.host\_address      | string    | fe80::1           | no        | ホスト側の veth インターフェースに追加する IPv6 アドレス <!-- The IPv6 address to add to the host-side veth interface. -->
-ipv6.host\_table        | integer   | -                 | no        | （メインのルーティングテーブルに加えて） IPv6 の静的ルートを追加する先のルーティングテーブル ID <!-- The custom policy routing table ID to add IPv6 static routes to (in addition to main routing table). -->
-vlan                    | integer   | -                 | no        | アタッチ先の VLAN ID <!-- The VLAN ID to attach to -->
+Key                     | Type      | Default                                       | Required | Description
+:--                     | :--       | :--                                           | :--      | :--
+parent                  | string    | -                                             | no       | インスタンスが参加するホストデバイス名 <!-- The name of the host device to join the instance to -->
+name                    | string    | カーネルが割り当て <!-- kernel assigned -->   | no       | インスタンス内でのインタフェース名 <!-- The name of the interface inside the instance -->
+host\_name              | string    | ランダムに割り当て <!-- randomly assigned --> | no       | ホスト内でのインターフェース名 <!-- The name of the interface inside the host -->
+mtu                     | integer   | 親の MTU <!-- parent MTU -->                  | no       | 新しいインタフェースの MTU <!-- The MTU of the new interface -->
+hwaddr                  | string    | ランダムに割り当て <!-- randomly assigned --> | no       | 新しいインタフェースの MAC アドレス <!-- The MAC address of the new interface -->
+limits.ingress          | string    | -                                             | no       | 内向きトラフィックに対する bit/s での I/O 制限（さまざまな単位をサポート、下記参照） <!-- I/O limit in bit/s for incoming traffic (various suffixes supported, see below) -->
+limits.egress           | string    | -                                             | no       | 外向きトラフィックに対する bit/s での I/O 制限（さまざまな単位をサポート、下記参照） <!-- I/O limit in bit/s for outgoing traffic (various suffixes supported, see below) -->
+limits.max              | string    | -                                             | no       | limits.ingress と limits.egress の両方を指定するのと同じ <!-- Same as modifying both limits.ingress and limits.egress -->
+ipv4.address            | string    | -                                             | no       | インスタンスに追加する IPv4 静的アドレスのカンマ区切りリスト <!-- Comma delimited list of IPv4 static addresses to add to the instance -->
+ipv4.gateway            | string    | auto                                          | no       | 自動的に IPv4 のデフォルトゲートウェイを追加するかどうか（ auto か none を指定可能） <!-- Whether to add an automatic default IPv4 gateway, can be "auto" or "none" -->
+ipv4.host\_address      | string    | 169.254.0.1                                   | no       | ホスト側の veth インターフェースに追加する IPv4 アドレス <!-- The IPv4 address to add to the host-side veth interface. -->
+ipv4.host\_table        | integer   | -                                             | no       | （メインのルーティングテーブルに加えて） IPv4 の静的ルートを追加する先のルーティングテーブル ID <!-- The custom policy routing table ID to add IPv4 static routes to (in addition to main routing table). -->
+ipv6.address            | string    | -                                             | no       | インスタンスに追加する IPv6 静的アドレスのカンマ区切りリスト <!-- Comma delimited list of IPv6 static addresses to add to the instance -->
+ipv6.gateway            | string    | auto                                          | no       | 自動的に IPv6 のデフォルトゲートウェイを追加するかどうか（ auto か none を指定可能） <!-- Whether to add an automatic default IPv6 gateway, can be "auto" or "none" -->
+ipv6.host\_address      | string    | fe80::1                                       | no       | ホスト側の veth インターフェースに追加する IPv6 アドレス <!-- The IPv6 address to add to the host-side veth interface. -->
+ipv6.host\_table        | integer   | -                                             | no       | （メインのルーティングテーブルに加えて） IPv6 の静的ルートを追加する先のルーティングテーブル ID <!-- The custom policy routing table ID to add IPv6 static routes to (in addition to main routing table). -->
+vlan                    | integer   | -                                             | no       | アタッチ先の VLAN ID <!-- The VLAN ID to attach to -->
 
 #### ブリッジ、ipvlan、macvlan を使った物理ネットワークへの接続 <!-- bridged, macvlan or ipvlan for connection to physical network -->
 `bridged`、`ipvlan`、`macvlan` インターフェースタイプのいずれも、既存の物理ネットワークへ接続できます。
 <!--
-The `bridged`, `macvlan` and `ipvlan` interface types can both be used to connect
-to an existing physical network.
+The `bridged`, `macvlan` and `ipvlan` interface types can be used to connect to an existing physical network.
 -->
 
 `macvlan` は、物理 NIC を効率的に分岐できます。つまり、物理 NIC からインスタンスで使える第 2 のインターフェースを取得できます。macvlan を使うことで、ブリッジデバイスと veth ペアの作成を減らせますし、通常はブリッジよりも良いパフォーマンスが得られます。
 <!--
-`macvlan` effectively lets you fork your physical NIC, getting a second
-interface that's then used by the instance. This saves you from
-creating a bridge device and veth pairs and usually offers better
-performance than a bridge.
+`macvlan` effectively lets you fork your physical NIC, getting a second interface that's then used by the instance.
+This saves you from creating a bridge device and veth pairs and usually offers better performance than a bridge.
 -->
 
 macvlan の欠点は、macvlan は外部との間で通信はできますが、自身の親デバイスとは通信できないことです。つまりインスタンスとホストが通信する必要がある場合は macvlan は使えません。
 <!--
-The downside to this is that macvlan devices while able to communicate
-between themselves and to the outside, aren't able to talk to their
-parent device. This means that you can't use macvlan if you ever need
-your instances to talk to the host itself.
+The downside to this is that macvlan devices while able to communicate between themselves and to the outside, aren't able to talk to their parent device.
+This means that you can't use macvlan if you ever need your instances to talk to the host itself.
 -->
 
 そのような場合は、ブリッジを選ぶのが良いでしょう。macvlan では使えない MAC フィルタリングと I/O 制限も使えます。
 <!--
-In such case, a bridge is preferable. A bridge will also let you use mac
-filtering and I/O limits which cannot be applied to a macvlan device.
+In such case, a bridge is preferable. A bridge will also let you use mac filtering and I/O limits which cannot be applied to a macvlan device.
 -->
 
 `ipvlan` は `macvlan` と同様ですが、フォークされたデバイスが静的に割り当てられた IP アドレスを持ち、ネットワーク上の親の MAC アドレスを受け継ぐ点が異なります。
 <!--
-`ipvlan` is similar to `macvlan`, with the difference being that the forked device has IPs
-statically assigned to it and inherits the parent's MAC address on the network.
+`ipvlan` is similar to `macvlan`, with the difference being that the forked device has IPs statically assigned to it and inherits the parent's MAC address on the network.
 -->
 
 #### SR-IOV
@@ -768,23 +871,21 @@ VFs は通常の PCIe デバイスとしてシステム上に現れるので、�
 すると LXD は、システム上で使用可能な VFs があるかどうかをチェックします。デフォルトでは、LXD は検索で最初に見つかった使われていない VF を割り当てます。
 有効になった VF が存在しないか、現時点で有効な VFs がすべて使われている場合は、サポートされている VF 数の最大値まで有効化し、最初の使用可能な VF をつかいます。
 もしすべての使用可能な VF が使われているか、カーネルもしくはカードが VF 数を増加させられない場合は、LXD はエラーを返します。
+<!--
+The `sriov` interface type supports SR-IOV enabled network devices.
+These devices associate a set of virtual functions (VFs) with the single physical function (PF) of the network device.
+PFs are standard PCIe functions. VFs on the other hand are very lightweight PCIe functions that are optimized for data movement.
+They come with a limited set of configuration capabilities to prevent changing properties of the PF.
+Given that VFs appear as regular PCIe devices to the system they can be passed to instances just like a regular physical device.
+The `sriov` interface type expects to be passed the name of an SR-IOV enabled network device on the system via the `parent` property.
+LXD will then check for any available VFs on the system. By default LXD will allocate the first free VF it finds.
+If it detects that either none are enabled or all currently enabled VFs are in use it will bump the number of supported VFs to the maximum value and use the first free VF.
+If all possible VFs are in use or the kernel or card doesn't support incrementing the number of VFs LXD will return an error.
+-->
+
 `sriov` ネットワークデバイスは次のように作成します:
 <!--
-The `sriov` interface type supports SR-IOV enabled network devices. These
-devices associate a set of virtual functions (VFs) with the single physical
-function (PF) of the network device. PFs are standard PCIe functions. VFs on
-the other hand are very lightweight PCIe functions that are optimized for data
-movement. They come with a limited set of configuration capabilities to prevent
-changing properties of the PF. Given that VFs appear as regular PCIe devices to
-the system they can be passed to instances just like a regular physical
-device. The `sriov` interface type expects to be passed the name of an SR-IOV
-enabled network device on the system via the `parent` property. LXD will then
-check for any available VFs on the system. By default LXD will allocate the
-first free VF it finds. If it detects that either none are enabled or all
-currently enabled VFs are in use it will bump the number of supported VFs to
-the maximum value and use the first free VF. If all possible VFs are in use or
-the kernel or card doesn't support incrementing the number of VFs LXD will
-return an error. To create a `sriov` network device use:
+To create a `sriov` network device use:
 -->
 
 ```
