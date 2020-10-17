@@ -1151,3 +1151,60 @@ Also introduces two new global config keys that apply to all `ovn` networks and 
 
  - network.ovn.integration\_bridge - the OVS integration bridge to use.
  - network.ovn.northbound\_connection - the OVN northbound database connection string.
+
+## projects\_networks
+Adds the `features.networks` config key to projects and the ability for a project to hold networks.
+
+## projects\_networks\_restricted\_uplinks
+Adds the `restricted.networks.uplinks` project config key to indicate (as a comma delimited list) which networks
+the networks created inside the project can use as their uplink network.
+
+## custom\_volume\_backup
+Add custom volume backup support.
+
+This includes the following new endpoints (see [RESTful API](rest-api.md) for details):
+
+* `GET /1.0/storage-pools/<pool>/<type>/<volume>/backups`
+* `POST /1.0/storage-pools/<pool>/<type>/<volume>/backups`
+
+* `GET /1.0/storage-pools/<pool>/<type>/<volume>/backups/<name>`
+* `POST /1.0/storage-pools/<pool>/<type>/<volume>/backups/<name>`
+* `DELETE /1.0/storage-pools/<pool>/<type>/<volume>/backups/<name>`
+
+* `GET /1.0/storage-pools/<pool>/<type>/<volume>/backups/<name>/export`
+
+The following existing endpoint has been modified:
+
+ * `POST /1.0/storage-pools/<pool>/<type>/<volume>` accepts the new source type `backup`
+
+## backup\_override\_name
+Adds `Name` field to `InstanceBackupArgs` to allow specifying a different instance name when restoring a backup.
+
+Adds `Name` and `PoolName` fields to `StoragePoolVolumeBackupArgs` to allow specifying a different volume name
+when restoring a custom volume backup.
+
+## storage\_rsync\_compression
+Adds `rsync.compression` config key to storage pools. This key can be used
+to disable compression in rsync while migrating storage pools.
+
+## network\_type\_physical
+Adds support for additional network type `physical` that can be used as an uplink for `ovn` networks.
+
+The interface specified by `parent` on the `physical` network will be connected to the `ovn` network's gateway.
+
+## network\_ovn\_external\_subnets
+Adds support for `ovn` networks to use external subnets from uplink networks.
+
+Introduces the `ipv4.routes` and `ipv6.routes` setting on `physical` networks that defines the external routes
+allowed to be used in child OVN networks in their `ipv4.routes.external` and `ipv6.routes.external` settings.
+
+Introduces the `restricted.networks.subnets` project setting that specifies which external subnets are allowed to
+be used by OVN networks inside the project (if not set then all routes defined on the uplink network are allowed).
+
+## network\_ovn\_nat
+Adds support for `ipv4.nat` and `ipv6.nat` settings on `ovn` networks.
+
+When creating the network if these settings are unspecified, and an equivalent IP address is being generated for
+the subnet, then the appropriate NAT setting will added set to `true`.
+
+If the setting is missing then the value is taken as `false`.

@@ -27,6 +27,7 @@ lvm.vg.force\_reuse             | bool      | lvm driver                        
 volume.lvm.stripes              | string    | lvm driver                        | -                          | storage\_lvm\_stripes              | Number of stripes to use for new volumes (or thin pool volume).
 volume.lvm.stripes.size         | string    | lvm driver                        | -                          | storage\_lvm\_stripes              | Size of stripes to use (at least 4096 bytes and multiple of 512bytes).
 rsync.bwlimit                   | string    | -                                 | 0 (no limit)               | storage\_rsync\_bwlimit            | Specifies the upper limit to be placed on the socket I/O whenever rsync has to be used to transfer storage entities.
+rsync.compression               | bool      | appropriate driver                | true                       | storage\_rsync\_compression        | Whether to use compression while migrating storage pools.
 volatile.initial\_source        | string    | -                                 | -                          | storage\_volatile\_initial\_source | Records the actual source passed during creating (e.g. /dev/sdb).
 volatile.pool.pristine          | string    | -                                 | true                       | storage\_driver\_ceph              | Whether the pool has been empty on creation time.
 volume.block.filesystem         | string    | block based driver (lvm)          | ext4                       | storage                            | Filesystem to use for new volumes
@@ -267,13 +268,13 @@ lxc storage create pool1 ceph
 - Create a osd storage pool named "pool1" in the CEPH cluster "my-cluster".
 
 ```bash
-lxc storage create pool1 ceph ceph.cluster\_name=my-cluster
+lxc storage create pool1 ceph ceph.cluster_name=my-cluster
 ```
 
 - Create a osd storage pool named "pool1" with the on-disk name "my-osd".
 
 ```bash
-lxc storage create pool1 ceph ceph.osd.pool\_name=my-osd
+lxc storage create pool1 ceph ceph.osd.pool_name=my-osd
 ```
 
 - Use the existing osd storage pool "my-already-existing-osd".
@@ -429,7 +430,7 @@ lxc storage create pool1 zfs
  - Create a loop-backed pool named "pool1" with the ZFS Zpool called "my-tank".
 
 ```bash
-lxc storage create pool1 zfs zfs.pool\_name=my-tank
+lxc storage create pool1 zfs zfs.pool_name=my-tank
 ```
 
  - Use the existing ZFS Zpool "my-tank".
