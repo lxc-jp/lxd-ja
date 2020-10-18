@@ -2278,7 +2278,7 @@ be used by OVN networks inside the project (if not set then all routes defined o
 Adds support for `ipv4.nat` and `ipv6.nat` settings on `ovn` networks.
 -->
 
-これらの設定が未設定の状態でネットワークを作成し、サブネット用に同じ IP アドレスが生成されると、適切な NAT の設定が追加され、この設定は `true` に設定されます。
+これらの設定（訳注: ipv4.nat や ipv6.nat）を未設定でネットワークを作成する際、（訳注: ipv4.address や ipv6.address が未設定あるいは auto の場合に）対応するアドレス （訳注: ipv4.nat であれば ipv4.address、ipv6.nat であれば ipv6.address）がサブネット用に生成される場合は適切な NAT が生成され、ipv4.nat や ipv6.nat は true に設定されます。
 <!--
 When creating the network if these settings are unspecified, and an equivalent IP address is being generated for
 the subnet, then the appropriate NAT setting will added set to `true`.
