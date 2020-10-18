@@ -2180,3 +2180,111 @@ Also introduces two new global config keys that apply to all `ovn` networks and 
 
  - network.ovn.integration\_bridge - 使用する OVS 統合ブリッジ <!-- the OVS integration bridge to use. -->
  - network.ovn.northbound\_connection - OVN northbound データベース接続文字列 <!-- the OVN northbound database connection string. -->
+
+## projects\_networks
+プロジェクトに `features.networks` 設定キーを追加し、プロジェクトがネットワークを保持できるようにします。
+<!--
+Adds the `features.networks` config key to projects and the ability for a project to hold networks.
+-->
+
+## projects\_networks\_restricted\_uplinks
+プロジェクトに `restricted.networks.uplinks` 設定キーを追加し、プロジェクト内で作られたネットワークがそのアップリンクのネットワークとしてどのネットワークが使えるかを（カンマ区切りリストで）指定します。
+<!--
+Adds the `restricted.networks.uplinks` project config key to indicate (as a comma delimited list) which networks
+the networks created inside the project can use as their uplink network.
+-->
+
+## custom\_volume\_backup
+カスタムボリュームのバックアップサポートを追加します。
+<!--
+Add custom volume backup support.
+-->
+
+この拡張は以下の新しい API エンドポイント （詳細は [RESTful API](rest-api.md) を参照）を含みます。
+<!--
+This includes the following new endpoints (see [RESTful API](rest-api.md) for details):
+-->
+
+* `GET /1.0/storage-pools/<pool>/<type>/<volume>/backups`
+* `POST /1.0/storage-pools/<pool>/<type>/<volume>/backups`
+
+* `GET /1.0/storage-pools/<pool>/<type>/<volume>/backups/<name>`
+* `POST /1.0/storage-pools/<pool>/<type>/<volume>/backups/<name>`
+* `DELETE /1.0/storage-pools/<pool>/<type>/<volume>/backups/<name>`
+
+* `GET /1.0/storage-pools/<pool>/<type>/<volume>/backups/<name>/export`
+
+以下の既存のエンドポイントが変更されます。
+<!--
+The following existing endpoint has been modified:
+-->
+
+ * `POST /1.0/storage-pools/<pool>/<type>/<volume>` が新しいソースタイプとして `backup` を受け付けます <!-- accepts the new source type `backup` -->
+
+## backup\_override\_name
+`InstanceBackupArgs` に `Name` フィールドを追加し、バックアップをリストアする際に別のインスタンス名を指定できるようにします。
+<!--
+Adds `Name` field to `InstanceBackupArgs` to allow specifying a different instance name when restoring a backup.
+-->
+
+`StoragePoolVolumeBackupArgs` に `Name` と `PoolName` フィールドを追加し、カスタムボリュームのバックアップをリストアする際に別のボリューム名を指定できるようにします。
+<!--
+Adds `Name` and `PoolName` fields to `StoragePoolVolumeBackupArgs` to allow specifying a different volume name
+when restoring a custom volume backup.
+-->
+
+## storage\_rsync\_compression
+ストレージプールに `rsync.compression` 設定キーを追加します。
+このキーはストレージプールをマイグレートする際に rsync での圧縮を無効にするために使うことができます。
+<!--
+Adds `rsync.compression` config key to storage pools. This key can be used
+to disable compression in rsync while migrating storage pools.
+-->
+
+## network\_type\_physical
+新たに `physical` というネットワークタイプのサポートを追加し、 `ovn` ネットワークのアップリンクとして使用できるようにします。
+<!--
+Adds support for additional network type `physical` that can be used as an uplink for `ovn` networks.
+-->
+
+`physical` ネットワークの `parent` で指定するインターフェースは `ovn` ネットワークのゲートウェイに接続されます。
+<!--
+The interface specified by `parent` on the `physical` network will be connected to the `ovn` network's gateway.
+-->
+
+## network\_ovn\_external\_subnets
+`ovn` ネットワークがアップリンクネットワークの外部のサブネットを使用できるようにします。
+<!--
+Adds support for `ovn` networks to use external subnets from uplink networks.
+-->
+
+`physical` ネットワークに `ipv4.routes` と `ipv6.routes` の設定を追加します。
+これは子供の OVN ネットワークで `ipv4.routes.external` と `ipv6.routes.external` の設定で使用可能な外部のルートを指定します。
+<!--
+Introduces the `ipv4.routes` and `ipv6.routes` setting on `physical` networks that defines the external routes
+allowed to be used in child OVN networks in their `ipv4.routes.external` and `ipv6.routes.external` settings.
+-->
+
+プロジェクトに `restricted.networks.subnets` 設定を追加します。
+これはプロジェクト内の OVN ネットワークで使用可能な外部のサブネットを指定します（未設定の場合はアップリンクネットワークで定義される全てのルートが使用可能です）。
+<!--
+Introduces the `restricted.networks.subnets` project setting that specifies which external subnets are allowed to
+be used by OVN networks inside the project (if not set then all routes defined on the uplink network are allowed).
+-->
+
+## network\_ovn\_nat
+`ovn` ネットワークに `ipv4.nat` と `ipv6.nat` の設定を追加します。
+<!--
+Adds support for `ipv4.nat` and `ipv6.nat` settings on `ovn` networks.
+-->
+
+これらの設定（訳注: ipv4.nat や ipv6.nat）を未設定でネットワークを作成する際、（訳注: ipv4.address や ipv6.address が未設定あるいは auto の場合に）対応するアドレス （訳注: ipv4.nat であれば ipv4.address、ipv6.nat であれば ipv6.address）がサブネット用に生成される場合は適切な NAT が生成され、ipv4.nat や ipv6.nat は true に設定されます。
+<!--
+When creating the network if these settings are unspecified, and an equivalent IP address is being generated for
+the subnet, then the appropriate NAT setting will added set to `true`.
+-->
+
+この設定がない場合は値は `false` として扱われます。
+<!--
+If the setting is missing then the value is taken as `false`.
+-->
