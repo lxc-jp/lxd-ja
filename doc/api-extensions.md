@@ -2295,7 +2295,7 @@ If the setting is missing then the value is taken as `false`.
 Removes the settings `ipv4.routes.external` and `ipv6.routes.external` from `ovn` networks.
 -->
 
-ネットワークと NIC レベルの両方で指定するのではなく、ネットワークレベルで設定する代わりに `ovn` NIC タイプ上で等価な設定を使えます。
+ネットワークと NIC レベルの両方で指定するのではなく、 `ovn` NIC タイプ上で等価な設定を使えます。
 <!--
 The equivalent settings on the `ovn` NIC type can be used instead for this, rather than having to specify them
 both at the network and NIC level.
