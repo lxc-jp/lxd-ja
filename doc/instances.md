@@ -74,7 +74,7 @@ limits.kernel.\*                            | string    | -                 | no
 limits.memory                               | string    | - (all)           | yes           | -                 | ホストメモリに対する割合（パーセント）もしくはメモリサイズの固定値（さまざまな単位が指定可能、下記参照） <!-- Percentage of the host's memory or fixed value in bytes (various suffixes supported, see below) -->
 limits.memory.enforce                       | string    | hard              | yes           | container         | hard に設定すると、インスタンスはメモリー制限値を超過できません。soft に設定すると、ホストでメモリに余裕がある場合は超過できる可能性があります <!-- If hard, instance can't exceed its memory limit. If soft, the instance can exceed its memory limit when extra host memory is available -->
 limits.memory.hugepages                     | boolean   | false             | no            | virtual-machine   | インスタンスを動かすために通常のシステムメモリではなく hugepage を使用するかどうか <!-- Controls whether to back the instance using hugepages rather than regular system memory -->
-limits.memory.swap                          | boolean   | true              | yes           | container         | インスタンスのメモリの一部をディスクにスワップすることを許すかどうか  <!-- Whether to allow some of the instance's memory to be swapped out to disk -->
+limits.memory.swap                          | boolean   | true              | yes           | container         | このインスタンスのあまり使われないページのスワップを推奨／非推奨するかを制御する <!-- Controls whether to encourage/discourage swapping less used pages for this instance -->
 limits.memory.swap.priority                 | integer   | 10 (maximum)      | yes           | container         | 高い値を設定するほど、インスタンスがディスクにスワップされにくくなります （0 〜 10 の整数） <!-- The higher this is set, the least likely the instance is to be swapped to disk (integer between 0 and 10) -->
 limits.network.priority                     | integer   | 0 (minimum)       | yes           | -                 | 負荷がかかった状態で、インスタンスのネットワークリクエストに割り当てる優先度（0 〜 10 の整数） <!-- When under load, how much priority to give to the instance's network requests (integer between 0 and 10) -->
 limits.processes                            | integer   | - (max)           | yes           | container         | インスタンス内で実行できるプロセスの最大数 <!-- Maximum number of processes that can run in the instance -->
@@ -325,11 +325,12 @@ ID (database)   | Name                               | Condition     | Descripti
 2               | [disk](#type-disk)                 | -             | インスタンス内のマウントポイント <!-- Mountpoint inside the instance -->
 3               | [unix-char](#type-unix-char)       | container     | Unix キャラクターデバイス <!-- Unix character device -->
 4               | [unix-block](#type-unix-block)     | container     | Unix ブロックデバイス <!-- Unix block device -->
-5               | [usb](#type-usb)                   | container     | USB デバイス <!-- USB device -->
-6               | [gpu](#type-gpu)                   | container     | GPU デバイス <!-- GPU device -->
+5               | [usb](#type-usb)                   | -             | USB デバイス <!-- USB device -->
+6               | [gpu](#type-gpu)                   | -             | GPU デバイス <!-- GPU device -->
 7               | [infiniband](#type-infiniband)     | container     | インフィニバンドデバイス <!-- Infiniband device -->
 8               | [proxy](#type-proxy)               | container     | プロキシデバイス <!-- Proxy device -->
 9               | [unix-hotplug](#type-unix-hotplug) | container     | Unix ホットプラグデバイス <!-- Unix hotplug device -->
+10              | [tpm](#tpm)                        | -             | TPM デバイス <!-- TPM device -->
 
 ### Type: none
 
@@ -1115,6 +1116,12 @@ mode        | int       | 0660              | no        | インスタンス内�
 required    | boolean   | true              | no        | このデバイスがインスタンスの起動に必要かどうか <!-- Whether or not this device is required to start the instance -->
 
 ### Type: usb
+
+サポートされるインスタンスタイプ: コンテナー, VM
+<!--
+Supported instance types: container, VM
+-->
+
 USB デバイスエントリーは、シンプルにリクエストのあった USB デバイスをインスタンスに出現させます。
 <!--
 USB device entries simply make the requested USB device appear in the
@@ -1293,6 +1300,28 @@ uid         | int       | 0                 | no        | インスタンス内�
 gid         | int       | 0                 | no        | インスタンス内でのデバイスオーナーの GID <!-- GID of the device owner in the instance -->
 mode        | int       | 0660              | no        | インスタンス内でのデバイスのモード {<!-- Mode of the device in the instance -->
 required    | boolean   | false             | no        | このデバイスがインスタンスを起動するのに必要かどうか。(デフォルトは false で全てのデバイスはホットプラグ可能です) <!-- Whether or not this device is required to start the instance. (The default is false, and all devices are hot-pluggable) -->
+
+### Type: tpm
+
+
+サポートされるインスタンスタイプ: コンテナー, VM
+<!--
+Supported instance types: container, VM
+-->
+
+TPM デバイスのエントリーは TPM エミュレーターへのアクセスを可能にします。
+<!--
+TPM device entries enable access to a TPM emulator.
+-->
+
+以下の設定があります。
+<!--
+The following properties exist:
+-->
+
+Key                 | Type      | Default   | Required  | Description
+:--                 | :--       | :--       | :--       | :--
+path                | string    | -         | yes       | インスタンス内でのパス（コンテナーのみ） <!-- Path inside the instance (only for containers). -->
 
 ## ストレージとネットワーク制限の単位 <!-- Units for storage and network limits -->
 バイト数とビット数を表す値は全ていくつかの有用な単位を使用し特定の制限がどういう値かをより理解しやすいようにできます。

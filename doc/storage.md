@@ -42,7 +42,7 @@ volume.block.mount\_options     | string    | block based driver (lvm)          
 volume.size                     | string    | appropriate driver                | unlimited (ブロックデバイスは 10GB) <!-- unlimited (10GB for block)--> | storage                            | デフォルトのボリュームサイズ <!-- Default volume size -->
 volume.zfs.remove\_snapshots    | bool      | zfs driver                        | false                      | storage                            | 必要に応じてスナップショットを削除するかどうか <!-- Remove snapshots as needed -->
 volume.zfs.use\_refquota        | bool      | zfs driver                        | false                      | storage                            | 領域の quota の代わりに refquota を使うかどうか <!-- Use refquota instead of quota for space. -->
-zfs.clone\_copy                 | bool      | zfs driver                        | true                       | storage\_zfs\_clone\_copy          | ZFS のフルデータセットコピーの代わりに軽量なクローンを使うかどうか <!-- Whether to use ZFS lightweight clones rather than full dataset copies. -->
+zfs.clone\_copy                 | string    | zfs driver                        | true                       | storage\_zfs\_clone\_copy          | boolean の文字列を指定した場合は ZFS のフルデータセットコピーの代わりに軽量なクローンを使うかどうかを制御し、 "rebase" という文字列を指定した場合は初期イメージをベースにコピーします。 <!-- Whether to use ZFS lightweight clones rather than full dataset copies (boolean) or "rebase" to copy based on the initial image. -->
 zfs.pool\_name                  | string    | zfs driver                        | プール名 <!-- name of the pool --> | storage                            | Zpool 名 <!-- Name of the zpool -->
 
 <!--

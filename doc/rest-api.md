@@ -535,7 +535,7 @@ much like `/1.0/containers` will only show you instances of that type.
     "api_extensions": [],                           // stable とマークされた API 以降に追加された API 拡張の一覧
     "api_status": "stable",                         // API の実装状態 (development, stable, deprecated のいずれか)
     "api_version": "1.0",                           // 文字列表記での API バージョン
-    "auth": "trusted",                              // 認証状態 ("guest", "untrusted", "trusted" のいずれか)
+    "auth": "trusted",                              // 認証状態 ("untrusted", "trusted" のいずれか)
     "config": {                                     // ホストの設定
         "core.trust_password": true,
         "core.https_address": "[::]:8443"
@@ -571,7 +571,7 @@ much like `/1.0/containers` will only show you instances of that type.
     "api_extensions": [],                           // List of API extensions added after the API was marked stable
     "api_status": "stable",                         // API implementation status (one of, development, stable or deprecated)
     "api_version": "1.0",                           // The API version as a string
-    "auth": "trusted",                              // Authentication state, one of "guest", "untrusted" or "trusted"
+    "auth": "trusted",                              // Authentication state, one of "untrusted" or "trusted"
     "config": {                                     // Host configuration
         "core.trust_password": true,
         "core.https_address": "[::]:8443"
@@ -609,7 +609,7 @@ much like `/1.0/containers` will only show you instances of that type.
     "api_extensions": [],                   // stable とマークされた API 以降に追加された API 拡張の一覧
     "api_status": "stable",                 // API の実装状態 (development, stable, deprecated のいずれか)
     "api_version": "1.0",                   // 文字列表記での API バージョン
-    "auth": "guest",                        // 認証状態 ("guest", "untrusted", "trusted" のいずれか)
+    "auth": "untrusted",                    // 認証状態 ("untrusted", "trusted" のいずれか)
     "public": false,                        // クライアントにとってサーバを公開された (読み取り専用の) リモートとして扱うべきかどうか
 }
 ```
@@ -620,7 +620,7 @@ much like `/1.0/containers` will only show you instances of that type.
     "api_extensions": [],                   // List of API extensions added after the API was marked stable
     "api_status": "stable",                 // API implementation status (one of, development, stable or deprecated)
     "api_version": "1.0",                   // The API version as a string
-    "auth": "guest",                        // Authentication state, one of "guest", "untrusted" or "trusted"
+    "auth": "untrusted",                    // Authentication state, one of "untrusted" or "trusted"
     "public": false,                        // Whether the server should be treated as a public (read-only) remote by the client
 }
 ```
