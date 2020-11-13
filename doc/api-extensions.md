@@ -2288,3 +2288,30 @@ the subnet, then the appropriate NAT setting will added set to `true`.
 <!--
 If the setting is missing then the value is taken as `false`.
 -->
+
+## network\_ovn\_external\_routes\_remove
+`ovn` ネットワークから `ipv4.routes.external` と `ipv6.routes.external` の設定を削除します。
+<!--
+Removes the settings `ipv4.routes.external` and `ipv6.routes.external` from `ovn` networks.
+-->
+
+ネットワークと NIC レベルの両方で指定するのではなく、ネットワークレベルで設定する代わりに `ovn` NIC タイプ上で等価な設定を使えます。
+<!--
+The equivalent settings on the `ovn` NIC type can be used instead for this, rather than having to specify them
+both at the network and NIC level.
+-->
+
+## tpm\_device\_type
+`tpm` デバイスタイプを導入します。
+<!--
+This introduces the `tpm` device type.
+-->
+
+## storage\_zfs\_clone\_copy\_rebase
+zfs.clone\_copy に `rebase` という値を導入します。
+この設定で LXD は先祖の系列上の "image" データセットを追跡し、その最上位に対して send/receive を実行します。
+<!--
+This introduces `rebase` as a value for zfs.clone\_copy causing LXD to
+track down any "image" dataset in the ancestry line and then perform
+send/receive on top of that.
+-->
