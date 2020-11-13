@@ -82,7 +82,7 @@ ipv4.dhcp.gateway               | string    | ipv4 dhcp             | ipv4.addre
 ipv4.dhcp.ranges                | string    | ipv4 dhcp             | all addresses             | Comma separated list of IP ranges to use for DHCP (FIRST-LAST format)
 ipv4.firewall                   | boolean   | ipv4 address          | true                      | Whether to generate filtering firewall rules for this network
 ipv4.nat.address                | string    | ipv4 address          | -                         | The source address used for outbound traffic from the bridge
-ipv4.nat                        | boolean   | ipv4 address          | false                     | Whether to NAT (will default to true if unset and a random ipv4.address is generated)
+ipv4.nat                        | boolean   | ipv4 address          | false                     | Whether to NAT (defaults to true for regular bridges where ipv4.address is generated and always defaults to true for fan bridges)
 ipv4.nat.order                  | string    | ipv4 address          | before                    | Whether to add the required NAT rules before or after any pre-existing rules
 ipv4.ovn.ranges                 | string    | -                     | none                      | Comma separate list of IPv4 ranges to use for child OVN network routers (FIRST-LAST format)
 ipv4.routes                     | string    | ipv4 address          | -                         | Comma separated list of additional IPv4 CIDR subnets to route to the bridge
@@ -297,10 +297,10 @@ bridge.mtu                      | integer   | -                     | 1442      
 dns.domain                      | string    | -                     | lxd                       | Domain to advertise to DHCP clients and use for DNS resolution
 dns.search                      | string    | -                     | -                         | Full comma separated domain search list, defaulting to `dns.domain` value
 ipv4.address                    | string    | standard mode         | random unused subnet      | IPv4 address for the bridge (CIDR notation). Use "none" to turn off IPv4 or "auto" to generate a new one
-ipv4.routes.external            | string    | ipv4 address          | -                         | Comma separated list of additional external IPv4 CIDR subnets that are allowed for OVN NICs ipv4.routes.external setting
+ipv4.nat                        | boolean   | ipv4 address          | false                     | Whether to NAT (will default to true if unset and a random ipv4.address is generated)
 ipv6.address                    | string    | standard mode         | random unused subnet      | IPv6 address for the bridge (CIDR notation). Use "none" to turn off IPv6 or "auto" to generate a new one
 ipv6.dhcp.stateful              | boolean   | ipv6 dhcp             | false                     | Whether to allocate addresses using DHCP
-ipv6.routes.external            | string    | ipv6 address          | -                         | Comma separated list of additional external IPv6 CIDR subnets that are allowed for OVN NICs ipv6.routes.external setting
+ipv6.nat                        | boolean   | ipv6 address          | false                     | Whether to NAT (will default to true if unset and a random ipv6.address is generated)
 network                         | string    | -                     | -                         | Uplink network to use for external network access
 
 ## network: physical
@@ -317,11 +317,9 @@ mtu                             | integer   | -                     | -         
 parent                          | string    | -                     | -                         | Parent interface to create sriov NICs on
 vlan                            | integer   | -                     | -                         | The VLAN ID to attach to
 ipv4.gateway                    | string    | standard mode         | -                         | IPv4 address for the gateway and network (CIDR notation)
-ipv4.nat                        | boolean   | ipv4 address          | false                     | Whether to NAT (will default to true if unset and a random ipv4.address is generated)
 ipv4.ovn.ranges                 | string    | -                     | none                      | Comma separate list of IPv4 ranges to use for child OVN network routers (FIRST-LAST format)
 ipv4.routes                     | string    | ipv4 address          | -                         | Comma separated list of additional IPv4 CIDR subnets that can be used with child OVN networks ipv4.routes.external setting
 ipv6.gateway                    | string    | standard mode         | -                         | IPv6 address for the gateway and network  (CIDR notation)
-ipv6.nat                        | boolean   | ipv6 address          | false                     | Whether to NAT (will default to true if unset and a random ipv6.address is generated)
 ipv6.ovn.ranges                 | string    | -                     | none                      | Comma separate list of IPv6 ranges to use for child OVN network routers (FIRST-LAST format)
 ipv6.routes                     | string    | ipv6 address          | -                         | Comma separated list of additional IPv6 CIDR subnets that can be used with child OVN networks ipv6.routes.external setting
 dns.nameservers                 | string    | standard mode         | -                         | List of DNS server IPs on physical network

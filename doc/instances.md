@@ -54,7 +54,7 @@ limits.kernel.\*                            | string    | -                 | no
 limits.memory                               | string    | - (all)           | yes           | -                         | Percentage of the host's memory or fixed value in bytes (various suffixes supported, see below)
 limits.memory.enforce                       | string    | hard              | yes           | container                 | If hard, instance can't exceed its memory limit. If soft, the instance can exceed its memory limit when extra host memory is available
 limits.memory.hugepages                     | boolean   | false             | no            | virtual-machine           | Controls whether to back the instance using hugepages rather than regular system memory
-limits.memory.swap                          | boolean   | true              | yes           | container                 | Whether to allow some of the instance's memory to be swapped out to disk
+limits.memory.swap                          | boolean   | true              | yes           | container                 | Controls whether to encourage/discourage swapping less used pages for this instance
 limits.memory.swap.priority                 | integer   | 10 (maximum)      | yes           | container                 | The higher this is set, the least likely the instance is to be swapped to disk (integer between 0 and 10)
 limits.network.priority                     | integer   | 0 (minimum)       | yes           | -                         | When under load, how much priority to give to the instance's network requests (integer between 0 and 10)
 limits.processes                            | integer   | - (max)           | yes           | container                 | Maximum number of processes that can run in the instance
@@ -234,11 +234,12 @@ ID (database)   | Name                               | Condition     | Descripti
 2               | [disk](#type-disk)                 | -             | Mountpoint inside the instance
 3               | [unix-char](#type-unix-char)       | container     | Unix character device
 4               | [unix-block](#type-unix-block)     | container     | Unix block device
-5               | [usb](#type-usb)                   | container     | USB device
-6               | [gpu](#type-gpu)                   | container     | GPU device
+5               | [usb](#type-usb)                   | -             | USB device
+6               | [gpu](#type-gpu)                   | -             | GPU device
 7               | [infiniband](#type-infiniband)     | container     | Infiniband device
 8               | [proxy](#type-proxy)               | container     | Proxy device
 9               | [unix-hotplug](#type-unix-hotplug) | container     | Unix hotplug device
+10              | [tpm](#tpm)                        | -             | TPM device
 
 ### Type: none
 
@@ -727,6 +728,9 @@ mode        | int       | 0660              | no        | Mode of the device in 
 required    | boolean   | true              | no        | Whether or not this device is required to start the instance
 
 ### Type: usb
+
+Supported instance types: container, VM
+
 USB device entries simply make the requested USB device appear in the
 instance.
 
@@ -846,6 +850,19 @@ uid         | int       | 0                 | no        | UID of the device owne
 gid         | int       | 0                 | no        | GID of the device owner in the instance
 mode        | int       | 0660              | no        | Mode of the device in the instance
 required    | boolean   | false             | no        | Whether or not this device is required to start the instance. (The default is false, and all devices are hot-pluggable)
+
+
+### Type: tpm
+
+Supported instance types: container, VM
+
+TPM device entries enable access to a TPM emulator.
+
+The following properties exist:
+
+Key                 | Type      | Default   | Required  | Description
+:--                 | :--       | :--       | :--       | :--
+path                | string    | -         | yes       | Path inside the instance (only for containers).
 
 ## Units for storage and network limits
 Any value representing bytes or bits can make use of a number of useful
