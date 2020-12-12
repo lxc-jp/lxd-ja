@@ -110,7 +110,7 @@ volatile.idmap.current                      | string    | -             | The id
 volatile.idmap.next                         | string    | -             | The idmap to use next time the instance starts
 volatile.last\_state.idmap                  | string    | -             | Serialized instance uid/gid map
 volatile.last\_state.power                  | string    | -             | Instance state as of last host shutdown
-volatile.vm.uuid                            | string    | -             | Virtual machine UUID
+volatile.uuid                               | string    | -             | Instance UUID
 volatile.\<name\>.apply\_quota              | string    | -             | Disk quota to be applied on next instance start
 volatile.\<name\>.ceph\_rbd                 | string    | -             | RBD device path for Ceph disk devices
 volatile.\<name\>.host\_name                | string    | -             | Network device name on the host
@@ -342,7 +342,7 @@ hwaddr                  | string  | randomly assigned | no       | no      | TTh
 vlan                    | integer | -                 | no       | no      | TThe VLAN ID to attach to
 maas.subnet.ipv4        | string  | -                 | no       | yes     | MAAS IPv4 subnet to register the instance in
 maas.subnet.ipv6        | string  | -                 | no       | yes     | MAAS IPv6 subnet to register the instance in
-boot.priority           | integer | -                 | no       | no      | TBoot priority for VMs (higher boots first)
+boot.priority           | integer | -                 | no       | no      | Boot priority for VMs (higher boots first)
 
 #### nic: sriov
 
@@ -747,10 +747,19 @@ required    | boolean   | false             | no        | Whether or not this de
 
 ### Type: gpu
 
-Supported instance types: container, VM
-
 GPU device entries simply make the requested gpu device appear in the
 instance.
+
+#### GPUs Available:
+
+The following GPUs can be specified using the `gputype` property:
+
+ - [physical](#gpu-physical) Passes through an entire GPU. This is the default if `gputype` is unspecified.
+ - [mdev](#gpu-mdev) Creates and passes through a virtual GPU.
+
+#### gpu: physical
+
+Supported instance types: container, VM
 
 The following properties exist:
 
@@ -763,6 +772,22 @@ pci         | string    | -                 | no        | The pci address of the
 uid         | int       | 0                 | no        | UID of the device owner in the instance (container only)
 gid         | int       | 0                 | no        | GID of the device owner in the instance (container only)
 mode        | int       | 0660              | no        | Mode of the device in the instance (container only)
+
+#### gpu: mdev
+
+Supported instance types: VM
+
+Create a virtual GPU and pass it. A list of available mdev profiles can be found by running `lxc info --resources`.
+
+The following properties exist:
+
+Key         | Type      | Default           | Required  | Description
+:--         | :--       | :--               | :--       | :--
+vendorid    | string    | -                 | no        | The vendor id of the GPU device
+productid   | string    | -                 | no        | The product id of the GPU device
+id          | string    | -                 | no        | The card id of the GPU device
+pci         | string    | -                 | no        | The pci address of the GPU device
+mdev        | string    | -                 | no        | The mdev profile to use (e.g. i915-GVTg_V5_4)
 
 ### Type: proxy
 
@@ -996,5 +1021,5 @@ in your template string to avoid forbidden characters in your snapshot name.
 Another way to avoid name collisions is to use the placeholder `%d`. If a snapshot
 with the same name (excluding the placeholder) already exists, all existing snapshot
 names will be taken into account to find the highest number at the placeholders
-position. This numnber will be incremented by one for the new name. The starting
+position. This number will be incremented by one for the new name. The starting
 number if no snapshot exists will be `0`.

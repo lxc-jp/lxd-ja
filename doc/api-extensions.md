@@ -1222,3 +1222,38 @@ This introduces the `tpm` device type.
 This introduces `rebase` as a value for zfs.clone\_copy causing LXD to
 track down any "image" dataset in the ancestry line and then perform
 send/receive on top of that.
+
+## gpu\_mdev
+This adds support for virtual GPUs. It introduces the `mdev` config key for GPU devices which takes
+a supported mdev type, e.g. i915-GVTg\_V5\_4.
+
+## resources\_pci\_iommu
+This adds the IOMMUGroup field for PCI entries in the resources API.
+
+## resources\_network\_usb
+Adds the usb\_address field to the network card entries in the resources API.
+
+## resources\_disk\_address
+Adds the usb\_address and pci\_address fields to the disk entries in the resources API.
+
+## network\_physical\_ovn\_ingress\_mode
+Adds `ovn.ingress_mode` setting for `physical` networks.
+
+Sets the method that OVN NIC external IPs will be advertised on uplink network.
+
+Either `l2proxy` (proxy ARP/NDP) or `routed`.
+
+## network\_ovn\_dhcp
+Adds `ipv4.dhcp` and `ipv6.dhcp` settings for `ovn` networks.
+
+Allows DHCP (and RA for IPv6) to be disabled. Defaults to on.
+
+## network\_physical\_routes\_anycast
+Adds `ipv4.routes.anycast` and `ipv6.routes.anycast` boolean settings for `physical` networks. Defaults to false.
+
+Allows OVN networks using physical network as uplink to relax external subnet/route overlap detection when used
+with `ovn.ingress_mode=routed`.
+
+## projects\_limits\_instances
+Adds `limits.instances` to the available project configuration keys. If set, it
+limits the total number of instances (VMs and containers) that can be used in the project.
