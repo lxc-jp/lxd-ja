@@ -133,7 +133,7 @@ volatile.idmap.current                      | string    | -             | イン
 volatile.idmap.next                         | string    | -             | 次にインスタンスが起動する際に使う idmap <!-- The idmap to use next time the instance starts -->
 volatile.last\_state.idmap                  | string    | -             | シリアライズ化したインスタンスの uid/gid マップ <!-- Serialized instance uid/gid map -->
 volatile.last\_state.power                  | string    | -             | 最後にホストがシャットダウンした時点のインスタンスの状態 <!-- Instance state as of last host shutdown -->
-volatile.vm.uuid                            | string    | -             | 仮想マシンの UUID <!-- Virtual machine UUID -->
+volatile.uuid                               | string    | -             | インスタンスの UUID <!-- Instance UUID -->
 volatile.\<name\>.apply\_quota              | string    | -             | 次回のインスタンス起動時に適用されるディスククォータ <!-- Disk quota to be applied on next instance start -->
 volatile.\<name\>.ceph\_rbd                 | string    | -             | Ceph のディスクデバイスの RBD デバイスパス <!-- RBD device path for Ceph disk devices -->
 volatile.\<name\>.host\_name                | string    | -             | ホスト上のネットワークデバイス名 <!-- Network device name on the host -->
@@ -1144,15 +1144,27 @@ required    | boolean   | false             | no        | このデバイスが�
 
 ### Type: gpu
 
-サポートされるインスタンスタイプ: コンテナー, VM
-<!--
-Supported instance types: container, VM
--->
-
 GPU デバイスエントリーは、シンプルにリクエストのあった GPU デバイスをインスタンスに出現させます。
 <!--
 GPU device entries simply make the requested gpu device appear in the
 instance.
+-->
+
+#### 利用可能な GPU <!-- GPUs Available: -->
+
+以下の GPU が `gputype` プロパティーを使って指定できます。
+<!--
+The following GPUs can be specified using the `gputype` property:
+-->
+
+ - [physical](#gpu-physical) GPU 全体をパススルーします。 `gputype` が指定されない場合これがデフォルトです。 <!-- Passes through an entire GPU. This is the default if `gputype` is unspecified. -->
+ - [mdev](#gpu-mdev) 仮想 GPU を作成しそれにパススルーします。 <!-- Creates and passes through a virtual GPU. -->
+
+#### gpu: physical
+
+サポートされるインスタンスタイプ: コンテナー, VM
+<!--
+Supported instance types: container, VM
 -->
 
 次に挙げるプロパティがあります:
@@ -1169,6 +1181,31 @@ pci         | string    | -                 | no        | GPU デバイスの PC
 uid         | int       | 0                 | no        | インスタンス（コンテナーのみ）内のデバイス所有者の UID <!-- UID of the device owner in the instance (container only) -->
 gid         | int       | 0                 | no        | インスタンス（コンテナーのみ）内のデバイス所有者の GID <!-- GID of the device owner in the instance (container only) -->
 mode        | int       | 0660              | no        | インスタンス（コンテナーのみ）内のデバイスのモード <!-- Mode of the device in the instance (container only) -->
+
+#### gpu: mdev
+
+サポートされるインスタンスタイプ: VM
+<!--
+Supported instance types: VM
+-->
+
+仮想 GPU を作成しそれにパススルーします。利用可能な mdev プロファイルの一覧は `lxc info --resources` を実行すると確認できます。
+<!--
+Create a virtual GPU and pass it. A list of available mdev profiles can be found by running `lxc info -\-resources`.
+-->
+
+次に挙げるプロパティがあります:
+<!--
+The following properties exist:
+-->
+
+Key         | Type      | Default           | Required  | Description
+:--         | :--       | :--               | :--       | :--
+vendorid    | string    | -                 | no        | GPU デバイスのベンダー ID <!-- The vendor id of the GPU device -->
+productid   | string    | -                 | no        | GPU デバイスのプロダクト ID <!-- The product id of the GPU device -->
+id          | string    | -                 | no        | GPU デバイスのカード ID <!-- The card id of the GPU device -->
+pci         | string    | -                 | no        | GPU デバイスの PCI アドレス <!-- The pci address of the GPU device -->
+mdev        | string    | -                 | no        | 使用する mdev プロファイル（例: i915-GVTg\_V5\_4） <!-- The mdev profile to use (e.g. i915-GVTg_V5_4) -->
 
 ### Type: proxy
 
@@ -1524,6 +1561,6 @@ in your template string to avoid forbidden characters in your snapshot name.
 Another way to avoid name collisions is to use the placeholder `%d`. If a snapshot
 with the same name (excluding the placeholder) already exists, all existing snapshot
 names will be taken into account to find the highest number at the placeholders
-position. This numnber will be incremented by one for the new name. The starting
+position. This number will be incremented by one for the new name. The starting
 number if no snapshot exists will be `0`.
 -->

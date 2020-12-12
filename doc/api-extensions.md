@@ -2315,3 +2315,76 @@ This introduces `rebase` as a value for zfs.clone\_copy causing LXD to
 track down any "image" dataset in the ancestry line and then perform
 send/receive on top of that.
 -->
+
+## gpu\_mdev
+これは仮想 CPU のサポートを追加します。
+GPU デバイスに `mdev` 設定キーを追加し、i915-GVTg\_V5\_4 のようなサポートされる mdev のタイプを指定します。
+<!--
+This adds support for virtual GPUs. It introduces the `mdev` config key for GPU devices which takes
+a supported mdev type, e.g. i915-GVTg\_V5\_4.
+-->
+
+## resources\_pci\_iommu
+これはリソース API の PCI エントリーに IOMMUGroup フィールドを追加します。
+<!--
+This adds the IOMMUGroup field for PCI entries in the resources API.
+-->
+
+## resources\_network\_usb
+リソース API のネットワークカードエントリーに usb\_address フィールドを追加します。
+<!--
+Adds the usb\_address field to the network card entries in the resources API.
+-->
+
+## resources\_disk\_address
+リソース API のディスクエントリーに usb\_address と pci\_address フィールドを追加します。
+<!--
+Adds the usb\_address and pci\_address fields to the disk entries in the resources API.
+-->
+
+## network\_physical\_ovn\_ingress\_mode
+`physical` ネットワークに `ovn.ingress_mode` 設定を追加します。
+<!--
+Adds `ovn.ingress_mode` setting for `physical` networks.
+-->
+
+OVN NIC ネットワークの外部 IP アドレスがアップリンクネットワークにどのように広告されるかの方法を設定します。
+<!--
+Sets the method that OVN NIC external IPs will be advertised on uplink network.
+-->
+
+`l2proxy` (proxy ARP/NDP) か `routed` のいずれかを指定します。
+<!--
+Either `l2proxy` (proxy ARP/NDP) or `routed`.
+-->
+
+## network\_ovn\_dhcp
+`ovn` ネットワークに `ipv4.dhcp` と `ipv6.dhcp` の設定を追加します。
+<!--
+Adds `ipv4.dhcp` and `ipv6.dhcp` settings for `ovn` networks.
+-->
+
+DHCP (と IPv6 の RA) を無効にできます。デフォルトはオンです。
+<!--
+Allows DHCP (and RA for IPv6) to be disabled. Defaults to on.
+-->
+
+## network\_physical\_routes\_anycast
+`physical` ネットワークに `ipv4.routes.anycast` と `ipv6.routes.anycast` の boolean の設定を追加します。デフォルトは false です。
+<!--
+Adds `ipv4.routes.anycast` and `ipv6.routes.anycast` boolean settings for `physical` networks. Defaults to false.
+-->
+
+`ovn.ingress_mode=routed` と共に使うと physical ネットワークをアップリンクとして使う OVN ネットワークでサブネット／ルートのオーバーラップ検出を緩和できます。
+<!--
+Allows OVN networks using physical network as uplink to relax external subnet/route overlap detection when used
+with `ovn.ingress_mode=routed`.
+-->
+
+## projects\_limits\_instances
+`limits.instances` を利用可能なプロジェクトの設定キーに追加します。
+設定するとプロジェクト内で使われるインスタンス（VMとコンテナー）の合計数を制限します。
+<!--
+Adds `limits.instances` to the available project configuration keys. If set, it
+limits the total number of instances (VMs and containers) that can be used in the project.
+-->
