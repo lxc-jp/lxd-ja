@@ -40,6 +40,7 @@ features.images                      | boolean   | -                     | true 
 features.networks                    | boolean   | -                     | true                      | プロジェクトごとに個別のネットワークのセットを使うかどうか <!-- Separate set of networks for the project -->
 features.profiles                    | boolean   | -                     | true                      | プロジェクト用のプロファイルを分離する <!-- Separate set of profiles for the project -->
 features.storage.volumes             | boolean   | -                     | true                      | プロジェクトごとに個別のストレージボリュームのセットを使うかどうか <!-- Separate set of storage volumes for the project -->
+limits.instances                     | integer   | -                     | -                         | プロジェクト内に作成できるインスタンスの合計数の最大値 <!-- Maximum number of total instances that can be created in the project -->
 limits.containers                    | integer   | -                     | -                         | プロジェクト内に作成可能なコンテナーの最大数 <!-- Maximum number of containers that can be created in the project -->
 limits.cpu                           | integer   | -                     | -                         | プロジェクトのインスタンスに設定する個々の "limits.cpu" 設定の合計の最大値 <!-- Maximum value for the sum of individual "limits.cpu" configs set on the instances of the project -->
 limits.disk                          | string    | -                     | -                         | プロジェクトの全てのインスタンスボリューム、カスタムボリューム、イメージで使用するディスクスペースの合計の最大値 <!-- Maximum value of aggregate disk space used by all instances volumes, custom volumes and images of the project -->

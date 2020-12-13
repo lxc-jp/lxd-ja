@@ -345,11 +345,18 @@ the metadata and rootfs tarball (in that order).
 -->
 
 ### サポートされている圧縮形式 <!-- Supported compression -->
-tarball は bz2, gz, xz, lzma, tar (非圧縮) で圧縮することができ、あるいは
-squashfs のイメージでも構いません。
+LXD は広範な tarball の圧縮アルゴリズムをサポートしますが、互換性のために gzip か xz が望ましいです。
 <!--
-The tarball(s) can be compressed using bz2, gz, xz, lzma, tar (uncompressed) or
-it can also be a squashfs image.
+LXD supports a wide variety of compression algorithms for tarballs
+though for compatibility purposes, gzip or xz should be preferred.
+-->
+
+分離されたイメージではコンテナーの場合は rootfs ファイルはさらに squashfs 形式でフォーマットすることもできます。
+仮想マシンでは `root.img` ファイルは常に qcow2 であり、オプションで qcow2 のネイティブ圧縮を使って圧縮することもできます。
+<!--
+For split images, the rootfs file can also be squashfs formatted in the
+container case. For virtual machines, the `root.img` file is always
+qcow2 and can optionally be compressed using qcow2's native compression.
 -->
 
 ### 中身 <!-- Content -->
