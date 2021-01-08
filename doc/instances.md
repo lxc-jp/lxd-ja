@@ -321,6 +321,7 @@ maas.subnet.ipv6         | string  | -                 | no       | yes     | MA
 boot.priority            | integer | -                 | no       | no      | Boot priority for VMs (higher boots first)
 vlan                     | integer | -                 | no       | no      | The VLAN ID to use for untagged traffic (Can be `none` to remove port from default VLAN)
 vlan.tagged              | integer | -                 | no       | no      | Comma delimited list of VLAN IDs to join for tagged traffic
+security.port\_isolation | boolean | false             | no       | no      | Prevent the NIC from communicating with other NICs in the network that have port isolation enabled
 
 #### nic: macvlan
 
@@ -338,8 +339,8 @@ parent                  | string  | -                 | yes      | yes     | The
 network                 | string  | -                 | yes      | no      | The LXD network to link device to (instead of parent)
 name                    | string  | kernel assigned   | no       | no      | The name of the interface inside the instance
 mtu                     | integer | parent MTU        | no       | yes     | The MTU of the new interface
-hwaddr                  | string  | randomly assigned | no       | no      | TThe MAC address of the new interface
-vlan                    | integer | -                 | no       | no      | TThe VLAN ID to attach to
+hwaddr                  | string  | randomly assigned | no       | no      | The MAC address of the new interface
+vlan                    | integer | -                 | no       | no      | The VLAN ID to attach to
 maas.subnet.ipv4        | string  | -                 | no       | yes     | MAAS IPv4 subnet to register the instance in
 maas.subnet.ipv6        | string  | -                 | no       | yes     | MAAS IPv6 subnet to register the instance in
 boot.priority           | integer | -                 | no       | no      | Boot priority for VMs (higher boots first)
@@ -791,7 +792,7 @@ mdev        | string    | -                 | no        | The mdev profile to us
 
 ### Type: proxy
 
-Supported instance types: container
+Supported instance types: container (`nat` and non-`nat` modes), VM (`nat` mode only)
 
 Proxy devices allow forwarding network connections between host and instance.
 This makes it possible to forward traffic hitting one of the host's
