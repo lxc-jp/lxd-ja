@@ -352,19 +352,19 @@ though for compatibility purposes, gzip or xz should be preferred.
 -->
 
 分離されたイメージではコンテナーの場合は rootfs ファイルはさらに squashfs 形式でフォーマットすることもできます。
-仮想マシンでは `root.img` ファイルは常に qcow2 であり、オプションで qcow2 のネイティブ圧縮を使って圧縮することもできます。
+仮想マシンでは `rootfs.img` ファイルは常に qcow2 であり、オプションで qcow2 のネイティブ圧縮を使って圧縮することもできます。
 <!--
 For split images, the rootfs file can also be squashfs formatted in the
-container case. For virtual machines, the `root.img` file is always
+container case. For virtual machines, the `rootfs.img` file is always
 qcow2 and can optionally be compressed using qcow2's native compression.
 -->
 
 ### 中身 <!-- Content -->
 コンテナーでは rootfs のディレクトリ (あるいは tarball) は完全なファイルシステムのツリーを含み、それが `/` になります。
-VM ではこれは代わりに `root.img` ファイルでメインのディスクデバイスになります。
+VM ではこれは代わりに `rootfs.img` ファイルでメインのディスクデバイスになります。
 <!--
 For containers, the rootfs directory (or tarball) contains a full file system tree of what will become the `/`.
-For VMs, this is instead a `root.img` file which becomes the main disk device.
+For VMs, this is instead a `rootfs.img` file which becomes the main disk device.
 -->
 
 テンプレートのディレクトリはコンテナー内で使用される pongo2 形式のテンプレート・ファイルを含みます。

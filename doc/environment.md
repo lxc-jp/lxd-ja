@@ -16,7 +16,7 @@ the user's environment and to turn some advanced features on and off.
 `PATH`                          | 実行ファイルの検索対象のパスのリスト <!-- List of paths to look into when resolving binaries -->
 `http_proxy`                    | HTTP 用のプロキシサーバの URL <!-- Proxy server URL for HTTP -->
 `https_proxy`                   | HTTPS 用のプロキシサーバの URL <!-- Proxy server URL for HTTPS -->
-`no_proxy`                      | プロキシが不要なドメインのリスト <!-- List of domains that don't require the use of a proxy -->
+`no_proxy`                      | プロキシが不要なドメイン、IPアドレスあるいは CIDR レンジのリスト <!-- List of domains, IP addresses or CIDR ranges that don't require the use of a proxy -->
 
 ## クライアントの環境変数 <!-- Client environment variable -->
 名前 <!-- Name -->                           | 説明 <!-- Description -->
