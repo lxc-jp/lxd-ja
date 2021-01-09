@@ -466,6 +466,7 @@ maas.subnet.ipv6         | string    | -                                        
 boot.priority            | integer   | -                                             | no       | no      | VM のブート優先度 (高いほうが先にブート) <!-- Boot priority for VMs (higher boots first) -->
 vlan                     | integer   | -                                             | no       | no      | タグなしのトラフィックに使用する VLAN ID （デフォルトの VLAN からポートを削除するには `none` を指定） <!-- The VLAN ID to use for untagged traffic (Can be `none` to remove port from default VLAN) -->
 vlan.tagged              | integer   | -                                             | no       | no      | タグありのトラフィックに参加する VLAN ID のカンマ区切りリスト <!-- Comma delimited list of VLAN IDs to join for tagged traffic -->
+security.port\_isolation | boolean   | false                                         | no       | no      | NIC がポート隔離を有効にしたネットワーク内の他の NIC と通信するのを防ぐ <!-- Prevent the NIC from communicating with other NICs in the network that have port isolation enabled -->
 
 #### nic: macvlan
 
@@ -1209,9 +1210,9 @@ mdev        | string    | -                 | no        | 使用する mdev プ�
 
 ### Type: proxy
 
-サポートされるインスタンスタイプ: コンテナー
+サポートされるインスタンスタイプ: コンテナー（`nat` と 非 `nat` モード）、 VM （`nat` モードのみ）
 <!--
-Supported instance types: container
+Supported instance types: container (`nat` and non-`nat` modes), VM (`nat` mode only)
 -->
 
 プロキシーデバイスにより、ホストとインスタンス間のネットワーク接続を転送できます。

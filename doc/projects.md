@@ -37,7 +37,7 @@ currently supported:
 キー <!-- Key -->       | 型 <!-- Type --> | 条件 <!-- Condition --> | デフォルト値 <!-- Default --> | 説明 <!-- Description -->
 :--                                  | :--       | :--                   | :--                       | :--
 features.images                      | boolean   | -                     | true                      | プロジェクト用のイメージとイメージエイリアスのセットを分離する <!-- Separate set of images and image aliases for the project -->
-features.networks                    | boolean   | -                     | true                      | プロジェクトごとに個別のネットワークのセットを使うかどうか <!-- Separate set of networks for the project -->
+features.networks                    | boolean   | -                     | false                     | プロジェクトごとに個別のネットワークのセットを使うかどうか <!-- Separate set of networks for the project -->
 features.profiles                    | boolean   | -                     | true                      | プロジェクト用のプロファイルを分離する <!-- Separate set of profiles for the project -->
 features.storage.volumes             | boolean   | -                     | true                      | プロジェクトごとに個別のストレージボリュームのセットを使うかどうか <!-- Separate set of storage volumes for the project -->
 limits.instances                     | integer   | -                     | -                         | プロジェクト内に作成できるインスタンスの合計数の最大値 <!-- Maximum number of total instances that can be created in the project -->
