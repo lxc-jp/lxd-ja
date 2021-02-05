@@ -323,7 +323,7 @@ There is no default value for filter which means that all results found will
 be returned. The following is the language used for the filter argument:
 -->
 
-?filter=field_name eq desired_field_assignment
+?filter=field\_name eq desired\_field\_assignment
 
 この言語は REST API のフィルタロジックを構成するための OData の慣習に従います。
 フィルタは下記の論理演算子もサポートします。
@@ -340,14 +340,14 @@ Values with spaces can be surrounded with quotes. Nesting filtering is also supp
 For instance, to filter on a field in a config you would pass:
 -->
 
-?filter=config.field_name eq desired_field_assignment
+?filter=config.field\_name eq desired\_field\_assignment
 
 device の属性についてフィルタするには以下のように指定します。
 <!--
 For filtering on device attributes you would pass:
 -->
 
-?filter=devices.device_name.field_name eq desired_field_assignment
+?filter=devices.device\_name.field\_name eq desired\_field\_assignment
 
 以下に上記の異なるフィルタの方法を含む GET クエリをいくつか示します。
 <!--
@@ -500,6 +500,7 @@ much like `/1.0/containers` will only show you instances of that type.
             * [`/1.0/storage-pools/<pool>/volumes/<type>/<name>/backups`](#10storage-poolspoolvolumestypenamebackups)
              * [`/1.0/storage-pools/<pool>/volumes/<type>/<volume>/backups/<name>`](#10storage-poolspoolvolumestypevolumebackupsname)
                * [`/1.0/storage-pools/<pool>/volumes/<type>/<volume>/backups/<name>/export`](#10storage-poolspoolvolumestypevolumebackupsnameexport)
+           * [`/1.0/storage-pools/<pool>/volumes/<type>/<name>/state`](#10storage-poolspoolvolumestypenamestate)
  * [`/1.0/resources`](#10resources)
  * [`/1.0/cluster`](#10cluster)
    * [`/1.0/cluster/members`](#10clustermembers)
@@ -1278,6 +1279,41 @@ Input (using a backup):
 
 <!--
 Raw compressed tarball as provided by a backup download.
+-->
+
+#### PUT
+ * 説明: インスタンスの一括操作を行う <!-- Description: perform bulk operations on instances -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 非同期 <!-- Operation: async -->
+ * 戻り値: バックグラウンド操作または標準のエラー <!-- Return: background operation or standard error -->
+
+入力
+<!--
+Input:
+-->
+
+```js
+{
+    "state": {
+        "action": "start",      // 状態変更のアクション (stop, start, restart, freeze または unfreeze)
+        "timeout": 30,          // 状態変更を失敗と認識するまでのタイムアウト
+        "force": true,          // 状態変更を強制する （現状は stop と restart でインスタンスを kill するときのみに有効)
+        "stateful": true        // 停止または開始の前にランタイムの状態を保存または復元するか （stop と start にのみ有効、デフォルトは false）
+    }
+}
+```
+
+<!--
+```js
+{
+    "state": {
+        "action": "start",      // State change action (stop, start, restart, freeze or unfreeze)
+        "timeout": 30,          // A timeout after which the state change is considered as failed
+        "force": true,          // Force the state change (currently only valid for stop and restart where it means killing the instance)
+        "stateful": true        // Whether to store or restore runtime state before stopping or starting (only valid for stop and start, defaults to false)
+    }
+}
+```
 -->
 
 ### `/1.0/instances/<name>`
@@ -2269,7 +2305,7 @@ Input:
     "action": "stop",       // State change action (stop, start, restart, freeze or unfreeze)
     "timeout": 30,          // A timeout after which the state change is considered as failed
     "force": true,          // Force the state change (currently only valid for stop and restart where it means killing the instance)
-    "stateful": true        // Whether to store or restore runtime state before stopping or startiong (only valid for stop and start, defaults to false)
+    "stateful": true        // Whether to store or restore runtime state before stopping or starting (only valid for stop and start, defaults to false)
 }
 ```
 -->
@@ -4710,6 +4746,27 @@ Output:
 ```json
 {
     "data": "<byte-stream>"
+}
+```
+
+### `/1.0/storage-pools/<pool>/volumes/<type>/<name>/state`
+#### GET
+ * 説明: ストレージボリュームの状態情報 <!-- Description: Storage volume state information -->
+ * 導入: `storage_volume_state` API 拡張によって <!-- Introduced: with API extension `storage_volume_state` -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻り値: 状態情報を含む dict <!-- Return: dict containing state information -->
+
+戻り値
+<!--
+Return value:
+-->
+
+```json
+{
+    "usage": {
+        "used": 2578112512
+    }
 }
 ```
 

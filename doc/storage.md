@@ -545,11 +545,18 @@ lxc storage create pool1 lvm source=/dev/sdX lvm.vg_name=my-pool
    restore before you remove the newer snapshots.
    -->
 
-   また、インスタンスのコピーにスナップショットを使うので、インスタンスのコピーを削除することなく、最後のコピーの前に取得したスナップショットにインスタンスをリストアできないことにも注意が必要です。
+   LXD はリストア中に新しいスナップショットを自動的に破棄するように設定することもできます。
+   これは `volume.zfs.remove_snapshots` プールオプションを使って設定可能です。
    <!--
-   Also note that instance copies use ZFS snapshots, so you also cannot
-   restore an instance to a snapshot taken before the last copy without
-   having to also delete instance copies.
+   LXD can be configured to automatically discard the newer snapshots during restore.
+   This can be configured through the `volume.zfs.remove_snapshots` pool option.
+   -->
+
+   しかしインスタンスのコピーも ZFS スナップショットを使うこと、その結果として全ての子孫も消すことなしには最後のコピーより前に取られたスナップショットにインスタンスをリストアすることもできないことに注意してください。
+   <!--
+   However note that instance copies use ZFS snapshots too, so you also cannot
+   restore an instance to a snapshot taken before the last copy without having
+   to also delete all its descendants.
    -->
 
    必要なスナップショットを新しいインスタンスにコピーした後に古いインスタンスを削除できますが、インスタンスが持っているかもしれない他のスナップショットを失ってしまいます。

@@ -360,6 +360,7 @@ maas.subnet.ipv6                | string    | ipv6 アドレス <!-- address -->
 mtu                             | integer   | -                              | -                    | 作成するインターフェースの MTU <!-- The MTU of the new interface -->
 parent                          | string    | -                              | -                    | macvlan NIC を作成する親のインターフェース <!-- Parent interface to create macvlan NICs on -->
 vlan                            | integer   | -                              | -                    | アタッチする先の VLAN ID <!-- The VLAN ID to attach to -->
+gvrp                            | boolean   | -                              | false                | GARP VLAN Registration Protocol を使って VLAN を登録する <!-- Register VLAN using GARP VLAN Registration Protocol -->
 
 ## ネットワーク: sriov <!-- network: sriov -->
 
@@ -491,6 +492,7 @@ maas.subnet.ipv6                | string    | ipv6 アドレス <!-- address -->
 mtu                             | integer   | -                                 | -                           | 作成するインターフェースの MTU <!-- The MTU of the new interface -->
 parent                          | string    | -                                 | -                           | sriov NIC を作成する親のインターフェース <!-- Parent interface to create sriov NICs on -->
 vlan                            | integer   | -                                 | -                           | アタッチする先の VLAN ID <!-- The VLAN ID to attach to -->
+gvrp                            | boolean   | -                                 | false                       | GARP VLAN Registration Protocol を使って VLAN を登録する <!-- Register VLAN using GARP VLAN Registration Protocol -->
 ipv4.gateway                    | string    | 標準モード <!-- standard mode --> | -                           | ゲートウェイとネットワークの IPv4 アドレス（CIDR表記） <!-- IPv4 address for the gateway and network (CIDR notation) -->
 ipv4.ovn.ranges                 | string    | -                                 | -                           | 子供の OVN ネットワークルーターに使用する IPv4 アドレスの範囲（開始-終了 形式) のカンマ区切りリスト <!-- Comma separate list of IPv4 ranges to use for child OVN network routers (FIRST-LAST format) -->
 ipv4.routes                     | string    | ipv4 アドレス <!-- address -->    | -                           | 子供の OVN ネットワークの ipv4.routes.external 設定で利用可能な追加の IPv4 CIDR サブネットのカンマ区切りリスト <!-- Comma separated list of additional IPv4 CIDR subnets that can be used with child OVN networks ipv4.routes.external setting -->

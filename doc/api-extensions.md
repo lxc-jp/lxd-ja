@@ -2407,3 +2407,53 @@ Those contain additional state information relevant to VLAN interfaces:
 <!--
 This adds the `security.port_isolation` field for bridged NIC instances.
 -->
+
+## instance\_bulk\_state\_change
+一括状態変更（詳細は [REST API](rest-api.md) を参照）のために次のエンドポイントを追加します。
+<!--
+Adds the following endpoint for bulk state change (see [RESTful API](rest-api.md) for details):
+-->
+
+* `PUT /1.0/instances`
+
+## network\_gvrp
+これはオプショナルな `gvrp` プロパティを `macvlan` と `physical` ネットワークに追加し、
+さらに `ipvlan`, `macvlan`, `routed`, `physical` NIC デバイスにも追加します。
+<!--
+This adds an optional `gvrp` property to `macvlan` and `physical` networks,
+and to `ipvlan`, `macvlan`, `routed` and `physical` NIC devices.
+-->
+
+設定された場合は、これは VLAN が GARP VLAN Registration Protocol を使って登録すべきかどうかを指定します。
+デフォルトは false です。
+<!--
+When set, this specifies whether the VLAN should be registered using GARP VLAN
+Registration Protocol. Defaults to false.
+-->
+
+## instance\_pool\_move
+これは `POST /1.0/instances/NAME` API に `pool` フィールドを追加し、プール間でインスタンスのルートディスクを簡単に移動できるようにします。
+<!--
+This adds a `pool` field to the `POST /1.0/instances/NAME` API,
+allowing for easy move of an instance root disk between pools.
+-->
+
+## gpu\_sriov
+これは SR-IOV を有効にした GPU のサポートを追加します。
+これにより `sriov` という GPU タイプのプロパティーが追加されます。
+<!--
+This adds support for SR-IOV enabled GPUs.
+It introduces the `sriov` gpu type property.
+-->
+
+## pci\_device\_type
+これは `pci` デバイスタイプを追加します。
+<!--
+This introduces the `pci` device type.
+-->
+
+## storage\_volume\_state
+`/1.0/storage-pools/POOL/volumes/VOLUME/state` API エンドポイントを新規追加しボリュームの使用量を取得できるようにします。
+<!--
+Add new `/1.0/storage-pools/POOL/volumes/VOLUME/state` API endpoint to get usage data on a volume.
+-->
