@@ -1267,3 +1267,29 @@ Those contain additional state information relevant to VLAN interfaces:
 
 ## instance\_nic\_bridged\_port\_isolation
 This adds the `security.port_isolation` field for bridged NIC instances.
+
+## instance\_bulk\_state\_change
+Adds the following endpoint for bulk state change (see [RESTful API](rest-api.md) for details):
+
+* `PUT /1.0/instances`
+
+## network\_gvrp
+This adds an optional `gvrp` property to `macvlan` and `physical` networks,
+and to `ipvlan`, `macvlan`, `routed` and `physical` NIC devices.
+
+When set, this specifies whether the VLAN should be registered using GARP VLAN
+Registration Protocol. Defaults to false.
+
+## instance\_pool\_move
+This adds a `pool` field to the `POST /1.0/instances/NAME` API,
+allowing for easy move of an instance root disk between pools.
+
+## gpu\_sriov
+This adds support for SR-IOV enabled GPUs.
+It introduces the `sriov` gpu type property.
+
+## pci\_device\_type
+This introduces the `pci` device type.
+
+## storage\_volume\_state
+Add new `/1.0/storage-pools/POOL/volumes/VOLUME/state` API endpoint to get usage data on a volume.
