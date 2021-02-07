@@ -330,7 +330,8 @@ ID (database)   | Name                               | Condition     | Descripti
 7               | [infiniband](#type-infiniband)     | container     | インフィニバンドデバイス <!-- Infiniband device -->
 8               | [proxy](#type-proxy)               | container     | プロキシデバイス <!-- Proxy device -->
 9               | [unix-hotplug](#type-unix-hotplug) | container     | Unix ホットプラグデバイス <!-- Unix hotplug device -->
-10              | [tpm](#tpm)                        | -             | TPM デバイス <!-- TPM device -->
+10              | [tpm](#type-tpm)                   | -             | TPM デバイス <!-- device -->
+11              | [pci](#type-pci)                   | VM            | PCI デバイス <!-- device -->
 
 ### Type: none
 
@@ -498,6 +499,7 @@ name                    | string    | カーネルが割り当て <!-- kernel as
 mtu                     | integer   | 親の MTU <!-- parent MTU -->                  | no       | yes     | 新しいインタフェースの MTU <!-- The MTU of the new interface -->
 hwaddr                  | string    | ランダムに割り当て <!-- randomly assigned --> | no       | no      | 新しいインタフェースの MAC アドレス <!-- The MAC address of the new interface -->
 vlan                    | integer   | -                                             | no       | no      | アタッチ先の VLAN ID <!-- The VLAN ID to attach to -->
+gvrp                    | boolean   | false                                         | no       | no      | GARP VLAN Registration Protocol を使って VLAN を登録する <!-- Register VLAN using GARP VLAN Registration Protocol -->
 maas.subnet.ipv4        | string    | -                                             | no       | yes     | インスタンスを登録する MAAS IPv4 サブネット <!-- MAAS IPv4 subnet to register the instance in -->
 maas.subnet.ipv6        | string    | -                                             | no       | yes     | インスタンスを登録する MAAS IPv6 サブネット <!-- MAAS IPv6 subnet to register the instance in -->
 boot.priority           | integer   | -                                             | no       | no      | VM のブート優先度 (高いほうが先にブート) <!-- Boot priority for VMs (higher boots first) -->
@@ -600,6 +602,7 @@ name                    | string    | カーネルが割り当て <!-- kernel as
 mtu                     | integer   | 親の MTU <!-- parent MTU -->                  | no       | 新しいインタフェースの MTU <!-- The MTU of the new interface -->
 hwaddr                  | string    | ランダムに割り当て <!-- randomly assigned --> | no       | 新しいインタフェースの MAC アドレス <!-- The MAC address of the new interface -->
 vlan                    | integer   | -                                             | no       | アタッチ先の VLAN ID <!-- The VLAN ID to attach to -->
+gvrp                    | boolean   | false                                         | no       | GARP VLAN Registration Protocol を使って VLAN を登録する <!-- Register VLAN using GARP VLAN Registration Protocol -->
 maas.subnet.ipv4        | string    | -                                             | no       | インスタンスを登録する MAAS IPv4 サブネット <!-- MAAS IPv4 subnet to register the instance in -->
 maas.subnet.ipv6        | string    | -                                             | no       | インスタンスを登録する MAAS IPv6 サブネット <!-- MAAS IPv6 subnet to register the instance in -->
 boot.priority           | integer   | -                                             | no       | VM のブート優先度 (高いほうが先にブート) <!-- Boot priority for VMs (higher boots first) -->
@@ -680,6 +683,7 @@ ipv6.address            | string    | -                                         
 ipv6.gateway            | string    | auto (l3s), - (l2)                            | no       | `l3s` モードではデフォルト IPv6 ゲートウェイを自動的に追加するかどうか (auto か none を指定可能)。 `l2` モードではゲートウェイの IPv6 アドレスを指定。 <!-- In `l3s` mode, whether to add an automatic default IPv6 gateway, can be `auto` or `none`. In `l2` mode specifies the IPv6 address of the gateway. -->
 ipv6.host\_table        | integer   | -                                             | no       | （メインのルーティングテーブルに加えて） IPv6 の静的ルートを追加する先のルーティングテーブル ID <!-- The custom policy routing table ID to add IPv6 static routes to (in addition to main routing table). -->
 vlan                    | integer   | -                                             | no       | アタッチ先の VLAN ID <!-- The VLAN ID to attach to -->
+gvrp                    | boolean   | false                                         | no       | GARP VLAN Registration Protocol を使って VLAN を登録する <!-- Register VLAN using GARP VLAN Registration Protocol -->
 
 #### nic: p2p
 
@@ -835,6 +839,7 @@ ipv6.gateway            | string    | auto                                      
 ipv6.host\_address      | string    | fe80::1                                       | no       | ホスト側の veth インターフェースに追加する IPv6 アドレス <!-- The IPv6 address to add to the host-side veth interface. -->
 ipv6.host\_table        | integer   | -                                             | no       | （メインのルーティングテーブルに加えて） IPv6 の静的ルートを追加する先のルーティングテーブル ID <!-- The custom policy routing table ID to add IPv6 static routes to (in addition to main routing table). -->
 vlan                    | integer   | -                                             | no       | アタッチ先の VLAN ID <!-- The VLAN ID to attach to -->
+gvrp                    | boolean   | false                                         | no       | GARP VLAN Registration Protocol を使って VLAN を登録する <!-- Register VLAN using GARP VLAN Registration Protocol -->
 
 #### ブリッジ、ipvlan、macvlan を使った物理ネットワークへの接続 <!-- bridged, macvlan or ipvlan for connection to physical network -->
 `bridged`、`ipvlan`、`macvlan` インターフェースタイプのいずれも、既存の物理ネットワークへ接続できます。
@@ -1159,13 +1164,19 @@ The following GPUs can be specified using the `gputype` property:
 -->
 
  - [physical](#gpu-physical) GPU 全体をパススルーします。 `gputype` が指定されない場合これがデフォルトです。 <!-- Passes through an entire GPU. This is the default if `gputype` is unspecified. -->
- - [mdev](#gpu-mdev) 仮想 GPU を作成しそれにパススルーします。 <!-- Creates and passes through a virtual GPU. -->
+ - [mdev](#gpu-mdev) 仮想 GPU を作成しインスタンスにパススルーします。 <!-- Creates and passes through a virtual GPU into the instance. -->
+ - [sriov](#gpu-sriov) SR-IOV を有効にした GPU の仮想ファンクション（virtual function）をインスタンスに与えます。 <!-- Passes a virtual function of an SR-IOV enabled GPU into the instance. -->
 
 #### gpu: physical
 
 サポートされるインスタンスタイプ: コンテナー, VM
 <!--
 Supported instance types: container, VM
+-->
+
+GPU 全体をパススルーします。
+<!--
+Passes through an entire GPU.
 -->
 
 次に挙げるプロパティがあります:
@@ -1190,9 +1201,9 @@ mode        | int       | 0660              | no        | インスタンス（�
 Supported instance types: VM
 -->
 
-仮想 GPU を作成しそれにパススルーします。利用可能な mdev プロファイルの一覧は `lxc info --resources` を実行すると確認できます。
+仮想 GPU を作成しインスタンスにパススルーします。利用可能な mdev プロファイルの一覧は `lxc info --resources` を実行すると確認できます。
 <!--
-Create a virtual GPU and pass it. A list of available mdev profiles can be found by running `lxc info -\-resources`.
+Creates and passes through a virtual GPU into the instance. A list of available mdev profiles can be found by running `lxc info -\-resources`.
 -->
 
 次に挙げるプロパティがあります:
@@ -1207,6 +1218,30 @@ productid   | string    | -                 | no        | GPU デバイスのプ
 id          | string    | -                 | no        | GPU デバイスのカード ID <!-- The card id of the GPU device -->
 pci         | string    | -                 | no        | GPU デバイスの PCI アドレス <!-- The pci address of the GPU device -->
 mdev        | string    | -                 | no        | 使用する mdev プロファイル（例: i915-GVTg\_V5\_4） <!-- The mdev profile to use (e.g. i915-GVTg_V5_4) -->
+
+#### gpu: sriov
+
+サポートされるインスタンスタイプ: VM
+<!--
+Supported instance types: VM
+-->
+
+SR-IOV が有効な GPU の仮想ファンクション（virtual function）をインスタンスに与えます。
+<!--
+Passes a virtual function of an SR-IOV enabled GPU into the instance.
+-->
+
+次に挙げるプロパティがあります:
+<!--
+The following properties exist:
+-->
+
+Key         | Type      | Default           | Required  | Description
+:--         | :--       | :--               | :--       | :--
+vendorid    | string    | -                 | no        | 親の GPU デバイスのベンダー ID <!-- The vendor id of the GPU device -->
+productid   | string    | -                 | no        | 親の GPU デバイスのプロダクト ID <!-- The product id of the GPU device -->
+id          | string    | -                 | no        | 親の GPU デバイスのカード ID <!-- The card id of the GPU device -->
+pci         | string    | -                 | no        | 親の GPU デバイスの PCI アドレス <!-- The pci address of the GPU device -->
 
 ### Type: proxy
 
@@ -1341,7 +1376,6 @@ required    | boolean   | false             | no        | このデバイスが�
 
 ### Type: tpm
 
-
 サポートされるインスタンスタイプ: コンテナー, VM
 <!--
 Supported instance types: container, VM
@@ -1360,6 +1394,27 @@ The following properties exist:
 Key                 | Type      | Default   | Required  | Description
 :--                 | :--       | :--       | :--       | :--
 path                | string    | -         | yes       | インスタンス内でのパス（コンテナーのみ） <!-- Path inside the instance (only for containers). -->
+
+### Type: pci
+
+サポートされるインスタンスタイプ: VM
+<!--
+Supported instance types: VM
+-->
+
+PCI デバイスエントリーは生の PCI デバイスをホストから仮想マシンに渡すために使用されます。
+<!--
+PCI device entries are used to pass raw PCI devices from the host into a virtual machine.
+-->
+
+以下の設定があります。
+<!--
+The following properties exist:
+-->
+
+Key                 | Type      | Default   | Required  | Description
+:--                 | :--       | :--       | :--       | :--
+address             | string    | -         | yes       | デバイスの PCI アドレス <!-- PCI address of the device. -->
 
 ## ストレージとネットワーク制限の単位 <!-- Units for storage and network limits -->
 バイト数とビット数を表す値は全ていくつかの有用な単位を使用し特定の制限がどういう値かをより理解しやすいようにできます。
