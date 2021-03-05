@@ -2457,3 +2457,75 @@ This introduces the `pci` device type.
 <!--
 Add new `/1.0/storage-pools/POOL/volumes/VOLUME/state` API endpoint to get usage data on a volume.
 -->
+
+## network\_acl
+これは `/1.0/network-acls` の API エンドポイントプリフィクス以下の API にネットワークの ACL のコンセプトを追加します。
+<!--
+This adds the concept of network ACLs to API under the API endpoint prefix `/1.0/network-acls`.
+-->
+
+## migration\_stateful
+`/1.0/network-acls` という設定キーを追加します。
+<!--
+Add a new `migration.stateful` config key.
+-->
+
+## disk\_state\_quota
+これは `disk` デバイスに `size.state` というデバイス設定キーを追加します。
+<!--
+This introduces the `size.state` device config key on `disk` devices.
+-->
+
+## storage\_ceph\_features
+ストレージプールに `ceph.rbd.features` 設定キーを追加し、新規ボリュームに使用する RBD の機能を制御します。
+<!--
+Adds a new `ceph.rbd.features` config key on storage pools to control the RBD features used for new volumes.
+-->
+
+## projects\_compression
+`backups.compression_algorithm` と `images.compression_algorithm` 設定キーを追加します。
+これらによりプロジェクトごとのバックアップとイメージの圧縮の設定が出来るようになります。
+<!--
+Adds new `backups.compression_algorithm` and `images.compression_algorithm` config keys which
+allows configuration of backup and image compression per-project.
+-->
+
+## projects\_images\_remote\_cache\_expiry
+プロジェクトに `images.remote_cache_expiry` 設定キーを追加します。
+これを設定するとキャッシュされたリモートのイメージが指定の日数使われない場合は削除されるようになります。
+<!--
+Add new `images.remote_cache_expiry` config key to projects,
+allowing for set number of days after which an unused cached remote image will be flushed.
+-->
+
+## certificate\_project
+API 内の証明書に `restricted` と `projects` プロパティーを追加します。
+`projects` は証明書がアクセスしたプロジェクト名の一覧を保持します。
+<!--
+Adds a new `restricted` property to certificates in the API as well as
+`projects` holding a list of project names that the certificate has
+access to.
+-->
+
+## network\_ovn\_acl
+OVN ネットワークと OVN NIC に `security.acls` プロパティーを追加します。
+これにより ネットワークに ACL をかけられるようになります。
+<!--
+Adds a new `security.acls` property to OVN networks and OVN NICs, allowing Network ACLs to be applied.
+-->
+
+## projects\_images\_auto\_update
+`images.auto_update_cached` と `images.auto_update_interval` 設定キーを追加します。
+これらによりプロジェクト内のイメージの自動更新を設定できるようになります。
+<!--
+Adds new `images.auto_update_cached` and `images.auto_update_interval` config keys which
+allows configuration of images auto update in projects
+-->
+
+## projects\_restricted\_cluster\_target
+プロジェクトに `restricted.cluster.target` 設定キーを追加します。
+これによりどのクラスターメンバーにワークロードを配置するかやメンバー間のワークロードを移動する能力を指定する --target オプションをユーザーに使わせないように出来ます。
+<!--
+Adds new `restricted.cluster.target` config key to project which prevent the user from using -\-target
+to specify what cluster member to place a workload on or the ability to move a workload between members.
+-->

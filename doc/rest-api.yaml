@@ -1,0 +1,4484 @@
+definitions:
+  Certificate:
+    description: Certificate represents a LXD certificate
+    properties:
+      certificate:
+        description: The certificate itself, as PEM encoded X509
+        example: X509 PEM certificate
+        readOnly: true
+        type: string
+        x-go-name: Certificate
+      fingerprint:
+        description: SHA256 fingerprint of the certificate
+        example: fd200419b271f1dc2a5591b693cc5774b7f234e1ff8c6b78ad703b6888fe2b69
+        readOnly: true
+        type: string
+        x-go-name: Fingerprint
+      name:
+        description: Name associated with the certificate
+        example: castiana
+        type: string
+        x-go-name: Name
+      projects:
+        description: List of allowed projects (applies when restricted)
+        example:
+        - default
+        - foo
+        - bar
+        items:
+          type: string
+        type: array
+        x-go-name: Projects
+      restricted:
+        description: Whether to limit the certificate to listed projects
+        example: true
+        type: boolean
+        x-go-name: Restricted
+      type:
+        description: Usage type for the certificate (only client currently)
+        example: client
+        type: string
+        x-go-name: Type
+    type: object
+    x-go-package: github.com/lxc/lxd/shared/api
+  CertificatePut:
+    description: CertificatePut represents the modifiable fields of a LXD certificate
+    properties:
+      name:
+        description: Name associated with the certificate
+        example: castiana
+        type: string
+        x-go-name: Name
+      projects:
+        description: List of allowed projects (applies when restricted)
+        example:
+        - default
+        - foo
+        - bar
+        items:
+          type: string
+        type: array
+        x-go-name: Projects
+      restricted:
+        description: Whether to limit the certificate to listed projects
+        example: true
+        type: boolean
+        x-go-name: Restricted
+      type:
+        description: Usage type for the certificate (only client currently)
+        example: client
+        type: string
+        x-go-name: Type
+    type: object
+    x-go-package: github.com/lxc/lxd/shared/api
+  CertificatesPost:
+    description: CertificatesPost represents the fields of a new LXD certificate
+    properties:
+      certificate:
+        description: The certificate itself, as PEM encoded X509
+        example: X509 PEM certificate
+        type: string
+        x-go-name: Certificate
+      name:
+        description: Name associated with the certificate
+        example: castiana
+        type: string
+        x-go-name: Name
+      password:
+        description: Server trust password (used to add an untrusted client)
+        example: blah
+        type: string
+        x-go-name: Password
+      projects:
+        description: List of allowed projects (applies when restricted)
+        example:
+        - default
+        - foo
+        - bar
+        items:
+          type: string
+        type: array
+        x-go-name: Projects
+      restricted:
+        description: Whether to limit the certificate to listed projects
+        example: true
+        type: boolean
+        x-go-name: Restricted
+      type:
+        description: Usage type for the certificate (only client currently)
+        example: client
+        type: string
+        x-go-name: Type
+    type: object
+    x-go-package: github.com/lxc/lxd/shared/api
+  Cluster:
+    properties:
+      enabled:
+        description: Whether clustering is enabled
+        example: true
+        type: boolean
+        x-go-name: Enabled
+      member_config:
+        description: |-
+          List of member configuration keys (used during join)
+
+          API extension: clustering_join
+        items:
+          $ref: '#/definitions/ClusterMemberConfigKey'
+        type: array
+        x-go-name: MemberConfig
+      server_name:
+        description: Name of the cluster member answering the request
+        example: lxd01
+        type: string
+        x-go-name: ServerName
+    title: Cluster represents high-level information about a LXD cluster.
+    type: object
+    x-go-package: github.com/lxc/lxd/shared/api
+  ClusterMember:
+    properties:
+      architecture:
+        description: |-
+          The primary architecture of the cluster member
+
+          API extension: clustering_architecture
+        type: string
+        x-go-name: Architecture
+      database:
+        description: Whether the cluster member is a database server
+        example: true
+        type: boolean
+        x-go-name: Database
+      failure_domain:
+        description: Name of the failure domain for this cluster member
+        example: rack1
+        type: string
+        x-go-name: FailureDomain
+      message:
+        description: Additional status information
+        example: fully operational
+        type: string
+        x-go-name: Message
+      roles:
+        description: List of roles held by this cluster member
+        example:
+        - database
+        items:
+          type: string
+        type: array
+        x-go-name: Roles
+      server_name:
+        description: Name of the cluster member
+        example: lxd01
+        type: string
+        x-go-name: ServerName
+      status:
+        description: Current status
+        example: Online
+        type: string
+        x-go-name: Status
+      url:
+        description: URL at which the cluster member can be reached
+        example: https://10.0.0.1:8443
+        type: string
+        x-go-name: URL
+    title: ClusterMember represents the a LXD node in the cluster.
+    type: object
+    x-go-package: github.com/lxc/lxd/shared/api
+  ClusterMemberConfigKey:
+    description: |-
+      The Value field is empty when getting clustering information with GET
+      1.0/cluster, and should be filled by the joining node when performing a PUT
+      1.0/cluster join request.
+    properties:
+      description:
+        description: A human friendly description key
+        example: '"source" property for storage pool "local"'
+        type: string
+        x-go-name: Description
+      entity:
+        description: The kind of configuration key (network, storage-pool, ...)
+        example: storage-pool
+        type: string
+        x-go-name: Entity
+      key:
+        description: The name of the key
+        example: source
+        type: string
+        x-go-name: Key
+      name:
+        description: The name of the object requiring this key
+        example: local
+        type: string
+        x-go-name: Name
+      value:
+        description: The value on the answering cluster member
+        example: /dev/sdb
+        type: string
+        x-go-name: Value
+    title: |-
+      ClusterMemberConfigKey represents a single config key that a new member of
+      the cluster is required to provide when joining.
+    type: object
+    x-go-package: github.com/lxc/lxd/shared/api
+  ClusterMemberPost:
+    properties:
+      server_name:
+        description: The new name of the cluster member
+        example: lxd02
+        type: string
+        x-go-name: ServerName
+    title: ClusterMemberPost represents the fields required to rename a LXD node.
+    type: object
+    x-go-package: github.com/lxc/lxd/shared/api
+  ClusterMemberPut:
+    description: ClusterMemberPut represents the the modifiable fields of a LXD cluster
+      member
+    properties:
+      failure_domain:
+        description: Name of the failure domain for this cluster member
+        example: rack1
+        type: string
+        x-go-name: FailureDomain
+      roles:
+        description: List of roles held by this cluster member
+        example:
+        - database
+        items:
+          type: string
+        type: array
+        x-go-name: Roles
+    type: object
+    x-go-package: github.com/lxc/lxd/shared/api
+  ClusterPut:
+    description: |-
+      ClusterPut represents the fields required to bootstrap or join a LXD
+      cluster.
+    properties:
+      cluster_address:
+        description: The address of the cluster you wish to join
+        example: 10.0.0.1:8443
+        type: string
+        x-go-name: ClusterAddress
+      cluster_certificate:
+        description: The expected certificate (X509 PEM encoded) for the cluster
+        example: X509 PEM certificate
+        type: string
+        x-go-name: ClusterCertificate
+      cluster_password:
+        description: The trust password of the cluster you're trying to join
+        example: blah
+        type: string
+        x-go-name: ClusterPassword
+      enabled:
+        description: Whether clustering is enabled
+        example: true
+        type: boolean
+        x-go-name: Enabled
+      member_config:
+        description: |-
+          List of member configuration keys (used during join)
+
+          API extension: clustering_join
+        items:
+          $ref: '#/definitions/ClusterMemberConfigKey'
+        type: array
+        x-go-name: MemberConfig
+      server_address:
+        description: The local address to use for cluster communication
+        example: 10.0.0.2:8443
+        type: string
+        x-go-name: ServerAddress
+      server_name:
+        description: Name of the cluster member answering the request
+        example: lxd01
+        type: string
+        x-go-name: ServerName
+    type: object
+    x-go-package: github.com/lxc/lxd/shared/api
+  Event:
+    description: Event represents an event entry (over websocket)
+    properties:
+      location:
+        description: Originating cluster member
+        example: lxd01
+        type: string
+        x-go-name: Location
+      metadata:
+        description: JSON encoded metadata (see EventLogging, EventLifecycle or Operation)
+        example:
+          action: instance-started
+          context: {}
+          source: /1.0/instances/c1
+        type: object
+        x-go-name: Metadata
+      timestamp:
+        description: Time at which the event was sent
+        example: "2021-02-24T19:00:45.452649098-05:00"
+        format: date-time
+        type: string
+        x-go-name: Timestamp
+      type:
+        description: Event type (one of operation, logging or lifecycle)
+        example: lifecycle
+        type: string
+        x-go-name: Type
+    type: object
+    x-go-package: github.com/lxc/lxd/shared/api
+  Network:
+    description: Network represents a LXD network
+    properties:
+      config:
+        additionalProperties:
+          type: string
+        description: Network configuration map (refer to doc/networks.md)
+        example:
+          ipv4.address: 10.0.0.1/24
+          ipv4.nat: "true"
+          ipv6.address: none
+        type: object
+        x-go-name: Config
+      description:
+        description: Description of the profile
+        example: My new LXD bridge
+        type: string
+        x-go-name: Description
+      locations:
+        description: Cluster members on which the network has been defined
+        example:
+        - lxd01
+        - lxd02
+        - lxd03
+        items:
+          type: string
+        readOnly: true
+        type: array
+        x-go-name: Locations
+      managed:
+        description: Whether this is a LXD managed network
+        example: true
+        readOnly: true
+        type: boolean
+        x-go-name: Managed
+      name:
+        description: The network name
+        example: lxdbr0
+        readOnly: true
+        type: string
+        x-go-name: Name
+      status:
+        description: The state of the network (for managed network in clusters)
+        example: Created
+        readOnly: true
+        type: string
+        x-go-name: Status
+      type:
+        description: The network name
+        example: bridge
+        readOnly: true
+        type: string
+        x-go-name: Type
+      used_by:
+        description: List of URLs of objects using this profile
+        example:
+        - /1.0/profiles/default
+        - /1.0/instances/c1
+        items:
+          type: string
+        readOnly: true
+        type: array
+        x-go-name: UsedBy
+    type: object
+    x-go-package: github.com/lxc/lxd/shared/api
+  NetworkACL:
+    properties:
+      config:
+        additionalProperties:
+          type: string
+        description: ACL configuration map (refer to doc/network-acls.md)
+        example:
+          default.action: drop
+        type: object
+        x-go-name: Config
+      description:
+        description: Description of the ACL
+        example: Web servers
+        type: string
+        x-go-name: Description
+      egress:
+        description: List of egress rules (order independent)
+        items:
+          $ref: '#/definitions/NetworkACLRule'
+        type: array
+        x-go-name: Egress
+      ingress:
+        description: List of ingress rules (order independent)
+        items:
+          $ref: '#/definitions/NetworkACLRule'
+        type: array
+        x-go-name: Ingress
+      name:
+        description: The new name for the ACL
+        example: bar
+        type: string
+        x-go-name: Name
+      used_by:
+        description: List of URLs of objects using this profile
+        example:
+        - /1.0/instances/c1
+        - /1.0/instances/v1
+        - /1.0/networks/lxdbr0
+        items:
+          type: string
+        readOnly: true
+        type: array
+        x-go-name: UsedBy
+    title: NetworkACL used for displaying an ACL.
+    type: object
+    x-go-package: github.com/lxc/lxd/shared/api
+  NetworkACLPost:
+    properties:
+      name:
+        description: The new name for the ACL
+        example: bar
+        type: string
+        x-go-name: Name
+    title: NetworkACLPost used for renaming an ACL.
+    type: object
+    x-go-package: github.com/lxc/lxd/shared/api
+  NetworkACLPut:
+    properties:
+      config:
+        additionalProperties:
+          type: string
+        description: ACL configuration map (refer to doc/network-acls.md)
+        example:
+          default.action: drop
+        type: object
+        x-go-name: Config
+      description:
+        description: Description of the ACL
+        example: Web servers
+        type: string
+        x-go-name: Description
+      egress:
+        description: List of egress rules (order independent)
+        items:
+          $ref: '#/definitions/NetworkACLRule'
+        type: array
+        x-go-name: Egress
+      ingress:
+        description: List of ingress rules (order independent)
+        items:
+          $ref: '#/definitions/NetworkACLRule'
+        type: array
+        x-go-name: Ingress
+    title: NetworkACLPut used for updating an ACL.
+    type: object
+    x-go-package: github.com/lxc/lxd/shared/api
+  NetworkACLRule:
+    description: Refer to doc/network-acls.md for details.
+    properties:
+      action:
+        description: Action to perform on rule match
+        example: allow
+        type: string
+        x-go-name: Action
+      description:
+        description: Description of the rule
+        example: Allow DNS queries to Google DNS
+        type: string
+        x-go-name: Description
+      destination:
+        description: Destination address
+        example: 8.8.8.8/32,8.8.4.4/32
+        type: string
+        x-go-name: Destination
+      destination_port:
+        description: Destination port
+        example: "53"
+        type: string
+        x-go-name: DestinationPort
+      icmp_code:
+        description: ICMP message code (for ICMP protocol)
+        type: string
+        x-go-name: ICMPCode
+      icmp_type:
+        description: Type of ICMP message (for ICMP protocol)
+        type: string
+        x-go-name: ICMPType
+      protocol:
+        description: Protocol
+        type: string
+        x-go-name: Protocol
+      source:
+        description: Source address
+        type: string
+        x-go-name: Source
+      source_port:
+        description: Source port
+        type: string
+        x-go-name: SourcePort
+      state:
+        description: State of the rule
+        example: enabled
+        type: string
+        x-go-name: State
+    title: NetworkACLRule represents a single rule in an ACL ruleset.
+    type: object
+    x-go-package: github.com/lxc/lxd/shared/api
+  NetworkACLsPost:
+    properties:
+      config:
+        additionalProperties:
+          type: string
+        description: ACL configuration map (refer to doc/network-acls.md)
+        example:
+          default.action: drop
+        type: object
+        x-go-name: Config
+      description:
+        description: Description of the ACL
+        example: Web servers
+        type: string
+        x-go-name: Description
+      egress:
+        description: List of egress rules (order independent)
+        items:
+          $ref: '#/definitions/NetworkACLRule'
+        type: array
+        x-go-name: Egress
+      ingress:
+        description: List of ingress rules (order independent)
+        items:
+          $ref: '#/definitions/NetworkACLRule'
+        type: array
+        x-go-name: Ingress
+      name:
+        description: The new name for the ACL
+        example: bar
+        type: string
+        x-go-name: Name
+    title: NetworkACLsPost used for creating an ACL.
+    type: object
+    x-go-package: github.com/lxc/lxd/shared/api
+  NetworkLease:
+    description: NetworkLease represents a DHCP lease
+    properties:
+      address:
+        description: The IP address
+        example: 10.0.0.98
+        type: string
+        x-go-name: Address
+      hostname:
+        description: The hostname associated with the record
+        example: c1
+        type: string
+        x-go-name: Hostname
+      hwaddr:
+        description: The MAC address
+        example: 00:16:3e:2c:89:d9
+        type: string
+        x-go-name: Hwaddr
+      location:
+        description: What cluster member this record was found on
+        example: lxd01
+        type: string
+        x-go-name: Location
+      type:
+        description: The type of record (static or dynamic)
+        example: dynamic
+        type: string
+        x-go-name: Type
+    type: object
+    x-go-package: github.com/lxc/lxd/shared/api
+  NetworkPost:
+    description: NetworkPost represents the fields required to rename a LXD network
+    properties:
+      name:
+        description: The new name for the network
+        example: lxdbr1
+        type: string
+        x-go-name: Name
+    type: object
+    x-go-package: github.com/lxc/lxd/shared/api
+  NetworkPut:
+    description: NetworkPut represents the modifiable fields of a LXD network
+    properties:
+      config:
+        additionalProperties:
+          type: string
+        description: Network configuration map (refer to doc/networks.md)
+        example:
+          ipv4.address: 10.0.0.1/24
+          ipv4.nat: "true"
+          ipv6.address: none
+        type: object
+        x-go-name: Config
+      description:
+        description: Description of the profile
+        example: My new LXD bridge
+        type: string
+        x-go-name: Description
+    type: object
+    x-go-package: github.com/lxc/lxd/shared/api
+  NetworkState:
+    description: NetworkState represents the network state
+    properties:
+      addresses:
+        description: List of addresses
+        items:
+          $ref: '#/definitions/NetworkStateAddress'
+        type: array
+        x-go-name: Addresses
+      bond:
+        $ref: '#/definitions/NetworkStateBond'
+      bridge:
+        $ref: '#/definitions/NetworkStateBridge'
+      counters:
+        $ref: '#/definitions/NetworkStateCounters'
+      hwaddr:
+        description: MAC address
+        example: 00:16:3e:5a:83:57
+        type: string
+        x-go-name: Hwaddr
+      mtu:
+        description: MTU
+        example: 1500
+        format: int64
+        type: integer
+        x-go-name: Mtu
+      state:
+        description: Link state
+        example: up
+        type: string
+        x-go-name: State
+      type:
+        description: Interface type
+        example: broadcast
+        type: string
+        x-go-name: Type
+      vlan:
+        $ref: '#/definitions/NetworkStateVLAN'
+    type: object
+    x-go-package: github.com/lxc/lxd/shared/api
+  NetworkStateAddress:
+    description: NetworkStateAddress represents a network address
+    properties:
+      address:
+        description: IP address
+        example: 10.0.0.1
+        type: string
+        x-go-name: Address
+      family:
+        description: Address family
+        example: inet
+        type: string
+        x-go-name: Family
+      netmask:
+        description: IP netmask (CIDR)
+        example: "24"
+        type: string
+        x-go-name: Netmask
+      scope:
+        description: Address scope
+        example: global
+        type: string
+        x-go-name: Scope
+    type: object
+    x-go-package: github.com/lxc/lxd/shared/api
+  NetworkStateBond:
+    description: NetworkStateBond represents bond specific state
+    properties:
+      down_delay:
+        description: Delay on link down (ms)
+        example: 0
+        format: uint64
+        type: integer
+        x-go-name: DownDelay
+      lower_devices:
+        description: List of devices that are part of the bond
+        example:
+        - eth0
+        - eth1
+        items:
+          type: string
+        type: array
+        x-go-name: LowerDevices
+      mii_frequency:
+        description: How often to check for link state (ms)
+        example: 100
+        format: uint64
+        type: integer
+        x-go-name: MIIFrequency
+      mii_state:
+        description: Bond link state
+        example: up
+        type: string
+        x-go-name: MIIState
+      mode:
+        description: Bonding mode
+        example: 802.3ad
+        type: string
+        x-go-name: Mode
+      transmit_policy:
+        description: Transmit balancing policy
+        example: layer3+4
+        type: string
+        x-go-name: TransmitPolicy
+      up_delay:
+        description: Delay on link up (ms)
+        example: 0
+        format: uint64
+        type: integer
+        x-go-name: UpDelay
+    type: object
+    x-go-package: github.com/lxc/lxd/shared/api
+  NetworkStateBridge:
+    description: NetworkStateBridge represents bridge specific state
+    properties:
+      forward_delay:
+        description: Delay on port join (ms)
+        example: 1500
+        format: uint64
+        type: integer
+        x-go-name: ForwardDelay
+      id:
+        description: Bridge ID
+        example: 8000.0a0f7c6edbd9
+        type: string
+        x-go-name: ID
+      stp:
+        description: Whether STP is enabled
+        example: false
+        type: boolean
+        x-go-name: STP
+      upper_devices:
+        description: List of devices that are in the bridge
+        example:
+        - eth0
+        - eth1
+        items:
+          type: string
+        type: array
+        x-go-name: UpperDevices
+      vlan_default:
+        description: Default VLAN ID
+        example: 1
+        format: uint64
+        type: integer
+        x-go-name: VLANDefault
+      vlan_filtering:
+        description: Whether VLAN filtering is enabled
+        example: false
+        type: boolean
+        x-go-name: VLANFiltering
+    type: object
+    x-go-package: github.com/lxc/lxd/shared/api
+  NetworkStateCounters:
+    description: NetworkStateCounters represents packet counters
+    properties:
+      bytes_received:
+        description: Number of bytes received
+        example: 250542118
+        format: int64
+        type: integer
+        x-go-name: BytesReceived
+      bytes_sent:
+        description: Number of bytes sent
+        example: 17524040140
+        format: int64
+        type: integer
+        x-go-name: BytesSent
+      packets_received:
+        description: Number of packets received
+        example: 1182515
+        format: int64
+        type: integer
+        x-go-name: PacketsReceived
+      packets_sent:
+        description: Number of packets sent
+        example: 1567934
+        format: int64
+        type: integer
+        x-go-name: PacketsSent
+    type: object
+    x-go-package: github.com/lxc/lxd/shared/api
+  NetworkStateVLAN:
+    description: NetworkStateVLAN represents VLAN specific state
+    properties:
+      lower_device:
+        description: Parent device
+        example: eth0
+        type: string
+        x-go-name: LowerDevice
+      vid:
+        description: VLAN ID
+        example: 100
+        format: uint64
+        type: integer
+        x-go-name: VID
+    type: object
+    x-go-package: github.com/lxc/lxd/shared/api
+  NetworksPost:
+    description: NetworksPost represents the fields of a new LXD network
+    properties:
+      config:
+        additionalProperties:
+          type: string
+        description: Network configuration map (refer to doc/networks.md)
+        example:
+          ipv4.address: 10.0.0.1/24
+          ipv4.nat: "true"
+          ipv6.address: none
+        type: object
+        x-go-name: Config
+      description:
+        description: Description of the profile
+        example: My new LXD bridge
+        type: string
+        x-go-name: Description
+      name:
+        description: The name of the new network
+        example: lxdbr1
+        type: string
+        x-go-name: Name
+      type:
+        description: The network type (refer to doc/networks.md)
+        example: bridge
+        type: string
+        x-go-name: Type
+    type: object
+    x-go-package: github.com/lxc/lxd/shared/api
+  Profile:
+    description: Profile represents a LXD profile
+    properties:
+      config:
+        additionalProperties:
+          type: string
+        description: Instance configuration map (refer to doc/instances.md)
+        example:
+          limits.cpu: "4"
+          limits.memory: 4GiB
+        type: object
+        x-go-name: Config
+      description:
+        description: Description of the profile
+        example: Medium size instances
+        type: string
+        x-go-name: Description
+      devices:
+        additionalProperties:
+          additionalProperties:
+            type: string
+          type: object
+        description: List of devices
+        example:
+          eth0:
+            name: eth0
+            network: lxdbr0
+            type: nic
+          root:
+            path: /
+            pool: default
+            type: disk
+        type: object
+        x-go-name: Devices
+      name:
+        description: The profile name
+        example: foo
+        readOnly: true
+        type: string
+        x-go-name: Name
+      used_by:
+        description: List of URLs of objects using this profile
+        example:
+        - /1.0/instances/c1
+        - /1.0/instances/v1
+        items:
+          type: string
+        readOnly: true
+        type: array
+        x-go-name: UsedBy
+    type: object
+    x-go-package: github.com/lxc/lxd/shared/api
+  ProfilePost:
+    description: ProfilePost represents the fields required to rename a LXD profile
+    properties:
+      name:
+        description: The new name for the profile
+        example: bar
+        type: string
+        x-go-name: Name
+    type: object
+    x-go-package: github.com/lxc/lxd/shared/api
+  ProfilePut:
+    description: ProfilePut represents the modifiable fields of a LXD profile
+    properties:
+      config:
+        additionalProperties:
+          type: string
+        description: Instance configuration map (refer to doc/instances.md)
+        example:
+          limits.cpu: "4"
+          limits.memory: 4GiB
+        type: object
+        x-go-name: Config
+      description:
+        description: Description of the profile
+        example: Medium size instances
+        type: string
+        x-go-name: Description
+      devices:
+        additionalProperties:
+          additionalProperties:
+            type: string
+          type: object
+        description: List of devices
+        example:
+          eth0:
+            name: eth0
+            network: lxdbr0
+            type: nic
+          root:
+            path: /
+            pool: default
+            type: disk
+        type: object
+        x-go-name: Devices
+    type: object
+    x-go-package: github.com/lxc/lxd/shared/api
+  ProfilesPost:
+    description: ProfilesPost represents the fields of a new LXD profile
+    properties:
+      config:
+        additionalProperties:
+          type: string
+        description: Instance configuration map (refer to doc/instances.md)
+        example:
+          limits.cpu: "4"
+          limits.memory: 4GiB
+        type: object
+        x-go-name: Config
+      description:
+        description: Description of the profile
+        example: Medium size instances
+        type: string
+        x-go-name: Description
+      devices:
+        additionalProperties:
+          additionalProperties:
+            type: string
+          type: object
+        description: List of devices
+        example:
+          eth0:
+            name: eth0
+            network: lxdbr0
+            type: nic
+          root:
+            path: /
+            pool: default
+            type: disk
+        type: object
+        x-go-name: Devices
+      name:
+        description: The name of the new profile
+        example: foo
+        type: string
+        x-go-name: Name
+    type: object
+    x-go-package: github.com/lxc/lxd/shared/api
+  Project:
+    description: Project represents a LXD project
+    properties:
+      config:
+        additionalProperties:
+          type: string
+        description: Project configuration map (refer to doc/projects.md)
+        example:
+          features.networks: "false"
+          features.profiles: "true"
+        type: object
+        x-go-name: Config
+      description:
+        description: Description of the project
+        example: My new project
+        type: string
+        x-go-name: Description
+      name:
+        description: The project name
+        example: foo
+        readOnly: true
+        type: string
+        x-go-name: Name
+      used_by:
+        description: List of URLs of objects using this project
+        example:
+        - /1.0/images/0e60015346f06627f10580d56ac7fffd9ea775f6d4f25987217d5eed94910a20
+        - /1.0/instances/c1
+        - /1.0/networks/lxdbr0
+        - /1.0/profiles/default
+        - /1.0/storage-pools/default/volumes/custom/blah
+        items:
+          type: string
+        readOnly: true
+        type: array
+        x-go-name: UsedBy
+    type: object
+    x-go-package: github.com/lxc/lxd/shared/api
+  ProjectPost:
+    description: ProjectPost represents the fields required to rename a LXD project
+    properties:
+      name:
+        description: The new name for the project
+        example: bar
+        type: string
+        x-go-name: Name
+    type: object
+    x-go-package: github.com/lxc/lxd/shared/api
+  ProjectPut:
+    description: ProjectPut represents the modifiable fields of a LXD project
+    properties:
+      config:
+        additionalProperties:
+          type: string
+        description: Project configuration map (refer to doc/projects.md)
+        example:
+          features.networks: "false"
+          features.profiles: "true"
+        type: object
+        x-go-name: Config
+      description:
+        description: Description of the project
+        example: My new project
+        type: string
+        x-go-name: Description
+    type: object
+    x-go-package: github.com/lxc/lxd/shared/api
+  ProjectsPost:
+    description: ProjectsPost represents the fields of a new LXD project
+    properties:
+      config:
+        additionalProperties:
+          type: string
+        description: Project configuration map (refer to doc/projects.md)
+        example:
+          features.networks: "false"
+          features.profiles: "true"
+        type: object
+        x-go-name: Config
+      description:
+        description: Description of the project
+        example: My new project
+        type: string
+        x-go-name: Description
+      name:
+        description: The name of the new project
+        example: foo
+        type: string
+        x-go-name: Name
+    type: object
+    x-go-package: github.com/lxc/lxd/shared/api
+  Resources:
+    description: Resources represents the system resources available for LXD
+    properties:
+      cpu:
+        $ref: '#/definitions/ResourcesCPU'
+      gpu:
+        $ref: '#/definitions/ResourcesGPU'
+      memory:
+        $ref: '#/definitions/ResourcesMemory'
+      network:
+        $ref: '#/definitions/ResourcesNetwork'
+      pci:
+        $ref: '#/definitions/ResourcesPCI'
+      storage:
+        $ref: '#/definitions/ResourcesStorage'
+      system:
+        $ref: '#/definitions/ResourcesSystem'
+      usb:
+        $ref: '#/definitions/ResourcesUSB'
+    type: object
+    x-go-package: github.com/lxc/lxd/shared/api
+  ResourcesCPU:
+    description: ResourcesCPU represents the cpu resources available on the system
+    properties:
+      architecture:
+        description: Architecture name
+        example: x86_64
+        type: string
+        x-go-name: Architecture
+      sockets:
+        description: List of CPU sockets
+        items:
+          $ref: '#/definitions/ResourcesCPUSocket'
+        type: array
+        x-go-name: Sockets
+      total:
+        description: Total number of CPU threads (from all sockets and cores)
+        example: 1
+        format: uint64
+        type: integer
+        x-go-name: Total
+    type: object
+    x-go-package: github.com/lxc/lxd/shared/api
+  ResourcesCPUCache:
+    description: ResourcesCPUCache represents a CPU cache
+    properties:
+      level:
+        description: Cache level (usually a number from 1 to 3)
+        example: 1
+        format: uint64
+        type: integer
+        x-go-name: Level
+      size:
+        description: Size of the cache (in bytes)
+        example: 32768
+        format: uint64
+        type: integer
+        x-go-name: Size
+      type:
+        description: Type of cache (Data, Instruction, Unified, ...)
+        example: Data
+        type: string
+        x-go-name: Type
+    type: object
+    x-go-package: github.com/lxc/lxd/shared/api
+  ResourcesCPUCore:
+    description: ResourcesCPUCore represents a CPU core on the system
+    properties:
+      core:
+        description: Core identifier within the socket
+        example: 0
+        format: uint64
+        type: integer
+        x-go-name: Core
+      die:
+        description: What die the CPU is a part of (for chiplet designs)
+        example: 0
+        format: uint64
+        type: integer
+        x-go-name: Die
+      frequency:
+        description: Current frequency
+        example: 3500
+        format: uint64
+        type: integer
+        x-go-name: Frequency
+      threads:
+        description: List of threads
+        items:
+          $ref: '#/definitions/ResourcesCPUThread'
+        type: array
+        x-go-name: Threads
+    type: object
+    x-go-package: github.com/lxc/lxd/shared/api
+  ResourcesCPUSocket:
+    description: ResourcesCPUSocket represents a CPU socket on the system
+    properties:
+      cache:
+        description: List of CPU caches
+        items:
+          $ref: '#/definitions/ResourcesCPUCache'
+        type: array
+        x-go-name: Cache
+      cores:
+        description: List of CPU cores
+        items:
+          $ref: '#/definitions/ResourcesCPUCore'
+        type: array
+        x-go-name: Cores
+      frequency:
+        description: Current CPU frequency (Mhz)
+        example: 3499
+        format: uint64
+        type: integer
+        x-go-name: Frequency
+      frequency_minimum:
+        description: Minimum CPU frequency (Mhz)
+        example: 400
+        format: uint64
+        type: integer
+        x-go-name: FrequencyMinimum
+      frequency_turbo:
+        description: Maximum CPU frequency (Mhz)
+        example: 3500
+        format: uint64
+        type: integer
+        x-go-name: FrequencyTurbo
+      name:
+        description: Product name
+        example: Intel(R) Core(TM) i5-7300U CPU @ 2.60GHz
+        type: string
+        x-go-name: Name
+      socket:
+        description: Socket number
+        example: 0
+        format: uint64
+        type: integer
+        x-go-name: Socket
+      vendor:
+        description: Vendor name
+        example: GenuineIntel
+        type: string
+        x-go-name: Vendor
+    type: object
+    x-go-package: github.com/lxc/lxd/shared/api
+  ResourcesCPUThread:
+    description: ResourcesCPUThread represents a CPU thread on the system
+    properties:
+      id:
+        description: Thread ID (used for CPU pinning)
+        example: 0
+        format: int64
+        type: integer
+        x-go-name: ID
+      isolated:
+        description: Whether the thread has been isolated (outside of normal scheduling)
+        example: false
+        type: boolean
+        x-go-name: Isolated
+      numa_node:
+        description: NUMA node the thread is a part of
+        example: 0
+        format: uint64
+        type: integer
+        x-go-name: NUMANode
+      online:
+        description: Whether the thread is online (enabled)
+        example: true
+        type: boolean
+        x-go-name: Online
+      thread:
+        description: Thread identifier within the core
+        example: 0
+        format: uint64
+        type: integer
+        x-go-name: Thread
+    type: object
+    x-go-package: github.com/lxc/lxd/shared/api
+  ResourcesGPU:
+    description: ResourcesGPU represents the GPU resources available on the system
+    properties:
+      cards:
+        description: List of GPUs
+        items:
+          $ref: '#/definitions/ResourcesGPUCard'
+        type: array
+        x-go-name: Cards
+      total:
+        description: Total number of GPUs
+        example: 1
+        format: uint64
+        type: integer
+        x-go-name: Total
+    type: object
+    x-go-package: github.com/lxc/lxd/shared/api
+  ResourcesGPUCard:
+    description: ResourcesGPUCard represents a GPU card on the system
+    properties:
+      driver:
+        description: Kernel driver currently associated with the GPU
+        example: i915
+        type: string
+        x-go-name: Driver
+      driver_version:
+        description: Version of the kernel driver
+        example: 5.8.0-36-generic
+        type: string
+        x-go-name: DriverVersion
+      drm:
+        $ref: '#/definitions/ResourcesGPUCardDRM'
+      mdev:
+        additionalProperties:
+          $ref: '#/definitions/ResourcesGPUCardMdev'
+        description: Map of available mediated device profiles
+        example: null
+        type: object
+        x-go-name: Mdev
+      numa_node:
+        description: NUMA node the GPU is a part of
+        example: 0
+        format: uint64
+        type: integer
+        x-go-name: NUMANode
+      nvidia:
+        $ref: '#/definitions/ResourcesGPUCardNvidia'
+      pci_address:
+        description: PCI address
+        example: "0000:00:02.0"
+        type: string
+        x-go-name: PCIAddress
+      product:
+        description: Name of the product
+        example: HD Graphics 620
+        type: string
+        x-go-name: Product
+      product_id:
+        description: PCI ID of the product
+        example: "5916"
+        type: string
+        x-go-name: ProductID
+      sriov:
+        $ref: '#/definitions/ResourcesGPUCardSRIOV'
+      vendor:
+        description: Name of the vendor
+        example: Intel Corporation
+        type: string
+        x-go-name: Vendor
+      vendor_id:
+        description: PCI ID of the vendor
+        example: "8086"
+        type: string
+        x-go-name: VendorID
+    type: object
+    x-go-package: github.com/lxc/lxd/shared/api
+  ResourcesGPUCardDRM:
+    description: ResourcesGPUCardDRM represents the Linux DRM configuration of the
+      GPU
+    properties:
+      card_device:
+        description: Card device number
+        example: "226:0"
+        type: string
+        x-go-name: CardDevice
+      card_name:
+        description: Card device name
+        example: card0
+        type: string
+        x-go-name: CardName
+      control_device:
+        description: Control device number
+        example: "226:0"
+        type: string
+        x-go-name: ControlDevice
+      control_name:
+        description: Control device name
+        example: controlD64
+        type: string
+        x-go-name: ControlName
+      id:
+        description: DRM card ID
+        example: 0
+        format: uint64
+        type: integer
+        x-go-name: ID
+      render_device:
+        description: Render device number
+        example: 226:128
+        type: string
+        x-go-name: RenderDevice
+      render_name:
+        description: Render device name
+        example: renderD128
+        type: string
+        x-go-name: RenderName
+    type: object
+    x-go-package: github.com/lxc/lxd/shared/api
+  ResourcesGPUCardMdev:
+    description: ResourcesGPUCardMdev represents the mediated devices configuration
+      of the GPU
+    properties:
+      api:
+        description: The mechanism used by this device
+        example: vfio-pci
+        type: string
+        x-go-name: API
+      available:
+        description: Number of available devices of this profile
+        example: 2
+        format: uint64
+        type: integer
+        x-go-name: Available
+      description:
+        description: Profile description
+        example: 'low_gm_size: 128MB\nhigh_gm_size: 512MB\nfence: 4\nresolution: 1920x1200\nweight:
+          4'
+        type: string
+        x-go-name: Description
+      devices:
+        description: List of active devices (UUIDs)
+        example:
+        - 42200aac-0977-495c-8c9e-6c51b9092a01
+        - b4950c00-1437-41d9-88f6-28d61cf9b9ef
+        items:
+          type: string
+        type: array
+        x-go-name: Devices
+      name:
+        description: Profile name
+        example: i915-GVTg_V5_8
+        type: string
+        x-go-name: Name
+    type: object
+    x-go-package: github.com/lxc/lxd/shared/api
+  ResourcesGPUCardNvidia:
+    description: ResourcesGPUCardNvidia represents additional information for NVIDIA
+      GPUs
+    properties:
+      architecture:
+        description: Architecture (generation)
+        example: "3.5"
+        type: string
+        x-go-name: Architecture
+      brand:
+        description: Brand name
+        example: GeForce
+        type: string
+        x-go-name: Brand
+      card_device:
+        description: Card device number
+        example: "195:0"
+        type: string
+        x-go-name: CardDevice
+      card_name:
+        description: Card device name
+        example: nvidia0
+        type: string
+        x-go-name: CardName
+      cuda_version:
+        description: Version of the CUDA API
+        example: "11.0"
+        type: string
+        x-go-name: CUDAVersion
+      model:
+        description: Model name
+        example: GeForce GT 730
+        type: string
+        x-go-name: Model
+      nvrm_version:
+        description: Version of the NVRM (usually driver version)
+        example: 450.102.04
+        type: string
+        x-go-name: NVRMVersion
+      uuid:
+        description: GPU UUID
+        example: GPU-6ddadebd-dafe-2db9-f10f-125719770fd3
+        type: string
+        x-go-name: UUID
+    type: object
+    x-go-package: github.com/lxc/lxd/shared/api
+  ResourcesGPUCardSRIOV:
+    description: ResourcesGPUCardSRIOV represents the SRIOV configuration of the GPU
+    properties:
+      current_vfs:
+        description: Number of VFs currently configured
+        example: 0
+        format: uint64
+        type: integer
+        x-go-name: CurrentVFs
+      maximum_vfs:
+        description: Maximum number of supported VFs
+        example: 0
+        format: uint64
+        type: integer
+        x-go-name: MaximumVFs
+      vfs:
+        description: List of VFs (as additional GPU devices)
+        example: null
+        items:
+          $ref: '#/definitions/ResourcesGPUCard'
+        type: array
+        x-go-name: VFs
+    type: object
+    x-go-package: github.com/lxc/lxd/shared/api
+  ResourcesMemory:
+    description: ResourcesMemory represents the memory resources available on the
+      system
+    properties:
+      hugepages_size:
+        description: Size of memory huge pages (bytes)
+        example: 2097152
+        format: uint64
+        type: integer
+        x-go-name: HugepagesSize
+      hugepages_total:
+        description: Total of memory huge pages (bytes)
+        example: 429284917248
+        format: uint64
+        type: integer
+        x-go-name: HugepagesTotal
+      hugepages_used:
+        description: Used memory huge pages (bytes)
+        example: 429284917248
+        format: uint64
+        type: integer
+        x-go-name: HugepagesUsed
+      nodes:
+        description: List of NUMA memory nodes
+        example: null
+        items:
+          $ref: '#/definitions/ResourcesMemoryNode'
+        type: array
+        x-go-name: Nodes
+      total:
+        description: Total system memory (bytes)
+        example: 687194767360
+        format: uint64
+        type: integer
+        x-go-name: Total
+      used:
+        description: Used system memory (bytes)
+        example: 557450502144
+        format: uint64
+        type: integer
+        x-go-name: Used
+    type: object
+    x-go-package: github.com/lxc/lxd/shared/api
+  ResourcesMemoryNode:
+    description: ResourcesMemoryNode represents the node-specific memory resources
+      available on the system
+    properties:
+      hugepages_total:
+        description: Total of memory huge pages (bytes)
+        example: 214536552448
+        format: uint64
+        type: integer
+        x-go-name: HugepagesTotal
+      hugepages_used:
+        description: Used memory huge pages (bytes)
+        example: 214536552448
+        format: uint64
+        type: integer
+        x-go-name: HugepagesUsed
+      numa_node:
+        description: NUMA node identifier
+        example: 0
+        format: uint64
+        type: integer
+        x-go-name: NUMANode
+      total:
+        description: Total system memory (bytes)
+        example: 343597383680
+        format: uint64
+        type: integer
+        x-go-name: Total
+      used:
+        description: Used system memory (bytes)
+        example: 264880439296
+        format: uint64
+        type: integer
+        x-go-name: Used
+    type: object
+    x-go-package: github.com/lxc/lxd/shared/api
+  ResourcesNetwork:
+    description: ResourcesNetwork represents the network cards available on the system
+    properties:
+      cards:
+        description: List of network cards
+        items:
+          $ref: '#/definitions/ResourcesNetworkCard'
+        type: array
+        x-go-name: Cards
+      total:
+        description: Total number of network cards
+        example: 1
+        format: uint64
+        type: integer
+        x-go-name: Total
+    type: object
+    x-go-package: github.com/lxc/lxd/shared/api
+  ResourcesNetworkCard:
+    description: ResourcesNetworkCard represents a network card on the system
+    properties:
+      driver:
+        description: Kernel driver currently associated with the card
+        example: atlantic
+        type: string
+        x-go-name: Driver
+      driver_version:
+        description: Version of the kernel driver
+        example: 5.8.0-36-generic
+        type: string
+        x-go-name: DriverVersion
+      firmware_version:
+        description: Current firmware version
+        example: 3.1.100
+        type: string
+        x-go-name: FirmwareVersion
+      numa_node:
+        description: NUMA node the card is a part of
+        example: 0
+        format: uint64
+        type: integer
+        x-go-name: NUMANode
+      pci_address:
+        description: PCI address (for PCI cards)
+        example: 0000:0d:00.0
+        type: string
+        x-go-name: PCIAddress
+      ports:
+        description: List of ports on the card
+        items:
+          $ref: '#/definitions/ResourcesNetworkCardPort'
+        type: array
+        x-go-name: Ports
+      product:
+        description: Name of the product
+        example: AQC107 NBase-T/IEEE
+        type: string
+        x-go-name: Product
+      product_id:
+        description: PCI ID of the product
+        example: 87b1
+        type: string
+        x-go-name: ProductID
+      sriov:
+        $ref: '#/definitions/ResourcesNetworkCardSRIOV'
+      usb_address:
+        description: USB address (for USB cards)
+        example: "2:7"
+        type: string
+        x-go-name: USBAddress
+      vendor:
+        description: Name of the vendor
+        example: Aquantia Corp.
+        type: string
+        x-go-name: Vendor
+      vendor_id:
+        description: PCI ID of the vendor
+        example: 1d6a
+        type: string
+        x-go-name: VendorID
+    type: object
+    x-go-package: github.com/lxc/lxd/shared/api
+  ResourcesNetworkCardPort:
+    description: ResourcesNetworkCardPort represents a network port on the system
+    properties:
+      address:
+        description: MAC address
+        example: 00:23:a4:01:01:6f
+        type: string
+        x-go-name: Address
+      auto_negotiation:
+        description: Whether auto negotiation is used
+        example: true
+        type: boolean
+        x-go-name: AutoNegotiation
+      id:
+        description: Port identifier (interface name)
+        example: eth0
+        type: string
+        x-go-name: ID
+      infiniband:
+        $ref: '#/definitions/ResourcesNetworkCardPortInfiniband'
+      link_detected:
+        description: Whether a link was detected
+        example: true
+        type: boolean
+        x-go-name: LinkDetected
+      link_duplex:
+        description: Duplex type
+        example: full
+        type: string
+        x-go-name: LinkDuplex
+      link_speed:
+        description: Current speed (Mbit/s)
+        example: 10000
+        format: uint64
+        type: integer
+        x-go-name: LinkSpeed
+      port:
+        description: Port number
+        example: 0
+        format: uint64
+        type: integer
+        x-go-name: Port
+      port_type:
+        description: Current port type
+        example: twisted pair
+        type: string
+        x-go-name: PortType
+      protocol:
+        description: Transport protocol
+        example: ethernet
+        type: string
+        x-go-name: Protocol
+      supported_modes:
+        description: List of supported modes
+        example:
+        - 100baseT/Full
+        - 1000baseT/Full
+        - 2500baseT/Full
+        - 5000baseT/Full
+        - 10000baseT/Full
+        items:
+          type: string
+        type: array
+        x-go-name: SupportedModes
+      supported_ports:
+        description: List of supported port types
+        example:
+        - twisted pair
+        items:
+          type: string
+        type: array
+        x-go-name: SupportedPorts
+      transceiver_type:
+        description: Type of transceiver used
+        example: internal
+        type: string
+        x-go-name: TransceiverType
+    type: object
+    x-go-package: github.com/lxc/lxd/shared/api
+  ResourcesNetworkCardPortInfiniband:
+    description: ResourcesNetworkCardPortInfiniband represents the Linux Infiniband
+      configuration for the port
+    properties:
+      issm_device:
+        description: ISSM device number
+        example: 231:64
+        type: string
+        x-go-name: IsSMDevice
+      issm_name:
+        description: ISSM device name
+        example: issm0
+        type: string
+        x-go-name: IsSMName
+      mad_device:
+        description: MAD device number
+        example: "231:0"
+        type: string
+        x-go-name: MADDevice
+      mad_name:
+        description: MAD device name
+        example: umad0
+        type: string
+        x-go-name: MADName
+      verb_device:
+        description: Verb device number
+        example: 231:192
+        type: string
+        x-go-name: VerbDevice
+      verb_name:
+        description: Verb device name
+        example: uverbs0
+        type: string
+        x-go-name: VerbName
+    type: object
+    x-go-package: github.com/lxc/lxd/shared/api
+  ResourcesNetworkCardSRIOV:
+    description: ResourcesNetworkCardSRIOV represents the SRIOV configuration of the
+      network card
+    properties:
+      current_vfs:
+        description: Number of VFs currently configured
+        example: 0
+        format: uint64
+        type: integer
+        x-go-name: CurrentVFs
+      maximum_vfs:
+        description: Maximum number of supported VFs
+        example: 0
+        format: uint64
+        type: integer
+        x-go-name: MaximumVFs
+      vfs:
+        description: List of VFs (as additional Network devices)
+        example: null
+        items:
+          $ref: '#/definitions/ResourcesNetworkCard'
+        type: array
+        x-go-name: VFs
+    type: object
+    x-go-package: github.com/lxc/lxd/shared/api
+  ResourcesPCI:
+    description: ResourcesPCI represents the PCI devices available on the system
+    properties:
+      devices:
+        description: List of PCI devices
+        items:
+          $ref: '#/definitions/ResourcesPCIDevice'
+        type: array
+        x-go-name: Devices
+      total:
+        description: Total number of PCI devices
+        example: 1
+        format: uint64
+        type: integer
+        x-go-name: Total
+    type: object
+    x-go-package: github.com/lxc/lxd/shared/api
+  ResourcesPCIDevice:
+    description: ResourcesPCIDevice represents a PCI device
+    properties:
+      driver:
+        description: Kernel driver currently associated with the GPU
+        example: mgag200
+        type: string
+        x-go-name: Driver
+      driver_version:
+        description: Version of the kernel driver
+        example: 5.8.0-36-generic
+        type: string
+        x-go-name: DriverVersion
+      iommu_group:
+        description: IOMMU group number
+        example: 20
+        format: uint64
+        type: integer
+        x-go-name: IOMMUGroup
+      numa_node:
+        description: NUMA node the card is a part of
+        example: 0
+        format: uint64
+        type: integer
+        x-go-name: NUMANode
+      pci_address:
+        description: PCI address
+        example: "0000:07:03.0"
+        type: string
+        x-go-name: PCIAddress
+      product:
+        description: Name of the product
+        example: MGA G200eW WPCM450
+        type: string
+        x-go-name: Product
+      product_id:
+        description: PCI ID of the product
+        example: "0532"
+        type: string
+        x-go-name: ProductID
+      vendor:
+        description: Name of the vendor
+        example: Matrox Electronics Systems Ltd.
+        type: string
+        x-go-name: Vendor
+      vendor_id:
+        description: PCI ID of the vendor
+        example: 102b
+        type: string
+        x-go-name: VendorID
+    type: object
+    x-go-package: github.com/lxc/lxd/shared/api
+  ResourcesStorage:
+    description: ResourcesStorage represents the local storage
+    properties:
+      disks:
+        description: List of disks
+        items:
+          $ref: '#/definitions/ResourcesStorageDisk'
+        type: array
+        x-go-name: Disks
+      total:
+        description: Total number of partitions
+        example: 1
+        format: uint64
+        type: integer
+        x-go-name: Total
+    type: object
+    x-go-package: github.com/lxc/lxd/shared/api
+  ResourcesStorageDisk:
+    description: ResourcesStorageDisk represents a disk
+    properties:
+      block_size:
+        description: Block size
+        example: 512
+        format: uint64
+        type: integer
+        x-go-name: BlockSize
+      device:
+        description: Device number
+        example: "259:0"
+        type: string
+        x-go-name: Device
+      device_id:
+        description: Device by-id identifier
+        example: nvme-eui.0000000001000000e4d25cafae2e4c00
+        type: string
+        x-go-name: DeviceID
+      device_path:
+        description: Device by-path identifier
+        example: pci-0000:05:00.0-nvme-1
+        type: string
+        x-go-name: DevicePath
+      firmware_version:
+        description: Current firmware version
+        example: PSF121C
+        type: string
+        x-go-name: FirmwareVersion
+      id:
+        description: ID of the disk (device name)
+        example: nvme0n1
+        type: string
+        x-go-name: ID
+      model:
+        description: Disk model name
+        example: INTEL SSDPEKKW256G7
+        type: string
+        x-go-name: Model
+      numa_node:
+        description: NUMA node the disk is a part of
+        example: 0
+        format: uint64
+        type: integer
+        x-go-name: NUMANode
+      partitions:
+        description: List of partitions
+        items:
+          $ref: '#/definitions/ResourcesStorageDiskPartition'
+        type: array
+        x-go-name: Partitions
+      pci_address:
+        description: PCI address
+        example: "0000:05:00.0"
+        type: string
+        x-go-name: PCIAddress
+      read_only:
+        description: Whether the disk is read-only
+        example: false
+        type: boolean
+        x-go-name: ReadOnly
+      removable:
+        description: Whether the disk is removable (hot-plug)
+        example: false
+        type: boolean
+        x-go-name: Removable
+      rpm:
+        description: Rotation speed (RPM)
+        example: 0
+        format: uint64
+        type: integer
+        x-go-name: RPM
+      serial:
+        description: Serial number
+        example: BTPY63440ARH256D
+        type: string
+        x-go-name: Serial
+      size:
+        description: Total size of the disk (bytes)
+        example: 256060514304
+        format: uint64
+        type: integer
+        x-go-name: Size
+      type:
+        description: Storage type
+        example: nvme
+        type: string
+        x-go-name: Type
+      usb_address:
+        description: USB address
+        example: "3:5"
+        type: string
+        x-go-name: USBAddress
+      wwn:
+        description: WWN identifier
+        example: eui.0000000001000000e4d25cafae2e4c00
+        type: string
+        x-go-name: WWN
+    type: object
+    x-go-package: github.com/lxc/lxd/shared/api
+  ResourcesStorageDiskPartition:
+    description: ResourcesStorageDiskPartition represents a partition on a disk
+    properties:
+      device:
+        description: Device number
+        example: "259:1"
+        type: string
+        x-go-name: Device
+      id:
+        description: ID of the partition (device name)
+        example: nvme0n1p1
+        type: string
+        x-go-name: ID
+      partition:
+        description: Partition number
+        example: 1
+        format: uint64
+        type: integer
+        x-go-name: Partition
+      read_only:
+        description: Whether the partition is read-only
+        example: false
+        type: boolean
+        x-go-name: ReadOnly
+      size:
+        description: Size of the partition (bytes)
+        example: 254933278208
+        format: uint64
+        type: integer
+        x-go-name: Size
+    type: object
+    x-go-package: github.com/lxc/lxd/shared/api
+  ResourcesStoragePool:
+    description: ResourcesStoragePool represents the resources available to a given
+      storage pool
+    properties:
+      inodes:
+        $ref: '#/definitions/ResourcesStoragePoolInodes'
+      space:
+        $ref: '#/definitions/ResourcesStoragePoolSpace'
+    type: object
+    x-go-package: github.com/lxc/lxd/shared/api
+  ResourcesStoragePoolInodes:
+    description: ResourcesStoragePoolInodes represents the inodes available to a given
+      storage pool
+    properties:
+      total:
+        description: Total inodes
+        example: 30709993797
+        format: uint64
+        type: integer
+        x-go-name: Total
+      used:
+        description: Used inodes
+        example: 23937695
+        format: uint64
+        type: integer
+        x-go-name: Used
+    type: object
+    x-go-package: github.com/lxc/lxd/shared/api
+  ResourcesStoragePoolSpace:
+    description: ResourcesStoragePoolSpace represents the space available to a given
+      storage pool
+    properties:
+      total:
+        description: Total disk space (bytes)
+        example: 420100937728
+        format: uint64
+        type: integer
+        x-go-name: Total
+      used:
+        description: Used disk space (bytes)
+        example: 343537419776
+        format: uint64
+        type: integer
+        x-go-name: Used
+    type: object
+    x-go-package: github.com/lxc/lxd/shared/api
+  ResourcesSystem:
+    description: ResourcesSystem represents the system
+    properties:
+      chassis:
+        $ref: '#/definitions/ResourcesSystemChassis'
+      family:
+        description: System family
+        example: ThinkPad X1 Carbon 5th
+        type: string
+        x-go-name: Family
+      firmware:
+        $ref: '#/definitions/ResourcesSystemFirmware'
+      motherboard:
+        $ref: '#/definitions/ResourcesSystemMotherboard'
+      product:
+        description: System model
+        example: 20HRCTO1WW
+        type: string
+        x-go-name: Product
+      serial:
+        description: System serial number
+        example: PY3DD4X9
+        type: string
+        x-go-name: Serial
+      sku:
+        description: |-
+          System nanufacturer SKU
+          LENOVO_MT_20HR_BU_Think_FM_ThinkPad X1 Carbon 5th
+        type: string
+        x-go-name: Sku
+      type:
+        description: System type (unknown, physical, virtual-machine, container, ...)
+        example: physical
+        type: string
+        x-go-name: Type
+      uuid:
+        description: System UUID
+        example: 7fa1c0cc-2271-11b2-a85c-aab32a05d71a
+        type: string
+        x-go-name: UUID
+      vendor:
+        description: System vendor
+        example: LENOVO
+        type: string
+        x-go-name: Vendor
+      version:
+        description: System version
+        example: ThinkPad X1 Carbon 5th
+        type: string
+        x-go-name: Version
+    type: object
+    x-go-package: github.com/lxc/lxd/shared/api
+  ResourcesSystemChassis:
+    description: ResourcesSystemChassis represents the system chassis
+    properties:
+      serial:
+        description: Chassis serial number
+        example: PY3DD4X9
+        type: string
+        x-go-name: Serial
+      type:
+        description: Chassis type
+        example: Notebook
+        type: string
+        x-go-name: Type
+      vendor:
+        description: Chassis vendor
+        example: Lenovo
+        type: string
+        x-go-name: Vendor
+      version:
+        description: Chassis version/revision
+        example: None
+        type: string
+        x-go-name: Version
+    type: object
+    x-go-package: github.com/lxc/lxd/shared/api
+  ResourcesSystemFirmware:
+    description: ResourcesSystemFirmware represents the system firmware
+    properties:
+      date:
+        description: Firmware build date
+        example: 10/14/2020
+        type: string
+        x-go-name: Date
+      vendor:
+        description: Firmware vendor
+        example: Lenovo
+        type: string
+        x-go-name: Vendor
+      version:
+        description: Firmware version
+        example: N1MET64W (1.49)
+        type: string
+        x-go-name: Version
+    type: object
+    x-go-package: github.com/lxc/lxd/shared/api
+  ResourcesSystemMotherboard:
+    description: ResourcesSystemMotherboard represents the motherboard
+    properties:
+      product:
+        description: Motherboard model
+        example: 20HRCTO1WW
+        type: string
+        x-go-name: Product
+      serial:
+        description: Motherboard serial number
+        example: L3CF4FX003A
+        type: string
+        x-go-name: Serial
+      vendor:
+        description: Motherboard vendor
+        example: Lenovo
+        type: string
+        x-go-name: Vendor
+      version:
+        description: Motherboard version/revision
+        example: None
+        type: string
+        x-go-name: Version
+    type: object
+    x-go-package: github.com/lxc/lxd/shared/api
+  ResourcesUSB:
+    description: ResourcesUSB represents the USB devices available on the system
+    properties:
+      devices:
+        description: List of USB devices
+        items:
+          $ref: '#/definitions/ResourcesUSBDevice'
+        type: array
+        x-go-name: Devices
+      total:
+        description: Total number of USB devices
+        example: 1
+        format: uint64
+        type: integer
+        x-go-name: Total
+    type: object
+    x-go-package: github.com/lxc/lxd/shared/api
+  ResourcesUSBDevice:
+    description: ResourcesUSBDevice represents a USB device
+    properties:
+      bus_address:
+        description: USB address (bus)
+        example: 1
+        format: uint64
+        type: integer
+        x-go-name: BusAddress
+      device_address:
+        description: USB address (device)
+        example: 3
+        format: uint64
+        type: integer
+        x-go-name: DeviceAddress
+      interfaces:
+        description: List of USB interfaces
+        items:
+          $ref: '#/definitions/ResourcesUSBDeviceInterface'
+        type: array
+        x-go-name: Interfaces
+      product:
+        description: Name of the product
+        example: Hermon USB hidmouse Device
+        type: string
+        x-go-name: Product
+      product_id:
+        description: USB ID of the product
+        example: "2221"
+        type: string
+        x-go-name: ProductID
+      speed:
+        description: Transfer speed (Mbit/s)
+        example: 12
+        format: double
+        type: number
+        x-go-name: Speed
+      vendor:
+        description: Name of the vendor
+        example: ATEN International Co., Ltd
+        type: string
+        x-go-name: Vendor
+      vendor_id:
+        description: USB ID of the vendor
+        example: "0557"
+        type: string
+        x-go-name: VendorID
+    type: object
+    x-go-package: github.com/lxc/lxd/shared/api
+  ResourcesUSBDeviceInterface:
+    description: ResourcesUSBDeviceInterface represents a USB device interface
+    properties:
+      class:
+        description: Class of USB interface
+        example: Human Interface Device
+        type: string
+        x-go-name: Class
+      class_id:
+        description: ID of the USB interface class
+        example: 3
+        format: uint64
+        type: integer
+        x-go-name: ClassID
+      driver:
+        description: Kernel driver currently associated with the device
+        example: usbhid
+        type: string
+        x-go-name: Driver
+      driver_version:
+        description: Version of the kernel driver
+        example: 5.8.0-36-generic
+        type: string
+        x-go-name: DriverVersion
+      number:
+        description: Interface number
+        example: 0
+        format: uint64
+        type: integer
+        x-go-name: Number
+      subclass:
+        description: Sub class of the interface
+        example: Boot Interface Subclass
+        type: string
+        x-go-name: SubClass
+      subclass_id:
+        description: ID of the USB interface sub class
+        example: 1
+        format: uint64
+        type: integer
+        x-go-name: SubClassID
+    type: object
+    x-go-package: github.com/lxc/lxd/shared/api
+  Server:
+    description: Server represents a LXD server
+    properties:
+      api_extensions:
+        description: List of supported API extensions
+        example:
+        - etag
+        - patch
+        - network
+        - storage
+        items:
+          type: string
+        readOnly: true
+        type: array
+        x-go-name: APIExtensions
+      api_status:
+        description: Support status of the current API (one of "devel", "stable" or
+          "deprecated")
+        example: stable
+        readOnly: true
+        type: string
+        x-go-name: APIStatus
+      api_version:
+        description: API version number
+        example: "1.0"
+        readOnly: true
+        type: string
+        x-go-name: APIVersion
+      auth:
+        description: Whether the client is trusted (one of "trusted" or "untrusted")
+        example: untrusted
+        readOnly: true
+        type: string
+        x-go-name: Auth
+      auth_methods:
+        description: List of supported authentication methods
+        example:
+        - tls
+        - candid
+        items:
+          type: string
+        readOnly: true
+        type: array
+        x-go-name: AuthMethods
+      config:
+        additionalProperties:
+          type: object
+        description: Server configuration map (refer to doc/server.md)
+        example:
+          core.https_address: :8443
+          core.trust_password: true
+        type: object
+        x-go-name: Config
+      environment:
+        $ref: '#/definitions/ServerEnvironment'
+      public:
+        description: Whether the server is public-only (only public endpoints are
+          implemented)
+        example: false
+        readOnly: true
+        type: boolean
+        x-go-name: Public
+    type: object
+    x-go-package: github.com/lxc/lxd/shared/api
+  ServerEnvironment:
+    description: ServerEnvironment represents the read-only environment fields of
+      a LXD server
+    properties:
+      addresses:
+        description: List of addresses the server is listening on
+        example:
+        - :8443
+        items:
+          type: string
+        type: array
+        x-go-name: Addresses
+      architectures:
+        description: List of architectures supported by the server
+        example:
+        - x86_64
+        - i686
+        items:
+          type: string
+        type: array
+        x-go-name: Architectures
+      certificate:
+        description: Server certificate as PEM encoded X509
+        example: X509 PEM certificate
+        type: string
+        x-go-name: Certificate
+      certificate_fingerprint:
+        description: Server certificate fingerprint as SHA256
+        example: fd200419b271f1dc2a5591b693cc5774b7f234e1ff8c6b78ad703b6888fe2b69
+        type: string
+        x-go-name: CertificateFingerprint
+      driver:
+        description: List of supported instance drivers (separate by " | ")
+        example: lxc | qemu
+        type: string
+        x-go-name: Driver
+      driver_version:
+        description: List of supported instance driver versions (separate by " | ")
+        example: 4.0.7 | 5.2.0
+        type: string
+        x-go-name: DriverVersion
+      firewall:
+        description: Current firewall driver
+        example: nftables
+        type: string
+        x-go-name: Firewall
+      kernel:
+        description: OS kernel name
+        example: Linux
+        type: string
+        x-go-name: Kernel
+      kernel_architecture:
+        description: OS kernel architecture
+        example: x86_64
+        type: string
+        x-go-name: KernelArchitecture
+      kernel_features:
+        additionalProperties:
+          type: string
+        description: Map of kernel features that were tested on startup
+        example:
+          netnsid_getifaddrs: "true"
+          seccomp_listener: "true"
+        type: object
+        x-go-name: KernelFeatures
+      kernel_version:
+        description: Kernel version
+        example: 5.4.0-36-generic
+        type: string
+        x-go-name: KernelVersion
+      lxc_features:
+        additionalProperties:
+          type: string
+        description: Map of LXC features that were tested on startup
+        example:
+          cgroup2: "true"
+          devpts_fd: "true"
+          pidfd: "true"
+        type: object
+        x-go-name: LXCFeatures
+      os_name:
+        description: Name of the operating system (Linux distribution)
+        example: Ubuntu
+        type: string
+        x-go-name: OSName
+      os_version:
+        description: Version of the operating system (Linux distribution)
+        example: "20.04"
+        type: string
+        x-go-name: OSVersion
+      project:
+        description: Current project name
+        example: default
+        type: string
+        x-go-name: Project
+      server:
+        description: Server implementation name
+        example: lxd
+        type: string
+        x-go-name: Server
+      server_clustered:
+        description: Whether the server is part of a cluster
+        example: false
+        type: boolean
+        x-go-name: ServerClustered
+      server_name:
+        description: Server hostname
+        example: castiana
+        type: string
+        x-go-name: ServerName
+      server_pid:
+        description: PID of the LXD process
+        example: 1453969
+        format: int64
+        type: integer
+        x-go-name: ServerPid
+      server_version:
+        description: Server version
+        example: "4.11"
+        type: string
+        x-go-name: ServerVersion
+      storage:
+        description: List of active storage drivers (separate by " | ")
+        example: dir | zfs
+        type: string
+        x-go-name: Storage
+      storage_version:
+        description: List of active storage driver versions (separate by " | ")
+        example: 1 | 0.8.4-1ubuntu11
+        type: string
+        x-go-name: StorageVersion
+    type: object
+    x-go-package: github.com/lxc/lxd/shared/api
+  ServerPut:
+    description: ServerPut represents the modifiable fields of a LXD server configuration
+    properties:
+      config:
+        additionalProperties:
+          type: object
+        description: Server configuration map (refer to doc/server.md)
+        example:
+          core.https_address: :8443
+          core.trust_password: true
+        type: object
+        x-go-name: Config
+    type: object
+    x-go-package: github.com/lxc/lxd/shared/api
+  ServerUntrusted:
+    description: ServerUntrusted represents a LXD server for an untrusted client
+    properties:
+      api_extensions:
+        description: List of supported API extensions
+        example:
+        - etag
+        - patch
+        - network
+        - storage
+        items:
+          type: string
+        readOnly: true
+        type: array
+        x-go-name: APIExtensions
+      api_status:
+        description: Support status of the current API (one of "devel", "stable" or
+          "deprecated")
+        example: stable
+        readOnly: true
+        type: string
+        x-go-name: APIStatus
+      api_version:
+        description: API version number
+        example: "1.0"
+        readOnly: true
+        type: string
+        x-go-name: APIVersion
+      auth:
+        description: Whether the client is trusted (one of "trusted" or "untrusted")
+        example: untrusted
+        readOnly: true
+        type: string
+        x-go-name: Auth
+      auth_methods:
+        description: List of supported authentication methods
+        example:
+        - tls
+        - candid
+        items:
+          type: string
+        readOnly: true
+        type: array
+        x-go-name: AuthMethods
+      public:
+        description: Whether the server is public-only (only public endpoints are
+          implemented)
+        example: false
+        readOnly: true
+        type: boolean
+        x-go-name: Public
+    type: object
+    x-go-package: github.com/lxc/lxd/shared/api
+info:
+  contact:
+    email: lxc-devel@lists.linuxcontainers.org
+    name: LXD upstream
+    url: https://github.com/lxc/lxd
+  description: |-
+    This is the REST API used by all LXD clients.
+    Internal endpoints aren't included in this documentation.
+
+    The LXD API is available over both a local unix+http and remote https API.
+    Authentication for local users relies on group membership and access to the unix socket.
+    For remote users, the default authentication method is TLS client
+    certificates with a macaroon based (candid) authentication method also
+    supported.
+
+    WARNING: This API documentation is a work in progress.
+    You may find the full documentation in its old format at "doc/rest-api.md".
+  license:
+    name: Apache-2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0
+  title: LXD external REST API
+  version: "1.0"
+paths:
+  /:
+    get:
+      description: |-
+        Returns a list of supported API versions (URLs).
+
+        Internal API endpoints are not reported as those aren't versioned and
+        should only be used by LXD itself.
+      operationId: api_get
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: API endpoints
+          schema:
+            description: Sync response
+            properties:
+              metadata:
+                description: List of endpoints
+                example:
+                - /1.0
+                items:
+                  type: string
+                type: array
+              status:
+                description: Status description
+                example: Success
+                type: string
+              status_code:
+                description: Status code
+                example: 200
+                type: int
+              type:
+                description: Response type
+                example: sync
+                type: string
+            type: object
+      summary: Get the supported API enpoints
+      tags:
+      - server
+  /1.0:
+    get:
+      description: Shows the full server environment and configuration.
+      operationId: server_get
+      parameters:
+      - description: Cluster member name
+        example: lxd01
+        in: query
+        name: target
+        type: string
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Server environment and configuration
+          schema:
+            description: Sync response
+            properties:
+              metadata:
+                $ref: '#/definitions/Server'
+              status:
+                description: Status description
+                example: Success
+                type: string
+              status_code:
+                description: Status code
+                example: 200
+                type: int
+              type:
+                description: Response type
+                example: sync
+                type: string
+            type: object
+        "500":
+          $ref: '#/responses/InternalServerError'
+      summary: Get the server environment and configuration
+      tags:
+      - server
+    patch:
+      consumes:
+      - application/json
+      description: Updates a subset of the server configuration.
+      operationId: server_patch
+      parameters:
+      - description: Cluster member name
+        example: lxd01
+        in: query
+        name: target
+        type: string
+      - description: Server configuration
+        in: body
+        name: server
+        required: true
+        schema:
+          $ref: '#/definitions/ServerPut'
+      produces:
+      - application/json
+      responses:
+        "200":
+          $ref: '#/responses/EmptySyncResponse'
+        "400":
+          $ref: '#/responses/BadRequest'
+        "403":
+          $ref: '#/responses/Forbidden'
+        "412":
+          $ref: '#/responses/PreconditionFailed'
+        "500":
+          $ref: '#/responses/InternalServerError'
+      summary: Partially update the server configuration
+      tags:
+      - server
+    put:
+      consumes:
+      - application/json
+      description: Updates the entire server configuration.
+      operationId: server_put
+      parameters:
+      - description: Cluster member name
+        example: lxd01
+        in: query
+        name: target
+        type: string
+      - description: Server configuration
+        in: body
+        name: server
+        required: true
+        schema:
+          $ref: '#/definitions/ServerPut'
+      produces:
+      - application/json
+      responses:
+        "200":
+          $ref: '#/responses/EmptySyncResponse'
+        "400":
+          $ref: '#/responses/BadRequest'
+        "403":
+          $ref: '#/responses/Forbidden'
+        "412":
+          $ref: '#/responses/PreconditionFailed'
+        "500":
+          $ref: '#/responses/InternalServerError'
+      summary: Update the server configuration
+      tags:
+      - server
+  /1.0/certificates:
+    get:
+      description: Returns a list of trusted certificates (URLs).
+      operationId: certificates_get
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: API endpoints
+          schema:
+            description: Sync response
+            properties:
+              metadata:
+                description: List of endpoints
+                example: |-
+                  [
+                    "/1.0/certificates/390fdd27ed5dc2408edc11fe602eafceb6c025ddbad9341dfdcb1056a8dd98b1",
+                    "/1.0/certificates/22aee3f051f96abe6d7756892eecabf4b4b22e2ba877840a4ca981e9ea54030a"
+                  ]
+                items:
+                  type: string
+                type: array
+              status:
+                description: Status description
+                example: Success
+                type: string
+              status_code:
+                description: Status code
+                example: 200
+                type: int
+              type:
+                description: Response type
+                example: sync
+                type: string
+            type: object
+        "403":
+          $ref: '#/responses/Forbidden'
+        "500":
+          $ref: '#/responses/InternalServerError'
+      summary: Get the trusted certificates
+      tags:
+      - certificates
+    post:
+      consumes:
+      - application/json
+      description: |-
+        Adds a certificate to the trust store.
+        In this mode, the `password` property is always ignored.
+      operationId: certificates_post
+      parameters:
+      - description: Certificate
+        in: body
+        name: certificate
+        required: true
+        schema:
+          $ref: '#/definitions/CertificatesPost'
+      produces:
+      - application/json
+      responses:
+        "200":
+          $ref: '#/responses/EmptySyncResponse'
+        "400":
+          $ref: '#/responses/BadRequest'
+        "403":
+          $ref: '#/responses/Forbidden'
+        "500":
+          $ref: '#/responses/InternalServerError'
+      summary: Add a trusted certificate
+      tags:
+      - certificates
+  /1.0/certificates/{fingerprint}:
+    delete:
+      description: Removes the certificate from the trust store.
+      operationId: certificate_delete
+      produces:
+      - application/json
+      responses:
+        "200":
+          $ref: '#/responses/EmptySyncResponse'
+        "400":
+          $ref: '#/responses/BadRequest'
+        "403":
+          $ref: '#/responses/Forbidden'
+        "500":
+          $ref: '#/responses/InternalServerError'
+      summary: Delete the trusted certificate
+      tags:
+      - certificates
+    get:
+      description: Gets a specific certificate entry from the trust store.
+      operationId: certificate_get
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Certificate
+          schema:
+            description: Sync response
+            properties:
+              metadata:
+                $ref: '#/definitions/Certificate'
+              status:
+                description: Status description
+                example: Success
+                type: string
+              status_code:
+                description: Status code
+                example: 200
+                type: int
+              type:
+                description: Response type
+                example: sync
+                type: string
+            type: object
+        "403":
+          $ref: '#/responses/Forbidden'
+        "500":
+          $ref: '#/responses/InternalServerError'
+      summary: Get the trusted certificate
+      tags:
+      - certificates
+    patch:
+      consumes:
+      - application/json
+      description: Updates a subset of the certificate configuration.
+      operationId: certificate_patch
+      parameters:
+      - description: Certificate configuration
+        in: body
+        name: certificate
+        required: true
+        schema:
+          $ref: '#/definitions/CertificatePut'
+      produces:
+      - application/json
+      responses:
+        "200":
+          $ref: '#/responses/EmptySyncResponse'
+        "400":
+          $ref: '#/responses/BadRequest'
+        "403":
+          $ref: '#/responses/Forbidden'
+        "412":
+          $ref: '#/responses/PreconditionFailed'
+        "500":
+          $ref: '#/responses/InternalServerError'
+      summary: Partially update the trusted certificate
+      tags:
+      - certificates
+    put:
+      consumes:
+      - application/json
+      description: Updates the entire certificate configuration.
+      operationId: certificate_put
+      parameters:
+      - description: Certificate configuration
+        in: body
+        name: certificate
+        required: true
+        schema:
+          $ref: '#/definitions/CertificatePut'
+      produces:
+      - application/json
+      responses:
+        "200":
+          $ref: '#/responses/EmptySyncResponse'
+        "400":
+          $ref: '#/responses/BadRequest'
+        "403":
+          $ref: '#/responses/Forbidden'
+        "412":
+          $ref: '#/responses/PreconditionFailed'
+        "500":
+          $ref: '#/responses/InternalServerError'
+      summary: Update the trusted certificate
+      tags:
+      - certificates
+  /1.0/certificates?public:
+    post:
+      consumes:
+      - application/json
+      description: |-
+        Adds a certificate to the trust store as an untrusted user.
+        In this mode, the `password` property must be set to the correct value.
+
+        The `certificate` field can be omitted in which case the TLS client
+        certificate in use for the connection will be retrieved and added to the
+        trust store.
+
+        The `?public` part of the URL isn't required, it's simply used to
+        separate the two behaviors of this endpoint.
+      operationId: certificates_post_untrusted
+      parameters:
+      - description: Certificate
+        in: body
+        name: certificate
+        required: true
+        schema:
+          $ref: '#/definitions/CertificatesPost'
+      produces:
+      - application/json
+      responses:
+        "200":
+          $ref: '#/responses/EmptySyncResponse'
+        "400":
+          $ref: '#/responses/BadRequest'
+        "403":
+          $ref: '#/responses/Forbidden'
+        "500":
+          $ref: '#/responses/InternalServerError'
+      summary: Add a trusted certificate
+      tags:
+      - certificates
+  /1.0/certificates?recursion=1:
+    get:
+      description: Returns a list of trusted certificates (structs).
+      operationId: certificates_get_recursion1
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: API endpoints
+          schema:
+            description: Sync response
+            properties:
+              metadata:
+                description: List of certificates
+                items:
+                  $ref: '#/definitions/Certificate'
+                type: array
+              status:
+                description: Status description
+                example: Success
+                type: string
+              status_code:
+                description: Status code
+                example: 200
+                type: int
+              type:
+                description: Response type
+                example: sync
+                type: string
+            type: object
+        "403":
+          $ref: '#/responses/Forbidden'
+        "500":
+          $ref: '#/responses/InternalServerError'
+      summary: Get the trusted certificates
+      tags:
+      - certificates
+  /1.0/cluster/{name}:
+    get:
+      description: Gets the current cluster configuration.
+      operationId: cluster_get
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Cluster configuration
+          schema:
+            description: Sync response
+            properties:
+              metadata:
+                $ref: '#/definitions/Cluster'
+              status:
+                description: Status description
+                example: Success
+                type: string
+              status_code:
+                description: Status code
+                example: 200
+                type: int
+              type:
+                description: Response type
+                example: sync
+                type: string
+            type: object
+        "403":
+          $ref: '#/responses/Forbidden'
+        "500":
+          $ref: '#/responses/InternalServerError'
+      summary: Get the cluster configuration
+      tags:
+      - cluster
+    put:
+      consumes:
+      - application/json
+      description: Updates the entire cluster configuration.
+      operationId: cluster_put
+      parameters:
+      - description: Cluster configuration
+        in: body
+        name: cluster
+        required: true
+        schema:
+          $ref: '#/definitions/ClusterPut'
+      produces:
+      - application/json
+      responses:
+        "200":
+          $ref: '#/responses/EmptySyncResponse'
+        "400":
+          $ref: '#/responses/BadRequest'
+        "403":
+          $ref: '#/responses/Forbidden'
+        "412":
+          $ref: '#/responses/PreconditionFailed'
+        "500":
+          $ref: '#/responses/InternalServerError'
+      summary: Update the cluster configuration
+      tags:
+      - cluster
+  /1.0/cluster/members:
+    get:
+      description: Returns a list of cluster members (URLs).
+      operationId: cluster_members_get
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: API endpoints
+          schema:
+            description: Sync response
+            properties:
+              metadata:
+                description: List of endpoints
+                example: |-
+                  [
+                    "/1.0/cluster/members/lxd01",
+                    "/1.0/cluster/members/lxd02"
+                  ]
+                items:
+                  type: string
+                type: array
+              status:
+                description: Status description
+                example: Success
+                type: string
+              status_code:
+                description: Status code
+                example: 200
+                type: int
+              type:
+                description: Response type
+                example: sync
+                type: string
+            type: object
+        "403":
+          $ref: '#/responses/Forbidden'
+        "500":
+          $ref: '#/responses/InternalServerError'
+      summary: Get the cluster members
+      tags:
+      - cluster
+  /1.0/cluster/members/{name}:
+    delete:
+      description: Removes the member from the cluster.
+      operationId: cluster_member_delete
+      produces:
+      - application/json
+      responses:
+        "200":
+          $ref: '#/responses/EmptySyncResponse'
+        "400":
+          $ref: '#/responses/BadRequest'
+        "403":
+          $ref: '#/responses/Forbidden'
+        "500":
+          $ref: '#/responses/InternalServerError'
+      summary: Delete the cluster member
+      tags:
+      - cluster
+    get:
+      description: Gets a specific cluster member.
+      operationId: cluster_member_get
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Profile
+          schema:
+            description: Sync response
+            properties:
+              metadata:
+                $ref: '#/definitions/ClusterMember'
+              status:
+                description: Status description
+                example: Success
+                type: string
+              status_code:
+                description: Status code
+                example: 200
+                type: int
+              type:
+                description: Response type
+                example: sync
+                type: string
+            type: object
+        "403":
+          $ref: '#/responses/Forbidden'
+        "500":
+          $ref: '#/responses/InternalServerError'
+      summary: Get the cluster member
+      tags:
+      - cluster
+    patch:
+      consumes:
+      - application/json
+      description: Updates a subset of the cluster member configuration.
+      operationId: cluster_member_patch
+      parameters:
+      - description: Cluster member configuration
+        in: body
+        name: cluster
+        required: true
+        schema:
+          $ref: '#/definitions/ClusterMemberPut'
+      produces:
+      - application/json
+      responses:
+        "200":
+          $ref: '#/responses/EmptySyncResponse'
+        "400":
+          $ref: '#/responses/BadRequest'
+        "403":
+          $ref: '#/responses/Forbidden'
+        "412":
+          $ref: '#/responses/PreconditionFailed'
+        "500":
+          $ref: '#/responses/InternalServerError'
+      summary: Partially update the cluster member
+      tags:
+      - cluster
+    post:
+      consumes:
+      - application/json
+      description: Renames an existing cluster member.
+      operationId: cluster_member_post
+      parameters:
+      - description: Cluster member rename request
+        in: body
+        name: cluster
+        required: true
+        schema:
+          $ref: '#/definitions/ClusterMemberPost'
+      produces:
+      - application/json
+      responses:
+        "200":
+          $ref: '#/responses/EmptySyncResponse'
+        "400":
+          $ref: '#/responses/BadRequest'
+        "403":
+          $ref: '#/responses/Forbidden'
+        "500":
+          $ref: '#/responses/InternalServerError'
+      summary: Rename the cluster member
+      tags:
+      - cluster
+    put:
+      consumes:
+      - application/json
+      description: Updates the entire cluster member configuration.
+      operationId: cluster_member_put
+      parameters:
+      - description: Cluster member configuration
+        in: body
+        name: cluster
+        required: true
+        schema:
+          $ref: '#/definitions/ClusterMemberPut'
+      produces:
+      - application/json
+      responses:
+        "200":
+          $ref: '#/responses/EmptySyncResponse'
+        "400":
+          $ref: '#/responses/BadRequest'
+        "403":
+          $ref: '#/responses/Forbidden'
+        "412":
+          $ref: '#/responses/PreconditionFailed'
+        "500":
+          $ref: '#/responses/InternalServerError'
+      summary: Update the cluster member
+      tags:
+      - cluster
+  /1.0/cluster/members?recursion=1:
+    get:
+      description: Returns a list of cluster members (structs).
+      operationId: cluster_members_get_recursion1
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: API endpoints
+          schema:
+            description: Sync response
+            properties:
+              metadata:
+                description: List of cluster members
+                items:
+                  $ref: '#/definitions/ClusterMember'
+                type: array
+              status:
+                description: Status description
+                example: Success
+                type: string
+              status_code:
+                description: Status code
+                example: 200
+                type: int
+              type:
+                description: Response type
+                example: sync
+                type: string
+            type: object
+        "403":
+          $ref: '#/responses/Forbidden'
+        "500":
+          $ref: '#/responses/InternalServerError'
+      summary: Get the cluster members
+      tags:
+      - cluster
+  /1.0/events:
+    get:
+      description: Connects to the event API using websocket.
+      operationId: events_get
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        type: string
+      - description: Event type(s), comma separated (valid types are logging, operation
+          or lifecycle)
+        example: logging,lifecycle
+        in: query
+        name: type
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Websocket message (JSON)
+          schema:
+            $ref: '#/definitions/Event'
+        "403":
+          $ref: '#/responses/Forbidden'
+        "500":
+          $ref: '#/responses/InternalServerError'
+      summary: Get the event stream
+      tags:
+      - server
+  /1.0/network-acls:
+    get:
+      description: Returns a list of network ACLs (URLs).
+      operationId: network_acls_get
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: API endpoints
+          schema:
+            description: Sync response
+            properties:
+              metadata:
+                description: List of endpoints
+                example: |-
+                  [
+                    "/1.0/network-acls/foo",
+                    "/1.0/network-acls/bar"
+                  ]
+                items:
+                  type: string
+                type: array
+              status:
+                description: Status description
+                example: Success
+                type: string
+              status_code:
+                description: Status code
+                example: 200
+                type: int
+              type:
+                description: Response type
+                example: sync
+                type: string
+            type: object
+        "403":
+          $ref: '#/responses/Forbidden'
+        "500":
+          $ref: '#/responses/InternalServerError'
+      summary: Get the network ACLs
+      tags:
+      - network-acls
+    post:
+      consumes:
+      - application/json
+      description: Creates a new network ACL.
+      operationId: network_acls_post
+      parameters:
+      - description: ACL
+        in: body
+        name: acl
+        required: true
+        schema:
+          $ref: '#/definitions/NetworkACLsPost'
+      produces:
+      - application/json
+      responses:
+        "200":
+          $ref: '#/responses/EmptySyncResponse'
+        "400":
+          $ref: '#/responses/BadRequest'
+        "403":
+          $ref: '#/responses/Forbidden'
+        "500":
+          $ref: '#/responses/InternalServerError'
+      summary: Add a network ACL
+      tags:
+      - network-acls
+  /1.0/network-acls/{name}:
+    delete:
+      description: Removes the network ACL.
+      operationId: network_acls_delete
+      produces:
+      - application/json
+      responses:
+        "200":
+          $ref: '#/responses/EmptySyncResponse'
+        "400":
+          $ref: '#/responses/BadRequest'
+        "403":
+          $ref: '#/responses/Forbidden'
+        "500":
+          $ref: '#/responses/InternalServerError'
+      summary: Delete the network ACL
+      tags:
+      - network-acls
+    get:
+      description: Gets a specific network ACL.
+      operationId: network_acls_get
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ACL
+          schema:
+            description: Sync response
+            properties:
+              metadata:
+                $ref: '#/definitions/NetworkACL'
+              status:
+                description: Status description
+                example: Success
+                type: string
+              status_code:
+                description: Status code
+                example: 200
+                type: int
+              type:
+                description: Response type
+                example: sync
+                type: string
+            type: object
+        "403":
+          $ref: '#/responses/Forbidden'
+        "500":
+          $ref: '#/responses/InternalServerError'
+      summary: Get the network ACL
+      tags:
+      - network-acls
+    patch:
+      consumes:
+      - application/json
+      description: Updates a subset of the network ACL configuration.
+      operationId: network_acls_patch
+      parameters:
+      - description: ACL configuration
+        in: body
+        name: acl
+        required: true
+        schema:
+          $ref: '#/definitions/NetworkACLPut'
+      produces:
+      - application/json
+      responses:
+        "200":
+          $ref: '#/responses/EmptySyncResponse'
+        "400":
+          $ref: '#/responses/BadRequest'
+        "403":
+          $ref: '#/responses/Forbidden'
+        "412":
+          $ref: '#/responses/PreconditionFailed'
+        "500":
+          $ref: '#/responses/InternalServerError'
+      summary: Partially update the network ACL
+      tags:
+      - network-acls
+    post:
+      consumes:
+      - application/json
+      description: Renames an existing network ACL.
+      operationId: network_acls_post
+      parameters:
+      - description: ACL rename request
+        in: body
+        name: acl
+        required: true
+        schema:
+          $ref: '#/definitions/NetworkACLPost'
+      produces:
+      - application/json
+      responses:
+        "200":
+          $ref: '#/responses/EmptySyncResponse'
+        "400":
+          $ref: '#/responses/BadRequest'
+        "403":
+          $ref: '#/responses/Forbidden'
+        "500":
+          $ref: '#/responses/InternalServerError'
+      summary: Rename the network ACL
+      tags:
+      - network-acls
+    put:
+      consumes:
+      - application/json
+      description: Updates the entire network ACL configuration.
+      operationId: network_acls_put
+      parameters:
+      - description: ACL configuration
+        in: body
+        name: acl
+        required: true
+        schema:
+          $ref: '#/definitions/NetworkACLPut'
+      produces:
+      - application/json
+      responses:
+        "200":
+          $ref: '#/responses/EmptySyncResponse'
+        "400":
+          $ref: '#/responses/BadRequest'
+        "403":
+          $ref: '#/responses/Forbidden'
+        "412":
+          $ref: '#/responses/PreconditionFailed'
+        "500":
+          $ref: '#/responses/InternalServerError'
+      summary: Update the network ACL
+      tags:
+      - network-acls
+  /1.0/network-acls?recursion=1:
+    get:
+      description: Returns a list of network ACLs (structs).
+      operationId: network_acls_get_recursion1
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: API endpoints
+          schema:
+            description: Sync response
+            properties:
+              metadata:
+                description: List of network ACLs
+                items:
+                  $ref: '#/definitions/NetworkACL'
+                type: array
+              status:
+                description: Status description
+                example: Success
+                type: string
+              status_code:
+                description: Status code
+                example: 200
+                type: int
+              type:
+                description: Response type
+                example: sync
+                type: string
+            type: object
+        "403":
+          $ref: '#/responses/Forbidden'
+        "500":
+          $ref: '#/responses/InternalServerError'
+      summary: Get the network ACLs
+      tags:
+      - network-acls
+  /1.0/networks:
+    get:
+      description: Returns a list of networks (URLs).
+      operationId: networks_get
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: API endpoints
+          schema:
+            description: Sync response
+            properties:
+              metadata:
+                description: List of endpoints
+                example: |-
+                  [
+                    "/1.0/networks/lxdbr0",
+                    "/1.0/networks/lxdbr1"
+                  ]
+                items:
+                  type: string
+                type: array
+              status:
+                description: Status description
+                example: Success
+                type: string
+              status_code:
+                description: Status code
+                example: 200
+                type: int
+              type:
+                description: Response type
+                example: sync
+                type: string
+            type: object
+        "403":
+          $ref: '#/responses/Forbidden'
+        "500":
+          $ref: '#/responses/InternalServerError'
+      summary: Get the networks
+      tags:
+      - networks
+    post:
+      consumes:
+      - application/json
+      description: |-
+        Creates a new network.
+        When clustered, most network types require individual POST for each cluster member prior to a global POST.
+      operationId: networks_post
+      parameters:
+      - description: Cluster member name
+        example: lxd01
+        in: query
+        name: target
+        type: string
+      - description: Network
+        in: body
+        name: network
+        required: true
+        schema:
+          $ref: '#/definitions/NetworksPost'
+      produces:
+      - application/json
+      responses:
+        "200":
+          $ref: '#/responses/EmptySyncResponse'
+        "400":
+          $ref: '#/responses/BadRequest'
+        "403":
+          $ref: '#/responses/Forbidden'
+        "500":
+          $ref: '#/responses/InternalServerError'
+      summary: Add a network
+      tags:
+      - networks
+  /1.0/networks/{name}:
+    delete:
+      description: Removes the network.
+      operationId: network_delete
+      produces:
+      - application/json
+      responses:
+        "200":
+          $ref: '#/responses/EmptySyncResponse'
+        "400":
+          $ref: '#/responses/BadRequest'
+        "403":
+          $ref: '#/responses/Forbidden'
+        "500":
+          $ref: '#/responses/InternalServerError'
+      summary: Delete the network
+      tags:
+      - networks
+    get:
+      description: Gets a specific network.
+      operationId: network_get
+      parameters:
+      - description: Cluster member name
+        example: lxd01
+        in: query
+        name: target
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Network
+          schema:
+            description: Sync response
+            properties:
+              metadata:
+                $ref: '#/definitions/Network'
+              status:
+                description: Status description
+                example: Success
+                type: string
+              status_code:
+                description: Status code
+                example: 200
+                type: int
+              type:
+                description: Response type
+                example: sync
+                type: string
+            type: object
+        "403":
+          $ref: '#/responses/Forbidden'
+        "500":
+          $ref: '#/responses/InternalServerError'
+      summary: Get the network
+      tags:
+      - networks
+    patch:
+      consumes:
+      - application/json
+      description: Updates a subset of the network configuration.
+      operationId: network_patch
+      parameters:
+      - description: Cluster member name
+        example: lxd01
+        in: query
+        name: target
+        type: string
+      - description: Network configuration
+        in: body
+        name: network
+        required: true
+        schema:
+          $ref: '#/definitions/NetworkPut'
+      produces:
+      - application/json
+      responses:
+        "200":
+          $ref: '#/responses/EmptySyncResponse'
+        "400":
+          $ref: '#/responses/BadRequest'
+        "403":
+          $ref: '#/responses/Forbidden'
+        "412":
+          $ref: '#/responses/PreconditionFailed'
+        "500":
+          $ref: '#/responses/InternalServerError'
+      summary: Partially update the network
+      tags:
+      - networks
+    post:
+      consumes:
+      - application/json
+      description: Renames an existing network.
+      operationId: network_post
+      parameters:
+      - description: Network rename request
+        in: body
+        name: network
+        required: true
+        schema:
+          $ref: '#/definitions/NetworkPost'
+      produces:
+      - application/json
+      responses:
+        "200":
+          $ref: '#/responses/EmptySyncResponse'
+        "400":
+          $ref: '#/responses/BadRequest'
+        "403":
+          $ref: '#/responses/Forbidden'
+        "500":
+          $ref: '#/responses/InternalServerError'
+      summary: Rename the network
+      tags:
+      - networks
+    put:
+      consumes:
+      - application/json
+      description: Updates the entire network configuration.
+      operationId: network_put
+      parameters:
+      - description: Cluster member name
+        example: lxd01
+        in: query
+        name: target
+        type: string
+      - description: Network configuration
+        in: body
+        name: network
+        required: true
+        schema:
+          $ref: '#/definitions/NetworkPut'
+      produces:
+      - application/json
+      responses:
+        "200":
+          $ref: '#/responses/EmptySyncResponse'
+        "400":
+          $ref: '#/responses/BadRequest'
+        "403":
+          $ref: '#/responses/Forbidden'
+        "412":
+          $ref: '#/responses/PreconditionFailed'
+        "500":
+          $ref: '#/responses/InternalServerError'
+      summary: Update the network
+      tags:
+      - networks
+  /1.0/networks/{name}/leases:
+    get:
+      description: Returns a list of DHCP leases for the network.
+      operationId: networks_leases_get
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: API endpoints
+          schema:
+            description: Sync response
+            properties:
+              metadata:
+                description: List of DHCP leases
+                items:
+                  $ref: '#/definitions/NetworkLease'
+                type: array
+              status:
+                description: Status description
+                example: Success
+                type: string
+              status_code:
+                description: Status code
+                example: 200
+                type: int
+              type:
+                description: Response type
+                example: sync
+                type: string
+            type: object
+        "403":
+          $ref: '#/responses/Forbidden'
+        "500":
+          $ref: '#/responses/InternalServerError'
+      summary: Get the DHCP leases
+      tags:
+      - networks
+  /1.0/networks/{name}/state:
+    get:
+      description: Returns the current network state information.
+      operationId: networks_state_get
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: API endpoints
+          schema:
+            description: Sync response
+            properties:
+              metadata:
+                $ref: '#/definitions/NetworkState'
+              status:
+                description: Status description
+                example: Success
+                type: string
+              status_code:
+                description: Status code
+                example: 200
+                type: int
+              type:
+                description: Response type
+                example: sync
+                type: string
+            type: object
+        "403":
+          $ref: '#/responses/Forbidden'
+        "500":
+          $ref: '#/responses/InternalServerError'
+      summary: Get the network state
+      tags:
+      - networks
+  /1.0/networks?recursion=1:
+    get:
+      description: Returns a list of networks (structs).
+      operationId: networks_get_recursion1
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: API endpoints
+          schema:
+            description: Sync response
+            properties:
+              metadata:
+                description: List of networks
+                items:
+                  $ref: '#/definitions/Network'
+                type: array
+              status:
+                description: Status description
+                example: Success
+                type: string
+              status_code:
+                description: Status code
+                example: 200
+                type: int
+              type:
+                description: Response type
+                example: sync
+                type: string
+            type: object
+        "403":
+          $ref: '#/responses/Forbidden'
+        "500":
+          $ref: '#/responses/InternalServerError'
+      summary: Get the networks
+      tags:
+      - networks
+  /1.0/profiles:
+    get:
+      description: Returns a list of profiles (URLs).
+      operationId: profiles_get
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: API endpoints
+          schema:
+            description: Sync response
+            properties:
+              metadata:
+                description: List of endpoints
+                example: |-
+                  [
+                    "/1.0/profiles/default",
+                    "/1.0/profiles/foo"
+                  ]
+                items:
+                  type: string
+                type: array
+              status:
+                description: Status description
+                example: Success
+                type: string
+              status_code:
+                description: Status code
+                example: 200
+                type: int
+              type:
+                description: Response type
+                example: sync
+                type: string
+            type: object
+        "403":
+          $ref: '#/responses/Forbidden'
+        "500":
+          $ref: '#/responses/InternalServerError'
+      summary: Get the profiles
+      tags:
+      - profiles
+    post:
+      consumes:
+      - application/json
+      description: Creates a new profile.
+      operationId: profiles_post
+      parameters:
+      - description: Profile
+        in: body
+        name: profile
+        required: true
+        schema:
+          $ref: '#/definitions/ProfilesPost'
+      produces:
+      - application/json
+      responses:
+        "200":
+          $ref: '#/responses/EmptySyncResponse'
+        "400":
+          $ref: '#/responses/BadRequest'
+        "403":
+          $ref: '#/responses/Forbidden'
+        "500":
+          $ref: '#/responses/InternalServerError'
+      summary: Add a profile
+      tags:
+      - profiles
+  /1.0/profiles/{name}:
+    delete:
+      description: Removes the profile.
+      operationId: profile_delete
+      produces:
+      - application/json
+      responses:
+        "200":
+          $ref: '#/responses/EmptySyncResponse'
+        "400":
+          $ref: '#/responses/BadRequest'
+        "403":
+          $ref: '#/responses/Forbidden'
+        "500":
+          $ref: '#/responses/InternalServerError'
+      summary: Delete the profile
+      tags:
+      - profiles
+    get:
+      description: Gets a specific profile.
+      operationId: profile_get
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Profile
+          schema:
+            description: Sync response
+            properties:
+              metadata:
+                $ref: '#/definitions/Profile'
+              status:
+                description: Status description
+                example: Success
+                type: string
+              status_code:
+                description: Status code
+                example: 200
+                type: int
+              type:
+                description: Response type
+                example: sync
+                type: string
+            type: object
+        "403":
+          $ref: '#/responses/Forbidden'
+        "500":
+          $ref: '#/responses/InternalServerError'
+      summary: Get the profile
+      tags:
+      - profiles
+    patch:
+      consumes:
+      - application/json
+      description: Updates a subset of the profile configuration.
+      operationId: profile_patch
+      parameters:
+      - description: Profile configuration
+        in: body
+        name: profile
+        required: true
+        schema:
+          $ref: '#/definitions/ProfilePut'
+      produces:
+      - application/json
+      responses:
+        "200":
+          $ref: '#/responses/EmptySyncResponse'
+        "400":
+          $ref: '#/responses/BadRequest'
+        "403":
+          $ref: '#/responses/Forbidden'
+        "412":
+          $ref: '#/responses/PreconditionFailed'
+        "500":
+          $ref: '#/responses/InternalServerError'
+      summary: Partially update the profile
+      tags:
+      - profiles
+    post:
+      consumes:
+      - application/json
+      description: Renames an existing profile.
+      operationId: profile_post
+      parameters:
+      - description: Profile rename request
+        in: body
+        name: profile
+        required: true
+        schema:
+          $ref: '#/definitions/ProfilePost'
+      produces:
+      - application/json
+      responses:
+        "200":
+          $ref: '#/responses/EmptySyncResponse'
+        "400":
+          $ref: '#/responses/BadRequest'
+        "403":
+          $ref: '#/responses/Forbidden'
+        "500":
+          $ref: '#/responses/InternalServerError'
+      summary: Rename the profile
+      tags:
+      - profiles
+    put:
+      consumes:
+      - application/json
+      description: Updates the entire profile configuration.
+      operationId: profile_put
+      parameters:
+      - description: Profile configuration
+        in: body
+        name: profile
+        required: true
+        schema:
+          $ref: '#/definitions/ProfilePut'
+      produces:
+      - application/json
+      responses:
+        "200":
+          $ref: '#/responses/EmptySyncResponse'
+        "400":
+          $ref: '#/responses/BadRequest'
+        "403":
+          $ref: '#/responses/Forbidden'
+        "412":
+          $ref: '#/responses/PreconditionFailed'
+        "500":
+          $ref: '#/responses/InternalServerError'
+      summary: Update the profile
+      tags:
+      - profiles
+  /1.0/profiles?recursion=1:
+    get:
+      description: Returns a list of profiles (structs).
+      operationId: profiles_get_recursion1
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: API endpoints
+          schema:
+            description: Sync response
+            properties:
+              metadata:
+                description: List of profiles
+                items:
+                  $ref: '#/definitions/Profile'
+                type: array
+              status:
+                description: Status description
+                example: Success
+                type: string
+              status_code:
+                description: Status code
+                example: 200
+                type: int
+              type:
+                description: Response type
+                example: sync
+                type: string
+            type: object
+        "403":
+          $ref: '#/responses/Forbidden'
+        "500":
+          $ref: '#/responses/InternalServerError'
+      summary: Get the profiles
+      tags:
+      - profiles
+  /1.0/projects:
+    get:
+      description: Returns a list of projects (URLs).
+      operationId: projects_get
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: API endpoints
+          schema:
+            description: Sync response
+            properties:
+              metadata:
+                description: List of endpoints
+                example: |-
+                  [
+                    "/1.0/projects/default",
+                    "/1.0/projects/foo"
+                  ]
+                items:
+                  type: string
+                type: array
+              status:
+                description: Status description
+                example: Success
+                type: string
+              status_code:
+                description: Status code
+                example: 200
+                type: int
+              type:
+                description: Response type
+                example: sync
+                type: string
+            type: object
+        "403":
+          $ref: '#/responses/Forbidden'
+        "500":
+          $ref: '#/responses/InternalServerError'
+      summary: Get the projects
+      tags:
+      - projects
+    post:
+      consumes:
+      - application/json
+      description: Creates a new project.
+      operationId: projects_post
+      parameters:
+      - description: Project
+        in: body
+        name: project
+        required: true
+        schema:
+          $ref: '#/definitions/ProjectsPost'
+      produces:
+      - application/json
+      responses:
+        "200":
+          $ref: '#/responses/EmptySyncResponse'
+        "400":
+          $ref: '#/responses/BadRequest'
+        "403":
+          $ref: '#/responses/Forbidden'
+        "500":
+          $ref: '#/responses/InternalServerError'
+      summary: Add a project
+      tags:
+      - projects
+  /1.0/projects/{name}:
+    delete:
+      description: Removes the project.
+      operationId: project_delete
+      produces:
+      - application/json
+      responses:
+        "200":
+          $ref: '#/responses/EmptySyncResponse'
+        "400":
+          $ref: '#/responses/BadRequest'
+        "403":
+          $ref: '#/responses/Forbidden'
+        "500":
+          $ref: '#/responses/InternalServerError'
+      summary: Delete the project
+      tags:
+      - projects
+    get:
+      description: Gets a specific project.
+      operationId: project_get
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Project
+          schema:
+            description: Sync response
+            properties:
+              metadata:
+                $ref: '#/definitions/Project'
+              status:
+                description: Status description
+                example: Success
+                type: string
+              status_code:
+                description: Status code
+                example: 200
+                type: int
+              type:
+                description: Response type
+                example: sync
+                type: string
+            type: object
+        "403":
+          $ref: '#/responses/Forbidden'
+        "500":
+          $ref: '#/responses/InternalServerError'
+      summary: Get the project
+      tags:
+      - projects
+    patch:
+      consumes:
+      - application/json
+      description: Updates a subset of the project configuration.
+      operationId: project_patch
+      parameters:
+      - description: Project configuration
+        in: body
+        name: project
+        required: true
+        schema:
+          $ref: '#/definitions/ProjectPut'
+      produces:
+      - application/json
+      responses:
+        "200":
+          $ref: '#/responses/EmptySyncResponse'
+        "400":
+          $ref: '#/responses/BadRequest'
+        "403":
+          $ref: '#/responses/Forbidden'
+        "412":
+          $ref: '#/responses/PreconditionFailed'
+        "500":
+          $ref: '#/responses/InternalServerError'
+      summary: Partially update the project
+      tags:
+      - projects
+    post:
+      consumes:
+      - application/json
+      description: Renames an existing project.
+      operationId: project_post
+      parameters:
+      - description: Project rename request
+        in: body
+        name: project
+        required: true
+        schema:
+          $ref: '#/definitions/ProjectPost'
+      produces:
+      - application/json
+      responses:
+        "200":
+          $ref: '#/responses/EmptySyncResponse'
+        "400":
+          $ref: '#/responses/BadRequest'
+        "403":
+          $ref: '#/responses/Forbidden'
+        "500":
+          $ref: '#/responses/InternalServerError'
+      summary: Rename the project
+      tags:
+      - projects
+    put:
+      consumes:
+      - application/json
+      description: Updates the entire project configuration.
+      operationId: project_put
+      parameters:
+      - description: Project configuration
+        in: body
+        name: project
+        required: true
+        schema:
+          $ref: '#/definitions/ProjectPut'
+      produces:
+      - application/json
+      responses:
+        "200":
+          $ref: '#/responses/EmptySyncResponse'
+        "400":
+          $ref: '#/responses/BadRequest'
+        "403":
+          $ref: '#/responses/Forbidden'
+        "412":
+          $ref: '#/responses/PreconditionFailed'
+        "500":
+          $ref: '#/responses/InternalServerError'
+      summary: Update the project
+      tags:
+      - projects
+  /1.0/projects?recursion=1:
+    get:
+      description: Returns a list of projects (structs).
+      operationId: projects_get_recursion1
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: API endpoints
+          schema:
+            description: Sync response
+            properties:
+              metadata:
+                description: List of projects
+                items:
+                  $ref: '#/definitions/Project'
+                type: array
+              status:
+                description: Status description
+                example: Success
+                type: string
+              status_code:
+                description: Status code
+                example: 200
+                type: int
+              type:
+                description: Response type
+                example: sync
+                type: string
+            type: object
+        "403":
+          $ref: '#/responses/Forbidden'
+        "500":
+          $ref: '#/responses/InternalServerError'
+      summary: Get the projects
+      tags:
+      - projects
+  /1.0/resources:
+    get:
+      description: Gets the hardware information profile of the LXD server.
+      operationId: resources_get
+      parameters:
+      - description: Cluster member name
+        example: lxd01
+        in: query
+        name: target
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Hardware resources
+          schema:
+            description: Sync response
+            properties:
+              metadata:
+                $ref: '#/definitions/Resources'
+              status:
+                description: Status description
+                example: Success
+                type: string
+              status_code:
+                description: Status code
+                example: 200
+                type: int
+              type:
+                description: Response type
+                example: sync
+                type: string
+            type: object
+        "403":
+          $ref: '#/responses/Forbidden'
+        "500":
+          $ref: '#/responses/InternalServerError'
+      summary: Get system resources information
+      tags:
+      - server
+  /1.0?public:
+    get:
+      description: |-
+        Shows a small subset of the server environment and configuration
+        which is required by untrusted clients to reach a server.
+
+        The `?public` part of the URL isn't required, it's simply used to
+        separate the two behaviors of this endpoint.
+      operationId: server_get_untrusted
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Server environment and configuration
+          schema:
+            description: Sync response
+            properties:
+              metadata:
+                $ref: '#/definitions/ServerUntrusted'
+              status:
+                description: Status description
+                example: Success
+                type: string
+              status_code:
+                description: Status code
+                example: 200
+                type: int
+              type:
+                description: Response type
+                example: sync
+                type: string
+            type: object
+        "500":
+          $ref: '#/responses/InternalServerError'
+      summary: Get the server environment
+      tags:
+      - server
+responses:
+  BadRequest:
+    description: Bad Request
+    schema:
+      properties:
+        code:
+          example: 400
+          format: int64
+          type: integer
+          x-go-name: Code
+        error:
+          example: bad request
+          type: string
+          x-go-name: Error
+        type:
+          example: error
+          type: string
+          x-go-name: Type
+      type: object
+  EmptySyncResponse:
+    description: Empty sync response
+    schema:
+      properties:
+        status:
+          example: Success
+          type: string
+          x-go-name: Status
+        status_code:
+          example: 200
+          format: int64
+          type: integer
+          x-go-name: StatusCode
+        type:
+          example: sync
+          type: string
+          x-go-name: Type
+      type: object
+  Forbidden:
+    description: Forbidden
+    schema:
+      properties:
+        code:
+          example: 403
+          format: int64
+          type: integer
+          x-go-name: Code
+        error:
+          example: not authorized
+          type: string
+          x-go-name: Error
+        type:
+          example: error
+          type: string
+          x-go-name: Type
+      type: object
+  InternalServerError:
+    description: Internal Server Error
+    schema:
+      properties:
+        code:
+          example: 500
+          format: int64
+          type: integer
+          x-go-name: Code
+        error:
+          example: internal server error
+          type: string
+          x-go-name: Error
+        type:
+          example: error
+          type: string
+          x-go-name: Type
+      type: object
+  PreconditionFailed:
+    description: Precondition Failed
+    schema:
+      properties:
+        code:
+          example: 412
+          format: int64
+          type: integer
+          x-go-name: Code
+        error:
+          example: precondition failed
+          type: string
+          x-go-name: Error
+        type:
+          example: error
+          type: string
+          x-go-name: Type
+      type: object
+swagger: "2.0"

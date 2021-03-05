@@ -54,6 +54,17 @@ Restoring involves stopping LXD on the target server, wiping the lxd
 directory, restoring the backup and any external dependency it requires.
 -->
 
+snap パッケージを使っておらず、かつシステムに /etc/subuid と /etc/subgid
+ファイルがある場合、 `lxd` と `root` ユーザーの両方についてこれらのファイル
+あるいは少なくともこれらのファイル内のエントリーを復元することも良い考えです
+（コンテナーのファイルシステムの不要なシフトを防ぎます）。
+<!--
+If not using the snap package and your source system has a /etc/subuid
+and /etc/subgid file, restoring those or at least the entries inside
+them for both the `lxd` and `root` user is also a good idea
+(avoids needless shifting of container filesystems).
+-->
+
 その後再び LXD を起動し、全てが正常に動作するか確認してください。
 <!--
 Then start LXD again and check that everything works fine.

@@ -330,6 +330,27 @@ To revoke trust to a client its certificate can be removed with `lxc config
 trust remove FINGERPRINT`.
 -->
 
+TLS クライアントを 1 つあるいは複数のプロジェクトに限定することが可能です。
+そのようなモードではクライアントはグローバルな設定変更を実行することや
+アクセスが許可されているプロジェクトの (limit や restriction の）設定を変更することも
+できなくなります。
+<!--
+It's possible to restrict a TLS client to one or multiple projects, in
+such a mode, the client will also be prevented from performing global
+configuration changes or altering the configuration (limits,
+restrictions) of the projects it's allowed access to.
+-->
+
+これは `lxc config trust edit` を使って制御できます。
+`restricted` キーを `true` に設定し、さらにユーザーがアクセス可能なプロジェクトのリストを指定して制御します。
+プロジェクトのリストが空の場合は、ユーザーはどのプロジェクトへのアクセスも却下されます。
+<!--
+This can be controlled through `lxc config trust edit`, setting the
+`restricted` key to `true` and then specifying a list of projects to
+retrict the user to. If the list of projects is empty, the user will not
+be allowed access to any of them.
+-->
+
 ## TLS 認証でのパスワード・プロンプト <!-- Password prompt with TLS authentication -->
 管理者によって事前に信頼関係がセットアップされていない場合に
 新しい信頼関係を確立するには、サーバにパスワードを設定し、クライアントが

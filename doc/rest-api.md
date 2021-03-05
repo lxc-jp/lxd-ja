@@ -481,6 +481,8 @@ much like `/1.0/containers` will only show you instances of that type.
  * [`/1.0/networks`](#10networks)
    * [`/1.0/networks/<name>`](#10networksname)
    * [`/1.0/networks/<name>/state`](#10networksnamestate)
+ * [`/1.0/network-acls`](#10network-acls)
+   * [`/1.0/network-acls/<name>`](#10network-aclsname)
  * [`/1.0/operations`](#10operations)
    * [`/1.0/operations/<uuid>`](#10operationsuuid)
      * [`/1.0/operations/<uuid>/wait`](#10operationsuuidwait)
@@ -558,7 +560,7 @@ much like `/1.0/containers` will only show you instances of that type.
         "kernel_version": "3.16",
         "server": "lxd",
         "server_pid": 10224,
-        "server_version": "0.8.1"}
+        "server_version": "0.8.1",
         "storage": "btrfs",
         "storage_version": "3.19",
     },
@@ -594,7 +596,7 @@ much like `/1.0/containers` will only show you instances of that type.
         "kernel_version": "3.16",
         "server": "lxd",
         "server_pid": 10224,
-        "server_version": "0.8.1"}
+        "server_version": "0.8.1",
         "storage": "btrfs",
         "storage_version": "3.19",
     },
@@ -1275,10 +1277,13 @@ Input (using a remote instance, in push mode sent over the migration websocket v
 Input (using a backup):
 -->
 
-バックアップダウンロードにより提供される生の圧縮された tarball
-
+バックアップのエクスポート (`/1.0/instances/<name>/backups/<backup>/export`) により提供される生の圧縮された tarball。
+`X-LXD-name` ヘッダーを指定すると対象のインスタンス名をオーバーライドできます。
+`X-LXD-pool` ヘッダーを指定すると対象のストレージプールをオーバーライドできます。
 <!--
-Raw compressed tarball as provided by a backup download.
+Raw compressed tarball as provided by a backup export (`/1.0/instances/<name>/backups/<backup>/export`).
+The `X-LXD-name` header can be set to override the target instance name.
+The `X-LXD-pool` header can be set to override the target storage pool.
 -->
 
 #### PUT
@@ -2515,20 +2520,22 @@ Input:
 
 ```js
 {
-    "name": "backupName",      // バックアップのユニークな識別子
-    "expiry": 3600,            // いつ自動的にバックアップを削除するか
-    "instance_only": true,     // true の場合、スナップショットは含まれません
-    "optimized_storage": true  // true の場合 btrfs send または zfs send がインスタンスとスナップショットに対して使用されます
+    "name": "backupName",                      // バックアップのユニークな識別子
+    "expires_at": "2018-04-23T12:16:09+02:00", // バックアップを自動で削除する日時
+    "instance_only": true,                     // true の場合、スナップショットは含まれません               
+    "optimized_storage": true,                 // true の場合 btrfs send または zfs send がインスタンスとスナップショットに対して使用されます（対応するストレージプールドライバーでのみインポート可能です）　
+    "compression_algorithm": "xz"              // バックアップの圧縮アルゴリズムをオーバーライド（省略可能）
 }
 ```
 
 <!--
 ```js
 {
-    "name": "backupName",      // unique identifier for the backup
-    "expiry": 3600,            // when to delete the backup automatically
-    "instance_only": true,     // if True, snapshots aren't included
-    "optimized_storage": true  // if True, btrfs send or zfs send is used for instance and snapshots
+    "name": "backupName",                      // unique identifier for the backup
+    "expires_at": "2018-04-23T12:16:09+02:00", // when to delete the backup automatically
+    "instance_only": true,                     // if True, snapshots aren't included
+    "optimized_storage": true,                 // if True, btrfs send or zfs send is used for instance and snapshots (can only be imported on matching storage pool driver)
+    "compression_algorithm": "xz"              // Override the compression algorithm for the backup (optional)
 }
 ```
 -->
@@ -2587,18 +2594,7 @@ Input:
  * 導入: `container_backup` API 拡張によって <!-- Introduced: with API extension `container_backup` -->
  * 認証: trusted <!-- Authentication: trusted -->
  * 操作: 同期 <!-- Operation: sync -->
- * 戻り値: バックアップの tarball を含む dict <!-- Return: dict containing the backup tarball -->
-
-出力
-<!--
-Output:
--->
-
-```json
-{
-    "data": "<byte-stream>"
-}
-```
+ * 戻り値: 生のバックアップファイルまたは標準のエラー <!-- Return: Raw backup file or standard error -->
 
 ### `/1.0/events`
 この URL は真の REST API エンドポイントではなく、代わりに GET クエリを
@@ -3457,6 +3453,188 @@ Return:
 }
 ```
 
+### `/1.0/network-acls`
+#### GET
+ * 説明: ネットワーク ACL のリスト <!-- Description: list of network ACLs -->
+ * 導入: `network_acl` API 拡張によって <!-- Introduced: with API extension `network_acl` -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻り値: ホストに現在定義されているネットワーク ACL の URL のリスト <!-- Return: list of URLs for network ACLs that are current defined on the host -->
+
+戻り値
+<!--
+Return:
+-->
+
+```json
+[
+    "/1.0/network-acls/myacl1",
+    "/1.0/network-acls/myacl2"
+]
+```
+
+#### POST
+ * 説明: 新しいネットワーク ACL のリストを作成する <!-- Description: define a new network ACL -->
+ * 導入: `network_acl` API 拡張によって <!-- Introduced: with API extension `network_acl` -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻り値: 標準の戻り値または標準のエラー <!-- Return: standard return value or standard error -->
+
+入力
+<!--
+Input:
+-->
+
+```json
+{
+    "name": "my-network-acl",
+    "description": "My network ACL",
+    "config": {
+        "user.somekey": "my own optional reference",
+    },
+    "ingress": [
+        {
+            "action": "allow",
+            "source": "192.168.1.1/32",
+            "destination": "192.168.1.2/32",
+            "protocol": "tcp",
+            "source_port": "",
+            "destination_port": "22",
+            "icmp_type": "",
+            "icmp_code": "",
+            "description": "Allow a known IP to reach another known IP using SSH",
+            "state": "enabled"
+        },
+    ],
+    "egress": [],
+}
+```
+
+### `/1.0/network-acls/<name>`
+#### GET
+ * 説明: 新しいネットワーク ACL についての情報 <!-- Description: information about a network ACL -->
+ * 導入: `network_acl` API 拡張によって <!-- Introduced: with API extension `network_acl` -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻り値: ネットワークを表す dict <!-- Return: dict representing a network -->
+
+戻り値
+<!--
+Return:
+-->
+
+```json
+{
+    "name": "my-network-acl",
+    "description": "My network ACL",
+    "config": {
+        "user.somekey": "my own optional reference",
+    },
+    "ingress": [
+        {
+            "action": "allow",
+            "source": "192.168.1.1/32",
+            "destination": "192.168.1.2/32",
+            "protocol": "tcp",
+            "source_port": "",
+            "destination_port": "22",
+            "icmp_type": "",
+            "icmp_code": "",
+            "description": "Allow a known IP to reach another known IP using SSH",
+            "state": "enabled"
+        },
+    ],
+    "egress": [],
+    "used_by": []
+}
+```
+
+#### PUT (ETag supported)
+ * 説明: ネットワーク ACL の情報を変更する <!-- Description: replace the network ACL information -->
+ * 導入: `network_acl` API 拡張によって <!-- Introduced: with API extension `network_acl` -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻り値: 標準の戻り値または標準のエラー <!-- Return: standard return value or standard error -->
+
+入力
+<!--
+Input:
+-->
+
+```json
+{
+    "description": "My network ACL",
+    "config": {
+        "user.somekey": "my own optional reference",
+    },
+    "ingress": [
+        {
+            "action": "allow",
+            "source": "192.168.1.1/32",
+            "destination": "192.168.1.2/32",
+            "protocol": "tcp",
+            "source_port": "",
+            "destination_port": "22",
+            "icmp_type": "",
+            "icmp_code": "",
+            "description": "Allow a known IP to reach another known IP using SSH",
+            "state": "enabled"
+        },
+    ],
+    "egress": [],
+}
+```
+
+#### POST
+ * 説明: ネットワーク ACL をリネームする <!-- Description: rename a network ACL -->
+ * 導入: `network_acl` API 拡張によって <!-- Introduced: with API extension `network_acl` -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻り値: 標準の戻り値または標準のエラー <!-- Return: standard return value or standard error -->
+
+入力 (ネットワーク ACL をリネームします)
+<!--
+Input (rename a network): 訳注: ここは network ACL のはず。たぶん `/1.0/networks/<name>` からコピー後変更漏れ。
+-->
+
+```json
+{
+    "name": "new-name"
+}
+```
+
+HTTP レスポンスのステータスコードは 204 (No content) で Location ヘッダーにリネーム語のリソースの URL が設定されます。
+<!--
+HTTP return value must be 204 (No content) and Location must point to the renamed resource.
+-->
+
+リネーム後の名前が既に存在する場合は 409 (Conflict) の HTTP ステータスコードが返ります。
+<!--
+Renaming to an existing name must return the 409 (Conflict) HTTP code.
+-->
+
+#### DELETE
+ * 説明: ネットワーク ACL を削除する <!-- Description: remove a network ACL -->
+ * 導入: `network_acl` API 拡張によって <!-- Introduced: with API extension `network_acl` -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻り値: 標準の戻り値または標準のエラー <!-- Return: standard return value or standard error -->
+
+入力 (現在は何もなし)
+<!--
+Input (none at present):
+-->
+
+```json
+{
+}
+```
+
+HTTP レスポンスのステータスコードは 202 (Accepted) が返ります。
+<!--
+HTTP code for this should be 202 (Accepted).
+-->
+
 ### `/1.0/operations`
 #### GET
  * 説明: 操作の一覧 <!-- Description: list of operations -->
@@ -4279,6 +4457,16 @@ Input (when migrating a volume):
 ```
 -->
 
+入力（バックアップを使用する場合）
+<!--
+Input (using a backup):
+-->
+
+バックアップのエクスポート (`/1.0/storage-pools/<pool>/volumes/<type>/<name>/backups/<backup>/export`) で得られた生の圧縮された tarball。
+<!--
+Raw compressed tarball as provided by a backup export (`/1.0/storage-pools/<pool>/volumes/<type>/<name>/backups/<backup>/export`).
+-->
+
 ### `/1.0/storage-pools/<pool>/volumes/<type>`
 #### POST
  * 説明: 指定のストレージプール上に特定のタイプのストレージボリュームを作成します <!-- Description: create a new storage volume of a particular type on a given storage pool -->
@@ -4664,20 +4852,22 @@ Input:
 
 ```js
 {
-    "name": "backupName",      // バックアップに対するユニークな識別子
-    "expiry": 3600,            // バックアップをいつ自動で削除するか
-    "volume_only": true,       // true ならスナップショットは含めない
-    "optimized_storage": true  // true なら btrfs send か zfs send がボリュームとスナップショットに使用される
+    "name": "backupName",                      // バックアップのユニークな識別子
+    "expires_at": "2018-04-23T12:16:09+02:00", // バックアップを自動で削除する日時
+    "instance_only": true,                     // true の場合、スナップショットは含まれません
+    "optimized_storage": true,                 // true の場合 btrfs send または zfs send がインスタンスとスナップショットに対して使用されます（対応するストレージプールドライバーでのみインポート可能です）　
+    "compression_algorithm": "xz"              // バックアップの圧縮アルゴリズムをオーバーライド（省略可能）
 }
 ```
 
 <!--
 ```js
 {
-    "name": "backupName",      // unique identifier for the backup
-    "expiry": 3600,            // when to delete the backup automatically
-    "volume_only": true,     // if True, snapshots aren't included
-    "optimized_storage": true  // if True, btrfs send or zfs send is used for volume and snapshots
+    "name": "backupName",                      // unique identifier for the backup
+    "expires_at": "2018-04-23T12:16:09+02:00", // when to delete the backup automatically
+    "volume_only": true,                       // if True, snapshots aren't included
+    "optimized_storage": true,                 // if True, btrfs send or zfs send is used for volume and snapshots
+    "compression_algorithm": "xz"              // Override the compression algorithm for the backup (optional)
 }
 ```
 -->
@@ -4736,18 +4926,7 @@ Input:
  * 導入: `custom_volume_backup` API 拡張によって <!-- Introduced: with API extension `custom_volume_backup` -->
  * 認証: trusted <!-- Authentication: trusted -->
  * 操作: 同期 <!-- Operation: sync -->
- * 戻り値: バックアップの tarball を含む dict <!-- Return: dict containing the backup tarball -->
-
-出力
-<!--
-Output:
--->
-
-```json
-{
-    "data": "<byte-stream>"
-}
-```
+ * 戻り値: 生のバックアップファイルまたは標準のエラー <!-- Return: Raw backup file or standard error -->
 
 ### `/1.0/storage-pools/<pool>/volumes/<type>/<name>/state`
 #### GET

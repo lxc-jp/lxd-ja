@@ -23,16 +23,17 @@ LXD がどういうものであり、何をするのかをよく理解するた�
 <!--
 Release announcements can be found here: <https://linuxcontainers.org/lxd/news/>  
 And the release tarballs here: <https://linuxcontainers.org/lxd/downloads/>
+The documentation is here: <https://linuxcontainers.org/lxd/docs/master/>
 -->
 リリースアナウンスはこちらでご覧になれます: <https://linuxcontainers.org/lxd/news/>  
 リリース tarball はこちらから取得できます: <https://linuxcontainers.org/lxd/downloads/>
+ドキュメントはこちらでご覧になれます: <https://linuxcontainers.org/lxd/docs/master/>
 
 ## ステータス <!-- Status -->
 Type                | Service               | Status
 ---                 | ---                   | ---
-CI (client)         | GitHub                | [![Build Status](https://github.com/stgraber/lxd/workflows/Client%20build%20and%20unit%20tests/badge.svg)](https://github.com/lxc/lxd/actions)
+CI (client)         | GitHub                | [![Build Status](https://github.com/lxc/lxd/workflows/Client%20build%20and%20unit%20tests/badge.svg)](https://github.com/lxc/lxd/actions)
 CI (server)         | Jenkins               | [![Build Status](https://jenkins.linuxcontainers.org/job/lxd-github-commit/badge/icon)](https://jenkins.linuxcontainers.org/job/lxd-github-commit/)
-LXD documentation   | ReadTheDocs           | [![Read the Docs](https://readthedocs.org/projects/lxd/badge/?version=latest&style=flat)](https://lxd.readthedocs.org)
 Go documentation    | Godoc                 | [![GoDoc](https://godoc.org/github.com/lxc/lxd/client?status.svg)](https://godoc.org/github.com/lxc/lxd/client)
 Static analysis     | GoReport              | [![Go Report Card](https://goreportcard.com/badge/github.com/lxc/lxd)](https://goreportcard.com/report/github.com/lxc/lxd)
 Translations        | Weblate               | [![Translation status](https://hosted.weblate.org/widgets/linux-containers/-/svg-badge.svg)](https://hosted.weblate.org/projects/linux-containers/lxd/)

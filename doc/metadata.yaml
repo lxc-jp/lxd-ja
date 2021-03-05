@@ -28,6 +28,9 @@ navigation:
         - title: ネットワーク # Networks
           location: networks.md
 
+        - title: ネットワーク ACL # Network ACLs
+          location: network-acls.md
+
         - title: presseed YAML # Preseed files
           location: preseed.md
 
