@@ -17,10 +17,15 @@ currently supported:
 
 Key                                  | Type      | Condition             | Default                   | Description
 :--                                  | :--       | :--                   | :--                       | :--
+backups.compression\_algorithm       | string    | -                     | -                         | Compression algorithm to use for images (bzip2, gzip, lzma, xz or none) in the project
 features.images                      | boolean   | -                     | true                      | Separate set of images and image aliases for the project
 features.networks                    | boolean   | -                     | false                     | Separate set of networks for the project
 features.profiles                    | boolean   | -                     | true                      | Separate set of profiles for the project
 features.storage.volumes             | boolean   | -                     | true                      | Separate set of storage volumes for the project
+images.auto\_update\_cached          | boolean   | -                     | -                         | Whether to automatically update any image that LXD caches
+images.auto\_update\_interval        | integer   | -                     | -                         | Interval in hours at which to look for update to cached images (0 disables it)
+images.compression\_algorithm        | string    | -                     | -                         | Compression algorithm to use for images (bzip2, gzip, lzma, xz or none) in the project
+images.remote\_cache\_expiry         | integer   | -                     | -                         | Number of days after which an unused cached remote image will be flushed in the project
 limits.instances                     | integer   | -                     | -                         | Maximum number of total instances that can be created in the project
 limits.containers                    | integer   | -                     | -                         | Maximum number of containers that can be created in the project
 limits.cpu                           | integer   | -                     | -                         | Maximum value for the sum of individual "limits.cpu" configs set on the instances of the project
@@ -29,7 +34,8 @@ limits.memory                        | string    | -                     | -    
 limits.networks                      | integer   | -                     | -                         | Maximum value for the number of networks this project can have
 limits.processes                     | integer   | -                     | -                         | Maximum value for the sum of individual "limits.processes" configs set on the instances of the project
 limits.virtual-machines              | integer   | -                     | -                         | Maximum number of VMs that can be created in the project
-restricted                           | boolean   | -                     | true                      | Block access to security-sensitive features
+restricted                           | boolean   | -                     | false                     | Block access to security-sensitive features
+restricted.cluster.target            | string    | -                     | block                     | Prevents direct targeting of cluster members when creating or moving instances.
 restricted.containers.lowlevel       | string    | -                     | block                     | Prevents use of low-level container options like raw.lxc, raw.idmap, volatile, etc.
 restricted.containers.nesting        | string    | -                     | block                     | Prevents setting security.nesting=true.
 restricted.containers.privilege      | string    | -                     | unpriviliged              | If "unpriviliged", prevents setting security.privileged=true. If "isolated", prevents setting security.privileged=true and also security.idmap.isolated=true. If "allow", no restriction apply.

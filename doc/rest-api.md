@@ -262,6 +262,8 @@ much like `/1.0/containers` will only show you instances of that type.
  * [`/1.0/networks`](#10networks)
    * [`/1.0/networks/<name>`](#10networksname)
    * [`/1.0/networks/<name>/state`](#10networksnamestate)
+ * [`/1.0/network-acls`](#10network-acls)
+   * [`/1.0/network-acls/<name>`](#10network-aclsname)
  * [`/1.0/operations`](#10operations)
    * [`/1.0/operations/<uuid>`](#10operationsuuid)
      * [`/1.0/operations/<uuid>/wait`](#10operationsuuidwait)
@@ -339,7 +341,7 @@ Return value (if trusted):
         "kernel_version": "3.16",
         "server": "lxd",
         "server_pid": 10224,
-        "server_version": "0.8.1"}
+        "server_version": "0.8.1",
         "storage": "btrfs",
         "storage_version": "3.19",
     },
@@ -726,7 +728,9 @@ Input (using a remote instance, in push mode sent over the migration websocket v
 
 Input (using a backup):
 
-Raw compressed tarball as provided by a backup download.
+Raw compressed tarball as provided by a backup export (`/1.0/instances/<name>/backups/<backup>/export`).
+The `X-LXD-name` header can be set to override the target instance name.
+The `X-LXD-pool` header can be set to override the target storage pool.
 
 #### PUT
  * Description: perform bulk operations on instances
@@ -1638,10 +1642,11 @@ Input:
 
 ```js
 {
-    "name": "backupName",      // unique identifier for the backup
-    "expiry": 3600,            // when to delete the backup automatically
-    "instance_only": true,     // if True, snapshots aren't included
-    "optimized_storage": true  // if True, btrfs send or zfs send is used for instance and snapshots
+    "name": "backupName",                      // unique identifier for the backup
+    "expires_at": "2018-04-23T12:16:09+02:00", // when to delete the backup automatically
+    "instance_only": true,                     // if True, snapshots aren't included
+    "optimized_storage": true,                 // if True, btrfs send or zfs send is used for instance and snapshots (can only be imported on matching storage pool driver)
+    "compression_algorithm": "xz"              // Override the compression algorithm for the backup (optional)
 }
 ```
 
@@ -1693,15 +1698,7 @@ Input:
  * Introduced: with API extension `container_backup`
  * Authentication: trusted
  * Operation: sync
- * Return: dict containing the backup tarball
-
-Output:
-
-```json
-{
-    "data": "<byte-stream>"
-}
-```
+ * Return: Raw backup file or standard error
 
 ### `/1.0/events`
 This URL isn't a real REST API endpoint, instead doing a GET query on it
@@ -2315,6 +2312,162 @@ Return:
     "type": "broadcast"
 }
 ```
+
+
+### `/1.0/network-acls`
+#### GET
+ * Description: list of network ACLs
+ * Introduced: with API extension `network_acl`
+ * Authentication: trusted
+ * Operation: sync
+ * Return: list of URLs for network ACLs that are current defined on the host
+
+Return:
+
+```json
+[
+    "/1.0/network-acls/myacl1",
+    "/1.0/network-acls/myacl2"
+]
+```
+
+#### POST
+ * Description: define a new network ACL
+ * Introduced: with API extension `network_acl`
+ * Authentication: trusted
+ * Operation: sync
+ * Return: standard return value or standard error
+
+Input:
+
+```json
+{
+    "name": "my-network-acl",
+    "description": "My network ACL",
+    "config": {
+        "user.somekey": "my own optional reference",
+    },
+    "ingress": [
+        {
+            "action": "allow",
+            "source": "192.168.1.1/32",
+            "destination": "192.168.1.2/32",
+            "protocol": "tcp",
+            "source_port": "",
+            "destination_port": "22",
+            "icmp_type": "",
+            "icmp_code": "",
+            "description": "Allow a known IP to reach another known IP using SSH",
+            "state": "enabled"
+        },
+    ],
+    "egress": [],
+}
+```
+
+### `/1.0/network-acls/<name>`
+#### GET
+ * Description: information about a network ACL
+ * Introduced: with API extension `network_acl`
+ * Authentication: trusted
+ * Operation: sync
+ * Return: dict representing a network
+
+Return:
+
+```json
+{
+    "name": "my-network-acl",
+    "description": "My network ACL",
+    "config": {
+        "user.somekey": "my own optional reference",
+    },
+    "ingress": [
+        {
+            "action": "allow",
+            "source": "192.168.1.1/32",
+            "destination": "192.168.1.2/32",
+            "protocol": "tcp",
+            "source_port": "",
+            "destination_port": "22",
+            "icmp_type": "",
+            "icmp_code": "",
+            "description": "Allow a known IP to reach another known IP using SSH",
+            "state": "enabled"
+        },
+    ],
+    "egress": [],
+    "used_by": []
+}
+```
+
+#### PUT (ETag supported)
+ * Description: replace the network ACL information
+ * Introduced: with API extension `network_acl`
+ * Authentication: trusted
+ * Operation: sync
+ * Return: standard return value or standard error
+
+Input:
+
+```json
+{
+    "description": "My network ACL",
+    "config": {
+        "user.somekey": "my own optional reference",
+    },
+    "ingress": [
+        {
+            "action": "allow",
+            "source": "192.168.1.1/32",
+            "destination": "192.168.1.2/32",
+            "protocol": "tcp",
+            "source_port": "",
+            "destination_port": "22",
+            "icmp_type": "",
+            "icmp_code": "",
+            "description": "Allow a known IP to reach another known IP using SSH",
+            "state": "enabled"
+        },
+    ],
+    "egress": [],
+}
+```
+
+#### POST
+ * Description: rename a network ACL
+ * Introduced: with API extension `network_acl`
+ * Authentication: trusted
+ * Operation: sync
+ * Return: standard return value or standard error
+
+Input (rename a network):
+
+```json
+{
+    "name": "new-name"
+}
+```
+
+HTTP return value must be 204 (No content) and Location must point to the renamed resource.
+
+Renaming to an existing name must return the 409 (Conflict) HTTP code.
+
+#### DELETE
+ * Description: remove a network ACL
+ * Introduced: with API extension `network_acl`
+ * Authentication: trusted
+ * Operation: sync
+ * Return: standard return value or standard error
+
+Input (none at present):
+
+```json
+{
+}
+```
+
+HTTP code for this should be 202 (Accepted).
 
 ### `/1.0/operations`
 #### GET
@@ -2963,6 +3116,10 @@ Input (when migrating a volume):
 }
 ```
 
+Input (using a backup):
+
+Raw compressed tarball as provided by a backup export (`/1.0/storage-pools/<pool>/volumes/<type>/<name>/backups/<backup>/export`).
+
 ### `/1.0/storage-pools/<pool>/volumes/<type>`
 #### POST
  * Description: create a new storage volume of a particular type on a given storage pool
@@ -3008,6 +3165,10 @@ Input (when migrating a volume):
     }
 }
 ```
+
+Input (using a backup):
+
+Raw compressed tarball as provided by a backup export (`/1.0/storage-pools/<pool>/volumes/<type>/<name>/backups/<backup>/export`).
 
 ### `/1.0/storage-pools/<pool>/volumes/<type>/<name>`
 #### POST
@@ -3251,10 +3412,11 @@ Input:
 
 ```js
 {
-    "name": "backupName",      // unique identifier for the backup
-    "expiry": 3600,            // when to delete the backup automatically
-    "volume_only": true,     // if True, snapshots aren't included
-    "optimized_storage": true  // if True, btrfs send or zfs send is used for volume and snapshots
+    "name": "backupName",                      // unique identifier for the backup
+    "expires_at": "2018-04-23T12:16:09+02:00", // when to delete the backup automatically
+    "volume_only": true,                       // if True, snapshots aren't included
+    "optimized_storage": true,                 // if True, btrfs send or zfs send is used for volume and snapshots
+    "compression_algorithm": "xz"              // Override the compression algorithm for the backup (optional)
 }
 ```
 
@@ -3306,15 +3468,7 @@ Input:
  * Introduced: with API extension `custom_volume_backup`
  * Authentication: trusted
  * Operation: sync
- * Return: dict containing the backup tarball
-
-Output:
-
-```json
-{
-    "data": "<byte-stream>"
-}
-```
+ * Return: Raw backup file or standard error
 
 ### `/1.0/storage-pools/<pool>/volumes/<type>/<name>/state`
 #### GET

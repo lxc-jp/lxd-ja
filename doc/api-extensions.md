@@ -350,7 +350,7 @@ This adds support for btrfs as a storage volume filesystem, in addition to ext4
 and xfs.
 
 ## resources
-This adds support for querying an LXD daemon for the system resources it has
+This adds support for querying a LXD daemon for the system resources it has
 available.
 
 ## kernel\_limits
@@ -1293,3 +1293,39 @@ This introduces the `pci` device type.
 
 ## storage\_volume\_state
 Add new `/1.0/storage-pools/POOL/volumes/VOLUME/state` API endpoint to get usage data on a volume.
+
+## network\_acl
+This adds the concept of network ACLs to API under the API endpoint prefix `/1.0/network-acls`.
+
+## migration\_stateful
+Add a new `migration.stateful` config key.
+
+## disk\_state\_quota
+This introduces the `size.state` device config key on `disk` devices.
+
+## storage\_ceph\_features
+Adds a new `ceph.rbd.features` config key on storage pools to control the RBD features used for new volumes.
+
+## projects\_compression
+Adds new `backups.compression_algorithm` and `images.compression_algorithm` config keys which
+allows configuration of backup and image compression per-project.
+
+## projects\_images\_remote\_cache\_expiry
+Add new `images.remote_cache_expiry` config key to projects,
+allowing for set number of days after which an unused cached remote image will be flushed.
+
+## certificate\_project
+Adds a new `restricted` property to certificates in the API as well as
+`projects` holding a list of project names that the certificate has
+access to.
+
+## network\_ovn\_acl
+Adds a new `security.acls` property to OVN networks and OVN NICs, allowing Network ACLs to be applied.
+
+## projects\_images\_auto\_update
+Adds new `images.auto_update_cached` and `images.auto_update_interval` config keys which
+allows configuration of images auto update in projects
+
+## projects\_restricted\_cluster\_target
+Adds new `restricted.cluster.target` config key to project which prevent the user from using --target
+to specify what cluster member to place a workload on or the ability to move a workload between members.
