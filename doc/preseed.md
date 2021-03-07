@@ -108,7 +108,7 @@ in the [RESTful API](rest-api.md).
 <!--
 Note however, that the rollback itself might potentially fail as well,
 although rarely (typically due to backend bugs or limitations). Thus
-care must be taken when trying to reconfigure an LXD daemon via
+care must be taken when trying to reconfigure a LXD daemon via
 preseed.
 -->
 ただし、まれにではありますが (典型的にはバックエンドのバグか制限により)、

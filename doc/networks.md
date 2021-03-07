@@ -471,6 +471,7 @@ ipv6.dhcp                       | boolean   | ipv6 アドレス <!-- address -->
 ipv6.dhcp.stateful              | boolean   | ipv6 dhcp                         | false                                                      | DHCP を使ってアドレスを割り当てるかどうか <!-- Whether to allocate addresses using DHCP -->
 ipv6.nat                        | boolean   | ipv6 アドレス <!-- address -->    | false                                                      | NAT するかどうか（ipv6.address が未設定の場合デフォルト値は true でランダムな ipv6.address が生成されます） <!-- Whether to NAT (will default to true if unset and a random ipv6.address is generated) -->
 network                         | string    | -                                 | -                                                          | 外部ネットワークへの外向きのアクセスに使うアップリンクのネットワーク <!-- Uplink network to use for external network access -->
+security.acls                   | string    | -                                 | -                                                          | このネットワークに接続する NIC に適用するネットワーク ACL のカンマ区切りリスト <!-- Comma separated list of Network ACLs to apply to NICs connected to this network -->
 
 ## ネットワーク: physical <!-- network: physical -->
 
