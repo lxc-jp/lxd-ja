@@ -36,7 +36,7 @@ currently supported:
 
 キー <!-- Key -->       | 型 <!-- Type --> | 条件 <!-- Condition --> | デフォルト値 <!-- Default --> | 説明 <!-- Description -->
 :--                                  | :--       | :--                   | :--                       | :--
-backups.compression\_algorithm       | string    | -                     | -                         | プロジェクト内のバックアップに使う圧縮アルゴリズム（bzip2, gzip, lzma, xz あるいは none） <!-- Compression algorithm to use for images (訳注: ここは backups の間違いと思われます。下に images.compression_algorithm というのがあるので) (bzip2, gzip, lzma, xz or none) in the project -->
+backups.compression\_algorithm       | string    | -                     | -                         | プロジェクト内のバックアップに使う圧縮アルゴリズム（bzip2, gzip, lzma, xz あるいは none） <!-- Compression algorithm to use for backups (bzip2, gzip, lzma, xz or none) in the project -->
 features.images                      | boolean   | -                     | true                      | プロジェクト用のイメージとイメージエイリアスのセットを分離する <!-- Separate set of images and image aliases for the project -->
 features.networks                    | boolean   | -                     | false                     | プロジェクトごとに個別のネットワークのセットを使うかどうか <!-- Separate set of networks for the project -->
 features.profiles                    | boolean   | -                     | true                      | プロジェクト用のプロファイルを分離する <!-- Separate set of profiles for the project -->

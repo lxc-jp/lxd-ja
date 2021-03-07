@@ -2465,7 +2465,7 @@ This adds the concept of network ACLs to API under the API endpoint prefix `/1.0
 -->
 
 ## migration\_stateful
-`/1.0/network-acls` という設定キーを追加します。
+`migration.stateful` という設定キーを追加します。
 <!--
 Add a new `migration.stateful` config key.
 -->

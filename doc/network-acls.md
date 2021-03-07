@@ -8,13 +8,13 @@ This provides the ability to control network access between different instances 
 control access to and from the external network.
 -->
 
-ネットワーク ACL は希望の NIC に直接適用することも出来ますし、希望のネットワークに ACL の適用することでネットワークに接続する全ての NIC に適用することも出来ます。
+ネットワーク ACL は希望の NIC に直接適用することも出来ますし、希望のネットワークに ACL を適用することでネットワークに接続する全ての NIC に適用することも出来ます。
 <!--
 Network ACLs can either be applied directly to the desired NICs or can be applied to all NICs connected to a
 network by assigning applying the ACL to the desired network.
 -->
 
-特別な ACL を(明示的にあるいはネットワークから暗黙的に)適用された Instance NIC は他のルールから送信元あるいは送信先として参照される論理的なグループを形成します。
+特別な ACL を(明示的にあるいはネットワークから暗黙的に)適用した Instance NIC は他のルールから送信元あるいは送信先として参照される論理的なグループを形成します。
 これにより IP のリストを維持管理したり追加のサブネットを作成することなくインスタンスのグループに対してルールを定義できます。
 <!--
 The Instance NICs that have a particular ACL applied (either explicitly or implicitly from the network) make up a

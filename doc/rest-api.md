@@ -3594,7 +3594,7 @@ Input:
 
 入力 (ネットワーク ACL をリネームします)
 <!--
-Input (rename a network): 訳注: ここは network ACL のはず。たぶん `/1.0/networks/<name>` からコピー後変更漏れ。
+Input (rename a network ACL):
 -->
 
 ```json
