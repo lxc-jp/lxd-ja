@@ -13,6 +13,7 @@ pages:
     - コンテナ: containers.md
     - インスタンス: instances.md
     - ネットワーク: networks.md
+    - ネットワーク ACL: network-acls.md
     - preseeded YAML: preseed.md
     - プロファイル: profiles.md
     - プロジェクト: projects.md
