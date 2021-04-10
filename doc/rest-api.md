@@ -2441,7 +2441,7 @@ Input:
  * Operation: sync
  * Return: standard return value or standard error
 
-Input (rename a network):
+Input (rename a network ACL):
 
 ```json
 {
@@ -2852,6 +2852,55 @@ Input (none at present):
 HTTP code for this should be 202 (Accepted).
 
 Attempting to delete the `default` project will return the 403 (Forbidden) HTTP code.
+
+### `/1.0/projects/<name>/state`
+#### GET
+ * Description: project usage
+ * Introduced: with API extension `project_usage`
+ * Authentication: trusted
+ * Operation: sync
+ * Return: dict representing the project allocations
+
+Output:
+
+```json
+{
+    "resources": {
+        "containers": {
+            "limit": 10,
+            "usage": 4
+        },
+        "cpu": {
+            "limit": -1,
+            "usage": 8
+        },
+        "disk": {
+            "limit": 838860800,
+            "usage": 419430400
+        },
+        "instances": {
+            "limit": 12,
+            "usage": 5
+        },
+        "memory": {
+            "limit": 17179869184,
+            "usage": 536870912
+        },
+        "networks": {
+            "limit": 10,
+            "usage": 2
+        },
+        "processes": {
+            "limit": 10000,
+            "usage": 500
+        },
+        "virtual-machines": {
+            "limit": 5,
+            "usage": 1
+        }
+    }
+}
+```
 
 ### `/1.0/storage-pools`
 #### GET

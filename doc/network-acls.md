@@ -2,22 +2,26 @@
 
 Network Access Control Lists (ACLs) define traffic rules that can then be applied to certain types of Instance NIC devices.
 This provides the ability to control network access between different instances connected to the same network and
-control access to and from the external network.
+control access to and from other networks.
 
 Network ACLs can either be applied directly to the desired NICs or can be applied to all NICs connected to a
-network by assigning applying the ACL to the desired network.
+network by assigning the ACL to the desired network.
 
 The Instance NICs that have a particular ACL applied (either explicitly or implicitly from the network) make up a
 logical group that can be referenced from other rules as a source or destination. This makes it possible to define
 rules for groups of instances without needing to maintain IP lists or create additional subnets.
 
-Network ACLs come with an implicit default rule (that defaults to `reject` unless `default.action` is set), so if
-traffic doesn't match one of the defined rules in an ACL then all other traffic is dropped.
+Once one or more ACLs are applied to a NIC (either explicitly or implicitly from the network) then a default reject
+rule is added to the NIC, so if traffic doesn't match one of the rules in the applied ACLs then it is rejected.
 
-Rules are defined on for a particular direction (ingress or egress) in relation to the Instance NIC.
-Ingress rules apply to traffic going towards the NIC, and egress rules apply to traffic leave the NIC.
+This behaviour can be modified by using the network and NIC level `security.acls.default.ingress.action` and
+`security.acls.default.egress.action` settings. The NIC level settings will override the network level settings.
 
-Rules are provided as lists, however the order of the rules in the list is not important and does not affect filtering.
+Rules are defined for a particular direction (ingress or egress) in relation to the Instance NIC.
+Ingress rules apply to traffic going towards the NIC, and egress rules apply to traffic leaving the NIC.
+
+Rules are provided as lists, however the order of the rules in the list is not important and does not affect
+filtering. See [Rule ordering and priorities](#rule-ordering-and-priorities).
 
 Valid Network ACL names must:
 
@@ -36,14 +40,7 @@ name             | string     | yes      | Unique name of Network ACL in Project
 description      | string     | no       | Description of Network ACL
 ingress          | rule list  | no       | Ingress traffic rules
 egress           | rule list  | no       | Egress traffic rules
-config           | string set | no       | Config key/value pairs (in addition to `user.*` custom keys, see below)
-
-Config properties:
-
-Property         | Type       | Required | Description
-:--              | :--        | :--      | :--
-default.action   | string     | no       | What action to take for traffic hitting the default rule (default `reject`)
-default.logged   | boolean    | no       | Whether or not to log traffic hitting the default rule (default `false`)
+config           | string set | no       | Config key/value pairs (Only `user.*` custom keys supported)
 
 ACL rules have the following properties:
 
@@ -52,8 +49,8 @@ Property          | Type       | Required | Description
 action            | string     | yes      | Action to take for matching traffic (`allow`, `reject` or `drop`)
 state             | string     | yes      | State of rule (`enabled`, `disabled` or `logged`)
 description       | string     | no       | Description of rule
-source            | string     | no       | Comma separated list of CIDR or IP ranges, source ACL names or #external/#internal (for ingress rules), or empty for any
-destination       | string     | no       | Comma separated list of CIDR or IP ranges, destination ACL names or #external/#internal (for egress rules), or empty for any
+source            | string     | no       | Comma separated list of CIDR or IP ranges, source ACL names or @external/@internal (for ingress rules), or empty for any
+destination       | string     | no       | Comma separated list of CIDR or IP ranges, destination ACL names or @external/@internal (for egress rules), or empty for any
 protocol          | string     | no       | Protocol to match (`icmp4`, `icmp6`, `tcp`, `udp`) or empty for any
 source\_port      | string     | no       | If Protocol is `udp` or `tcp`, then comma separated list of ports or port ranges (start-end inclusive), or empty for any
 destination\_port | string     | no       | If Protocol is `udp` or `tcp`, then comma separated list of ports or port ranges (start-end inclusive), or empty for any
@@ -67,17 +64,20 @@ Rules cannot be explicitly ordered. However LXD will order the rules based on th
  - `drop`
  - `reject`
  - `allow`
- - Automatic default rule action for any unmatched traffic (defaults to `reject` if `default.action` not specified).
+ - Automatic default action for any unmatched traffic (defaults to `reject`).
 
- This means that multiple ACLs can be applied to a NIC without having to specify the combined rule ordering.
- As soon as one of the rules in the ACLs matches then that action is taken and no other rules are considered.
+This means that multiple ACLs can be applied to a NIC without having to specify the combined rule ordering.
+As soon as one of the rules in the ACLs matches then that action is taken and no other rules are considered.
+
+The default reject action can be modified by using the network and NIC level `security.acls.default.ingress.action`
+and `security.acls.default.egress.action` settings. The NIC level settings will override the network level settings.
 
 ## Port group selectors
 
 The Instance NICs that are assigned a particular ACL make up a logical port group that can then be referenced by
 name in other ACL rules.
 
-There are also two special selectors called `#internal` and `#external` which represent network local and external
+There are also two special selectors called `@internal` and `@external` which represent network local and external
 traffic respectively.
 
 Port group selectors can be used in the `source` field for ingress rules and in the `destination` field for egress rules.

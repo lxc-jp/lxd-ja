@@ -94,7 +94,7 @@ security.syscalls.intercept.mount.allowed   | string    | -                 | ye
 security.syscalls.intercept.mount.fuse      | string    | -                 | yes           | container                 | Whether to redirect mounts of a given filesystem to their fuse implemenation (e.g. ext4=fuse2fs)
 security.syscalls.intercept.mount.shift     | boolean   | false             | yes           | container                 | Whether to mount shiftfs on top of filesystems handled through mount syscall interception
 security.syscalls.intercept.setxattr        | boolean   | false             | no            | container                 | Handles the `setxattr` system call (allows setting a limited subset of restricted extended attributes)
-snapshots.schedule                          | string    | -                 | no            | -                         | Cron expression (`<minute> <hour> <dom> <month> <dow>`)
+snapshots.schedule                          | string    | -                 | no            | -                         | Cron expression (`<minute> <hour> <dom> <month> <dow>`), or a comma separated list of schedule aliases `<@hourly> <@daily> <@midnight> <@weekly> <@monthly> <@annually> <@yearly> <@startup>`
 snapshots.schedule.stopped                  | bool      | false             | no            | -                         | Controls whether or not stopped instances are to be snapshoted automatically
 snapshots.pattern                           | string    | snap%d            | no            | -                         | Pongo2 template string which represents the snapshot name (used for scheduled snapshots and unnamed snapshots)
 snapshots.expiry                            | string    | -                 | no            | -                         | Controls when snapshots are to be deleted (expects expression like `1M 2H 3d 4w 5m 6y`)
@@ -381,18 +381,24 @@ Uses an existing OVN network and creates a virtual device pair to connect the in
 
 Device configuration properties:
 
-Key                     | Type    | Default           | Required | Managed | Description
-:--                     | :--     | :--               | :--      | :--     | :--
-network                 | string  | -                 | yes      | yes     | The LXD network to link device to
-name                    | string  | kernel assigned   | no       | no      | The name of the interface inside the instance
-host\_name              | string  | randomly assigned | no       | no      | The name of the interface inside the host
-hwaddr                  | string  | randomly assigned | no       | no      | The MAC address of the new interface
-ipv4.address            | string  | -                 | no       | no      | An IPv4 address to assign to the instance through DHCP
-ipv6.address            | string  | -                 | no       | no      | An IPv6 address to assign to the instance through DHCP
-ipv4.routes.external    | string  | -                 | no       | no      | Comma delimited list of IPv4 static routes to route to the NIC and publish on uplink network
-ipv6.routes.external    | string  | -                 | no       | no      | Comma delimited list of IPv6 static routes to route to the NIC and publish on uplink network
-boot.priority           | integer | -                 | no       | no      | Boot priority for VMs (higher boots first)
-security.acls           | string  | -                 | no       | no      | Comma separated list of Network ACLs to apply
+Key                                  | Type    | Default           | Required | Managed | Description
+:--                                  | :--     | :--               | :--      | :--     | :--
+network                              | string  | -                 | yes      | yes     | The LXD network to link device to
+name                                 | string  | kernel assigned   | no       | no      | The name of the interface inside the instance
+host\_name                           | string  | randomly assigned | no       | no      | The name of the interface inside the host
+hwaddr                               | string  | randomly assigned | no       | no      | The MAC address of the new interface
+ipv4.address                         | string  | -                 | no       | no      | An IPv4 address to assign to the instance through DHCP
+ipv6.address                         | string  | -                 | no       | no      | An IPv6 address to assign to the instance through DHCP
+ipv4.routes                          | string  | -                 | no       | no      | Comma delimited list of IPv4 static routes to route to the NIC
+ipv6.routes                          | string  | -                 | no       | no      | Comma delimited list of IPv6 static routes to route to the NIC
+ipv4.routes.external                 | string  | -                 | no       | no      | Comma delimited list of IPv4 static routes to route to the NIC and publish on uplink network
+ipv6.routes.external                 | string  | -                 | no       | no      | Comma delimited list of IPv6 static routes to route to the NIC and publish on uplink network
+boot.priority                        | integer | -                 | no       | no      | Boot priority for VMs (higher boots first)
+security.acls                        | string  | -                 | no       | no      | Comma separated list of Network ACLs to apply
+security.acls.default.ingress.action | string  | reject            | no       | no      | Action to use for ingress traffic that doesn't match any ACL rule
+security.acls.default.egress.action  | string  | reject            | no       | no      | Action to use for egress traffic that doesn't match any ACL rule
+security.acls.default.ingress.logged | boolean | false             | no       | no      | Whether to log ingress traffic that doesn't match any ACL rule
+security.acls.default.egress.logged  | boolean | false             | no       | no      | Whether to log egress traffic that doesn't match any ACL rule
 
 #### nic: physical
 
@@ -765,6 +771,7 @@ The following GPUs can be specified using the `gputype` property:
 
  - [physical](#gpu-physical) Passes through an entire GPU. This is the default if `gputype` is unspecified.
  - [mdev](#gpu-mdev) Creates and passes through a virtual GPU into the instance.
+ - [mig](#gpu-mig) Creates and passes through a MIG (Multi-Instance GPU) device into the instance.
  - [sriov](#gpu-sriov) Passes a virtual function of an SR-IOV enabled GPU into the instance.
 
 #### gpu: physical
@@ -799,7 +806,24 @@ vendorid    | string    | -                 | no        | The vendor id of the G
 productid   | string    | -                 | no        | The product id of the GPU device
 id          | string    | -                 | no        | The card id of the GPU device
 pci         | string    | -                 | no        | The pci address of the GPU device
-mdev        | string    | -                 | no        | The mdev profile to use (e.g. i915-GVTg_V5_4)
+mdev        | string    | -                 | yes       | The mdev profile to use (e.g. i915-GVTg\_V5\_4)
+
+#### gpu: mig
+
+Supported instance types: container
+
+Creates and passes through a MIG compute instance. This currently requires NVIDIA MIG instances to be pre-created.
+
+The following properties exist:
+
+Key         | Type      | Default           | Required  | Description
+:--         | :--       | :--               | :--       | :--
+vendorid    | string    | -                 | no        | The vendor id of the GPU device
+productid   | string    | -                 | no        | The product id of the GPU device
+id          | string    | -                 | no        | The card id of the GPU device
+pci         | string    | -                 | no        | The pci address of the GPU device
+mig.ci      | int       | -                 | yes       | Existing MIG compute instance ID
+mig.gi      | int       | -                 | yes       | Existing MIG GPU instance ID
 
 #### gpu: sriov
 
