@@ -284,9 +284,9 @@ Now that you have LXD running on your system you can read the [getting started g
 
 ## バグレポート <!-- Bug reports -->
 <!--
-Bug reports can be filed at: <https://github.com/lxc/lxd/issues/new>
+Bug reports and Feature requests can be filed at: <https://github.com/lxc/lxd/issues/new>
 -->
-バグ報告はこちらから行えます: <https://github.com/lxc/lxd/issues/new>
+バグ報告と機能リクエストはこちらから行えます: <https://github.com/lxc/lxd/issues/new>
 
 ## コントリビュート <!-- Contributing -->
 <!--

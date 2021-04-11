@@ -114,7 +114,7 @@ security.syscalls.intercept.mount.allowed   | string    | -                 | ye
 security.syscalls.intercept.mount.fuse      | string    | -                 | yes           | container                 | 指定されたファイルシステムを対応する fuse 実装にリダイレクトするかどうか（例: ext4-fuse2fs）<!-- Whether to redirect mounts of a given filesystem to their fuse implemenation (e.g. ext4=fuse2fs) -->
 security.syscalls.intercept.mount.shift     | boolean   | false             | yes           | container                 | `mount` システムコールをインターセプトして処理対象のファイルシステムの上に shiftfs をマウントするかどうか <!-- Whether to mount shiftfs on top of filesystems handled through mount syscall interception -->
 security.syscalls.intercept.setxattr        | boolean   | false             | no            | container                 | `setxattr` システムコールを処理するかどうか (限定されたサブセットの制限された拡張属性の設定を許可する) <!--Handles the `setxattr` system call (allows setting a limited subset of restricted extended attributes) -->
-snapshots.schedule                          | string    | -                 | no            | -                         | Cron 表記 <!-- Cron expression --> (`<minute> <hour> <dom> <month> <dow>`)
+snapshots.schedule                          | string    | -                 | no            | -                         | Cron の書式 <!-- Cron expression --> (`<minute> <hour> <dom> <month> <dow>`)、またはスケジュールエイリアスのカンマ区切りリスト <!-- , or a comma separated list of schedule aliases --> `<@hourly> <@daily> <@midnight> <@weekly> <@monthly> <@annually> <@yearly> <@startup>`
 snapshots.schedule.stopped                  | bool      | false             | no            | -                         | 停止したインスタンスのスナップショットを自動的に作成するかどうか <!-- Controls whether or not stopped instances are to be snapshoted automatically -->
 snapshots.pattern                           | string    | snap%d            | no            | -                         | スナップショット名を表す Pongo2 テンプレート（スケジュールされたスナップショットと名前を指定されないスナップショットに使用される） <!-- Pongo2 template string which represents the snapshot name (used for scheduled snapshots and unnamed snapshots) -->
 snapshots.expiry                            | string    | -                 | no            | -                         | スナップショットをいつ削除するかを設定します（`1M 2H 3d 4w 5m 6y` のような書式で設定します）<!-- Controls when snapshots are to be deleted (expects expression like `1M 2H 3d 4w 5m 6y`) -->
@@ -562,18 +562,24 @@ Uses an existing OVN network and creates a virtual device pair to connect the in
 Device configuration properties:
 -->
 
-Key                     | Type    | Default                                       | Required | Managed | Description
-:--                     | :--     | :--                                           | :--      | :--     | :--
-network                 | string  | -                                             | yes      | yes     | デバイスの接続先の LXD ネットワーク <!-- The LXD network to link device to -->
-name                    | string  | カーネルが割り当て <!-- kernel assigned -->   | no       | no      | インスタンス内部でのインタフェース名 <!-- The name of the interface inside the instance -->
-host\_name              | string  | ランダムに割り当て <!-- randomly assigned --> | no       | no      | ホスト内部でのインタフェース名 <!-- The name of the interface inside the host -->
-hwaddr                  | string  | ランダムに割り当て <!-- randomly assigned --> | no       | no      | 新しいインターフェースの MAC アドレス <!-- The MAC address of the new interface -->
-ipv4.address            | string  | -                                             | no       | no      | DHCP でインスタンスに割り当てる IPv4 アドレス <!-- An IPv4 address to assign to the instance through DHCP -->
-ipv6.address            | string  | -                                             | no       | no      | DHCP でインスタンスに割り当てる IPv6 アドレス <!-- An IPv6 address to assign to the instance through DHCP -->
-ipv4.routes.external    | string  | -                                             | no       | no      | NIC へのルートとアップリンクネットワークでの公開に使用する IPv4 静的ルートのカンマ区切りリスト <!-- Comma delimited list of IPv4 static routes to route to the NIC and publish on uplink network -->
-ipv6.routes.external    | string  | -                                             | no       | no      | NIC へのルートとアップリンクネットワークでの公開に使用する IPv6 静的ルートのカンマ区切りリスト <!-- Comma delimited list of IPv6 static routes to route to the NIC and publish on uplink network -->
-boot.priority           | integer | -                                             | no       | no      | VM のブート優先度 (高いほうが先にブート) <!-- Boot priority for VMs (higher boots first) -->
-security.acls           | string  | -                                             | no       | no      | 適用するネットワーク ACL のカンマ区切りリスト <!-- Comma separated list of Network ACLs to apply -->
+Key                                  | Type    | Default                                       | Required | Managed | Description
+:--                                  | :--     | :--                                           | :--      | :--     | :--
+network                              | string  | -                                             | yes      | yes     | デバイスの接続先の LXD ネットワーク <!-- The LXD network to link device to -->
+name                                 | string  | カーネルが割り当て <!-- kernel assigned -->   | no       | no      | インスタンス内部でのインタフェース名 <!-- The name of the interface inside the instance -->
+host\_name                           | string  | ランダムに割り当て <!-- randomly assigned --> | no       | no      | ホスト内部でのインタフェース名 <!-- The name of the interface inside the host -->
+hwaddr                               | string  | ランダムに割り当て <!-- randomly assigned --> | no       | no      | 新しいインターフェースの MAC アドレス <!-- The MAC address of the new interface -->
+ipv4.address                         | string  | -                                             | no       | no      | DHCP でインスタンスに割り当てる IPv4 アドレス <!-- An IPv4 address to assign to the instance through DHCP -->
+ipv6.address                         | string  | -                                             | no       | no      | DHCP でインスタンスに割り当てる IPv6 アドレス <!-- An IPv6 address to assign to the instance through DHCP -->
+ipv4.routes                          | string  | -                                             | no       | no      | ホスト上で nic に追加する IPv4 静的ルートのカンマ区切りリスト <!-- Comma delimited list of IPv4 static routes to add on host to nic -->
+ipv6.routes                          | string  | -                                             | no       | no      | ホスト上で nic に追加する IPv6 静的ルートのカンマ区切りリスト <!-- Comma delimited list of IPv6 static routes to add on host to nic -->
+ipv4.routes.external                 | string  | -                                             | no       | no      | NIC へのルートとアップリンクネットワークでの公開に使用する IPv4 静的ルートのカンマ区切りリスト <!-- Comma delimited list of IPv4 static routes to route to the NIC and publish on uplink network -->
+ipv6.routes.external                 | string  | -                                             | no       | no      | NIC へのルートとアップリンクネットワークでの公開に使用する IPv6 静的ルートのカンマ区切りリスト <!-- Comma delimited list of IPv6 static routes to route to the NIC and publish on uplink network -->
+boot.priority                        | integer | -                                             | no       | no      | VM のブート優先度 (高いほうが先にブート) <!-- Boot priority for VMs (higher boots first) -->
+security.acls                        | string  | -                                             | no       | no      | 適用するネットワーク ACL のカンマ区切りリスト <!-- Comma separated list of Network ACLs to apply -->
+security.acls.default.ingress.action | string  | reject                                        | no       | no      | どの ACL ルールにもマッチしない ingress トラフィックに使うアクション <!-- Action to use for ingress traffic that doesn't match any ACL rule -->
+security.acls.default.egress.action  | string  | reject                                        | no       | no      | どの ACL ルールにもマッチしない egress トラフィックに使うアクション <!-- Action to use for egress traffic that doesn't match any ACL rule -->
+security.acls.default.ingress.logged | boolean | false                                         | no       | no      | どの ACL ルールにもマッチしない ingress トラフィックをログ出力するかどうか <!-- Whether to log ingress traffic that doesn't match any ACL rule -->
+security.acls.default.egress.logged  | boolean | false                                         | no       | no      | どの ACL ルールにもマッチしない egress トラフィックをログ出力するかどうか <!-- Whether to log egress traffic that doesn't match any ACL rule -->
 
 #### nic: physical
 
@@ -1168,6 +1174,7 @@ The following GPUs can be specified using the `gputype` property:
 
  - [physical](#gpu-physical) GPU 全体をパススルーします。 `gputype` が指定されない場合これがデフォルトです。 <!-- Passes through an entire GPU. This is the default if `gputype` is unspecified. -->
  - [mdev](#gpu-mdev) 仮想 GPU を作成しインスタンスにパススルーします。 <!-- Creates and passes through a virtual GPU into the instance. -->
+ - [mig](#gpu-mig) MIG (Multi-Instance GPU) を作成しインスタンスにパススルーします。 <!-- Creates and passes through a MIG (Multi-Instance GPU) device into the instance. -->
  - [sriov](#gpu-sriov) SR-IOV を有効にした GPU の仮想ファンクション（virtual function）をインスタンスに与えます。 <!-- Passes a virtual function of an SR-IOV enabled GPU into the instance. -->
 
 #### gpu: physical
@@ -1220,7 +1227,34 @@ vendorid    | string    | -                 | no        | GPU デバイスのベ
 productid   | string    | -                 | no        | GPU デバイスのプロダクト ID <!-- The product id of the GPU device -->
 id          | string    | -                 | no        | GPU デバイスのカード ID <!-- The card id of the GPU device -->
 pci         | string    | -                 | no        | GPU デバイスの PCI アドレス <!-- The pci address of the GPU device -->
-mdev        | string    | -                 | no        | 使用する mdev プロファイル（例: i915-GVTg\_V5\_4） <!-- The mdev profile to use (e.g. i915-GVTg_V5_4) -->
+mdev        | string    | -                 | yes       | 使用する mdev プロファイル（例: i915-GVTg\_V5\_4） <!-- The mdev profile to use (e.g. i915-GVTg\_V5\_4) -->
+
+#### gpu: mig
+
+サポートされるインスタンスタイプ: コンテナー
+<!--
+Supported instance types: container
+-->
+
+MIG コンピュートインスタンスを作成しパススルーします。
+現状これは NVIDIA MIG を事前に作成しておく必要があります。
+<!--
+Creates and passes through a MIG compute instance. This currently requires NVIDIA MIG instances to be pre-created.
+-->
+
+次に挙げるプロパティがあります:
+<!--
+The following properties exist:
+-->
+
+Key         | Type      | Default           | Required  | Description
+:--         | :--       | :--               | :--       | :--
+vendorid    | string    | -                 | no        | GPU デバイスのベンダー ID <!-- The vendor id of the GPU device -->
+productid   | string    | -                 | no        | GPU デバイスのプロダクト ID <!-- The product id of the GPU device -->
+id          | string    | -                 | no        | GPU デバイスのカード ID <!-- The card id of the GPU device -->
+pci         | string    | -                 | no        | GPU デバイスの PCI アドレス <!-- The pci address of the GPU device -->
+mig.ci      | int       | -                 | yes       | 既存の MIG コンピュートインスタンス ID <!-- Existing MIG compute instance ID -->
+mig.gi      | int       | -                 | yes       | 既存の MIG GPU インスタンス ID <!-- Existing MIG GPU instance ID -->
 
 #### gpu: sriov
 
@@ -1241,10 +1275,10 @@ The following properties exist:
 
 Key         | Type      | Default           | Required  | Description
 :--         | :--       | :--               | :--       | :--
-vendorid    | string    | -                 | no        | 親の GPU デバイスのベンダー ID <!-- The vendor id of the GPU device -->
-productid   | string    | -                 | no        | 親の GPU デバイスのプロダクト ID <!-- The product id of the GPU device -->
-id          | string    | -                 | no        | 親の GPU デバイスのカード ID <!-- The card id of the GPU device -->
-pci         | string    | -                 | no        | 親の GPU デバイスの PCI アドレス <!-- The pci address of the GPU device -->
+vendorid    | string    | -                 | no        | GPU デバイスのベンダー ID <!-- The vendor id of the GPU device -->
+productid   | string    | -                 | no        | GPU デバイスのプロダクト ID <!-- The product id of the GPU device -->
+id          | string    | -                 | no        | GPU デバイスのカード ID <!-- The card id of the GPU device -->
+pci         | string    | -                 | no        | GPU デバイスの PCI アドレス <!-- The pci address of the GPU device -->
 
 ### Type: proxy
 
