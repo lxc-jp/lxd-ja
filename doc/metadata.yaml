@@ -71,6 +71,9 @@ navigation:
         - title: プロダクション環境のセットアップ # Production setup
           location: production-setup.md
 
+        - title: リモート # Remotes
+          location: remotes.md
+
     - title: REST API
       children:
         - title: メインの API ドキュメント # Main API documentation

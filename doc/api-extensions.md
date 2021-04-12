@@ -1256,6 +1256,16 @@ configuration keys: `snapshots.schedule`, `snapshots.schedule.stopped`, and
 `snapshots.pattern`. Snapshots can be created automatically up to every minute.
 -->
 
+## snapshots\_schedule\_aliases
+スナップショットのスケジュールはスケジュールエイリアスのカンマ区切りリストで設定できます。
+インスタンスには `<@hourly> <@daily> <@midnight> <@weekly> <@monthly> <@annually> <@yearly> <@startup>`、
+ストレージボリュームには `<@hourly> <@daily> <@midnight> <@weekly> <@monthly> <@annually> <@yearly>` のエイリアスが利用できます。
+<!--
+Snapshot schedule can be configured by a comma separated list of schedule aliases.
+Available aliases are `<@hourly> <@daily> <@midnight> <@weekly> <@monthly> <@annually> <@yearly> <@startup>` for instances,
+and `<@hourly> <@daily> <@midnight> <@weekly> <@monthly> <@annually> <@yearly>` for storage volumes.
+-->
+
 ## container\_copy\_project
 コピー元のコンテナーの dict に `project` フィールドを導入します。これにより
 プロジェクト間でコンテナーをコピーあるいは移動できるようになります。
@@ -2528,4 +2538,35 @@ allows configuration of images auto update in projects
 <!--
 Adds new `restricted.cluster.target` config key to project which prevent the user from using -\-target
 to specify what cluster member to place a workload on or the ability to move a workload between members.
+-->
+
+## images\_default\_architecture
+`images.default_architecture` をグローバルの設定キーとプロジェクトごとの設定キーとして追加します。
+これはイメージリクエストの一部として明示的に指定しなかった場合にどのアーキテクチャーを使用するかを LXD に指定します。
+<!--
+Adds new `images.default_architecture` global config key and matching per-project key which lets user tell LXD
+what architecture to go with when no specific one is specified as part of the image request.
+-->
+
+## network\_ovn\_acl\_defaults
+OVN ネットワークと NIC に `security.acls.default.{in,e}gress.action` と `security.acls.default.{in,e}gress.logged` 設定キーを追加します。
+これは削除された ACL の `default.action` と `default.logged` キーの代わりになるものです。
+<!--
+Adds new `security.acls.default.{in,e}gress.action` and `security.acls.default.{in,e}gress.logged` config keys for
+OVN networks and NICs. This replaces the removed ACL `default.action` and `default.logged` keys.
+-->
+
+## gpu\_mig
+これは NVIDIA MIG のサポートを追加します。
+`mig` gputype と関連する設定キーを追加します。
+<!--
+This adds support for NVIDIA MIG. It introduces the `mig` gputype and associaetd config keys.
+-->
+
+## project\_usage
+プロジェクトに現在のリソース割り当ての情報を取得する API エンドポイントを追加します。
+API の `GET /1.0/projects/<name>/state` で利用できます。
+<!--
+Adds an API endpoint to get current resource allocations in a project.
+Accessible at API `GET /1.0/projects/<name>/state`.
 -->

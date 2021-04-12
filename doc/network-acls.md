@@ -1,17 +1,17 @@
 # ネットワーク ACL の設定 <!-- Network ACL configuration -->
 
 ネットワークアクセス制御リスト (ACL) はある種の Instance NIC デバイスに適用されるトラフィクルールを定義します。
-これは同じネットワークに接続された異なるインスタンス間のネットワークアクセスと外部のネットワークとのアクセスを制御する機能を提供します。
+これは同じネットワークに接続された異なるインスタンス間のネットワークアクセスと他のネットワークとのアクセスを制御する機能を提供します。
 <!--
 Network Access Control Lists (ACLs) define traffic rules that can then be applied to certain types of Instance NIC devices.
 This provides the ability to control network access between different instances connected to the same network and
-control access to and from the external network.
+control access to and from other networks.
 -->
 
-ネットワーク ACL は希望の NIC に直接適用することも出来ますし、希望のネットワークに ACL を適用することでネットワークに接続する全ての NIC に適用することも出来ます。
+ネットワーク ACL は希望の NIC に直接適用することも出来ますし、希望のネットワークに ACL を割り当てることでネットワークに接続する全ての NIC に適用することも出来ます。
 <!--
 Network ACLs can either be applied directly to the desired NICs or can be applied to all NICs connected to a
-network by assigning applying the ACL to the desired network.
+network by assigning the ACL to the desired network.
 -->
 
 特別な ACL を(明示的にあるいはネットワークから暗黙的に)適用した Instance NIC は他のルールから送信元あるいは送信先として参照される論理的なグループを形成します。
@@ -22,22 +22,32 @@ logical group that can be referenced from other rules as a source or destination
 rules for groups of instances without needing to maintain IP lists or create additional subnets.
 -->
 
-ネットワーク ACL には暗黙のデフォルトルール(`default.action` が定義されない限り `reject` がデフォルト)があるため、トラフィックが ACL に定義されたルールのいずれにもマッチしない場合は drop されます。
+1 つ以上の ACL が NIC に (明示的またはネットワークから暗黙的に) ひとたび適用されると NIC にデフォルトの拒否ルールが追加され
+適用された ACL のどのルールにもマッチしないトラフィックは拒否されます。
 <!--
-Network ACLs come with an implicit default rule (that defaults to `reject` unless `default.action` is set), so if
-traffic doesn't match one of the defined rules in an ACL then all other traffic is dropped.
+Once one or more ACLs are applied to a NIC (either explicitly or implicitly from the network) then a default reject
+rule is added to the NIC, so if traffic doesn't match one of the rules in the applied ACLs then it is rejected.
 -->
 
-ルールは Instance NIC に対しての特定の向き(ingress か egress)について定義されます。
-ingress のルールは NIC に向かうトラフィックに適用され、 egress のルールは NIC から出るトラフィックに適用されます。
+この挙動はネットワークと NIC レベルの `security.acls.default.ingress.action` と `security.acls.default.egress.action` 設定で変更できます。
+NIC レベルの設定はネットワークレベルの設定を上書きします。
 <!--
-Rules are defined on for a particular direction (ingress or egress) in relation to the Instance NIC.
-Ingress rules apply to traffic going towards the NIC, and egress rules apply to traffic leave the NIC.
+This behaviour can be modified by using the network and NIC level `security.acls.default.ingress.action` and
+`security.acls.default.egress.action` settings. The NIC level settings will override the network level settings.
 -->
 
-ルールはリストとして定義され、リスト内でのルールの順番は重要ではなく、フィルタリングには影響しません。
+ルールはインスタンス NIC に対しての特定の向き (ingress か egress) に対して定義します。
+ingress のルールは NIC に向かうトラフィックに適用し、 egress のルールは NIC から出るトラフィックに適用します。
 <!--
-Rules are provided as lists, however the order of the rules in the list is not important and does not affect filtering.
+Rules are defined for a particular direction (ingress or egress) in relation to the Instance NIC.
+Ingress rules apply to traffic going towards the NIC, and egress rules apply to traffic leaving the NIC.
+-->
+
+ルールはリスト形式で指定しますが、リスト内のルールの順番は重要ではなくフィルタリングには影響しません。
+[ルールの順番と優先度](#rule-ordering-and-priorities) を参照してください。
+<!--
+Rules are provided as lists, however the order of the rules in the list is not important and does not affect
+filtering. See [Rule ordering and priorities](#rule-ordering-and-priorities).
 -->
 
 有効なネットワーク ACL の名前は以下のルールに従う必要があります。
@@ -63,17 +73,7 @@ name             | string     | yes      | プロジェクト内でユニーク�
 description      | string     | no       | ネットワーク ACL の説明 <!-- Description of Network ACL -->
 ingress          | rule list  | no       | ingress のトラフィックルールのリスト <!-- Ingress traffic rules -->
 egress           | rule list  | no       | egress のトラフィックルールのリスト <!-- Egress traffic rules -->
-config           | string set | no       | (`user.*` カスタムキー以外の) 設定のキー・バリューペアのセット(下記参照) <!-- Config key/value pairs (in addition to `user.*` custom keys, see below) -->
-
-config のプロパティー
-<!--
-Config properties:
--->
-
-Property         | Type       | Required | Description
-:--              | :--        | :--      | :--
-default.action   | string     | no       | デフォルトルールに到達したトラフィックに適用するアクション(デフォルトは `reject`) <!-- What action to take for traffic hitting the default rule (default `reject`) -->
-default.logged   | boolean    | no       | デフォルトルールに到達したトラフィックをログ出力するかどうか(デフォルトは `false`) <!-- Whether or not to log traffic hitting the default rule (default `false`) -->
+config           | string set | no       | 設定のキー・バリューペア (`user.*` カスタムキーのみサポート) <!-- Config key/value pairs (Only `user.*` custom keys supported) -->
 
 ACL ルールには次のプロパティーがあります。
 <!--
@@ -85,8 +85,8 @@ Property          | Type       | Required | Description
 action            | string     | yes      | マッチしたトラフィックに適用するアクション(`allow`, `reject` または `drop`) <!-- Action to take for matching traffic (`allow`, `reject` or `drop`) -->
 state             | string     | yes      | ルールの状態(`enabled`, `disabled` または `logged`) <!-- State of rule (`enabled`, `disabled` or `logged`) -->
 description       | string     | no       | ルールの説明 <!-- Description of rule -->
-source            | string     | no       | CIDR か IP の範囲、送信元の ACL の名前、あるいは(ingress ルールに対しての) #external/#internal のカンマ区切りリスト、または any の場合は空を指定 <!-- Comma separated list of CIDR or IP ranges, source ACL names or #external/#internal (for ingress rules), or empty for any -->
-destination       | string     | no       | CIDR か IP の範囲、送信先の ACL の名前、あるいは(egress ルールに対しての) #external/#internal のカンマ区切りリスト、または any の場合は空を指定 <!-- Comma separated list of CIDR or IP ranges, destination ACL names or #external/#internal (for egress rules), or empty for any -->
+source            | string     | no       | CIDR か IP の範囲、送信元の ACL の名前、あるいは(ingress ルールに対しての) @external/@internal のカンマ区切りリスト、または any の場合は空を指定 <!-- Comma separated list of CIDR or IP ranges, source ACL names or @external/@internal (for ingress rules), or empty for any -->
+destination       | string     | no       | CIDR か IP の範囲、送信先の ACL の名前、あるいは(egress ルールに対しての) @external/@internal のカンマ区切りリスト、または any の場合は空を指定 <!-- Comma separated list of CIDR or IP ranges, destination ACL names or @external/@internal (for egress rules), or empty for any -->
 protocol          | string     | no       | マッチ対象のプロトコル(`icmp4`, `icmp6`, `tcp`, `udp`)、または any の場合は空を指定 <!-- Protocol to match (`icmp4`, `icmp6`, `tcp`, `udp`) or empty for any -->
 source\_port      | string     | no       | protocol が `udp` か `tcp` の場合はポートかポートの範囲(開始-終了で両端含む)のカンマ区切りリスト、または any の場合は空を指定 <!-- If Protocol is `udp` or `tcp`, then comma separated list of ports or port ranges (start-end inclusive), or empty for any -->
 destination\_port | string     | no       | protocol が `udp` か `tcp` の場合はポートかポートの範囲(開始-終了で両端含む)のカンマ区切りリスト、または any の場合は空を指定 <!-- If Protocol is `udp` or `tcp`, then comma separated list of ports or port ranges (start-end inclusive), or empty for any -->
@@ -103,13 +103,20 @@ Rules cannot be explicitly ordered. However LXD will order the rules based on th
  - `drop`
  - `reject`
  - `allow`
- - 上記の全てにマッチしなかったトラフィックへのデフォルトルールのアクション(`default.action` が未指定の場合のデフォルトは `reject`) <!-- Automatic default rule action for any unmatched traffic (defaults to `reject` if `default.action` not specified). -->
+ - 上記の全てにマッチしなかったトラフィックへの自動のデフォルトのアクション(デフォルトは `reject`) <!-- Automatic default action for any unmatched traffic (defaults to `reject`). -->
 
- これは 1 つの NIC への複数のルールが結合されたルールの順序を指定することなしに適用できることを意味します。
- ACL 内のどれか一つのルールがマッチされたらすぐにアクションが実行され、他のルールは考慮されません。
+これは 1 つの NIC への複数のルールが結合されたルールの順序を指定することなしに適用できることを意味します。
+ACL 内のどれか一つのルールがマッチされたらすぐにアクションが実行され、他のルールは考慮されません。
 <!--
- This means that multiple ACLs can be applied to a NIC without having to specify the combined rule ordering.
- As soon as one of the rules in the ACLs matches then that action is taken and no other rules are considered.
+This means that multiple ACLs can be applied to a NIC without having to specify the combined rule ordering.
+As soon as one of the rules in the ACLs matches then that action is taken and no other rules are considered.
+-->
+
+デフォルトの拒否アクションはネットワークと NIC レベルの `security.acls.default.ingress.action` と `security.acls.default.egress.action` 設定で変更できます。
+NIC レベルの設定はネットワークレベルの設定を上書きします。
+<!--
+The default reject action can be modified by using the network and NIC level `security.acls.default.ingress.action`
+and `security.acls.default.egress.action` settings. The NIC level settings will override the network level settings.
 -->
 
 ## ポートグループセレクター <!-- Port group selectors -->
@@ -120,9 +127,9 @@ The Instance NICs that are assigned a particular ACL make up a logical port grou
 name in other ACL rules.
 -->
 
-また `#internal` と `#external` という 2 つの特殊なセレクターがあり、これらはネットワークのそれぞれローカルと外部のトラフィックを表します。
+また `@internal` と `@external` という 2 つの特殊なセレクターがあり、これらはネットワークのそれぞれローカルと外部のトラフィックを表します。
 <!--
-There are also two special selectors called `#internal` and `#external` which represent network local and external
+There are also two special selectors called `@internal` and `@external` which represent network local and external
 traffic respectively.
 -->
 

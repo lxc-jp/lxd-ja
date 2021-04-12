@@ -46,6 +46,7 @@ core.trust\_password                | string    | global    | -                 
 images.auto\_update\_cached         | boolean   | global    | true                             | LXD がキャッシュしているイメージを自動的に更新するかどうか <!-- Whether to automatically update any image that LXD caches -->
 images.auto\_update\_interval       | integer   | global    | 6                                | キャッシュされているイメージが更新されているかチェックする間隔を時間単位で指定 <!-- Interval in hours at which to look for update to cached images (0 disables it) -->
 images.compression\_algorithm       | string    | global    | gzip                             | 新しいイメージに使用する圧縮アルゴリズム (bzip2, gzip, lzma, xz あるいは none) <!-- Compression algorithm to use for new images (bzip2, gzip, lzma, xz or none) -->
+images.default\_architecture        | string    | -         | -                                | アーキテクチャーが混在するクラスター内で使用するデフォルトのアーキテクチャー <!-- Default architecture which should be used in mixed architecture cluster -->
 images.remote\_cache\_expiry        | integer   | global    | 10                               | キャッシュされたが未使用のイメージを破棄するまでの日数 <!-- Number of days after which an unused cached remote image will be flushed -->
 maas.api.key                        | string    | global    | -                                | MAAS を管理するための API キー <!-- API key to manage MAAS -->
 maas.api.url                        | string    | global    | -                                | MAAS サーバの URL <!-- URL of the MAAS server -->

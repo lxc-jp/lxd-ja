@@ -4145,6 +4145,58 @@ HTTP code for this should be 202 (Accepted).
 Attempting to delete the `default` project will return the 403 (Forbidden) HTTP code.
 -->
 
+### `/1.0/projects/<name>/state`
+#### GET
+ * 説明: プロジェクトの利用状況 <!-- Description: project usage -->
+ * 導入: `project_usage` API 拡張によって <!-- Introduced: with API extension `project_usage` -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻り値: プロジェクトの割り当てを表す dict <!-- Return: dict representing the project allocations -->
+
+出力
+<!--
+Output:
+-->
+
+```json
+{
+    "resources": {
+        "containers": {
+            "limit": 10,
+            "usage": 4
+        },
+        "cpu": {
+            "limit": -1,
+            "usage": 8
+        },
+        "disk": {
+            "limit": 838860800,
+            "usage": 419430400
+        },
+        "instances": {
+            "limit": 12,
+            "usage": 5
+        },
+        "memory": {
+            "limit": 17179869184,
+            "usage": 536870912
+        },
+        "networks": {
+            "limit": 10,
+            "usage": 2
+        },
+        "processes": {
+            "limit": 10000,
+            "usage": 500
+        },
+        "virtual-machines": {
+            "limit": 5,
+            "usage": 1
+        }
+    }
+}
+```
+
 ### `/1.0/storage-pools`
 #### GET
  * 説明: ストレージプールの一覧 <!-- Description: list of storage pools -->
