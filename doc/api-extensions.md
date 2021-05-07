@@ -1349,3 +1349,31 @@ This adds support for NVIDIA MIG. It introduces the `mig` gputype and associaetd
 ## project\_usage
 Adds an API endpoint to get current resource allocations in a project.
 Accessible at API `GET /1.0/projects/<name>/state`.
+
+## network\_bridge\_acl
+Adds a new `security.acls` config key to `bridge` networks, allowing Network ACLs to be applied.
+
+Also adds `security.acls.default.{in,e}gress.action` and `security.acls.default.{in,e}gress.logged` config keys for
+specifying the default behaviour for unmatched traffic.
+
+## warnings
+Warning API for LXD.
+
+This includes the following endpoints (see  [Restful API](rest-api.md) for details):
+
+* `GET /1.0/warnings`
+
+* `GET /1.0/warnings/<uuid>`
+* `PUT /1.0/warnings/<uuid>`
+* `DELETE /1.0/warnings/<uuid>`
+
+## projects\_restricted\_backups\_and\_snapshots
+Adds new `restricted.backups` and `restricted.snapshots` config keys to project which
+prevents the user from creation of backups and snapshots.
+
+## clustering\_join\_token
+Adds `POST /1.0/cluster/members` API endpoint for requesting a join token used when adding new cluster members
+without using the trust password.
+
+## clustering\_description
+Adds an editable description to the cluster members.
