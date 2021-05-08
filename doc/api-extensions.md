@@ -2570,3 +2570,52 @@ API の `GET /1.0/projects/<name>/state` で利用できます。
 Adds an API endpoint to get current resource allocations in a project.
 Accessible at API `GET /1.0/projects/<name>/state`.
 -->
+
+## network\_bridge\_acl
+`bridge` ネットワークに `security.acls` 設定キーを追加し、ネットワーク ACL を適用できるようにします。
+<!--
+Adds a new `security.acls` config key to `bridge` networks, allowing Network ACLs to be applied.
+-->
+
+さらにマッチしなかったトラフィックに対するデフォルトの振る舞いを指定する `security.acls.default.{in,e}gress.action` と `security.acls.default.{in,e}gress.logged` 設定キーを追加します。
+<!--
+Also adds `security.acls.default.{in,e}gress.action` and `security.acls.default.{in,e}gress.logged` config keys for
+specifying the default behaviour for unmatched traffic.
+-->
+
+## warnings
+LXD の警告 API です。
+<!--
+Warning API for LXD.
+-->
+
+この拡張は次のエンドポイントを含みます（詳細は [Restful API](rest-api.md) 参照）。
+<!--
+This includes the following endpoints (see  [Restful API](rest-api.md) for details):
+-->
+
+* `GET /1.0/warnings`
+
+* `GET /1.0/warnings/<uuid>`
+* `PUT /1.0/warnings/<uuid>`
+* `DELETE /1.0/warnings/<uuid>`
+
+## projects\_restricted\_backups\_and\_snapshots
+プロジェクトに `restricted.backups` と `restricted.snapshots` 設定キーを追加し、ユーザーがバックアップやスナップショットを作成できないようにします。
+<!--
+Adds new `restricted.backups` and `restricted.snapshots` config keys to project which
+prevents the user from creation of backups and snapshots.
+-->
+
+## clustering\_join\_token
+トラスト・パスワードを使わずに新しいクラスターメンバーを追加する際に使用する参加トークンをリクエストするための `POST /1.0/cluster/members` API エンドポイントを追加します。
+<!--
+Adds `POST /1.0/cluster/members` API endpoint for requesting a join token used when adding new cluster members
+without using the trust password.
+-->
+
+## clustering\_description
+クラスターメンバーに編集可能な説明を追加します。
+<!--
+Adds an editable description to the cluster members.
+-->

@@ -137,3 +137,30 @@ traffic respectively.
 <!--
 Port group selectors can be used in the `source` field for ingress rules and in the `destination` field for egress rules.
 -->
+
+## ブリッジの制限 <!-- Bridge limitations -->
+
+<!--
+Unlike OVN ACLs, `bridge` ACLs are applied *only* on the boundary between the bridge and the LXD host.
+This means they can only be used to apply network policy for traffic going to/from external networks, and cannot be
+used for intra-bridge firewalling (i.e for firewalling traffic between instances connected to the same bridge).
+-->
+OVN ACL とは違い、 `bridge` ACL はブリッジと LXD ホストの間の境界*のみ*に適用されます。これは外部へと外部からのトラフィックにネットワークポリシーを適用するために使うことしかできず、ブリッジ間のファイアウォール（例：同じブリッジに繋がれたインスタンス間のトラフィックに対するファイアウォール）には使えません。
+
+<!--
+Additionally `bridge` ACLs do not support using the reserved subject names (starting with a `@`) nor do they
+support using other ACL names in the rule subjects.
+-->
+さらに `bridge` ACL は（`@` で始まる）予約されたサブジェクト名を使うこともルールサブジェクト内の他の ACL 名を使うこともサポートしていません。
+
+<!--
+When using the `iptables` firewall driver, you cannot use IP range subjects (e.g. `192.168.1.1-192.168.1.10`).
+-->
+`iptables` ファイアウォールドライバーを使う際は、 IP レンジサブジェクト（例：`192.168.1.1-192.168.1.10`）は使用できません。
+
+<!--
+Baseline network service rules are added before ACL rules (in their respective INPUT/OUTPUT chains), because we
+cannot differentiate between INPUT/OUTPUT and FORWARD traffic once we have jumped into the ACL chain. Because of
+this ACL rules cannot be used to block baseline service rules.
+-->
+ベースラインのネットワークサービスルールが（対応する INPUT/OUTPUT チェイン内の） ACL ルールの前に適用されます。これは一旦 ACL チェインに入ってしまうと INPUT/OUTPUT と FORWARD トラフィックを区別できないからです。このため ACL ルールはベースラインのサービスルールをブロックするのには使えません。

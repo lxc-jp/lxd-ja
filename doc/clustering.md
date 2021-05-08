@@ -66,15 +66,49 @@ will be lost.
 更に追加のノードをクラスターに追加できます。しかし、追加ノードの既存データはすべて失われるため、追加のノードは完全に新しい LXD サーバであるか、追加前にすべての情報をクリアしたノードである必要があります。
 
 <!--
-To add an additional node, run `lxd init` and answer `yes` to the question
-about whether to use clustering. Choose a node name that is different from
-the one chosen for the bootstrap node or any other nodes you have joined so
-far. Then pick an IP or DNS address for the node and answer `yes` to the
-question about whether you're joining an existing cluster. Pick an address
-of an existing node in the cluster and check the fingerprint that gets
-printed.
+There are two ways to add a member to an existing cluster; using the trust password or using a join token.
+A join token for a new member is generated in advance on the existing cluster using the command:
 -->
-ノードを追加するために、`lxd init` を実行し、クラスタリングを使うかどうかの質問に `yes` と答えます。ブートストラップノード、それまでに参加したノードとは異なる名前を指定します。IP もしくは DNS アドレスを指定し、既存のクラスターに加わるかどうかの質問には `yes` と答えます。クラスター内の既存のノードのアドレスを指定し、表示されたフィンガープリントを確認します。
+既存のクラスターにメンバーを追加するには 2 つの方法があります。トラスト・パスワードを使うか参加トークンを使うかです。
+新規メンバーの参加トークンは既存のクラスターで次のコマンドを使って事前に生成します。
+
+```
+lxc cluster add <new member name>
+```
+
+<!--
+This will return a single-use join token which can then be used in the join token question stage of `lxd init`.
+The join token contains the addresses of the existing online members, as well as a single-use secret and the
+fingerprint of the cluster certificate. This reduces the amount of questions you have to answer during `lxd init`
+as the join token can be used to answer these questions automatically.
+-->
+これで 1 度だけ使える参加トークンが生成されます。これは `lxd init` の参加トークンを質問するプロンプトで使えます。参加トークンは既存のオンラインメンバーのアドレスと 1 度だけ使えるシークレットとクラスターの証明書のフィンガープリントを含んでいます。参加トークンは `lxd init` 実行時に聞かれる複数の質問に自動的に回答するのに使われるので、回答が必要な質問の数を減らすことができます。
+
+<!--
+Alternatively you can use the trust password instead of using a join token.
+-->
+あるいは参加トークンの代わりにトラスト・パスワードを使うこともできます。
+
+<!--
+To add an additional node, run `lxd init` and answer `yes` to the question about whether to use clustering.
+Choose a node name that is different from the one chosen for the bootstrap node or any other nodes you have joined
+so far. Then pick an IP or DNS address for the node and answer `yes` to the question about whether you're joining
+an existing cluster.
+-->
+ノードを追加するために、`lxd init` を実行し、クラスタリングを使うかどうかの質問に `yes` と答えます。ブートストラップノード、それまでに参加したノードとは異なる名前を指定します。IP もしくは DNS アドレスを指定し、既存のクラスターに加わるかどうかの質問には `yes` と答えます。
+
+<!--
+If you have a join token then answer `yes` to the question that asks if you have a join token and then copy it in
+when it asks for it.
+-->
+参加トークンがある場合は参加トークンを持っているかの質問に `yes` と回答し、参加トークンを求めるプロンプトに対してトークンをコピーします。
+
+<!--
+If you do not have a join token, but have a trust password instead then, then answer `no` to the question that asks
+if you have a join token. Then pick an address of an existing node in the cluster and check the fingerprint that
+gets printed matches the cluster certificate of the existing members.
+-->
+参加トークンは持っていないがトラスト・パスワードを持っている場合は参加トークンを持っているかの質問に `no` と答えます。その後クラスター内の既存のノードのアドレスを 1 つ選び表示されたフィンガープリントが既存メンバーのクラスター証明書にマッチするかをチェックします。
 
 ### 事前に定義して行う方法 <!-- Preseed -->
 
@@ -131,10 +165,10 @@ node.
 <!--
 Be sure to include the address and certificate of the target bootstrap node. To
 create a YAML-compatible entry for the ``cluster_certificate`` key you can use a
-command like `sed ':a;N;$!ba;s/\n/\n\n/g' /var/lib/lxd/server.crt`, which you
+command like `sed ':a;N;$!ba;s/\n/\n\n/g' /var/lib/lxd/cluster.crt`, which you
 have to run on the bootstrap node.
 -->
-ターゲットとなるブートストラップノードのアドレスと証明書を必ず含めてください。``cluster_certificate`` に対する YAML 互換のエントリーを作成するには、`sed ':a;N;$!ba;s/\n/\n\n/g' /var/lib/lxd/server.crt` のようにコマンドを実行します。このコマンドはブートストラップノードで実行する必要があります。
+ターゲットとなるブートストラップノードのアドレスと証明書を必ず含めてください。``cluster_certificate`` に対する YAML 互換のエントリーを作成するには、`sed ':a;N;$!ba;s/\n/\n\n/g' /var/lib/lxd/cluster.crt` のようにコマンドを実行します。このコマンドはブートストラップノードで実行する必要があります。
 
 <!--
 For example:
