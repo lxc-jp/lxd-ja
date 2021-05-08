@@ -55,6 +55,7 @@ limits.networks                      | integer   | -                     | -    
 limits.processes                     | integer   | -                     | -                         | プロジェクトのインスタンスに設定する個々の "limits.processes" 設定の合計の最大値 <!-- Maximum value for the sum of individual "limits.processes" configs set on the instances of the project -->
 limits.virtual-machines              | integer   | -                     | -                         | プロジェクト内に作成可能な VM の最大数 <!-- Maximum number of VMs that can be created in the project -->
 restricted                           | boolean   | -                     | false                     | セキュリティセンシティブな機能へのアクセスをブロックするかどうか <!-- Block access to security-sensitive features -->
+restricted.backups                   | string    | -                     | block                     | インスタンスやボリュームのバックアップの作成を禁止するかどうか <!-- Prevents the creation of any instance or volume backups. -->
 restricted.cluster.target            | string    | -                     | block                     | インスタンスを作成・移動する際にクラスターメンバーを直接指定するのを防ぐかどうか <!-- Prevents direct targeting of cluster members when creating or moving instances. -->
 restricted.containers.lowlevel       | string    | -                     | block                     | block と設定すると raw.lxc, raw.idmap, volatile などの低レベルのコンテナーオプションを防ぐ。 <!-- Prevents use of low-level container options like raw.lxc, raw.idmap, volatile, etc. -->
 restricted.containers.nesting        | string    | -                     | block                     | block と設定すると security.nesting=true と設定するのを防ぐ <!-- Prevents setting security.nesting=true. -->
@@ -69,6 +70,7 @@ restricted.devices.unix-hotplug      | string    | -                     | block
 restricted.devices.usb               | string    | -                     | block                     | block と設定すると usb タイプのデバイスの使用を防ぐ <!-- Prevents use of devices of type "usb" -->
 restricted.networks.subnets          | string    | -                     | block                     | このプロジェクトで使用するために割り当てられるアップリンクネットワークのネットワークサブネット（`<uplink>:<subnet>` 形式）のカンマ区切りリスト <!-- Comma delimited list of network subnets from the uplink networks (in the form `<uplink>:<subnet>`) that are allocated for use in this project -->
 restricted.networks.uplinks          | string    | -                     | block                     | このプロジェクト内のネットワークでアップリンクとして使用可能なネットワークのカンマ区切りリスト <!-- Comma delimited list of network names that can be used as uplinks for networks in this project -->
+restricted.snapshots                 | string    | -                     | block                     | インスタンスやボリュームのスナップショット作成を禁止するかどうか <!-- Prevents the creation of any instance or volume snapshots. -->
 restricted.virtual-machines.lowlevel | string    | -                     | block                     | block と設定すると raw.qemu, volatile などの低レベルの仮想マシンオプションを防ぐ。 <!-- Prevents use of low-level virtual-machine options like raw.qemu, volatile, etc. -->
 
 これらのキーは lxc ツールを使って以下のように設定できます。

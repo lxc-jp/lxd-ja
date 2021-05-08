@@ -507,6 +507,8 @@ much like `/1.0/containers` will only show you instances of that type.
  * [`/1.0/cluster`](#10cluster)
    * [`/1.0/cluster/members`](#10clustermembers)
      * [`/1.0/cluster/members/<name>`](#10clustermembersname)
+ * [`/1.0/warnings`](#10warnings)
+   * [`/1.0/warnings/<uuid>`](#10warningsuuid)
 
 ## API 詳細 <!-- API details -->
 ### `/`
@@ -5220,3 +5222,109 @@ Input (none at present):
 {
 }
 ```
+
+### `/1.0/warnings`
+#### GET
+ * 説明: 警告の一覧 <!-- Description: list of warnings -->
+ * 導入: `warnings` API 拡張によって <!-- Introduced: with API extension `warnings` -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻り値: 警告の一覧 <!-- Return: list of warnings -->
+
+戻り値
+<!--
+Return:
+-->
+```json
+[
+    "/1.0/warnings/0e3bff13-f7a1-45b9-9df9-30e4856b7603",
+    "/1.0/warnings/01a7faeb-cb5b-4d8d-b670-0650c9ad5e90"
+]
+```
+
+### `/1.0/warnings/<uuid>`
+#### GET
+ * 説明: サーバーの警告 <!-- Description: server warning -->
+ * 導入: `warnings` API 拡張によって <!-- Introduced: with API extension `warnings` -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻り値: サーバーの警告 <!-- Return: server warning -->
+
+戻り値
+<!--
+Return:
+-->
+
+```js
+{
+    "count": 1,
+    "entity_url": "/1.0/instances/c1?project=default",
+    "first_seen_at": "2021-03-23T17:38:37.753398689-04:00",
+    "last_message": "Couldn't find the CGroup blkio.weight, disk priority will be ignored",
+    "last_seen_at": "2021-03-23T17:38:37.753398689-04:00",
+    "location": "node1",
+    "project": "default",
+    "severity": "low",
+    "status": "new",
+    "type": "Couldn't find CGroup",
+    "uuid": "e9e9da0d-2538-4351-8047-46d4a8ae4dbb"
+}
+```
+
+#### PUT (ETag サポートあり) <!-- PUT (ETag supported) -->
+ * 説明: 警告のステータスを更新します <!-- Description: Updates warning status -->
+ * 導入: `warnings` API 拡張によって <!-- Introduced: with API extension `warnings` -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻り値: 標準の戻り値または標準のエラー <!-- Return: standard return value or standard error -->
+
+入力
+<!--
+Input:
+-->
+
+```json
+{
+  "status": "new"
+}
+```
+
+#### PATCH (ETag サポートあり) <!-- PATCH (ETag supported) -->
+ * 説明: 警告のステータスを更新します <!-- Description: Updates warning status -->
+ * 導入: `warnings` API 拡張によって <!-- Introduced: with API extension `warnings` -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 同期 <!-- Operation: sync -->
+ * 戻り値: 標準の戻り値または標準のエラー <!-- Return: standard return value or standard error -->
+
+入力
+<!--
+Input:
+-->
+
+```json
+{
+  "status": "new"
+}
+```
+
+#### DELETE
+ * 説明: 解決した警告を削除します <!-- Description: delete a warning that has been resolved -->
+ * 導入: `warnings` API 拡張によって <!-- Introduced: with API extension `warnings` -->
+ * 認証: trusted <!-- Authentication: trusted -->
+ * 操作: 非同期 <!-- Operation: async -->
+ * 戻り値: バックグラウンド操作または標準のエラー <!-- Return: background operation or standard error -->
+
+入力 (現在は何もなし)
+<!--
+Input (none at present):
+-->
+
+```json
+{
+}
+```
+
+レスポンスの HTTP ステータスコードは 202 (Accepted)。
+<!--
+HTTP code for this should be 202 (Accepted).
+-->
