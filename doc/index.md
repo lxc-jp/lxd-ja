@@ -41,7 +41,7 @@ later to work. On ubuntu, you can get those with:
 
 ```bash
 sudo apt update
-sudo apt install acl autoconf dnsmasq-base git golang libacl1-dev libcap-dev liblxc1 liblxc-dev libsqlite3-dev libtool libudev-dev libuv1-dev make pkg-config rsync squashfs-tools tar tcl xz-utils ebtables
+sudo apt install acl autoconf dnsmasq-base git golang libacl1-dev libcap-dev liblxc1 liblxc-dev libsqlite3-dev libtool libudev-dev liblz4-dev libuv1-dev make pkg-config rsync squashfs-tools tar tcl xz-utils ebtables
 ```
 
 Note that when building LXC yourself, ensure to build it with the appropriate
@@ -58,13 +58,13 @@ host boot, but are needed if you'd like to use a particular backend:
 
 ```bash
 sudo apt install lvm2 thin-provisioning-tools
-sudo apt install btrfs-tools
+sudo apt install btrfs-progs
 ```
 
 To run the testsuite, you'll also need:
 
 ```bash
-sudo apt install curl gettext jq sqlite3 uuid-runtime bzr socat
+sudo apt install curl gettext jq sqlite3 uuid-runtime socat
 ```
 
 ### From Source: Building the latest version
@@ -185,8 +185,7 @@ We use the LXC mailing-lists for developer and user discussions, you can
 find and subscribe to those at: <https://lists.linuxcontainers.org>
 
 ### IRC
-If you prefer live discussions, some of us also hang out in
-[#lxcontainers](https://webchat.freenode.net/?channels=#lxcontainers) on irc.freenode.net.
+If you prefer live discussions, you can find us in [#lxc](https://kiwiirc.com/client/irc.libera.chat/#lxc) on irc.libera.chat.
 
 ## FAQ
 #### How to enable LXD server for remote access?
@@ -330,6 +329,16 @@ curl --unix-socket /var/lib/lxd/unix.socket \
     -d @hello-ubuntu.json \
     lxd/1.0/containers
 ```
+or for snap users:
+
+```bash
+curl --unix-socket /var/snap/lxd/common/lxd/unix.socket \
+    -H "Content-Type: application/json" \
+    -X POST \
+    -d @hello-ubuntu.json \
+    lxd/1.0/containers
+```
+
 
 #### Via TCP
 TCP requires some additional configuration and is not enabled by default.
