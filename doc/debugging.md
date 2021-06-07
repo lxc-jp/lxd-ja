@@ -72,6 +72,12 @@ JSONを人間が読みやすいように整形します。
 curl --unix-socket /var/lib/lxd/unix.socket lxd/1.0 | jq .
 ```
 
+あるいは snap ユーザーの場合は
+
+```bash
+curl --unix-socket /var/snap/lxd/common/lxd/unix.socket lxd/1.0 | jq .
+```
+
 <!--
 See the [RESTful API](rest-api.md) for available API.
 -->

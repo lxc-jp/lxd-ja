@@ -70,6 +70,22 @@ Then, reboot the server.
 [1]: http://man7.org/linux/man-pages/man7/inotify.7.html
 [2]: https://www.kernel.org/doc/Documentation/networking/ip-sysctl.txt
 
+### コンテナー名の漏洩防止 <!-- Prevent container name leakage -->
+/sys/kernel/slab と /proc/sched\_debug はともにシステム上の全ての cgroup の一覧を表示し、拡張を使えばコンテナー一覧を表示するのを容易にします。
+<!--
+Both /sys/kernel/slab and /proc/sched\_debug make it easy to list all
+cgroups on the system and by extension, all containers.
+-->
+
+一覧が見られるのを防ぐためには、コンテナーを開始する前に以下のコマンドを忘れずに実行してください。
+<!--
+If this is something you'd like to see blocked, make sure you have the
+following done before any container is started:
+-->
+
+ - chmod 600 /proc/sched\_debug
+ - chmod 700 /sys/kernel/slab/
+
 ### ネットワーク帯域の調整 <!-- Network Bandwidth Tweaking -->
 大量の (コンテナー・コンテナー間、あるいはホスト・コンテナー間の) ローカル・アクティビティを持つ
 LXD ホスト上に 1GbE 以上の NIC をお持ちか、 LXD ホストに 1GbE 以上のインターネット接続を

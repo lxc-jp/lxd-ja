@@ -452,7 +452,7 @@ sudo btrfs filesystem resize max /var/lib/lxd/storage-pools/<POOL>/
 
 (注意: snap のユーザーは `/var/lib/lxd/` の代わりに `/var/snap/lxd/common/lxd/` を使ってください)
 <!--
-(NOTE: For users of the snap, use `/var/snap/lxd/common/lxd/ instead of /var/lib/lxd/`)
+(NOTE: For users of the snap, use `/var/snap/lxd/common/lxd/` instead of /var/lib/lxd/`)
 -->
 
 ### LVM
@@ -649,7 +649,7 @@ sudo zpool set autoexpand=off lxd
 
 (注意: snap のユーザーは `/var/lib/lxd/` の代わりに `/var/snap/lxd/common/lxd/` を使ってください)
 <!--
-(NOTE: For users of the snap, use `/var/snap/lxd/common/lxd/ instead of /var/lib/lxd/`)
+(NOTE: For users of the snap, use `/var/snap/lxd/common/lxd/` instead of /var/lib/lxd/`)
 -->
 
 #### 既存のプールで TRIM を有効にする <!-- Enabling TRIM on existing pools -->

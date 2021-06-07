@@ -256,16 +256,17 @@ any additional credentials.
 -->
 
 PKI モードを有効にするには、クライアントの設定ディレクトリ (`~/.config/lxc`) に
-client.ca ファイルを追加し、サーバの設定ディレクトリ (`/var/lib/lxd`) に
+client.ca ファイルを追加し、サーバの設定ディレクトリ (`/var/lib/lxd` か
+snap ユーザーは `/var/snap/lxd/common/lxd`) に
 server.ca ファイルを追加します。さらにクライアント用にクライアント証明書を
 CA によって発行し、サーバ用にサーバ証明書を発行します。それらの証明書で
 事前に自動生成されたファイルを置き換える必要があります。
 <!--
 Enabling PKI mode is done by adding a client.ca file in the
 client's configuration directory (`~/.config/lxc`) and a server.ca file in
-the server's configuration directory (`/var/lib/lxd`). Then a client
-certificate must be issued by the CA for the client and a server
-certificate for the server. Those must then replace the existing
+the server's configuration directory (`/var/lib/lxd` or `/var/snap/lxd/common/lxd`
+for snap users). Then a client certificate must be issued by the CA for the client
+and a server certificate for the server. Those must then replace the existing
 pre-generated files.
 -->
 
