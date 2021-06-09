@@ -68,7 +68,7 @@ later to work. On ubuntu, you can get those with:
 
 ```bash
 sudo apt update
-sudo apt install acl autoconf dnsmasq-base git golang libacl1-dev libcap-dev liblxc1 liblxc-dev libsqlite3-dev libtool libudev-dev libuv1-dev make pkg-config rsync squashfs-tools tar tcl xz-utils ebtables
+sudo apt install acl autoconf dnsmasq-base git golang libacl1-dev libcap-dev liblxc1 liblxc-dev libsqlite3-dev libtool libudev-dev liblz4-dev libuv1-dev make pkg-config rsync squashfs-tools tar tcl xz-utils ebtables
 ```
 
 <!--
@@ -93,7 +93,7 @@ host boot, but are needed if you'd like to use a particular backend:
 
 ```bash
 sudo apt install lvm2 thin-provisioning-tools
-sudo apt install btrfs-tools
+sudo apt install btrfs-progs
 ```
 
 <!--
@@ -102,7 +102,7 @@ To run the testsuite, you'll also need:
 テストスイートを実行するには、次のパッケージも必要です:
 
 ```bash
-sudo apt install curl gettext jq sqlite3 uuid-runtime bzr socat
+sudo apt install curl gettext jq sqlite3 uuid-runtime socat
 ```
 
 ### ソースからの最新版のビルド <!-- From Source: Building the latest version -->
@@ -310,9 +310,9 @@ find and subscribe to those at: <https://lists.linuxcontainers.org>
 
 ### IRC
 <!--
-If you prefer live discussions, some of us also hang out in
+If you prefer live discussions, you can find us in [#lxc](https://kiwiirc.com/client/irc.libera.chat/#lxc) on irc.libera.chat.
 -->
-ライブのディスカッションがお好みなら、irc.freenode.net の [#lxcontainers](https://webchat.freenode.net/?channels=#lxcontainers) に参加している開発者もいます:
+ライブのディスカッションがお好みなら、irc.libera.chat の [#lxc](https://kiwiirc.com/client/irc.libera.chat/#lxc) で私たちを見つけられます。
 
 ## FAQ
 #### LXD サーバにリモートからアクセスできるようにするには? <!-- How to enable LXD server for remote access? -->
@@ -536,6 +536,16 @@ LXD の REST API は、認証不要なローカルの Unix ソケット経由で
 
 ```bash
 curl --unix-socket /var/lib/lxd/unix.socket \
+    -H "Content-Type: application/json" \
+    -X POST \
+    -d @hello-ubuntu.json \
+    lxd/1.0/containers
+```
+
+あるいは snap ユーザーの場合は
+
+```bash
+curl --unix-socket /var/snap/lxd/common/lxd/unix.socket \
     -H "Content-Type: application/json" \
     -X POST \
     -d @hello-ubuntu.json \

@@ -68,11 +68,12 @@ database.
 
 <!--
 The files of the global database are stored under the ``./database/global``
-sub-directory of your LXD data dir (e.g. ``/var/lib/lxd/database/global``).
+sub-directory of your LXD data dir (e.g. ``/var/lib/lxd/database/global`` or
+``/var/snap/lxd/common/lxd/database/global`` for snap users).
 -->
 グローバルデータベースのファイルは LXD のデータディレクトリ
-(例 ``/var/lib/lxd/database/global``) の ``./database/global`` サブディレクトリ
-の下に格納されます。
+(例 ``/var/lib/lxd/database/global`` か snap ユーザーは ``/var/snap/lxd/common/lxd/database/global`` )
+の ``./database/global`` サブディレクトリの下に格納されます。
 
 <!--
 Since each member of the cluster also needs to keep some data which is specific

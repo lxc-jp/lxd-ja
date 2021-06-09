@@ -23,6 +23,8 @@ the user's environment and to turn some advanced features on and off.
 :---                            | :----
 `EDITOR`                        | 使用するテキストエディタ <!-- What text editor to use -->
 `VISUAL`                        | (`EDITOR` が設定されてないときに) 使用するテキストエディタ <!-- What text editor to use (if `EDITOR` isn't set) -->
+`LXD_CONF`                      | LXC 設定ディレクトリーのパス <!-- Path to the LXC configuration directory -->
+`LXD_GLOBAL_CONF`               | LXC グローバル設定ディレクトリーのパス <!-- Path to the global LXC configuration directory -->
 
 ## サーバの環境変数 <!-- Server environment variable -->
 名前 <!-- Name -->                           | 説明 <!-- Description -->

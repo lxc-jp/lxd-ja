@@ -2619,3 +2619,12 @@ without using the trust password.
 <!--
 Adds an editable description to the cluster members.
 -->
+
+## server\_trusted\_proxy
+`core.https_trusted_proxy` のサポートを追加します。 この設定は、LXD が HAProxy スタイルの connection ヘッダーをパースし、そのような（HAProxy などのリバースプロキシーサーバーが LXD の前面に存在するような）接続の場合でヘッダーが存在する場合は、プロキシーサーバーが（ヘッダーで）提供するリクエストの（実際のクライアントの）ソースアドレスへ（LXDが）ソースアドレスを書き換え（て、LXDの管理するクラスターにリクエストを送出し）ます。（LXDのログにもオリジナルのアドレスを記録します）
+<!--
+This introduces support for `core.https_trusted_proxy` which has LXD
+parse a HAProxy style connection header on such connections and if
+present, will rewrite the request's source address to that provided by
+the proxy server.
+-->
