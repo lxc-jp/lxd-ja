@@ -759,3 +759,19 @@ and then use the ```PUT /1.0/cluster``` API endpoint as usual, specifying the
 address of the joining node with the ```server_address``` field. If you use
 preseed, the YAML payload would be exactly like the one above.
 -->
+
+## クラスター証明書の更新 <!-- Updating the cluster certificate -->
+LXD のクラスター内の全てのサーバーは同じ共有された証明書で応答します。
+これは通常は有効期限が10年の標準的な自己署名証明書です。
+<!--
+In a LXD cluster, all servers respond with the same shared certificate. This
+is usually a standard self-signed certificate with an expiry set to 10 years.
+-->
+
+何か他のもの、例えば Let's Encrypt で取得した有効な証明書、に置き換えたい場合は
+`lxc cluster update-certificate` を使ってクラスター内の全てのサーバーの証明書を置き換えることが出来ます。
+<!--
+If you wish to replace it with something else, for example a valid certificate
+obtained through Let's Encrypt, `lxc cluster update-certificate` can be used
+to replace the certificate on all servers in your cluster.
+-->

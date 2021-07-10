@@ -2628,3 +2628,29 @@ parse a HAProxy style connection header on such connections and if
 present, will rewrite the request's source address to that provided by
 the proxy server.
 -->
+
+## clustering\_update\_cert
+クラスター全体に適用されるクラスター証明書を更新するための `PUT /1.0/cluster/certificate` エンドポイントを追加します。
+<!--
+Adds `PUT /1.0/cluster/certificate` endpoint for updating the cluster
+certificate across the whole cluster
+-->
+
+## storage\_api\_project
+これはプロジェクト間でカスタムストレージボリュームをコピー／移動できるようにします。
+<!--
+This adds support for copy/move custom storage volumes between projects.
+-->
+
+## server\_instance\_driver\_operational
+これは `/1.0` エンドポイントの `driver` の出力をサーバー上で実際にサポートされ利用可能であるドライバーのみを含めるように修正します（LXD に含まれるがサーバー上では利用不可なドライバーも含めるのとは違って）。
+<!--
+This modifies the `driver` output for the `/1.0` endpoint to only include drivers which are actually supported and
+operational on the server (as opposed to being included in LXD but not operational on the server).
+-->
+
+## server\_supported\_storage\_drivers
+これはサーバーの環境情報にサポートされているストレージドライバーの情報を追加します。
+<!--
+This adds supported storage driver info to server environment info.
+-->
