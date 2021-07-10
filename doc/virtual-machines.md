@@ -10,12 +10,11 @@ Virtual machines are a new instance type supported by LXD alongside containers.
 They are implemented through the use of `qemu`.
 -->
 
-仮想マシンの機能は現状は実験的 (experimental) です。
-コンテナーと同程度の機能に達するには多くの機能を今後実装していく必要があります。
+現状はコンテナーで利用可能な全ての機能が VM には実装されているわけではないことにご注意ください。
+しかし、私達はコンテナーと同等の機能を目指して引き続き努力します。
 <!--
-This feature is currently considered to be experimental with a lot of
-functionality still yet to be implemented in order to reach feature
-parity with containers.
+Please note, currently not all features that are available with containers have been implemented for VMs,
+however we continue to strive for feature parity with containers.
 -->
 
 ## 設定 <!-- Configuration -->

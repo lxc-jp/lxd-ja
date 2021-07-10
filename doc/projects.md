@@ -137,10 +137,10 @@ across LXD releases, as more features are added that are considered
 security-sensitive.
 -->
 
-さまざまな `restricted.*` サブキーを使うことで通常なら `restricted` でブロックされるはずの個々の機能を選んでホワイトリストに入れ、プロジェクトのインスタンスで使えるようにできます。
+さまざまな `restricted.*` サブキーを使うことで通常なら `restricted` でブロックされるはずの個々の機能を選んで許可し、プロジェクトのインスタンスで使えるようにできます。
 <!--
 Using the various `restricted.*` sub-keys, it's possible to pick individual
-features which would be normally blocked by `restricted` and white-list them, so
+features which would be normally blocked by `restricted` and allow them, so
 they can be used by instances of the project.
 -->
 
@@ -159,11 +159,11 @@ lxc project set <project> restricted.containers.nesting=allow
 will block all security-sensitive features **except** container nesting.
 -->
 
-それぞれのセキュリティセンシティブな機能は対応する `restricted.*` プロジェクト設定サブキーを持ち、その機能をホワイトリストに入れプロジェクトで使えるようにするにはデフォルト値から変更する必要があります。
+それぞれのセキュリティセンシティブな機能は対応する `restricted.*` プロジェクト設定サブキーを持ち、その機能を許可しプロジェクトで使えるようにするにはデフォルト値から変更する必要があります。
 <!--
 Each security-sensitive feature has an associated `restricted.*` project config
 sub-key whose default value needs to be explicitly changed if you want for that
-feature to be white-listed and allow it in the project.
+feature to be allowed it in the project.
 -->
 
 個々の `restricted.*` 設定キーの値の変更が有効になるのはトップレベルの `restricted` キーが `true` に設定されているときのみであることに注意してください。

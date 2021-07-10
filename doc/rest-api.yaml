@@ -133,6 +133,22 @@ definitions:
     title: Cluster represents high-level information about a LXD cluster.
     type: object
     x-go-package: github.com/lxc/lxd/shared/api
+  ClusterCertificatePut:
+    description: ClusterCertificatePut represents the certificate and key pair for
+      all members in a LXD Cluster
+    properties:
+      cluster_certificate:
+        description: The new certificate (X509 PEM encoded) for the cluster
+        example: X509 PEM certificate
+        type: string
+        x-go-name: ClusterCertificate
+      cluster_certificate_key:
+        description: The new certificate key (X509 PEM encoded) for the cluster
+        example: X509 PEM certificate key
+        type: string
+        x-go-name: ClusterCertificateKey
+    type: object
+    x-go-package: github.com/lxc/lxd/shared/api
   ClusterMember:
     properties:
       architecture:
@@ -4217,6 +4233,12 @@ definitions:
         example: dir | zfs
         type: string
         x-go-name: Storage
+      storage_supported_drivers:
+        description: List of supported storage drivers
+        items:
+          $ref: '#/definitions/ServerStorageDriverInfo'
+        type: array
+        x-go-name: StorageSupportedDrivers
       storage_version:
         description: List of active storage driver versions (separate by " | ")
         example: 1 | 0.8.4-1ubuntu11
@@ -4236,6 +4258,24 @@ definitions:
           core.trust_password: true
         type: object
         x-go-name: Config
+    type: object
+    x-go-package: github.com/lxc/lxd/shared/api
+  ServerStorageDriverInfo:
+    description: ServerStorageDriverInfo represents the read-only info about a storage
+      driver
+    properties:
+      Name:
+        description: Name of the driver
+        example: zfs
+        type: string
+      Remote:
+        description: Whether the driver has remote volumes
+        example: false
+        type: boolean
+      Version:
+        description: Version of the driver
+        example: 0.8.4-1ubuntu11
+        type: string
     type: object
     x-go-package: github.com/lxc/lxd/shared/api
   ServerUntrusted:
@@ -4714,6 +4754,11 @@ definitions:
         example: local
         type: string
         x-go-name: Pool
+      project:
+        description: Source project name
+        example: foo
+        type: string
+        x-go-name: Project
       secrets:
         additionalProperties:
           type: string
@@ -5345,6 +5390,35 @@ paths:
         "500":
           $ref: '#/responses/InternalServerError'
       summary: Update the cluster configuration
+      tags:
+      - cluster
+  /1.0/cluster/certificate:
+    put:
+      consumes:
+      - application/json
+      description: |-
+        Replaces existing cluster certificate and reloads LXD on each cluster
+        member.
+      operationId: clustering_update_cert
+      parameters:
+      - description: Cluster certificate replace request
+        in: body
+        name: cluster
+        required: true
+        schema:
+          $ref: '#/definitions/ClusterCertificatePut'
+      produces:
+      - application/json
+      responses:
+        "200":
+          $ref: '#/responses/EmptySyncResponse'
+        "400":
+          $ref: '#/responses/BadRequest'
+        "403":
+          $ref: '#/responses/Forbidden'
+        "500":
+          $ref: '#/responses/InternalServerError'
+      summary: Update the certificate for the cluster
       tags:
       - cluster
   /1.0/cluster/members:
@@ -6098,6 +6172,29 @@ paths:
       tags:
       - images
   /1.0/images/aliases/{name}:
+    delete:
+      description: Deletes a specific image alias.
+      operationId: image_alias_delete
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          $ref: '#/responses/EmptySyncResponse'
+        "400":
+          $ref: '#/responses/BadRequest'
+        "403":
+          $ref: '#/responses/Forbidden'
+        "500":
+          $ref: '#/responses/InternalServerError'
+      summary: Delete the image alias
+      tags:
+      - images
     get:
       description: Gets a specific image alias.
       operationId: image_alias_get
