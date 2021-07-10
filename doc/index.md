@@ -100,6 +100,7 @@ tarball is downloaded and extracted, set the `GOPATH` as follows:
 ```bash
 cd lxd-3.18
 export GOPATH=$(pwd)/_dist
+export GOBIN=$GOPATH/bin
 ```
 
 ### Starting the Build
@@ -118,7 +119,7 @@ make deps
 export CGO_CFLAGS="${CGO_CFLAGS} -I${GOPATH}/deps/dqlite/include/ -I${GOPATH}/deps/raft/include/"
 export CGO_LDFLAGS="${CGO_LDFLAGS} -L${GOPATH}/deps/dqlite/.libs/ -L${GOPATH}/deps/raft/.libs/"
 export LD_LIBRARY_PATH="${GOPATH}/deps/dqlite/.libs/:${GOPATH}/deps/raft/.libs/:${LD_LIBRARY_PATH}"
-export CGO_LDFLAGS_ALLOW="-Wl,-wrap,pthread_create"
+export CGO_LDFLAGS_ALLOW="(-Wl,-wrap,pthread_create)|(-Wl,-z,now)"
 make
 ```
 
