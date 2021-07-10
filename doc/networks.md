@@ -244,7 +244,7 @@ DNSSEC in resolved to allow for DNS resolution. This can be done through
 the `DNSSEC` option in `resolved.conf`.
 -->
 
-LXD が `lxdbr0` インターフェースを作成したときに `systemd-resolved` の DNS 設定をシステムに適用するのを自動化するには、
+LXD が `lxdbr0` インターフェースを作成した場合、 `systemd-resolved` の DNS 設定をシステム起動時に適用するのを自動化するには
 以下のような設定を含む systemd の unit ファイル `/etc/systemd/system/lxd-dns-lxdbr0.service` を作成する必要があります。
 <!--
 To automate the `systemd-resolved` DNS configuration when LXD creates the `lxdbr0` interface so that it is applied

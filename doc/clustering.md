@@ -762,7 +762,7 @@ preseed, the YAML payload would be exactly like the one above.
 
 ## クラスター証明書の更新 <!-- Updating the cluster certificate -->
 LXD のクラスター内の全てのサーバーは同じ共有された証明書で応答します。
-これは通常は有効期限が10年の標準的な自己証明書です。
+これは通常は有効期限が10年の標準的な自己署名証明書です。
 <!--
 In a LXD cluster, all servers respond with the same shared certificate. This
 is usually a standard self-signed certificate with an expiry set to 10 years.
