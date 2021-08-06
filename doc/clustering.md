@@ -356,6 +356,40 @@ out-of-date node left and will become operational again.
 -->
 残りのノードのアップグレードを進めると、最後のノードをアップグレードするまでは、ノードはすべて Blocked 状態に移行します。その時点で、Blocked ノードは古いノードが残っていないかを確認し、再度操作できるようになります。
 
+### クラスターメンバーの待避と復元 <!-- Evacuating and restoring cluster members -->
+
+再起動が必要なシステムアップデートを適用する定例メンテナンスやハードウェアの構成変更などで、指定したサーバー上の全てのインスタンスを空にしたいことが時々あります。
+<!--
+Whether it's for routine maintenance like applying system updates requiring
+a reboot or to perform hardware changes, you may sometimes want to empty a
+given server of all its instances.
+-->
+
+これは `lxc cluster evacuate <NAME>` で実行できます。
+このコマンドはそのサーバー上の全てのインスタンスをマイグレートし、他のクラスターメンバーに移動します。
+待避されたクラスターメンバーは "evacuated" 状態に遷移し、そこではインスタンスの生成は禁止されます。
+<!--
+This can be done using `lxc cluster evacuate <NAME>` which will migrate all
+instances on that server, moving them to other cluster members. The evacuated
+cluster member will be transitioned to an "evacuated" state which will prevent
+the creation of any instances on it.
+-->
+
+メンテナンスが完了したら `lxc cluster restore <NAME>` を実行するとサーバーを通常の実行状態に戻し、このサーバー上に元々あって一時的に他のサーバーに移動していたインスタンスをこのサーバー上に戻します。
+<!--
+Once maintenance is complete, `lxc cluster restore <NAME>` will move the server
+back into a normal running state and will move its instances back from the servers
+that were temporarily holding them.
+-->
+
+指定のインスタンスの挙動は `cluster.evacuate` インスタンス設定キーで指定できます。
+`boot.host_shutdown_timeout` 設定キーを尊重してインスタンスはクリーンにシャットダウンされます。
+<!--
+The behavior for a given instance can be configured through the `cluster.evacuate`
+instance configuration key. Instances will be shutdown cleanly, respecting the
+`boot.host_shutdown_timeout` configuration key.
+-->
+
 ### Failure domains
 
 Failure domain はシャットダウンしたかクラッシュしたクラスターメンバーに role を割り当てる際にどのノードが優先されるかを指示するのに使います。

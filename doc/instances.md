@@ -61,6 +61,7 @@ boot.autostart.delay                        | integer   | 0                 | n/
 boot.autostart.priority                     | integer   | 0                 | n/a           | -                         | インスタンスを起動させる順番（高いほど早く起動します）<!-- What order to start the instances in (starting with highest) -->
 boot.host\_shutdown\_timeout                | integer   | 30                | yes           | -                         | 強制停止前にインスタンスが停止するのを待つ秒数 <!-- Seconds to wait for instance to shutdown before it is force stopped -->
 boot.stop.priority                          | integer   | 0                 | n/a           | -                         | インスタンスの停止順（高いほど早く停止します）<!-- What order to shutdown the instances (starting with highest) -->
+cluster.evacuate                            | string    | auto              | n/a           | -                         | インスタンス待避時に何をするか（auto, migrate, stop） <!-- What to do when evacuating the instance (auto, migrate, or stop) -->
 environment.\*                              | string    | -                 | yes (exec)    | -                         | インスタンス実行時に設定される key/value 形式の環境変数<!-- key/value environment variables to export to the instance and set on exec -->
 limits.cpu                                  | string    | - (all)           | yes           | -                         | インスタンスに割り当てる CPU 番号、もしくは番号の範囲 <!-- Number or range of CPUs to expose to the instance -->
 limits.cpu.allowance                        | string    | 100%              | yes           | container                 | どれくらい CPU を使えるか。ソフトリミットとしてパーセント指定（例、50%）か固定値として単位時間内に使える時間（25ms/100ms）を指定できます <!-- How much of the CPU can be used. Can be a percentage (e.g. 50%) for a soft limit or hard a chunk of time (25ms/100ms) -->
@@ -92,7 +93,7 @@ raw.idmap                                   | blob      | -                 | no
 raw.lxc                                     | blob      | -                 | no            | container                 | 生成された設定に追加する生（raw）の LXC 設定 <!-- Raw LXC configuration to be appended to the generated one -->
 raw.qemu                                    | blob      | -                 | no            | virtual-machine           | 生成されたコマンドラインに追加される生（raw）の Qemu 設定 <!-- Raw Qemu configuration to be appended to the generated command line -->
 raw.seccomp                                 | blob      | -                 | no            | container                 | 生（raw）の seccomp 設定 <!-- Raw Seccomp configuration -->
-security.devlxd                             | boolean   | true              | no            | container                 | インスタンス内の `/dev/lxd` の存在を制御する <!-- Controls the presence of /dev/lxd in the instance -->
+security.devlxd                             | boolean   | true              | no            | -                         | インスタンス内の `/dev/lxd` の存在を制御する <!-- Controls the presence of /dev/lxd in the instance -->
 security.devlxd.images                      | boolean   | false             | no            | container                 | devlxd 経由の `/1.0/images` の利用可否を制御する <!-- Controls the availability of the /1.0/images API over devlxd -->
 security.idmap.base                         | integer   | -                 | no            | unprivileged container    | 割り当てに使う host の ID の base（auto-detection （自動検出）を上書きします） <!-- The base host ID to use for the allocation (overrides auto-detection) -->
 security.idmap.isolated                     | boolean   | false             | no            | unprivileged container    | インスタンス間で独立した idmap のセットを使用するかどうか <!-- Use an idmap for this instance that is unique among instances with isolated set -->
@@ -129,11 +130,13 @@ Key                                         | Type      | Default       | Descri
 :--                                         | :---      | :------       | :----------
 volatile.apply\_template                    | string    | -             | 次の起動時にトリガーされるテンプレートフックの名前 <!-- The name of a template hook which should be triggered upon next startup -->
 volatile.base\_image                        | string    | -             | インスタンスを作成したイメージのハッシュ（存在する場合）<!-- The hash of the image the instance was created from, if any -->
+volatile.evacuate.origin                    | string    | -             | 待避したインスタンスのオリジン（クラスターメンバー） <!-- The origin (cluster member) of the evacuated instance -->
 volatile.idmap.base                         | integer   | -             | インスタンスの主 idmap の範囲の最初の ID <!-- The first id in the instance's primary idmap range -->
 volatile.idmap.current                      | string    | -             | インスタンスで現在使用中の idmap <!-- The idmap currently in use by the instance -->
 volatile.idmap.next                         | string    | -             | 次にインスタンスが起動する際に使う idmap <!-- The idmap to use next time the instance starts -->
 volatile.last\_state.idmap                  | string    | -             | シリアライズ化したインスタンスの uid/gid マップ <!-- Serialized instance uid/gid map -->
 volatile.last\_state.power                  | string    | -             | 最後にホストがシャットダウンした時点のインスタンスの状態 <!-- Instance state as of last host shutdown -->
+volatile.vsock\_id                          | string    | -             | 最後の起動時に使用されたインスタンスの vsock ID <!-- Instance vsock ID used as of last start -->
 volatile.uuid                               | string    | -             | インスタンスの UUID <!-- Instance UUID -->
 volatile.\<name\>.apply\_quota              | string    | -             | 次回のインスタンス起動時に適用されるディスククォータ <!-- Disk quota to be applied on next instance start -->
 volatile.\<name\>.ceph\_rbd                 | string    | -             | Ceph のディスクデバイスの RBD デバイスパス <!-- RBD device path for Ceph disk devices -->

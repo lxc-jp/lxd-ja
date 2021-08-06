@@ -10,59 +10,23 @@
 しかし、 cloud-init を使おうとする前に、これから使おうとするイメージ・ソース
 をどれにするかをまず決めてください。というのも、全てのイメージに
 cloud-init パッケージがインストールされているわけではないからです。
-これを書いている時点では、 images.linuxcontainers.org で提供されている
-イメージには cloud-init パッケージはインストールされていません。そのため、
-このガイドで説明されている設定オプションはどれも動かないでしょう。一方、
-cloud-images.ubuntu.com で提供されているイメージには必要なパッケージが
-インストールされており、アーカイブのテンプレートディレクトリには
-以下のファイル
 <!--
 Before trying to use it, however, first determine which image source you are
 about to use as not all images have cloud-init package installed.
-At the time of writing, images provided at images.linuxcontainers.org do not
-have the cloud-init package installed, therefore, any of the configuration
-options mentioned in this guide will not work. On the contrary, images
-provided at cloud-images.ubuntu.com have the necessary package installed
-and also have a templates directory in their archive populated with
 -->
 
- * `cloud-init-meta.tpl`
- * `cloud-init-user.tpl`
- * `cloud-init-vendor.tpl`
- * `cloud-init-network.tpl`
-
-と、それ以外に cloud-init に無関係なファイルが置かれています。
+`ubuntu` と `ubuntu-daily` の remote にあるイメージは全て cloud-init が有効です。
+`images` remote のイメージで cloud-init が有効なイメージがあるものは `/cloud` という接尾辞がつきます。
 <!--
-and others not related to cloud-init.
+The images from the `ubuntu` and `ubuntu-daily` remotes are all cloud-init enabled.
+Images from the `images` remote have cloud-init enabled variants using the `/cloud` suffix.
 -->
 
-cloud-images.ubuntu.com にあるイメージで提供されるテンプレートは
-`metadata.yaml` に以下のような設定を含んでいます。
-<!--
-Templates provided with images at cloud-images.ubuntu.com have
-the following in their `metadata.yaml`:
--->
-
-```yaml
-/var/lib/cloud/seed/nocloud-net/network-config:
-  when:
-    - create
-    - copy
-  template: cloud-init-network.tpl
-```
-
-そのため、インスタンスを作成するかコピーすると、事前に定義したテンプレートから
-ネットワーク設定が新たに生成されます。
-<!--
-Therefore, either when you create or copy an instance it gets a newly rendered
-network configuration from a pre-defined template.
--->
-
-cloud-init は、network-config ファイルを使い、Ubuntu リリースに応じて
+cloud-init は、network-config データを使い、Ubuntu リリースに応じて
 ifupdown もしくは netplan のどちらかを使って、システム上の関連する設定
 を行います。
 <!--
-cloud-init uses the network-config file to render the relevant network
+cloud-init uses the network-config data to render the relevant network
 configuration on the system using either ifupdown or netplan depending
 on the Ubuntu release.
 -->
