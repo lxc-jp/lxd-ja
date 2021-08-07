@@ -31,11 +31,9 @@ LXD you're using.
 -->
 
 ## フルバックアップ <!-- Full backup -->
-フルバックアップは `/var/lib/lxd` あるいは snap ユーザーの場合は
-`/var/snap/lxd/common/lxd` の全体を含みます。
+フルバックアップは `/var/lib/lxd` あるいは snap ユーザーの場合は `/var/snap/lxd/common/lxd` の全体を含みます。
 <!--
-A full backup would include the entirety of `/var/lib/lxd` or
-`/var/snap/lxd/common/lxd` for snap users.
+A full backup would include the entirety of `/var/lib/lxd` or `/var/snap/lxd/common/lxd` for snap users.
 -->
 
 LXD が外部ストレージを使用している場合はそれらも適切にバックアップする
@@ -103,8 +101,8 @@ server using the same storage pool backend.
 サーバー上にインストールされたどんな圧縮ツールでも `--compression` を指定することで利用可能です。
 LXD 側でのバリデーションはなく、 LXD から実行可能で `-c` オプションで標準出力への出力をサポートしているコマンドであれば動作します。
 <!--
-You can use any compressor installed on the server using the `-\-compression` 
-flag. There is no validation on the LXD side, any command that is available
+You can use any compressor installed on the server using the `-\-compression` flag.
+There is no validation on the LXD side, any command that is available
 to LXD and supports `-c` for stdout should work.
 -->
 
@@ -117,51 +115,39 @@ and can be imported back into LXD using the `lxc import` command.
 -->
 
 ## ディザスタリカバリ <!-- Disaster recovery -->
-さらに、 LXD は各インスタンスのストレージボリューム内に `backup.yaml` ファイルを
-保管しています。このファイルはインスタンスの設定やアタッチされたデバイスや
-ストレージなど、インスタンスを復元するのに必要な全ての情報を含んでいます。
+LXD は `lxd recover` コマンドを提供しています（通常の `lxc` コマンドではなく `lxd` コマンドであることに注意）。
+これはインタラクティブな CLI ツールでデータベース内に存在する全てのストレージプールをスキャンしリカバリー可能な焼失したボリュームを探します。
+また（ディスク上には存在するがデータベース内には存在しない）任意の未知のストレージプールの詳細をユーザーが指定してそれらに対してもスキャンを試みることもできます。
 <!--
-Additionally, LXD maintains a `backup.yaml` file in each instance's storage
-volume. This file contains all necessary information to recover a given
-instance, such as instance configuration, attached devices and storage.
+LXD provides the `lxd recover` command (note the the `lxd` command rather than the normal `lxc` command).
+This is an interactive CLI tool that will attempt to scan all storage pools that exist in the database looking for
+missing volumes that can be recovered. It also provides the ability for the user to specify the details of any
+unknown storage pools (those that exist on disk but do not exist in the database) and it will attempt to scan those
+too.
 -->
 
-このファイルは `lxd import` コマンドで処理できます。 `lxc import` コマンドと
-間違えないようにしてください。
+指定されたインスタンスを復元するのに必要な全ての（インスタンス設定、アタッチしたデバイス、ストレージボリューム、プール設定も含めた）情報を含む各インスタンスのストレージボリューム内の `backup.yaml` ファイルを LXD は保管しているため、それをインスタンス、ストレージボリューム、ストレージプールのデータベースレコードをリビルドするのに使用できます。
 <!--
-This file can be processed by the `lxd import` command, not to
-be confused with `lxc import`.
+Because LXD maintains a `backup.yaml` file in each instance's storage volume which contains all necessary
+information to recover a given instance (including instance configuration, attached devices, storage volume and
+pool configuration) it can be used to rebuild the instance, storage volume and storage pool database records.
 -->
 
-ディザスタリカバリ機構を使うためには、インスタンスのストレージを期待される場所、
-通常は `storage-pools/NAME-OF-POOL/containers/インスタンス名` にマウントしておく
-必要があります。
+`lxd recover` ツールはストレージプールを（まだマウントされていなければ）マウントし、 LXD に関係すると思われる未知のボリュームをスキャンしようと試みます。
+各インスタンスボリュームについては LXD はマウントして `backup.yaml` ファイルにアクセスしようと試みます。
+その後 `backup.yaml` ファイルの内容と（対応するスナップショットなど）ディスク上に実際に存在するものとを比較してある程度の整合性チェックを行い、問題なければデータベースのレコードを再生成します。
 <!--
-To use the disaster recovery mechanism, you must mount the instance's
-storage to its expected location, usually under
-`storage-pools/NAME-OF-POOL/containers/NAME-OF-CONTAINER`.
+The `lxd recover` tool will attempt to mount the storage pool (if not already mounted) and scan it for unknown
+volumes that look like they are associated with LXD. For each instance volume LXD will attempt to mount it and
+access the `backup.yaml` file. From there it will perform some consistency checks to compare what is in the
+`backup.yaml` file with what is actually on disk (such as matching snapshots) and if all checks out then the
+database records are recreated.
 -->
 
-ストレージバックエンドによっては、リストアしたい全てのスナップショットに
-ついても同様にマウントが必要です (`dir` と `btrfs` で必要です)。
+ストレージプールのデータベースレコードも作成が必要な場合、ディスカバリーフェーズにユーザーが入力した情報よりも、インスタンスの `backup.yaml` ファイルを設定のベースとして優先して使用します。
+ただし、それが無い場合はユーザーが入力した情報をもとにプールのデータベースレコードを復元するようにフォールバックします。
 <!--
-Depending on your storage backend you will also need to do the same for
-any snapshot you want to restore (needed for `dir` and `btrfs`).
--->
-
-`backup.yaml` に宣言されているリソースに対応するデータベースエントリーがインポート
-中に見つかったら、コマンドはインスタンスをリストアすることを拒絶します。これは
-`--force` を渡すことでオーバーライドできます。
-<!--
-If any matching database entry for resources declared in `backup.yaml` is found
-during import, the command will refuse to restore the instance.  This can be
-overridden by passing `\-\-force`.
--->
-
-注意: マウントと snap を扱う際は、 `snap stop` と `snap start` で snap のフルリスタートを実行するか `nsenter --mount=/run/snapd/ns/lxd.mnt` を使って snap 環境内からマウントを実行するかのいずれかを行う必要があります。
-<!--
-NOTE: When dealing with mounts and the snap, you may need to either
-perform a full restart of the snap with `snap stop` and `snap start` or
-perform the mounts from within the snap environment using `nsenter
--\-mount=/run/snapd/ns/lxd.mnt`.
+If the storage pool database record also needs to be created then it will prefer to use an instance `backup.yaml`
+file as the basis of its config, rather than what the user provided during the discovery phase, however if not
+available then it will fallback to restoring the pool's database record with what was provided by the user.
 -->

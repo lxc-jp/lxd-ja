@@ -2654,3 +2654,24 @@ operational on the server (as opposed to being included in LXD but not operation
 <!--
 This adds supported storage driver info to server environment info.
 -->
+
+## event\_lifecycle\_requestor\_address
+lifecycle requestor に address のフィールドを追加します。
+<!--
+Adds a new address field to lifecycle requestor.
+-->
+
+## resources\_gpu\_usb
+リソース API 内の ResourcesGPUCard (GPU エントリ) に USBAddress (usb\_address) を追加します。
+<!--
+Add a new USBAddress (usb\_address) field to ResourcesGPUCard (GPU entries) in the resources API.
+-->
+
+## clustering\_evacuation
+クラスターメンバーを待避と復元するための `POST /1.0/cluster/members/<name>/state` エンドポイントを追加します。
+また設定キー `cluster.evacuate` と `volatile.evacuate.origin` も追加します。
+これらはそれぞれ待避の方法 (`auto`, `stop` or `migrate`) と移動したインスタンスのオリジンを設定します。
+<!--
+Adds `POST /1.0/cluster/members/<name>/state` endpoint for evacuating and restoring cluster members.
+It also adds the config keys `cluster.evacuate` and `volatile.evacuate.origin` for setting the evacuation method (`auto`, `stop` or `migrate`) and the origin of any migrated instance respectively.
+-->

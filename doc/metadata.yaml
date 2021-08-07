@@ -85,6 +85,9 @@ navigation:
         - title: インスタンス API ドキュメント # Instance API documentation
           location: dev-lxd.md
 
+        - title: イベント API ドキュメント # Events API documentation
+          location: events.md
+
     - title: 内部動作とデバッグ # Internals & debugging
       children:
         - title: コンテナー環境 # Container environment
