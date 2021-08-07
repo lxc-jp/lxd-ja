@@ -367,7 +367,7 @@ given server of all its instances.
 
 これは `lxc cluster evacuate <NAME>` で実行できます。
 このコマンドはそのサーバー上の全てのインスタンスをマイグレートし、他のクラスターメンバーに移動します。
-待避されたクラスターメンバーは "evacuated" 状態に遷移し、そこではインスタンスの生成は禁止されます。
+待避が行われたクラスターメンバーは "evacuated" 状態に遷移し、そこではインスタンスの生成は禁止されます。
 <!--
 This can be done using `lxc cluster evacuate <NAME>` which will migrate all
 instances on that server, moving them to other cluster members. The evacuated

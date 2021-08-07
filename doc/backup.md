@@ -117,7 +117,7 @@ and can be imported back into LXD using the `lxc import` command.
 ## ディザスタリカバリ <!-- Disaster recovery -->
 LXD は `lxd recover` コマンドを提供しています（通常の `lxc` コマンドではなく `lxd` コマンドであることに注意）。
 これはインタラクティブな CLI ツールでデータベース内に存在する全てのストレージプールをスキャンしリカバリー可能な焼失したボリュームを探します。
-また（ディスク状には存在するがデータベース内には存在しない）任意の未知のストレージプールの詳細をユーザーが指定してそれらに対してもスキャンを試みることもできます。
+また（ディスク上には存在するがデータベース内には存在しない）任意の未知のストレージプールの詳細をユーザーが指定してそれらに対してもスキャンを試みることもできます。
 <!--
 LXD provides the `lxd recover` command (note the the `lxd` command rather than the normal `lxc` command).
 This is an interactive CLI tool that will attempt to scan all storage pools that exist in the database looking for
@@ -133,7 +133,7 @@ information to recover a given instance (including instance configuration, attac
 pool configuration) it can be used to rebuild the instance, storage volume and storage pool database records.
 -->
 
-`lxd recover` ツールはストレージプールを（まだマウントされていなければ）マウントし、 LXD によって関連付けられていると思われる未知のボリュームをスキャンしようと試みます。
+`lxd recover` ツールはストレージプールを（まだマウントされていなければ）マウントし、 LXD に関係すると思われる未知のボリュームをスキャンしようと試みます。
 各インスタンスボリュームについては LXD はマウントして `backup.yaml` ファイルにアクセスしようと試みます。
 その後 `backup.yaml` ファイルの内容と（対応するスナップショットなど）ディスク上に実際に存在するものとを比較してある程度の整合性チェックを行い、問題なければデータベースのレコードを再生成します。
 <!--
