@@ -1,8 +1,6 @@
 site_name: "LXDドキュメント翻訳プロジェクト"
 theme: readthedocs
 docs_dir: 'doc'
-markdown_extensions:
-- attr_list
 pages:
 - はじめに:
     - はじめに: index.md
