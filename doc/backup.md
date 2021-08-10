@@ -114,7 +114,7 @@ Those tarballs can be saved any way you want on any filesystem you want
 and can be imported back into LXD using the `lxc import` command.
 -->
 
-## <a name="disaster-recovery"/> ディザスタリカバリ <!-- Disaster recovery -->
+## <a name="disaster-recovery"> ディザスタリカバリ</a> <!-- Disaster recovery -->
 LXD は `lxd recover` コマンドを提供しています（通常の `lxc` コマンドではなく `lxd` コマンドであることに注意）。
 これはインタラクティブな CLI ツールでデータベース内に存在する全てのストレージプールをスキャンしリカバリー可能な焼失したボリュームを探します。
 また（ディスク上には存在するがデータベース内には存在しない）任意の未知のストレージプールの詳細をユーザーが指定してそれらに対してもスキャンを試みることもできます。
