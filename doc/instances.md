@@ -137,7 +137,7 @@ volatile.idmap.next                         | string    | -             | 次に
 volatile.last\_state.idmap                  | string    | -             | シリアライズ化したインスタンスの uid/gid マップ <!-- Serialized instance uid/gid map -->
 volatile.last\_state.power                  | string    | -             | 最後にホストがシャットダウンした時点のインスタンスの状態 <!-- Instance state as of last host shutdown -->
 volatile.vsock\_id                          | string    | -             | 最後の起動時に使用されたインスタンスの vsock ID <!-- Instance vsock ID used as of last start -->
-volatile.uuid                               | string    | -             | インスタンスの UUID <!-- Instance UUID -->
+volatile.uuid                               | string    | -             | インスタンスの UUID （全サーバーとプロジェクト内でグローバルにユニーク） <!-- Instance UUID (globally unique across all servers and projects) -->
 volatile.\<name\>.apply\_quota              | string    | -             | 次回のインスタンス起動時に適用されるディスククォータ <!-- Disk quota to be applied on next instance start -->
 volatile.\<name\>.ceph\_rbd                 | string    | -             | Ceph のディスクデバイスの RBD デバイスパス <!-- RBD device path for Ceph disk devices -->
 volatile.\<name\>.host\_name                | string    | -             | ホスト上のネットワークデバイス名 <!-- Network device name on the host -->
@@ -461,8 +461,10 @@ limits.egress            | string    | -                                        
 limits.max               | string    | -                                             | no       | no      | `limits.ingress` と `limits.egress` の両方を同じ値に変更する <!-- Same as modifying both limits.ingress and limits.egress -->
 ipv4.address             | string    | -                                             | no       | no      | DHCP でインスタンスに割り当てる IPv4 アドレス <!-- An IPv4 address to assign to the instance through DHCP -->
 ipv6.address             | string    | -                                             | no       | no      | DHCP でインスタンスに割り当てる IPv6 アドレス <!-- An IPv6 address to assign to the instance through DHCP -->
-ipv4.routes              | string    | -                                             | no       | no      | ホスト上で nic に追加する IPv4 静的ルートのカンマ区切りリスト <!-- Comma delimited list of IPv4 static routes to add on host to nic -->
-ipv6.routes              | string    | -                                             | no       | no      | ホスト上で nic に追加する IPv6 静的ルートのカンマ区切りリスト <!-- Comma delimited list of IPv6 static routes to add on host to nic -->
+ipv4.routes              | string    | -                                             | no       | no      | ホスト上で NIC に追加する IPv4 静的ルートのカンマ区切りリスト <!-- Comma delimited list of IPv4 static routes to add on host to NIC -->
+ipv6.routes              | string    | -                                             | no       | no      | ホスト上で NIC に追加する IPv6 静的ルートのカンマ区切りリスト <!-- Comma delimited list of IPv6 static routes to add on host to NIC -->
+ipv4.routes.external     | string    | -                                             | no       | no      | NIC にルーティングしアップリンクのネットワーク (BGP) で公開する IPv4 静的ルートのカンマ区切りリスト <!-- Comma delimited list of IPv4 static routes to route to the NIC and publish on uplink network (BGP) -->
+ipv6.routes.external     | string    | -                                             | no       | no      | NIC にルーティングしアップリンクのネットワーク (BGP) で公開する IPv6 静的ルートのカンマ区切りリスト <!-- Comma delimited list of IPv6 static routes to route to the NIC and publish on uplink network (BGP) -->
 security.mac\_filtering  | boolean   | false                                         | no       | no      | インスタンスが他の MAC アドレスになりすますのを防ぐ <!-- Prevent the instance from spoofing another's MAC address -->
 security.ipv4\_filtering | boolean   | false                                         | no       | no      | インスタンスが他の IPv4 アドレスになりすますのを防ぐ (これを設定すると mac\_filtering も有効になります） <!-- Prevent the instance from spoofing another's IPv4 address (enables mac\_filtering) -->
 security.ipv6\_filtering | boolean   | false                                         | no       | no      | インスタンスが他の IPv6 アドレスになりすますのを防ぐ (これを設定すると mac\_filtering も有効になります） <!-- Prevent the instance from spoofing another's IPv6 address (enables mac\_filtering) -->
@@ -727,8 +729,8 @@ host\_name              | string    | ランダムに割り当て <!-- randomly 
 limits.ingress          | string    | -                                             | no       | 入力トラフィックの I/O 制限値（さまざまな単位が使用可能、下記参照）<!-- I/O limit in bit/s for incoming traffic (various suffixes supported, see below) -->
 limits.egress           | string    | -                                             | no       | 出力トラフィックの I/O 制限値（さまざまな単位が使用可能、下記参照）<!-- I/O limit in bit/s for outgoing traffic (various suffixes supported, see below) -->
 limits.max              | string    | -                                             | no       | `limits.ingress` と `limits.egress` の両方を同じ値に変更する <!-- Same as modifying both limits.ingress and limits.egress -->
-ipv4.routes             | string    | -                                             | no       | ホスト上で nic に追加する IPv4 静的ルートのカンマ区切りリスト <!-- Comma delimited list of IPv4 static routes to add on host to nic -->
-ipv6.routes             | string    | -                                             | no       | ホスト上で nic に追加する IPv6 静的ルートのカンマ区切りリスト <!-- Comma delimited list of IPv6 static routes to add on host to nic -->
+ipv4.routes             | string    | -                                             | no       | ホスト上で NIC に追加する IPv4 静的ルートのカンマ区切りリスト <!-- Comma delimited list of IPv4 static routes to add on host to NIC -->
+ipv6.routes             | string    | -                                             | no       | ホスト上で NIC に追加する IPv6 静的ルートのカンマ区切りリスト <!-- Comma delimited list of IPv6 static routes to add on host to NIC -->
 boot.priority           | integer   | -                                             | no       | VM のブート優先度 (高いほうが先にブート) <!-- Boot priority for VMs (higher boots first) -->
 
 #### nic: routed

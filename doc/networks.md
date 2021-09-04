@@ -73,6 +73,13 @@ devices:
      type: nic
 ```
 
+ネットワークフォワード: <!--Network forwards: -->
+
+ブリッジのネットワークサポートは [network forwards](network-forwards.md#network-bridge) 参照。
+<!--
+Bridge networks support [network forwards](network-forwards.md#network-bridge).
+-->
+
 ネットワークの設定プロパティー: <!-- Network configuration properties: -->
 
 LXD のネットワークの設定項目の完全なリストは以下の通りです。
@@ -105,6 +112,11 @@ The exception being tunnel local and remote addresses which are just plain addre
 
 キー <!-- Key -->                    | 型 <!-- Type --> | 条件 <!-- Condition -->           | デフォルト <!-- Default -->                                        | 説明 <!-- Description -->
 :--                                  | :--       | :--                                      | :--                                                                | :--
+bgp.peers.NAME.address               | string    | bgp server                               | -                                                                  | ピアのアドレス (IPv4 か IPv6) <!-- Peer address (IPv4 or IPv6) -->
+bgp.peers.NAME.asn                   | integer   | bgp server                               | -                                                                  | ピアの AS 番号 <!-- Peer AS number -->
+bgp.peers.NAME.password              | string    | bgp server                               | - (パスワード無し) <!-- (no password) -->                          | ピアのセッションパスワード（省略可能） <!-- Peer session password (optional) -->
+bgp.ipv4.nexthop                     | string    | bgp server                               | ローカルアドレス <!-- local address -->                            | 広告されたプリフィクスの next-hop をオーバーライド <!-- Override the next-hop for advertised prefixes -->
+bgp.ipv6.nexthop                     | string    | bgp server                               | ローカルアドレス <!-- local address -->                            | 広告されたプリフィクスの next-hop をオーバーライド <!-- Override the next-hop for advertised prefixes -->
 bridge.driver                        | string    | -                                        | native                                                             | ブリッジのドライバ ("native" か "openvswitch") <!-- Bridge driver ("native" or "openvswitch") -->
 bridge.external\_interfaces          | string    | -                                        | -                                                                  | ブリッジに含める未設定のネットワークインタフェースのカンマ区切りリスト <!-- Comma separate list of unconfigured network interfaces to include in the bridge -->
 bridge.hwaddr                        | string    | -                                        | -                                                                  | ブリッジの MAC アドレス <!-- MAC address for the bridge -->
@@ -535,6 +547,15 @@ lxc ls
 ```
 -->
 
+ネットワークフォワード: <!--Network forwards: -->
+
+OVN のネットワークサポートは [network forwards](network-forwards.md#network-ovn) 参照。
+<!--
+OVN networks support [network forwards](network-forwards.md#network-ovn).
+-->
+
+ネットワークの設定プロパティー: <!-- Network configuration properties: -->
+
 キー <!-- Key -->                    | 型 <!-- Type --> | 条件 <!-- Condition -->    | デフォルト <!-- Default -->                                | 説明 <!-- Description -->
 :--                                  | :--       | :--                               | :--                                                        | :--
 bridge.hwaddr                        | string    | -                                 | -                                                          | ブリッジの MAC アドレス <!-- MAC address for the bridge -->
@@ -544,7 +565,9 @@ dns.search                           | string    | -                            
 ipv4.address                         | string    | 標準モード <!-- standard mode --> | 自動（作成時のみ） <!-- auto (on create only) -->          | ブリッジの IPv4 アドレス (CIDR 形式)。 IPv4 をオフにするには "none" 、新しいランダムな未使用のサブネットを生成するには "auto" を指定。 <!-- IPv4 address for the bridge (CIDR notation). Use "none" to turn off IPv4 or "auto" to generate a new random unused subnet -->
 ipv4.dhcp                            | boolean   | ipv4 アドレス <!-- address -->    | true                                                       | DHCP を使ってアドレスを割り当てるかどうか <!-- Whether to allocate addresses using DHCP -->
 ipv4.nat                             | boolean   | ipv4 アドレス <!-- address -->    | false                                                      | NAT するかどうか（ipv4.address が未設定の場合デフォルト値は true でランダムな ipv4.address が生成されます） <!-- Whether to NAT (will default to true if unset and a random ipv4.address is generated) -->
+ipv4.nat.address                     | string    | ipv4 アドレス <!-- address -->    | -                                                          | ネットワークからの外向きトラフィックに使用されるソースアドレス (アップリンクに `ovn.ingress_mode=routed` が必要) <!-- The source address used for outbound traffic from the network (requires uplink `ovn.ingress_mode=routed`) -->
 ipv6.address                         | string    | 標準モード <!-- standard mode --> | 自動（作成時のみ） <!-- auto (on create only) -->          | ブリッジの IPv6 アドレス (CIDR 形式)。 IPv6 をオフにするには "none" 、新しいランダムな未使用のサブネットを生成するには "auto" を指定。 <!-- IPv6 address for the bridge (CIDR notation). Use "none" to turn off IPv6 or "auto" to generate a new random unused subnet -->
+ipv6.nat.address                     | string    | ipv6 アドレス <!-- address -->    | -                                                          | ネットワークからの外向きトラフィックに使用されるソースアドレス (アップリンクに `ovn.ingress_mode=routed` が必要) <!-- The source address used for outbound traffic from the network (requires uplink `ovn.ingress_mode=routed`) -->
 ipv6.dhcp                            | boolean   | ipv6 アドレス <!-- address -->    | true                                                       | DHCP 上に追加のネットワーク設定を提供するかどうか <!-- Whether to provide additional network configuration over DHCP -->
 ipv6.dhcp.stateful                   | boolean   | ipv6 dhcp                         | false                                                      | DHCP を使ってアドレスを割り当てるかどうか <!-- Whether to allocate addresses using DHCP -->
 ipv6.nat                             | boolean   | ipv6 アドレス <!-- address -->    | false                                                      | NAT するかどうか（ipv6.address が未設定の場合デフォルト値は true でランダムな ipv6.address が生成されます） <!-- Whether to NAT (will default to true if unset and a random ipv6.address is generated) -->
@@ -568,21 +591,66 @@ Network configuration properties:
 -->
 
 
-キー <!-- Key -->               | 型 <!-- Type --> | 条件 <!-- Condition -->    | デフォルト <!-- Default --> | 説明 <!-- Description -->
-:--                             | :--       | :--                               | :--                         | :--
-maas.subnet.ipv4                | string    | ipv4 アドレス <!-- address -->    | -                           | インスタンスを登録する MAAS IPv4 サブネット (NIC で `network` プロパティを使う場合に有効) <!-- MAAS IPv4 subnet to register instances in (when using `network` property on nic) -->
-maas.subnet.ipv6                | string    | ipv6 アドレス <!-- address -->    | -                           | インスタンスを登録する MAAS IPv6 サブネット (NIC で `network` プロパティを使う場合に有効) <!-- MAAS IPv6 subnet to register instances in (when using `network` property on nic) -->
-mtu                             | integer   | -                                 | -                           | 作成するインターフェースの MTU <!-- The MTU of the new interface -->
-parent                          | string    | -                                 | -                           | sriov NIC を作成する親のインターフェース <!-- Parent interface to create sriov NICs on -->
-vlan                            | integer   | -                                 | -                           | アタッチする先の VLAN ID <!-- The VLAN ID to attach to -->
-gvrp                            | boolean   | -                                 | false                       | GARP VLAN Registration Protocol を使って VLAN を登録する <!-- Register VLAN using GARP VLAN Registration Protocol -->
-ipv4.gateway                    | string    | 標準モード <!-- standard mode --> | -                           | ゲートウェイとネットワークの IPv4 アドレス（CIDR表記） <!-- IPv4 address for the gateway and network (CIDR notation) -->
-ipv4.ovn.ranges                 | string    | -                                 | -                           | 子供の OVN ネットワークルーターに使用する IPv4 アドレスの範囲（開始-終了 形式) のカンマ区切りリスト <!-- Comma separate list of IPv4 ranges to use for child OVN network routers (FIRST-LAST format) -->
-ipv4.routes                     | string    | ipv4 アドレス <!-- address -->    | -                           | 子供の OVN ネットワークの ipv4.routes.external 設定で利用可能な追加の IPv4 CIDR サブネットのカンマ区切りリスト <!-- Comma separated list of additional IPv4 CIDR subnets that can be used with child OVN networks ipv4.routes.external setting -->
-ipv4.routes.anycast             | boolean   | ipv4 アドレス <!-- address -->    | false                       | 複数のネットワーク／NICで同時にオーバーラップするルートが使われることを許可するかどうか <!-- Allow the overlapping routes to be used on multiple networks/NIC at the same time. -->
-ipv6.gateway                    | string    | 標準モード <!-- standard mode --> | -                           | ゲートウェイとネットワークの IPv6 アドレス（CIDR表記） <!-- IPv6 address for the gateway and network (CIDR notation) -->
-ipv6.ovn.ranges                 | string    | -                                 | -                           | 子供の OVN ネットワークルーターに使用する IPv6 アドレスの範囲（開始-終了 形式) のカンマ区切りリスト <!-- Comma separate list of IPv6 ranges to use for child OVN network routers (FIRST-LAST format) -->
-ipv6.routes                     | string    | ipv6 アドレス <!-- address -->    | -                           | 子供の OVN ネットワークの ipv6.routes.external 設定で利用可能な追加の IPv6 CIDR サブネットのカンマ区切りリスト <!-- Comma separated list of additional IPv6 CIDR subnets that can be used with child OVN networks ipv6.routes.external setting -->
-ipv6.routes.anycast             | boolean   | ipv6 アドレス <!-- address -->    | false                       | 複数のネットワーク／NICで同時にオーバーラップするルートが使われることを許可するかどうか <!-- Allow the overlapping routes to be used on multiple networks/NIC at the same time. -->
-dns.nameservers                 | string    | 標準モード <!-- standard mode --> | -                           | 物理ネットワークの DNS サーバー IP のリスト <!-- List of DNS server IPs on physical network -->
-ovn.ingress\_mode               | string    | 標準モード <!-- standard mode --> | l2proxy                     | OVN NIC の外部 IP アドレスがアップリンクネットワークで広告される方法を設定します。 `l2proxy` (proxy ARP/NDP) か `routed` です。 <!-- Sets the method that OVN NIC external IPs will be advertised on uplink network. Either `l2proxy` (proxy ARP/NDP) or `routed`. -->
+キー <!-- Key -->               | 型 <!-- Type --> | 条件 <!-- Condition -->    | デフォルト <!-- Default -->               | 説明 <!-- Description -->
+:--                             | :--       | :--                               | :--                                       | :--
+bgp.peers.NAME.address          | string    | bgp server                        | -                                         | `ovn` ダウンストリームネットワークで使用するピアアドレス (IPv4 か IPv6) <!-- Peer address (IPv4 or IPv6) for use by `ovn` downstream networks -->
+bgp.peers.NAME.asn              | integer   | bgp server                        | -                                         | `ovn` ダウンストリームネットワークで使用する AS 番号 <!-- Peer AS number for use by `ovn` downstream networks -->
+bgp.peers.NAME.password         | string    | bgp server                        | - (パスワード無し) <!-- (no password) --> | `ovn` ダウンストリームネットワークで使用するピアのセッションパスワード（省略可能） <!-- Peer session password (optional) for use by `ovn` downstream networks -->
+maas.subnet.ipv4                | string    | ipv4 アドレス <!-- address -->    | -                                         | インスタンスを登録する MAAS IPv4 サブネット (NIC で `network` プロパティを使う場合に有効) <!-- MAAS IPv4 subnet to register instances in (when using `network` property on nic) -->
+maas.subnet.ipv6                | string    | ipv6 アドレス <!-- address -->    | -                                         | インスタンスを登録する MAAS IPv6 サブネット (NIC で `network` プロパティを使う場合に有効) <!-- MAAS IPv6 subnet to register instances in (when using `network` property on nic) -->
+mtu                             | integer   | -                                 | -                                         | 作成するインターフェースの MTU <!-- The MTU of the new interface -->
+parent                          | string    | -                                 | -                                         | sriov NIC を作成する親のインターフェース <!-- Parent interface to create sriov NICs on -->
+vlan                            | integer   | -                                 | -                                         | アタッチする先の VLAN ID <!-- The VLAN ID to attach to -->
+gvrp                            | boolean   | -                                 | false                                     | GARP VLAN Registration Protocol を使って VLAN を登録する <!-- Register VLAN using GARP VLAN Registration Protocol -->
+ipv4.gateway                    | string    | 標準モード <!-- standard mode --> | -                                         | ゲートウェイとネットワークの IPv4 アドレス（CIDR表記） <!-- IPv4 address for the gateway and network (CIDR notation) -->
+ipv4.ovn.ranges                 | string    | -                                 | -                                         | 子供の OVN ネットワークルーターに使用する IPv4 アドレスの範囲（開始-終了 形式) のカンマ区切りリスト <!-- Comma separate list of IPv4 ranges to use for child OVN network routers (FIRST-LAST format) -->
+ipv4.routes                     | string    | ipv4 アドレス <!-- address -->    | -                                         | 子供の OVN ネットワークの ipv4.routes.external 設定で利用可能な追加の IPv4 CIDR サブネットのカンマ区切りリスト <!-- Comma separated list of additional IPv4 CIDR subnets that can be used with child OVN networks ipv4.routes.external setting -->
+ipv4.routes.anycast             | boolean   | ipv4 アドレス <!-- address -->    | false                                     | 複数のネットワーク／NICで同時にオーバーラップするルートが使われることを許可するかどうか <!-- Allow the overlapping routes to be used on multiple networks/NIC at the same time. -->
+ipv6.gateway                    | string    | 標準モード <!-- standard mode --> | -                                         | ゲートウェイとネットワークの IPv6 アドレス（CIDR表記） <!-- IPv6 address for the gateway and network (CIDR notation) -->
+ipv6.ovn.ranges                 | string    | -                                 | -                                         | 子供の OVN ネットワークルーターに使用する IPv6 アドレスの範囲（開始-終了 形式) のカンマ区切りリスト <!-- Comma separate list of IPv6 ranges to use for child OVN network routers (FIRST-LAST format) -->
+ipv6.routes                     | string    | ipv6 アドレス <!-- address -->    | -                                         | 子供の OVN ネットワークの ipv6.routes.external 設定で利用可能な追加の IPv6 CIDR サブネットのカンマ区切りリスト <!-- Comma separated list of additional IPv6 CIDR subnets that can be used with child OVN networks ipv6.routes.external setting -->
+ipv6.routes.anycast             | boolean   | ipv6 アドレス <!-- address -->    | false                                     | 複数のネットワーク／NICで同時にオーバーラップするルートが使われることを許可するかどうか <!-- Allow the overlapping routes to be used on multiple networks/NIC at the same time. -->
+dns.nameservers                 | string    | 標準モード <!-- standard mode --> | -                                         | 物理ネットワークの DNS サーバー IP のリスト <!-- List of DNS server IPs on physical network -->
+ovn.ingress\_mode               | string    | 標準モード <!-- standard mode --> | l2proxy                                   | OVN NIC の外部 IP アドレスがアップリンクネットワークで広告される方法を設定します。 `l2proxy` (proxy ARP/NDP) か `routed` です。 <!-- Sets the method that OVN NIC external IPs will be advertised on uplink network. Either `l2proxy` (proxy ARP/NDP) or `routed`. -->
+
+# BGP の統合 <!-- BGP integration -->
+LXD は BGP サーバーとして機能でき、アップストリームの BGP ルーターとセッションを確立し LXD が使用しているアドレスとサブネットを広告できます。
+<!--
+LXD can act as a BGP server, effectively allowing to establish sessions with upstream BGP routers and announce the addresses and subnets that it's using.
+-->
+
+これにより LXD サーバーやクラスターが内部／外部のアドレス空間を直接使い、正しいホストにルーティングされた特定のサブネットやアドレスをターゲットインスタンスにフォワードできます。
+<!--
+This can be used to allow a LXD server or cluster to directly use internal/external address space, getting the specific subnets or addresses routed to the correct host for it to forward onto the target instance.
+-->
+
+このためには `core.bgp_address`, `core.bgp_asn` と `core.bgp_routerid` が設定されている必要があります。
+これらが設定されると LXD は BGP セッションのリッスンを開始します。
+<!--
+For this to work, `core.bgp_address`, `core.bgp_asn` and `core.bgp_routerid` must be set.
+Once those are set, LXD will start listening for BGP sessions.
+-->
+
+ピアは `bridged` と `physical` で管理されたネットワーク上に定義できます。さらに `bridged` の場合は next-hop をオーバーライドするためにサーバー毎の設定キーの組が利用できます。それらが指定されない場合は next-hop はデフォルトとして BGP セッションに使用されるアドレスになります。
+<!--
+Peers can be defined on both `bridged` and `physical` managed networks. Additionally in the `bridged` case, a set of per-server configuration keys are also available to override the next-hop. When those aren't specified, the next-hop defaults to the address used for the BGP session.
+-->
+
+`physical` ネットワークの場合はアップリンクのネットワークが利用可能なサブネットのリストと BGP 設定を持つような `ovn` ネットワークに使用されます。
+親のネットワークが一旦設定されると、子の OVN ネットワークは BGP で広告された外部のサブネットとアドレスを受け取り next-hop は問題のネットワークの OVN ルーターアドレスに設定されます。
+<!--
+The `physical` network case is used for `ovn` networks where the uplink network is the one holding the list of allowed subnets and the BGP configuration. Once that parent network is configured, children OVN networks will get their external subnets and addresses announced over BGP with the next-hop set to the OVN router address for the network in question.
+-->
+
+現在公開されるアドレスとネットワークは以下のとおりです。
+<!--
+The addresses and networks currently being advertised are:
+-->
+ - `nat` プロパティーが `true` に設定されない場合はネットワークの `ipv4.address` か `ipv6.address` <!-- Network `ipv4.address` or `ipv6.address` subnets when the matching `nat` property isn't set to `true` -->
+ - `nat` プロパティーが設定される場合はネットワークの `ipv4.address` と `ipv6.address` <!-- Network `ipv4.nat.address` and `ipv6.nat.address` when those are set -->
+ - `ipv4.routes.external` か `ipv6.routes.external` 経由で定義されるインスタンスの NIC ルート <!-- Instance NIC routes defined through `ipv4.routes.external` or `ipv6.routes.external` -->
+
+現時点では、特定のピアに特定のルートやアドレスのみを公開する方法はありません。代わりにアップストリームのルーターでプリフィクスをフィルターすることを現状ではお勧めします。
+<!--
+At this time, there isn't a way to only announce some specific routes/addresses to particular peers. Instead it's currently recommended to filter prefixes on the upstream routers.
+-->

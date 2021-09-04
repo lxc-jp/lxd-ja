@@ -2675,3 +2675,68 @@ Add a new USBAddress (usb\_address) field to ResourcesGPUCard (GPU entries) in t
 Adds `POST /1.0/cluster/members/<name>/state` endpoint for evacuating and restoring cluster members.
 It also adds the config keys `cluster.evacuate` and `volatile.evacuate.origin` for setting the evacuation method (`auto`, `stop` or `migrate`) and the origin of any migrated instance respectively.
 -->
+
+## network\_ovn\_nat\_address
+これは LXD の `ovn` ネットワークに `ipv4.nat.address` と `ipv6.nat.address` 設定キーを追加します。
+これらのキーで OVN 仮想ネットワークからの外向きトラフィックのソースアドレスを制御します。
+これらのキーは OVN ネットワークのアップリンクネットワークが `ovn.ingress_mode=routed` という設定を持つ場合にのみ指定可能です。
+<!--
+This introduces the `ipv4.nat.address` and `ipv6.nat.address` configuration keys for LXD `ovn` networks.
+Those keys control the source address used for outbound traffic from the OVN virtual network.
+These keys can only be specified when the OVN network's uplink network has `ovn.ingress_mode=routed`.
+-->
+
+## network\_bgp
+これは LXD を BGP ルーターとして振る舞わせルートを `bridge` と `ovn` ネットワークに広告するようにします。
+<!--
+This introduces support for LXD acting as a BGP router to advertise
+routes to `bridge` and `ovn` networks.
+-->
+
+以下のグローバル設定が追加されます。
+<!--
+This comes with the addition to global config of:
+-->
+
+ - `core.bgp_address`
+ - `core.bgp_asn`
+ - `core.bgp_routerid`
+
+以下のネットワーク設定キーが追加されます（`bridge` と `physical`）。
+<!--
+The following network configurations keys (`bridge` and `physical`):
+-->
+
+ - `bgp.peers.<name>.address`
+ - `bgp.peers.<name>.asn`
+ - `bgp.peers.<name>.password`
+ - `bgp.ipv4.nexthop`
+ - `bgp.ipv6.nexthop`
+
+そして下記の NIC 特有な設定が追加されます（nictype が `bridged` の場合）。
+<!--
+And the following NIC-specific configuration keys (`bridged` nictype):
+-->
+
+ - `ipv4.routes.external`
+ - `ipv6.routes.external`
+
+## network\_forward
+これはネットワークアドレスのフォワード機能を追加します。
+`bridge` と `ovn` ネットワークで外部 IP アドレスを定義して対応するネットワーク内の内部 IP アドレス(複数指定可能) にフォワード出来ます。
+<!--
+This introduces the networking address forward functionality. Allowing for `bridge` and `ovn` networks to define
+external IP addresses that can be forwarded to internal IP(s) inside their respective networks.
+-->
+
+## custom\_volume\_refresh
+ボリュームマイグレーションに refresh オプションのサポートを追加します。
+<!--
+Adds support for refresh during volume migration.
+-->
+
+## network\_counters\_errors\_dropped
+これはネットワークカウンターに受信エラー数、送信エラー数とインバウンドとアウトバウンドのドロップしたパケット数を追加します。
+<!--
+This adds the received and sent errors as well as inbound and outbound dropped packets to the network counters.
+-->

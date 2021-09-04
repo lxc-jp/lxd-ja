@@ -8,6 +8,11 @@ LXD requires Go 1.13 or higher and is only tested with the golang compiler.
 LXD は Go 1.13 以上を必要とし、 golang のコンパイラのみでテストされています。
 (訳注: 以前は gccgo もサポートされていましたが golang のみになりました)
 
+ビルドには最低 2GB の RAM を推奨します。
+<!--
+We recommend having at least 2GB of RAM to allow the build to complete.
+-->
+
 ## 必要なカーネルバージョン <!-- Kernel requirements -->
 <!--
 The minimum supported kernel version is 3.13.
