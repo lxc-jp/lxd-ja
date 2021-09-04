@@ -14,6 +14,7 @@ pages:
     - インスタンス: instances.md
     - ネットワーク: networks.md
     - ネットワーク ACL: network-acls.md
+    - ネットワークフォワード: network-forwards.md
     - preseeded YAML: preseed.md
     - プロファイル: profiles.md
     - プロジェクト: projects.md
