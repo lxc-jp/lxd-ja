@@ -1407,3 +1407,41 @@ Add a new USBAddress (usb\_address) field to ResourcesGPUCard (GPU entries) in t
 ## clustering\_evacuation
 Adds `POST /1.0/cluster/members/<name>/state` endpoint for evacuating and restoring cluster members.
 It also adds the config keys `cluster.evacuate` and `volatile.evacuate.origin` for setting the evacuation method (`auto`, `stop` or `migrate`) and the origin of any migrated instance respectively.
+
+## network\_ovn\_nat\_address
+This introduces the `ipv4.nat.address` and `ipv6.nat.address` configuration keys for LXD `ovn` networks.
+Those keys control the source address used for outbound traffic from the OVN virtual network.
+These keys can only be specified when the OVN network's uplink network has `ovn.ingress_mode=routed`.
+
+## network\_bgp
+This introduces support for LXD acting as a BGP router to advertise
+routes to `bridge` and `ovn` networks.
+
+This comes with the addition to global config of:
+
+ - `core.bgp_address`
+ - `core.bgp_asn`
+ - `core.bgp_routerid`
+
+The following network configurations keys (`bridge` and `physical`):
+
+ - `bgp.peers.<name>.address`
+ - `bgp.peers.<name>.asn`
+ - `bgp.peers.<name>.password`
+ - `bgp.ipv4.nexthop`
+ - `bgp.ipv6.nexthop`
+
+And the following NIC-specific configuration keys (`bridged` nictype):
+
+ - `ipv4.routes.external`
+ - `ipv6.routes.external`
+
+## network\_forward
+This introduces the networking address forward functionality. Allowing for `bridge` and `ovn` networks to define
+external IP addresses that can be forwarded to internal IP(s) inside their respective networks.
+
+## custom\_volume\_refresh
+Adds support for refresh during volume migration.
+
+## network\_counters\_errors\_dropped
+This adds the received and sent errors as well as inbound and outbound dropped packets to the network counters.

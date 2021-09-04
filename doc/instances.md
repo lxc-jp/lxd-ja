@@ -114,7 +114,7 @@ volatile.idmap.next                         | string    | -             | The id
 volatile.last\_state.idmap                  | string    | -             | Serialized instance uid/gid map
 volatile.last\_state.power                  | string    | -             | Instance state as of last host shutdown
 volatile.vsock\_id                          | string    | -             | Instance vsock ID used as of last start
-volatile.uuid                               | string    | -             | Instance UUID
+volatile.uuid                               | string    | -             | Instance UUID (globally unique across all servers and projects)
 volatile.\<name\>.apply\_quota              | string    | -             | Disk quota to be applied on next instance start
 volatile.\<name\>.ceph\_rbd                 | string    | -             | RBD device path for Ceph disk devices
 volatile.\<name\>.host\_name                | string    | -             | Network device name on the host
@@ -316,8 +316,10 @@ limits.egress            | string  | -                 | no       | no      | I/
 limits.max               | string  | -                 | no       | no      | Same as modifying both limits.ingress and limits.egress
 ipv4.address             | string  | -                 | no       | no      | An IPv4 address to assign to the instance through DHCP
 ipv6.address             | string  | -                 | no       | no      | An IPv6 address to assign to the instance through DHCP
-ipv4.routes              | string  | -                 | no       | no      | Comma delimited list of IPv4 static routes to add on host to nic
-ipv6.routes              | string  | -                 | no       | no      | Comma delimited list of IPv6 static routes to add on host to nic
+ipv4.routes              | string  | -                 | no       | no      | Comma delimited list of IPv4 static routes to add on host to NIC
+ipv6.routes              | string  | -                 | no       | no      | Comma delimited list of IPv6 static routes to add on host to NIC
+ipv4.routes.external     | string  | -                 | no       | no      | Comma delimited list of IPv4 static routes to route to the NIC and publish on uplink network (BGP)
+ipv6.routes.external     | string  | -                 | no       | no      | Comma delimited list of IPv6 static routes to route to the NIC and publish on uplink network (BGP)
 security.mac\_filtering  | boolean | false             | no       | no      | Prevent the instance from spoofing another's MAC address
 security.ipv4\_filtering | boolean | false             | no       | no      | Prevent the instance from spoofing another's IPv4 address (enables mac\_filtering)
 security.ipv6\_filtering | boolean | false             | no       | no      | Prevent the instance from spoofing another's IPv6 address (enables mac\_filtering)
@@ -491,8 +493,8 @@ host\_name              | string  | randomly assigned | no       | The name of t
 limits.ingress          | string  | -                 | no       | I/O limit in bit/s for incoming traffic (various suffixes supported, see below)
 limits.egress           | string  | -                 | no       | I/O limit in bit/s for outgoing traffic (various suffixes supported, see below)
 limits.max              | string  | -                 | no       | Same as modifying both limits.ingress and limits.egress
-ipv4.routes             | string  | -                 | no       | Comma delimited list of IPv4 static routes to add on host to nic
-ipv6.routes             | string  | -                 | no       | Comma delimited list of IPv6 static routes to add on host to nic
+ipv4.routes             | string  | -                 | no       | Comma delimited list of IPv4 static routes to add on host to NIC
+ipv6.routes             | string  | -                 | no       | Comma delimited list of IPv6 static routes to add on host to NIC
 boot.priority           | integer | -                 | no       | Boot priority for VMs (higher boots first)
 
 #### nic: routed
