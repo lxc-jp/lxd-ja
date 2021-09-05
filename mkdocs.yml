@@ -14,6 +14,7 @@ pages:
     - インスタンス: instances.md
     - ネットワーク: networks.md
     - ネットワーク ACL: network-acls.md
+    - ネットワークフォワード: network-forwards.md
     - preseeded YAML: preseed.md
     - プロファイル: profiles.md
     - プロジェクト: projects.md
@@ -28,10 +29,12 @@ pages:
     - バックアップ: backup.md
     - クラスタリング: clustering.md
     - プロダクション環境のセットアップ: production-setup.md
+    - Remotes: remotes.md
 - REST API:
     - REST API: rest-api.md
     - API拡張: api-extensions.md
     - コンテナ API: dev-lxd.md
+    - イベント API: events.md
 - 内部動作とデバッグ:
     - コンテナ実行環境: container-environment.md
     - コンテナのマイグレーション: migration.md

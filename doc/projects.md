@@ -64,6 +64,8 @@ restricted.devices.disk              | string    | -                     | manag
 restricted.devices.gpu               | string    | -                     | block                     | block と設定すると gpu タイプのデバイスの使用を防ぐ <!-- Prevents use of devices of type "gpu" -->
 restricted.devices.infiniband        | string    | -                     | block                     | block と設定すると infiniband タイプのデバイスの使用を防ぐ <!-- Prevents use of devices of type "infiniband" -->
 restricted.devices.nic               | string    | -                     | managed                   | block と設定すると全てのネットワークデバイスの使用を防ぐ。 managed と設定すると network= が設定されているときだけネットワークデバイスの使用を許可する。  allow と設定すると制限なし。 <!-- If "block" prevent use of all network devices. If "managed" allow use of network devices only if "network=" is set. If "allow", no restrictions apply. -->
+restricted.devices.pci               | string    | -                     | block                     | "pci" タイプのデバイスの使用を防ぐ <!-- Prevents use of devices of type "pci" -->
+restricted.devices.proxy             | string    | -                     | block                     | "proxy" タイプのデバイスの使用を防ぐ <!-- Prevents use of devices of type "proxy" -->
 restricted.devices.unix-block        | string    | -                     | block                     | block と設定すると unix-block タイプのデバイスの使用を防ぐ <!-- Prevents use of devices of type "unix-block" -->
 restricted.devices.unix-char         | string    | -                     | block                     | block と設定すると unix-char タイプのデバイスの使用を防ぐ <!-- Prevents use of devices of type "unix-char" -->
 restricted.devices.unix-hotplug      | string    | -                     | block                     | block と設定すると unix-hotplug タイプのデバイスの使用を防ぐ <!-- Prevents use of devices of type "unix-hotplug" -->

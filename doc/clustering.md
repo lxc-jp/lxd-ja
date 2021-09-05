@@ -201,6 +201,21 @@ opyQ1VRpAg2sV2C4W8irbNqeUsTeZZxhLqp4vNOXXBBrSqUCdPu1JXADV0kavg1l
     value: ""
 ```
 
+クラスター参加トークンを使用してクラスターに参加する際は、下記のフィールドは省略できます。
+<!--
+When joining a cluster using a cluster join token, the following fields can be omitted:
+-->
+
+ - server\_name
+ - cluster\_address
+ - cluster\_certificate
+ - cluster\_password
+
+そして代わりにフルのトークンを `cluster_token` フィールドを使って渡せます。
+<!--
+And instead the full token be passed through the `cluster_token` field.
+-->
+
 ## クラスターの管理 <!-- Managing a cluster -->
 
 <!--
@@ -476,10 +491,94 @@ run the command:
 lxc cluster remove <name> --force
 ```
 
-ここでは ``lxd``` ではなく通常の ```lxc``` コマンドを使う必要があることに注意してください。
+ここでは ``lxd`` ではなく通常の ``lxc`` コマンドを使う必要があることに注意してください。
 <!--
-Note that this time you have to use the regular ```lxc``` command line tool, not
-```lxd```.
+Note that this time you have to use the regular ``lxc`` command line tool, not
+``lxd``.
+-->
+
+### アドレスを変更してクラスターメンバーをリカバーする <!-- Recover cluster members with changed addresses -->
+
+クラスターの一部のメンバーが到達不可能になった場合や、IPアドレスやリッスンするポート番号の変更によりクラスター自体が到達不可能になった場合、クラスターは再設定できます。
+<!--
+If some members of your cluster are no longer reachable, or if the cluster itself
+is unreachable due to a change in IP address or listening port number, the
+cluster can be reconfigured.
+-->
+
+クラスターの各メンバー上で、 LXD が実行していないときに、以下のコマンドを実行します。
+<!--
+On each member of the cluster, with LXD not running, run the following command:
+-->
+
+```
+lxd cluster edit
+```
+
+このセクションの全てのコマンドは ``lxc`` ではなく ``lxd`` を使うことに注意してください。
+<!--
+Note that all commands in this section will use ``lxd`` instead of ``lxc``.
+-->
+
+このコマンドはこのノード上で最後に記録されたクラスターの他のノードに関する情報を YAML 形式で表示します。
+<!--
+This will present a YAML representation of this node's last recorded information
+about the rest of the cluster:
+-->
+
+```yaml
+latest_segment: "12345"     # このノードの最新のトランザクション ID (読み取り専用)
+members:
+  - id: 1	            # このノードの内部 ID (読み取り専用)
+    address: 10.0.0.10:8443 # このノードの最新のアドレス (書き込み可)
+    role: voter             # このノードの最新のロール (書き込み可)
+  - id: 2
+    address: 10.0.0.11:8443
+    role: stand-by
+  - id: 3
+    address: 10.0.0.12:8443
+    role: spare
+```
+
+<!--
+```yaml
+latest_segment: "12345"     # The last transaction id of this node (Read-only)
+members:
+  - id: 1	            # Internal ID of the node (Read-only)
+    address: 10.0.0.10:8443 # Last known address of the node (Writeable)
+    role: voter             # Last known role of the node (Writeable)
+  - id: 2
+    address: 10.0.0.11:8443
+    role: stand-by
+  - id: 3
+    address: 10.0.0.12:8443
+    role: spare
+```
+-->
+
+この設定からメンバーを削除したり、スタンバイのノードを投票者 (voter) に変えたりは出来ません。
+それらの変更にはグローバルデータベースが必要になるかもしれないからです。
+重要なこととして、最低 2 つのノードが投票者 (voter) であること (メンバー数が 2 のクラスターのケースを除いて。メンバー数が 2 のクラスターは 1 つの投票者 (voter) で十分です) を覚えておいてください。
+そうでないとクォーラムが成立しません。
+<!--
+Members may not be removed from this configuration, and a spare node cannot become
+a voter, as it may lack a global database. Importantly, keep in mind that at least
+2 nodes must remain voters (except in the case of a 2-member cluster, where 1 voter
+suffices), or there will be no quorum.
+-->
+
+必要な変更を終えたら、クラスター内の各メンバー上で同様に変更を行います。
+各メンバー上で LXD をリロードすると、設定に書かれた全てのノードを含んだ状態でクラスター全体がオンラインに戻るはずです。
+<!--
+Once the necessary changes have been made, repeat the process on each member of the
+cluster. Upon reloading LXD on each member, the cluster in its entirety should be
+back online with all nodes reporting in.
+-->
+
+データベースからは何の情報も削除されていないので、クラスターメンバーとインスタンスの全ての情報はデータベースに残っていることに注意してください。
+<!--
+Note that no information has been deleted from the database, all information
+about the cluster members and their instances is still there.
 -->
 
 ## インスタンス <!-- Instances -->
