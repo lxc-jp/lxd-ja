@@ -1,7 +1,7 @@
 site_name: "LXDドキュメント翻訳プロジェクト"
 theme: readthedocs
 docs_dir: 'doc'
-pages:
+nav:
 - はじめに:
     - はじめに: index.md
     - 動作環境: requirements.md
@@ -44,3 +44,6 @@ pages:
     - 環境変数: environment.md
     - システムコールのインターセプト: syscall-interception.md
     - ユーザー名前空間の設定: userns-idmap.md
+- 外部リソース:
+    - プロジェクトリポジトリー: https://github.com/lxc/lxd
+    - イメージサーバー: https://images.linuxcontainers.org/
