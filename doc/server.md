@@ -26,7 +26,7 @@ cluster.max\_voters                 | integer   | global    | 3                 
 cluster.offline\_threshold          | integer   | global    | 20                                | Number of seconds after which an unresponsive node is considered offline
 core.bgp\_address                   | string    | local     | -                                 | Address to bind the BGP server to (BGP)
 core.bgp\_asn                       | string    | global    | -                                 | The BGP Autonomous System Number to use for the local server
-core.bgp\_routerid                  | string    | local     | Primary IPv4 address              | A unique identifier for this BGP server (formatted as an IPv4 address)
+core.bgp\_routerid                  | string    | local     | -                                 | A unique identifier for this BGP server (formatted as an IPv4 address)
 core.debug\_address                 | string    | local     | -                                 | Address to bind the pprof debug server to (HTTP)
 core.https\_address                 | string    | local     | -                                 | Address to bind for the remote API (HTTPS)
 core.https\_allowed\_credentials    | boolean   | global    | -                                 | Whether to set Access-Control-Allow-Credentials http header value to "true"
@@ -34,6 +34,7 @@ core.https\_allowed\_headers        | string    | global    | -                 
 core.https\_allowed\_methods        | string    | global    | -                                 | Access-Control-Allow-Methods http header value
 core.https\_allowed\_origin         | string    | global    | -                                 | Access-Control-Allow-Origin http header value
 core.https\_trusted\_proxy          | string    | global    | -                                 | Comma-separated list of IP addresses of trusted servers to provide the client's address through the proxy connection header
+core.metrics\_address               | string    | global    | -                                 | Address to bind the metrics server to (HTTPS)
 core.proxy\_https                   | string    | global    | -                                 | https proxy to use, if any (falls back to HTTPS\_PROXY environment variable)
 core.proxy\_http                    | string    | global    | -                                 | http proxy to use, if any (falls back to HTTP\_PROXY environment variable)
 core.proxy\_ignore\_hosts           | string    | global    | -                                 | hosts which don't need the proxy for use (similar format to NO\_PROXY, e.g. 1.2.3.4,1.2.3.5, falls back to NO\_PROXY environment variable)

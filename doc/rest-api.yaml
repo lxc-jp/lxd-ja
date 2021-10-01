@@ -1851,18 +1851,6 @@ definitions:
         format: int64
         type: integer
         x-go-name: BytesSent
-      dropped_inbound:
-        description: Number of inbound packets dropped
-        example: 179
-        format: int64
-        type: integer
-        x-go-name: DroppedInbound
-      dropped_outbound:
-        description: Number of outbound packets dropped
-        example: 541
-        format: int64
-        type: integer
-        x-go-name: DroppedOutbound
       errors_received:
         description: Number of errors received
         example: 14
@@ -1875,6 +1863,18 @@ definitions:
         format: int64
         type: integer
         x-go-name: ErrorsSent
+      packets_dropped_inbound:
+        description: Number of inbound packets dropped
+        example: 179
+        format: int64
+        type: integer
+        x-go-name: PacketsDroppedInbound
+      packets_dropped_outbound:
+        description: Number of outbound packets dropped
+        example: 541
+        format: int64
+        type: integer
+        x-go-name: PacketsDroppedOutbound
       packets_received:
         description: Number of packets received
         example: 1748
@@ -5644,7 +5644,7 @@ paths:
       produces:
       - application/json
       responses:
-        "200":
+        "202":
           $ref: '#/responses/Operation'
         "400":
           $ref: '#/responses/BadRequest'
@@ -5804,7 +5804,7 @@ paths:
       produces:
       - application/json
       responses:
-        "200":
+        "202":
           $ref: '#/responses/Operation'
         "400":
           $ref: '#/responses/BadRequest'
@@ -5968,7 +5968,7 @@ paths:
       produces:
       - application/json
       responses:
-        "200":
+        "202":
           $ref: '#/responses/Operation'
         "400":
           $ref: '#/responses/BadRequest'
@@ -5992,7 +5992,7 @@ paths:
       produces:
       - application/json
       responses:
-        "200":
+        "202":
           $ref: '#/responses/Operation'
         "400":
           $ref: '#/responses/BadRequest'
@@ -6151,7 +6151,7 @@ paths:
       produces:
       - application/json
       responses:
-        "200":
+        "202":
           $ref: '#/responses/Operation'
         "403":
           $ref: '#/responses/Forbidden'
@@ -6206,7 +6206,7 @@ paths:
       produces:
       - application/json
       responses:
-        "200":
+        "202":
           $ref: '#/responses/Operation'
         "403":
           $ref: '#/responses/Forbidden'
@@ -6231,7 +6231,7 @@ paths:
       produces:
       - application/json
       responses:
-        "200":
+        "202":
           $ref: '#/responses/Operation'
         "403":
           $ref: '#/responses/Forbidden'
@@ -6700,7 +6700,7 @@ paths:
   /1.0/images?public&recursion=1:
     get:
       description: Returns a list of publicly available images (structs).
-      operationId: images_get_recursion1
+      operationId: images_get_recursion1_untrusted
       parameters:
       - description: Project name
         example: default
@@ -6877,7 +6877,7 @@ paths:
       produces:
       - application/json
       responses:
-        "200":
+        "202":
           $ref: '#/responses/Operation'
         "400":
           $ref: '#/responses/BadRequest'
@@ -6907,7 +6907,7 @@ paths:
       produces:
       - application/json
       responses:
-        "200":
+        "202":
           $ref: '#/responses/Operation'
         "400":
           $ref: '#/responses/BadRequest'
@@ -6934,7 +6934,7 @@ paths:
       produces:
       - application/json
       responses:
-        "200":
+        "202":
           $ref: '#/responses/Operation'
         "400":
           $ref: '#/responses/BadRequest'
@@ -7004,7 +7004,7 @@ paths:
       - application/json
       responses:
         "200":
-          $ref: '#/responses/Operation'
+          $ref: '#/responses/EmptySyncResponse'
         "400":
           $ref: '#/responses/BadRequest'
         "403":
@@ -7040,7 +7040,7 @@ paths:
       produces:
       - application/json
       responses:
-        "200":
+        "202":
           $ref: '#/responses/Operation'
         "400":
           $ref: '#/responses/BadRequest'
@@ -7070,7 +7070,7 @@ paths:
       produces:
       - application/json
       responses:
-        "200":
+        "202":
           $ref: '#/responses/Operation'
         "400":
           $ref: '#/responses/BadRequest'
@@ -7148,7 +7148,7 @@ paths:
       produces:
       - application/json
       responses:
-        "200":
+        "202":
           $ref: '#/responses/Operation'
         "400":
           $ref: '#/responses/BadRequest'
@@ -7174,7 +7174,7 @@ paths:
       produces:
       - application/json
       responses:
-        "200":
+        "202":
           $ref: '#/responses/Operation'
         "400":
           $ref: '#/responses/BadRequest'
@@ -7243,7 +7243,7 @@ paths:
       produces:
       - application/json
       responses:
-        "200":
+        "202":
           $ref: '#/responses/Operation'
         "400":
           $ref: '#/responses/BadRequest'
@@ -7392,7 +7392,7 @@ paths:
       produces:
       - application/json
       responses:
-        "200":
+        "202":
           $ref: '#/responses/Operation'
         "400":
           $ref: '#/responses/BadRequest'
@@ -7431,7 +7431,7 @@ paths:
       produces:
       - application/json
       responses:
-        "200":
+        "202":
           $ref: '#/responses/Operation'
         "400":
           $ref: '#/responses/BadRequest'
@@ -7953,7 +7953,7 @@ paths:
       produces:
       - application/json
       responses:
-        "200":
+        "202":
           $ref: '#/responses/Operation'
         "400":
           $ref: '#/responses/BadRequest'
@@ -7979,7 +7979,7 @@ paths:
       produces:
       - application/json
       responses:
-        "200":
+        "202":
           $ref: '#/responses/Operation'
         "400":
           $ref: '#/responses/BadRequest'
@@ -8048,7 +8048,7 @@ paths:
       produces:
       - application/json
       responses:
-        "200":
+        "202":
           $ref: '#/responses/Operation'
         "400":
           $ref: '#/responses/BadRequest'
@@ -8085,7 +8085,7 @@ paths:
       produces:
       - application/json
       responses:
-        "200":
+        "202":
           $ref: '#/responses/Operation'
         "400":
           $ref: '#/responses/BadRequest'
@@ -8115,7 +8115,7 @@ paths:
       produces:
       - application/json
       responses:
-        "200":
+        "202":
           $ref: '#/responses/Operation'
         "400":
           $ref: '#/responses/BadRequest'
@@ -8234,7 +8234,7 @@ paths:
       produces:
       - application/json
       responses:
-        "200":
+        "202":
           $ref: '#/responses/Operation'
         "400":
           $ref: '#/responses/BadRequest'
@@ -8346,6 +8346,31 @@ paths:
       summary: Get the instances
       tags:
       - instances
+  /1.0/metrics:
+    get:
+      description: Gets metrics of instances.
+      operationId: metrics_get
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        type: string
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: Metrics
+          schema:
+            description: Instance metrics
+            type: string
+        "403":
+          $ref: '#/responses/Forbidden'
+        "500":
+          $ref: '#/responses/InternalServerError'
+      summary: Get metrics
+      tags:
+      - metrics
   /1.0/network-acls:
     get:
       description: Returns a list of network ACLs (URLs).
@@ -8428,7 +8453,7 @@ paths:
   /1.0/network-acls/{name}:
     delete:
       description: Removes the network ACL.
-      operationId: network_acls_delete
+      operationId: network_acl_delete
       parameters:
       - description: Project name
         example: default
@@ -8451,7 +8476,7 @@ paths:
       - network-acls
     get:
       description: Gets a specific network ACL.
-      operationId: network_acls_get
+      operationId: network_acl_get
       parameters:
       - description: Project name
         example: default
@@ -8492,7 +8517,7 @@ paths:
       consumes:
       - application/json
       description: Updates a subset of the network ACL configuration.
-      operationId: network_acls_patch
+      operationId: network_acl_patch
       parameters:
       - description: Project name
         example: default
@@ -8525,7 +8550,7 @@ paths:
       consumes:
       - application/json
       description: Renames an existing network ACL.
-      operationId: network_acls_post
+      operationId: network_acl_post
       parameters:
       - description: Project name
         example: default
@@ -8556,7 +8581,7 @@ paths:
       consumes:
       - application/json
       description: Updates the entire network ACL configuration.
-      operationId: network_acls_put
+      operationId: network_acl_put
       parameters:
       - description: Project name
         example: default
@@ -8984,7 +9009,7 @@ paths:
       - networks
   /1.0/networks/{networkName}/forwards:
     get:
-      description: Returns a list of network forwards (URLs).
+      description: Returns a list of network address forwards (URLs).
       operationId: network_forwards_get
       parameters:
       - description: Project name
@@ -9027,7 +9052,7 @@ paths:
           $ref: '#/responses/Forbidden'
         "500":
           $ref: '#/responses/InternalServerError'
-      summary: Get the network forwards
+      summary: Get the network address forwards
       tags:
       - network-forwards
     post:
@@ -9063,8 +9088,8 @@ paths:
       - network-forwards
   /1.0/networks/{networkName}/forwards/{listenAddress}:
     delete:
-      description: Removes the network forward.
-      operationId: network_forwards_delete
+      description: Removes the network address forward.
+      operationId: network_forward_delete
       parameters:
       - description: Project name
         example: default
@@ -9082,12 +9107,12 @@ paths:
           $ref: '#/responses/Forbidden'
         "500":
           $ref: '#/responses/InternalServerError'
-      summary: Delete the network forward
+      summary: Delete the network address forward
       tags:
       - network-forwards
     get:
-      description: Gets a specific network forward.
-      operationId: network_forwards_get
+      description: Gets a specific network address forward.
+      operationId: network_forward_get
       parameters:
       - description: Project name
         example: default
@@ -9098,7 +9123,7 @@ paths:
       - application/json
       responses:
         "200":
-          description: Forward
+          description: Address forward
           schema:
             description: Sync response
             properties:
@@ -9121,21 +9146,21 @@ paths:
           $ref: '#/responses/Forbidden'
         "500":
           $ref: '#/responses/InternalServerError'
-      summary: Get the network forward
+      summary: Get the network address forward
       tags:
       - network-forwards
     patch:
       consumes:
       - application/json
-      description: Updates a subset of the network forward configuration.
-      operationId: network_forwards_patch
+      description: Updates a subset of the network address forward configuration.
+      operationId: network_forward_patch
       parameters:
       - description: Project name
         example: default
         in: query
         name: project
         type: string
-      - description: Forward configuration
+      - description: Address forward configuration
         in: body
         name: forward
         required: true
@@ -9154,21 +9179,21 @@ paths:
           $ref: '#/responses/PreconditionFailed'
         "500":
           $ref: '#/responses/InternalServerError'
-      summary: Partially update the network forward
+      summary: Partially update the network address forward
       tags:
       - network-forwards
     put:
       consumes:
       - application/json
-      description: Updates the entire network forward configuration.
-      operationId: network_forwards_put
+      description: Updates the entire network address forward configuration.
+      operationId: network_forward_put
       parameters:
       - description: Project name
         example: default
         in: query
         name: project
         type: string
-      - description: Forward configuration
+      - description: Address forward configuration
         in: body
         name: forward
         required: true
@@ -9187,13 +9212,13 @@ paths:
           $ref: '#/responses/PreconditionFailed'
         "500":
           $ref: '#/responses/InternalServerError'
-      summary: Update the network forward
+      summary: Update the network address forward
       tags:
       - network-forwards
   /1.0/networks/{networkName}/forwards?recursion=1:
     get:
-      description: Returns a list of network forwards (structs).
-      operationId: network_forwards_get_recursion1
+      description: Returns a list of network address forwards (structs).
+      operationId: network_forward_get_recursion1
       parameters:
       - description: Project name
         example: default
@@ -9209,7 +9234,7 @@ paths:
             description: Sync response
             properties:
               metadata:
-                description: List of network forwards
+                description: List of network address forwards
                 items:
                   $ref: '#/definitions/NetworkForward'
                 type: array
@@ -9230,7 +9255,7 @@ paths:
           $ref: '#/responses/Forbidden'
         "500":
           $ref: '#/responses/InternalServerError'
-      summary: Get the networks
+      summary: Get the network address forwards
       tags:
       - network-forwards
   /1.0/networks?recursion=1:
@@ -10497,7 +10522,7 @@ paths:
       produces:
       - application/json
       responses:
-        "200":
+        "202":
           $ref: '#/responses/Operation'
         "400":
           $ref: '#/responses/BadRequest'
@@ -10586,7 +10611,7 @@ paths:
       produces:
       - application/json
       responses:
-        "200":
+        "202":
           $ref: '#/responses/Operation'
         "400":
           $ref: '#/responses/BadRequest'
@@ -10739,7 +10764,7 @@ paths:
       produces:
       - application/json
       responses:
-        "200":
+        "202":
           $ref: '#/responses/Operation'
         "400":
           $ref: '#/responses/BadRequest'
@@ -10866,7 +10891,7 @@ paths:
       produces:
       - application/json
       responses:
-        "200":
+        "202":
           $ref: '#/responses/Operation'
         "400":
           $ref: '#/responses/BadRequest'
@@ -10897,7 +10922,7 @@ paths:
       produces:
       - application/json
       responses:
-        "200":
+        "202":
           $ref: '#/responses/Operation'
         "400":
           $ref: '#/responses/BadRequest'
@@ -10977,7 +11002,7 @@ paths:
       produces:
       - application/json
       responses:
-        "200":
+        "202":
           $ref: '#/responses/Operation'
         "400":
           $ref: '#/responses/BadRequest'
@@ -11141,7 +11166,7 @@ paths:
       produces:
       - application/json
       responses:
-        "200":
+        "202":
           $ref: '#/responses/Operation'
         "400":
           $ref: '#/responses/BadRequest'
@@ -11172,7 +11197,7 @@ paths:
       produces:
       - application/json
       responses:
-        "200":
+        "202":
           $ref: '#/responses/Operation'
         "400":
           $ref: '#/responses/BadRequest'
@@ -11290,7 +11315,7 @@ paths:
       produces:
       - application/json
       responses:
-        "200":
+        "202":
           $ref: '#/responses/Operation'
         "400":
           $ref: '#/responses/BadRequest'
