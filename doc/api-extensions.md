@@ -2740,3 +2740,16 @@ Adds support for refresh during volume migration.
 <!--
 This adds the received and sent errors as well as inbound and outbound dropped packets to the network counters.
 -->
+
+## metrics
+これは LXD にメトリクスを追加します。実行中のインスタンスのメトリクスを OpenMetrics 形式で返します。
+<!--
+This adds metrics to LXD. It returns metrics of running instances using the OpenMetrics format.
+-->
+
+この拡張は次のエンドポイントを含みます。
+<!--
+This includes the following endpoints:
+-->
+
+* `GET /1.0/metrics`

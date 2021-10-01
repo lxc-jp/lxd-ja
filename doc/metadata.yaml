@@ -31,6 +31,9 @@ navigation:
         - title: ネットワーク ACL # Network ACLs
           location: network-acls.md
 
+        - title: ネットワークフォワード # Network Forwards
+          location: network-forwards.md
+
         - title: presseed YAML # Preseed files
           location: preseed.md
 
@@ -48,6 +51,9 @@ navigation:
 
         - title: 仮想マシン # Virtual machines
           location: virtual-machines.md
+
+        - title: インスタンスメトリクスエクスポーター # Instance metrics exporter
+          location: metrics.md
 
     - title: イメージ # Images
       children:
