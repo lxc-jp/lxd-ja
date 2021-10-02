@@ -260,6 +260,7 @@ The codes are always 3 digits, with the following ranges:
 109   | 凍結中 <!-- Freezing -->
 110   | 凍結された <!-- Frozen -->
 111   | 解凍された <!-- Thawed -->
+112   | エラー <!-- Error -->
 200   | 成功 <!-- Success -->
 400   | 失敗 <!-- Failure -->
 401   | キャンセルされた <!-- Cancelled -->
@@ -409,7 +410,7 @@ it to empty will usually do the trick, but there are cases where PATCH
 won't work and PUT needs to be used instead.
 -->
 
-## インスタンス、コンテナーと仮想マシン <!-- instances, containers and virtual-machines -->
+## インスタンス、コンテナーと仮想マシン <!-- Instances, containers and virtual-machines -->
 このドキュメントでは `/1.0/instances/...` のようなパスを常に示します。
 これらはかなり新しく、仮想マシンがサポートされた LXD 3.19 で導入されました。
 <!--
@@ -437,10 +438,10 @@ much like `/1.0/containers` will only show you instances of that type.
 
 ## API 構造 <!-- API structure -->
 LXD は API エンドポイントを記述する [Swagger](https://swagger.io/) 仕様を自動生成しています。
-これの YAML 版が [rest-api.yaml](rest-api.yaml) にあります。
+この API 仕様の YAML 版が [rest-api.yaml](https://github.com/lxc/lxd/blob/master/doc/rest-api.yaml) にあります。
 手軽にウェブで見る場合は [https://linuxcontainers.org/lxd/api/master/](https://linuxcontainers.org/lxd/api/master/) を参照してください。
 <!--
 LXD has an auto-generated [Swagger](https://swagger.io/) specification describing its API endpoints.
-The YAML version of this can be found in [rest-api.yaml](rest-api.yaml).
+The YAML version of this API specification can be found in [rest-api.yaml](https://github.com/lxc/lxd/blob/master/doc/rest-api.yaml).
 A convenient web rendering of it can be found here: [https://linuxcontainers.org/lxd/api/master/](https://linuxcontainers.org/lxd/api/master/)
 -->

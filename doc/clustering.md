@@ -527,30 +527,38 @@ about the rest of the cluster:
 -->
 
 ```yaml
-latest_segment: "12345"     # このノードの最新のトランザクション ID (読み取り専用)
+# Latest dqlite segment ID: 1234 # 最新の dqlite のセグメント ID
+
 members:
-  - id: 1	            # このノードの内部 ID (読み取り専用)
+  - id: 1             # このノードの内部 ID (読み取り専用)
+    name: node1       # クラスターメンバーの名前 (読み取り専用)
     address: 10.0.0.10:8443 # このノードの最新のアドレス (書き込み可)
     role: voter             # このノードの最新のロール (書き込み可)
   - id: 2
+   name: node2
     address: 10.0.0.11:8443
     role: stand-by
   - id: 3
+   name: node3
     address: 10.0.0.12:8443
     role: spare
 ```
 
 <!--
 ```yaml
-latest_segment: "12345"     # The last transaction id of this node (Read-only)
+# Latest dqlite segment ID: 1234
+
 members:
-  - id: 1	            # Internal ID of the node (Read-only)
+  - id: 1             # Internal ID of the node (Read-only)
+    name: node1       # Name of the cluster member (Read-only)
     address: 10.0.0.10:8443 # Last known address of the node (Writeable)
     role: voter             # Last known role of the node (Writeable)
   - id: 2
+   name: node2
     address: 10.0.0.11:8443
     role: stand-by
   - id: 3
+   name: node3
     address: 10.0.0.12:8443
     role: spare
 ```
