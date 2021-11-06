@@ -125,6 +125,9 @@ bridge.mtu                           | integer   | -                            
 dns.domain                           | string    | -                                        | lxd                                                                | DHCP のクライアントに広告し DNS の名前解決に使用するドメイン <!-- Domain to advertise to DHCP clients and use for DNS resolution -->
 dns.mode                             | string    | -                                        | managed                                                            | DNS の登録モード ("none" は DNS レコード無し、 "managed" は LXD が静的レコードを生成、 "dynamic" はクライアントがレコードを生成) <!-- DNS registration mode ("none" for no DNS record, "managed" for LXD generated static records or "dynamic" for client generated records) -->
 dns.search                           | string    | -                                        | -                                                                  | 完全なドメインサーチのカンマ区切りリスト（デフォルトは `dns.domain` の値） <!-- Full comma separated domain search list, defaulting to `dns.domain` value -->
+dns.zone.forward                     | string    | -                                        | managed                                                            | 正引き DNS レコード用の DNS ゾーン名 <!-- DNS zone name for forward DNS records -->
+dns.zone.reverse.ipv4                | string    | -                                        | managed                                                            | IPv4 逆引き DNS レコード用の DNS ゾーン名 <!-- DNS zone name for IPv4 reverse DNS records -->
+dns.zone.reverse.ipv6                | string    | -                                        | managed                                                            | IPv6 逆引き DNS レコード用の DNS ゾーン名 <!-- DNS zone name for IPv6 reverse DNS records -->
 fan.overlay\_subnet                  | string    | ファンモード <!-- fan mode -->           | 240.0.0.0/8                                                        | FAN の overlay として使用するサブネット (CIDR 形式) <!-- Subnet to use as the overlay for the FAN (CIDR notation) -->
 fan.type                             | string    | ファンモード <!-- fan mode -->           | vxlan                                                              | FAN のトンネル・タイプ ("vxlan" か "ipip") <!-- The tunneling type for the FAN ("vxlan" or "ipip") -->
 fan.underlay\_subnet                 | string    | ファンモード <!-- fan mode -->           | 自動（作成時のみ） <!-- auto (on create only) -->                  | FAN の underlay として使用するサブネット (CIDR 形式)。デフォルトのゲートウェイサブネットを使うには "auto" を指定。 <!-- Subnet to use as the underlay for the FAN (CIDR notation). Use "auto" to use default gateway subnet-->
@@ -520,7 +523,7 @@ Create an OVN network and an instance using it:
 ```
 lxc network set lxdbr0 ipv4.dhcp.ranges=... ipv4.ovn.ranges=... # OVN ゲートウェイに IP のレンジを割り当て
 lxc network create ovntest --type=ovn network=lxdbr0
-lxc init images:ubuntu/focal c1
+lxc init images:ubuntu/20.04 c1
 lxc config device override c1 eth0 network=ovntest
 lxc start c1
 lxc ls
@@ -535,7 +538,7 @@ lxc ls
 ```
 lxc network set lxdbr0 ipv4.dhcp.ranges=... ipv4.ovn.ranges=... # Allocate IP range for OVN gateways.
 lxc network create ovntest -\-type=ovn network=lxdbr0
-lxc init images:ubuntu/focal c1
+lxc init images:ubuntu/20.04 c1
 lxc config device override c1 eth0 network=ovntest
 lxc start c1
 lxc ls
@@ -549,9 +552,16 @@ lxc ls
 
 ネットワークフォワード: <!--Network forwards: -->
 
-OVN のネットワークサポートは [network forwards](network-forwards.md#network-ovn) 参照。
+OVN のネットワークサポートは [ネットワークフォワード](network-forwards.md#network-ovn) 参照。
 <!--
 OVN networks support [network forwards](network-forwards.md#network-ovn).
+-->
+
+ネットワークピア: <!-- Network peers: -->
+
+OVN のネットワークピアサポートは [ネットワークピア](network-peers.md) 参照。
+<!--
+OVN networks support [network peers](network-peers.md).
 -->
 
 ネットワークの設定プロパティー: <!-- Network configuration properties: -->
@@ -562,6 +572,9 @@ bridge.hwaddr                        | string    | -                            
 bridge.mtu                           | integer   | -                                 | 1442                                                       | ブリッジの MTU (デフォルトではホストからホストへの geneve トンネルを許可します) <!-- Bridge MTU (default allows host to host geneve tunnels) -->
 dns.domain                           | string    | -                                 | lxd                                                        | DHCP のクライアントに広告し DNS の名前解決に使用するドメイン <!-- Domain to advertise to DHCP clients and use for DNS resolution -->
 dns.search                           | string    | -                                 | -                                                          | 完全なドメインサーチのカンマ区切りリスト（デフォルトは `dns.domain` の値） <!-- Full comma separated domain search list, defaulting to `dns.domain` value -->
+dns.zone.forward                     | string    | -                                 | -                                                          | 正引き DNS レコード用の DNS ゾーン名 <!-- DNS zone name for forward DNS records -->
+dns.zone.reverse.ipv4                | string    | -                                 | -                                                          | IPv4 逆引き DNS レコード用の DNS ゾーン名 <!-- DNS zone name for IPv4 reverse DNS records -->
+dns.zone.reverse.ipv6                | string    | -                                 | -                                                          | IPv6 逆引き DNS レコード用の DNS ゾーン名 <!-- DNS zone name for IPv6 reverse DNS records -->
 ipv4.address                         | string    | 標準モード <!-- standard mode --> | 自動（作成時のみ） <!-- auto (on create only) -->          | ブリッジの IPv4 アドレス (CIDR 形式)。 IPv4 をオフにするには "none" 、新しいランダムな未使用のサブネットを生成するには "auto" を指定。 <!-- IPv4 address for the bridge (CIDR notation). Use "none" to turn off IPv4 or "auto" to generate a new random unused subnet -->
 ipv4.dhcp                            | boolean   | ipv4 アドレス <!-- address -->    | true                                                       | DHCP を使ってアドレスを割り当てるかどうか <!-- Whether to allocate addresses using DHCP -->
 ipv4.nat                             | boolean   | ipv4 アドレス <!-- address -->    | false                                                      | NAT するかどうか（ipv4.address が未設定の場合デフォルト値は true でランダムな ipv4.address が生成されます） <!-- Whether to NAT (will default to true if unset and a random ipv4.address is generated) -->

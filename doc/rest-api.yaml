@@ -156,6 +156,14 @@ definitions:
         example: x86_64
         type: string
         x-go-name: Architecture
+      config:
+        additionalProperties:
+          type: string
+        description: Additional configuration information
+        example:
+          scheduler.instance: all
+        type: object
+        x-go-name: Config
       database:
         description: Whether the cluster member is a database server
         example: true
@@ -281,6 +289,14 @@ definitions:
     description: ClusterMemberPut represents the the modifiable fields of a LXD cluster
       member
     properties:
+      config:
+        additionalProperties:
+          type: string
+        description: Additional configuration information
+        example:
+          scheduler.instance: all
+        type: object
+        x-go-name: Config
       description:
         description: Cluster member description
         example: AMD Epyc 32c/64t
@@ -845,6 +861,11 @@ definitions:
         example: c1/snap0
         type: string
         x-go-name: Name
+      project:
+        description: Source project name
+        example: project1
+        type: string
+        x-go-name: Project
       protocol:
         description: Source server protocol
         example: simplestreams
@@ -2392,6 +2413,110 @@ definitions:
         x-go-name: Type
     type: object
     x-go-package: github.com/lxc/lxd/shared/api
+  NetworkPeer:
+    properties:
+      config:
+        additionalProperties:
+          type: string
+        description: Peer configuration map (refer to doc/network-peers.md)
+        example:
+          user.mykey: foo
+        type: object
+        x-go-name: Config
+      description:
+        description: Description of the peer
+        example: Peering with network1 in project1
+        type: string
+        x-go-name: Description
+      name:
+        description: Name of the peer
+        example: project1-network1
+        readOnly: true
+        type: string
+        x-go-name: Name
+      status:
+        description: The state of the peering
+        example: Pending
+        readOnly: true
+        type: string
+        x-go-name: Status
+      target_network:
+        description: Name of the target network
+        example: network1
+        readOnly: true
+        type: string
+        x-go-name: TargetNetwork
+      target_project:
+        description: Name of the target project
+        example: project1
+        readOnly: true
+        type: string
+        x-go-name: TargetProject
+      used_by:
+        description: List of URLs of objects using this network peering
+        example:
+        - /1.0/network-acls/test
+        - /1.0/network-acls/foo
+        items:
+          type: string
+        readOnly: true
+        type: array
+        x-go-name: UsedBy
+    title: NetworkPeer used for displaying a LXD network peering.
+    type: object
+    x-go-package: github.com/lxc/lxd/shared/api
+  NetworkPeerPut:
+    description: NetworkPeerPut represents the modifiable fields of a LXD network
+      peering
+    properties:
+      config:
+        additionalProperties:
+          type: string
+        description: Peer configuration map (refer to doc/network-peers.md)
+        example:
+          user.mykey: foo
+        type: object
+        x-go-name: Config
+      description:
+        description: Description of the peer
+        example: Peering with network1 in project1
+        type: string
+        x-go-name: Description
+    type: object
+    x-go-package: github.com/lxc/lxd/shared/api
+  NetworkPeersPost:
+    description: NetworkPeersPost represents the fields of a new LXD network peering
+    properties:
+      config:
+        additionalProperties:
+          type: string
+        description: Peer configuration map (refer to doc/network-peers.md)
+        example:
+          user.mykey: foo
+        type: object
+        x-go-name: Config
+      description:
+        description: Description of the peer
+        example: Peering with network1 in project1
+        type: string
+        x-go-name: Description
+      name:
+        description: Name of the peer
+        example: project1-network1
+        type: string
+        x-go-name: Name
+      target_network:
+        description: Name of the target network
+        example: network1
+        type: string
+        x-go-name: TargetNetwork
+      target_project:
+        description: Name of the target project
+        example: project1
+        type: string
+        x-go-name: TargetProject
+    type: object
+    x-go-package: github.com/lxc/lxd/shared/api
   NetworkPost:
     description: NetworkPost represents the fields required to rename a LXD network
     properties:
@@ -2618,6 +2743,81 @@ definitions:
         format: uint64
         type: integer
         x-go-name: VID
+    type: object
+    x-go-package: github.com/lxc/lxd/shared/api
+  NetworkZone:
+    properties:
+      config:
+        additionalProperties:
+          type: string
+        description: Zone configuration map (refer to doc/network-zones.md)
+        example:
+          user.mykey: foo
+        type: object
+        x-go-name: Config
+      description:
+        description: Description of the network zone
+        example: Internal domain
+        type: string
+        x-go-name: Description
+      name:
+        description: The name of the zone (DNS domain name)
+        example: example.net
+        type: string
+        x-go-name: Name
+      used_by:
+        description: List of URLs of objects using this network zone
+        example:
+        - /1.0/networks/foo
+        - /1.0/networks/bar
+        items:
+          type: string
+        readOnly: true
+        type: array
+        x-go-name: UsedBy
+    title: NetworkZone represents a network zone (DNS).
+    type: object
+    x-go-package: github.com/lxc/lxd/shared/api
+  NetworkZonePut:
+    description: NetworkZonePut represents the modifiable fields of a LXD network
+      zoned
+    properties:
+      config:
+        additionalProperties:
+          type: string
+        description: Zone configuration map (refer to doc/network-zones.md)
+        example:
+          user.mykey: foo
+        type: object
+        x-go-name: Config
+      description:
+        description: Description of the network zone
+        example: Internal domain
+        type: string
+        x-go-name: Description
+    type: object
+    x-go-package: github.com/lxc/lxd/shared/api
+  NetworkZonesPost:
+    description: NetworkZonesPost represents the fields of a new LXD network zone
+    properties:
+      config:
+        additionalProperties:
+          type: string
+        description: Zone configuration map (refer to doc/network-zones.md)
+        example:
+          user.mykey: foo
+        type: object
+        x-go-name: Config
+      description:
+        description: Description of the network zone
+        example: Internal domain
+        type: string
+        x-go-name: Description
+      name:
+        description: The name of the zone (DNS domain name)
+        example: example.net
+        type: string
+        x-go-name: Name
     type: object
     x-go-package: github.com/lxc/lxd/shared/api
   NetworksPost:
@@ -5496,7 +5696,7 @@ paths:
       summary: Get the trusted certificates
       tags:
       - certificates
-  /1.0/cluster/{name}:
+  /1.0/cluster:
     get:
       description: Gets the current cluster configuration.
       operationId: cluster_get
@@ -8653,6 +8853,257 @@ paths:
       summary: Get the network ACLs
       tags:
       - network-acls
+  /1.0/network-zones:
+    get:
+      description: Returns a list of network zones (URLs).
+      operationId: network_zones_get
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: API endpoints
+          schema:
+            description: Sync response
+            properties:
+              metadata:
+                description: List of endpoints
+                example: |-
+                  [
+                    "/1.0/network-zones/example.net",
+                    "/1.0/network-zones/example.com"
+                  ]
+                items:
+                  type: string
+                type: array
+              status:
+                description: Status description
+                example: Success
+                type: string
+              status_code:
+                description: Status code
+                example: 200
+                type: integer
+              type:
+                description: Response type
+                example: sync
+                type: string
+            type: object
+        "403":
+          $ref: '#/responses/Forbidden'
+        "500":
+          $ref: '#/responses/InternalServerError'
+      summary: Get the network zones
+      tags:
+      - network-zones
+    post:
+      consumes:
+      - application/json
+      description: Creates a new network zone.
+      operationId: network_zones_post
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        type: string
+      - description: zone
+        in: body
+        name: zone
+        required: true
+        schema:
+          $ref: '#/definitions/NetworkZonesPost'
+      produces:
+      - application/json
+      responses:
+        "200":
+          $ref: '#/responses/EmptySyncResponse'
+        "400":
+          $ref: '#/responses/BadRequest'
+        "403":
+          $ref: '#/responses/Forbidden'
+        "500":
+          $ref: '#/responses/InternalServerError'
+      summary: Add a network zone
+      tags:
+      - network-zones
+  /1.0/network-zones/{name}:
+    delete:
+      description: Removes the network zone.
+      operationId: network_zone_delete
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          $ref: '#/responses/EmptySyncResponse'
+        "400":
+          $ref: '#/responses/BadRequest'
+        "403":
+          $ref: '#/responses/Forbidden'
+        "500":
+          $ref: '#/responses/InternalServerError'
+      summary: Delete the network zone
+      tags:
+      - network-zones
+    get:
+      description: Gets a specific network zone.
+      operationId: network_zone_get
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: zone
+          schema:
+            description: Sync response
+            properties:
+              metadata:
+                $ref: '#/definitions/NetworkZone'
+              status:
+                description: Status description
+                example: Success
+                type: string
+              status_code:
+                description: Status code
+                example: 200
+                type: integer
+              type:
+                description: Response type
+                example: sync
+                type: string
+            type: object
+        "403":
+          $ref: '#/responses/Forbidden'
+        "500":
+          $ref: '#/responses/InternalServerError'
+      summary: Get the network zone
+      tags:
+      - network-zones
+    patch:
+      consumes:
+      - application/json
+      description: Updates a subset of the network zone configuration.
+      operationId: network_zone_patch
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        type: string
+      - description: zone configuration
+        in: body
+        name: zone
+        required: true
+        schema:
+          $ref: '#/definitions/NetworkZonePut'
+      produces:
+      - application/json
+      responses:
+        "200":
+          $ref: '#/responses/EmptySyncResponse'
+        "400":
+          $ref: '#/responses/BadRequest'
+        "403":
+          $ref: '#/responses/Forbidden'
+        "412":
+          $ref: '#/responses/PreconditionFailed'
+        "500":
+          $ref: '#/responses/InternalServerError'
+      summary: Partially update the network zone
+      tags:
+      - network-zones
+    put:
+      consumes:
+      - application/json
+      description: Updates the entire network zone configuration.
+      operationId: network_zone_put
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        type: string
+      - description: zone configuration
+        in: body
+        name: zone
+        required: true
+        schema:
+          $ref: '#/definitions/NetworkZonePut'
+      produces:
+      - application/json
+      responses:
+        "200":
+          $ref: '#/responses/EmptySyncResponse'
+        "400":
+          $ref: '#/responses/BadRequest'
+        "403":
+          $ref: '#/responses/Forbidden'
+        "412":
+          $ref: '#/responses/PreconditionFailed'
+        "500":
+          $ref: '#/responses/InternalServerError'
+      summary: Update the network zone
+      tags:
+      - network-zones
+  /1.0/network-zones?recursion=1:
+    get:
+      description: Returns a list of network zones (structs).
+      operationId: network_zones_get_recursion1
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: API endpoints
+          schema:
+            description: Sync response
+            properties:
+              metadata:
+                description: List of network zones
+                items:
+                  $ref: '#/definitions/NetworkZone'
+                type: array
+              status:
+                description: Status description
+                example: Success
+                type: string
+              status_code:
+                description: Status code
+                example: 200
+                type: integer
+              type:
+                description: Response type
+                example: sync
+                type: string
+            type: object
+        "403":
+          $ref: '#/responses/Forbidden'
+        "500":
+          $ref: '#/responses/InternalServerError'
+      summary: Get the network zones
+      tags:
+      - network-zones
   /1.0/networks:
     get:
       description: Returns a list of networks (URLs).
@@ -9258,6 +9709,259 @@ paths:
       summary: Get the network address forwards
       tags:
       - network-forwards
+  /1.0/networks/{networkName}/peers:
+    get:
+      description: Returns a list of network peers (URLs).
+      operationId: network_peers_get
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: API endpoints
+          schema:
+            description: Sync response
+            properties:
+              metadata:
+                description: List of endpoints
+                example: |-
+                  [
+                    "/1.0/networks/lxdbr0/peers/my-peer-1",
+                    "/1.0/networks/lxdbr0/peers/my-peer-2"
+                  ]
+                items:
+                  type: string
+                type: array
+              status:
+                description: Status description
+                example: Success
+                type: string
+              status_code:
+                description: Status code
+                example: 200
+                type: integer
+              type:
+                description: Response type
+                example: sync
+                type: string
+            type: object
+        "403":
+          $ref: '#/responses/Forbidden'
+        "500":
+          $ref: '#/responses/InternalServerError'
+      summary: Get the network peers
+      tags:
+      - network-peers
+    post:
+      consumes:
+      - application/json
+      description: Initiates/creates a new network peering.
+      operationId: network_peers_post
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        type: string
+      - description: Peer
+        in: body
+        name: peer
+        required: true
+        schema:
+          $ref: '#/definitions/NetworkPeersPost'
+      produces:
+      - application/json
+      responses:
+        "200":
+          $ref: '#/responses/EmptySyncResponse'
+        "202":
+          $ref: '#/responses/EmptySyncResponse'
+        "400":
+          $ref: '#/responses/BadRequest'
+        "403":
+          $ref: '#/responses/Forbidden'
+        "500":
+          $ref: '#/responses/InternalServerError'
+      summary: Add a network peer
+      tags:
+      - network-peers
+  /1.0/networks/{networkName}/peers/{peerName}:
+    delete:
+      description: Removes the network peering.
+      operationId: network_peer_delete
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          $ref: '#/responses/EmptySyncResponse'
+        "400":
+          $ref: '#/responses/BadRequest'
+        "403":
+          $ref: '#/responses/Forbidden'
+        "500":
+          $ref: '#/responses/InternalServerError'
+      summary: Delete the network peer
+      tags:
+      - network-peers
+    get:
+      description: Gets a specific network peering.
+      operationId: network_peer_get
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Peer
+          schema:
+            description: Sync response
+            properties:
+              metadata:
+                $ref: '#/definitions/NetworkPeer'
+              status:
+                description: Status description
+                example: Success
+                type: string
+              status_code:
+                description: Status code
+                example: 200
+                type: integer
+              type:
+                description: Response type
+                example: sync
+                type: string
+            type: object
+        "403":
+          $ref: '#/responses/Forbidden'
+        "500":
+          $ref: '#/responses/InternalServerError'
+      summary: Get the network peer
+      tags:
+      - network-peers
+    patch:
+      consumes:
+      - application/json
+      description: Updates a subset of the network peering configuration.
+      operationId: network_peer_patch
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        type: string
+      - description: Peer configuration
+        in: body
+        name: Peer
+        required: true
+        schema:
+          $ref: '#/definitions/NetworkPeerPut'
+      produces:
+      - application/json
+      responses:
+        "200":
+          $ref: '#/responses/EmptySyncResponse'
+        "400":
+          $ref: '#/responses/BadRequest'
+        "403":
+          $ref: '#/responses/Forbidden'
+        "412":
+          $ref: '#/responses/PreconditionFailed'
+        "500":
+          $ref: '#/responses/InternalServerError'
+      summary: Partially update the network peer
+      tags:
+      - network-peers
+    put:
+      consumes:
+      - application/json
+      description: Updates the entire network peering configuration.
+      operationId: network_peer_put
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        type: string
+      - description: Peer configuration
+        in: body
+        name: peer
+        required: true
+        schema:
+          $ref: '#/definitions/NetworkPeerPut'
+      produces:
+      - application/json
+      responses:
+        "200":
+          $ref: '#/responses/EmptySyncResponse'
+        "400":
+          $ref: '#/responses/BadRequest'
+        "403":
+          $ref: '#/responses/Forbidden'
+        "412":
+          $ref: '#/responses/PreconditionFailed'
+        "500":
+          $ref: '#/responses/InternalServerError'
+      summary: Update the network peer
+      tags:
+      - network-peers
+  /1.0/networks/{networkName}/peers?recursion=1:
+    get:
+      description: Returns a list of network peers (structs).
+      operationId: network_peer_get_recursion1
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: API endpoints
+          schema:
+            description: Sync response
+            properties:
+              metadata:
+                description: List of network peers
+                items:
+                  $ref: '#/definitions/NetworkPeer'
+                type: array
+              status:
+                description: Status description
+                example: Success
+                type: string
+              status_code:
+                description: Status code
+                example: 200
+                type: integer
+              type:
+                description: Response type
+                example: sync
+                type: string
+            type: object
+        "403":
+          $ref: '#/responses/Forbidden'
+        "500":
+          $ref: '#/responses/InternalServerError'
+      summary: Get the network peers
+      tags:
+      - network-peers
   /1.0/networks?recursion=1:
     get:
       description: Returns a list of networks (structs).

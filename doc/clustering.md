@@ -225,6 +225,26 @@ an individual node is available with `lxc cluster show <node name>`.
 -->
 クラスターが形成されると、`lxc cluster list` を実行して、ノードのリストと状態を見ることができます。ノードそれぞれのもっと詳細な情報は `lxc cluster show <node name>` を実行して取得できます。
 
+### クラスターメンバーの設定 <!-- Cluster member configuration -->
+
+各クラスターメンバーは以下のサポートされるネームスペース内で独自のキー・バリュー設定を持てます。
+<!--
+Each cluster member has its own key/value configuration with the following supported namespaces:
+-->
+
+- `user` (ユーザーのメタデータ用に自由形式のキー・バリュー) <!-- (free form key/value for user metadata) -->
+- `scheduler` (メンバーが自クラスターによりどのように動的にターゲットされるかに関連するオプション) <!-- (options related to how the member is automatically targeted by the cluster) -->
+
+現状サポートされるキーは以下の通りです。
+<!--
+The currently supported keys are:
+-->
+
+| キー <!-- Key -->  | 型 <!-- Type --> | 条件 <!-- Condition --> | デフォルト値 <!-- Default --> | 説明 <!-- Description -->                                                                                                                                                                                  |
+| :----------------- | :----- | :-------- | :------ | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| scheduler.instance | string | -         | all     | `all` の場合、最低数のインスタンスを持っていれば、メンバーがインスタンス作成に自動でターゲットされます。 `manual` の場合、インスタンスは `--target` が指定されたときのみメンバーにターゲットされます。 <!-- If `all` then the member will be auto-targeted for instance creation if it has the least number of instances. If `manual` then instances will only target the member if `--target` is given. --> |
+| user.\*            | string | -         | -       | 自由形式のユーザーのキー・バリュー・ストレージ (検索で使用可能) <!-- Free form user key/value storage (can be used in search) -->                                                                                                                                     |
+
 ### 投票 (voting) メンバーとスタンバイメンバー <!-- Voting and stand-by members -->
 
 クラスターは状態を保管するために分散 [データベース](database.md) を使用します。

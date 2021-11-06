@@ -80,6 +80,7 @@ limits.memory.swap.priority                 | integer   | 10 (maximum)      | ye
 limits.network.priority                     | integer   | 0 (minimum)       | yes           | -                         | 負荷がかかった状態で、インスタンスのネットワークリクエストに割り当てる優先度（0 〜 10 の整数） <!-- When under load, how much priority to give to the instance's network requests (integer between 0 and 10) -->
 limits.processes                            | integer   | - (max)           | yes           | container                 | インスタンス内で実行できるプロセスの最大数 <!-- Maximum number of processes that can run in the instance -->
 linux.kernel\_modules                       | string    | -                 | yes           | container                 | インスタンスを起動する前にロードするカーネルモジュールのカンマ区切りのリスト <!--Comma separated list of kernel modules to load before starting the instance -->
+linux.sysctl.\*                             | string    | -                 | no            | container                 | sysctl 設定の変更に使用可能 <!-- Allow for modify sysctl settings -->
 migration.incremental.memory                | boolean   | false             | yes           | container                 | インスタンスのダウンタイムを短くするためにインスタンスのメモリを増分転送するかどうか <!--Incremental memory transfer of the instance's memory to reduce downtime -->
 migration.incremental.memory.goal           | integer   | 70                | yes           | container                 | インスタンスを停止させる前に同期するメモリの割合 <!-- Percentage of memory to have in sync before stopping the instance -->
 migration.incremental.memory.iterations     | integer   | 10                | yes           | container                 | インスタンスを停止させる前に完了させるメモリ転送処理の最大数 <!-- Maximum number of transfer operations to go through before stopping the instance -->
@@ -247,6 +248,66 @@ instance, relative to any other instance which is using the same CPU(s).
 `limits.cpu.priority` is another knob which is used to compute that
 scheduler priority score when a number of instances sharing a set of
 CPUs have the same percentage of CPU assigned to them.
+-->
+
+### VM CPU トポロジー <!-- VM CPU topology -->
+LXD の仮想マシンはデフォルトでは vCPU を 1 つだけ割り当てて、それは
+ホストの CPU のベンダーとタイプにマッチしたものとして表示されますが
+シングルコアでスレッドはありません。
+<!--
+LXD virtual machines default to having just one vCPU allocated which
+shows up as matching the host CPU vendor and type but has a single core
+and no threads.
+-->
+
+`limits.cpu` を単一の整数に設定すると、複数の vCPU が割り当てられゲストにフルのコアとして公開します。
+これらの vCPU ホスト上の特定の物理コアにピン止めはされません。
+<!--
+When `limits.cpu` is set to a single integer, this will cause multiple
+vCPUs to be allocated and exposed to the guest as full cores. Those vCPUs
+will not be pinned to specific physical cores on the host.
+-->
+
+`limits.cpu` に CPU ID (`lxc info --resources` で表示されます) の範囲やカンマ区切りリストを指定すると、 vCPU はそれらの物理コアにピン止めされます。
+このシナリオでは LXD は CPU 設定が実際のハードウェアトポロジーと合っているか確認し、合っている場合はゲストのトポロジーに複製します。
+<!--
+When `limits.cpu` is set to a range or comma separate list of CPU IDs
+(as provided by `lxc info -\-resources`), then the vCPUs will be pinned
+to those physical cores. In this scenario, LXD will check whether the
+CPU configuration lines up with a realistic hardware topology and if it
+does, it will replicate that topology in the guest.
+-->
+
+例えばピン止めの設定が 8 スレッドを含む場合、スレッドの各ペアは同じコアから提供され、
+コア番号が 2 つの CPU にまたがる場合でも、 LXD はゲストに 2 つの CPU を提供し、
+各 CPU は 2 つのコアを持ち、各コアは 2 つのスレッドを満ちます。
+NUMA レイアウトも同様に複製され、このシナリオではゲストは十中八九
+各 CPU ソケットにつき 1 つ、合計 2 つの NUMA ノードを持つことになるでしょう。
+<!--
+This means that if the pinning configuration includes 8 threads, with
+each pair of thread coming from the same core and an even number of
+cores spread across two CPUs, LXD will have the guest show two CPUs,
+each with two cores and each core with two threads. The NUMA layout is
+similarly replicated and in this scenario, the guest would most likely
+end up with two NUMA nodes, one for each CPU socket.
+-->
+
+複数の NUMA ノードの環境では、メモリも同様に NUMA ノードに分割され、
+それに応じてホストでピン止めされ、その後ゲストにも公開します。
+<!--
+In such an environment with multiple NUMA nodes, the memory will
+similarly be divided across NUMA nodes and be pinned accordingly on the
+host and then exposed to the guest.
+-->
+
+これら全てによりゲスト内で非常に高いパフォーマンスのオペレーションが可能です。
+これはゲストのスケジューラーが NUMA ノード間でメモリを共有したりプロセスを移動する際に
+ソケット、コア、スレッドについて適切に判断し、 NUMA トポロジーも考慮できるからです。
+<!--
+All this allows for very high performance operations in the guest as the
+guest scheduler can properly reason about sockets, cores and threads as
+well as consider NUMA topology when sharing memory or moving processes
+across NUMA nodes.
 -->
 
 # デバイス設定 <!-- Devices configuration -->
@@ -570,6 +631,7 @@ Device configuration properties:
 Key                                  | Type    | Default                                       | Required | Managed | Description
 :--                                  | :--     | :--                                           | :--      | :--     | :--
 network                              | string  | -                                             | yes      | yes     | デバイスの接続先の LXD ネットワーク <!-- The LXD network to link device to -->
+acceleration                         | string  | none                                          | no       | no      | ハードウェアオフローディングを有効にする。 `none` か `sriov` (下記の SR-IOV ハードウェアアクセラレーション参照) <!-- Enable hardware offloading. Either `none` or `sriov` (see SR-IOV hardware acceleration below) -->
 name                                 | string  | カーネルが割り当て <!-- kernel assigned -->   | no       | no      | インスタンス内部でのインタフェース名 <!-- The name of the interface inside the instance -->
 host\_name                           | string  | ランダムに割り当て <!-- randomly assigned --> | no       | no      | ホスト内部でのインタフェース名 <!-- The name of the interface inside the host -->
 hwaddr                               | string  | ランダムに割り当て <!-- randomly assigned --> | no       | no      | 新しいインターフェースの MAC アドレス <!-- The MAC address of the new interface -->
@@ -585,6 +647,63 @@ security.acls.default.ingress.action | string  | reject                         
 security.acls.default.egress.action  | string  | reject                                        | no       | no      | どの ACL ルールにもマッチしない egress トラフィックに使うアクション <!-- Action to use for egress traffic that doesn't match any ACL rule -->
 security.acls.default.ingress.logged | boolean | false                                         | no       | no      | どの ACL ルールにもマッチしない ingress トラフィックをログ出力するかどうか <!-- Whether to log ingress traffic that doesn't match any ACL rule -->
 security.acls.default.egress.logged  | boolean | false                                         | no       | no      | どの ACL ルールにもマッチしない egress トラフィックをログ出力するかどうか <!-- Whether to log egress traffic that doesn't match any ACL rule -->
+
+SR-IOV ハードウェアアクセラレーション:
+<!--
+SR-IOV hardware acceleration:
+-->
+
+`acceleration=sriov` を使用するためには互換性のある SR-IOV switchdev が使用できる物理 NIC が LXD ホスト内に存在する必要があります。
+LXD では物理 NIC (PF) が switchdev モードで設定されており、 OVN の統合 OVN ブリッジに接続すると 1 つ以上の仮想ファンクション (VF) がアクティブになることを想定しています。
+<!--
+In order to use `acceleration=sriov` you need to have a compatible SR-IOV switchdev capable phyical NIC in your LXD
+host. LXD assumes that the physical NIC (PF) will be configured in switchdev mode and will be connected to the OVN
+integration OVS bridge and that it will have one or more virtual functions (VFs) active.
+-->
+
+これを実現するための前提となるセットアップの行程は以下の通りです。
+<!--
+The basic prerequisite setup steps to achieve this are:
+-->
+
+PF と VF のセットアップ:
+<!--
+PF and VF setup:
+-->
+
+PF 上(以下の例では `0000:09:00.0` の PCI アドレスで `enp9s0f0np0` という名前) の VF をアクティベートしアンバインドします。 
+次に `switchdev` モードと PF 上の `hw-tc-offload` を有効にします。
+最後に VF をリバインドします。
+<!--
+Activate some VFs on PF (in this case called `enp9s0f0np0` with a PCI address of `0000:09:00.0`) and unbind them.
+Then enable `switchdev` mode and `hw-tc-offload` on the the PF.
+Finally rebind the VFs.
+-->
+
+```
+echo 4 > /sys/bus/pci/devices/0000:09:00.0/sriov_numvfs
+for i in $(lspci -nnn | grep "Virtual Function" | cut -d' ' -f1); do echo 0000:$i > /sys/bus/pci/drivers/mlx5_core/unbind; done
+devlink dev eswitch set pci/0000:09:00.0 mode switchdev
+ethtool -K enp9s0f0np0 hw-tc-offload on
+for i in $(lspci -nnn | grep "Virtual Function" | cut -d' ' -f1); do echo 0000:$i > /sys/bus/pci/drivers/mlx5_core/bind; done
+```
+
+OVS のセットアップ:
+<!--
+OVS setup:
+-->
+
+ハードウェアオフロードを有効にし、 PF NIC を統合ブリッジ (通常は `br-int` という名前) に追加します。
+<!--
+Enable hardware offload and add the PF NIC to the integration bridge (normally callled `br-int`):
+-->
+
+```
+ovs-vsctl set open_vswitch . other_config:hw-offload=true
+systemctl restart openvswitch-switch
+ovs-vsctl add-port br-int enp9s0f0np0
+ip link set enp9s0f0np0 up
+```
 
 #### nic: physical
 
@@ -1540,7 +1659,7 @@ On the command line, this is passed like this:
 -->
 
 ```bash
-lxc launch ubuntu:18.04 my-instance -t t2.micro
+lxc launch ubuntu:20.04 my-instance -t t2.micro
 ```
 
 使えるクラウドとインスタンスタイプのリストは次をご覧ください:

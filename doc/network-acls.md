@@ -85,8 +85,8 @@ Property          | Type       | Required | Description
 action            | string     | yes      | マッチしたトラフィックに適用するアクション(`allow`, `reject` または `drop`) <!-- Action to take for matching traffic (`allow`, `reject` or `drop`) -->
 state             | string     | yes      | ルールの状態(`enabled`, `disabled` または `logged`) <!-- State of rule (`enabled`, `disabled` or `logged`) -->
 description       | string     | no       | ルールの説明 <!-- Description of rule -->
-source            | string     | no       | CIDR か IP の範囲、送信元の ACL の名前、あるいは(ingress ルールに対しての) @external/@internal のカンマ区切りリスト、または any の場合は空を指定 <!-- Comma separated list of CIDR or IP ranges, source ACL names or @external/@internal (for ingress rules), or empty for any -->
-destination       | string     | no       | CIDR か IP の範囲、送信先の ACL の名前、あるいは(egress ルールに対しての) @external/@internal のカンマ区切りリスト、または any の場合は空を指定 <!-- Comma separated list of CIDR or IP ranges, destination ACL names or @external/@internal (for egress rules), or empty for any -->
+source            | string     | no       | CIDR か IP の範囲、送信元の ACL の名前、あるいは(ingress ルールに対しての) ソースサブジェクト名セレクターのカンマ区切りリスト、または any の場合は空を指定 <!-- Comma separated list of CIDR or IP ranges, source subject name selectors (for ingress rules), or empty for any -->
+destination       | string     | no       | CIDR か IP の範囲、送信先の ACL の名前、あるいは(egress ルールに対しての) デスティネーションサブジェクト名セレクターのカンマ区切りリスト、または any の場合は空を指定 <!-- Comma separated list of CIDR or IP ranges, destination subject name selectors (for egress rules), or empty for any -->
 protocol          | string     | no       | マッチ対象のプロトコル(`icmp4`, `icmp6`, `tcp`, `udp`)、または any の場合は空を指定 <!-- Protocol to match (`icmp4`, `icmp6`, `tcp`, `udp`) or empty for any -->
 source\_port      | string     | no       | protocol が `udp` か `tcp` の場合はポートかポートの範囲(開始-終了で両端含む)のカンマ区切りリスト、または any の場合は空を指定 <!-- If Protocol is `udp` or `tcp`, then comma separated list of ports or port ranges (start-end inclusive), or empty for any -->
 destination\_port | string     | no       | protocol が `udp` か `tcp` の場合はポートかポートの範囲(開始-終了で両端含む)のカンマ区切りリスト、または any の場合は空を指定 <!-- If Protocol is `udp` or `tcp`, then comma separated list of ports or port ranges (start-end inclusive), or empty for any -->
@@ -119,23 +119,56 @@ The default reject action can be modified by using the network and NIC level `se
 and `security.acls.default.egress.action` settings. The NIC level settings will override the network level settings.
 -->
 
-## ポートグループセレクター <!-- Port group selectors -->
+# サブジェクト名セレクター <!-- Subject name selectors -->
 
-特定の ACL を割り当てられた Instance NIC は論理的なポートグループを形成し、他の ACL ルールから名前で参照することが出来ます。
+サブジェクト名セレクターは ingress ルールの `source` フィールドと egress ルールの `destination` フィールドで使用可能です。
 <!--
-The Instance NICs that are assigned a particular ACL make up a logical port group that can then be referenced by
-name in other ACL rules.
+Subject name selectors can be used in the `source` field for ingress rules and in the `destination` field for
+egress rules.
 -->
 
-また `@internal` と `@external` という 2 つの特殊なセレクターがあり、これらはネットワークのそれぞれローカルと外部のトラフィックを表します。
+（直接あるいは NIC が接続するネットワークに割り当てられた ACL 経由で） 特定の ACL を割り当てられた Instance NIC
+は論理的なポートグループを形成し、他の ACL ルールから `<ACL_name>` 形式で ACL サブジェクト名として参照することが出来ます。
 <!--
-There are also two special selectors called `@internal` and `@external` which represent network local and external
-traffic respectively.
+Instance NICs that are assigned a particular ACL (either directly or via the ACLs assigned to the network it is
+connected to) make up a logical port group named after the ACL that can then be referenced as an ACL subject name
+in other ACL rules using the format `<ACL_name>`.
 -->
 
-ポートグループセレクターは ingress ルールの `source` フィールドと egress ルールの `destination` フィールドで使用可能です。
+例 `source=foo`
 <!--
-Port group selectors can be used in the `source` field for ingress rules and in the `destination` field for egress rules.
+E.g. `source=foo`
+-->
+
+ネットワークが [ネットワークピア](network-peers.md) をサポートする場合、ピア接続間のトラフィックを
+`@<network_name>/<peer_name>` という形式のネットワークサブジェクトセレクターで参照できます。
+<!--
+If the network supports [network peers](network-peers.md) then you can also reference traffic to/from the peer
+connection by way of a network subject selector in the format `@<network_name>/<peer_name>`.
+-->
+
+例 `source=@ovn1/mypeer`
+<!--
+E.g. `source=@ovn1/mypeer`
+-->
+
+ネットワークサブジェクトセレクターを使用する際は、 ACL 適用先のネットワークは指定されたピア接続を持っていなければなりません。
+持っていない場合 ACL は適用されません。
+<!--
+When using a network subject selector, the network having the ACL applied to it must have the specified peer
+connection or the ACL will refuse to be applied to it.
+-->
+
+`@internal` と `@external` という特別なネットワークサブジェクトセレクターもあります。
+これらはそれぞれネットワークローカルのトラフィックと外部のトラフィックを表します。
+<!--
+There are also two special network subject selectors called `@internal` and `@external` which represent network
+local and external traffic respectively.
+-->
+
+例 `source=@internal`
+<!--
+E.g. `source=@internal`
 -->
 
 ## ブリッジの制限 <!-- Bridge limitations -->
@@ -148,10 +181,9 @@ used for intra-bridge firewalling (i.e for firewalling traffic between instances
 OVN ACL とは違い、 `bridge` ACL はブリッジと LXD ホストの間の境界*のみ*に適用されます。これは外部へと外部からのトラフィックにネットワークポリシーを適用するために使うことしかできず、ブリッジ間のファイアウォール（例：同じブリッジに繋がれたインスタンス間のトラフィックに対するファイアウォール）には使えません。
 
 <!--
-Additionally `bridge` ACLs do not support using the reserved subject names (starting with a `@`) nor do they
-support using other ACL names in the rule subjects.
+Additionally `bridge` ACLs do not support using subject name selectors.
 -->
-さらに `bridge` ACL は（`@` で始まる）予約されたサブジェクト名を使うこともルールサブジェクト内の他の ACL 名を使うこともサポートしていません。
+さらに `bridge` ACL はサブジェクト名セレクターの使用をサポートしていません。
 
 <!--
 When using the `iptables` firewall driver, you cannot use IP range subjects (e.g. `192.168.1.1-192.168.1.10`).

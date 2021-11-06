@@ -2753,3 +2753,74 @@ This includes the following endpoints:
 -->
 
 * `GET /1.0/metrics`
+
+## image\_source\_project
+`POST /1.0/images` に `project` フィールドを追加し、イメージコピー時にコピー元プロジェクトを設定できるようにします。
+<!--
+Adds a new `project` field to `POST /1.0/images` allowing for the source project
+to be set at image copy time.
+-->
+
+## clustering\_config
+クラスターメンバーに `config` プロパティーを追加し、キー・バリュー・ペアを設定可能にします。
+<!--
+Adds new `config` property to cluster members with configurable key/value pairs.
+-->
+
+## network\_peer
+ネットワークピアリングを追加し、 OVN ネットワーク間のトラフィックが OVN サブシステムの外に出ずに通信できるようにします。
+<!--
+This adds network peering to allow traffic to flow between OVN networks without leaving the OVN subsystem.
+-->
+
+## linux\_sysctl
+`linux.sysctl.*` 設定キーを追加し、ユーザーが一コンテナー内の一部のカーネルパラメータを変更できるようにします。
+<!--
+Adds new `linux.sysctl.*` configuration keys allowing users to modify certain kernel parameters
+within containers.
+-->
+
+## network\_dns
+組み込みの DNS サーバーとゾーン API を追加し、 LXD インスタンスに DNS レコードを提供します。
+<!--
+Introduces a built-in DNS server and zones API to provide DNS records for LXD instances.
+-->
+
+以下のサーバー設定キーが追加されます。
+<!--
+This introduces the following server configuration key:
+-->
+
+ - `core.dns_address`
+
+以下のネットワーク設定キーが追加されます。
+<!--
+The following network configuration key:
+-->
+
+ - `dns.zone.forward`
+ - `dns.zone.reverse.ipv4`
+ - `dns.zone.reverse.ipv6`
+
+以下のプロジェクト設定キーが追加されます。
+<!--
+And the following project configuration key:
+-->
+
+ - `restricted.networks.zones`
+
+DNS ゾーンを管理するために下記の REST API が追加されます。
+<!--
+A new REST API is also introduced to manage DNS zones:
+-->
+
+ - `/1.0/network-zones` (GET, POST)
+ - `/1.0/network-zones/<name>` (GET, PUT, PATCH, DELETE)
+
+## ovn\_nic\_acceleration
+OVN NIC に `acceleration` 設定キーを追加し、ハードウェアオフロードを有効にするのに使用できます。
+設定値は `none` または `sriov` です。
+<!--
+Adds new `acceleration` config key to OVN NICs which can be used for enabling hardware offloading.
+It takes the values `none` or `sriov`.
+-->
