@@ -1452,3 +1452,43 @@ This adds metrics to LXD. It returns metrics of running instances using the Open
 This includes the following endpoints:
 
 * `GET /1.0/metrics`
+
+## image\_source\_project
+Adds a new `project` field to `POST /1.0/images` allowing for the source project
+to be set at image copy time.
+
+## clustering\_config
+Adds new `config` property to cluster members with configurable key/value pairs.
+
+## network\_peer
+This adds network peering to allow traffic to flow between OVN networks without leaving the OVN subsystem.
+
+## linux\_sysctl
+Adds new `linux.sysctl.*` configuration keys allowing users to modify certain kernel parameters
+within containers.
+
+## network\_dns
+Introduces a built-in DNS server and zones API to provide DNS records for LXD instances.
+
+This introduces the following server configuration key:
+
+ - `core.dns_address`
+
+The following network configuration key:
+
+ - `dns.zone.forward`
+ - `dns.zone.reverse.ipv4`
+ - `dns.zone.reverse.ipv6`
+
+And the following project configuration key:
+
+ - `restricted.networks.zones`
+
+A new REST API is also introduced to manage DNS zones:
+
+ - `/1.0/network-zones` (GET, POST)
+ - `/1.0/network-zones/<name>` (GET, PUT, PATCH, DELETE)
+
+## ovn\_nic\_acceleration
+Adds new `acceleration` config key to OVN NICs which can be used for enabling hardware offloading.
+It takes the values `none` or `sriov`.
