@@ -242,7 +242,7 @@ The currently supported keys are:
 
 | キー <!-- Key -->  | 型 <!-- Type --> | 条件 <!-- Condition --> | デフォルト値 <!-- Default --> | 説明 <!-- Description -->                                                                                                                                                                                  |
 | :----------------- | :----- | :-------- | :------ | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| scheduler.instance | string | -         | all     | `all` の場合、最低数のインスタンスを持っていれば、メンバーがインスタンス作成に自動でターゲットされます。 `manual` の場合、インスタンスは `--target` が指定されたときのみメンバーにターゲットされます。 <!-- If `all` then the member will be auto-targeted for instance creation if it has the least number of instances. If `manual` then instances will only target the member if `--target` is given. --> |
+| scheduler.instance | string | -         | all     | `all` の場合、最低数のインスタンスを持っていれば、`all` と設定されたインスタンスの中から1つインスタンス作成時に自動的に選択されてターゲットされます。 `manual` の場合、インスタンスは `--target` が指定されたときのみメンバーにターゲットされます。 <!-- If `all` then the member will be auto-targeted for instance creation if it has the least number of instances. If `manual` then instances will only target the member if `--target` is given. --> |
 | user.\*            | string | -         | -       | 自由形式のユーザーのキー・バリュー・ストレージ (検索で使用可能) <!-- Free form user key/value storage (can be used in search) -->                                                                                                                                     |
 
 ### 投票 (voting) メンバーとスタンバイメンバー <!-- Voting and stand-by members -->
