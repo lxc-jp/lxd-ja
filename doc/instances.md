@@ -280,7 +280,7 @@ does, it will replicate that topology in the guest.
 
 例えばピン止めの設定が 8 スレッドを含む場合、スレッドの各ペアは同じコアから提供され、
 コア番号が 2 つの CPU にまたがる場合でも、 LXD はゲストに 2 つの CPU を提供し、
-各 CPU は 2 つのコアを持ち、各コアは 2 つのスレッドを満ちます。
+各 CPU は 2 つのコアを持ち、各コアは 2 つのスレッドを持ちます。
 NUMA レイアウトも同様に複製され、このシナリオではゲストは十中八九
 各 CPU ソケットにつき 1 つ、合計 2 つの NUMA ノードを持つことになるでしょう。
 <!--
@@ -654,7 +654,7 @@ SR-IOV hardware acceleration:
 -->
 
 `acceleration=sriov` を使用するためには互換性のある SR-IOV switchdev が使用できる物理 NIC が LXD ホスト内に存在する必要があります。
-LXD では物理 NIC (PF) が switchdev モードで設定されており、 OVN の統合 OVN ブリッジに接続すると 1 つ以上の仮想ファンクション (VF) がアクティブになることを想定しています。
+LXD は、物理 NIC (PF) が switchdev モードに設定されて OVN の統合 OVN ブリッジに接続されており、1 つ以上の仮想ファンクション (VF) がアクティブであることを想定しています。
 <!--
 In order to use `acceleration=sriov` you need to have a compatible SR-IOV switchdev capable phyical NIC in your LXD
 host. LXD assumes that the physical NIC (PF) will be configured in switchdev mode and will be connected to the OVN
