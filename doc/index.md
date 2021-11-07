@@ -72,18 +72,6 @@ sudo apt install acl attr autoconf dnsmasq-base git golang libacl1-dev libcap-de
 ```
 
 <!--
-Note that when building LXC yourself, ensure to build it with the appropriate
-security related libraries installed which our testsuite tests. Again, on
-ubuntu, you can get those with:
--->
-LXC を自分でビルドする場合は、テストスイートがテストする、関連する適切なセキュリティ関連のライブラリーがインストールされていることを確認してください。
-Ubuntu であれば次のようにインストールできます:
-
-```bash
-sudo apt install libapparmor-dev libseccomp-dev libcap-dev
-```
-
-<!--
 There are a few storage backends for LXD besides the default "directory" backend.
 Installing these tools adds a bit to initramfs and may slow down your
 host boot, but are needed if you'd like to use a particular backend:
@@ -102,7 +90,7 @@ To run the testsuite, you'll also need:
 テストスイートを実行するには、次のパッケージも必要です:
 
 ```bash
-sudo apt install curl gettext jq sqlite3 uuid-runtime socat
+sudo apt install curl gettext jq sqlite3 uuid-runtime socat bind9-dnsutils
 ```
 
 ### ソースからの最新版のビルド <!-- From Source: Building the latest version -->

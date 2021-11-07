@@ -36,6 +36,7 @@ core.bgp\_address                   | string    | local     | -                 
 core.bgp\_asn                       | string    | global    | -                                | ローカルサーバーに使用する BGP の AS番号 (Autonomous System Number) <!-- The BGP Autonomous System Number to use for the local server -->
 core.bgp\_routerid                  | string    | local     |                                  | この BGP サーバーのユニークな ID (IPv4 アドレス形式) <!-- A unique identifier for this BGP server (formatted as an IPv4 address) -->
 core.debug\_address                 | string    | local     | -                                | pprof デバッグサーバがバインドするアドレス (HTTP) <!-- Address to bind the pprof debug server to (HTTP) -->
+core.dns\_address                   | string    | local     | -                                | 権威 DNS サーバーをバインドするアドレス (DNS) <!-- Address to bind the authoritative DNS server to (DNS) -->
 core.https\_address                 | string    | local     | -                                | リモート API がバインドするアドレス (HTTPS) <!-- Address to bind for the remote API (HTTPS) -->
 core.https\_allowed\_credentials    | boolean   | global    | -                                | Access-Control-Allow-Credentials HTTP ヘッダの値を "true" にするかどうか <!-- Whether to set Access-Control-Allow-Credentials http header value to "true" -->
 core.https\_allowed\_headers        | string    | global    | -                                | Access-Control-Allow-Headers HTTP ヘッダの値 <!-- Access-Control-Allow-Headers http header value -->
