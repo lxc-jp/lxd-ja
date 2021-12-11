@@ -79,6 +79,7 @@ authentication support in the `/dev/lxd/sock` API.
    * /1.0
      * /1.0/config
        * /1.0/config/{key}
+     * /1.0/devices
      * /1.0/events
      * /1.0/images/{fingerprint}/export
      * /1.0/meta-data
@@ -135,14 +136,14 @@ Return value:
 Note that the configuration key names match those in the instance
 config, however not all configuration namespaces will be exported to
 `/dev/lxd/sock`.
-Currently only the `user.*` keys are accessible to the instance.
+Currently only the `cloud-init.*` and `user.*` keys are accessible to the instance.
 
 At this time, there also aren't any instance-writable namespace.
 -->
 設定キーの名前はインスタンスの設定の名前と一致するようにしています。
 しかし、設定の namespace の全てが `/dev/lxd/sock` にエクスポート
 されているわけではありません。
-現在は `user.*` キーのみがインスタンスにアクセス可能となっています。
+現在は `cloud-init.*` と `user.*` キーのみがインスタンスにアクセス可能となっています。
 
 現時点ではインスタンスが書き込み可能な名前空間はありません。
 
@@ -172,6 +173,36 @@ Return value:
 戻り値:
 
     blah
+
+#### `/1.0/devices`
+##### GET
+<!--
+ * Description: Map of instance devices
+ * Return: dict
+-->
+ * 説明: インスタンスのデバイスのマップ
+ * 出力: dict
+
+<!--
+Return value:
+-->
+戻り値:
+
+```json
+{
+    "eth0": {
+        "name": "eth0",
+        "network": "lxdbr0",
+        "type": "nic"
+    },
+    "root": {
+        "path": "/",
+        "pool": "default",
+        "type": "disk"
+    }
+}
+```
+
 
 #### `/1.0/events`
 ##### GET

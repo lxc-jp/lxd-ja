@@ -1,14 +1,233 @@
 # FAQ
 <!-- # Frequently Asked Questions -->
 
-## コンテナー起動時の問題 <!-- Container Startup Issues -->
+## 一般的な問題 <!-- General issues -->
 
+### LXD サーバーをリモートからアクセス可能にするには？ <!-- How to enable LXD server for remote access? -->
+デフォルトでは LXD サーバーはローカルの unix ソケットのみをリッスンしているためネットワークからはアクセス可能ではありません。
+リッスンする追加のアドレスを指定することでネットワークから LXD を利用可能にできます。
+これは `core.https_address` 設定で実現できます。
+<!--
+By default LXD server is not accessible from the networks as it only listens
+on a local unix socket. You can make LXD available from the network by specifying
+additional addresses to listen to. This is done with the `core.https_address`
+config variable.
+-->
+
+現状のサーバー設定を確認するには、以下のコマンドを実行します。
+<!--
+To see the current server configuration, run:
+-->
+
+```bash
+lxc config show
+```
+
+リッスンするアドレスを設定するには、利用可能なアドレスを調べた上でサーバーで `config set` コマンドを実行します。
+<!--
+To set the address to listen to, find out what addresses are available and use
+the `config set` command on the server:
+-->
+
+```bash
+ip addr
+lxc config set core.https_address 192.168.1.15
+```
+
+### https 経由で `lxc remote add` を実行したらパスワードを聞かれたがどうすればよいか？ <!-- When I do a `lxc remote add` over https, it asks for a password? -->
+デフォルトではセキュリティー上の理由から LXD はパスワードを設定していないため、 `lxc remote add` でリモートは追加できません。
+パスワードを設定するには LXD が実行中のホスト上で以下のコマンドを実行します。
+<!--
+By default, LXD has no password for security reasons, so you can't do a remote
+add this way. In order to set a password, do:
+-->
+
+```bash
+lxc config set core.trust_password SECRET
+```
+
+これでリモートパスワードが設定されるので、 `lxc remote add` 実行時にこのパスワードを使用できます。
+<!--
+on the host LXD is running on. This will set the remote password that you can
+then use to do `lxc remote add`.
+-->
+
+あるいはクライアント証明書を `.config/lxc/client.crt` からサーバーにコピーして以下のコマンドで追加すれば、パスワードを設定しなくてもサーバーにアクセスできます。
+<!--
+You can also access the server without setting a password by copying the client
+certificate from `.config/lxc/client.crt` to the server and adding it with:
+-->
+
+```bash
+lxc config trust add client.crt
+```
+
+### LXD のストレージを設定するには？ <!-- How do I configure LXD storage? -->
+LXD は btrfs, ceph, directory, lvm と zfs ベースのストレージをサポートします。
+<!--
+LXD supports btrfs, ceph, directory, lvm and zfs based storage.
+-->
+
+まず、あなたが選択したファイルシステムに関連するツール（btrfs-progs, lvm2 あるいは zfsutils-linux）をマシーン上にインストールしてください。
+<!--
+First make sure you have the relevant tools for your filesystem of
+choice installed on the machine (btrfs-progs, lvm2 or zfsutils-linux).
+-->
+
+（訳注：LXD をインストールしただけの）デフォルトの状態では LXD はネットワークやストレージが設定されていません。
+以下のコマンドにより基本の設定を実行できます。
+<!--
+By default, LXD comes with no configured network or storage.
+You can get a basic configuration done with:
+-->
+
+```bash
+lxd init
+```
+
+`lxd init` はディレクトリーベースのストレージと ZFS の両方をサポートします。
+それ以外のストレージを使いたい場合は `lxc storage` コマンドを使う必要があります。
+<!--
+`lxd init` supports both directory based storage and ZFS.
+If you want something else, you'll need to use the `lxc storage` command:
+-->
+
+```bash
+lxc storage create default BACKEND [OPTIONS...]
+lxc profile device add default root disk path=/ pool=default
+```
+
+BACKEND は `btrfs`, `ceph`, `dir`, `lvm`, `zfs` のいずれかです。
+<!--
+BACKEND is one of `btrfs`, `ceph`, `dir`, `lvm` or `zfs`.
+-->
+
+明示的に指定しない場合、 LXD は妥当なデフォルトサイズでループデバイスをベースにしたストレージをセットアップします。
+<!--
+Unless specified otherwise, LXD will setup loop based storage with a sane default size.
+-->
+
+本番環境ではパフォーマンスと信頼性の両方の理由でブロックデバイスをベースにしたストレージを使うべきです。
+<!--
+For production environments, you should be using block backed storage
+instead both for performance and reliability reasons.
+-->
+
+### LXD を使ってコンテナーをマイグレートするには？ <!-- How can I live migrate a container using LXD? -->
+ライブマイグレーションには [CRIU](https://criu.org) と呼ばれるツールを両方のホストにインストールする必要があります。
+Ubuntu では以下のコマンドでインストールできます。
+<!--
+Live migration requires a tool installed on both hosts called
+[CRIU](https://criu.org), which is available in Ubuntu via:
+-->
+
+```bash
+sudo apt install criu
+```
+
+次に以下のコマンドでコンテナーを起動します。
+<!--
+Then, launch your container with the following,
+-->
+
+```bash
+lxc launch ubuntu SOME-NAME
+sleep 5s # コンテナーの起動が完了するのをを待ちます。
+lxc move host1:SOME-NAME host2:SOME-NAME
+```
+
+<!--
+```bash
+lxc launch ubuntu SOME-NAME
+sleep 5s # let the container get to an interesting state
+lxc move host1:SOME-NAME host2:SOME-NAME
+```
+-->
+
+これで運が良ければコンテナーがマイグレートされます :)。
+マイグレーションはいまだ実験的な段階にあり環境によっては動かないかもしれません。
+動かない場合は lxc-devel メーリングリストに報告してください。
+そうすれば私たちが必要に応じて CRIU メーリングリストに報告します。
+<!--
+And with luck you'll have migrated the container :). Migration is still in
+experimental stages and may not work for all workloads. Please report bugs on
+lxc-devel, and we can escalate to CRIU lists as necessary.
+-->
+
+### 自分のホームディレクトリをコンテナー内にバインドマウントできますか？ <!-- Can I bind mount my home directory in a container? -->
+はい。ディスクデバイスを使って以下のようにすればできます。
+<!--
+Yes. This can be done using a disk device:
+-->
+
+```bash
+lxc config device add container-name home disk source=/home/${USER} path=/home/ubuntu
+```
+
+非特権コンテナーの場合は、以下のいずれかも必要です。
+<!--
+For unprivileged containers, you will also need one of:
+-->
+
+ - `lxc config device add` の実行に `shift=true` を指定する。これは `shiftfs` がサポートされているかに依存します（`lxc info` 参照）。 <!-- Pass `shift=true` to the `lxc config device add` call. This depends on `shiftfs` being supported (see `lxc info`) -->
+ - raw.idmap エントリーを使用する（[ユーザー名前空間 (user namespace) 用の ID のマッピング](userns-idmap.md) 参照）。 <!-- raw.idmap entry (see [Idmaps for user namespace](userns-idmap.md)) -->
+ - マウントしたいホームディレクトリに再帰的な POSIX ACL を設定する。 <!-- Recursive POSIX ACLs placed on your home directory -->
+
+上記のいずれかを実行すればコンテナー内のユーザーは read/write パーミッションに沿ってアクセス可能です。
+上記のいずれも設定しない場合、アクセスしようとすると uid/gid (65536:65536) のオーバーフローが発生し、全ユーザーで読み取り可能 (world readable) 以外のファイルへのアクセスは失敗します。
+<!--
+Either of those can be used to allow the user in the container to have working read/write permissions.
+When not setting one of those, everything will show up as the overflow uid/gid (65536:65536)
+and access to anything that's not world readable will fail.
+-->
+
+特権コンテナーではコンテナー内の uid/gid が外部と同じなためこの問題はありません。
+しかしこれは特権コンテナーのセキュリティーの問題のほとんどの原因でもあります。
+<!--
+Privileged containers do not have this issue as all uid/gid inthe container are the same outside.
+But that's also the cause of most of the security issues with such privileged containers.
+-->
+
+### LXD コンテナー内で docker を動かすには？ <!-- How can I run docker inside a LXD container? -->
+LXD のコンテナー内で Docker を動かすにはコンテナーの `security.nesting` プロパティーを `true` にする必要があります。
+<!--
+In order to run Docker inside a LXD container the `security.nesting` property of the container should be set to `true`.
+-->
+
+```bash
+lxc config set <container> security.nesting true
+```
+
+LXD コンテナーはカーネルモジュールをロードすることはできないので、お使いの Docker の設定によっては、ホストで追加のカーネルモジュールをロードする必要があることに注意してください。
+<!--
+Note that LXD containers cannot load kernel modules, so depending on your
+Docker configuration you may need to have the needed extra kernel modules
+loaded by the host.
+-->
+
+コンテナーが必要とするカーネルモジュールのカンマ区切りリストを以下のコマンドで指定すればホストでそれらのモジュールをロードできます。
+<!--
+You can do so by setting a comma separate list of kernel modules that your container needs with:
+-->
+
+```bash
+lxc config set <container> linux.kernel_modules <modules>
+```
+
+コンテナー内に `/.dockerenv` ファイルを作成するとネストした環境内で実行しているために発生するエラーを Docker が無視するようにできるという報告もあります。
+<!--
+We have also received some reports that creating a `/.dockerenv` file in your
+container can help Docker ignore some errors it's getting due to running in a
+nested environment.
+-->
+
+## コンテナーの起動に関する問題 <!-- Container startup issues -->
 もしコンテナーが起動しない場合や、期待通りの動きをしない場合に最初にすべきことは、コンテナーが生成したコンソールログを見ることです。
 これには `lxc console --show-log CONTAINERNAME` コマンドを使います。
 <!--
 If your container is not starting, or not behaving as you would expect,
 the first thing to do is to look at the console logs generated by the
-container, using the `lxc console --show-log CONTAINERNAME` command.
+container, using the `lxc console -\-show-log CONTAINERNAME` command.
 -->
 
 次の例では、`systemd` が起動しない RHEL 7 システムを調べています。
@@ -95,7 +314,7 @@ the original cause is still there - the **template does not contain the required
 files**.
 -->
 
-## ネットワークの問題 <!-- Networking Issues -->
+## ネットワークの問題 <!-- Networking issues -->
 
 大規模な[プロダクション環境](production-setup.md)では、複数の VLAN を持ち、LXD クライアントを直接それらの VLAN に接続するのが一般的です。
 netplan と systemd-networkd を使っている場合、いくつかの最悪の問題を引き起こす可能性があるバグに遭遇するでしょう。
@@ -199,4 +418,3 @@ host**, causing network blips. Almost everything can be run in an unprivileged c
 or - in cases of things that require unusual privileges, like wanting to mount NFS
 filesystems inside the container, you may need to use bind mounts.
 -->
-

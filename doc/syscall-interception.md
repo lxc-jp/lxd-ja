@@ -14,9 +14,9 @@ process it with elevated privileges.
 -->
 これを行うことで、対象のシステムコールではパフォーマンスに影響があり、LXD ではリクエストを評価するための作業が必要となり、もし許可されれば昇格した特権で実行されます。
 
-# 利用できるシステムコール
+## 利用できるシステムコール
 <!-- Available system calls -->
-## mknod / mknodat
+### mknod / mknodat
 <!--
 The `mknod` and `mknodat` system calls can be used to create a variety of special files.
 -->
@@ -63,7 +63,7 @@ This can be enabled by setting `security.syscalls.intercept.mknod` to `true`.
 -->
 この機能は `security.syscalls.intercept.mknod` を `true` に設定することで有効に出来ます。
 
-## setxattr
+### setxattr
 <!--
 The `setxattr` system call is used to set extended attributes on files.
 -->

@@ -1,6 +1,7 @@
 # インスタンスの設定
 <!-- Instance configuration -->
-## プロパティ <!-- Properties -->
+## インスタンス <!-- Instances -->
+### プロパティ <!-- Properties -->
 次のプロパティは、インスタンスに直接結びつくプロパティであり、プロファイルの一部ではありません:
 <!--
 The following are direct instance properties and can't be part of a profile:
@@ -31,7 +32,7 @@ DNS records, on the filesystem, in various security profiles as well as
 the hostname of the instance itself.
 -->
 
-## Key/value 形式の設定 <!-- Key/value configuration -->
+### Key/value 形式の設定 <!-- Key/value configuration -->
 key/value 形式の設定は、名前空間構造を取っており、現在は次のような名前空間があります:
 <!--
 The key/value configuration is namespaced with the following namespaces
@@ -39,6 +40,7 @@ currently supported:
 -->
 
  - `boot` (ブートに関連したオプション、タイミング、依存性、…<!-- boot related options, timing, dependencies, ... -->)
+ - `cloud-init` (cloud-init の設定) <!-- (cloud-init configuration) -->
  - `environment` (環境変数<!-- environment variables -->)
  - `image` (作成時のイメージプロパティのコピー<!-- copy of the image properties at time of creation -->)
  - `limits` (リソース制限<!-- resource limits -->)
@@ -53,74 +55,77 @@ currently supported:
 The currently supported keys are:
 -->
 
-Key                                         | Type      | Default           | Live update   | Condition                 | Description
-:--                                         | :---      | :------           | :----------   | :----------               | :----------
-boot.autostart                              | boolean   | -                 | n/a           | -                         | LXD起動時に常にインスタンスを起動するかどうか（設定しない場合、最後の状態
-がリストアされます）<!-- Always start the instance when LXD starts (if not set, restore last state) -->
-boot.autostart.delay                        | integer   | 0                 | n/a           | -                         | インスタンスが起動した後に次のインスタンスが起動するまで待つ秒数<!-- Number of seconds to wait after the instance started before starting the next one -->
-boot.autostart.priority                     | integer   | 0                 | n/a           | -                         | インスタンスを起動させる順番（高いほど早く起動します）<!-- What order to start the instances in (starting with highest) -->
-boot.host\_shutdown\_timeout                | integer   | 30                | yes           | -                         | 強制停止前にインスタンスが停止するのを待つ秒数 <!-- Seconds to wait for instance to shutdown before it is force stopped -->
-boot.stop.priority                          | integer   | 0                 | n/a           | -                         | インスタンスの停止順（高いほど早く停止します）<!-- What order to shutdown the instances (starting with highest) -->
-cluster.evacuate                            | string    | auto              | n/a           | -                         | インスタンス待避時に何をするか（auto, migrate, stop） <!-- What to do when evacuating the instance (auto, migrate, or stop) -->
-environment.\*                              | string    | -                 | yes (exec)    | -                         | インスタンス実行時に設定される key/value 形式の環境変数<!-- key/value environment variables to export to the instance and set on exec -->
-limits.cpu                                  | string    | -                 | yes           | -                         | インスタンスに割り当てる CPU 番号、もしくは番号の範囲（デフォルトは VM 毎に 1 CPU） <!-- Number or range of CPUs to expose to the instance (defaults to 1 CPU for VMs) -->
-limits.cpu.allowance                        | string    | 100%              | yes           | container                 | どれくらい CPU を使えるか。ソフトリミットとしてパーセント指定（例、50%）か固定値として単位時間内に使える時間（25ms/100ms）を指定できます <!-- How much of the CPU can be used. Can be a percentage (e.g. 50%) for a soft limit or hard a chunk of time (25ms/100ms) -->
-limits.cpu.priority                         | integer   | 10 (maximum)      | yes           | container                 | 同じ CPU をシェアする他のインスタンスと比較した CPU スケジューリングの優先度（オーバーコミット）（0 〜 10 の整数） <!-- CPU scheduling priority compared to other instances sharing the same CPUs (overcommit) (integer between 0 and 10) -->
-limits.disk.priority                        | integer   | 5 (medium)        | yes           | -                         | 負荷がかかった状態で、インスタンスの I/O リクエストに割り当てる優先度（0 〜 10 の整数） <!-- When under load, how much priority to give to the instance's I/O requests (integer between 0 and 10) -->
-limits.hugepages.64KB                       | string    | -                 | yes           | container                 | 64 KB hugepages の数を制限するため（利用可能な hugepage のサイズはアーキテクチャー依存）のサイズの固定値（さまざまな単位が指定可能、下記参照） <!-- Fixed value in bytes (various suffixes supported, see below) to limit number of 64 KB hugepages (Available hugepage sizes are architecture dependent.) -->
-limits.hugepages.1MB                        | string    | -                 | yes           | container                 | 1 MB hugepages の数を制限するため（利用可能な hugepage のサイズはアーキテクチャー依存）のサイズの固定値（さまざまな単位が指定可能、下記参照） <!-- Fixed value in bytes (various suffixes supported, see below) to limit number of 1 MB hugepages (Available hugepage sizes are architecture dependent.) -->
-limits.hugepages.2MB                        | string    | -                 | yes           | container                 | 2 MB hugepages の数を制限するため（利用可能な hugepage のサイズはアーキテクチャー依存）のサイズの固定値（さまざまな単位が指定可能、下記参照） <!-- Fixed value in bytes (various suffixes supported, see below) to limit number of 2 MB hugepages (Available hugepage sizes are architecture dependent.) -->
-limits.hugepages.1GB                        | string    | -                 | yes           | container                 | 1 GB hugepages の数を制限するため（利用可能な hugepage のサイズはアーキテクチャー依存）のサイズの固定値（さまざまな単位が指定可能、下記参照） <!-- Fixed value in bytes (various suffixes supported, see below) to limit number of 1 GB hugepages (Available hugepage sizes are architecture dependent.) -->
-limits.kernel.\*                            | string    | -                 | no            | container                 | インスタンスごとのカーネルリソースの制限（例、オープンできるファイルの数）<!-- This limits kernel resources per instance (e.g. number of open files) -->
-limits.memory                               | string    | -                 | yes           | -                         | ホストメモリに対する割合（パーセント）もしくはメモリサイズの固定値（さまざまな単位が指定可能、下記参照）（デフォルトは VM 毎に 1GiB） <!-- Percentage of the host's memory or fixed value in bytes (various suffixes supported, see below) (defaults to 1GiB for VMs) -->
-limits.memory.enforce                       | string    | hard              | yes           | container                 | hard に設定すると、インスタンスはメモリー制限値を超過できません。soft に設定すると、ホストでメモリに余裕がある場合は超過できる可能性があります <!-- If hard, instance can't exceed its memory limit. If soft, the instance can exceed its memory limit when extra host memory is available -->
-limits.memory.hugepages                     | boolean   | false             | no            | virtual-machine           | インスタンスを動かすために通常のシステムメモリではなく hugepage を使用するかどうか <!-- Controls whether to back the instance using hugepages rather than regular system memory -->
-limits.memory.swap                          | boolean   | true              | yes           | container                 | このインスタンスのあまり使われないページのスワップを推奨／非推奨するかを制御する <!-- Controls whether to encourage/discourage swapping less used pages for this instance -->
-limits.memory.swap.priority                 | integer   | 10 (maximum)      | yes           | container                 | 高い値を設定するほど、インスタンスがディスクにスワップされにくくなります （0 〜 10 の整数） <!-- The higher this is set, the least likely the instance is to be swapped to disk (integer between 0 and 10) -->
-limits.network.priority                     | integer   | 0 (minimum)       | yes           | -                         | 負荷がかかった状態で、インスタンスのネットワークリクエストに割り当てる優先度（0 〜 10 の整数） <!-- When under load, how much priority to give to the instance's network requests (integer between 0 and 10) -->
-limits.processes                            | integer   | - (max)           | yes           | container                 | インスタンス内で実行できるプロセスの最大数 <!-- Maximum number of processes that can run in the instance -->
-linux.kernel\_modules                       | string    | -                 | yes           | container                 | インスタンスを起動する前にロードするカーネルモジュールのカンマ区切りのリスト <!--Comma separated list of kernel modules to load before starting the instance -->
-linux.sysctl.\*                             | string    | -                 | no            | container                 | sysctl 設定の変更に使用可能 <!-- Allow for modify sysctl settings -->
-migration.incremental.memory                | boolean   | false             | yes           | container                 | インスタンスのダウンタイムを短くするためにインスタンスのメモリを増分転送するかどうか <!--Incremental memory transfer of the instance's memory to reduce downtime -->
-migration.incremental.memory.goal           | integer   | 70                | yes           | container                 | インスタンスを停止させる前に同期するメモリの割合 <!-- Percentage of memory to have in sync before stopping the instance -->
-migration.incremental.memory.iterations     | integer   | 10                | yes           | container                 | インスタンスを停止させる前に完了させるメモリ転送処理の最大数 <!-- Maximum number of transfer operations to go through before stopping the instance -->
-migration.stateful                          | boolean   | false             | no            | virtual-machine           | ステートフルな停止/開始とスナップショットを許可。これはこれと非互換ないくつかの機能の使用を防ぎます。 <!-- Allow for stateful stop/start and snapshots. This will prevent the use of some features that are incompatible with it -->
-nvidia.driver.capabilities                  | string    | compute,utility   | no            | container                 | インスタンスに必要なドライバケーパビリティ（libnvidia-container に環境変数 NVIDIA\_DRIVER\_CAPABILITIES を設定）<!-- What driver capabilities the instance needs (sets libnvidia-container NVIDIA\_DRIVER\_CAPABILITIES) -->
-nvidia.runtime                              | boolean   | false             | no            | container                 | ホストの NVIDIA と CUDA ラインタイムライブラリーをインスタンス内でも使えるようにする <!-- Pass the host NVIDIA and CUDA runtime libraries into the instance -->
-nvidia.require.cuda                         | string    | -                 | no            | container                 | 必要となる CUDA バージョン（libnvidia-container に環境変数 NVIDIA\_REQUIRE\_CUDA を設定） <!-- Version expression for the required CUDA version (sets libnvidia-container NVIDIA\_REQUIRE\_CUDA) -->
-nvidia.require.driver                       | string    | -                 | no            | container                 | 必要となるドライバーバージョン（libnvidia-container に環境変数 NVIDIA\_REQUIRE\_DRIVER を設定） <!-- Version expression for the required driver version (sets libnvidia-container NVIDIA\_REQUIRE\_DRIVER) -->
-raw.apparmor                                | blob      | -                 | yes           | -                         | 生成されたプロファイルに追加する Apparmor プロファイルエントリー <!-- Apparmor profile entries to be appended to the generated profile -->
-raw.idmap                                   | blob      | -                 | no            | unprivileged conta        iner | 生（raw）の idmap 設定（例: "both 1000 1000"） <!-- Raw idmap configuration (e.g. "both 1000 1000") -->
-raw.lxc                                     | blob      | -                 | no            | container                 | 生成された設定に追加する生（raw）の LXC 設定 <!-- Raw LXC configuration to be appended to the generated one -->
-raw.qemu                                    | blob      | -                 | no            | virtual-machine           | 生成されたコマンドラインに追加される生（raw）の Qemu 設定 <!-- Raw Qemu configuration to be appended to the generated command line -->
-raw.seccomp                                 | blob      | -                 | no            | container                 | 生（raw）の seccomp 設定 <!-- Raw Seccomp configuration -->
-security.devlxd                             | boolean   | true              | no            | -                         | インスタンス内の `/dev/lxd` の存在を制御する <!-- Controls the presence of /dev/lxd in the instance -->
-security.devlxd.images                      | boolean   | false             | no            | container                 | devlxd 経由の `/1.0/images` の利用可否を制御する <!-- Controls the availability of the /1.0/images API over devlxd -->
-security.idmap.base                         | integer   | -                 | no            | unprivileged container    | 割り当てに使う host の ID の base（auto-detection （自動検出）を上書きします） <!-- The base host ID to use for the allocation (overrides auto-detection) -->
-security.idmap.isolated                     | boolean   | false             | no            | unprivileged container    | インスタンス間で独立した idmap のセットを使用するかどうか <!-- Use an idmap for this instance that is unique among instances with isolated set -->
-security.idmap.size                         | integer   | -                 | no            | unprivileged container    | 使用する idmap のサイズ <!-- The size of the idmap to use -->
-security.nesting                            | boolean   | false             | yes           | container                 | インスタンス内でネストした lxd の実行を許可するかどうか <!-- Support running lxd (nested) inside the instance -->
-security.privileged                         | boolean   | false             | no            | container                 | 特権モードでインスタンスを実行するかどうか <!--Runs the instance in privileged mode -->
-security.protection.delete                  | boolean   | false             | yes           | -                         | インスタンスを削除から保護する <!-- Prevents the instance from being deleted -->
-security.protection.shift                   | boolean   | false             | yes           | container                 | インスタンスのファイルシステムが起動時に uid/gid がシフト（再マッピング） されるのを防ぐ <!-- Prevents the instance's filesystem from being uid/gid shifted on startup -->
-security.secureboot                         | boolean   | true              | no            | virtual-machine           | UEFI セキュアブートがデフォルトの Microsoft のキーで有効になるかを制御する <!-- Controls whether UEFI secure boot is enabled with the default Microsoft keys -->
-security.syscalls.allow                     | string    | -                 | no            | container                 | `\n` 区切りのシステムコールの許可リスト（security.syscalls.deny\* を使う場合は使用不可）  <!-- A '\n' separated list of syscalls to allow (mutually exclusive with security.syscalls.deny\*) -->
-security.syscalls.deny                      | string    | -                 | no            | container                 | `\n` 区切りのシステムコールの拒否リスト <!-- A '\n' separated list of syscalls to deny -->
-security.syscalls.deny\_compat              | boolean   | false             | no            | container                 | `x86_64` で `compat_*` システムコールのブロックを有効にするかどうか。他のアーキテクチャでは何もしません <!-- On x86\_64 this enables blocking of compat\_\* syscalls, it is a no-op on other arches -->
-security.syscalls.deny\_default             | boolean   | true              | no            | container                 | デフォルトのシステムコールの拒否リストを有効にするかどうか <!-- Enables the default syscall deny -->
-security.syscalls.intercept.bpf             | boolean   | false             | no            | container                 | `bpf` システムコールを処理するかどうか <!-- Handles the `bpf` system call -->
-security.syscalls.intercept.bpf.devices     | boolean   | false             | no            | container                 | device cgroup の `bpf` プログラムの統合された階層へのロードを許可するかどうか <!-- Allows `bpf` programs for the devices cgroup in the unified hierarchy to be loaded. -->
-security.syscalls.intercept.mknod           | boolean   | false             | no            | container                 | `mknod` と `mknodat` システムコールを処理するかどうか (限定されたサブセットのキャラクタ／ブロックデバイスの作成を許可する) <!-- Handles the `mknod` and `mknodat` system calls (allows creation of a limited subset of char/block devices) -->
-security.syscalls.intercept.mount           | boolean   | false             | no            | container                 | `mount` システムコールを処理するかどうか <!-- Handles the `mount` system call -->
-security.syscalls.intercept.mount.allowed   | string    | -                 | yes           | container                 | インスタンス内のプロセスが安全にマウントできるファイルシステムのカンマ区切りリストを指定 <!-- Specify a comma-separated list of filesystems that are safe to mount for processes inside the instance -->
-security.syscalls.intercept.mount.fuse      | string    | -                 | yes           | container                 | 指定されたファイルシステムを対応する fuse 実装にリダイレクトするかどうか（例: ext4-fuse2fs）<!-- Whether to redirect mounts of a given filesystem to their fuse implemenation (e.g. ext4=fuse2fs) -->
-security.syscalls.intercept.mount.shift     | boolean   | false             | yes           | container                 | `mount` システムコールをインターセプトして処理対象のファイルシステムの上に shiftfs をマウントするかどうか <!-- Whether to mount shiftfs on top of filesystems handled through mount syscall interception -->
-security.syscalls.intercept.setxattr        | boolean   | false             | no            | container                 | `setxattr` システムコールを処理するかどうか (限定されたサブセットの制限された拡張属性の設定を許可する) <!--Handles the `setxattr` system call (allows setting a limited subset of restricted extended attributes) -->
-snapshots.schedule                          | string    | -                 | no            | -                         | Cron の書式 <!-- Cron expression --> (`<minute> <hour> <dom> <month> <dow>`)、またはスケジュールエイリアスのカンマ区切りリスト <!-- , or a comma separated list of schedule aliases --> `<@hourly> <@daily> <@midnight> <@weekly> <@monthly> <@annually> <@yearly> <@startup>`
-snapshots.schedule.stopped                  | bool      | false             | no            | -                         | 停止したインスタンスのスナップショットを自動的に作成するかどうか <!-- Controls whether or not stopped instances are to be snapshoted automatically -->
-snapshots.pattern                           | string    | snap%d            | no            | -                         | スナップショット名を表す Pongo2 テンプレート（スケジュールされたスナップショットと名前を指定されないスナップショットに使用される） <!-- Pongo2 template string which represents the snapshot name (used for scheduled snapshots and unnamed snapshots) -->
-snapshots.expiry                            | string    | -                 | no            | -                         | スナップショットをいつ削除するかを設定します（`1M 2H 3d 4w 5m 6y` のような書式で設定します）<!-- Controls when snapshots are to be deleted (expects expression like `1M 2H 3d 4w 5m 6y`) -->
-user.\*                                     | string    | -                 | n/a           | -                         | 自由形式のユーザー定義の key/value の設定の組（検索に使えます） <!-- Free form user key/value storage (can be used in search) -->
+キー <!-- Key -->                    | 型 <!-- Type --> | デフォルト値 <!-- Default --> | ライブアップデート <!-- Live update --> | 条件 <!-- Condition --> | 説明 <!-- Description -->
+:--                                         | :---      | :------                              | :----------   | :----------               | :----------
+boot.autostart                              | boolean   | -                                    | n/a           | -                         | LXD起動時に常にインスタンスを起動するかどうか（設定しない場合、最後の状態
+がリストアされます）<!-- Always start the instance when LXD starts (if not s                   et, restore last state) -->
+boot.autostart.delay                        | integer   | 0                                    | n/a           | -                         | インスタンスが起動した後に次のインスタンスが起動するまで待つ秒数<!-- Number of seconds to wait after the instance started before starting the next one -->
+boot.autostart.priority                     | integer   | 0                                    | n/a           | -                         | インスタンスを起動させる順番（高いほど早く起動します）<!-- What order to start the instances in (starting with highest) -->
+boot.host\_shutdown\_timeout                | integer   | 30                                   | yes           | -                         | 強制停止前にインスタンスが停止するのを待つ秒数 <!-- Seconds to wait for instance to shutdown before it is force stopped -->
+boot.stop.priority                          | integer   | 0                                    | n/a           | -                         | インスタンスの停止順（高いほど早く停止します）<!-- What order to shutdown the instances (starting with highest) -->
+cloud-init.network-config                   | string    | eth0 上の DHCP <!-- DHCP on eth0 --> | no            | -                         | Cloud-init network-config。設定はシード値として使用 <!-- Cloud-init network-config, content is used as seed value -->
+cloud-init.user-data                        | string    | #cloud-config                        | no            | -                         | Cloud-init user-data。設定はシード値として使用 <!-- Cloud-init user-data, content is used as seed value -->
+cloud-init.vendor-data                      | string    | #cloud-config                        | no            | -                         | Cloud-init vendor-data。設定はシード値として使用 <!-- Cloud-init vendor-data, content is used as seed value -->
+cluster.evacuate                            | string    | auto                                 | n/a           | -                         | インスタンス待避時に何をするか（auto, migrate, stop） <!-- What to do when evacuating the instance (auto, migrate, or stop) -->
+environment.\*                              | string    | -                                    | yes (exec)    | -                         | インスタンス実行時に設定される key/value 形式の環境変数<!-- key/value environment variables to export to the instance and set on exec -->
+limits.cpu                                  | string    | -                                    | yes           | -                         | インスタンスに割り当てる CPU 番号、もしくは番号の範囲（デフォルトは VM 毎に 1 CPU） <!-- Number or range of CPUs to expose to the instance (defaults to 1 CPU for VMs) -->
+limits.cpu.allowance                        | string    | 100%                                 | yes           | container                 | どれくらい CPU を使えるか。ソフトリミットとしてパーセント指定（例、50%）か固定値として単位時間内に使える時間（25ms/100ms）を指定できます <!-- How much of the CPU can be used. Can be a percentage (e.g. 50%) for a soft limit or hard a chunk of time (25ms/100ms) -->
+limits.cpu.priority                         | integer   | 10 (maximum)                         | yes           | container                 | 同じ CPU をシェアする他のインスタンスと比較した CPU スケジューリングの優先度（オーバーコミット）（0 〜 10 の整数） <!-- CPU scheduling priority compared to other instances sharing the same CPUs (overcommit) (integer between 0 and 10) -->
+limits.disk.priority                        | integer   | 5 (medium)                           | yes           | -                         | 負荷がかかった状態で、インスタンスの I/O リクエストに割り当てる優先度（0 〜 10 の整数） <!-- When under load, how much priority to give to the instance's I/O requests (integer between 0 and 10) -->
+limits.hugepages.64KB                       | string    | -                                    | yes           | container                 | 64 KB hugepages の数を制限するため（利用可能な hugepage のサイズはアーキテクチャー依存）のサイズの固定値（さまざまな単位が指定可能、下記参照） <!-- Fixed value in bytes (various suffixes supported, see below) to limit number of 64 KB hugepages (Available hugepage sizes are architecture dependent.) -->
+limits.hugepages.1MB                        | string    | -                                    | yes           | container                 | 1 MB hugepages の数を制限するため（利用可能な hugepage のサイズはアーキテクチャー依存）のサイズの固定値（さまざまな単位が指定可能、下記参照） <!-- Fixed value in bytes (various suffixes supported, see below) to limit number of 1 MB hugepages (Available hugepage sizes are architecture dependent.) -->
+limits.hugepages.2MB                        | string    | -                                    | yes           | container                 | 2 MB hugepages の数を制限するため（利用可能な hugepage のサイズはアーキテクチャー依存）のサイズの固定値（さまざまな単位が指定可能、下記参照） <!-- Fixed value in bytes (various suffixes supported, see below) to limit number of 2 MB hugepages (Available hugepage sizes are architecture dependent.) -->
+limits.hugepages.1GB                        | string    | -                                    | yes           | container                 | 1 GB hugepages の数を制限するため（利用可能な hugepage のサイズはアーキテクチャー依存）のサイズの固定値（さまざまな単位が指定可能、下記参照） <!-- Fixed value in bytes (various suffixes supported, see below) to limit number of 1 GB hugepages (Available hugepage sizes are architecture dependent.) -->
+limits.kernel.\*                            | string    | -                                    | no            | container                 | インスタンスごとのカーネルリソースの制限（例、オープンできるファイルの数）<!-- This limits kernel resources per instance (e.g. number of open files) -->
+limits.memory                               | string    | -                                    | yes           | -                         | ホストメモリに対する割合（パーセント）もしくはメモリサイズの固定値（さまざまな単位が指定可能、下記参照）（デフォルトは VM 毎に 1GiB） <!-- Percentage of the host's memory or fixed value in bytes (various suffixes supported, see below) (defaults to 1GiB for VMs) -->
+limits.memory.enforce                       | string    | hard                                 | yes           | container                 | hard に設定すると、インスタンスはメモリー制限値を超過できません。soft に設定すると、ホストでメモリに余裕がある場合は超過できる可能性があります <!-- If hard, instance can't exceed its memory limit. If soft, the instance can exceed its memory limit when extra host memory is available -->
+limits.memory.hugepages                     | boolean   | false                                | no            | virtual-machine           | インスタンスを動かすために通常のシステムメモリではなく hugepage を使用するかどうか <!-- Controls whether to back the instance using hugepages rather than regular system memory -->
+limits.memory.swap                          | boolean   | true                                 | yes           | container                 | このインスタンスのあまり使われないページのスワップを推奨／非推奨するかを制御する <!-- Controls whether to encourage/discourage swapping less used pages for this instance -->
+limits.memory.swap.priority                 | integer   | 10 (maximum)                         | yes           | container                 | 高い値を設定するほど、インスタンスがディスクにスワップされにくくなります （0 〜 10 の整数） <!-- The higher this is set, the least likely the instance is to be swapped to disk (integer between 0 and 10) -->
+limits.network.priority                     | integer   | 0 (minimum)                          | yes           | -                         | 負荷がかかった状態で、インスタンスのネットワークリクエストに割り当てる優先度（0 〜 10 の整数） <!-- When under load, how much priority to give to the instance's network requests (integer between 0 and 10) -->
+limits.processes                            | integer   | - (max)                              | yes           | container                 | インスタンス内で実行できるプロセスの最大数 <!-- Maximum number of processes that can run in the instance -->
+linux.kernel\_modules                       | string    | -                                    | yes           | container                 | インスタンスを起動する前にロードするカーネルモジュールのカンマ区切りのリスト <!--Comma separated list of kernel modules to load before starting the instance -->
+linux.sysctl.\*                             | string    | -                                    | no            | container                 | sysctl 設定の変更に使用可能 <!-- Allow for modify sysctl settings -->
+migration.incremental.memory                | boolean   | false                                | yes           | container                 | インスタンスのダウンタイムを短くするためにインスタンスのメモリを増分転送するかどうか <!--Incremental memory transfer of the instance's memory to reduce downtime -->
+migration.incremental.memory.goal           | integer   | 70                                   | yes           | container                 | インスタンスを停止させる前に同期するメモリの割合 <!-- Percentage of memory to have in sync before stopping the instance -->
+migration.incremental.memory.iterations     | integer   | 10                                   | yes           | container                 | インスタンスを停止させる前に完了させるメモリ転送処理の最大数 <!-- Maximum number of transfer operations to go through before stopping the instance -->
+migration.stateful                          | boolean   | false                                | no            | virtual-machine           | ステートフルな停止/開始とスナップショットを許可。これはこれと非互換ないくつかの機能の使用を防ぎます。 <!-- Allow for stateful stop/start and snapshots. This will prevent the use of some features that are incompatible with it -->
+nvidia.driver.capabilities                  | string    | compute,utility                      | no            | container                 | インスタンスに必要なドライバケーパビリティ（libnvidia-container に環境変数 NVIDIA\_DRIVER\_CAPABILITIES を設定）<!-- What driver capabilities the instance needs (sets libnvidia-container NVIDIA\_DRIVER\_CAPABILITIES) -->
+nvidia.runtime                              | boolean   | false                                | no            | container                 | ホストの NVIDIA と CUDA ラインタイムライブラリーをインスタンス内でも使えるようにする <!-- Pass the host NVIDIA and CUDA runtime libraries into the instance -->
+nvidia.require.cuda                         | string    | -                                    | no            | container                 | 必要となる CUDA バージョン（libnvidia-container に環境変数 NVIDIA\_REQUIRE\_CUDA を設定） <!-- Version expression for the required CUDA version (sets libnvidia-container NVIDIA\_REQUIRE\_CUDA) -->
+nvidia.require.driver                       | string    | -                                    | no            | container                 | 必要となるドライバーバージョン（libnvidia-container に環境変数 NVIDIA\_REQUIRE\_DRIVER を設定） <!-- Version expression for the required driver version (sets libnvidia-container NVIDIA\_REQUIRE\_DRIVER) -->
+raw.apparmor                                | blob      | -                                    | yes           | -                         | 生成されたプロファイルに追加する Apparmor プロファイルエントリー <!-- Apparmor profile entries to be appended to the generated profile -->
+raw.idmap                                   | blob      | -                                    | no            | unprivileged conta        iner | 生（raw）の idmap 設定（例: "both 1000 1000"） <!-- Raw idmap configuration (e.g. "both 1000 1000") -->
+raw.lxc                                     | blob      | -                                    | no            | container                 | 生成された設定に追加する生（raw）の LXC 設定 <!-- Raw LXC configuration to be appended to the generated one -->
+raw.qemu                                    | blob      | -                                    | no            | virtual-machine           | 生成されたコマンドラインに追加される生（raw）の Qemu 設定 <!-- Raw Qemu configuration to be appended to the generated command line -->
+raw.seccomp                                 | blob      | -                                    | no            | container                 | 生（raw）の seccomp 設定 <!-- Raw Seccomp configuration -->
+security.devlxd                             | boolean   | true                                 | no            | -                         | インスタンス内の `/dev/lxd` の存在を制御する <!-- Controls the presence of /dev/lxd in the instance -->
+security.devlxd.images                      | boolean   | false                                | no            | container                 | devlxd 経由の `/1.0/images` の利用可否を制御する <!-- Controls the availability of the /1.0/images API over devlxd -->
+security.idmap.base                         | integer   | -                                    | no            | unprivileged container    | 割り当てに使う host の ID の base（auto-detection （自動検出）を上書きします） <!-- The base host ID to use for the allocation (overrides auto-detection) -->
+security.idmap.isolated                     | boolean   | false                                | no            | unprivileged container    | インスタンス間で独立した idmap のセットを使用するかどうか <!-- Use an idmap for this instance that is unique among instances with isolated set -->
+security.idmap.size                         | integer   | -                                    | no            | unprivileged container    | 使用する idmap のサイズ <!-- The size of the idmap to use -->
+security.nesting                            | boolean   | false                                | yes           | container                 | インスタンス内でネストした lxd の実行を許可するかどうか <!-- Support running lxd (nested) inside the instance -->
+security.privileged                         | boolean   | false                                | no            | container                 | 特権モードでインスタンスを実行するかどうか <!--Runs the instance in privileged mode -->
+security.protection.delete                  | boolean   | false                                | yes           | -                         | インスタンスを削除から保護する <!-- Prevents the instance from being deleted -->
+security.protection.shift                   | boolean   | false                                | yes           | container                 | インスタンスのファイルシステムが起動時に uid/gid がシフト（再マッピング） されるのを防ぐ <!-- Prevents the instance's filesystem from being uid/gid shifted on startup -->
+security.secureboot                         | boolean   | true                                 | no            | virtual-machine           | UEFI セキュアブートがデフォルトの Microsoft のキーで有効になるかを制御する <!-- Controls whether UEFI secure boot is enabled with the default Microsoft keys -->
+security.syscalls.allow                     | string    | -                                    | no            | container                 | `\n` 区切りのシステムコールの許可リスト（security.syscalls.deny\* を使う場合は使用不可）  <!-- A '\n' separated list of syscalls to allow (mutually exclusive with security.syscalls.deny\*) -->
+security.syscalls.deny                      | string    | -                                    | no            | container                 | `\n` 区切りのシステムコールの拒否リスト <!-- A '\n' separated list of syscalls to deny -->
+security.syscalls.deny\_compat              | boolean   | false                                | no            | container                 | `x86_64` で `compat_*` システムコールのブロックを有効にするかどうか。他のアーキテクチャでは何もしません <!-- On x86\_64 this enables blocking of compat\_\* syscalls, it is a no-op on other arches -->
+security.syscalls.deny\_default             | boolean   | true                                 | no            | container                 | デフォルトのシステムコールの拒否リストを有効にするかどうか <!-- Enables the default syscall deny -->
+security.syscalls.intercept.bpf             | boolean   | false                                | no            | container                 | `bpf` システムコールを処理するかどうか <!-- Handles the `bpf` system call -->
+security.syscalls.intercept.bpf.devices     | boolean   | false                                | no            | container                 | device cgroup の `bpf` プログラムの統合された階層へのロードを許可するかどうか <!-- Allows `bpf` programs for the devices cgroup in the unified hierarchy to be loaded. -->
+security.syscalls.intercept.mknod           | boolean   | false                                | no            | container                 | `mknod` と `mknodat` システムコールを処理するかどうか (限定されたサブセットのキャラクタ／ブロックデバイスの作成を許可する) <!-- Handles the `mknod` and `mknodat` system calls (allows creation of a limited subset of char/block devices) -->
+security.syscalls.intercept.mount           | boolean   | false                                | no            | container                 | `mount` システムコールを処理するかどうか <!-- Handles the `mount` system call -->
+security.syscalls.intercept.mount.allowed   | string    | -                                    | yes           | container                 | インスタンス内のプロセスが安全にマウントできるファイルシステムのカンマ区切りリストを指定 <!-- Specify a comma-separated list of filesystems that are safe to mount for processes inside the instance -->
+security.syscalls.intercept.mount.fuse      | string    | -                                    | yes           | container                 | 指定されたファイルシステムを対応する fuse 実装にリダイレクトするかどうか（例: ext4-fuse2fs）<!-- Whether to redirect mounts of a given filesystem to their fuse implemenation (e.g. ext4=fuse2fs) -->
+security.syscalls.intercept.mount.shift     | boolean   | false                                | yes           | container                 | `mount` システムコールをインターセプトして処理対象のファイルシステムの上に shiftfs をマウントするかどうか <!-- Whether to mount shiftfs on top of filesystems handled through mount syscall interception -->
+security.syscalls.intercept.setxattr        | boolean   | false                                | no            | container                 | `setxattr` システムコールを処理するかどうか (限定されたサブセットの制限された拡張属性の設定を許可する) <!--Handles the `setxattr` system call (allows setting a limited subset of restricted extended attributes) -->
+snapshots.schedule                          | string    | -                                    | no            | -                         | Cron の書式 <!-- Cron expression --> (`<minute> <hour> <dom> <month> <dow>`)、またはスケジュールエイリアスのカンマ区切りリスト <!-- , or a comma separated list of schedule aliases --> `<@hourly> <@daily> <@midnight> <@weekly> <@monthly> <@annually> <@yearly> <@startup>`
+snapshots.schedule.stopped                  | bool      | false                                | no            | -                         | 停止したインスタンスのスナップショットを自動的に作成するかどうか <!-- Controls whether or not stopped instances are to be snapshoted automatically -->
+snapshots.pattern                           | string    | snap%d                               | no            | -                         | スナップショット名を表す Pongo2 テンプレート（スケジュールされたスナップショットと名前を指定されないスナップショットに使用される） <!-- Pongo2 template string which represents the snapshot name (used for scheduled snapshots and unnamed snapshots) -->
+snapshots.expiry                            | string    | -                                    | no            | -                         | スナップショットをいつ削除するかを設定します（`1M 2H 3d 4w 5m 6y` のような書式で設定します）<!-- Controls when snapshots are to be deleted (expects expression like `1M 2H 3d 4w 5m 6y`) -->
+user.\*                                     | string    | -                                    | n/a           | -                         | 自由形式のユーザー定義の key/value の設定の組（検索に使えます） <!-- Free form user key/value storage (can be used in search) -->
 
 LXD は内部的に次の揮発性の設定を使います:
 <!--
@@ -159,10 +164,6 @@ Additionally, those user keys have become common with images (support isn't guar
 Key                         | Type          | Default           | Description
 :--                         | :---          | :------           | :----------
 user.meta-data              | string        | -                 | cloud-init メタデータ。設定は seed 値に追加されます <!-- Cloud-init meta-data, content is appended to seed value -->
-user.network-config         | string        | DHCP on eth0      | cloud-init ネットワーク設定。設定は seed 値として使われます <!-- Cloud-init network-config, content is used as seed value -->
-user.network\_mode          | string        | dhcp              | "dhcp"、"link-local" のどちらか。サポートされているイメージでネットワークを設定するために使われます <!-- One of "dhcp" or "link-local". Used to configure network in supported images -->
-user.user-data              | string        | #!cloud-config    | cloud-init メタデータ。seed 値として使われます <!-- Cloud-init user-data, content is used as seed value -->
-user.vendor-data            | string        | #!cloud-config    | cloud-init ベンダーデータ。seed 値として使われます <!-- Cloud-init vendor-data, content is used as seed value -->
 
 便宜的に型（type）を定義していますが、すべての値は文字列として保存されます。そして REST API を通して文字列として提供されます（後方互換性を損なうことなく任意の追加の値をサポートできます）。
 <!--
@@ -193,7 +194,7 @@ itself uses, setting those may very well break LXD in non-obvious ways
 and should whenever possible be avoided.
 -->
 
-### CPU 制限 <!-- CPU limits -->
+#### CPU 制限 <!-- CPU limits -->
 CPU 制限は cgroup コントローラの `cpuset` と `cpu` を組み合わせて実装しています。
 <!--
 The CPU limits are implemented through a mix of the `cpuset` and `cpu` CGroup controllers.
@@ -250,7 +251,7 @@ scheduler priority score when a number of instances sharing a set of
 CPUs have the same percentage of CPU assigned to them.
 -->
 
-### VM CPU トポロジー <!-- VM CPU topology -->
+#### VM CPU トポロジー <!-- VM CPU topology -->
 LXD の仮想マシンはデフォルトでは vCPU を 1 つだけ割り当てて、それは
 ホストの CPU のベンダーとタイプにマッチしたものとして表示されますが
 シングルコアでスレッドはありません。
@@ -310,7 +311,7 @@ well as consider NUMA topology when sharing memory or moving processes
 across NUMA nodes.
 -->
 
-# デバイス設定 <!-- Devices configuration -->
+## デバイス設定 <!-- Devices configuration -->
 LXD は、標準の POSIX システムが動作するのに必要な基本的なデバイスを常にインスタンスに提供します。これらはインスタンスやプロファイルの設定では見えず、上書きもできません。
 <!--
 LXD will always provide the instance with the basic devices which are required
@@ -377,7 +378,7 @@ or to a profile with:
 lxc profile device add <profile> <name> <type> [key=value]...
 ```
 
-## デバイスタイプ <!-- Device types -->
+### デバイスタイプ <!-- Device types -->
 LXD では次のデバイスタイプが使えます:
 <!--
 LXD supports the following device types:
@@ -398,7 +399,7 @@ ID (database)   | Name                               | Condition     | Descripti
 10              | [tpm](#type-tpm)                   | -             | TPM デバイス <!-- device -->
 11              | [pci](#type-pci)                   | VM            | PCI デバイス <!-- device -->
 
-### Type: none
+#### Type: none
 
 サポートされるインスタンスタイプ: コンテナー, VM
 <!--
@@ -422,7 +423,7 @@ To do so, just add a none type device with the same name of the one you wish to 
 It can be added in a profile being applied after the profile it originated from or directly on the instance.
 -->
 
-### Type: nic
+#### Type: nic
 LXD では、様々な種類のネットワークデバイス（ネットワークインターフェースコントローラーや NIC と呼びます）が使えます:
 <!--
 LXD supports several different kinds of network devices (referred to as Network Interface Controller or NIC).
@@ -435,7 +436,7 @@ When adding a network device to an instance, there are two ways to specify the t
 either by specifying the `nictype` property or using the `network` property.
 -->
 
-#### `network` プロパティーを使って NIC を指定する <!-- Specifying a NIC using the `network` property -->
+##### `network` プロパティーを使って NIC を指定する <!-- Specifying a NIC using the `network` property -->
 
 `network` プロパティーを指定する場合、 NIC は既存の管理されたネットワークにリンクされ、 `nictype` はネットワークのタイプに応じて自動的に検出されます。
 <!--
@@ -453,7 +454,7 @@ Some of the NICs properties are inherited from the network rather than being cus
 These are detailed in the "Managed" column in the NIC specific sections below.
 -->
 
-#### 利用可能な NIC <!-- NICs Available: -->
+##### 利用可能な NIC <!-- NICs Available: -->
 
 NIC ごとにどのプロパティーが設定可能かの詳細については下記を参照してください。
 <!--
@@ -487,7 +488,7 @@ The following NICs can be specified using only the `nictype` property:
  - [routed](#nictype-routed): 仮想デバイスペアを作成し、ホストからインスタンスに繋いで静的ルートをセットアップし ARP/NDP エントリーをプロキシします。これにより指定された親インタフェースのネットワークに
 インスタンスが参加できるようになります。 <!-- Creates a virtual device pair to connect the host to the instance and sets up static routes and proxy ARP/NDP entries to allow the instance to join the network of a designated parent interface. -->
 
-#### nic: bridged
+##### nic: bridged
 
 サポートされるインスタンスタイプ: コンテナー, VM
 <!--
@@ -522,8 +523,8 @@ limits.egress            | string    | -                                        
 limits.max               | string    | -                                             | no       | no      | `limits.ingress` と `limits.egress` の両方を同じ値に変更する <!-- Same as modifying both limits.ingress and limits.egress -->
 ipv4.address             | string    | -                                             | no       | no      | DHCP でインスタンスに割り当てる IPv4 アドレス <!-- An IPv4 address to assign to the instance through DHCP -->
 ipv6.address             | string    | -                                             | no       | no      | DHCP でインスタンスに割り当てる IPv6 アドレス <!-- An IPv6 address to assign to the instance through DHCP -->
-ipv4.routes              | string    | -                                             | no       | no      | ホスト上で NIC に追加する IPv4 静的ルートのカンマ区切りリスト <!-- Comma delimited list of IPv4 static routes to add on host to NIC -->
-ipv6.routes              | string    | -                                             | no       | no      | ホスト上で NIC に追加する IPv6 静的ルートのカンマ区切りリスト <!-- Comma delimited list of IPv6 static routes to add on host to NIC -->
+ipv4.routes              | string    | -                                             | no       | no      | ホスト上で NIC に追加する IPv4 静的ルートのカンマ区切りリスト（security.ipv4\_filtering 設定時に全ての IPv4 トラフィックを制限するには `none` と設定可能） <!-- Comma delimited list of IPv4 static routes to add on host to NIC (Can be `none` to restrict all IPv4 traffic when security.ipv4\_filtering is set) -->
+ipv6.routes              | string    | -                                             | no       | no      | ホスト上で NIC に追加する IPv6 静的ルートのカンマ区切りリスト（security.ipv6\_filtering 設定時に全ての IPv6 トラフィックを制限するには `none` と設定可能）  <!-- Comma delimited list of IPv6 static routes to add on host to NIC (Can be `none` to restrict all IPv6 traffic when security.ipv6\_filtering is set) -->
 ipv4.routes.external     | string    | -                                             | no       | no      | NIC にルーティングしアップリンクのネットワーク (BGP) で公開する IPv4 静的ルートのカンマ区切りリスト <!-- Comma delimited list of IPv4 static routes to route to the NIC and publish on uplink network (BGP) -->
 ipv6.routes.external     | string    | -                                             | no       | no      | NIC にルーティングしアップリンクのネットワーク (BGP) で公開する IPv6 静的ルートのカンマ区切りリスト <!-- Comma delimited list of IPv6 static routes to route to the NIC and publish on uplink network (BGP) -->
 security.mac\_filtering  | boolean   | false                                         | no       | no      | インスタンスが他の MAC アドレスになりすますのを防ぐ <!-- Prevent the instance from spoofing another's MAC address -->
@@ -536,7 +537,7 @@ vlan                     | integer   | -                                        
 vlan.tagged              | integer   | -                                             | no       | no      | タグありのトラフィックに参加する VLAN ID のカンマ区切りリスト <!-- Comma delimited list of VLAN IDs to join for tagged traffic -->
 security.port\_isolation | boolean   | false                                         | no       | no      | NIC がポート隔離を有効にしたネットワーク内の他の NIC と通信するのを防ぐ <!-- Prevent the NIC from communicating with other NICs in the network that have port isolation enabled -->
 
-#### nic: macvlan
+##### nic: macvlan
 
 サポートされるインスタンスタイプ: コンテナー, VM
 <!--
@@ -571,7 +572,7 @@ maas.subnet.ipv4        | string    | -                                         
 maas.subnet.ipv6        | string    | -                                             | no       | yes     | インスタンスを登録する MAAS IPv6 サブネット <!-- MAAS IPv6 subnet to register the instance in -->
 boot.priority           | integer   | -                                             | no       | no      | VM のブート優先度 (高いほうが先にブート) <!-- Boot priority for VMs (higher boots first) -->
 
-#### nic: sriov
+##### nic: sriov
 
 サポートされるインスタンスタイプ: コンテナー, VM
 <!--
@@ -606,7 +607,7 @@ maas.subnet.ipv4        | string    | -                                         
 maas.subnet.ipv6        | string    | -                                             | no       | yes     | インスタンスを登録する MAAS IPv6 サブネット <!-- MAAS IPv6 subnet to register the instance in -->
 boot.priority           | integer   | -                                             | no       | no      | VM のブート優先度 (高いほうが先にブート) <!-- Boot priority for VMs (higher boots first) -->
 
-#### nic: ovn
+##### nic: ovn
 
 サポートされるインスタンスタイプ: コンテナー, VM
 <!--
@@ -705,7 +706,7 @@ ovs-vsctl add-port br-int enp9s0f0np0
 ip link set enp9s0f0np0 up
 ```
 
-#### nic: physical
+##### nic: physical
 
 サポートされるインスタンスタイプ: コンテナー, VM
 <!--
@@ -739,7 +740,7 @@ maas.subnet.ipv4        | string    | -                                         
 maas.subnet.ipv6        | string    | -                                             | no       | インスタンスを登録する MAAS IPv6 サブネット <!-- MAAS IPv6 subnet to register the instance in -->
 boot.priority           | integer   | -                                             | no       | VM のブート優先度 (高いほうが先にブート) <!-- Boot priority for VMs (higher boots first) -->
 
-#### nic: ipvlan
+##### nic: ipvlan
 
 サポートされるインスタンスタイプ: コンテナー
 <!--
@@ -817,7 +818,7 @@ ipv6.host\_table        | integer   | -                                         
 vlan                    | integer   | -                                             | no       | アタッチ先の VLAN ID <!-- The VLAN ID to attach to -->
 gvrp                    | boolean   | false                                         | no       | GARP VLAN Registration Protocol を使って VLAN を登録する <!-- Register VLAN using GARP VLAN Registration Protocol -->
 
-#### nic: p2p
+##### nic: p2p
 
 サポートされるインスタンスタイプ: コンテナー, VM
 <!--
@@ -852,11 +853,11 @@ ipv4.routes             | string    | -                                         
 ipv6.routes             | string    | -                                             | no       | ホスト上で NIC に追加する IPv6 静的ルートのカンマ区切りリスト <!-- Comma delimited list of IPv6 static routes to add on host to NIC -->
 boot.priority           | integer   | -                                             | no       | VM のブート優先度 (高いほうが先にブート) <!-- Boot priority for VMs (higher boots first) -->
 
-#### nic: routed
+##### nic: routed
 
-サポートされるインスタンスタイプ: コンテナー
+サポートされるインスタンスタイプ: コンテナー, VM
 <!--
-Supported instance types: container
+Supported instance types: container, VM
 -->
 
 この NIC の指定に使えるプロパティー: `nictype`
@@ -884,13 +885,26 @@ IP アドレスは `ipv4.address` と `ipv6.address` の設定のいずれかあ
 IP addresses must be manually specified using either one or both of `ipv4.address` and `ipv6.address` settings before the instance is started.
 -->
 
-ホストとインスタンスの間に veth ペアをセットアップし、ホスト側の veth の上に次のリンクローカルゲートウェイ IP アドレスを設定し、それらをインスタンス内のデフォルトゲートウェイに設定します。
+コンテナーでは veth ペアを使用し、VM では TAP デバイスを使用します。そしてホスト側の veth の上に下記のリンクローカルゲートウェイ IP アドレスを設定し、それらをインスタンス内のデフォルトゲートウェイに設定します。
 <!--
-It sets up a veth pair between host and instance and then configures the following link-local gateway IPs on the host end which are then set as the default gateways in the instance:
+For containers it uses a veth pair, and for VMs it uses a TAP device. It then configures the following link-local gateway IPs on the host end which are then set as the default gateways in the instance:
 -->
 
   169.254.0.1
   fe80::1
+
+コンテナーではこれらはインスタンスの NIC インタフェースのデフォルトゲートウェイに自動的に設定されます。
+しかし VM では IP アドレスとデフォルトゲートウェイは手動か cloud-init のような仕組みを使って設定する必要があります。
+<!--
+For containers these are automatically set as default gateways on the instance NIC interface.
+But for VMs the IP addresses and gateways will need to be configured manually or via a mechanism like cloud-init.
+-->
+
+またお使いのコンテナーイメージがインタフェースに対して DHCP を使うように設定されている場合、上記の自動的に追加される設定は削除される可能性が高く、その後手動か cloud-init のような仕組みを使って設定する必要があることにもご注意ください。
+<!--
+Note also that if your container image is configured to perform DHCP on the interface it will likely remove the
+automatically added configuration, and will need to be configured manually or via a mechanism like cloud-init.
+-->
 
 次にインスタンスの IP アドレス全てをインスタンスの veth インタフェースに向ける静的ルートをホスト上に設定します。
 <!--
@@ -962,18 +976,20 @@ hwaddr                  | string    | ランダムに割り当て <!-- randomly 
 limits.ingress          | string    | -                                             | no       | 内向きトラフィックに対する bit/s での I/O 制限（さまざまな単位をサポート、下記参照） <!-- I/O limit in bit/s for incoming traffic (various suffixes supported, see below) -->
 limits.egress           | string    | -                                             | no       | 外向きトラフィックに対する bit/s での I/O 制限（さまざまな単位をサポート、下記参照） <!-- I/O limit in bit/s for outgoing traffic (various suffixes supported, see below) -->
 limits.max              | string    | -                                             | no       | limits.ingress と limits.egress の両方を指定するのと同じ <!-- Same as modifying both limits.ingress and limits.egress -->
+ipv4.routes             | string    | -                                             | no       | ホスト上で NIC に追加する IPv4 静的ルートのカンマ区切りリスト（L2 ARP/NDP プロキシーを除く） <!-- Comma delimited list of IPv4 static routes to add on host to NIC (without L2 ARP/NDP proxy) -->
 ipv4.address            | string    | -                                             | no       | インスタンスに追加する IPv4 静的アドレスのカンマ区切りリスト <!-- Comma delimited list of IPv4 static addresses to add to the instance -->
 ipv4.gateway            | string    | auto                                          | no       | 自動的に IPv4 のデフォルトゲートウェイを追加するかどうか（ auto か none を指定可能） <!-- Whether to add an automatic default IPv4 gateway, can be "auto" or "none" -->
-ipv4.host\_address      | string    | 169.254.0.1                                   | no       | ホスト側の veth インターフェースに追加する IPv4 アドレス <!-- The IPv4 address to add to the host-side veth interface. -->
-ipv4.host\_table        | integer   | -                                             | no       | （メインのルーティングテーブルに加えて） IPv4 の静的ルートを追加する先のルーティングテーブル ID <!-- The custom policy routing table ID to add IPv4 static routes to (in addition to main routing table). -->
+ipv4.host\_address      | string    | 169.254.0.1                                   | no       | ホスト側の veth インターフェースに追加する IPv4 アドレス <!-- The IPv4 address to add to the host-side veth interface -->
+ipv4.host\_table        | integer   | -                                             | no       | （メインのルーティングテーブルに加えて） IPv4 の静的ルートを追加する先のルーティングテーブル ID <!-- The custom policy routing table ID to add IPv4 static routes to (in addition to main routing table) -->
 ipv6.address            | string    | -                                             | no       | インスタンスに追加する IPv6 静的アドレスのカンマ区切りリスト <!-- Comma delimited list of IPv6 static addresses to add to the instance -->
+ipv6.routes             | string    | -                                             | no       | ホスト上で NIC に追加する IPv6 静的ルートのカンマ区切りリスト（L2 ARP/NDP プロキシーを除く） <!-- Comma delimited list of IPv6 static routes to add on host to NIC (without L2 ARP/NDP proxy) -->
 ipv6.gateway            | string    | auto                                          | no       | 自動的に IPv6 のデフォルトゲートウェイを追加するかどうか（ auto か none を指定可能） <!-- Whether to add an automatic default IPv6 gateway, can be "auto" or "none" -->
-ipv6.host\_address      | string    | fe80::1                                       | no       | ホスト側の veth インターフェースに追加する IPv6 アドレス <!-- The IPv6 address to add to the host-side veth interface. -->
-ipv6.host\_table        | integer   | -                                             | no       | （メインのルーティングテーブルに加えて） IPv6 の静的ルートを追加する先のルーティングテーブル ID <!-- The custom policy routing table ID to add IPv6 static routes to (in addition to main routing table). -->
+ipv6.host\_address      | string    | fe80::1                                       | no       | ホスト側の veth インターフェースに追加する IPv6 アドレス <!-- The IPv6 address to add to the host-side veth interface -->
+ipv6.host\_table        | integer   | -                                             | no       | （メインのルーティングテーブルに加えて） IPv6 の静的ルートを追加する先のルーティングテーブル ID <!-- The custom policy routing table ID to add IPv6 static routes to (in addition to main routing table) -->
 vlan                    | integer   | -                                             | no       | アタッチ先の VLAN ID <!-- The VLAN ID to attach to -->
 gvrp                    | boolean   | false                                         | no       | GARP VLAN Registration Protocol を使って VLAN を登録する <!-- Register VLAN using GARP VLAN Registration Protocol -->
 
-#### ブリッジ、ipvlan、macvlan を使った物理ネットワークへの接続 <!-- bridged, macvlan or ipvlan for connection to physical network -->
+##### ブリッジ、ipvlan、macvlan を使った物理ネットワークへの接続 <!-- bridged, macvlan or ipvlan for connection to physical network -->
 `bridged`、`ipvlan`、`macvlan` インターフェースタイプのいずれも、既存の物理ネットワークへ接続できます。
 <!--
 The `bridged`, `macvlan` and `ipvlan` interface types can be used to connect to an existing physical network.
@@ -1001,7 +1017,7 @@ In such case, a bridge is preferable. A bridge will also let you use mac filteri
 `ipvlan` is similar to `macvlan`, with the difference being that the forked device has IPs statically assigned to it and inherits the parent's MAC address on the network.
 -->
 
-#### SR-IOV
+##### SR-IOV
 `sriov` インターフェースタイプで、SR-IOV が有効になったネットワークデバイスを使えます。このデバイスは、複数の仮想ファンクション（Virtual Functions: VFs）をネットワークデバイスの単一の物理ファンクション（Physical Function: PF）に関連付けます。
 PF は標準の PCIe ファンクションです。一方、VFs は非常に軽量な PCIe ファンクションで、データの移動に最適化されています。
 VFs は PF のプロパティを変更できないように、制限された設定機能のみを持っています。
@@ -1037,7 +1053,7 @@ To tell LXD to use a specific unused VF add the `host_name` property and pass
 it the name of the enabled VF.
 -->
 
-#### MAAS を使った統合管理 <!-- MAAS integration -->
+##### MAAS を使った統合管理 <!-- MAAS integration -->
 もし、LXD ホストが接続されている物理ネットワークを MAAS を使って管理している場合で、インスタンスを直接 MAAS が管理するネットワークに接続したい場合は、MAAS とやりとりをしてインスタンスをトラッキングするように LXD を設定できます。
 <!--
 If you're using MAAS to manage the physical network under your LXD host
@@ -1066,7 +1082,7 @@ If you set the `ipv4.address` or `ipv6.address` keys on the nic, then
 those will be registered as static assignments in MAAS too.
 -->
 
-### Type: infiniband
+#### Type: infiniband
 
 サポートされるインスタンスタイプ: コンテナー
 <!--
@@ -1103,7 +1119,7 @@ To create a `physical` `infiniband` device use:
 lxc config device add <instance> <device-name> infiniband nictype=physical parent=<device>
 ```
 
-#### InfiniBand デバイスでの SR-IOV <!-- SR-IOV with infiniband devices -->
+##### InfiniBand デバイスでの SR-IOV <!-- SR-IOV with infiniband devices -->
 InfiniBand デバイスは SR-IOV をサポートしますが、他の SR-IOV と違って、SR-IOV モードでの動的なデバイスの作成はできません。
 つまり、カーネルモジュール側で事前に仮想ファンクション（virtual functions）の数を設定する必要があるということです。
 <!--
@@ -1122,7 +1138,7 @@ To create a `sriov` `infiniband` device use:
 lxc config device add <instance> <device-name> infiniband nictype=sriov parent=<sriov-enabled-device>
 ```
 
-### Type: disk
+#### Type: disk
 
 サポートされるインスタンスタイプ: コンテナー, VM
 <!--
@@ -1190,13 +1206,13 @@ size.state          | string    | -         | no        | 上の size と同じ�
 recursive           | boolean   | false     | no        | ソースパスを再帰的にマウントするかどうか <!-- Whether or not to recursively mount the source path -->
 pool                | string    | -         | no        | ディスクデバイスが属するストレージプール。LXD が管理するストレージボリュームにのみ適用されます <!-- The storage pool the disk device belongs to. This is only applicable for storage volumes managed by LXD -->
 propagation         | string    | -         | no        | バインドマウントをインスタンスとホストでどのように共有するかを管理する（デフォルトである `private`, `shared`, `slave`, `unbindable`,  `rshared`, `rslave`, `runbindable`,  `rprivate` のいずれか。詳しくは Linux kernel の文書 [shared subtree](https://www.kernel.org/doc/Documentation/filesystems/sharedsubtree.txt) をご覧ください）<!-- Controls how a bind-mount is shared between the instance and the host. (Can be one of `private`, the default, or `shared`, `slave`, `unbindable`,  `rshared`, `rslave`, `runbindable`,  `rprivate`. Please see the Linux Kernel [shared subtree](https://www.kernel.org/doc/Documentation/filesystems/sharedsubtree.txt) documentation for a full explanation) -->
-shift               | boolean   | false     | no        | ソースの uid/gid をインスタンスにマッチするように変換させるためにオーバーレイの shift を設定するか <!-- Setup a shifting overlay to translate the source uid/gid to match the instance -->
+shift               | boolean   | false     | no        | ソースの uid/gid をインスタンスにマッチするように変換させるためにオーバーレイの shift を設定するか（コンテナーのみ） <!-- Setup a shifting overlay to translate the source uid/gid to match the instance (only for containers) -->
 raw.mount.options   | string    | -         | no        | ファイルシステム固有のマウントオプション <!-- Filesystem specific mount options -->
 ceph.user\_name     | string    | admin     | no        | ソースが ceph か cephfs の場合に適切にマウントするためにユーザーが ceph user\_name を指定しなければなりません <!-- If source is ceph or cephfs then ceph user\_name must be specified by user for proper mount -->
 ceph.cluster\_name  | string    | ceph      | no        | ソースが ceph か cephfs の場合に適切にマウントするためにユーザーが ceph cluster\_name を指定しなければなりません <!-- If source is ceph or cephfs then ceph cluster\_name must be specified by user for proper mount -->
 boot.priority       | integer   | -         | no        | VM のブート優先度 (高いほうが先にブート) <!-- Boot priority for VMs (higher boots first) -->
 
-### Type: unix-char
+#### Type: unix-char
 
 サポートされるインスタンスタイプ: コンテナー
 <!--
@@ -1225,7 +1241,7 @@ gid         | int       | 0                 | no        | インスタンス内�
 mode        | int       | 0660              | no        | インスタンス内のデバイスのモード <!-- Mode of the device in the instance -->
 required    | boolean   | true              | no        | このデバイスがインスタンスの起動に必要かどうか <!-- Whether or not this device is required to start the instance -->
 
-### Type: unix-block
+#### Type: unix-block
 
 サポートされるインスタンスタイプ: コンテナー
 <!--
@@ -1254,7 +1270,7 @@ gid         | int       | 0                 | no        | インスタンス内�
 mode        | int       | 0660              | no        | インスタンス内のデバイスのモード <!-- Mode of the device in the instance -->
 required    | boolean   | true              | no        | このデバイスがインスタンスの起動に必要かどうか <!-- Whether or not this device is required to start the instance -->
 
-### Type: usb
+#### Type: usb
 
 サポートされるインスタンスタイプ: コンテナー, VM
 <!--
@@ -1281,7 +1297,7 @@ gid         | int       | 0                 | no        | インスタンス内�
 mode        | int       | 0660              | no        | インスタンス内のデバイスのモード <!-- Mode of the device in the instance -->
 required    | boolean   | false             | no        | このデバイスがインスタンスの起動に必要かどうか（デフォルトは false で、すべてのデバイスがホットプラグ可能です） <!-- Whether or not this device is required to start the instance. (The default is false, and all devices are hot-pluggable) -->
 
-### Type: gpu
+#### Type: gpu
 
 GPU デバイスエントリーは、シンプルにリクエストのあった GPU デバイスをインスタンスに出現させます。
 <!--
@@ -1289,7 +1305,7 @@ GPU device entries simply make the requested gpu device appear in the
 instance.
 -->
 
-#### 利用可能な GPU <!-- GPUs Available: -->
+##### 利用可能な GPU <!-- GPUs Available: -->
 
 以下の GPU が `gputype` プロパティーを使って指定できます。
 <!--
@@ -1301,7 +1317,7 @@ The following GPUs can be specified using the `gputype` property:
  - [mig](#gpu-mig) MIG (Multi-Instance GPU) を作成しインスタンスにパススルーします。 <!-- Creates and passes through a MIG (Multi-Instance GPU) device into the instance. -->
  - [sriov](#gpu-sriov) SR-IOV を有効にした GPU の仮想ファンクション（virtual function）をインスタンスに与えます。 <!-- Passes a virtual function of an SR-IOV enabled GPU into the instance. -->
 
-#### gpu: physical
+##### gpu: physical
 
 サポートされるインスタンスタイプ: コンテナー, VM
 <!--
@@ -1328,7 +1344,7 @@ uid         | int       | 0                 | no        | インスタンス（�
 gid         | int       | 0                 | no        | インスタンス（コンテナーのみ）内のデバイス所有者の GID <!-- GID of the device owner in the instance (container only) -->
 mode        | int       | 0660              | no        | インスタンス（コンテナーのみ）内のデバイスのモード <!-- Mode of the device in the instance (container only) -->
 
-#### gpu: mdev
+##### gpu: mdev
 
 サポートされるインスタンスタイプ: VM
 <!--
@@ -1353,7 +1369,7 @@ id          | string    | -                 | no        | GPU デバイスのカ
 pci         | string    | -                 | no        | GPU デバイスの PCI アドレス <!-- The pci address of the GPU device -->
 mdev        | string    | -                 | yes       | 使用する mdev プロファイル（例: i915-GVTg\_V5\_4） <!-- The mdev profile to use (e.g. i915-GVTg\_V5\_4) -->
 
-#### gpu: mig
+##### gpu: mig
 
 サポートされるインスタンスタイプ: コンテナー
 <!--
@@ -1380,7 +1396,7 @@ pci         | string    | -                 | no        | GPU デバイスの PC
 mig.ci      | int       | -                 | yes       | 既存の MIG コンピュートインスタンス ID <!-- Existing MIG compute instance ID -->
 mig.gi      | int       | -                 | yes       | 既存の MIG GPU インスタンス ID <!-- Existing MIG GPU instance ID -->
 
-#### gpu: sriov
+##### gpu: sriov
 
 サポートされるインスタンスタイプ: VM
 <!--
@@ -1404,7 +1420,7 @@ productid   | string    | -                 | no        | GPU デバイスのプ
 id          | string    | -                 | no        | GPU デバイスのカード ID <!-- The card id of the GPU device -->
 pci         | string    | -                 | no        | GPU デバイスの PCI アドレス <!-- The pci address of the GPU device -->
 
-### Type: proxy
+#### Type: proxy
 
 サポートされるインスタンスタイプ: コンテナー（`nat` と 非 `nat` モード）、 VM （`nat` モードのみ）
 <!--
@@ -1506,7 +1522,7 @@ security.gid    | int       | 0             | no        | 特権を落とす GID
 lxc config device add <instance> <device-name> proxy listen=<type>:<addr>:<port>[-<port>][,<port>] connect=<type>:<addr>:<port> bind=<host/instance>
 ```
 
-### Type: unix-hotplug
+#### Type: unix-hotplug
 
 サポートされるインスタンスタイプ: コンテナー
 <!--
@@ -1535,7 +1551,7 @@ gid         | int       | 0                 | no        | インスタンス内�
 mode        | int       | 0660              | no        | インスタンス内でのデバイスのモード {<!-- Mode of the device in the instance -->
 required    | boolean   | false             | no        | このデバイスがインスタンスを起動するのに必要かどうか。(デフォルトは false で全てのデバイスはホットプラグ可能です) <!-- Whether or not this device is required to start the instance. (The default is false, and all devices are hot-pluggable) -->
 
-### Type: tpm
+#### Type: tpm
 
 サポートされるインスタンスタイプ: コンテナー, VM
 <!--
@@ -1556,7 +1572,7 @@ Key                 | Type      | Default   | Required  | Description
 :--                 | :--       | :--       | :--       | :--
 path                | string    | -         | yes       | インスタンス内でのパス（コンテナーのみ） <!-- Path inside the instance (only for containers). -->
 
-### Type: pci
+#### Type: pci
 
 サポートされるインスタンスタイプ: VM
 <!--
@@ -1577,7 +1593,7 @@ Key                 | Type      | Default   | Required  | Description
 :--                 | :--       | :--       | :--       | :--
 address             | string    | -         | yes       | デバイスの PCI アドレス <!-- PCI address of the device. -->
 
-## ストレージとネットワーク制限の単位 <!-- Units for storage and network limits -->
+### ストレージとネットワーク制限の単位 <!-- Units for storage and network limits -->
 バイト数とビット数を表す値は全ていくつかの有用な単位を使用し特定の制限がどういう値かをより理解しやすいようにできます。
 <!--
 Any value representing bytes or bits can make use of a number of useful
@@ -1628,7 +1644,7 @@ The full list of byte suffixes currently supported is:
  - PiB (1024^5)
  - EiB (1024^6)
 
-## インスタンスタイプ <!-- Instance types -->
+### インスタンスタイプ <!-- Instance types -->
 LXD ではシンプルなインスタンスタイプが使えます。これは、インスタンスの作成時に指定できる文字列で表されます。
 <!--
 LXD supports simple instance types. Those are represented as a string
@@ -1669,7 +1685,7 @@ The list of supported clouds and instance types can be found here:
 
   https://github.com/dustinkirkland/instance-type
 
-## `limits.hugepages.[size]` を使った hugepage の制限 <!-- Hugepage limits via `limits.hugepages.[size]` -->
+### `limits.hugepages.[size]` を使った hugepage の制限 <!-- Hugepage limits via `limits.hugepages.[size]` -->
 LXD では `limits.hugepage.[size]` キーを使ってコンテナーが利用できる hugepage の数を制限できます。
 hugepage の制限は hugetlb cgroup コントローラーを使って行われます。
 これはつまりこれらの制限を適用するためにホストシステムが hugetlb コントローラーを legacy あるいは unified cgroup の階層に公開する必要があることを意味します。
@@ -1700,7 +1716,7 @@ container through `limits.hugepages.[size]` to stop the container from being
 able to exhaust the hugepages available to the host.
 -->
 
-## `limits.kernel.[limit name]` を使ったリソース制限 <!-- Resource limits via `limits.kernel.[limit name]`-->
+### `limits.kernel.[limit name]` を使ったリソース制限 <!-- Resource limits via `limits.kernel.[limit name]`-->
 LXD では、指定したインスタンスのリソース制限を設定するのに、 `limits.kernel.*` という名前空間のキーが使えます。
 LXD は `limits.kernel.*` のあとに指定されるキーのリソースについての妥当性の確認は一切行ないません。
 LXD は、使用中のカーネルで、指定したリソースがすべてが使えるのかどうかを知ることができません。
@@ -1751,33 +1767,49 @@ configured limitation will be inherited from the process starting up the
 instance. Note that this inheritance is not enforced by LXD but by the kernel.
 -->
 
-## スナップショットの定期実行 <!-- Snapshot scheduling -->
+### スナップショットの定期実行と設定 <!-- Snapshot scheduling and configuration -->
 LXD は 1 分毎に最大 1 回作成可能なスナップショットの定期実行をサポートします。
-3 つの設定項目があります。 `snapshots.schedule` には短縮された cron 書式:
-`<分> <時> <日> <月> <曜日>` を指定します。これが空 (デフォルト) の場合はスナップショットは
-作成されません。 `snapshots.schedule.stopped` は自動的にスナップショットを作成する際に
+3 つの設定項目があります。
+<!--
+LXD supports scheduled snapshots which can be created at most once every minute.
+There are three configuration options:
+-->
+- `snapshots.schedule` には短縮された cron 書式: `<分> <時> <日> <月> <曜日>` を指定します。
+これが空 (デフォルト) の場合はスナップショットは作成されません。 <!-- `snapshots.schedule` takes a shortened cron expression:
+`<minute> <hour> <day-of-month> <month> <day-of-week>`. If this is empty
+(default), no snapshots will be created. -->
+- `snapshots.schedule.stopped` は自動的にスナップショットを作成する際に
 インスタンスを停止するかどうかを制御します。デフォルトは `false` です。
-`snapshots.pattern` は pongo2 のテンプレート文字列を指定し、 pongo2 のコンテキストには
+<!-- `snapshots.schedule.stopped` controls whether or not stopped instance are to
+be automatically snapshotted.  It defaults to `false`. -->
+- `snapshots.pattern` は pongo2 のテンプレート文字列を指定し、 pongo2 のコンテキストには
 `creation_date` 変数を含みます。スナップショットの名前に禁止された文字が含まれないように
 日付をフォーマットする (例: `{{ creation_date|date:"2006-01-02_15-04-05" }}`) べきで
 あることに注意してください。名前の衝突を防ぐ別の方法はプレースホルダ `%d` を使うことです。
 (プレースホルダを除いて) 同じ名前のスナップショットが既に存在する場合、
 既存の全てのスナップショットの名前を考慮に入れてプレースホルダの最大の番号を見つけます。
 新しい名前にはこの番号を 1 増やしたものになります。スナップショットが存在しない場合の
-開始番号は `0` になります。
+開始番号は `0` になります。 `snapshots.pattern` のデフォルトの挙動は `snap%d` の
+フォーマット文字列と同じです。<!-- `snapshots.pattern` takes a pongo2 template string to format the snapshot name.
+To name snapshots with time stamps, the pongo2 context variable `creation_date`
+can be used.  Be aware that you should format the date
+(e.g. use `{{ creation_date|date:"2006-01-02_15-04-05" }}`) in your template
+string to avoid forbidden characters in the snapshot name.  Another way to avoid
+name collisions is to use the placeholder `%d`. If a snapshot with the same name
+(excluding the placeholder) already exists, all existing snapshot names will be
+taken into account to find the highest number at the placeholders position. This
+number will be incremented by one for the new name. The starting number if no
+snapshot exists will be `0`. The default behavior of `snapshots.pattern` is
+equivalent to a format string of `snap%d`. -->
+
+pongo2 の文法を使ってスナップショット名にタイムスタンプを含める例:
 <!--
-LXD supports scheduled snapshots which can be created at most once every minute.
-There are three configuration options. `snapshots.schedule` takes a shortened
-cron expression: `<minute> <hour> <day-of-month> <month> <day-of-week>`. If this is
-empty (default), no snapshots will be created. `snapshots.schedule.stopped`
-controls whether or not stopped instance are to be automatically snapshotted.
-It defaults to `false`. `snapshots.pattern` takes a pongo2 template string,
-and the pongo2 context contains the `creation_date` variable. Be aware that you
-should format the date (e.g. use `{{ creation_date|date:"2006-01-02_15-04-05" }}`)
-in your template string to avoid forbidden characters in your snapshot name.
-Another way to avoid name collisions is to use the placeholder `%d`. If a snapshot
-with the same name (excluding the placeholder) already exists, all existing snapshot
-names will be taken into account to find the highest number at the placeholders
-position. This number will be incremented by one for the new name. The starting
-number if no snapshot exists will be `0`.
+Example of using pongo2 syntax to format snapshot names with timestamps:
+-->
+```bash
+lxc config set INSTANCE snapshots.pattern "{{ creation_date|date:'2006-01-02_15-04-05' }}"
+```
+これにより作成日時 `{date/time of creation}` を秒の精度まで含んだスナップショット名になります。
+<!--
+This results in snapshots named `{date/time of creation}` down to the precision of a second.
 -->

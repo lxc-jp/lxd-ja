@@ -85,9 +85,9 @@ A number of new syscalls related container configuration keys were introduced.
  * `security.syscalls.blacklist`
  * `security.syscalls.whitelist`
 
-使い方は [configuration.md](Configuration.md) を参照してください。
+使い方は [インスタンスの設定](instances.md) を参照してください。
 <!--
-See [configuration.md](configuration.md) for how to use them.
+See [Instance configuration](instances.md) for how to use them.
 -->
 
 ## auth\_pki
@@ -261,7 +261,7 @@ This includes:
 -->
 
  * `/1.0/networks` エントリーに "managed" プロパティを追加 <!-- Addition of the "managed" property on `/1.0/networks` entries -->
- * ネットワーク設定オプションの全て (詳細は[configuration.md](configuration.md) を参照) <!-- All the network configuration options (see [configuration.md](configuration.md) for details) -->
+ * ネットワーク設定オプションの全て (詳細は [ネットワーク設定](networks.md) を参照) <!-- All the network configuration options (see [Network configuration](networks.md) for details) -->
  * `POST /1.0/networks` (詳細は [RESTful API](rest-api.md) を参照) <!-- `POST /1.0/networks` (see [RESTful API](rest-api.md) for details) -->
  * `PUT /1.0/networks/<entry>` (詳細は [RESTful API](rest-api.md) を参照) <!-- `PUT /1.0/networks/<entry>` (see [RESTful API](rest-api.md)for details) -->
  * `PATCH /1.0/networks/<entry>` (詳細は [RESTful API](rest-api.md) を参照) <!-- `PATCH /1.0/networks/<entry>` (see [RESTful API](rest-api.md) for details) -->
@@ -418,7 +418,7 @@ This includes:
 * `PATCH /1.0/storage-pools/<pool>/volumes/<volume_type>/<name>` (詳細は [RESTful API](rest-api.md) を参照) <!-- (see [RESTful API](rest-api.md) for details) -->
 * `DELETE /1.0/storage-pools/<pool>/volumes/<volume_type>/<name>` (詳細は [RESTful API](rest-api.md) を参照) <!-- (see [RESTful API](rest-api.md) for details) -->
 
-* 全てのストレージ設定オプション (詳細は [configuration.md](configuration.md) を参照) <!-- All storage configuration options (see [configuration.md](configuration.md) for details) -->
+* 全てのストレージ設定オプション (詳細は [ストレージの設定](storage.md) を参照) <!-- All storage configuration options (see [Storage configuration](storage.md) for details) -->
 
 ## file\_delete
 `/1.0/containers/<name>/files` の DELETE メソッドを実装
@@ -2560,7 +2560,7 @@ OVN networks and NICs. This replaces the removed ACL `default.action` and `defau
 これは NVIDIA MIG のサポートを追加します。
 `mig` gputype と関連する設定キーを追加します。
 <!--
-This adds support for NVIDIA MIG. It introduces the `mig` gputype and associaetd config keys.
+This adds support for NVIDIA MIG. It introduces the `mig` gputype and associated config keys.
 -->
 
 ## project\_usage
@@ -2823,4 +2823,93 @@ OVN NIC に `acceleration` 設定キーを追加し、ハードウェアオフ�
 <!--
 Adds new `acceleration` config key to OVN NICs which can be used for enabling hardware offloading.
 It takes the values `none` or `sriov`.
+-->
+
+## certificate\_self\_renewal
+これはクライアント自身の信頼証明書の更新のサポートを追加します。
+<!--
+This adds support for renewing a client's own trust certificate.
+-->
+
+## instance\_project\_move
+これは `POST /1.0/instances/NAME` API に `project` フィールドを追加し、インスタンスをプロジェクト間で簡単に移動できるようにします。
+<!--
+This adds a `project` field to the `POST /1.0/instances/NAME` API,
+allowing for easy move of an instance between projects.
+-->
+
+## storage\_volume\_project\_move
+これはストレージボリュームのプロジェクト間での移動のサポートを追加します。
+<!--
+This adds support for moving storage volume between projects.
+-->
+
+## cloud\_init
+これは以下のキーを含む `project` 設定キー名前空間を追加します。
+<!--
+This adds a new `cloud-init` config key namespace which contains the following keys:
+-->
+
+ - `cloud-init.vendor-data`
+ - `cloud-init.user-data`
+ - `cloud-init.network-config`
+
+これはまた devlxd にインスタンスのデバイスを表示する `/1.0/devices` エンドポイントを追加します。
+<!--
+ It also adds a new endpoint `/1.0/devices` to devlxd which shows an instance's devices.
+-->
+
+## network\_dns\_nat
+これはネットワークゾーン (DNS) に `network.nat` を設定オプションとして追加します。
+<!--
+This introduces `network.nat` as a config option on network zones (DNS).
+-->
+
+デフォルトでは全てのインスタンスの NIC のレコードを生成するという現状の挙動になりますが、
+`false` に設定すると外部から到達可能なアドレスのレコードのみを生成するよう LXD に指示します。
+<!--
+It defaults to the current behavior of generating records for all
+instances NICs but if set to `false`, it will instruct LXD to only
+generate records for externally reachable addreses.
+-->
+
+## database\_leader
+クラスター・リーダーに設定される "database-leader" ロールを追加します。
+<!--
+Adds new "database-leader" role which is assigned to cluster leader.
+-->
+
+## instance\_all\_projects
+全てのプロジェクトのインスタンス表示のサポートを追加します。
+<!--
+This adds support for displaying instances from all projects.
+-->
+
+## clustering\_groups
+クラスター・メンバーのグループ化のサポートを追加します。
+<!--
+Add support for grouping cluster members.
+-->
+
+これは以下の新しいエンドポイントを追加します。
+<!--
+This introduces the following new endpoints:
+-->
+
+ - `/1.0/cluster/groups` (GET, POST)
+ - `/1.0/cluster/groups/<name>` (GET, POST, PUT, PATCH, DELETE)
+
+以下のプロジェクトの制限が追加されます。
+<!--
+ The following project restriction is added:
+-->
+
+  - `restricted.cluster.groups`
+
+## ceph\_rbd\_du
+Ceph ストレージブールに `ceph.rbd.du` という boolean の設定を追加します。
+実行に時間がかかるかもしれない `rbd du` の呼び出しの使用を無効化できます。
+<!--
+Adds a new `ceph.rbd.du` boolean on Ceph storage pools which allows
+disabling the use of the potentially slow `rbd du` calls.
 -->

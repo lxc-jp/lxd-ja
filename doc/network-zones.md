@@ -78,11 +78,12 @@ through the `restricted.networks.zones` project configuration key.
 The following are network zone properties:
 -->
 
-プロパティー <!-- Property --> | 型 <!-- Type --> | 必須 <!-- Required --> | 説明 <!-- Description -->
-:--                 | :--        | :--      | :--
-peers.NAME.address  | string     | no       | DNS サーバーの IP アドレス <!-- IP address of a DNS server -->
-peers.NAME.key      | string     | no       | サーバー用の TSIG キー <!-- TSIG key for the server -->
-dns.nameservers     | string set | no       | (NS レコード用の) DNS サーバーの FQDN のカンマ区切りリスト <!-- Comma separated list of DNS server FQDNs (for NS records) -->
+プロパティー <!-- Property --> | 型 <!-- Type --> | 必須 <!-- Required --> | デフォルト値 <!-- Default --> | 説明 <!-- Description -->
+:--                 | :--        | :--      | -       | :--
+peers.NAME.address  | string     | no       | -       | DNS サーバーの IP アドレス <!-- IP address of a DNS server -->
+peers.NAME.key      | string     | no       | -       | サーバー用の TSIG キー <!-- TSIG key for the server -->
+dns.nameservers     | string set | no       | -       | (NS レコード用の) DNS サーバーの FQDN のカンマ区切りリスト <!-- Comma separated list of DNS server FQDNs (for NS records) -->
+network.nat         | bool       | no       | true    | NAT されたサブネットのレコードを生成するかどうか <!-- Whether to generate records for NAT-ed subnets -->
 
 さらに、 `user.` キーの名前空間もユーザー提供の自由形式のキー・バリュー用にサポートされています。
 <!--

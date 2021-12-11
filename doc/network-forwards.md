@@ -55,7 +55,7 @@ target\_address   | string     | yes      | フォワード先の IP アドレ�
 target\_port      | string     | no       | ターゲットのポート (例 `70,80-90` or `90`)、 空の場合は `listen_port` と同じ <!-- Target port(s) (e.g. `70,80-90` or `90`), same as `listen_port` if empty -->
 description       | string     | no       | ポートの説明 <!-- Description of port(s) -->
 
-# <a name="network-types"></a> ネットワーク種別 <!-- Network types -->
+## <a name="network-types"></a> ネットワーク種別 <!-- Network types -->
 
 以下のネットワーク種別がフォワードをサポートします。詳細は各ネットワーク種別の項を参照してください。
 <!--
@@ -66,7 +66,7 @@ The following network types support forwards. See each network type section for 
  - [ovn](#network-ovn)
 
 
-## <a name="network-bridge"></a> ブリッジ <!-- network: bridge -->
+### <a name="network-bridge"></a> ブリッジ <!-- network: bridge -->
 
 衝突しない任意のリッスンアドレスを指定可能です。
 <!--
@@ -78,7 +78,7 @@ Any non-conflicting listen address is allowed.
 The listen address used cannot overlap with a subnet that is in use with another network.
 -->
 
-## <a name="network-ovn"></a> ovn <!-- network: ovn -->
+### <a name="network-ovn"></a> ovn <!-- network: ovn -->
 
 使用可能なリッスンアドレスはアップリンクのネットワークの `ipv{n}.routes` 設定と（設定されていれば）プロジェクトの `restricted.networks.subnets` 設定で定義されているアドレスです。
 <!--

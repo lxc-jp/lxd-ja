@@ -1,83 +1,50 @@
 # ストレージの設定
 <!-- Storage configuration -->
+LXD を使ってストレージプールやストレージボリュームを管理、作成できます。
+一般的な（設定）キーはトップレベルです。ドライバー特有のキーはドライバー名で名前空間を作ります。
+ボリュームのキーは、ボリューム単位で値を上書きしない限りは、プール内に作られたすべてのボリュームに適用されます。
+以下のタイプがサポートされます。
 <!--
 LXD supports creating and managing storage pools and storage volumes.
 General keys are top-level. Driver specific keys are namespaced by driver name.
 Volume keys apply to any volume created in the pool unless the value is
-overridden on a per-volume basis.
+overridden on a per-volume basis. The following types are supported:
 -->
-LXD を使ってストレージプールやストレージボリュームを管理、作成できます。
-一般的な（設定）キーはトップレベルです。ドライバー特有のキーはドライバー名で名前空間を作ります。
-ボリュームのキーは、ボリューム単位で値を上書きしない限りは、プール内に作られたすべてのボリュームに適用されます。
 
+- [dir](#dir)
+- [ceph](#ceph)
+- [cephfs](#cephfs)
+- [btrfs](#btrfs)
+- [lvm](#lvm)
+- [zfs](#zfs)
 
-## ストレージプールの設定 <!-- Storage pool configuration -->
-Key                             | Type      | Condition                         | Default                                                      | Description
-:--                             | :---      | :--------                         | :------                                                      | :----------
-size                            | string    | appropriate driver and source     | 0                                                            | ストレージプールのサイズ。バイト単位（suffixも使えます）（現時点では loop ベースのプールと zfs で有効）<!-- Size of the storage pool in bytes (suffixes supported). (Currently valid for loop based pools and zfs.) -->
-source                          | string    | -                                 | -                                                            | ブロックデバイス、loop ファイル、ファイルシステムエントリーのパス <!-- Path to block device or loop file or filesystem entry -->
-btrfs.mount\_options            | string    | btrfs driver                      | user\_subvol\_rm\_allowed                                    | ブロックデバイスのマウントオプション <!-- Mount options for block devices -->
-ceph.cluster\_name              | string    | ceph driver                       | ceph                                                         | ストレージプールを作る対象の Ceph クラスタ名 <!-- Name of the ceph cluster in which to create new storage pools. -->
-ceph.osd.force\_reuse           | bool      | ceph driver                       | false                                                        | 他の LXD インスタンスが使用中の OSD ストレージプールを強制的に使う <!-- Force using an osd storage pool that is already in use by another LXD instance. -->
-ceph.osd.pg\_num                | string    | ceph driver                       | 32                                                           | OSD ストレージプールの Placement group 数 <!-- Number of placement groups for the osd storage pool. -->
-ceph.osd.pool\_name             | string    | ceph driver                       | プール名 <!-- name of the pool -->                           | OSD ストレージプール名 <!-- Name of the osd storage pool. -->
-ceph.osd.data\_pool\_name       | string    | ceph driver                       | -                                                            | OSD データプール名 <!-- Name of the osd data pool. -->
-ceph.rbd.clone\_copy            | string    | ceph driver                       | true                                                         | フルデータセットのコピーの代わりに RBD Lightweight Clone を使うかどうか <!-- Whether to use RBD lightweight clones rather than full dataset copies. -->
-ceph.user.name                  | string    | ceph driver                       | admin                                                        | ストレージプールやボリュームを作成する際に使用する Ceph ユーザー名 <!-- The ceph user to use when creating storage pools and volumes. -->
-cephfs.cluster\_name            | string    | cephfs driver                     | ceph                                                         | 新しいストレージプールを作成する ceph のクラスター名 <!-- Name of the ceph cluster in which to create new storage pools. -->
-cephfs.path                     | string    | cephfs driver                     | /                                                            | CEPHFS をマウントするベースのパス <!-- The base path for the CEPHFS mount -->
-cephfs.user.name                | string    | cephfs driver                     | admin                                                        | ストレージプールとボリュームを作成する際に用いる ceph のユーザー <!-- The ceph user to use when creating storage pools and volumes. -->
-lvm.thinpool\_name              | string    | lvm driver                        | LXDThinPool                                                  | イメージを作る Thin pool 名 <!-- Thin pool where images are created. -->
-lvm.use\_thinpool               | bool      | lvm driver                        | true                                                         | ストレージプールは論理ボリュームに Thinpool を使うかどうか <!-- Whether the storage pool uses a thinpool for logical volumes. -->
-lvm.vg\_name                    | string    | lvm driver                        | プール名 <!-- name of the pool -->                           | 作成するボリュームグループ名 <!-- Name of the volume group to create. -->
-lvm.vg.force\_reuse             | bool      | lvm driver                        | false                                                        | 既存の空でないボリュームグループの使用を強制 <!-- Force using an existing non-empty volume group. -->
-volume.lvm.stripes              | string    | lvm driver                        | -                                                            | 新しいボリューム (あるいは thin pool ボリューム) に使用するストライプ数 <!-- Number of stripes to use for new volumes (or thin pool volume). -->
-volume.lvm.stripes.size         | string    | lvm driver                        | -                                                            | 使用するストライプのサイズ (最低 4096 バイトで 512 バイトの倍数を指定) <!-- Size of stripes to use (at least 4096 bytes and multiple of 512bytes). -->
-rsync.bwlimit                   | string    | -                                 | 0 (no limit)                                                 | ストレージエンティティーの転送にrsyncを使う場合、I/Oソケットに設定する制限を指定 <!-- Specifies the upper limit to be placed on the socket I/O whenever rsync has to be used to transfer storage entities. -->
-rsync.compression               | bool      | appropriate driver                | true                                                         | ストレージプールをマイグレートする際に圧縮を使用するかどうか <!-- Whether to use compression while migrating storage pools. -->
-volatile.initial\_source        | string    | -                                 | -                                                            | 作成時に与える実際のソースを記録 <!-- Records the actual source passed during creating -->(e.g. /dev/sdb).
-volatile.pool.pristine          | string    | -                                 | true                                                         | プールが作成時に空かどうか <!-- Whether the pool has been empty on creation time. -->
-volume.block.filesystem         | string    | block based driver (lvm)          | ext4                                                         | 新しいボリュームに使うファイルシステム <!-- Filesystem to use for new volumes -->
-volume.block.mount\_options     | string    | block based driver (lvm)          | discard                                                      | ブロックデバイスのマウントポイント <!-- Mount options for block devices -->
-volume.size                     | string    | appropriate driver                | unlimited (ブロックデバイスは 10GB) <!-- (10GB for block)--> | デフォルトのボリュームサイズ <!-- Default volume size -->
-volume.zfs.remove\_snapshots    | bool      | zfs driver                        | false                                                        | 必要に応じてスナップショットを削除するかどうか <!-- Remove snapshots as needed -->
-volume.zfs.use\_refquota        | bool      | zfs driver                        | false                                                        | 領域の quota の代わりに refquota を使うかどうか <!-- Use refquota instead of quota for space. -->
-zfs.clone\_copy                 | string    | zfs driver                        | true                                                         | boolean の文字列を指定した場合は ZFS のフルデータセットコピーの代わりに軽量なクローンを使うかどうかを制御し、 "rebase" という文字列を指定した場合は初期イメージをベースにコピーします。 <!-- Whether to use ZFS lightweight clones rather than full dataset copies (boolean) or "rebase" to copy based on the initial image. -->
-zfs.pool\_name                  | string    | zfs driver                        | プール名 <!-- name of the pool -->                           | Zpool 名 <!-- Name of the zpool -->
-
+ストレージプールの設定は lxc ツールを使って次のように設定できます:
 <!--
 Storage pool configuration keys can be set using the lxc tool with:
 -->
-ストレージプールの設定は lxc ツールを使って次のように設定できます:
 
 ```bash
 lxc storage set [<remote>:]<pool> <key> <value>
 ```
-
-## ストレージボリュームの設定 <!-- Storage volume configuration -->
-Key                     | Type      | Condition                 | Default                                             | Description
-:--                     | :---      | :--------                 | :------                                             | :----------
-size                    | string    | appropriate driver        | <!-- same as -->volume.size と同じ                  | ストレージボリュームのサイズ <!-- Size of the storage volume -->
-block.filesystem        | string    | block based driver        | <!-- same as -->volume.block.filesystem と同じ      | ストレージボリュームのファイルシステム <!-- Filesystem of the storage volume -->
-block.mount\_options    | string    | block based driver        | <!-- same as -->volume.block.mount\_options と同じ  | ブロックデバイスのマウントオプション <!-- Mount options for block devices -->
-security.shifted        | bool      | custom volume             | false                                               | shiftfs オーバーレイを使って id をシフトさせる（複数の隔離されたインスタンスからアタッチしたストレージで、インスタンスそれぞれで指定したidになるようにする） <!-- Enable id shifting overlay (allows attach by multiple isolated instances) -->
-security.unmapped       | bool      | custom volume             | false                                               | ボリュームに対する ID マッピングを無効化する <!-- Disable id mapping for the volume -->
-lvm.stripes             | string    | lvm driver                | -                                                   | 新しいボリューム (あるいは thin pool ボリューム) に使用するストライプ数 <!-- Number of stripes to use for new volumes (or thin pool volume). -->
-lvm.stripes.size        | string    | lvm driver                | -                                                   | 使用するストライプのサイズ (最低 4096 バイトで 512 バイトの倍数を指定) <!-- Size of stripes to use (at least 4096 bytes and multiple of 512bytes). -->
-snapshots.expiry        | string    | custom volume             | -                                                   | スナップショットがいつ削除されるかを制御する（ `1M 2H 3d 4w 5m 6y` のような式を受け付ける） <!-- Controls when snapshots are to be deleted (expects expression like `1M 2H 3d 4w 5m 6y`) -->
-snapshots.schedule      | string    | custom volume             | -                                                   | Cron の書式 <!-- Cron expression --> (`<minute> <hour> <dom> <month> <dow>`)、またはスケジュールエイリアスのカンマ区切りリスト <!-- , or a comma separated list of schedule aliases --> `<@hourly> <@daily> <@midnight> <@weekly> <@monthly> <@annually> <@yearly>`
-snapshots.pattern       | string    | custom volume             | snap%d                                              | スナップショットの名前を表す Pongo2 のテンプレート文字列（スケジュールされたスナップショットと無名のスナップショットに使用される） <!-- Pongo2 template string which represents the snapshot name (used for scheduled snapshots and unnamed snapshots) -->
-zfs.remove\_snapshots   | string    | zfs driver                | <!-- same as -->volume.zfs.remove\_snapshots と同じ | 必要に応じてスナップショットを削除するかどうか <!-- Remove snapshots as needed -->
-zfs.use\_refquota       | string    | zfs driver                | <!-- same as -->volume.zfs.zfs\_requota と同じ      | 領域の quota の代わりに refquota を使うかどうか <!-- Use refquota instead of quota for space -->
-
+ストレージボリュームの設定は lxc ツールを使って次のように設定できます:
 <!--
 Storage volume configuration keys can be set using the lxc tool with:
 -->
-ストレージボリュームの設定は lxc ツールを使って次のように設定できます:
 
 ```bash
 lxc storage volume set [<remote>:]<pool> <volume> <key> <value>
 ```
+
+ストレージプールのデフォルトボリューム設定を設定するには、volume 接頭辞つきのストレージプール設定を設定します（例: `volume.<VOLUME_CONFIGURATION>=<VALUE>`）。
+例えば、デフォルトのボリュームサイズを lxc ツールで設定するには以下のようにします。
+<!--
+To set default volume configurations for a storage pool, set a storage pool configuration with a volume prefix i.e. `volume.<VOLUME_CONFIGURATION>=<VALUE>`.
+For an example, to set the default volume size of a pool with the lxc tool, use:
+-->
+```bash
+lxc storage set [<remote>:]<pool> volume.size <value>
+```
+
 
 ## ストレージボリュームのコンテンツタイプ <!-- Storage volume content types -->
 ストレージボリュームは `filesystem` か `block` のいずれかのタイプが指定可能です。
@@ -108,13 +75,13 @@ Block custom storage volumes can be created with:
 lxc storage volume create [<remote>]:<pool> <name> --type=block
 ```
 
-# LXD のデータをどこに保管するか <!-- Where to store LXD data -->
+## LXD のデータをどこに保管するか <!-- Where to store LXD data -->
 使用しているストレージバックエンドによって LXD はファイルシステムをホストと共有するかあるいはデータを分離しておくことができます。
 <!--
 Depending on the storage backends used, LXD can either share the filesystem with its host or keep its data separate.
 -->
 
-## ホストと共有する <!-- Sharing with the host -->
+### ホストと共有する <!-- Sharing with the host -->
 これは通常最もスペース効率良く LXD を動かす方法で、管理もおそらく一番容易でしょう。
 以下の方法で実現できます。
 <!--
@@ -126,7 +93,7 @@ It can be done with:
  - `btrfs` バックエンドでホストが btrfs で LXD に専用のサブボリュームを与えている場合 <!-- `btrfs` backend if the host is btrfs and you point LXD to a dedicated subvolume -->
  - `zfs` バックエンドでホストが zfs で zpool 上で専用のデータセットを LXD に与えている場合 <!-- `zfs` backend if the host is zfs and you point LXD to a dedicated dataset on your zpool -->
 
-## 専用のディスク／パーティション <!-- Dedicated disk/partition -->
+### 専用のディスク／パーティション <!-- Dedicated disk/partition -->
 このモードでは LXD のストレージはホストから完全に独立しています。
 これはメインのディスク上で空のパーティションを LXD に使用させるか、ディスク全体を専用で使用させるかで実現できます。
 <!--
@@ -139,7 +106,7 @@ This can be done by having LXD use an empty partition on your main disk or by ha
 This is supported by all storage drivers except `dir`, `ceph` and `cephfs`.
 -->
 
-## ループディスク <!-- Loop disk -->
+### ループディスク <!-- Loop disk -->
 上記のどちらの選択肢も利用できない場合、 LXD はメインのドライブ上にループファイルを作成し、選択したストレージドライバーにそれを使わせることができます。
 <!--
 If neither of the options above are possible for you, LXD can create a loop file
@@ -157,8 +124,8 @@ drive's filesystem. The loop files also usually cannot be shrunk.
 They will grow up to the limit you select but deleting instances or images will not cause the file to shrink.
 -->
 
-# ストレージバックエンドとサポートされる機能 <!-- Storage Backends and supported functions -->
-## 機能比較 <!-- Feature comparison -->
+## ストレージバックエンドとサポートされる機能 <!-- Storage Backends and supported functions -->
+### 機能比較 <!-- Feature comparison -->
 <!--
 LXD supports using ZFS, btrfs, LVM or just plain directories for storage of images, instances and custom volumes.  
 Where possible, LXD tries to use the advanced features of each system to optimize operations.
@@ -180,7 +147,7 @@ LXD では、イメージ、インスタンス、カスタムボリューム用�
 古い（最新ではない）スナップショットからのリストア <!-- Restore from older snapshots (not latest) --> | yes | yes | yes | no | yes
 ストレージクオータ <!-- Storage quotas --> | yes(\*) | yes | no | yes | no
 
-## おすすめのセットアップ <!-- Recommended setup -->
+### おすすめのセットアップ <!-- Recommended setup -->
 <!--
 The two best options for use with LXD are ZFS and btrfs.  
 They have about similar functionalities but ZFS is more reliable if available on your particular platform.
@@ -203,7 +170,26 @@ instant copies or snapshots and so needs to copy the entirety of the instance's 
 同様に、ディレクトリバックエンドも最後の手段として考えるべきでしょう。  
 LXD の主な機能すべてが使えますが、インスタントコピーやスナップショットが使えないので、毎回インスタンスのストレージ全体をコピーする必要があり、恐ろしく遅くて役に立たないでしょう。
 
-## 最適化されたイメージストレージ <!-- Optimized image storage -->
+### セキュリティの考慮 <!-- Security Considerations -->
+
+現在、 Linux Kernel はブロックベースのファイルシステム（例: `ext4`）が別のオプションでマウント済みの場合マウントオプションは適用せずに黙って無視します。
+これは専用ディスクデバイスが異なるストレージプール間で共有されている時、2つめのマウントは期待しているマウントオプションが設定されないかもしれないことを意味します。
+これは例えば1つめのストレージプールが `acl` サポートを提供する想定で、2つめのストレージプールが `acl` サポートを提供しない想定であるようなときにセキュリティ上の問題になります。
+この理由により、現状はストレージプールごとに専用のディスクデバイスを持つか、同じ専用ディスクを共有する全てのストレージプールで同じマウントオプションを使うことを推奨します。
+<!--
+Currently, the Linux Kernel may not apply mount options and silently ignore
+them when a block-based filesystem (e.g. `ext4`) is already mounted with
+different options. This means when dedicated disk devices are shared between
+different storage pools with different mount options set, the second mount may
+not have the expected mount options. This becomes security relevant, when e.g.
+one storage pool is supposed to provide `acl` support and the second one is
+supposed to not provide `acl` support. For this reason it is currently
+recommended to either have dedicated disk devices per storage pool or ensure
+that all storage pools that share the same dedicated disk device use the same
+mount options.
+-->
+
+### 最適化されたイメージストレージ <!-- Optimized image storage -->
 <!--
 All backends but the directory backend have some kind of optimized image storage format.  
 This is used by LXD to make instance creation near instantaneous by simply cloning a pre-made  
@@ -219,7 +205,7 @@ the volume is generated on demand, causing the first instance to take longer to 
 そのイメージで使えないストレージプールの上にそのようなボリュームを準備することは無駄なので、ボリュームはオンデマンドで作成されます。  
 したがって、最初のインスタンスはあとで作るインスタンスよりは作成に時間がかかります。
 
-## 最適化されたインスタンスの転送 <!-- Optimized instance transfer -->
+### 最適化されたインスタンスの転送 <!-- Optimized instance transfer -->
 <!--
 ZFS, btrfs and CEPH RBD have an internal send/receive mechanisms which allow for optimized volume transfer.  
 LXD uses those features to transfer instances and snapshots between servers.
@@ -242,7 +228,7 @@ value.
 -->
 rsync を使う必要がある場合、LXD ではストレージプールのプロパティーである `rsync.bwlimit` を 0 以外の値に設定することで、ソケット I/O の流量の上限を設定できます。
 
-## デフォルトのストレージプール <!-- Default storage pool -->
+### デフォルトのストレージプール <!-- Default storage pool -->
 <!--
 There is no concept of a default storage pool in LXD.  
 Instead, the pool to use for the instance's root is treated as just another "disk" device in LXD.
@@ -279,7 +265,7 @@ The same can be done manually against any profile using (for the "default" profi
 lxc profile device add default root disk path=/ pool=default
 ```
 
-## I/O 制限 <!-- I/O limits -->
+### I/O 制限 <!-- I/O limits -->
 <!--
 I/O limits in IOp/s or MB/s can be set on storage devices when attached to an
 instance (see [Containers](containers.md)).
@@ -311,7 +297,7 @@ This also means that access to cached data will not be affected by the limit.
 このことは、キャッシュされたデータへのアクセスは、制限の影響を受けないことも意味します。
 
 ## 各ストレージバックエンドに対する注意と例 <!-- Notes and examples -->
-### ディレクトリ <!-- Directory -->
+### <a name="dir"></a> ディレクトリ (dir) <!-- dir -->
 
  - このバックエンドでは全ての機能を使えますが、他のバックエンドに比べて非常に時間がかかります。
    これは、イメージを展開したり、インスタンスやスナップショットやイメージのその時点のコピーを作成する必要があるからです。
@@ -321,6 +307,23 @@ This also means that access to cached data will not be affected by the limit.
  - ファイルシステムレベルでプロジェクトクォータが有効に設定されている ext4 もしくは XFS で実行している場合は、ディレクトリバックエンドでクォータがサポートされます。
    <!-- Quotas are supported with the directory backend when running on
    either ext4 or XFS with project quotas enabled at the filesystem level. -->
+
+#### ストレージプール設定 <!-- Storage pool configuration -->
+キー <!-- Key -->             | 型 <!-- Type -->              | デフォルト値 <!--Default -->            | 説明 <!-- Description -->
+:--                           | :---                          | :------                                 | :----------
+rsync.bwlimit                 | string                        | 0 (no limit)                            | ストレージエンティティの転送に rsync を使う必要があるときにソケット I/O に指定する上限を設定 <!-- Specifies the upper limit to be placed on the socket I/O whenever rsync has to be used to transfer storage entities -->
+rsync.compression             | bool                          | true                                    | ストレージブールのマイグレーションの際に圧縮を使うかどうか <!-- Whether to use compression while migrating storage pools -->
+source                        | string                        | -                                       | ブロックデバイスかループファイルかファイルシステムエントリのパス <!-- Path to block device or loop file or filesystem entry -->
+
+#### ストレージボリューム設定 <!-- Storage volume configuration -->
+キー <!-- Key -->       | 型 <!-- Type --> | 条件 <!-- Condition --> | デフォルト値 <!--Default -->               | 説明 <!-- Description -->
+:--                     | :---      | :--------                 | :------                                         | :----------
+security.shifted        | bool      | custom volume             | false                                           | id シフトオーバーレイを有効にする（複数の独立したインスタンスによるアタッチを許可する） <!-- Enable id shifting overlay (allows attach by multiple isolated instances) -->
+security.unmapped       | bool      | custom volume             | false                                           | ボリュームへの id マッピングを無効にする <!-- Disable id mapping for the volume -->
+size                    | string    | appropriate driver        | volume.size と同じ <!-- same as volume.size --> | ストレージボリュームのサイズ <!-- Size of the storage volume -->
+snapshots.expiry        | string    | custom volume             | -                                               | スナップショットがいつ削除されるかを制御（`1M 2H 3d 4w 5m 6y` のような設定形式を想定） <!-- Controls when snapshots are to be deleted (expects expression like `1M 2H 3d 4w 5m 6y`) -->
+snapshots.pattern       | string    | custom volume             | snap%d                                          | スナップショット名を表す Pongo2 テンプレート文字列（スケジュールされたスナップショットと名前指定なしのスナップショットに使用） <!-- Pongo2 template string which represents the snapshot name (used for scheduled snapshots and unnamed snapshots) -->
+snapshots.schedule      | string    | custom volume             | -                                               | Cron の書式 <!-- Cron expression --> (`<minute> <hour> <dom> <month> <dow>`)、またはスケジュールアイリアスのカンマ区切りリスト <!-- , or a comma separated list of schedule aliases --> `<@hourly> <@daily> <@midnight> <@weekly> <@monthly> <@annually> <@yearly>`
 
 #### ディレクトリストレージプールを作成するコマンド <!-- The following commands can be used to create directory storage pools -->
 
@@ -336,7 +339,7 @@ lxc storage create pool1 dir
 lxc storage create pool2 dir source=/data/lxd
 ```
 
-### CEPH
+### <a name="ceph"></a> CEPH
 
 - イメージとして RBD イメージを使い、インスタンスやスナップショットを作成するためにスナップショットやクローンを実行します
   <!-- Uses RBD images for images, then snapshots and clones to create instances
@@ -372,6 +375,44 @@ lxc storage create pool2 dir source=/data/lxd
   hold OSD storage pools. Using `ext4` as the underlying filesystem for the
   storage entities is not recommended by Ceph upstream. You may see unexpected
   and erratic failures which are unrelated to LXD itself. -->
+- "erasure" タイプの ceph osd プールを使うためには事前に作成した osd pool とメタデータを保管するための "replicated" タイプの別の osd pool が必要です。
+  これは RBD と CephFS が omap をサポートしないために必要となります。
+  そのプールが "earasure coded" かを指定するにはリプリケートされたプールに
+  `ceph.osd.data_pool_name=<erasure-coded-pool-name>` と
+  `source=<replicated-pool-name>` を使用する必要があります。
+  <!-- To use ceph osd pool of type "erasure" you __must__ have the osd pool created
+  beforehand, as well as a separate osd pool of type "replicated" that will be used for
+  storing metadata. This is required as RBD & CephFS do not support omap.
+  To specify which pool is "earasure coded" you need to use the
+  `ceph.osd.data_pool_name=<erasure-coded-pool-name>` and
+  `source=<replicated-pool-name>` for the replicated pool. -->
+
+#### ストレージプール設定 <!-- Storage pool configuration -->
+キー <!-- Key -->             | 型 <!-- Type -->              | デフォルト値 <!--Default -->            | 説明 <!-- Description -->
+:--                           | :---                          | :------                                 | :----------
+ceph.cluster\_name            | string                        | ceph                                    | 新しいストレージプールを作成する ceph クラスターの名前 <!-- Name of the ceph cluster in which to create new storage pools -->
+ceph.osd.data\_pool\_name     | string                        | -                                       | osd data pool の名前 <!-- Name of the osd data pool -->
+ceph.osd.force\_reuse         | bool                          | false                                   | 別の LXD インスタンスで既に使用されている osd ストレージプールの使用を強制するか <!-- Force using an osd storage pool that is already in use by another LXD instance -->
+ceph.osd.pg\_num              | string                        | 32                                      | osd ストレージプール用の placement グループの数 <!-- Number of placement groups for the osd storage pool -->
+ceph.osd.pool\_name           | string                        | プールの名前 <!-- name of the pool -->  | osd ストレージプールの名前 <!-- Name of the osd storage pool -->
+ceph.rbd.clone\_copy          | string                        | true                                    | フルのデータセットコピーではなく RBD のライトウェイトクローンを使うかどうか <!-- Whether to use RBD lightweight clones rather than full dataset copies -->
+ceph.rbd.du                   | bool                          | true                                    | 停止したインスタンスのディスク使用データを取得するのに rbd du を使用するかどうか <!-- Whether to use rbd du to obtain disk usage data for stopped instances. -->
+ceph.rbd.features             | string                        | layering                                | ボリュームで有効する RBD の機能のカンマ区切りリスト <!-- Comma separate list of RBD features to enable on the volumes -->
+ceph.user.name                | string                        | admin                                   | ストレージプールとボリュームの作成に使用する ceph ユーザー <!-- The ceph user to use when creating storage pools and volumes -->
+volatile.pool.pristine        | string                        | true                                    | プールが作成時に空かどうか <!-- Whether the pool has been empty on creation time -->
+
+#### ストレージボリューム設定 <!-- Storage volume configuration -->
+キー <!-- Key -->       | 型 <!-- Type --> | 条件 <!-- Condition --> | デフォルト値 <!--Default -->                   | 説明 <!-- Description -->
+:--                     | :---      | :--------                 | :------                                             | :----------
+block.filesystem        | string    | block based driver        | <!-- same as --> volume.block.filesystem と同じ     | ストレージボリュームのファイルシステム <!-- Filesystem of the storage volume -->
+block.mount\_options    | string    | block based driver        | <!-- same as --> volume.block.mount\_options と同じ | ブロックデバイスのマウントオプション <!-- Mount options for block devices -->
+security.shifted        | bool      | custom volume             | false                                               | id シフトオーバーレイを有効にする（複数の独立したインスタンスによるアタッチを許可する） <!-- Enable id shifting overlay (allows attach by multiple isolated instances) -->
+security.unmapped       | bool      | custom volume             | false                                               | ボリュームへの id マッピングを無効にする <!-- Disable id mapping for the volume -->
+size                    | string    | appropriate driver        | volume.size と同じ <!-- same as volume.size -->     | ストレージボリュームのサイズ <!-- Size of the storage volume -->
+snapshots.expiry        | string    | custom volume             | -                                                   | スナップショットがいつ削除されるかを制御（`1M 2H 3d 4w 5m 6y` のような設定形式を想定） <!-- Controls when snapshots are to be deleted (expects expression like `1M 2H 3d 4w 5m 6y`) -->
+snapshots.pattern       | string    | custom volume             | snap%d                                              | スナップショット名を表す Pongo2 テンプレート文字列（スケジュールされたスナップショットと名前指定なしのスナップショットに使用） <!-- Pongo2 template string which represents the snapshot name (used for scheduled snapshots and unnamed snapshots) -->
+snapshots.schedule      | string    | custom volume             | -                                                   | Cron の書式 <!-- Cron expression --> (`<minute> <hour> <dom> <month> <dow>`)、またはスケジュールアイリアスのカンマ区切りリスト <!-- , or a comma separated list of schedule aliases --> `<@hourly> <@daily> <@midnight> <@weekly> <@monthly> <@annually> <@yearly>`
+
 
 #### Ceph ストレージプールを作成するコマンド <!-- The following commands can be used to create Ceph storage pools -->
 
@@ -399,12 +440,39 @@ lxc storage create pool1 ceph ceph.osd.pool_name=my-osd
 lxc storage create pool1 ceph source=my-already-existing-osd
 ```
 
-### CEPHFS
+- 既存の osd イレージャーコードされたプール "ecpool" と osd リプリケートされたプール "rpl-pool" を使用する <!-- Use the existing osd erasure coded pool "ecpool" and osd replicated pool "rpl-pool". -->
+
+```bash
+lxc storage create pool1 ceph source=rpl-pool ceph.osd.data_pool_name=ecpool
+```
+
+### <a name="cephfs"></a> CEPHFS
 
  - カスタムストレージボリュームにのみ利用可能 <!-- Can only be used for custom storage volumes -->
  - サーバサイドで許可されていればスナップショットもサポート <!-- Supports snapshots if enabled on the server side -->
 
-### Btrfs
+#### ストレージプール設定 <!-- Storage pool configuration -->
+キー <!-- Key -->             | 型 <!-- Type -->              | デフォルト値 <!--Default -->            | 説明 <!-- Description -->
+:--                           | :---                          | :------                                 | :----------
+ceph.cluster\_name            | string                        | ceph                                    | 新しいストレージプールを作成する ceph クラスターの名前 <!-- Name of the ceph cluster in which to create new storage pools -->
+ceph.user.name                | string                        | admin                                   | ストレージプールやボリュームを作成する際に使用する Ceph ユーザー名 <!-- The ceph user to use when creating storage pools and volumes -->
+cephfs.cluster\_name          | string                        | ceph                                    | 新しいストレージプールを作成する ceph のクラスター名 <!-- Name of the ceph cluster in which to create new storage pools -->
+cephfs.path                   | string                        | /                                       | CEPHFS をマウントするベースのパス <!-- The base path for the CEPHFS mount -->
+cephfs.user.name              | string                        | admin                                   | ストレージプールとボリュームを作成する際に用いる ceph のユーザー <!-- The ceph user to use when creating storage pools and volumes -->
+volatile.pool.pristine        | string                        | true                                    | プールが作成時に空かどうか <!-- Whether the pool has been empty on creation time -->
+
+#### ストレージボリューム設定 <!-- Storage volume configuration -->
+キー <!-- Key -->       | 型 <!-- Type --> | 条件 <!-- Condition --> | デフォルト値 <!--Default -->                   | 説明 <!-- Description -->
+:--                     | :---      | :--------                 | :------                                             | :----------
+security.shifted        | bool      | custom volume             | false                                               | id シフトオーバーレイを有効にする（複数の独立したインスタンスによるアタッチを許可する） <!-- Enable id shifting overlay (allows attach by multiple isolated instances) -->
+security.unmapped       | bool      | custom volume             | false                                               | ボリュームへの id マッピングを無効にする <!-- Disable id mapping for the volume -->
+size                    | string    | appropriate driver        | volume.size と同じ <!-- same as volume.size -->     | ストレージボリュームのサイズ <!-- Size of the storage volume -->
+snapshots.expiry        | string    | custom volume             | -                                                   | スナップショットがいつ削除されるかを制御（`1M 2H 3d 4w 5m 6y` のような設定形式を想定） <!-- Controls when snapshots are to be deleted (expects expression like `1M 2H 3d 4w 5m 6y`) -->
+snapshots.pattern       | string    | custom volume             | snap%d                                              | スナップショット名を表す Pongo2 テンプレート文字列（スケジュールされたスナップショットと名前指定なしのスナップショットに使用） <!-- Pongo2 template string which represents the snapshot name (used for scheduled snapshots and unnamed snapshots) -->
+snapshots.schedule      | string    | custom volume             | -                                                   | Cron の書式 <!-- Cron expression --> (`<minute> <hour> <dom> <month> <dow>`)、またはスケジュールアイリアスのカンマ区切りリスト <!-- , or a comma separated list of schedule aliases --> `<@hourly> <@daily> <@midnight> <@weekly> <@monthly> <@annually> <@yearly>`
+
+
+### <a name="btrfs"></a> Btrfs
 
  - インスタンス、イメージ、スナップショットごとにサブボリュームを使い、新しいオブジェクトを作成する際に btrfs スナップショットを作成します <!-- Uses a subvolume per instance, image and snapshot, creating btrfs snapshots when creating a new object. -->
  - btrfs は、親コンテナー自身が btrfs 上に作成されているときには、コンテナー内のストレージバックエンドとして使えます（ネストコンテナー）（qgroup を使った btrfs クオータについての注意を参照してください） <!-- btrfs can be used as a storage backend inside a container (nesting), so long as the parent container is itself on btrfs. (But see notes about btrfs quota via qgroups.) -->
@@ -417,6 +485,40 @@ lxc storage create pool1 ceph source=my-already-existing-osd
    quotas that are set. If adherence to strict quotas is a necessity users
    should be mindful of this and maybe consider using a zfs storage pool with
    refquotas. -->
+ - クオータを使用する際は btrfs のエクステントはイミュータブルであるためブロックが書かれるときにブロックが新しいエクステントに書き込まれ古いブロックはその中のデータが全て参照されなくなるか再書き込みされるまで残ることを考慮することが非常に重要です。
+   これはサブボリューム内の現在のファイルが使用中のスペースの合計量がクオータより小さいにもかかわらずクオータに達することがあり得ることを意味します。
+   これは btrfs サブボリュームの上に生のディスクイメージファイルを使うランダム I/O の性質のため BTRFS 上で VM を使うときによく発生します。
+   VM と btrfs のストレージプールの組み合わせは使わないことを私達は推奨します。
+   もしそれでも使いたい場合は、ディスクイメージファイル内の全てのブロックが qgroup クオータの制限にかかること無く再書き込みできるように
+   インスタンスのルートディスクの `size.state` プロパティをルートディスクサイズの 2 倍に設定してください。
+   また `btrfs.mount_options=compress-force` ストレージオプションを使うことで圧縮を有効にする副作用として最大のエクステントサイズを縮小させブロックの再書き込みによりストレージの大部分が 2 倍の容量を消費するのを防ぐことができます。
+   ただしこれはストレージプールのオプションですので、プール上の全てのボリュームに影響します。
+   <!-- When using quotas it is critical to take into account that btrfs extents are immutable so when blocks are
+   written they end up in new extents and the old ones remain until all of its data is dereferenced or rewritten.
+   This means that a quota can be reached even if the total amount of space used by the current files in the
+   subvolume is smaller than the quota. This is seen most often when using VMs on BTRFS due to the random I/O
+   nature of using raw disk image files on top of a btrfs subvolume. Our recommendation is to not use VMs with btrfs
+   storage pools, but if you insist then please ensure that the instance root disk's `size.state` property is set
+   to 2x the size of the root disk's size to allow all blocks in the disk image file to be rewritten without
+   reaching the qgroup quota. You may also find that using the `btrfs.mount_options=compress-force` storage pool
+   option avoids this scenario as a side effect of enabling compression is to reduce the maximum extent size such
+   that block rewrites don't cause as much storage to be double tracked. However as this is a storage pool option
+   it will affect all volumes on the pool. -->
+
+#### ストレージプール設定 <!-- Storage pool configuration -->
+キー <!-- Key -->               | 型 <!-- Type --> | 条件 <!-- Condition -->    | デフォルト値 <!--Default --> | 説明 <!-- Description -->
+:--                             | :---      | :--------                         | :------                    | :----------
+btrfs.mount\_options            | string    | btrfs driver                      | user\_subvol\_rm\_allowed  | ブロックデバイスのマウントオプション <!-- Mount options for block devices -->
+
+#### ストレージボリューム設定 <!-- Storage volume configuration -->
+キー <!-- Key -->       | 型 <!-- Type --> | 条件 <!-- Condition --> | デフォルト値 <!--Default -->                   | 説明 <!-- Description -->
+:--                     | :---      | :--------                 | :------                                             | :----------
+security.shifted        | bool      | custom volume             | false                                               | id シフトオーバーレイを有効にする（複数の独立したインスタンスによるアタッチを許可する） <!-- Enable id shifting overlay (allows attach by multiple isolated instances) -->
+security.unmapped       | bool      | custom volume             | false                                               | ボリュームへの id マッピングを無効にする <!-- Disable id mapping for the volume -->
+size                    | string    | appropriate driver        | volume.size と同じ <!-- same as volume.size -->     | ストレージボリュームのサイズ <!-- Size of the storage volume -->
+snapshots.expiry        | string    | custom volume             | -                                                   | スナップショットがいつ削除されるかを制御（`1M 2H 3d 4w 5m 6y` のような設定形式を想定） <!-- Controls when snapshots are to be deleted (expects expression like `1M 2H 3d 4w 5m 6y`) -->
+snapshots.pattern       | string    | custom volume             | snap%d                                              | スナップショット名を表す Pongo2 テンプレート文字列（スケジュールされたスナップショットと名前指定なしのスナップショットに使用） <!-- Pongo2 template string which represents the snapshot name (used for scheduled snapshots and unnamed snapshots) -->
+snapshots.schedule      | string    | custom volume             | -                                                   | Cron の書式 <!-- Cron expression --> (`<minute> <hour> <dom> <month> <dow>`)、またはスケジュールアイリアスのカンマ区切りリスト <!-- , or a comma separated list of schedule aliases --> `<@hourly> <@daily> <@midnight> <@weekly> <@monthly> <@annually> <@yearly>`
 
 #### Btrfs ストレージプールを作成するコマンド <!-- The following commands can be used to create BTRFS storage pools -->
 
@@ -454,8 +556,13 @@ sudo btrfs filesystem resize max /var/lib/lxd/storage-pools/<POOL>/
 <!--
 (NOTE: For users of the snap, use `/var/snap/lxd/common/lxd/` instead of /var/lib/lxd/`)
 -->
+- LOOPDEV はストレージプールイメージに関連付けられたマウントされたループデバイス（例: `/dev/loop8`）を参照します。 <!-- LOOPDEV refers to the mounted loop device (e.g. `/dev/loop8`) associated with the storage pool image. -->
+- マウントされたループデバイスは次のコマンドで確認できます。 <!-- The mounted loop devices can be found using the following command: -->
+```bash
+losetup -l
+```
 
-### LVM
+### <a name="lvm"></a> LVM
 
  - イメージ用に LV を使うと、インスタンスとインスタンススナップショット用に LV のスナップショットを使います <!-- Uses LVs for images, then LV snapshots for instances and instance snapshots. -->
  - LV で使われるファイルシステムは ext4 です（代わりに xfs を使うように設定できます） <!-- The filesystem used for the LVs is ext4 (can be configured to use xfs instead). -->
@@ -484,6 +591,31 @@ sudo btrfs filesystem resize max /var/lib/lxd/storage-pools/<POOL>/
    settings in `/etc/lvm/lvm.conf` to avoid slowdowns when interacting with
    LXD.
    -->
+
+#### ストレージプール設定 <!-- Storage pool configuration -->
+キー <!-- Key -->             | 型 <!-- Type -->              | デフォルト値 <!--Default -->            | 説明 <!-- Description -->
+:--                           | :---                          | :------                                 | :----------
+lvm.thinpool\_name            | string                        | LXDThinPool                             | イメージを作る Thin pool 名 <!-- Thin pool where volumes are created -->
+lvm.use\_thinpool             | bool                          | true                                    | ストレージプールは論理ボリュームに Thinpool を使うかどうか <!-- Whether the storage pool uses a thinpool for logical volumes -->
+lvm.vg.force\_reuse           | bool                          | false                                   | 既存の空でないボリュームグループの使用を強制 <!-- Force using an existing non-empty volume group -->
+lvm.vg\_name                  | string                        | name of the pool                        | 作成するボリュームグループ名 <!-- Name of the volume group to create -->
+rsync.bwlimit                 | string                        | 0 (no limit)                            | ストレージエンティティーの転送にrsyncを使う場合、I/Oソケットに設定する上限を指定 <!--  Specifies the upper limit to be placed on the socket I/O whenever rsync has to be used to transfer storage entities -->
+rsync.compression             | bool                          | true                                    | ストレージプールをマイグレートする際に圧縮を使用するかどうか <!--  Whether to use compression while migrating storage pools -->
+source                        | string                        | -                                       | ブロックデバイスかループファイルかファイルシステムエントリのパス <!-- Path to block device or loop file or filesystem entry -->
+
+#### ストレージボリューム設定 <!-- Storage volume configuration -->
+キー <!-- Key -->       | 型 <!-- Type --> | 条件 <!-- Condition --> | デフォルト値 <!--Default -->                   | 説明 <!-- Description -->
+:--                     | :---      | :--------                 | :------                                             | :----------
+block.filesystem        | string    | block based driver        | <!-- same as -->volume.block.filesystem と同じ      | ストレージボリュームのファイルシステム <!-- Filesystem of the storage volume -->
+block.mount\_options    | string    | block based driver        | <!-- same as -->volume.block.mount\_options と同じ  | ブロックデバイスのマウントオプション <!-- Mount options for block devices -->
+lvm.stripes             | string    | lvm driver                | -                                                   | 新しいボリューム (あるいは thin pool ボリューム) に使用するストライプ数 <!-- Number of stripes to use for new volumes (or thin pool volume). -->
+lvm.stripes.size        | string    | lvm driver                | -                                                   | 使用するストライプのサイズ (最低 4096 バイトで 512 バイトの倍数を指定) <!-- Size of stripes to use (at least 4096 bytes and multiple of 512bytes). -->
+security.shifted        | bool      | custom volume             | false                                               | id シフトオーバーレイを有効にする（複数の独立したインスタンスによるアタッチを許可する） <!-- Enable id shifting overlay (allows attach by multiple isolated instances) -->
+security.unmapped       | bool      | custom volume             | false                                               | ボリュームへの id マッピングを無効にする <!-- Disable id mapping for the volume -->
+size                    | string    | appropriate driver        | volume.size と同じ <!-- same as volume.size -->     | ストレージボリュームのサイズ <!-- Size of the storage volume -->
+snapshots.expiry        | string    | custom volume             | -                                                   | スナップショットがいつ削除されるかを制御（`1M 2H 3d 4w 5m 6y` のような設定形式を想定） <!-- Controls when snapshots are to be deleted (expects expression like `1M 2H 3d 4w 5m 6y`) -->
+snapshots.pattern       | string    | custom volume             | snap%d                                              | スナップショット名を表す Pongo2 テンプレート文字列（スケジュールされたスナップショットと名前指定なしのスナップショットに使用） <!-- Pongo2 template string which represents the snapshot name (used for scheduled snapshots and unnamed snapshots) -->
+snapshots.schedule      | string    | custom volume             | -                                                   | Cron の書式 <!-- Cron expression --> (`<minute> <hour> <dom> <month> <dow>`)、またはスケジュールアイリアスのカンマ区切りリスト <!-- , or a comma separated list of schedule aliases --> `<@hourly> <@daily> <@midnight> <@weekly> <@monthly> <@annually> <@yearly>`
 
 #### LVM ストレージプールを作成するコマンド <!-- The following commands can be used to create LVM storage pools -->
 
@@ -517,7 +649,7 @@ lxc storage create pool1 lvm source=/dev/sdX
 lxc storage create pool1 lvm source=/dev/sdX lvm.vg_name=my-pool
 ```
 
-### ZFS
+### <a name="zfs"></a> ZFS
 
  - LXD が ZFS プールを作成した場合は、デフォルトで圧縮が有効になります <!-- When LXD creates a ZFS pool, compression is enabled by default. -->
  - イメージ用に ZFS を使うと、インスタンスとスナップショットの作成にスナップショットとクローンを使います <!-- Uses ZFS filesystems for images, then snapshots and clones to create instances and snapshots. -->
@@ -595,6 +727,27 @@ lxc storage create pool1 lvm source=/dev/sdX lvm.vg_name=my-pool
    and not a native Linux filesystem using the Linux VFS API which is where
    I/O limits are applied.
    -->
+
+#### ストレージプール設定 <!-- Storage pool configuration -->
+キー <!-- Key -->             | 型 <!-- Type -->              | デフォルト値 <!--Default -->            | 説明 <!-- Description -->
+:--                           | :---                          | :------                                 | :----------
+size                          | string                        | 0                                       | ストレージプールのサイズ。バイト単位（suffixも使えます）（現時点では loop ベースのプールと zfs で有効）<!-- Size of the storage pool in bytes (suffixes supported). (Currently valid for loop based pools and zfs.) -->
+source                        | string                        | -                                       | ブロックデバイスかループファイルかファイルシステムエントリのパス <!-- Path to block device or loop file or filesystem entry -->
+zfs.clone\_copy               | string                        | true                                    | boolean の文字列を指定した場合は ZFS のフルデータセットコピーの代わりに軽量なクローンを使うかどうかを制御し、 "rebase" という文字列を指定した場合は初期イメージをベースにコピーします。 <!-- Whether to use ZFS lightweight clones rather than full dataset copies (boolean) or "rebase" to copy based on the initial image -->
+zfs.pool\_name                | string                        | name of the pool                        | Zpool 名 <!-- Name of the zpool -->
+
+#### ストレージボリューム設定 <!-- Storage volume configuration -->
+キー <!-- Key -->       | 型 <!-- Type --> | 条件 <!-- Condition --> | デフォルト値 <!--Default -->                   | 説明 <!-- Description -->
+:--                     | :---      | :--------                 | :------                                             | :----------
+security.shifted        | bool      | custom volume             | false                                               | id シフトオーバーレイを有効にする（複数の独立したインスタンスによるアタッチを許可する） <!-- Enable id shifting overlay (allows attach by multiple isolated instances) -->
+security.unmapped       | bool      | custom volume             | false                                               | ボリュームへの id マッピングを無効にする <!-- Disable id mapping for the volume -->
+size                    | string    | appropriate driver        | volume.size と同じ <!-- same as volume.size -->     | ストレージボリュームのサイズ <!-- Size of the storage volume -->
+snapshots.expiry        | string    | custom volume             | -                                                   | スナップショットがいつ削除されるかを制御（`1M 2H 3d 4w 5m 6y` のような設定形式を想定） <!-- Controls when snapshots are to be deleted (expects expression like `1M 2H 3d 4w 5m 6y`) -->
+snapshots.pattern       | string    | custom volume             | snap%d                                              | スナップショット名を表す Pongo2 テンプレート文字列（スケジュールされたスナップショットと名前指定なしのスナップショットに使用） <!-- Pongo2 template string which represents the snapshot name (used for scheduled snapshots and unnamed snapshots) -->
+snapshots.schedule      | string    | custom volume             | -                                                   | Cron の書式 <!-- Cron expression --> (`<minute> <hour> <dom> <month> <dow>`)、またはスケジュールアイリアスのカンマ区切りリスト <!-- , or a comma separated list of schedule aliases --> `<@hourly> <@daily> <@midnight> <@weekly> <@monthly> <@annually> <@yearly>`
+
+zfs.remove\_snapshots   | string    | zfs driver                | <!-- same as -->volume.zfs.remove\_snapshots と同じ | 必要に応じてスナップショットを削除するかどうか <!-- Remove snapshots as needed -->
+zfs.use\_refquota       | string    | zfs driver                | <!-- same as -->volume.zfs.zfs\_requota と同じ      | 領域の quota の代わりに refquota を使うかどうか <!-- Use refquota instead of quota for space -->
 
 #### ZFS ストレージプールを作成するコマンド <!-- The following commands can be used to create ZFS storage pools -->
 

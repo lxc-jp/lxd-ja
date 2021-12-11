@@ -21,13 +21,13 @@ LXD がどういうものであり、何をするのかをよく理解するた�
 そして、ローカルで実行してみたい場合は、[はじめに](https://linuxcontainers.org/lxd/getting-started-cli/) という文書をご覧ください。
 
 <!--
-Release announcements can be found here: <https://linuxcontainers.org/lxd/news/>  
-And the release tarballs here: <https://linuxcontainers.org/lxd/downloads/>
-The documentation is here: <https://linuxcontainers.org/lxd/docs/master/>
+- Release announcements: <https://linuxcontainers.org/lxd/news/>
+- Release tarballs: <https://linuxcontainers.org/lxd/downloads/>
+- Documentation: <https://linuxcontainers.org/lxd/docs/master/>
 -->
-リリースアナウンスはこちらでご覧になれます: <https://linuxcontainers.org/lxd/news/>  
-リリース tarball はこちらから取得できます: <https://linuxcontainers.org/lxd/downloads/>
-ドキュメントはこちらでご覧になれます: <https://linuxcontainers.org/lxd/docs/master/>
+- リリースアナウンス: <https://linuxcontainers.org/lxd/news/>
+- リリース tarball: <https://linuxcontainers.org/lxd/downloads/>
+- ドキュメント: <https://linuxcontainers.org/lxd/docs/master/>
 
 ## ステータス <!-- Status -->
 Type                | Service               | Status
@@ -56,161 +56,10 @@ More instructions on installing LXD for a wide variety of Linux distributions an
 -->
 さまざまな Linux ディストリビューションとオペレーティングシステムで LXD をインストールするためのより詳細な方法は、[公式サイト](https://linuxcontainers.org/lxd/getting-started-cli/) をご覧ください。
 
-## LXD のソースからのインストール <!-- Installing LXD from source -->
-LXD の開発には liblxc の最新バージョン（3.0.0 以上が必要）を使用することをおすすめします。
-さらに LXD が動作するためには Golang 1.13 以上が必要です。
-Ubuntu では次のようにインストールできます:
 <!--
-We recommend having the latest versions of liblxc (>= 3.0.0 required)
-available for LXD development. Additionally, LXD requires Golang 1.13 or
-later to work. On ubuntu, you can get those with:
+To install LXD from source, see [Installing LXD](installing.md) in the documentation.
 -->
-
-```bash
-sudo apt update
-sudo apt install acl attr autoconf dnsmasq-base git golang libacl1-dev libcap-dev liblxc1 liblxc-dev libsqlite3-dev libtool libudev-dev liblz4-dev libuv1-dev make pkg-config rsync squashfs-tools tar tcl xz-utils ebtables
-```
-
-<!--
-There are a few storage backends for LXD besides the default "directory" backend.
-Installing these tools adds a bit to initramfs and may slow down your
-host boot, but are needed if you'd like to use a particular backend:
--->
-デフォルトのストレージバックエンドである "directory" に加えて、LXD ではいくつかのストレージバックエンドが使えます。
-これらのツールをインストールすると、initramfs への追加が行われ、ホストのブートが少しだけ遅くなるかもしれませんが、特定のバックエンドを使いたい場合には必要です:
-
-```bash
-sudo apt install lvm2 thin-provisioning-tools
-sudo apt install btrfs-progs
-```
-
-<!--
-To run the testsuite, you'll also need:
--->
-テストスイートを実行するには、次のパッケージも必要です:
-
-```bash
-sudo apt install curl gettext jq sqlite3 uuid-runtime socat bind9-dnsutils
-```
-
-### ソースからの最新版のビルド <!-- From Source: Building the latest version -->
-この方法は LXD の最新版をビルドしたい開発者や Linux ディストリビューションで提供されない LXD の特定のリリースをビルドするためのものです。 Linux ディストリビューションへ統合するためのソースからのビルドはここでは説明しません。それは将来別のドキュメントで取り扱うかもしれません。
-<!--
-These instructions for building from source are suitable for individual developers who want to build the latest version
-of LXD, or build a specific release of LXD which may not be offered by their Linux distribution. Source builds for
-integration into Linux distributions are not covered here and may be covered in detail in a separate document in the
-future.
--->
-
-```bash
-git clone https://github.com/lxc/lxd
-cd lxd
-```
-
-これで LXD の現在の開発ツリーをダウンロードしてソースツリー内に移動します。
-その後下記の手順にしたがって実際に LXD をビルド、インストールしてください。
-<!--
-This will download the current development tree of LXD and place you in the source tree.
-Then proceed to the instructions below to actually build and install LXD.
--->
-
-### ソースからのリリース版のビルド <!-- From Source: Building a Release -->
-
-LXD のリリース tarball は完全な依存ツリーと libraft と LXD のデータベースのセットアップに使用する libdqlite のローカルコピーをバンドルしています。
-<!--
-The LXD release tarballs bundle a complete dependency tree as well as a
-local copy of libraft and libdqlite for LXD's database setup.
--->
-
-```bash
-tar zxvf lxd-4.18.tar.gz
-cd lxd-4.18
-```
-
-これでリリース tarball を解凍し、ソースツリー内に移動します。
-その後下記の手順にしたがって実際に LXD をビルド、インストールしてください。
-<!--
-This will unpack the release tarball and place you inside of the source tree.
-Then proceed to the instructions below to actually build and install LXD.
--->
-
-### ビルドの開始 <!-- Starting the Build -->
-
-実際のビルドは Makefile の 2 回の別々の実行により行われます。 1 つは `make deps` でこれは LXD に必要とされるライブラリーをビルドします。もう 1 つは `make` で LXD 自体をビルドします。 `make deps` の最後に `make` の実行に必要な環境変数を設定するための手順が表示されます。新しいバージョンの LXD がリリースされたらこれらの環境変数の設定は変わるかもしれませんので、 `make deps` の最後に表示された手順を使うようにしてください。下記の手順（例示のために表示します）はあなたがビルドする LXD のバージョンのものとは一致しないかもしれません。
-<!--
-The actual building is done by two separate invocations of the Makefile: `make deps` - - which builds libraries required 
-by LXD - - and `make`, which builds LXD itself. At the end of `make deps`, a message will be displayed which will specify environment variables that should be set prior to invoking `make`. As new versions of LXD are released, these environment
-variable settings may change, so be sure to use the ones displayed at the end of the `make deps` process, as the ones
-below (shown for example purposes) may not exactly match what your version of LXD requires:
--->
-
-ビルドには最低 2GB の RAM を推奨します。
-<!--
-We recommend having at least 2GB of RAM to allow the build to complete.
--->
-
-```bash
-make deps
-# `make deps` が出力した export のコマンド列を使って環境変数を設定してください。
-# 例:
-#  export CGO_CFLAGS="${CGO_CFLAGS} -I$(go env GOPATH)/deps/dqlite/include/ -I$(go env GOPATH)/deps/raft/include/"
-#  export CGO_LDFLAGS="${CGO_LDFLAGS} -L$(go env GOPATH)/deps/dqlite/.libs/ -L$(go env GOPATH)/deps/raft/.libs/"
-#  export LD_LIBRARY_PATH="$(go env GOPATH)/deps/dqlite/.libs/:$(go env GOPATH)/deps/raft/.libs/:${LD_LIBRARY_PATH}"
-#  export CGO_LDFLAGS_ALLOW="(-Wl,-wrap,pthread_create)|(-Wl,-z,now)"
-make
-```
-
-<!--
-```bash
-make deps
-# Follow the instructions from `make deps` to export the required environment variables.
-# For example:
-#  export CGO_CFLAGS="${CGO_CFLAGS} -I$(go env GOPATH)/deps/dqlite/include/ -I$(go env GOPATH)/deps/raft/include/"
-#  export CGO_LDFLAGS="${CGO_LDFLAGS} -L$(go env GOPATH)/deps/dqlite/.libs/ -L$(go env GOPATH)/deps/raft/.libs/"
-#  export LD_LIBRARY_PATH="$(go env GOPATH)/deps/dqlite/.libs/:$(go env GOPATH)/deps/raft/.libs/:${LD_LIBRARY_PATH}"
-#  export CGO_LDFLAGS_ALLOW="(-Wl,-wrap,pthread_create)|(-Wl,-z,now)"
-make
-```
--->
-
-### ソースからのビルド結果のインストール
-
-ビルドが完了したら、ソースツリーを維持したまま、あなたのお使いのシェルのパスに `$(go env GOPATH)/bin` を追加し `LD_LIBRARY_PATH` 環境変数を `make deps` で表示された値に設定すれば、 LXD が利用できます。 `~/.bashrc` ファイルの場合は以下のようになります。
-<!--
-Once the build completes, you simply keep the source tree, add the directory referenced by `$(go env GOPATH)/bin` to
-your shell path, and set the `LD_LIBRARY_PATH` variable printed by `make deps` to your environment. This might look
-something like this for a `~/.bashrc` file:
--->
-
-```bash
-export PATH="${PATH}:$(go env GOPATH)/bin"
-export LD_LIBRARY_PATH="$(go env GOPATH)/deps/dqlite/.libs/:$(go env GOPATH)/deps/raft/.libs/:${LD_LIBRARY_PATH}"
-```
-
-これで `lxd` と `lxc` コマンドの実行ファイルが利用可能になり LXD をセットアップするのに使用できます。 `LD_LIBRARY_PATH` 環境変数のおかげで実行ファイルは `$(go env GOPATH)/deps` にビルドされた依存ライブラリーを自動的に見つけて使用します。
-<!--
-Now, the `lxd` and `lxc` binaries will be available to you and can be used to set up LXD. The binaries will automatically find and use the dependencies built in `$(go env GOPATH)/deps` thanks to the `LD_LIBRARY_PATH` environment variable.
--->
-
-### マシンセットアップ <!-- Machine Setup -->
-<!--
-You'll need sub{u,g}ids for root, so that LXD can create the unprivileged containers:
--->
-LXD が非特権コンテナーを作成できるように、root ユーザーに対する sub{u,g}id の設定が必要です:
-
-```bash
-echo "root:1000000:65536" | sudo tee -a /etc/subuid /etc/subgid
-```
-
-<!--
-Now you can run the daemon (the `\-\-group sudo` bit allows everyone in the `sudo`
-group to talk to LXD; you can create your own group if you want):
--->
-これでデーモンを実行できます（`sudo` グループに属する全員が LXD とやりとりできるように `--group sudo` を指定します。別に指定したいグループを作ることもできます）:
-
-```bash
-sudo -E PATH=${PATH} LD_LIBRARY_PATH=${LD_LIBRARY_PATH} $(go env GOPATH)/bin/lxd --group sudo
-```
+ソースから LXD をインストールするには、このドキュメント内の [LXD のインストール](installing.md) を参照してください。
 
 ## セキュリティ <!-- Security -->
 <!--
@@ -243,329 +92,54 @@ More details are [available here](security.md).
 -->
 より詳細は[こちらを参照してください](security.md).
 
-## LXD を使い始める <!-- Getting started with LXD -->
-<!--
-Now that you have LXD running on your system you can read the [getting started guide](https://linuxcontainers.org/lxd/getting-started-cli/) or go through more examples and configurations in [our documentation](https://github.com/lxc/lxd/tree/master/doc).
--->
-ここまでで、システム上で LXD が実行されているでしょうから、[はじめに](https://linuxcontainers.org/lxd/getting-started-cli/) という文書を読んだり、[ドキュメント](https://linuxcontainers.org/lxd/docs/master/) （[日本語訳](https://lxd-ja.readthedocs.io/)）の例や設定を見たりできます。
+## サポートとコミュニティ <!-- Support and community -->
 
-## バグレポート <!-- Bug reports -->
+LXD コミュニティと交流するには以下のチャンネルが利用できます。
 <!--
-Bug reports and Feature requests can be filed at: <https://github.com/lxc/lxd/issues/new>
+The following channels are available for you to interact with the LXD community.
 -->
+
+### バグレポート <!-- Bug reports -->
 バグ報告と機能リクエストはこちらから行えます: <https://github.com/lxc/lxd/issues/new>
-
-## コントリビュート <!-- Contributing -->
 <!--
-Fixes and new features are greatly appreciated but please read our [contributing guidelines](contributing.md) first.
+You can file bug reports and feature requests at: <https://github.com/lxc/lxd/issues/new>
 -->
-修正や新機能の追加は歓迎です。最初に [contributing guidelines](contributing.md) を読んでください。
 
-## サポートとディスカッション <!-- Support and discussions -->
 ### フォーラム <!-- Forum -->
+ディスカッションフォーラムを使えます: <https://discuss.linuxcontainers.org>
 <!--
 A discussion forum is available at: <https://discuss.linuxcontainers.org>
 -->
-ディスカッションフォーラムを使えます: <https://discuss.linuxcontainers.org>
 
 ### メーリングリスト <!-- Mailing-lists -->
+開発者向けとユーザー向けのディスカッションに LXC のメーリングリストを使っています。次の URL から見つけられますし、購読もできます: <https://lists.linuxcontainers.org>
 <!--
 We use the LXC mailing-lists for developer and user discussions, you can
 find and subscribe to those at: <https://lists.linuxcontainers.org>
 -->
-開発者向けとユーザー向けのディスカッションに LXC のメーリングリストを使っています。次の URL から見つけられますし、購読もできます: <https://lists.linuxcontainers.org>
 
 ### IRC
+ライブのディスカッションがお好みなら、irc.libera.chat の [#lxc](https://kiwiirc.com/client/irc.libera.chat/#lxc) で私たちを見つけられます。 必要に応じて [Getting started with IRC](https://discuss.linuxcontainers.org/t/getting-started-with-irc/11920) を参照してください。
 <!--
-If you prefer live discussions, you can find us in [#lxc](https://kiwiirc.com/client/irc.libera.chat/#lxc) on irc.libera.chat.
--->
-ライブのディスカッションがお好みなら、irc.libera.chat の [#lxc](https://kiwiirc.com/client/irc.libera.chat/#lxc) で私たちを見つけられます。
-
-## FAQ
-#### LXD サーバにリモートからアクセスできるようにするには? <!-- How to enable LXD server for remote access? -->
-<!--
-By default LXD server is not accessible from the networks as it only listens
-on a local unix socket. You can make LXD available from the network by specifying
-additional addresses to listen to. This is done with the `core.https_address`
-config variable.
--->
-デフォルトでは、LXD サーバーはネットワークからのアクセスを許可せず、ローカルの unix ソケットのみで待ち受けます。
-待ち受ける追加のアドレスを指定して、ネットワーク経由で利用できるように設定できます。
-これには `core.https_address` を使用します。
-
-<!--
-To see the current server configuration, run:
--->
-現在のサーバーの設定を確認するには次のように実行します:
-
-```bash
-lxc config show
-```
-
-<!--
-To set the address to listen to, find out what addresses are available and use
-the `config set` command on the server:
--->
-待ち受けるアドレスを設定するには、どのアドレスが使用できるかを調べ、`config set` コマンドをサーバー上で実行します:
-
-```bash
-ip addr
-lxc config set core.https_address 192.168.1.15
-```
-
-#### https 越しに `lxc remote add` を実行したとき、パスワードを聞かれますか? <!-- When I do a `lxc remote add` over https, it asks for a password? -->
-<!--
-By default, LXD has no password for security reasons, so you can't do a remote
-add this way. In order to set a password, do:
--->
-デフォルトではセキュリティー上の理由から、LXD にはパスワードはありません。
-ですのでこの方法でリモートから追加できません。パスワードを設定するには、LXD を実行中のホスト上で次のコマンドを実行します:
-
-```bash
-lxc config set core.trust_password SECRET
-```
-
-<!--
-on the host LXD is running on. This will set the remote password that you can
-then use to do `lxc remote add`.
--->
-これで、`lxc remote add` を使えるように、リモートのパスワードを設定します。
-
-<!--
-You can also access the server without setting a password by copying the client
-certificate from `.config/lxc/client.crt` to the server and adding it with:
--->
-クライアント上の `.config/lxc/client.crt` にある証明書を次のコマンドでサーバにコピーすることで、パスワードを設定しなくてもサーバにアクセスできます。
-
-```bash
-lxc config trust add client.crt
-```
-
-#### どのように LXD のストレージを設定するのですか? <!-- How do I configure LXD storage? -->
-<!--
-LXD supports btrfs, ceph, directory, lvm and zfs based storage.
--->
-LXD は btrfs、ceph、ディレクトリ、lvm、zfs を使ったストーレジをサポートします。
-
-<!--
-First make sure you have the relevant tools for your filesystem of
-choice installed on the machine (btrfs-progs, lvm2 or zfsutils-linux).
--->
-まず、選択したファイルシステムを扱うツールをマシンにインストールしてください（btrfs-progs, lvm2, zfsutils-linux）。
-
-<!--
-By default, LXD comes with no configured network or storage.
-You can get a basic configuration done with:
--->
-デフォルトでは、LXD ではネットワークとストレージが設定されていません。
-基本的な設定は次のコマンドで設定できます:
-
-```bash
-    lxd init
-```
-
-<!--
-`lxd init` supports both directory based storage and ZFS.
-If you want something else, you'll need to use the `lxc storage` command:
--->
-`lxd init` はディレクトリと ZFS ベースのストレージの両方をサポートします。
-他のファイルシステムを使いたい場合は、`lxc storage` コマンドを使う必要があります:
-
-```bash
-lxc storage create default BACKEND [OPTIONS...]
-lxc profile device add default root disk path=/ pool=default
-```
-
-<!--
-BACKEND is one of `btrfs`, `ceph`, `dir`, `lvm` or `zfs`.
--->
-`BACKEND` は `btrfs`、`ceph`、`dir`、`lvm`、`zfs` のどれかです。
-
-<!--
-Unless specified otherwise, LXD will setup loop based storage with a sane default size.
--->
-特に指定しないと、LXD はデフォルトサイズの loop ベースのストレージをセットアップします。
-
-<!--
-For production environments, you should be using block backed storage
-instead both for performance and reliability reasons.
--->
-プロダクション環境では、パフォーマンスと信頼性を確保するために、loop ベースではなく、ブロックストレージを使うべきです。
-
-#### LXD を使ってコンテナーのライブマイグレーションはできますか? <!-- How can I live migrate a container using LXD? -->
-<!--
-Live migration requires a tool installed on both hosts called
-[CRIU](https://criu.org), which is available in Ubuntu via:
--->
-ライブマイグレーションには、送受信それぞれのホスト上に [CRIU](http://criu.org) というツールが必要です。
-Ubuntu では次のようにインストールできます:
-
-```bash
-sudo apt install criu
-```
-
-<!--
-Then, launch your container with the following,
--->
-そして、次のようにコンテナーを起動します。
-
-```bash
-lxc launch ubuntu SOME-NAME
-sleep 5s # コンテナーが起動するのを待ちます
-lxc move host1:SOME-NAME host2:SOME-NAME
-```
-
-<!--
-```bash
-lxc launch ubuntu SOME-NAME
-sleep 5s # let the container get to an interesting state
-lxc move host1:SOME-NAME host2:SOME-NAME
-```
+If you prefer live discussions, you can find us in [#lxc](https://kiwiirc.com/client/irc.libera.chat/#lxc) on irc.libera.chat. See [Getting started with IRC](https://discuss.linuxcontainers.org/t/getting-started-with-irc/11920) if needed.
 -->
 
+## コントリビュート <!-- Contributing -->
+修正や新機能の追加は大歓迎です。最初に忘れずに [contributing guidelines](contributing.md) を読んでください！
 <!--
-And with luck you'll have migrated the container :). Migration is still in
-experimental stages and may not work for all workloads. Please report bugs on
-lxc-devel, and we can escalate to CRIU lists as necessary.
--->
-運が良ければ、コンテナーがマイグレーションされるでしょう :)
-マイグレーションはまだ実験段階のステージで、すべてのケースで動作しないかもしれません。
-そういう場合は lxc-devel にバグレポートをしてください。必要であれば CRIU にもエスカレーションします。
-
-#### 私のホームディレクトリをコンテナー内にバインドマウントできますか? <!-- Can I bind mount my home directory in a container? -->
-はい。ディスクデバイスを使用して以下のように出来ます。
-<!--
-Yes. This can be done using a disk device:
+Fixes and new features are greatly appreciated. Make sure to read our [contributing guidelines](contributing.md) first!
 -->
 
-```bash
-lxc config device add container-name home disk source=/home/${USER} path=/home/ubuntu
-```
+```{toctree}
+:hidden:
+:titlesonly:
 
-非特権コンテナーの場合は、さらに以下のいずれかが必要です。
-<!--
-For unprivileged containers, you will also need one of:
--->
-
- - `lxc config device add` の実行時に `shift=true` を指定する。これは `shiftfs` がサポートされている場合にのみ使えます（ `lxc info` 参照）。 <!-- Pass `shift=true` to the `lxc config device add` call. This depends on `shiftfs` being supported (see `lxc info`) -->
- - raw.idmap エントリー（[ユーザー名前空間 (user namespace) 用の ID のマッピング](userns-idmap.md) 参照） <!-- raw.idmap entry (see [Idmaps for user namespace](userns-idmap.md)) -->
- - ホームディレクトリーに配置した再帰的な POSIX ACL <!-- Recursive POSIX ACLs placed on your home directory -->
-
-これらのいずれかにより、コンテナー内のユーザーが実際に効果のある read/write パーミッションを持てるようになります。
-これらの 1 つも設定しないときは、すべてが uid/gid がオーバーフロー (65536:65536) ように見えて、 world リーダブルでないものへのアクセスは全て失敗します。
-<!--
-Either of those can be used to allow the user in the container to have working read/write permissions.
-When not setting one of those, everything will show up as the overflow uid/gid (65536:65536)
-and access to anything that's not world readable will fail.
--->
-
-
-特権コンテナーではコンテナー内の全ての uid/gid が外部と同じためこの問題はありません。
-しかし、このことは特権コンテナーに関するセキュリティーの問題の主な原因でもあります。
-<!--
-Privileged containers do not have this issue as all uid/gid inthe container are the same outside.
-But that's also the cause of most of the security issues with such privileged containers.
--->
-
-#### LXD コンテナー内で docker を実行できますか? <!-- How can I run docker inside a LXD container? -->
-<!--
-In order to run Docker inside a LXD container the `security.nesting` property of the container should be set to `true`. 
--->
-LXD コンテナー内で Docker を実行するには、コンテナーの `security.nesting` プロパティを `true` に設定します。
-
-```bash
-lxc config set <container> security.nesting true
-```
-
-<!--
-Note that LXD containers cannot load kernel modules, so depending on your
-Docker configuration you may need to have the needed extra kernel modules
-loaded by the host.
--->
-LXD コンテナー内ではカーネルモジュールはロードできませんので、Docker の設定に従って、ホスト側で必要なカーネルモジュールをロードしておく必要があることに注意してください。
-
-<!--
-You can do so by setting a comma separate list of kernel modules that your container needs with:
--->
-コンテナーで必要なカーネルモジュールをカンマ区切りのリストで次のように設定しておけます:
-
-```bash
-lxc config set <container> linux.kernel_modules <modules>
-```
-
-<!--
-We have also received some reports that creating a `/.dockerenv` file in your
-container can help Docker ignore some errors it's getting due to running in a
-nested environment.
--->
-コンテナー内に `/.dockerenv` ファイルを作ることで、ネストされた環境内で実行することによりおこるエラーのいくつかを Docker に無視させることができるというレポートをいくつか受け取っています。
-
-## LXD のハック <!-- Hacking on LXD -->
-### 直接 REST API を使って <!-- Directly using the REST API -->
-<!--
-The LXD REST API can be used locally via unauthenticated Unix socket or remotely via SSL encapsulated TCP.
--->
-LXD の REST API は、認証不要なローカルの Unix ソケット経由でも、SSL で暗号化された TCP 経由でも使えます。
-
-#### UNIX ソケット経由 <!-- Via Unix socket -->
-
-```bash
-curl --unix-socket /var/lib/lxd/unix.socket \
-    -H "Content-Type: application/json" \
-    -X POST \
-    -d @hello-ubuntu.json \
-    lxd/1.0/containers
-```
-
-あるいは snap ユーザーの場合は
-
-```bash
-curl --unix-socket /var/snap/lxd/common/lxd/unix.socket \
-    -H "Content-Type: application/json" \
-    -X POST \
-    -d @hello-ubuntu.json \
-    lxd/1.0/containers
-```
-
-#### TCP 経由 <!-- Via TCP -->
-<!--
-TCP requires some additional configuration and is not enabled by default.
--->
-TCP 経由では、デフォルトでは有効ではない追加の設定が必要です。
-
-```bash
-lxc config set core.https_address "[::]:8443"
-```
-
-```bash
-curl -k -L \
-    --cert ~/.config/lxc/client.crt \
-    --key ~/.config/lxc/client.key \
-    -H "Content-Type: application/json" \
-    -X POST \
-    -d @hello-ubuntu.json \
-    "https://127.0.0.1:8443/1.0/containers"
-```
-
-#### 事前に用意する JSON ファイル <!-- JSON payload -->
-<!--
-The `hello-ubuntu.json` file referenced above could contain something like:
--->
-上記の `hello-ubuntu.json` ファイルは以下のような内容です。
-
-```json
-{
-    "name":"some-ubuntu",
-    "ephemeral":true,
-    "config":{
-        "limits.cpu":"2"
-    },
-    "source": {
-        "type":"image",
-        "mode":"pull",
-        "protocol":"simplestreams",
-        "server":"https://cloud-images.ubuntu.com/releases",
-        "alias":"18.04"
-    }
-}
+self
+getting_started
+configuration
+images
+operation
+restapi_landing
+internals
+external_resources
 ```

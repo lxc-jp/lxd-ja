@@ -135,7 +135,7 @@ a network interface to your default profile. See below for an example.
 ネットワーク・インターフェースをアタッチしたいでしょう。以下の例を
 参照してください。
 
-# 設定の形式 <!-- Configuration format -->
+## 設定の形式 <!-- Configuration format -->
 
 <!--
 The supported keys and values of the various entities are the same as

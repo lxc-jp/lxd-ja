@@ -119,7 +119,7 @@ The default reject action can be modified by using the network and NIC level `se
 and `security.acls.default.egress.action` settings. The NIC level settings will override the network level settings.
 -->
 
-# サブジェクト名セレクター <!-- Subject name selectors -->
+## サブジェクト名セレクター <!-- Subject name selectors -->
 
 サブジェクト名セレクターは ingress ルールの `source` フィールドと egress ルールの `destination` フィールドで使用可能です。
 <!--
