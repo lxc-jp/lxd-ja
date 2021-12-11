@@ -1,5 +1,7 @@
 # Instance configuration
-## Properties
+
+## Instances
+### Properties
 The following are direct instance properties and can't be part of a profile:
 
  - `name`
@@ -18,11 +20,12 @@ This requirement is so that the instance name may properly be used in
 DNS records, on the filesystem, in various security profiles as well as
 the hostname of the instance itself.
 
-## Key/value configuration
+### Key/value configuration
 The key/value configuration is namespaced with the following namespaces
 currently supported:
 
  - `boot` (boot related options, timing, dependencies, ...)
+ - `cloud-init` (cloud-init configuration)
  - `environment` (environment variables)
  - `image` (copy of the image properties at time of creation)
  - `limits` (resource limits)
@@ -41,6 +44,9 @@ boot.autostart.delay                        | integer   | 0                 | n/
 boot.autostart.priority                     | integer   | 0                 | n/a           | -                         | What order to start the instances in (starting with highest)
 boot.host\_shutdown\_timeout                | integer   | 30                | yes           | -                         | Seconds to wait for instance to shutdown before it is force stopped
 boot.stop.priority                          | integer   | 0                 | n/a           | -                         | What order to shutdown the instances (starting with highest)
+cloud-init.network-config                   | string    | DHCP on eth0      | no            | -                         | Cloud-init network-config, content is used as seed value
+cloud-init.user-data                        | string    | #cloud-config     | no            | -                         | Cloud-init user-data, content is used as seed value
+cloud-init.vendor-data                      | string    | #cloud-config     | no            | -                         | Cloud-init vendor-data, content is used as seed value
 cluster.evacuate                            | string    | auto              | n/a           | -                         | What to do when evacuating the instance (auto, migrate, or stop)
 environment.\*                              | string    | -                 | yes (exec)    | -                         | key/value environment variables to export to the instance and set on exec
 limits.cpu                                  | string    | -                 | yes           | -                         | Number or range of CPUs to expose to the instance (defaults to 1 CPU for VMs)
@@ -133,10 +139,6 @@ Additionally, those user keys have become common with images (support isn't guar
 Key                         | Type          | Default           | Description
 :--                         | :---          | :------           | :----------
 user.meta-data              | string        | -                 | Cloud-init meta-data, content is appended to seed value
-user.network-config         | string        | DHCP on eth0      | Cloud-init network-config, content is used as seed value
-user.network\_mode          | string        | dhcp              | One of "dhcp" or "link-local". Used to configure network in supported images
-user.user-data              | string        | #!cloud-config    | Cloud-init user-data, content is used as seed value
-user.vendor-data            | string        | #!cloud-config    | Cloud-init vendor-data, content is used as seed value
 
 Note that while a type is defined above as a convenience, all values are
 stored as strings and should be exported over the REST API as strings
@@ -155,7 +157,7 @@ The raw keys allow direct interaction with the backend features that LXD
 itself uses, setting those may very well break LXD in non-obvious ways
 and should whenever possible be avoided.
 
-### CPU limits
+#### CPU limits
 The CPU limits are implemented through a mix of the `cpuset` and `cpu` CGroup controllers.
 
 `limits.cpu` results in CPU pinning through the `cpuset` controller.
@@ -186,7 +188,7 @@ instance, relative to any other instance which is using the same CPU(s).
 scheduler priority score when a number of instances sharing a set of
 CPUs have the same percentage of CPU assigned to them.
 
-### VM CPU topology
+#### VM CPU topology
 LXD virtual machines default to having just one vCPU allocated which
 shows up as matching the host CPU vendor and type but has a single core
 and no threads.
@@ -217,7 +219,7 @@ guest scheduler can properly reason about sockets, cores and threads as
 well as consider NUMA topology when sharing memory or moving processes
 across NUMA nodes.
 
-# Devices configuration
+## Devices configuration
 LXD will always provide the instance with the basic devices which are required
 for a standard POSIX system to work. These aren't visible in instance or
 profile configuration and may not be overridden.
@@ -260,7 +262,7 @@ or to a profile with:
 lxc profile device add <profile> <name> <type> [key=value]...
 ```
 
-## Device types
+### Device types
 LXD supports the following device types:
 
 ID (database)   | Name                               | Condition     | Description
@@ -278,7 +280,7 @@ ID (database)   | Name                               | Condition     | Descripti
 10              | [tpm](#type-tpm)                   | -             | TPM device
 11              | [pci](#type-pci)                   | VM            | PCI device
 
-### Type: none
+#### Type: none
 
 Supported instance types: container, VM
 
@@ -289,13 +291,13 @@ It's only purpose it to stop inheritance of devices coming from profiles.
 To do so, just add a none type device with the same name of the one you wish to skip inheriting.
 It can be added in a profile being applied after the profile it originated from or directly on the instance.
 
-### Type: nic
+#### Type: nic
 LXD supports several different kinds of network devices (referred to as Network Interface Controller or NIC).
 
 When adding a network device to an instance, there are two ways to specify the type of device you want to add;
 either by specifying the `nictype` property or using the `network` property.
 
-#### Specifying a NIC using the `network` property
+##### Specifying a NIC using the `network` property
 
 When specifying the `network` property, the NIC is linked to an existing managed network and the `nictype` is
 automatically detected based on the network's type.
@@ -304,7 +306,7 @@ Some of the NICs properties are inherited from the network rather than being cus
 
 These are detailed in the "Managed" column in the NIC specific sections below.
 
-#### NICs Available:
+##### NICs Available:
 
 See the NIC's settings below for details about which properties are available.
 
@@ -325,7 +327,7 @@ The following NICs can be specified using only the `nictype` property:
  - [p2p](#nic-p2p): Creates a virtual device pair, putting one side in the instance and leaving the other side on the host.
  - [routed](#nic-routed): Creates a virtual device pair to connect the host to the instance and sets up static routes and proxy ARP/NDP entries to allow the instance to join the network of a designated parent interface.
 
-#### nic: bridged
+##### nic: bridged
 
 Supported instance types: container, VM
 
@@ -348,8 +350,8 @@ limits.egress            | string  | -                 | no       | no      | I/
 limits.max               | string  | -                 | no       | no      | Same as modifying both limits.ingress and limits.egress
 ipv4.address             | string  | -                 | no       | no      | An IPv4 address to assign to the instance through DHCP
 ipv6.address             | string  | -                 | no       | no      | An IPv6 address to assign to the instance through DHCP
-ipv4.routes              | string  | -                 | no       | no      | Comma delimited list of IPv4 static routes to add on host to NIC
-ipv6.routes              | string  | -                 | no       | no      | Comma delimited list of IPv6 static routes to add on host to NIC
+ipv4.routes              | string  | -                 | no       | no      | Comma delimited list of IPv4 static routes to add on host to NIC (Can be `none` to restrict all IPv4 traffic when security.ipv4\_filtering is set)
+ipv6.routes              | string  | -                 | no       | no      | Comma delimited list of IPv6 static routes to add on host to NIC (Can be `none` to restrict all IPv6 traffic when security.ipv6\_filtering is set)
 ipv4.routes.external     | string  | -                 | no       | no      | Comma delimited list of IPv4 static routes to route to the NIC and publish on uplink network (BGP)
 ipv6.routes.external     | string  | -                 | no       | no      | Comma delimited list of IPv6 static routes to route to the NIC and publish on uplink network (BGP)
 security.mac\_filtering  | boolean | false             | no       | no      | Prevent the instance from spoofing another's MAC address
@@ -362,7 +364,7 @@ vlan                     | integer | -                 | no       | no      | Th
 vlan.tagged              | integer | -                 | no       | no      | Comma delimited list of VLAN IDs to join for tagged traffic
 security.port\_isolation | boolean | false             | no       | no      | Prevent the NIC from communicating with other NICs in the network that have port isolation enabled
 
-#### nic: macvlan
+##### nic: macvlan
 
 Supported instance types: container, VM
 
@@ -385,7 +387,7 @@ maas.subnet.ipv4        | string  | -                 | no       | yes     | MAA
 maas.subnet.ipv6        | string  | -                 | no       | yes     | MAAS IPv6 subnet to register the instance in
 boot.priority           | integer | -                 | no       | no      | Boot priority for VMs (higher boots first)
 
-#### nic: sriov
+##### nic: sriov
 
 Supported instance types: container, VM
 
@@ -408,7 +410,7 @@ maas.subnet.ipv4        | string  | -                 | no       | yes     | MAA
 maas.subnet.ipv6        | string  | -                 | no       | yes     | MAAS IPv6 subnet to register the instance in
 boot.priority           | integer | -                 | no       | no      | Boot priority for VMs (higher boots first)
 
-#### nic: ovn
+##### nic: ovn
 
 Supported instance types: container, VM
 
@@ -462,7 +464,7 @@ for i in $(lspci -nnn | grep "Virtual Function" | cut -d' ' -f1); do echo 0000:$
 
 OVS setup:
 
-Enable hardware offline and add the PF NIC to the integration bridge (normally callled `br-int`):
+Enable hardware offload and add the PF NIC to the integration bridge (normally callled `br-int`):
 
 ```
 ovs-vsctl set open_vswitch . other_config:hw-offload=true
@@ -471,7 +473,7 @@ ovs-vsctl add-port br-int enp9s0f0np0
 ip link set enp9s0f0np0 up
 ```
 
-#### nic: physical
+##### nic: physical
 
 Supported instance types: container, VM
 
@@ -493,7 +495,7 @@ maas.subnet.ipv4        | string  | -                 | no       | MAAS IPv4 sub
 maas.subnet.ipv6        | string  | -                 | no       | MAAS IPv6 subnet to register the instance in
 boot.priority           | integer | -                 | no       | Boot priority for VMs (higher boots first)
 
-#### nic: ipvlan
+##### nic: ipvlan
 
 Supported instance types: container
 
@@ -540,7 +542,7 @@ ipv6.host\_table        | integer | -                  | no       | The custom p
 vlan                    | integer | -                  | no       | The VLAN ID to attach to
 gvrp                    | boolean | false              | no       | Register VLAN using GARP VLAN Registration Protocol
 
-#### nic: p2p
+##### nic: p2p
 
 Supported instance types: container, VM
 
@@ -563,9 +565,9 @@ ipv4.routes             | string  | -                 | no       | Comma delimit
 ipv6.routes             | string  | -                 | no       | Comma delimited list of IPv6 static routes to add on host to NIC
 boot.priority           | integer | -                 | no       | Boot priority for VMs (higher boots first)
 
-#### nic: routed
+##### nic: routed
 
-Supported instance types: container
+Supported instance types: container, VM
 
 Selected using: `nictype`
 
@@ -577,10 +579,16 @@ It will also respect netfilter rules on the host and will use the host's routing
 
 IP addresses must be manually specified using either one or both of `ipv4.address` and `ipv6.address` settings before the instance is started.
 
-It sets up a veth pair between host and instance and then configures the following link-local gateway IPs on the host end which are then set as the default gateways in the instance:
+For containers it uses a veth pair, and for VMs it uses a TAP device. It then configures the following link-local gateway IPs on the host end which are then set as the default gateways in the instance:
 
   169.254.0.1
   fe80::1
+
+For containers these are automatically set as default gateways on the instance NIC interface.
+But for VMs the IP addresses and gateways will need to be configured manually or via a mechanism like cloud-init.
+
+Note also that if your container image is configured to perform DHCP on the interface it will likely remove the
+automatically added configuration, and will need to be configured manually or via a mechanism like cloud-init.
 
 It then configures static routes on the host pointing to the instance's veth interface for all of the instance's IPs.
 
@@ -624,17 +632,19 @@ limits.ingress          | string  | -                 | no       | I/O limit in 
 limits.egress           | string  | -                 | no       | I/O limit in bit/s for outgoing traffic (various suffixes supported, see below)
 limits.max              | string  | -                 | no       | Same as modifying both limits.ingress and limits.egress
 ipv4.address            | string  | -                 | no       | Comma delimited list of IPv4 static addresses to add to the instance
+ipv4.routes             | string  | -                 | no       | Comma delimited list of IPv4 static routes to add on host to NIC (without L2 ARP/NDP proxy)
 ipv4.gateway            | string  | auto              | no       | Whether to add an automatic default IPv4 gateway, can be "auto" or "none"
-ipv4.host\_address      | string  | 169.254.0.1       | no       | The IPv4 address to add to the host-side veth interface.
-ipv4.host\_table        | integer | -                 | no       | The custom policy routing table ID to add IPv4 static routes to (in addition to main routing table).
+ipv4.host\_address      | string  | 169.254.0.1       | no       | The IPv4 address to add to the host-side veth interface
+ipv4.host\_table        | integer | -                 | no       | The custom policy routing table ID to add IPv4 static routes to (in addition to main routing table)
 ipv6.address            | string  | -                 | no       | Comma delimited list of IPv6 static addresses to add to the instance
+ipv6.routes             | string  | -                 | no       | Comma delimited list of IPv6 static routes to add on host to NIC (without L2 ARP/NDP proxy)
 ipv6.gateway            | string  | auto              | no       | Whether to add an automatic default IPv6 gateway, can be "auto" or "none"
-ipv6.host\_address      | string  | fe80::1           | no       | The IPv6 address to add to the host-side veth interface.
-ipv6.host\_table        | integer | -                 | no       | The custom policy routing table ID to add IPv6 static routes to (in addition to main routing table).
+ipv6.host\_address      | string  | fe80::1           | no       | The IPv6 address to add to the host-side veth interface
+ipv6.host\_table        | integer | -                 | no       | The custom policy routing table ID to add IPv6 static routes to (in addition to main routing table)
 vlan                    | integer | -                 | no       | The VLAN ID to attach to
 gvrp                    | boolean | false             | no       | Register VLAN using GARP VLAN Registration Protocol
 
-#### bridged, macvlan or ipvlan for connection to physical network
+##### bridged, macvlan or ipvlan for connection to physical network
 
 The `bridged`, `macvlan` and `ipvlan` interface types can be used to connect to an existing physical network.
 
@@ -648,7 +658,7 @@ In such case, a bridge is preferable. A bridge will also let you use mac filteri
 
 `ipvlan` is similar to `macvlan`, with the difference being that the forked device has IPs statically assigned to it and inherits the parent's MAC address on the network.
 
-#### SR-IOV
+##### SR-IOV
 The `sriov` interface type supports SR-IOV enabled network devices.
 These devices associate a set of virtual functions (VFs) with the single physical function (PF) of the network device.
 PFs are standard PCIe functions. VFs on the other hand are very lightweight PCIe functions that are optimized for data movement.
@@ -669,7 +679,7 @@ To tell LXD to use a specific unused VF add the `host_name` property and pass
 it the name of the enabled VF.
 
 
-#### MAAS integration
+##### MAAS integration
 If you're using MAAS to manage the physical network under your LXD host
 and want to attach your instances directly to a MAAS managed network,
 LXD can be configured to interact with MAAS so that it can track your
@@ -685,7 +695,7 @@ proper DHCP leases and DNS records.
 If you set the `ipv4.address` or `ipv6.address` keys on the nic, then
 those will be registered as static assignments in MAAS too.
 
-### Type: infiniband
+#### Type: infiniband
 
 Supported instance types: container
 
@@ -710,7 +720,7 @@ To create a `physical` `infiniband` device use:
 lxc config device add <instance> <device-name> infiniband nictype=physical parent=<device>
 ```
 
-#### SR-IOV with infiniband devices
+##### SR-IOV with infiniband devices
 Infiniband devices do support SR-IOV but in contrast to other SR-IOV enabled
 devices infiniband does not support dynamic device creation in SR-IOV mode.
 This means users need to pre-configure the number of virtual functions by
@@ -722,7 +732,7 @@ To create a `sriov` `infiniband` device use:
 lxc config device add <instance> <device-name> infiniband nictype=sriov parent=<sriov-enabled-device>
 ```
 
-### Type: disk
+#### Type: disk
 
 Supported instance types: container, VM
 
@@ -767,13 +777,13 @@ size.state          | string    | -         | no        | Same as size above but
 recursive           | boolean   | false     | no        | Whether or not to recursively mount the source path
 pool                | string    | -         | no        | The storage pool the disk device belongs to. This is only applicable for storage volumes managed by LXD
 propagation         | string    | -         | no        | Controls how a bind-mount is shared between the instance and the host. (Can be one of `private`, the default, or `shared`, `slave`, `unbindable`,  `rshared`, `rslave`, `runbindable`,  `rprivate`. Please see the Linux Kernel [shared subtree](https://www.kernel.org/doc/Documentation/filesystems/sharedsubtree.txt) documentation for a full explanation)
-shift               | boolean   | false     | no        | Setup a shifting overlay to translate the source uid/gid to match the instance
+shift               | boolean   | false     | no        | Setup a shifting overlay to translate the source uid/gid to match the instance (only for containers)
 raw.mount.options   | string    | -         | no        | Filesystem specific mount options
 ceph.user\_name     | string    | admin     | no        | If source is ceph or cephfs then ceph user\_name must be specified by user for proper mount
 ceph.cluster\_name  | string    | ceph      | no        | If source is ceph or cephfs then ceph cluster\_name must be specified by user for proper mount
 boot.priority       | integer   | -         | no        | Boot priority for VMs (higher boots first)
 
-### Type: unix-char
+#### Type: unix-char
 
 Supported instance types: container
 
@@ -793,7 +803,7 @@ gid         | int       | 0                 | no        | GID of the device owne
 mode        | int       | 0660              | no        | Mode of the device in the instance
 required    | boolean   | true              | no        | Whether or not this device is required to start the instance
 
-### Type: unix-block
+#### Type: unix-block
 
 Supported instance types: container
 
@@ -813,7 +823,7 @@ gid         | int       | 0                 | no        | GID of the device owne
 mode        | int       | 0660              | no        | Mode of the device in the instance
 required    | boolean   | true              | no        | Whether or not this device is required to start the instance
 
-### Type: usb
+#### Type: usb
 
 Supported instance types: container, VM
 
@@ -831,12 +841,12 @@ gid         | int       | 0                 | no        | GID of the device owne
 mode        | int       | 0660              | no        | Mode of the device in the instance
 required    | boolean   | false             | no        | Whether or not this device is required to start the instance. (The default is false, and all devices are hot-pluggable)
 
-### Type: gpu
+#### Type: gpu
 
 GPU device entries simply make the requested gpu device appear in the
 instance.
 
-#### GPUs Available:
+##### GPUs Available:
 
 The following GPUs can be specified using the `gputype` property:
 
@@ -845,7 +855,7 @@ The following GPUs can be specified using the `gputype` property:
  - [mig](#gpu-mig) Creates and passes through a MIG (Multi-Instance GPU) device into the instance.
  - [sriov](#gpu-sriov) Passes a virtual function of an SR-IOV enabled GPU into the instance.
 
-#### gpu: physical
+##### gpu: physical
 
 Supported instance types: container, VM
 
@@ -863,7 +873,7 @@ uid         | int       | 0                 | no        | UID of the device owne
 gid         | int       | 0                 | no        | GID of the device owner in the instance (container only)
 mode        | int       | 0660              | no        | Mode of the device in the instance (container only)
 
-#### gpu: mdev
+##### gpu: mdev
 
 Supported instance types: VM
 
@@ -879,7 +889,7 @@ id          | string    | -                 | no        | The card id of the GPU
 pci         | string    | -                 | no        | The pci address of the GPU device
 mdev        | string    | -                 | yes       | The mdev profile to use (e.g. i915-GVTg\_V5\_4)
 
-#### gpu: mig
+##### gpu: mig
 
 Supported instance types: container
 
@@ -896,7 +906,7 @@ pci         | string    | -                 | no        | The pci address of the
 mig.ci      | int       | -                 | yes       | Existing MIG compute instance ID
 mig.gi      | int       | -                 | yes       | Existing MIG GPU instance ID
 
-#### gpu: sriov
+##### gpu: sriov
 
 Supported instance types: VM
 
@@ -911,7 +921,7 @@ productid   | string    | -                 | no        | The product id of the 
 id          | string    | -                 | no        | The card id of the parent GPU device
 pci         | string    | -                 | no        | The pci address of the parent GPU device
 
-### Type: proxy
+#### Type: proxy
 
 Supported instance types: container (`nat` and non-`nat` modes), VM (`nat` mode only)
 
@@ -979,7 +989,7 @@ security.gid    | int       | 0             | no        | What GID to drop privi
 lxc config device add <instance> <device-name> proxy listen=<type>:<addr>:<port>[-<port>][,<port>] connect=<type>:<addr>:<port> bind=<host/instance>
 ```
 
-### Type: unix-hotplug
+#### Type: unix-hotplug
 
 Supported instance types: container
 
@@ -999,7 +1009,7 @@ mode        | int       | 0660              | no        | Mode of the device in 
 required    | boolean   | false             | no        | Whether or not this device is required to start the instance. (The default is false, and all devices are hot-pluggable)
 
 
-### Type: tpm
+#### Type: tpm
 
 Supported instance types: container, VM
 
@@ -1011,7 +1021,7 @@ Key                 | Type      | Default   | Required  | Description
 :--                 | :--       | :--       | :--       | :--
 path                | string    | -         | yes       | Path inside the instance (only for containers).
 
-### Type: pci
+#### Type: pci
 
 Supported instance types: VM
 
@@ -1024,7 +1034,7 @@ Key                 | Type      | Default   | Required  | Description
 address             | string    | -         | yes       | PCI address of the device.
 
 
-## Units for storage and network limits
+### Units for storage and network limits
 Any value representing bytes or bits can make use of a number of useful
 suffixes to make it easier to understand what a particular limit is.
 
@@ -1063,7 +1073,7 @@ The full list of byte suffixes currently supported is:
  - PiB (1024^5)
  - EiB (1024^6)
 
-## Instance types
+### Instance types
 LXD supports simple instance types. Those are represented as a string
 which can be passed at instance creation time.
 
@@ -1089,7 +1099,7 @@ The list of supported clouds and instance types can be found here:
 
   https://github.com/dustinkirkland/instance-type
 
-## Hugepage limits via `limits.hugepages.[size]`
+### Hugepage limits via `limits.hugepages.[size]`
 LXD allows to limit the number of hugepages available to a container through
 the `limits.hugepage.[size]` key. Limiting hugepages is done through the
 hugetlb cgroup controller. This means the host system needs to expose the
@@ -1107,7 +1117,7 @@ However, it is recommended to limit the number of hugepages available to the
 container through `limits.hugepages.[size]` to stop the container from being
 able to exhaust the hugepages available to the host.
 
-## Resource limits via `limits.kernel.[limit name]`
+### Resource limits via `limits.kernel.[limit name]`
 LXD exposes a generic namespaced key `limits.kernel.*` which can be used to set
 resource limits for a given instance. It is generic in the sense that LXD will
 not perform any validation on the resource that is specified following the
@@ -1143,18 +1153,28 @@ used as a shortcut to set both soft and hard limit (e.g.
 configured limitation will be inherited from the process starting up the
 instance. Note that this inheritance is not enforced by LXD but by the kernel.
 
-## Snapshot scheduling
+### Snapshot scheduling and configuration
 LXD supports scheduled snapshots which can be created at most once every minute.
-There are three configuration options. `snapshots.schedule` takes a shortened
-cron expression: `<minute> <hour> <day-of-month> <month> <day-of-week>`. If this is
-empty (default), no snapshots will be created. `snapshots.schedule.stopped`
-controls whether or not stopped instance are to be automatically snapshotted.
-It defaults to `false`. `snapshots.pattern` takes a pongo2 template string,
-and the pongo2 context contains the `creation_date` variable. Be aware that you
-should format the date (e.g. use `{{ creation_date|date:"2006-01-02_15-04-05" }}`)
-in your template string to avoid forbidden characters in your snapshot name.
-Another way to avoid name collisions is to use the placeholder `%d`. If a snapshot
-with the same name (excluding the placeholder) already exists, all existing snapshot
-names will be taken into account to find the highest number at the placeholders
-position. This number will be incremented by one for the new name. The starting
-number if no snapshot exists will be `0`.
+There are three configuration options: 
+-  `snapshots.schedule` takes a shortened cron expression: 
+`<minute> <hour> <day-of-month> <month> <day-of-week>`. If this is empty
+(default), no snapshots will be created. 
+-  `snapshots.schedule.stopped` controls whether or not stopped instance are to
+be automatically snapshotted.  It defaults to `false`. 
+-  `snapshots.pattern` takes a pongo2 template string to format the snapshot name.
+To name snapshots with time stamps, the pongo2 context variable `creation_date`
+can be used.  Be aware that you should format the date 
+(e.g. use `{{ creation_date|date:"2006-01-02_15-04-05" }}`) in your template
+string to avoid forbidden characters in the snapshot name.  Another way to avoid
+name collisions is to use the placeholder `%d`. If a snapshot with the same name
+(excluding the placeholder) already exists, all existing snapshot names will be
+taken into account to find the highest number at the placeholders position. This
+number will be incremented by one for the new name. The starting number if no
+snapshot exists will be `0`. The default behavior of `snapshots.pattern` is
+equivalent to a format string of `snap%d`.
+
+Example of using pongo2 syntax to format snapshot names with timestamps:
+```bash
+lxc config set INSTANCE snapshots.pattern "{{ creation_date|date:'2006-01-02_15-04-05' }}"
+```
+This results in snapshots named `{date/time of creation}` down to the precision of a second. 

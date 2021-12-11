@@ -35,13 +35,15 @@ limits.memory                        | string    | -                     | -    
 limits.networks                      | integer   | -                     | -                         | Maximum value for the number of networks this project can have
 limits.processes                     | integer   | -                     | -                         | Maximum value for the sum of individual "limits.processes" configs set on the instances of the project
 limits.virtual-machines              | integer   | -                     | -                         | Maximum number of VMs that can be created in the project
-restricted                           | boolean   | -                     | false                     | Block access to security-sensitive features
+restricted                           | boolean   | -                     | false                     | Block access to security-sensitive features (this must be enabled to allow the `restricted.*` keys to take effect, this is so it can be tempoarily disabled if needed without having to clear the related keys)
 restricted.backups                   | string    | -                     | block                     | Prevents the creation of any instance or volume backups.
+restricted.cluster.groups            | string    | -                     | -                         | Prevents targeting cluster groups other than the provided ones.
 restricted.cluster.target            | string    | -                     | block                     | Prevents direct targeting of cluster members when creating or moving instances.
 restricted.containers.lowlevel       | string    | -                     | block                     | Prevents use of low-level container options like raw.lxc, raw.idmap, volatile, etc.
 restricted.containers.nesting        | string    | -                     | block                     | Prevents setting security.nesting=true.
 restricted.containers.privilege      | string    | -                     | unpriviliged              | If "unpriviliged", prevents setting security.privileged=true. If "isolated", prevents setting security.privileged=true and also security.idmap.isolated=true. If "allow", no restriction apply.
 restricted.devices.disk              | string    | -                     | managed                   | If "block" prevent use of disk devices except the root one. If "managed" allow use of disk devices only if "pool=" is set. If "allow", no restrictions apply.
+restricted.devices.disk.paths        | string    | -                     | -                         | If `restricted.devices.disk` is set to `allow`, this sets a comma-separated list of path prefixes that restrict the `source` setting on `disk` devices. If empty then all paths are allowed.
 restricted.devices.gpu               | string    | -                     | block                     | Prevents use of devices of type "gpu"
 restricted.devices.infiniband        | string    | -                     | block                     | Prevents use of devices of type "infiniband"
 restricted.devices.nic               | string    | -                     | managed                   | If "block" prevent use of all network devices. If "managed" allow use of network devices only if "network=" is set. If "allow", no restrictions apply.
@@ -51,6 +53,8 @@ restricted.devices.unix-block        | string    | -                     | block
 restricted.devices.unix-char         | string    | -                     | block                     | Prevents use of devices of type "unix-char"
 restricted.devices.unix-hotplug      | string    | -                     | block                     | Prevents use of devices of type "unix-hotplug"
 restricted.devices.usb               | string    | -                     | block                     | Prevents use of devices of type "usb"
+restricted.idmap.uid                 | string    | -                     | -                         | Specifies the allowed host UID ranges allowed in the instance `raw.idmap` setting.
+restricted.idmap.gid                 | string    | -                     | -                         | Specifies the allowed host GID ranges allowed in the instance `raw.idmap` setting.
 restricted.networks.subnets          | string    | -                     | block                     | Comma delimited list of network subnets from the uplink networks (in the form `<uplink>:<subnet>`) that are allocated for use in this project
 restricted.networks.uplinks          | string    | -                     | block                     | Comma delimited list of network names that can be used as uplinks for networks in this project
 restricted.networks.zones            | string    | -                     | block                     | Comma delimited list of network zones that can be used (or something under them) in this project

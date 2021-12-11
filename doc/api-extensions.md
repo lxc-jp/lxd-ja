@@ -39,7 +39,7 @@ A number of new syscalls related container configuration keys were introduced.
  * `security.syscalls.blacklist`
  * `security.syscalls.whitelist`
 
-See [configuration.md](configuration.md) for how to use them.
+See [Instance configuration](instances.md) for how to use them.
 
 ## auth\_pki
 This indicates support for PKI authentication mode.
@@ -122,7 +122,7 @@ Network management API for LXD.
 This includes:
 
  * Addition of the "managed" property on `/1.0/networks` entries
- * All the network configuration options (see [configuration.md](configuration.md) for details)
+ * All the network configuration options (see [Network configuration](networks.md) for details)
  * `POST /1.0/networks` (see [RESTful API](rest-api.md) for details)
  * `PUT /1.0/networks/<entry>` (see [RESTful API](rest-api.md) for details)
  * `PATCH /1.0/networks/<entry>` (see [RESTful API](rest-api.md) for details)
@@ -215,7 +215,7 @@ This includes:
 * `PATCH /1.0/storage-pools/<pool>/volumes/<volume_type>/<name>` (see [RESTful API](rest-api.md) for details)
 * `DELETE /1.0/storage-pools/<pool>/volumes/<volume_type>/<name>` (see [RESTful API](rest-api.md) for details)
 
-* All storage configuration options (see [configuration.md](configuration.md) for details)
+* All storage configuration options (see [Storage configuration](storage.md) for details)
 
 ## file\_delete
 Implements `DELETE` in `/1.0/containers/<name>/files`
@@ -1344,7 +1344,7 @@ Adds new `security.acls.default.{in,e}gress.action` and `security.acls.default.{
 OVN networks and NICs. This replaces the removed ACL `default.action` and `default.logged` keys.
 
 ## gpu\_mig
-This adds support for NVIDIA MIG. It introduces the `mig` gputype and associaetd config keys.
+This adds support for NVIDIA MIG. It introduces the `mig` gputype and associated config keys.
 
 ## project\_usage
 Adds an API endpoint to get current resource allocations in a project.
@@ -1492,3 +1492,51 @@ A new REST API is also introduced to manage DNS zones:
 ## ovn\_nic\_acceleration
 Adds new `acceleration` config key to OVN NICs which can be used for enabling hardware offloading.
 It takes the values `none` or `sriov`.
+
+## certificate\_self\_renewal
+This adds support for renewing a client's own trust certificate.
+
+## instance\_project\_move
+This adds a `project` field to the `POST /1.0/instances/NAME` API,
+allowing for easy move of an instance between projects.
+
+## storage\_volume\_project\_move
+This adds support for moving storage volume between projects.
+
+## cloud\_init
+This adds a new `cloud-init` config key namespace which contains the following keys:
+
+ - `cloud-init.vendor-data`
+ - `cloud-init.user-data`
+ - `cloud-init.network-config`
+
+ It also adds a new endpoint `/1.0/devices` to devlxd which shows an instance's devices.
+
+## network\_dns\_nat
+This introduces `network.nat` as a config option on network zones (DNS).
+
+It defaults to the current behavior of generating records for all
+instances NICs but if set to `false`, it will instruct LXD to only
+generate records for externally reachable addreses.
+
+## database\_leader
+Adds new "database-leader" role which is assigned to cluster leader.
+
+## instance\_all\_projects
+This adds support for displaying instances from all projects.
+
+## clustering\_groups
+Add support for grouping cluster members.
+
+This introduces the following new endpoints:
+
+ - `/1.0/cluster/groups` (GET, POST)
+ - `/1.0/cluster/groups/<name>` (GET, POST, PUT, PATCH, DELETE)
+
+ The following project restriction is added:
+
+  - `restricted.cluster.groups`
+
+## ceph\_rbd\_du
+Adds a new `ceph.rbd.du` boolean on Ceph storage pools which allows
+disabling the use of the potentially slow `rbd du` calls.

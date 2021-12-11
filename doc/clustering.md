@@ -69,6 +69,28 @@ If you do not have a join token, but have a trust password instead then, then an
 if you have a join token. Then pick an address of an existing node in the cluster and check the fingerprint that
 gets printed matches the cluster certificate of the existing members.
 
+### Per-server configuration
+As mentioned previously, LXD cluster members are generally assumed to be identical systems.
+
+However to accommodate things like slightly different disk ordering or
+network interface naming, LXD records some settings as being
+server-specific. When such settings are present in a cluster, any new
+server being added will have to provide a value for it.
+
+This is most often done through the interactive `lxd init` which will
+ask the user for the value for a number of configuration keys related to
+storage or networks.
+
+Those typically cover:
+
+ - Source device for a storage pool (leaving empty would create a loop)
+ - Name for a ZFS zpool (defaults to the name of the LXD pool)
+ - External interfaces for a bridged network (empty would add none)
+ - Name of the parent network device for managed physical or macvlan networks (must be set)
+
+It's possible to lookup the questions ahead of time (useful for scripting) by querying the `/1.0/cluster` API endpoint.
+This can be done through `lxc query /1.0/cluster` or through other API clients.
+
 ### Preseed
 
 Create a preseed file for the bootstrap node with the configuration
@@ -171,7 +193,7 @@ The currently supported keys are:
 
 | Key                | Type   | Condition | Default | Description                                                                                                                                                                                  |
 | :----------------- | :----- | :-------- | :------ | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| scheduler.instance | string | -         | all     | If `all` then the member will be auto-targeted for instance creation if it has the least number of instances. If `manual` then instances will only target the member if `--target` is given. |
+| scheduler.instance | string | -         | all     | If `all` then the member will be auto-targeted for instance creation if it has the least number of instances. If `manual` then instances will only target the member if `--target` is given. If `group` then instances will only target members in the group provided using `--target=@<group>` |
 | user.\*            | string | -         | -       | Free form user key/value storage (can be used in search)                                                                                                                                     |
 
 ### Voting and stand-by members
@@ -387,10 +409,10 @@ You can launch an instance on any node in the cluster from any node in
 the cluster. For example, from node1:
 
 ```bash
-lxc launch --target node2 ubuntu:18.04 bionic
+lxc launch --target node2 ubuntu:20.04 c1
 ```
 
-will launch an Ubuntu 18.04 container on node2.
+will launch an Ubuntu 20.04 container on node2.
 
 When you launch an instance without defining a target, the instance will be 
 launched on the server which has the lowest number of instances.
@@ -408,10 +430,10 @@ After an instance is launched, you can operate it from any node. For
 example, from node1:
 
 ```bash
-lxc exec bionic ls /
-lxc stop bionic
-lxc delete bionic
-lxc pull file bionic/etc/hosts .
+lxc exec c1 ls /
+lxc stop c1
+lxc delete c1
+lxc pull file c1/etc/hosts .
 ```
 
 ### Manually altering Raft membership
@@ -575,3 +597,24 @@ is usually a standard self-signed certificate with an expiry set to 10 years.
 If you wish to replace it with something else, for example a valid certificate
 obtained through Let's Encrypt, `lxc cluster update-certificate` can be used
 to replace the certificate on all servers in your cluster.
+
+## Cluster groups
+
+In a LXD cluster, members can be added to cluster groups. By default, all members belong to the `default` group.
+
+Cluster members can be assigned to groups using the `lxc cluster group assign` command:
+
+```bash
+lxc cluster group create gpu
+lxc cluster group assign cluster:node1 gpu
+```
+
+With cluster groups, it's possible to target specific groups instead of individual members.
+This is done by using the `@` prefix when using `--target`.
+
+An example:
+```bash
+lxc launch images:ubuntu/20.04 cluster:ubuntu --target=@gpu
+```
+
+This will cause the instance to be created on a cluster member belonging to `gpu` group if `scheduler.instance` is set to either `all` (default) or `group`.
