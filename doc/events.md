@@ -17,7 +17,7 @@ LXD Currently supports three event types.
 - **Lifecycle**: LXD 上で発生する特定のアクションの監査証跡を表示します。 <!-- Shows an audit trail for specific actions occurring over LXD. -->
 
 ## イベント構造 <!-- Event structure -->
-#### 例: <!-- Example: -->
+### 例: <!-- Example: -->
 ```yaml
 location: cluster_name
 metadata:
@@ -34,12 +34,12 @@ type: lifecycle
 - `type`: イベント種別（`logging`, `operation`, `lifecycle` のいずれか）。 <!-- The type of event this is (one of `logging`, `operation`, or `lifecycle`). -->
 - `metadata`: 特定のイベント種別に関する情報。 <!-- Information about the specific event type. -->
 
-#### logging イベントの構造 <!-- Logging event structure -->
+### logging イベントの構造 <!-- Logging event structure -->
 - `message`: ログメッセージ。 <!-- The log message. -->
 - `level`: ログのログレベル。 <!-- The log-level of the log. -->
 - `context`: イベントに含まれる追加情報。 <!-- Additional information included in the event. -->
 
-#### operation イベントの構造 <!-- Operation event structure -->
+### operation イベントの構造 <!-- Operation event structure -->
 - `id`: オペレーションの UUID <!-- The UUID of the operation. -->
 - `class`: オペレーション種別（task, token, websocket のいずれか）。 <!-- The type of operation (task, token, or websocket). -->
 - `description`: オペレーションの説明。 <!-- A description of the operation. -->
@@ -53,7 +53,7 @@ type: lifecycle
 - `err`: オペレーションのエラーメッセージ。 <!-- Error message of the operation. -->
 - `location`: クラスターメンバー名（クラスターであれば）。 <!-- The cluster member name (if clustered). -->
 
-#### lifecycle イベントの構造 <!-- Lifecycle event structure -->
+### lifecycle イベントの構造 <!-- Lifecycle event structure -->
 - `action`: 発生したライフサイクルアクション。 <!-- The lifecycle action that occurred. -->
 - `requestor`: 誰がリクエストを作成したかの情報（該当するものがあれば）。 <!-- Information about who is making the request (if applicable). -->
 - `source`: アクションの対象のパス。 <!-- Path to what is being acted upon. -->

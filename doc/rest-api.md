@@ -40,7 +40,7 @@ There are three standard return types:
  * バックグラウンド操作 <!-- Background operation -->
  * エラー <!-- Error -->
 
-#### 標準の戻り値 <!-- Standard return value -->
+### 標準の戻り値 <!-- Standard return value -->
 標準の同期的な操作に対しては以下のような dict が返されます。
 <!--
 For a standard synchronous operation, the following dict is returned:
@@ -71,7 +71,7 @@ HTTP ステータスコードは必ず 200 です。
 HTTP code must be 200.
 -->
 
-#### バックグラウンド操作 <!-- Background operation -->
+### バックグラウンド操作 <!-- Background operation -->
 リクエストの結果がバックグラウンド操作になる場合、 HTTP ステータスコードは 202 (Accepted)
 になり、操作の URL を指す HTTP の Location ヘッダが返されます。
 <!--
@@ -171,7 +171,7 @@ going on without having to pull the target operation, all information in
 the body can also be retrieved from the background operation URL.
 -->
 
-#### エラー <!-- Error -->
+### エラー <!-- Error -->
 さまざまな状況によっては操作を行う前に直ぐに問題が起きる場合があり、
 そういう場合には以下のような値が返されます。
 <!--

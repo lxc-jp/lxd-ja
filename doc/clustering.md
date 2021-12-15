@@ -110,6 +110,45 @@ gets printed matches the cluster certificate of the existing members.
 -->
 参加トークンは持っていないがトラスト・パスワードを持っている場合は参加トークンを持っているかの質問に `no` と答えます。その後クラスター内の既存のノードのアドレスを 1 つ選び表示されたフィンガープリントが既存メンバーのクラスター証明書にマッチするかをチェックします。
 
+### サーバーごとの設定 <!-- Per-server configuration -->
+上で述べたように LXD のクラスターメンバーはたいていは同一のシステムであると想定されます。
+<!--
+As mentioned previously, LXD cluster members are generally assumed to be identical systems.
+-->
+
+しかしディスクの多少の順序の違いやネットワークインターフェースの名前が違いに適応するため、 LXD は一部の設定をサーバーごとに記録します。
+クラスターにそのような設定が存在するときは、新しく追加されるサーバーにはその設定に対する値を指定する必要があります。
+<!--
+However to accommodate things like slightly different disk ordering or
+network interface naming, LXD records some settings as being
+server-specific. When such settings are present in a cluster, any new
+server being added will have to provide a value for it.
+-->
+
+これはたいていの場合インタラクティブな `lxd init` の実行時に、ストレージやネットワークに関連するいくつかの設定キーの値をユーザーに尋ねることで実現されます。
+<!--
+This is most often done through the interactive `lxd init` which will
+ask the user for the value for a number of configuration keys related to
+storage or networks.
+-->
+
+典型的には以下のような項目が対象になります。
+<!--
+Those typically cover:
+-->
+
+ - ストレージプールのソースデバイス（空にするとループデバイスを作成） <!-- Source device for a storage pool (leaving empty would create a loop) -->
+ - ZFS zpool の名前（デフォルトは LXD プールの名前） <!-- Name for a ZFS zpool (defaults to the name of the LXD pool) -->
+ - ブリッジネットワークの外部インターフェース（空にすると追加しない） <!-- External interfaces for a bridged network (empty would add none) -->
+ - マネージドされた物理あるいは macvlan ネットワークの親のネットワークデバイスの名前（設定必須） <!-- Name of the parent network device for managed physical or macvlan networks (must be set) -->
+
+どういう質問があるかは `/1.0/cluster` API エンドポイントに問い合わせることで事前に確認できます（スクリプトを書く際に有効です）。
+これは `lxc query /1.0/cluster` や他の API クライアントを使って実行できます。
+<!--
+It's possible to lookup the questions ahead of time (useful for scripting) by querying the `/1.0/cluster` API endpoint.
+This can be done through `lxc query /1.0/cluster` or through other API clients.
+-->
+
 ### 事前に定義して行う方法 <!-- Preseed -->
 
 <!--
@@ -242,7 +281,7 @@ The currently supported keys are:
 
 | キー <!-- Key -->  | 型 <!-- Type --> | 条件 <!-- Condition --> | デフォルト値 <!-- Default --> | 説明 <!-- Description -->                                                                                                                                                                                  |
 | :----------------- | :----- | :-------- | :------ | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| scheduler.instance | string | -         | all     | `all` の場合、最低数のインスタンスを持っていれば、`all` と設定されたインスタンスの中から1つインスタンス作成時に自動的に選択されてターゲットされます。 `manual` の場合、インスタンスは `--target` が指定されたときのみメンバーにターゲットされます。 <!-- If `all` then the member will be auto-targeted for instance creation if it has the least number of instances. If `manual` then instances will only target the member if `--target` is given. --> |
+| scheduler.instance | string | -         | all     | `all` の場合、最低数のインスタンスを持っていれば、`all` と設定されたインスタンスの中から1つインスタンス作成時に自動的に選択されてターゲットされます。 `manual` の場合、インスタンスは `--target` が指定されたときのみメンバーにターゲットされます。`group` の場合、インスタンスは `--target=@<group>` が指定されたときのみメンバーにターゲットされます。 <!-- If `all` then the member will be auto-targeted for instance creation if it has the least number of instances. If `manual` then instances will only target the member if `-\-target` is given.  If `group` then instances will only target members in the group provided using `-\-target=@<group>`  --> |
 | user.\*            | string | -         | -       | 自由形式のユーザーのキー・バリュー・ストレージ (検索で使用可能) <!-- Free form user key/value storage (can be used in search) -->                                                                                                                                     |
 
 ### 投票 (voting) メンバーとスタンバイメンバー <!-- Voting and stand-by members -->
@@ -618,13 +657,13 @@ the cluster. For example, from node1:
 クラスター上の任意のノード上でインスタンスを起動できます。例えば、node1 から:
 
 ```bash
-lxc launch --target node2 ubuntu:18.04 bionic
+lxc launch --target node2 ubuntu:18.04 c1
 ```
 
 <!--
-will launch an Ubuntu 18.04 container on node2.
+will launch an Ubuntu 20.04 container on node2.
 -->
-のように実行すれば、node2 上で Ubuntu 18.04 コンテナーが起動します。
+のように実行すれば、node2 上で Ubuntu 20.04 コンテナーが起動します。
 
 <!--
 When you launch an instance without defining a target, the instance will be 
@@ -655,10 +694,10 @@ example, from node1:
 インスタンスが起動後、任意のノードからそのコンテナーを操作できます。例えば、node1 から:
 
 ```bash
-lxc exec bionic ls /
-lxc stop bionic
-lxc delete bionic
-lxc pull file bionic/etc/hosts .
+lxc exec c1 ls /
+lxc stop c1
+lxc delete c1
+lxc pull file c1/etc/hosts .
 ```
 
 のように操作できます。
@@ -935,4 +974,41 @@ is usually a standard self-signed certificate with an expiry set to 10 years.
 If you wish to replace it with something else, for example a valid certificate
 obtained through Let's Encrypt, `lxc cluster update-certificate` can be used
 to replace the certificate on all servers in your cluster.
+-->
+
+## クラスターグループ <!-- Cluster groups -->
+
+LXD のクラスターでは、メンバーはクラスターグループに追加できます。デフォルトでは全てのメンバーは `default` グループに属します。
+<!--
+In a LXD cluster, members can be added to cluster groups. By default, all members belong to the `default` group.
+-->
+
+クラスターメンバーは `lxc cluster group assign` コマンドを使ってグループに割り当てられます。
+<!--
+Cluster members can be assigned to groups using the `lxc cluster group assign` command:
+-->
+
+```bash
+lxc cluster group create gpu
+lxc cluster group assign cluster:node1 gpu
+```
+
+クラスターグループがあると、個別のメンバーの代わりに特定のグループをターゲットにできます。
+これは `--target` を使うときに `@` の接頭辞を使うことで実現できます。
+<!--
+With cluster groups, it's possible to target specific groups instead of individual members.
+This is done by using the `@` prefix when using `--target`.
+-->
+
+例
+<!--
+An example:
+-->
+```bash
+lxc launch images:ubuntu/20.04 cluster:ubuntu --target=@gpu
+```
+
+もし `scheduler.instance` が `all` (デフォルト) か `group` に設定されていれば、上のコマンドにより `gpu` グループに属するクラスターメンバー上にインスタンスが作成されます。
+<!--
+This will cause the instance to be created on a cluster member belonging to `gpu` group if `scheduler.instance` is set to either `all` (default) or `group`.
 -->

@@ -14,7 +14,7 @@ Here are different ways to help troubleshooting `lxc` and `lxd` code.
 `lxc` と `lxd` のコードをトラブルシューティングするのに役立ついくつかの
 異なる方法を説明します。
 
-#### lxc --debug
+### lxc --debug
 
 <!--
 Adding `\-\-debug` flag to any client command will give extra information
@@ -27,14 +27,14 @@ logging call:
 
     logger.Debugf("Hello: %s", "Debug")
 
-#### lxc monitor
+### lxc monitor
 
 <!--
 This command will monitor messages as they appear on remote server.
 -->
 このコマンドはメッセージがリモートのサーバに現れるのをモニターします。
 
-#### lxd --debug
+### lxd --debug
 
 <!--
 Shutting down `lxd` server and running it in foreground with `\-\-debug`
@@ -55,7 +55,7 @@ group.
 上記の `--group lxd` は非特権ユーザーにアクセス権限を与えるために必要です。
 
 
-### ローカルソケット経由でのREST API <!-- REST API through local socket -->
+## ローカルソケット経由でのREST API <!-- REST API through local socket -->
 
 <!--
 On server side the most easy way is to communicate with LXD through
@@ -84,7 +84,7 @@ See the [RESTful API](rest-api.md) for available API.
 利用可能なAPIについては [RESTful API](rest-api.md) をご参照ください。
 
 
-### HTTPS経由でのREST API <!-- REST API through HTTPS -->
+## HTTPS経由でのREST API <!-- REST API through HTTPS -->
 
 <!--
 [HTTPS connection to LXD](security.md) requires valid
@@ -114,13 +114,13 @@ Among the lines you should see:
     SSL client : Yes
 
 
-#### コマンドラインツールを使う <!-- with command line tools -->
+### コマンドラインツールを使う <!-- with command line tools -->
 
 ```bash
 wget --no-check-certificate https://127.0.0.1:8443/1.0 --certificate=$HOME/.config/lxc/client.crt --private-key=$HOME/.config/lxc/client.key -O - -q
 ```
 
-#### ブラウザを使う <!-- with browser -->
+### ブラウザを使う <!-- with browser -->
 
 <!--
 Some browser plugins provide convenient interface to create, modify

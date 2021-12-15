@@ -34,7 +34,7 @@ The configuration keys are namespaced with the following namespaces currently su
  - `maas` (MAAS ネットワーク識別) <!-- (MAAS network identification) -->
  - `user` (ユーザーのメタデータに対する自由形式の key/value) <!-- (free form key/value for user metadata) -->
 
-## ネットワーク: ブリッジ <!-- network: bridge -->
+## <a name="network-bridge"></a> ネットワーク: ブリッジ <!-- network: bridge -->
 
 LXD でのネットワークの設定タイプの 1 つとして、 LXD はネットワークブリッジの作成と管理をサポートしています。
 LXD のブリッジは下層のネイティブな Linux のブリッジと Open vSwitch を利用できます。
@@ -431,7 +431,7 @@ firewall-cmd --direct --get-all-rules
 Warning: what is exposed above is not a fool-proof approach and may end up inadvertently introducing a security risk.
 -->
 
-## ネットワーク: macvlan <!-- network: macvlan -->
+## <a name="network-macvlan"></a> ネットワーク: macvlan <!-- network: macvlan -->
 
 macvlan ネットワークタイプではインスタンスを macvlan NIC を使って親のインターフェースに接続する際に使用するプリセットを指定可能です。
 これによりインスタンスの NIC 自体は下層の詳しい設定を一切知ることなく、接続する `network` を単に指定するだけで設定できます。
@@ -455,7 +455,7 @@ parent                          | string    | -                              | -
 vlan                            | integer   | -                              | -                    | アタッチする先の VLAN ID <!-- The VLAN ID to attach to -->
 gvrp                            | boolean   | -                              | false                | GARP VLAN Registration Protocol を使って VLAN を登録する <!-- Register VLAN using GARP VLAN Registration Protocol -->
 
-## ネットワーク: sriov <!-- network: sriov -->
+## <a name="network-sriov"></a> ネットワーク: sriov <!-- network: sriov -->
 
 sriov ネットワークタイプではインスタンスを sriov NIC を使って親のインターフェースに接続する際に使用するプリセットを指定可能です。
 これによりインスタンスの NIC 自体は下層の詳しい設定を一切知ることなく、接続する `network` を単に指定するだけで設定できます。
@@ -478,7 +478,7 @@ mtu                             | integer   | -                              | -
 parent                          | string    | -                              | -                     | sriov NIC を作成する親のインターフェース <!-- Parent interface to create sriov NICs on -->
 vlan                            | integer   | -                              | -                     | アタッチする先の VLAN ID <!-- The VLAN ID to attach to -->
 
-## ネットワーク: ovn <!-- network: ovn -->
+## <a name="network-ovn"></a> ネットワーク: ovn <!-- network: ovn -->
 
 ovn ネットワークタイプは OVN SDN を使って論理的なネットワークの作成を可能にします。
 これは複数の個別のネットワーク内で同じ論理ネットワークのサブネットを使うような検証環境やマルチテナントの環境で便利です。
@@ -552,9 +552,9 @@ lxc ls
 
 ネットワークフォワード: <!--Network forwards: -->
 
-OVN のネットワークサポートは [ネットワークフォワード](network-forwards.md#network-ovn) 参照。
+OVN のネットワークサポートは [ネットワークフォワード](network-forwards.md) 参照。
 <!--
-OVN networks support [network forwards](network-forwards.md#network-ovn).
+OVN networks support [network forwards](network-forwards.md).
 -->
 
 ネットワークピア: <!-- Network peers: -->
@@ -591,7 +591,7 @@ security.acls.default.egress.action  | string    | security.acls                
 security.acls.default.ingress.logged | boolean   | security.acls                     | false                                                      | どの ACL ルールにもマッチしない ingress トラフィックをログ出力するかどうか <!-- Whether to log ingress traffic that doesn't match any ACL rule -->
 security.acls.default.egress.logged  | boolean   | security.acls                     | false                                                      | どの ACL ルールにもマッチしない egress トラフィックをログ出力するかどうか <!-- Whether to log egress traffic that doesn't match any ACL rule -->
 
-## ネットワーク: physical <!-- network: physical -->
+## <a name="network-physical"></a> ネットワーク: physical <!-- network: physical -->
 
 physical ネットワークは OVN ネットワークを親インターフェースに接続する際に使用するプリセットの設定を提供します。
 <!--
@@ -626,7 +626,7 @@ ipv6.routes.anycast             | boolean   | ipv6 アドレス <!-- address -->
 dns.nameservers                 | string    | 標準モード <!-- standard mode --> | -                                         | 物理ネットワークの DNS サーバー IP のリスト <!-- List of DNS server IPs on physical network -->
 ovn.ingress\_mode               | string    | 標準モード <!-- standard mode --> | l2proxy                                   | OVN NIC の外部 IP アドレスがアップリンクネットワークで広告される方法を設定します。 `l2proxy` (proxy ARP/NDP) か `routed` です。 <!-- Sets the method that OVN NIC external IPs will be advertised on uplink network. Either `l2proxy` (proxy ARP/NDP) or `routed`. -->
 
-# BGP の統合 <!-- BGP integration -->
+## BGP の統合 <!-- BGP integration -->
 LXD は BGP サーバーとして機能でき、アップストリームの BGP ルーターとセッションを確立し LXD が使用しているアドレスとサブネットを広告できます。
 <!--
 LXD can act as a BGP server, effectively allowing to establish sessions with upstream BGP routers and announce the addresses and subnets that it's using.

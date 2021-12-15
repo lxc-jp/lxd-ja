@@ -10,7 +10,7 @@ The instance metrics are updated when calling the `/1.0/metrics` endpoint.
 They are cached for 15s to handle multiple scrapers. Fetching metrics is a relatively expensive operation for LXD to perform so we would recommend scraping at a 30s or 60s rate to limit impact.
 -->
 
-# メトリクス用証明書の作成 <!-- Create metrics certificate -->
+## メトリクス用証明書の作成 <!-- Create metrics certificate -->
 `1.0/metrics` エンドポイントは他の証明書に加えて `metrics` タイプの証明書を受け付けるという点で特別なエンドポイントです。
 このタイプの証明書はメトリクス専用で、インスタンスや他の LXD のオブジェクトの操作には使用できません。
 <!--
@@ -36,7 +36,7 @@ Now, this certificate needs to be added to the list of trusted clients:
 lxc config trust add ~/.config/lxc/metrics.crt --type=metrics
 ```
 
-# Prometheus にターゲットを追加 <!-- Add target to Prometheus -->
+## Prometheus にターゲットを追加 <!-- Add target to Prometheus -->
 Prometheus が LXD からメトリクスを取得するためには、 LXD をターゲットに追加する必要があります。
 <!--
 In order for Prometheus to scrape from LXD, it has to be added to the targets.
