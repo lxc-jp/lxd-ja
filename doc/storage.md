@@ -397,7 +397,7 @@ ceph.osd.pg\_num              | string                        | 32              
 ceph.osd.pool\_name           | string                        | プールの名前 <!-- name of the pool -->  | osd ストレージプールの名前 <!-- Name of the osd storage pool -->
 ceph.rbd.clone\_copy          | string                        | true                                    | フルのデータセットコピーではなく RBD のライトウェイトクローンを使うかどうか <!-- Whether to use RBD lightweight clones rather than full dataset copies -->
 ceph.rbd.du                   | bool                          | true                                    | 停止したインスタンスのディスク使用データを取得するのに rbd du を使用するかどうか <!-- Whether to use rbd du to obtain disk usage data for stopped instances. -->
-ceph.rbd.features             | string                        | layering                                | ボリュームで有効する RBD の機能のカンマ区切りリスト <!-- Comma separate list of RBD features to enable on the volumes -->
+ceph.rbd.features             | string                        | layering                                | ボリュームで有効にする RBD の機能のカンマ区切りリスト <!-- Comma separate list of RBD features to enable on the volumes -->
 ceph.user.name                | string                        | admin                                   | ストレージプールとボリュームの作成に使用する ceph ユーザー <!-- The ceph user to use when creating storage pools and volumes -->
 volatile.pool.pristine        | string                        | true                                    | プールが作成時に空かどうか <!-- Whether the pool has been empty on creation time -->
 

@@ -58,7 +58,7 @@ The currently supported keys are:
 キー <!-- Key -->                    | 型 <!-- Type --> | デフォルト値 <!-- Default --> | ライブアップデート <!-- Live update --> | 条件 <!-- Condition --> | 説明 <!-- Description -->
 :--                                         | :---      | :------                              | :----------   | :----------               | :----------
 boot.autostart                              | boolean   | -                                    | n/a           | -                         | LXD起動時に常にインスタンスを起動するかどうか（設定しない場合、最後の状態
-がリストアされます）<!-- Always start the instance when LXD starts (if not s                   et, restore last state) -->
+がリストアされます）<!-- Always start the instance when LXD starts (if not set, restore last state) -->
 boot.autostart.delay                        | integer   | 0                                    | n/a           | -                         | インスタンスが起動した後に次のインスタンスが起動するまで待つ秒数<!-- Number of seconds to wait after the instance started before starting the next one -->
 boot.autostart.priority                     | integer   | 0                                    | n/a           | -                         | インスタンスを起動させる順番（高いほど早く起動します）<!-- What order to start the instances in (starting with highest) -->
 boot.host\_shutdown\_timeout                | integer   | 30                                   | yes           | -                         | 強制停止前にインスタンスが停止するのを待つ秒数 <!-- Seconds to wait for instance to shutdown before it is force stopped -->

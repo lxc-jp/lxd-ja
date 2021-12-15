@@ -116,7 +116,7 @@ gets printed matches the cluster certificate of the existing members.
 As mentioned previously, LXD cluster members are generally assumed to be identical systems.
 -->
 
-しかしディスクの多少の順序の違いやネットワークインターフェースの名前が違いに適応するため、 LXD は一部の設定サーバーごとに記録します。
+しかしディスクの多少の順序の違いやネットワークインターフェースの名前が違いに適応するため、 LXD は一部の設定をサーバーごとに記録します。
 クラスターにそのような設定が存在するときは、新しく追加されるサーバーにはその設定に対する値を指定する必要があります。
 <!--
 However to accommodate things like slightly different disk ordering or

@@ -43,7 +43,7 @@ sudo apt install curl gettext jq sqlite3 uuid-runtime socat bind9-dnsutils
 ```
 
 ### ソースからの最新版のビルド <!-- From Source: Building the latest version -->
-この方法は LXD の最新版をビルドしたい開発者や Linux ディストリビューションで提供されない LXD の特定のリリースをビルドするためのものです。 Linux ディストリビューションへ統合するためのソースからのビルドはここでは説明しません。それは将来別のドキュメントで取り扱うかもしれません。
+この方法は LXD の最新版をビルドしたい開発者や Linux ディストリビューションで提供されない LXD の特定のリリースをビルドするためのものです。 Linux ディストリビューションへ統合するためのソースからのビルドはここでは説明しません。それは将来、別のドキュメントで取り扱うかもしれません。
 <!--
 These instructions for building from source are suitable for individual developers who want to build the latest version
 of LXD, or build a specific release of LXD which may not be offered by their Linux distribution. Source builds for
@@ -93,7 +93,7 @@ variable settings may change, so be sure to use the ones displayed at the end of
 below (shown for example purposes) may not exactly match what your version of LXD requires:
 -->
 
-ビルドには最低 2GB の RAM を推奨します。
+ビルドには最低 2GB の RAM を搭載することを推奨します。
 <!--
 We recommend having at least 2GB of RAM to allow the build to complete.
 -->
