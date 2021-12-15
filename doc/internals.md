@@ -1,5 +1,6 @@
 # Internals & debugging
 
+<!--
 ```{toctree}
 :maxdepth: 1
 
@@ -12,3 +13,4 @@ environment
 syscall-interception
 User namespace setup <userns-idmap>
 ```
+-->
