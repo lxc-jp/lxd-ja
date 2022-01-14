@@ -1540,3 +1540,29 @@ This introduces the following new endpoints:
 ## ceph\_rbd\_du
 Adds a new `ceph.rbd.du` boolean on Ceph storage pools which allows
 disabling the use of the potentially slow `rbd du` calls.
+
+## instance\_get\_full
+This introduces a new recursion=1 mode for `GET /1.0/instances/{name}` which allows for the retrieval of
+all instance structs, including the state, snapshots and backup structs.
+
+## qemu\_metrics
+This adds a new `security.agent.metrics` boolean which defaults to `true`.
+When set to `false`, it doesn't connect to the lxd-agent for metrics and other state information, but relies on stats from QEMU.
+
+## gpu\_mig\_uuid
+Adds support for the new MIG UUID format used by Nvidia `470+` drivers (eg. `MIG-74c6a31a-fde5-5c61-973b-70e12346c202`),
+the `MIG-` prefix can be omitted
+
+This extension supersedes old `mig.gi` and `mig.ci` parameters which are kept for compatibility with old drivers and
+cannot be set together.
+
+## event\_project
+Expose the project an API event belongs to.
+
+## clustering\_evacuation\_live
+This adds `live-migrate` as a config option to `cluster.evacuate`, which forces live-migration
+of instances during cluster evacuation.
+
+## instance\_allow\_inconsistent\_copy
+Adds `allow_inconsistent` field to instance source on `POST /1.0/instances`. If true, rsync will ignore the 
+`Partial transfer due to vanished source files` (code 24) error when creating an instance from a copy. 

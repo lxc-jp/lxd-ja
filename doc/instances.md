@@ -37,6 +37,9 @@ currently supported:
 
 The currently supported keys are:
 
+```{rst-class} dec-font-size break-col-1 min-width-1-15
+```
+
 Key                                         | Type      | Default           | Live update   | Condition                 | Description
 :--                                         | :---      | :------           | :----------   | :----------               | :----------
 boot.autostart                              | boolean   | -                 | n/a           | -                         | Always start the instance when LXD starts (if not set, restore last state)
@@ -47,7 +50,7 @@ boot.stop.priority                          | integer   | 0                 | n/
 cloud-init.network-config                   | string    | DHCP on eth0      | no            | -                         | Cloud-init network-config, content is used as seed value
 cloud-init.user-data                        | string    | #cloud-config     | no            | -                         | Cloud-init user-data, content is used as seed value
 cloud-init.vendor-data                      | string    | #cloud-config     | no            | -                         | Cloud-init vendor-data, content is used as seed value
-cluster.evacuate                            | string    | auto              | n/a           | -                         | What to do when evacuating the instance (auto, migrate, or stop)
+cluster.evacuate                            | string    | auto              | n/a           | -                         | What to do when evacuating the instance (auto, migrate, live-migrate, or stop)
 environment.\*                              | string    | -                 | yes (exec)    | -                         | key/value environment variables to export to the instance and set on exec
 limits.cpu                                  | string    | -                 | yes           | -                         | Number or range of CPUs to expose to the instance (defaults to 1 CPU for VMs)
 limits.cpu.allowance                        | string    | 100%              | yes           | container                 | How much of the CPU can be used. Can be a percentage (e.g. 50%) for a soft limit or hard a chunk of time (25ms/100ms)
@@ -89,6 +92,7 @@ security.nesting                            | boolean   | false             | ye
 security.privileged                         | boolean   | false             | no            | container                 | Runs the instance in privileged mode
 security.protection.delete                  | boolean   | false             | yes           | -                         | Prevents the instance from being deleted
 security.protection.shift                   | boolean   | false             | yes           | container                 | Prevents the instance's filesystem from being uid/gid shifted on startup
+security.agent.metrics                      | boolean   | true              | no            | virtual-machine           | Controls whether the lxd-agent is queried for state information and metrics
 security.secureboot                         | boolean   | true              | no            | virtual-machine           | Controls whether UEFI secure boot is enabled with the default Microsoft keys
 security.syscalls.allow                     | string    | -                 | no            | container                 | A '\n' separated list of syscalls to allow (mutually exclusive with security.syscalls.deny\*)
 security.syscalls.deny                      | string    | -                 | no            | container                 | A '\n' separated list of syscalls to deny
@@ -903,8 +907,11 @@ vendorid    | string    | -                 | no        | The vendor id of the G
 productid   | string    | -                 | no        | The product id of the GPU device
 id          | string    | -                 | no        | The card id of the GPU device
 pci         | string    | -                 | no        | The pci address of the GPU device
-mig.ci      | int       | -                 | yes       | Existing MIG compute instance ID
-mig.gi      | int       | -                 | yes       | Existing MIG GPU instance ID
+mig.ci      | int       | -                 | no        | Existing MIG compute instance ID
+mig.gi      | int       | -                 | no        | Existing MIG GPU instance ID
+mig.uuid    | string    | -                 | no        | Existing MIG device UUID ("MIG-" prefix can be omitted)
+
+Note: Either "mig.uuid" (Nvidia drivers 470+) or both "mig.ci" and "mig.gi" (old Nvidia drivers) must be set.
 
 ##### gpu: sriov
 
@@ -1155,15 +1162,15 @@ instance. Note that this inheritance is not enforced by LXD but by the kernel.
 
 ### Snapshot scheduling and configuration
 LXD supports scheduled snapshots which can be created at most once every minute.
-There are three configuration options: 
--  `snapshots.schedule` takes a shortened cron expression: 
+There are three configuration options:
+-  `snapshots.schedule` takes a shortened cron expression:
 `<minute> <hour> <day-of-month> <month> <day-of-week>`. If this is empty
-(default), no snapshots will be created. 
+(default), no snapshots will be created.
 -  `snapshots.schedule.stopped` controls whether or not stopped instance are to
-be automatically snapshotted.  It defaults to `false`. 
+be automatically snapshotted.  It defaults to `false`.
 -  `snapshots.pattern` takes a pongo2 template string to format the snapshot name.
 To name snapshots with time stamps, the pongo2 context variable `creation_date`
-can be used.  Be aware that you should format the date 
+can be used.  Be aware that you should format the date
 (e.g. use `{{ creation_date|date:"2006-01-02_15-04-05" }}`) in your template
 string to avoid forbidden characters in the snapshot name.  Another way to avoid
 name collisions is to use the placeholder `%d`. If a snapshot with the same name
@@ -1177,4 +1184,4 @@ Example of using pongo2 syntax to format snapshot names with timestamps:
 ```bash
 lxc config set INSTANCE snapshots.pattern "{{ creation_date|date:'2006-01-02_15-04-05' }}"
 ```
-This results in snapshots named `{date/time of creation}` down to the precision of a second. 
+This results in snapshots named `{date/time of creation}` down to the precision of a second.
