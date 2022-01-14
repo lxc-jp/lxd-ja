@@ -3,7 +3,7 @@
 <!--
 Current LXD stores configurations for a few components:
 -->
-現在 LXD はいくつかのコンポーネントの設定を保管しています。
+LXD は次のコンポーネントの設定を保管しています。
 
 - [サーバ](server.md) <!--[Server](server.md) -->
 - [インスタンス](instances.md)  <!-- [Instances](instances.md) -->

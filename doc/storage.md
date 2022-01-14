@@ -395,7 +395,7 @@ ceph.osd.data\_pool\_name     | string                        | -               
 ceph.osd.force\_reuse         | bool                          | false                                   | 別の LXD インスタンスで既に使用されている osd ストレージプールの使用を強制するか <!-- Force using an osd storage pool that is already in use by another LXD instance -->
 ceph.osd.pg\_num              | string                        | 32                                      | osd ストレージプール用の placement グループの数 <!-- Number of placement groups for the osd storage pool -->
 ceph.osd.pool\_name           | string                        | プールの名前 <!-- name of the pool -->  | osd ストレージプールの名前 <!-- Name of the osd storage pool -->
-ceph.rbd.clone\_copy          | string                        | true                                    | フルのデータセットコピーではなく RBD のライトウェイトクローンを使うかどうか <!-- Whether to use RBD lightweight clones rather than full dataset copies -->
+ceph.rbd.clone\_copy          | bool                          | true                                    | フルのデータセットコピーではなく RBD のライトウェイトクローンを使うかどうか <!-- Whether to use RBD lightweight clones rather than full dataset copies -->
 ceph.rbd.du                   | bool                          | true                                    | 停止したインスタンスのディスク使用データを取得するのに rbd du を使用するかどうか <!-- Whether to use rbd du to obtain disk usage data for stopped instances. -->
 ceph.rbd.features             | string                        | layering                                | ボリュームで有効にする RBD の機能のカンマ区切りリスト <!-- Comma separate list of RBD features to enable on the volumes -->
 ceph.user.name                | string                        | admin                                   | ストレージプールとボリュームの作成に使用する ceph ユーザー <!-- The ceph user to use when creating storage pools and volumes -->

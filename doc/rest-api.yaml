@@ -499,6 +499,11 @@ definitions:
           source: /1.0/instances/c1
         type: object
         x-go-name: Metadata
+      project:
+        description: Project the event belongs to.
+        example: default
+        type: string
+        x-go-name: Project
       timestamp:
         description: Time at which the event was sent
         example: "2021-02-24T19:00:45.452649098-05:00"
@@ -1709,6 +1714,11 @@ definitions:
         example: ubuntu/20.04
         type: string
         x-go-name: Alias
+      allow_inconsistent:
+        description: Whether to ignore errors when copying (e.g. for volatile files)
+        example: false
+        type: boolean
+        x-go-name: AllowInconsistent
       base-image:
         description: Base image fingerprint (for faster migration)
         example: ed56997f7c5b48e8d78986d2467a26109be6fb9f2d92e8c7b08eb8b6cec7629a
@@ -7507,7 +7517,7 @@ paths:
       tags:
       - instances
     get:
-      description: Gets a specific instance.
+      description: Gets a specific instance (basic struct).
       operationId: instance_get
       parameters:
       - description: Project name
@@ -8804,6 +8814,49 @@ paths:
         "500":
           $ref: '#/responses/InternalServerError'
       summary: Change the state
+      tags:
+      - instances
+  /1.0/instances/{name}?recursion=1:
+    get:
+      description: |-
+        Gets a specific instance (full struct).
+
+        recursion=1 also includes information about state, snapshots and backups.
+      operationId: instance_get_recursion1
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Instance
+          schema:
+            description: Sync response
+            properties:
+              metadata:
+                $ref: '#/definitions/Instance'
+              status:
+                description: Status description
+                example: Success
+                type: string
+              status_code:
+                description: Status code
+                example: 200
+                type: integer
+              type:
+                description: Response type
+                example: sync
+                type: string
+            type: object
+        "403":
+          $ref: '#/responses/Forbidden'
+        "500":
+          $ref: '#/responses/InternalServerError'
+      summary: Get the instance
       tags:
       - instances
   /1.0/instances?recursion=1:

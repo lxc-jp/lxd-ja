@@ -3,9 +3,9 @@
 ## Go
 
 <!--
-LXD requires Go 1.13 or higher and is only tested with the golang compiler.
+LXD requires Go 1.16 or higher and is only tested with the golang compiler.
 -->
-LXD は Go 1.13 以上を必要とし、 golang のコンパイラのみでテストされています。
+LXD は Go 1.16 以上を必要とし、 golang のコンパイラのみでテストされています。
 (訳注: 以前は gccgo もサポートされていましたが golang のみになりました)
 
 ビルドには最低 2GB の RAM を推奨します。
@@ -15,9 +15,9 @@ We recommend having at least 2GB of RAM to allow the build to complete.
 
 ## 必要なカーネルバージョン <!-- Kernel requirements -->
 <!--
-The minimum supported kernel version is 3.13.
+The minimum supported kernel version is 5.4
 -->
-サポートされる最小のカーネルバージョンは 3.13 です。
+サポートされる最小のカーネルバージョンは 5.4 です。
 
 <!--
 LXD requires a kernel with support for:
@@ -55,9 +55,9 @@ As well as any other kernel feature required by the LXC version in use.
 
 ## LXC
 <!--
-LXD requires LXC 3.0.0 or higher with the following build options:
+LXD requires LXC 4.0.0 or higher with the following build options:
 -->
-LXD は以下のビルドオプションでビルドされた LXC 3.0.0 以上を必要とします。
+LXD は以下のビルドオプションでビルドされた LXC 4.0.0 以上を必要とします。
 
 <!--
  * apparmor (if using LXD's apparmor support)
