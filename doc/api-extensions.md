@@ -2913,3 +2913,56 @@ Ceph ストレージブールに `ceph.rbd.du` という boolean の設定を追
 Adds a new `ceph.rbd.du` boolean on Ceph storage pools which allows
 disabling the use of the potentially slow `rbd du` calls.
 -->
+
+## instance\_get\_full
+これは `GET /1.0/instances/{name}` に recursion=1 のモードを追加します。
+これは状態、スナップショット、バックアップの構造体を含む全てのインスタンスの構造体が取得できます。
+<!--
+This introduces a new recursion=1 mode for `GET /1.0/instances/{name}` which allows for the retrieval of
+all instance structs, including the state, snapshots and backup structs.
+-->
+
+## qemu\_metrics
+これは `security.agent.metrics` という boolean 値を追加します。デフォルト値は `true` です。
+`false` に設定するとメトリクスや他の状態の取得のために lxd-agent に接続することはせず、 QEMU からの統計情報に頼ります。
+<!--
+This adds a new `security.agent.metrics` boolean which defaults to `true`.
+When set to `false`, it doesn't connect to the lxd-agent for metrics and other state information, but relies on stats from QEMU.
+-->
+
+## gpu\_mig\_uuid
+Nvidia `470+` ドライバー (例. `MIG-74c6a31a-fde5-5c61-973b-70e12346c202`) で使用される MIG UUID 形式のサポートを追加します。
+`MIG-` の接頭辞は省略できます。
+<!--
+Adds support for the new MIG UUID format used by Nvidia `470+` drivers (eg. `MIG-74c6a31a-fde5-5c61-973b-70e12346c202`),
+the `MIG-` prefix can be omitted
+-->
+
+この拡張が古い `mig.gi` と `mig.ci` パラメーターに取って代わります。これらは古いドライバーとの互換性のため残されますが、
+同時には設定できません。
+<!--
+This extension supersedes old `mig.gi` and `mig.ci` parameters which are kept for compatibility with old drivers and
+cannot be set together.
+-->
+
+## event\_project
+イベントの API にイベントが属するプロジェクトを公開します。
+<!--
+Expose the project an API event belongs to.
+-->
+
+## clustering\_evacuation\_live
+`cluster.evacuate` への設定値 `live-migrate` を追加します。
+これはクラスター待避の際にインスタンスのライブマイグレーションを強制します。
+<!--
+This adds `live-migrate` as a config option to `cluster.evacuate`, which forces live-migration
+of instances during cluster evacuation.
+-->
+
+## instance\_allow\_inconsistent\_copy
+`POST /1.0/instances` のインスタンスソースに `allow_inconsistent` フィールドを追加します。
+true の場合、 rsync はコピーからインスタンスを生成するときに `Partial transfer due to vanished source files` (code 24) エラーを無視します。
+<!--
+Adds `allow_inconsistent` field to instance source on `POST /1.0/instances`. If true, rsync will ignore the 
+`Partial transfer due to vanished source files` (code 24) error when creating an instance from a copy. 
+-->

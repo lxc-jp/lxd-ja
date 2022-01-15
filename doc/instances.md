@@ -66,7 +66,7 @@ boot.stop.priority                          | integer   | 0                     
 cloud-init.network-config                   | string    | eth0 上の DHCP <!-- DHCP on eth0 --> | no            | -                         | Cloud-init network-config。設定はシード値として使用 <!-- Cloud-init network-config, content is used as seed value -->
 cloud-init.user-data                        | string    | #cloud-config                        | no            | -                         | Cloud-init user-data。設定はシード値として使用 <!-- Cloud-init user-data, content is used as seed value -->
 cloud-init.vendor-data                      | string    | #cloud-config                        | no            | -                         | Cloud-init vendor-data。設定はシード値として使用 <!-- Cloud-init vendor-data, content is used as seed value -->
-cluster.evacuate                            | string    | auto                                 | n/a           | -                         | インスタンス待避時に何をするか（auto, migrate, stop） <!-- What to do when evacuating the instance (auto, migrate, or stop) -->
+cluster.evacuate                            | string    | auto                                 | n/a           | -                         | インスタンス待避時に何をするか（auto, migrate, live-migrate, stop） <!-- What to do when evacuating the instance (auto, migrate, live-migrate, or stop) -->
 environment.\*                              | string    | -                                    | yes (exec)    | -                         | インスタンス実行時に設定される key/value 形式の環境変数<!-- key/value environment variables to export to the instance and set on exec -->
 limits.cpu                                  | string    | -                                    | yes           | -                         | インスタンスに割り当てる CPU 番号、もしくは番号の範囲（デフォルトは VM 毎に 1 CPU） <!-- Number or range of CPUs to expose to the instance (defaults to 1 CPU for VMs) -->
 limits.cpu.allowance                        | string    | 100%                                 | yes           | container                 | どれくらい CPU を使えるか。ソフトリミットとしてパーセント指定（例、50%）か固定値として単位時間内に使える時間（25ms/100ms）を指定できます <!-- How much of the CPU can be used. Can be a percentage (e.g. 50%) for a soft limit or hard a chunk of time (25ms/100ms) -->
@@ -108,6 +108,7 @@ security.nesting                            | boolean   | false                 
 security.privileged                         | boolean   | false                                | no            | container                 | 特権モードでインスタンスを実行するかどうか <!--Runs the instance in privileged mode -->
 security.protection.delete                  | boolean   | false                                | yes           | -                         | インスタンスを削除から保護する <!-- Prevents the instance from being deleted -->
 security.protection.shift                   | boolean   | false                                | yes           | container                 | インスタンスのファイルシステムが起動時に uid/gid がシフト（再マッピング） されるのを防ぐ <!-- Prevents the instance's filesystem from being uid/gid shifted on startup -->
+security.agent.metrics                      | boolean   | true                                 | no            | virtual-machine           | 状態の情報とメトリクスを lxd-agent に問い合わせるかどうかを制御する <!-- Controls whether the lxd-agent is queried for state information and metrics -->
 security.secureboot                         | boolean   | true                                 | no            | virtual-machine           | UEFI セキュアブートがデフォルトの Microsoft のキーで有効になるかを制御する <!-- Controls whether UEFI secure boot is enabled with the default Microsoft keys -->
 security.syscalls.allow                     | string    | -                                    | no            | container                 | `\n` 区切りのシステムコールの許可リスト（security.syscalls.deny\* を使う場合は使用不可）  <!-- A '\n' separated list of syscalls to allow (mutually exclusive with security.syscalls.deny\*) -->
 security.syscalls.deny                      | string    | -                                    | no            | container                 | `\n` 区切りのシステムコールの拒否リスト <!-- A '\n' separated list of syscalls to deny -->
@@ -1393,8 +1394,14 @@ vendorid    | string    | -                 | no        | GPU デバイスのベ
 productid   | string    | -                 | no        | GPU デバイスのプロダクト ID <!-- The product id of the GPU device -->
 id          | string    | -                 | no        | GPU デバイスのカード ID <!-- The card id of the GPU device -->
 pci         | string    | -                 | no        | GPU デバイスの PCI アドレス <!-- The pci address of the GPU device -->
-mig.ci      | int       | -                 | yes       | 既存の MIG コンピュートインスタンス ID <!-- Existing MIG compute instance ID -->
-mig.gi      | int       | -                 | yes       | 既存の MIG GPU インスタンス ID <!-- Existing MIG GPU instance ID -->
+mig.ci      | int       | -                 | no        | 既存の MIG コンピュートインスタンス ID <!-- Existing MIG compute instance ID -->
+mig.gi      | int       | -                 | no        | 既存の MIG GPU インスタンス ID <!-- Existing MIG GPU instance ID -->
+mig.uuid    | string    | -                 | no        | 既存の MIG デバイス UUID ("MIG-" 接頭辞は省略可) <!-- Existing MIG device UUID ("MIG-" prefix can be omitted) -->
+
+注意: "mig.uuid" (Nvidia drivers 470+) か、 "mig.ci" と  "mig.gi" (古い Nvidia ドライバー) の両方を設定する必要があります。
+<!--
+Note: Either "mig.uuid" (Nvidia drivers 470+) or both "mig.ci" and "mig.gi" (old Nvidia drivers) must be set.
+-->
 
 ##### gpu: sriov
 
