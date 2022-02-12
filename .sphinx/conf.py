@@ -98,8 +98,8 @@ html_theme_options = {
 }
 
 html_context = {
-    "github_url": "https://github.com/lxc/lxd",
-    "github_version": "master",
+    "github_url": "https://github.com/lxc-jp/lxd-ja",
+    "github_version": "staging",
     "github_folder": "/doc/",
     "github_filetype": "md"
 }
