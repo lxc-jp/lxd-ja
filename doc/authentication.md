@@ -1,78 +1,42 @@
-# リモート API 認証 <!-- Remote API authentication -->
+# Remote API authentication
 
-リモートの LXD デーモンとの通信は HTTPS 上の JSON を使って行います。
-<!--
 Remote communications with the LXD daemon happen using JSON over HTTPS.
--->
 
-リモート API へのアクセスを可能にするには、クライアントは LXD サーバーで認証する必要があります。
-以下の認証方法をサポートしています。
-<!--
 To be able to access the remote API, clients must authenticate with the LXD server.
 The following authentication methods are supported:
--->
 
-- [TLS クライアント証明書](#authentication-tls-certs)  <!-- {ref}`authentication-tls-certs` -->
-- [Candid ベースの認証](#authentication-candid) <!-- {ref}`authentication-candid` -->
+- {ref}`authentication-tls-certs`
+- {ref}`authentication-candid`
 - {ref}`authentication-rbac`
 
 
-<!--
 (authentication-tls-certs)=
--->
-## <a name="authentication-tls-certs"></a> TLS クライアント証明書 <!-- TLS client certificates -->
+## TLS client certificates
 
-TLS (Transport Layer Security) クライアント証明書を認証に使う場合、クライアントとサーバーの両方で初回起動時に鍵ペアーを生成します。
-サーバーはその鍵ペアーを LXD ソケットへの全ての HTTPS 接続に使用します。
-クライアントはあらゆるクライアント−サーバー間の通信に鍵ペアーの証明書をクライアント証明書として使用します。
-<!--
 When using {abbr}`TLS (Transport Layer Security)` client certificates for authentication, both the client and the server will generate a key pair the first time they're launched.
 The server will use that key pair for all HTTPS connections to the LXD socket.
 The client will use its certificate as a client certificate for any client-server communication.
--->
 
-証明書を再生成するには、単に古い証明書を削除してください。
-次回の接続で新しい証明書が生成されます。
-<!--
 To cause certificates to be regenerated, simply remove the old ones.
 On the next connection, a new certificate is generated.
--->
 
-### 通信プロトコル <!-- Communication protocol -->
+### Communication protocol
 
-サポートされているプロトコルは TLS 1.2 以上が必須です。
-全ての通信は完全前方秘匿性を使う必要があり、使用可能な暗号は（ECDHE-RSA や ECDHE-ECDSA のように）強力な楕円曲線暗号に限定されています。
-<!--
 The supported protocol must be TLS 1.2 or better.
 All communications must use perfect forward secrecy, and ciphers must be limited to strong elliptic curve ones (such as ECDHE-RSA or ECDHE-ECDSA).
--->
 
-生成される全ての鍵は少なくとも 4096 ビットの RSA か、より好ましいのは EC384 を使うべきです。
-署名を使用する際は、 SHA-2 の署名のみを信頼するべきです。
-<!--
 Any generated key should be at least 4096 bit RSA, preferably EC384.
 When using signatures, only SHA-2 signatures should be trusted.
--->
 
-LXD の利用者はクライアントとサーバーの両方を管理しているわけですから、壊れたプロトコルや暗号への後方互換性をサポートする理由はありません。
-<!--
 Since we control both client and server, there is no reason to support
 any backward compatibility to broken protocol or ciphers.
--->
 
-<!--
 (authentication-trusted-clients)=
--->
-### <a name="authentication-trusted-clients"></a> 信頼された TLS クライアント <!-- Trusted TLS clients -->
+### Trusted TLS clients
 
-`lxc config trust list` で LXD サーバーに信頼されて TLS 証明書の一覧を取得できます。
-<!--
 You can obtain the list of TLS certificates trusted by a LXD server with `lxc config trust list`.
--->
 
-<!--
 Trusted clients can be added in either of the following ways:
--->
 
 - {ref}`authentication-add-certs`
 - {ref}`authentication-trust-pw`
@@ -141,10 +105,8 @@ If the server certificate is valid and signed by the CA, then the connection con
 
 Note that the generated certificates are not automatically trusted. You must still add them to the server in one of the ways described in {ref}`authentication-trusted-clients`.
 
-<!--
 (authentication-candid)=
--->
-## <a name="authentication-candid"></a> Candid ベースの認証 <!-- Candid-based authentication -->
+## Candid-based authentication
 
 When LXD is configured to use [Candid](https://github.com/canonical/candid) authentication, clients that try to authenticate with the server must get a Discharge token from the authentication server specified by the `candid.api.url` setting (see {doc}`server`).
 
