@@ -1564,52 +1564,5 @@ This adds `live-migrate` as a config option to `cluster.evacuate`, which forces 
 of instances during cluster evacuation.
 
 ## instance\_allow\_inconsistent\_copy
-Adds `allow_inconsistent` field to instance source on `POST /1.0/instances`. If true, rsync will ignore the
-`Partial transfer due to vanished source files` (code 24) error when creating an instance from a copy.
-
-## network\_state\_ovn
-This adds an "ovn" section to the /1.0/networks/NAME/state API which contains additional state information relevant to
-OVN networks:
-- chassis
-
-## storage\_volume\_api\_filtering
-Adds support for filtering the result of a GET request for storage volumes.
-
-## image\_restrictions
-This extension adds on to the image properties to include image restrictions/host requirements. These requirements
-help determine the compatbility between an instance and the host system.
-
-## storage\_zfs\_export
-Introduces the ability to disable zpool export when unmounting pool by setting `zfs.export`.
-
-## network\_dns\_records
-This extends the network zones (DNS) API to add the ability to create and manage custom records.
-
-This adds:
-
- - `GET /1.0/network-zones/ZONE/records`
- - `POST /1.0/network-zones/ZONE/records`
- - `GET /1.0/network-zones/ZONE/records/RECORD`
- - `PUT /1.0/network-zones/ZONE/records/RECORD`
- - `PATCH /1.0/network-zones/ZONE/records/RECORD`
- - `DELETE /1.0/network-zones/ZONE/records/RECORD`
-
-## storage\_zfs\_reserve\_space
-Adds ability to set the reservation/refreservation ZFS property along with quota/refquota.
-
-## network\_acl\_log
-Adds a new `GET /1.0/networks-acls/NAME/log` API to retrieve ACL firewall logs.
-
-## storage\_zfs\_blocksize
-Introduces a new `zfs.blocksize` property for ZFS storage volumes which allows to set volume block size.
-
-## metrics\_cpu\_seconds
-This is used to detect whether LXD was fixed to output used CPU time in seconds rather than as milliseconds.
-
-## instance\_snapshot\_never
-Adds a `@never` option to `snapshots.schedule` which allows disabling inheritance.
-
-## certificate\_token
-This adds token-based certificate addition to the trust store as a safer alternative to a trust password.
-
-It adds the `token` field to `POST /1.0/certificates`.
+Adds `allow_inconsistent` field to instance source on `POST /1.0/instances`. If true, rsync will ignore the 
+`Partial transfer due to vanished source files` (code 24) error when creating an instance from a copy. 

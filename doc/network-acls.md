@@ -96,7 +96,6 @@ local and external traffic respectively.
 
 E.g. `source=@internal`
 
-(network-acls-bridge-limitations)=
 ## Bridge limitations
 
 Unlike OVN ACLs, `bridge` ACLs are applied *only* on the boundary between the bridge and the LXD host.
