@@ -2966,3 +2966,90 @@ true の場合、 rsync はコピーからインスタンスを生成すると�
 Adds `allow_inconsistent` field to instance source on `POST /1.0/instances`. If true, rsync will ignore the 
 `Partial transfer due to vanished source files` (code 24) error when creating an instance from a copy. 
 -->
+
+## network\_state\_ovn
+これは /1.0/networks/NAME/state API に "ovn" セクションを追加します。これは OVN ネットワークに関する追加の状態の情報を含みます。
+- chassis (シャーシ)
+<!--
+This adds an "ovn" section to the /1.0/networks/NAME/state API which contains additional state information relevant to
+OVN networks:
+- chassis
+-->
+
+## storage\_volume\_api\_filtering
+ストレージボリュームに対する GET リクエストの結果のフィルタリングのサポートを追加します。
+<!--
+Adds support for filtering the result of a GET request for storage volumes.
+-->
+
+## image\_restrictions
+この拡張はイメージのプロパティにイメージの制限やホストの前提条件を追加します。これらの前提条件はインスタンスとホストシステム間の互換性を決定するのに役立ちます。
+<!--
+This extension adds on to the image properties to include image restrictions/host requirements. These requirements
+help determine the compatbility between an instance and the host system.
+-->
+
+## storage\_zfs\_export
+`zfs.export` を設定してプールをアンマウントする際に zpool のエクスポートを無効にする機能を追加します。
+<!--
+Introduces the ability to disable zpool export when unmounting pool by setting `zfs.export`.
+-->
+
+## network\_dns\_records
+ネットワークゾーン (DNS) API にカスタムレコードを追加・管理する機能を追加します。
+<!--
+This extends the network zones (DNS) API to add the ability to create and manage custom records.
+-->
+
+以下の API を追加します。
+<!--
+This adds:
+-->
+
+ - `GET /1.0/network-zones/ZONE/records`
+ - `POST /1.0/network-zones/ZONE/records`
+ - `GET /1.0/network-zones/ZONE/records/RECORD`
+ - `PUT /1.0/network-zones/ZONE/records/RECORD`
+ - `PATCH /1.0/network-zones/ZONE/records/RECORD`
+ - `DELETE /1.0/network-zones/ZONE/records/RECORD`
+
+## storage\_zfs\_reserve\_space
+ZFS の quota/refquota に加えて reservation/refreservation プロパティを設定できるようにします。
+<!--
+Adds ability to set the reservation/refreservation ZFS property along with quota/refquota.
+-->
+
+## network\_acl\_log
+ACL ファイアウォールログを取得する `GET /1.0/networks-acls/NAME/log` を追加します。
+<!--
+Adds a new `GET /1.0/networks-acls/NAME/log` API to retrieve ACL firewall logs.
+-->
+
+## storage\_zfs\_blocksize
+ZFS ストレージボリュームに `zfs.blocksize` プロパティを追加しボリュームブロックサイズを設定できるようにします。
+<!--
+Introduces a new `zfs.blocksize` property for ZFS storage volumes which allows to set volume block size.
+-->
+
+## metrics\_cpu\_seconds
+使用した CPU 時間をミリ秒ではなく秒で出力するように LXD が固定されているかどうかを検出するのに使用します。
+<!--
+This is used to detect whether LXD was fixed to output used CPU time in seconds rather than as milliseconds.
+-->
+
+## instance\_snapshot\_never
+`snapshots.schedule` に `@never` オプションを追加します。これにより継承を無効にできます。
+<!--
+Adds a `@never` option to `snapshots.schedule` which allows disabling inheritance.
+-->
+
+## certificate\_token
+これはトラスト・パスワードよりも安全な選択肢としてトラスト・ストアへトークンベースの証明書を追加できるようにします。
+<!--
+This adds token-based certificate addition to the trust store as a safer alternative to a trust password.
+-->
+
+`POST /1.0/certificates` に `token` フィールドを追加します。
+<!--
+It adds the `token` field to `POST /1.0/certificates`.
+-->
