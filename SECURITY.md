@@ -1,37 +1,27 @@
-# Security policy
-## Supported versions
-LXD has two type of releases:
- - Monthly feature releases
- - LTS releases
+# セキュリティポリシー
+## 対応バージョン
+LXDには2種類のリリースがあります。
+ - 月次機能リリース
+ - LTSリリース
 
-For feature releases, only the latest one is supported and we usually
-won't be doing point releases on those, instead just having our users
-wait until the next monthly release.
+フィーチャーリリースでは、最新のものだけがサポートされ、通常はポイントリリースは行わず、次の月次リリースまでユーザーに待ってもらいます。
 
-For LTS releases, we do periodic bugfix releases which includes an
-accumulation of bugfixes from the feature releases, no new features are
-included.
+LTSリリースでは、定期的にバグフィックス・リリースを行います。これは、フィーチャー・リリースに含まれるバグフィックスを集積したもので、新機能は含まれません。
 
-## What qualify as a security issue
-We don't consider privileged containers to be root safe, so any exploit
-allowing someone to escape them, will not qualify as a security issue.
-This doesn't mean that we're not interested in preventing such escapes
-but we simply do not consider such containers to be root safe.
+## セキュリティ問題として認められるもの
+私たちは、特権コンテナがルートセーフであるとは考えていません。したがって、誰かが特権コンテナから脱出できるようなエクスプロイトは、セキュリティ上の問題とはみなされません。
+これは、そのような脱出を防ぐことに興味がないということではなく、単にそのようなコンテナがルートセーフであるとは考えていないということです。
 
-Unprivileged container escapes are certainly something we'd consider a
-security issue, especially if somehow facilitated by LXD.
+非特権コンテナのエスケープは確かに私たちがセキュリティ問題と考えるもので、特にLXDによって促進されている場合はそうです。
 
-More details can be found here: https://linuxcontainers.org/lxc/security/
+より詳細な情報はこちらをご覧ください： https://linuxcontainers.org/lxc/security/
 
-## Reporting a vulnerability
-The easiest way to report a security issue is to e-mail: security@linuxcontainers.org
+## 脆弱性の報告
+セキュリティ問題を報告する最も簡単な方法は、e-mail: security@linuxcontainers.org です。
 
-This e-mail address will reach the three main maintainers for LXC/LXD/LXCFS:
+このメールアドレスはLXC/LXD/LXCFSの3人のメインメンテナに届きます。
  - Christian Brauner
  - Stéphane Graber
  - Serge Hallyn
 
-We will be working with you to determine whether this does qualify as a
-security issue, if so in what component and then handle figuring out a
-fix, getting a CVE assigned and coordinating the release of the fix to
-the various Linux distributions.
+私たちはお客様と協力して、この問題がセキュリティ問題に該当するかどうか、該当する場合はどのコンポーネントに該当するかを判断し、修正プログラムを作成し、CVEを割り当て、様々なLinuxディストリビューションに修正プログラムをリリースするための調整を行います。

@@ -1,103 +1,101 @@
-# Contributing
+# 貢献する
 
-Check the following guidelines before contributing to the project.
+プロジェクトに貢献する前に、以下のガイドラインを確認してください。
 
-## Pull requests
-Changes to this project should be proposed as pull requests on Github
-at: <https://github.com/lxc/lxd>
+## プルリクエスト
+このプロジェクトへの変更は、Githubでプルリクエストとして提案してください。
+<https://github.com/lxc/lxd>
 
-Proposed changes will then go through code review there and once acked,
-be merged in the main branch.
+提案された変更は、Githubでのコードレビューを経て、承認されると、メインブランチにマージされます。
 
-## Commit structure
-Separate commits should be used for:
+## コミット構成
+次のような場合には、別々のコミットを使用します。
 
- - API extension (`api: Add XYZ extension`, contains `doc/api-extensions.md` and `shared/version.api.go`)
- - Documentation (`doc: Update XYZ` for files in `doc/`)
- - API structure (`shared/api: Add XYZ` for changes to `shared/api/`)
- - Go client package (`client: Add XYZ` for changes to `client/`)
- - CLI (`lxc/<command>: Change XYZ` for changes to `lxc/`)
- - Scripts (`scripts: Update bash completion for XYZ` for changes to `scripts/`)
- - LXD daemon (`lxd/<package>: Add support for XYZ` for changes to `lxd/`)
- - Tests (`tests: Add test for XYZ` for changes to `tests/`)
+ - API 拡張 (`api: Add XYZ extension`, `api: doc/api-extensions.md` と `shared/version.api.go` を含む）。
+ - ドキュメント (`doc: Update XYZ`。`doc/`内のファイルが対象)
+ - API構造 (`shared/api: Add XYZ`。 `shared/api/` の変更が対象)
+ - Goクライアントパッケージ (`client: Add XYZ`。`client/` の変更が対象)
+ - CLI (`lxc/<command>: Change XYZ`。 `lxc/` の変更が対象)
+ - スクリプト (`scripts: Update bash completion for XYZ`。 `scripts/` の変更が対象)
+ - LXD デーモン (`lxd/<package>: Add support for XYZ`。 `lxd/` の変更が対象)
+ - テスト (`tests: Add test for XYZ`。`tests/` の変更が対象)
 
-The same kind of pattern extends to the other tools in the LXD code tree
-and depending on complexity, things may be split into even smaller chunks.
+同じ種類のパターンがLXDのコードツリーの他のツールにも拡張されます。
+そして、複雑さに応じて、物事はさらに小さなチャンクに分割されるかもしれません。
 
-When updating strings in the CLI tool (`lxc/`), you may need a commit to update the templates:
+CLIツール(`lxc/`)で文字列を更新する際には、テンプレートを更新するためのコミットが必要になるかもしれません。
 
  - make i18n
  - git commit -a -s -m "i18n: Update translation templates" po/
 
-This structure makes it easier for contributions to be reviewed and also
-greatly simplifies the process of backporting fixes to stable branches.
+この構造により、コントリビューションのレビューが容易になり、また
+また、修正を安定版ブランチにバックポートするプロセスも非常に簡単になります。
 
-## License and copyright
-By default, any contribution to this project is made under the Apache
-2.0 license.
+## ライセンスと著作権
+デフォルトでは、このプロジェクトへの貢献はすべて、Apache
+2.0ライセンスの下で行われます。
 
-The author of a change remains the copyright holder of their code
-(no copyright assignment).
+変更を加えた作者は、そのコードの著作権者であり続けます。
+(著作権の譲渡はありません)。
 
+## 開発者の起源の証明
+このプロジェクトへの貢献の追跡を改善するために、DCO 1.1を使用しています。
+を使用しており、ブランチに入るすべての変更に対して「サインオフ」手順を使用しています。
 
-## Developer Certificate of Origin
-To improve tracking of contributions to this project we use the DCO 1.1
-and use a "sign-off" procedure for all changes going into the branch.
+サインオフとは、あなたがそのコミットを書いたことを証明する、そのコミットの説明の最後にある単純な行です。
+コミットの説明の最後にあるシンプルな行で、自分が書いたものであることを証明したり、オープンソースとして渡す権利があることを証明したりします。
+サインオフとは、コミットの説明文の最後に、自分が書いたものであることを証明する簡単な行です。
 
-The sign-off is a simple line at the end of the explanation for the
-commit which certifies that you wrote it or otherwise have the right
-to pass it on as an open-source contribution.
-
-> Developer Certificate of Origin
-> Version 1.1
+> 開発者の出所証明書
+> バージョン1.1
 >
 > Copyright (C) 2004, 2006 The Linux Foundation and its contributors.
 > 660 York Street, Suite 102,
 > San Francisco, CA 94110 USA
 >
-> Everyone is permitted to copy and distribute verbatim copies of this
-> license document, but changing it is not allowed.
+> このライセンス文書をそのままコピーして配布することは誰にでも許されています。
+> このライセンス文書をそのままコピーして配布することは許されますが、変更することは許されません。
 >
-> Developer's Certificate of Origin 1.1
+> 開発者の原産地証明書 1.1
 >
-> By making a contribution to this project, I certify that:
+> このプロジェクトに貢献することで、私は以下のことを証明します。
 >
-> (a) The contribution was created in whole or in part by me and I
->     have the right to submit it under the open source license
->     indicated in the file; or
+> (a) 寄稿物の全部または一部が私によって作成され、私はその寄稿物をオープンソースライセンスの下で提出する権利を有している。
+> (a) 寄稿物の全部または一部は私が作成したものであり、私はその寄稿物をファイルに示されたオープンソースライセンスの下で
+> ファイルに示されている。
 >
-> (b) The contribution is based upon previous work that, to the best
->     of my knowledge, is covered under an appropriate open source
->     license and I have the right under that license to submit that
->     work with modifications, whether created in whole or in part
->     by me, under the same open source license (unless I am
->     permitted to submit under a different license), as indicated
->     in the file; or
+> (b) 貢献は、私の知る限り、適切なオープンソースライセンスでカバーされている過去の作品に基づいています。
+> (b) その貢献は、私の知る限り、適切なオープンソースライセンスでカバーされてい
+> 貢献は、私の知る限り、適切なオープンソース・ライセンスの下でカバーされている以前の作
+> 私は、私の知る限り、適切なオープンソース・ライセンスの下で保護されている
+> 私が知っている限りにおいて、適切なオープンソース・ライセンスの対象となっており
+> ファイルに記載されているように、私が作成した作品の全部または一部を変更して
+> ファイルに記載されています。
 >
-> (c) The contribution was provided directly to me by some other
->     person who certified (a), (b) or (c) and I have not modified
->     it.
->
-> (d) I understand and agree that this project and the contribution
->     are public and that a record of the contribution (including all
->     personal information I submit with it, including my sign-off) is
->     maintained indefinitely and may be redistributed consistent with
->     this project or the open source license(s) involved.
+> (c) 寄贈品は、(a)を証明した他の人から私に直接提供されたものです。
+> (c) 寄稿物は、(a)、(b)または(c)を証明した他の人によって私に直接提供され、私はそれを変更していない。
+> 寄贈されたものです。
 
-An example of a valid sign-off line is:
+> (d) 私は、このプロジェクトと寄稿物が公開されていること、および寄稿物の記録（以下「寄稿記録」という。
+> (d) 私は、このプロジェクトと寄稿物が公開されており、寄稿物の記録（私が寄稿物とともに提出したすべての
+> (d)私は、このプロジェクトと寄稿物が公開され、寄稿物の記録（私が寄稿物とともに提出したすべての個人情報、私のサインオフを含む）が
+> 本プロジェクトまたはオープンソースライセンスに基づいて
+> 本プロジェクトまたは関連するオープンソースライセンスに準拠して再配布することができます。
+
+有効なサインオフラインの例は以下の通りです。
 
 ```
 Signed-off-by: Random J Developer <random@developer.org>
 ```
 
-Use your real name and a valid e-mail address.
-Sorry, no pseudonyms or anonymous contributions are allowed.
+実名と有効な電子メールアドレスを使用してください。
+残念ながら、ペンネームや匿名での投稿はできません。
 
-We also require each commit be individually signed-off by their author,
-even when part of a larger set. You may find `git commit -s` useful.
+また、それぞれのコミットには作者が個別に署名する必要があります。
+大きなセットの一部であってもです。`git commit -s`が役に立つでしょう。
 
 <!-- Include end contributing -->
 
-## More information
+## その他の情報
 
-For more information, see [Contributing](doc/contributing.md) in the documentation.
+より詳しい情報は、ドキュメントの [Contributing](doc/contributing.md) をご覧ください。

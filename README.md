@@ -1,81 +1,79 @@
 [![LXD](https://linuxcontainers.org/static/img/containers.png)](https://linuxcontainers.org/lxd)
 # LXD
-LXD is a next generation system container and virtual machine manager.
-It offers a unified user experience around full Linux systems running inside containers or virtual machines.
+LXDは、次世代のシステムコンテナおよび仮想マシンマネージャです。
+コンテナや仮想マシンの中で動作する完全なLinuxシステムに統一されたユーザーエクスペリエンスを提供します。
 
-It's image based with pre-made images available for a [wide number of Linux distributions](https://images.linuxcontainers.org)
-and is built around a very powerful, yet pretty simple, REST API.
+LXDはイメージベースで、[多くのLinuxディストリビューション](https://images.linuxcontainers.org)に対応しています。
+そして、非常にパワフルでありながら、非常にシンプルなREST APIを中心に構築されています。
 
-To get a better idea of what LXD is and what it does, you can [try it online](https://linuxcontainers.org/lxd/try-it/)!
-Then if you want to run it locally, take a look at our [getting started guide](https://linuxcontainers.org/lxd/getting-started-cli/).
+LXDとは何か、何ができるのか、より良いアイデアを得るためには、[オンラインで試す](https://linuxcontainers.org/lxd/try-it/)ことができます!
+また、ローカルで動作させたい場合は、[Getting Started Guide](https://linuxcontainers.org/lxd/getting-started-cli/)をご覧ください。
 
-- Release announcements: <https://linuxcontainers.org/lxd/news/>
-- Release tarballs: <https://linuxcontainers.org/lxd/downloads/>
-- Documentation: <https://linuxcontainers.org/lxd/docs/master/>
+- リリースのアナウンス: <https://linuxcontainers.org/lxd/news/>
+- リリースのtarball: <https://linuxcontainers.org/lxd/downloads/>
+- ドキュメント: <https://linuxcontainers.org/lxd/docs/master/>
 
 <!-- Include end LXD intro -->
 
-## Status
-Type                | Service               | Status
----                 | ---                   | ---
-CI (client)         | GitHub                | [![Build Status](https://github.com/lxc/lxd/workflows/Client%20build%20and%20unit%20tests/badge.svg)](https://github.com/lxc/lxd/actions)
-CI (server)         | Jenkins               | [![Build Status](https://jenkins.linuxcontainers.org/job/lxd-github-commit/badge/icon)](https://jenkins.linuxcontainers.org/job/lxd-github-commit/)
-Go documentation    | Godoc                 | [![GoDoc](https://godoc.org/github.com/lxc/lxd/client?status.svg)](https://godoc.org/github.com/lxc/lxd/client)
-Static analysis     | GoReport              | [![Go Report Card](https://goreportcard.com/badge/github.com/lxc/lxd)](https://goreportcard.com/report/github.com/lxc/lxd)
-Translations        | Weblate               | [![Translation status](https://hosted.weblate.org/widgets/linux-containers/-/svg-badge.svg)](https://hosted.weblate.org/projects/linux-containers/lxd/)
-Project status      | CII Best Practices    | [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/1086/badge)](https://bestpractices.coreinfrastructure.org/projects/1086)
+## ステータス
+タイプ｜サービス｜ステータス
+--- | --- | ---
+CI（クライアント）｜GitHub｜[![Build Status](https://github.com/lxc/lxd/workflows/Client%20build%20and%20unit%20tests/badge.svg)](https://github.com/lxc/lxd/actions)
+CI（サーバー）｜Jenkins｜[![Build Status](https://jenkins.linuxcontainers.org/job/lxd-github-commit/badge/icon)](https://jenkins.linuxcontainers.org/job/lxd-github-commit/)
+Goドキュメント | Godoc | [![GoDoc](https://godoc.org/github.com/lxc/lxd/client?status.svg)](https://godoc.org/github.com/lxc/lxd/client)
+静的解析｜GoReport｜[![Go Report Card](https://goreportcard.com/badge/github.com/lxc/lxd)](https://goreportcard.com/report/github.com/lxc/lxd)
+翻訳 | Weblate | [![翻訳状況](https://hosted.weblate.org/widgets/linux-containers/-/svg-badge.svg)](https://hosted.weblate.org/projects/linux-containers/lxd/)
+プロジェクトの状況｜CII Best Practices｜[![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/1086/badge)](https://bestpractices.coreinfrastructure.org/projects/1086)
 
-<!-- Include start installing -->
+<!--Include start installing -->
 
-## Installing LXD from packages
-The LXD daemon only works on Linux but the client tool (`lxc`) is available on most platforms.
+## パッケージからのLXDのインストール
+LXDのデーモンはLinuxでしか動作しませんが、クライアントツール(`lxc`)はほとんどのプラットフォームで利用可能です。
 
-OS                  | Format                                            | Command
----                 | ---                                               | ---
-Linux               | [Snap](https://snapcraft.io/lxd)                  | snap install lxd
-Windows             | [Chocolatey](https://chocolatey.org/packages/lxc) | choco install lxc
-MacOS               | [Homebrew](https://formulae.brew.sh/formula/lxc)  | brew install lxc
+OS｜フォーマット｜コマンド
+--- | --- | ---
+Linux | [Snap](https://snapcraft.io/lxd) | snap install lxd
+Windows | [Chocolatey](https://chocolatey.org/packages/lxc) | choco install lxc
+MacOS | [Homebrew](https://formulae.brew.sh/formula/lxc) | brew install lxc
 
-More instructions on installing LXD for a wide variety of Linux distributions and operating systems [can be found on our website](https://linuxcontainers.org/lxd/getting-started-cli/).
-<!-- Include end installing -->
+様々なLinuxディストリビューションやOSへのLXDのインストールについては、[私たちのウェブサイト](https://linuxcontainers.org/lxd/getting-started-cli/)に詳しい説明があります。
+<!--Include end installing -->
 
-To install LXD from source, see [Installing LXD](doc/installing.md) in the documentation.
+LXDをソースからインストールするには、ドキュメントの[Installing LXD](doc/installing.md)を参照してください。
 
-<!-- Include start security -->
+<!--Include start security -->
 
-## Security
-LXD, similar to other container and VM managers provides a UNIX socket for local communication.
+## セキュリティ
+LXDは、他のコンテナやVMマネージャと同様に、ローカル通信用のUNIXソケットを提供しています。
 
-**WARNING**: Anyone with access to that socket can fully control LXD, which includes
-the ability to attach host devices and filesystems, this should
-therefore only be given to users who would be trusted with root access
-to the host.
+**WARNING**: このソケットにアクセスできる人は、LXDを完全に制御することができ、それはホストデバイスやファイルシステムをアタッチする能力を含みます。
+したがって、この機能は、ホストへのルートアクセスを信頼できるユーザーにのみ与えられるべきです。
+ホストへのルートアクセスを信頼できるユーザーのみに与えられるべきです。
 
-When listening on the network, the same API is available on a TLS socket
-(HTTPS), specific access on the remote API can be restricted through
-Canonical RBAC.
-<!-- Include end security -->
+ネットワーク上でリスニングするとき、同じAPIはTLSソケット(HTTPS)で利用できます。リモートAPIへの特定のアクセスは、Canonical RBACによって制限できます。
 
-More details are [available here](doc/security.md).
+<!--Include end security -->
+
+詳細は[こちら](doc/security.md)をご覧ください。
 
 <!-- Include start support -->
 
-## Support and community
+## サポートとコミュニティ
 
-The following channels are available for you to interact with the LXD community.
+LXDコミュニティと交流するために以下のチャンネルが用意されています。
 
-### Bug reports
-You can file bug reports and feature requests at: <https://github.com/lxc/lxd/issues/new>
+### バグレポート
+バグレポートや機能要求は以下の場所で受け付けています。<https://github.com/lxc/lxd/issues/new>
 
-### Forum
-A discussion forum is available at: <https://discuss.linuxcontainers.org>
+### フォーラム
+フォーラムは以下の場所にあります。<https://discuss.linuxcontainers.org>
 
-### Mailing-lists
-We use the LXC mailing lists for developer and user discussions. You can
-find and subscribe to those at: <https://lists.linuxcontainers.org>
+### メーリングリスト
+開発者やユーザーの議論にはLXCのメーリングリストを利用しています。
+メーリングリストは以下の場所にあります。<https://lists.linuxcontainers.org>
 
 ### IRC
-If you prefer live discussions, you can find us in [#lxc](https://kiwiirc.com/client/irc.libera.chat/#lxc) on irc.libera.chat. See [Getting started with IRC](https://discuss.linuxcontainers.org/t/getting-started-with-irc/11920) if needed.
+ライブの議論がお好みならば、irc.libera.chatの[#lxc](https://kiwiirc.com/client/irc.libera.chat/#lxc)で私たちを見つけることができます。必要であれば [Getting started with IRC](https://discuss.linuxcontainers.org/t/getting-started-with-irc/11920) を参照してください。
 
-## Contributing
-Fixes and new features are greatly appreciated. <!-- Include end support --> Make sure to read our [contributing guidelines](CONTRIBUTING.md) first!
+## 貢献する
+修正や新機能を提供していただけると助かります。<!-- Include end support --> まず [contributing guidelines](CONTRIBUTING.md) を読んでください!

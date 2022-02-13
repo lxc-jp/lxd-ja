@@ -1,10 +1,10 @@
-The following support resources are available to LXD users:
+LXDをお使いの方は、以下のサポートリソースをご利用いただけます。
 
- - Official documentation: https://linuxcontainers.org/lxd/docs/master/
- - Community forum: https://discuss.linuxcontainers.org
- - Various howtos and blog posts: https://linuxcontainers.org/lxd/articles
- - Users mailing-list: https://lists.linuxcontainers.org/listinfo/lxc-users
- - IRC channel: [#lxc](https://kiwiirc.com/client/irc.libera.chat/#lxc) on irc.libera.chat
+ - 公式ドキュメント: https://linuxcontainers.org/lxd/docs/master/
+ - コミュニティフォーラム: https://discuss.linuxcontainers.org
+ - 様々なハウツーやブログ記事: https://linuxcontainers.org/lxd/articles
+ - ユーザーズメーリングリスト: https://lists.linuxcontainers.org/listinfo/lxc-users
+ - IRCチャンネル: irc.libera.chat 上の [#lxc](https://kiwiirc.com/client/irc.libera.chat/#lxc)
 
 
-Commercial support for LXD can be obtained through [Canonical Ltd](https://www.canonical.com)
+LXDの商用サポートは[Canonical Ltd](https://www.canonical.com)から受けられます。
