@@ -598,13 +598,13 @@ hwaddr                  | string    | ランダムに割り当て | no       | �
 limits.ingress          | string    | -                  | no       | 内向きトラフィックに対する bit/s での I/O 制限（さまざまな単位をサポート、下記参照）
 limits.egress           | string    | -                  | no       | 外向きトラフィックに対する bit/s での I/O 制限（さまざまな単位をサポート、下記参照）
 limits.max              | string    | -                  | no       | limits.ingress と limits.egress の両方を指定するのと同じ
-ipv4.routes             | string    | -                  | no       | ホスト上で NIC に追加する IPv4 静的ルートのカンマ区切りリスト（L2 ARP/NDP プロキシーを除く）
+ipv4.routes             | string    | -                  | no       | ホスト上で NIC に追加する IPv4 静的ルートのカンマ区切りリスト（L2 ARP/NDP プロキシを除く）
 ipv4.address            | string    | -                  | no       | インスタンスに追加する IPv4 静的アドレスのカンマ区切りリスト
 ipv4.gateway            | string    | auto               | no       | 自動的に IPv4 のデフォルトゲートウェイを追加するかどうか（ auto か none を指定可能）
 ipv4.host\_address      | string    | 169.254.0.1        | no       | ホスト側の veth インターフェースに追加する IPv4 アドレス
 ipv4.host\_table        | integer   | -                  | no       | （メインのルーティングテーブルに加えて） IPv4 の静的ルートを追加する先のルーティングテーブル ID
 ipv6.address            | string    | -                  | no       | インスタンスに追加する IPv6 静的アドレスのカンマ区切りリスト
-ipv6.routes             | string    | -                  | no       | ホスト上で NIC に追加する IPv6 静的ルートのカンマ区切りリスト（L2 ARP/NDP プロキシーを除く）
+ipv6.routes             | string    | -                  | no       | ホスト上で NIC に追加する IPv6 静的ルートのカンマ区切りリスト（L2 ARP/NDP プロキシを除く）
 ipv6.gateway            | string    | auto               | no       | 自動的に IPv6 のデフォルトゲートウェイを追加するかどうか（ auto か none を指定可能）
 ipv6.host\_address      | string    | fe80::1            | no       | ホスト側の veth インターフェースに追加する IPv6 アドレス
 ipv6.host\_table        | integer   | -                  | no       | （メインのルーティングテーブルに加えて） IPv6 の静的ルートを追加する先のルーティングテーブル ID
@@ -875,7 +875,7 @@ pci         | string    | -                 | no        | GPU デバイスの PC
 
 サポートされるインスタンスタイプ: コンテナ（`nat` と 非 `nat` モード）、 VM （`nat` モードのみ）
 
-プロキシーデバイスにより、ホストとインスタンス間のネットワーク接続を転送できます。
+プロキシデバイスにより、ホストとインスタンス間のネットワーク接続を転送できます。
 このデバイスを使って、ホストのアドレスの一つに到達したトラフィックをインスタンス内のアドレスに転送したり、その逆を行ったりして、ホストを通してインスタンス内にアドレスを持てます。
 
 利用できる接続タイプは次の通りです:
@@ -889,11 +889,11 @@ pci         | string    | -                 | no        | GPU デバイスの PC
 * `udp <-> unix`
 * `unix <-> udp`
 
-プロキシーデバイスは `nat` モードもサポートします。
-`nat` モードではパケットは別の接続を通してプロキシーされるのではなく NAT を使ってフォワードされます。
-これはターゲットの送り先が `PROXY` プロトコル（非 nat モードでプロキシーデバイスを使う場合はこれはクライアントアドレスを渡す唯一の方法です）をサポートする必要なく、クライアントのアドレスを維持できるという利点があります。
+プロキシデバイスは `nat` モードもサポートします。
+`nat` モードではパケットは別の接続を通してプロキシされるのではなく NAT を使ってフォワードされます。
+これはターゲットの送り先が `PROXY` プロトコル（非 nat モードでプロキシデバイスを使う場合はこれはクライアントアドレスを渡す唯一の方法です）をサポートする必要なく、クライアントのアドレスを維持できるという利点があります。
 
-プロキシーデバイスを `nat=true` に設定する際は、以下のようにターゲットのインスタンスが NIC デバイス上に静的 IP を持つよう LXD で設定する必要があります。
+プロキシデバイスを `nat=true` に設定する際は、以下のようにターゲットのインスタンスが NIC デバイス上に静的 IP を持つよう LXD で設定する必要があります。
 
 ```
 lxc config device set <instance> <nic> ipv4.address=<ipv4.address> ipv6.address=<ipv6.address>
@@ -925,7 +925,7 @@ bind            | string    | host          | no        | ホスト/インスタ
 uid             | int       | 0             | no        | listen する Unix ソケットの所有者の UID
 gid             | int       | 0             | no        | listen する Unix ソケットの所有者の GID
 mode            | int       | 0644          | no        | listen する Unix ソケットのモード
-nat             | bool      | false         | no        | NAT 経由でプロキシーを最適化するかどうか（インスタンスの NIC が静的 IP を持つ必要あり）
+nat             | bool      | false         | no        | NAT 経由でプロキシを最適化するかどうか（インスタンスの NIC が静的 IP を持つ必要あり）
 proxy\_protocol | bool      | false         | no        | 送信者情報を送信するのに HAProxy の PROXY プロトコルを使用するかどうか
 security.uid    | int       | 0             | no        | 特権を落とす UID
 security.gid    | int       | 0             | no        | 特権を落とす GID
