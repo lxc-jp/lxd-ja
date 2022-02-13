@@ -40,6 +40,35 @@ definitions:
         x-go-name: Type
     type: object
     x-go-package: github.com/lxc/lxd/shared/api
+  CertificateAddToken:
+    properties:
+      addresses:
+        description: The addresses of the server
+        example:
+        - 10.98.30.229:8443
+        items:
+          type: string
+        type: array
+        x-go-name: Addresses
+      client_name:
+        description: The name of the new client
+        example: user@host
+        type: string
+        x-go-name: ClientName
+      fingerprint:
+        description: The fingerprint of the network certificate
+        example: 57bb0ff4340b5bb28517e062023101adf788c37846dc8b619eb2c3cb4ef29436
+        type: string
+        x-go-name: Fingerprint
+      secret:
+        description: The random join secret
+        example: 2b2284d44db32675923fe0d2020477e0e9be11801ff70c435e032b97028c35cd
+        type: string
+        x-go-name: Secret
+    title: CertificateAddToken represents the fields contained within an encoded certificate
+      add token.
+    type: object
+    x-go-package: github.com/lxc/lxd/shared/api
   CertificatePut:
     description: CertificatePut represents the modifiable fields of a LXD certificate
     properties:
@@ -108,6 +137,11 @@ definitions:
         example: true
         type: boolean
         x-go-name: Restricted
+      token:
+        description: Whether to create a certificate add token
+        example: true
+        type: boolean
+        x-go-name: Token
       type:
         description: Usage type for the certificate (only client currently)
         example: client
@@ -877,7 +911,8 @@ definitions:
       aliases:
         description: Aliases to add to the image
         example:
-        - my-image
+        - name: foo
+        - name: bar
         items:
           $ref: '#/definitions/ImageAlias'
         type: array
@@ -2697,6 +2732,8 @@ definitions:
         format: int64
         type: integer
         x-go-name: Mtu
+      ovn:
+        $ref: '#/definitions/NetworkStateOVN'
       state:
         description: Link state
         example: up
@@ -2853,6 +2890,15 @@ definitions:
         x-go-name: PacketsSent
     type: object
     x-go-package: github.com/lxc/lxd/shared/api
+  NetworkStateOVN:
+    description: NetworkStateOVN represents OVN specific state
+    properties:
+      chassis:
+        description: OVN network chassis name
+        type: string
+        x-go-name: Chassis
+    type: object
+    x-go-package: github.com/lxc/lxd/shared/api
   NetworkStateVLAN:
     description: NetworkStateVLAN represents VLAN specific state
     properties:
@@ -2904,7 +2950,7 @@ definitions:
     x-go-package: github.com/lxc/lxd/shared/api
   NetworkZonePut:
     description: NetworkZonePut represents the modifiable fields of a LXD network
-      zoned
+      zone
     properties:
       config:
         additionalProperties:
@@ -2919,6 +2965,111 @@ definitions:
         example: Internal domain
         type: string
         x-go-name: Description
+    type: object
+    x-go-package: github.com/lxc/lxd/shared/api
+  NetworkZoneRecord:
+    properties:
+      config:
+        additionalProperties:
+          type: string
+        description: Advanced configuration for the record
+        example:
+          user.mykey: foo
+        type: object
+        x-go-name: Config
+      description:
+        description: Description of the record
+        example: SPF record
+        type: string
+        x-go-name: Description
+      entries:
+        description: Entries in the record
+        items:
+          $ref: '#/definitions/NetworkZoneRecordEntry'
+        type: array
+        x-go-name: Entries
+      name:
+        description: The name of the record
+        example: '@'
+        type: string
+        x-go-name: Name
+    title: NetworkZoneRecord represents a network zone (DNS) record.
+    type: object
+    x-go-package: github.com/lxc/lxd/shared/api
+  NetworkZoneRecordEntry:
+    description: NetworkZoneRecordEntry represents the fields in a record entry
+    properties:
+      ttl:
+        description: TTL for the entry
+        example: 3600
+        format: uint64
+        type: integer
+        x-go-name: TTL
+      type:
+        description: Type of DNS entry
+        example: TXT
+        type: string
+        x-go-name: Type
+      value:
+        description: Value for the record
+        example: v=spf1 mx ~all
+        type: string
+        x-go-name: Value
+    type: object
+    x-go-package: github.com/lxc/lxd/shared/api
+  NetworkZoneRecordPut:
+    description: NetworkZoneRecordPut represents the modifiable fields of a LXD network
+      zone record
+    properties:
+      config:
+        additionalProperties:
+          type: string
+        description: Advanced configuration for the record
+        example:
+          user.mykey: foo
+        type: object
+        x-go-name: Config
+      description:
+        description: Description of the record
+        example: SPF record
+        type: string
+        x-go-name: Description
+      entries:
+        description: Entries in the record
+        items:
+          $ref: '#/definitions/NetworkZoneRecordEntry'
+        type: array
+        x-go-name: Entries
+    type: object
+    x-go-package: github.com/lxc/lxd/shared/api
+  NetworkZoneRecordsPost:
+    description: NetworkZoneRecordsPost represents the fields of a new LXD network
+      zone record
+    properties:
+      config:
+        additionalProperties:
+          type: string
+        description: Advanced configuration for the record
+        example:
+          user.mykey: foo
+        type: object
+        x-go-name: Config
+      description:
+        description: Description of the record
+        example: SPF record
+        type: string
+        x-go-name: Description
+      entries:
+        description: Entries in the record
+        items:
+          $ref: '#/definitions/NetworkZoneRecordEntry'
+        type: array
+        x-go-name: Entries
+      name:
+        description: The record name in the zone
+        example: '@'
+        type: string
+        x-go-name: Name
     type: object
     x-go-package: github.com/lxc/lxd/shared/api
   NetworkZonesPost:
@@ -9232,6 +9383,28 @@ paths:
       summary: Update the network ACL
       tags:
       - network-acls
+  /1.0/network-acls/{name}/log:
+    get:
+      description: Gets a specific network ACL log entries.
+      operationId: network_acl_log_get
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        type: string
+      produces:
+      - application/octet-stream
+      responses:
+        "200":
+          description: Raw log file
+        "403":
+          $ref: '#/responses/Forbidden'
+        "500":
+          $ref: '#/responses/InternalServerError'
+      summary: Get the network ACL log
+      tags:
+      - network-acls
   /1.0/network-acls?recursion=1:
     get:
       description: Returns a list of network ACLs (structs).
@@ -9481,6 +9654,257 @@ paths:
         "500":
           $ref: '#/responses/InternalServerError'
       summary: Update the network zone
+      tags:
+      - network-zones
+  /1.0/network-zones/{zone}/records:
+    get:
+      description: Returns a list of network zone records (URLs).
+      operationId: network_zone_records_get
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: API endpoints
+          schema:
+            description: Sync response
+            properties:
+              metadata:
+                description: List of endpoints
+                example: |-
+                  [
+                    "/1.0/network-zones/example.net/records/foo",
+                    "/1.0/network-zones/example.net/records/bar"
+                  ]
+                items:
+                  type: string
+                type: array
+              status:
+                description: Status description
+                example: Success
+                type: string
+              status_code:
+                description: Status code
+                example: 200
+                type: integer
+              type:
+                description: Response type
+                example: sync
+                type: string
+            type: object
+        "403":
+          $ref: '#/responses/Forbidden'
+        "500":
+          $ref: '#/responses/InternalServerError'
+      summary: Get the network zone records
+      tags:
+      - network-zones
+    post:
+      consumes:
+      - application/json
+      description: Creates a new network zone record.
+      operationId: network_zone_records_post
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        type: string
+      - description: zone
+        in: body
+        name: zone
+        required: true
+        schema:
+          $ref: '#/definitions/NetworkZoneRecordsPost'
+      produces:
+      - application/json
+      responses:
+        "200":
+          $ref: '#/responses/EmptySyncResponse'
+        "400":
+          $ref: '#/responses/BadRequest'
+        "403":
+          $ref: '#/responses/Forbidden'
+        "500":
+          $ref: '#/responses/InternalServerError'
+      summary: Add a network zone record
+      tags:
+      - network-zones
+  /1.0/network-zones/{zone}/records/{name}:
+    delete:
+      description: Removes the network zone record.
+      operationId: network_zone_record_delete
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          $ref: '#/responses/EmptySyncResponse'
+        "400":
+          $ref: '#/responses/BadRequest'
+        "403":
+          $ref: '#/responses/Forbidden'
+        "500":
+          $ref: '#/responses/InternalServerError'
+      summary: Delete the network zone record
+      tags:
+      - network-zones
+    get:
+      description: Gets a specific network zone record.
+      operationId: network_zone_record_get
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: zone
+          schema:
+            description: Sync response
+            properties:
+              metadata:
+                $ref: '#/definitions/NetworkZoneRecord'
+              status:
+                description: Status description
+                example: Success
+                type: string
+              status_code:
+                description: Status code
+                example: 200
+                type: integer
+              type:
+                description: Response type
+                example: sync
+                type: string
+            type: object
+        "403":
+          $ref: '#/responses/Forbidden'
+        "500":
+          $ref: '#/responses/InternalServerError'
+      summary: Get the network zone record
+      tags:
+      - network-zones
+    patch:
+      consumes:
+      - application/json
+      description: Updates a subset of the network zone record configuration.
+      operationId: network_zone_record_patch
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        type: string
+      - description: zone record configuration
+        in: body
+        name: zone
+        required: true
+        schema:
+          $ref: '#/definitions/NetworkZoneRecordPut'
+      produces:
+      - application/json
+      responses:
+        "200":
+          $ref: '#/responses/EmptySyncResponse'
+        "400":
+          $ref: '#/responses/BadRequest'
+        "403":
+          $ref: '#/responses/Forbidden'
+        "412":
+          $ref: '#/responses/PreconditionFailed'
+        "500":
+          $ref: '#/responses/InternalServerError'
+      summary: Partially update the network zone record
+      tags:
+      - network-zones
+    put:
+      consumes:
+      - application/json
+      description: Updates the entire network zone record configuration.
+      operationId: network_zone_record_put
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        type: string
+      - description: zone record configuration
+        in: body
+        name: zone
+        required: true
+        schema:
+          $ref: '#/definitions/NetworkZoneRecordPut'
+      produces:
+      - application/json
+      responses:
+        "200":
+          $ref: '#/responses/EmptySyncResponse'
+        "400":
+          $ref: '#/responses/BadRequest'
+        "403":
+          $ref: '#/responses/Forbidden'
+        "412":
+          $ref: '#/responses/PreconditionFailed'
+        "500":
+          $ref: '#/responses/InternalServerError'
+      summary: Update the network zone record
+      tags:
+      - network-zones
+  /1.0/network-zones/{zone}/records?recursion=1:
+    get:
+      description: Returns a list of network zone records (structs).
+      operationId: network_zone_records_get_recursion1
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: API endpoints
+          schema:
+            description: Sync response
+            properties:
+              metadata:
+                description: List of network zone records
+                items:
+                  $ref: '#/definitions/NetworkZoneRecord'
+                type: array
+              status:
+                description: Status description
+                example: Success
+                type: string
+              status_code:
+                description: Status code
+                example: 200
+                type: integer
+              type:
+                description: Response type
+                example: sync
+                type: string
+            type: object
+        "403":
+          $ref: '#/responses/Forbidden'
+        "500":
+          $ref: '#/responses/InternalServerError'
+      summary: Get the network zone records
       tags:
       - network-zones
   /1.0/network-zones?recursion=1:
@@ -11583,6 +12007,11 @@ paths:
         in: query
         name: target
         type: string
+      - description: Collection filter
+        example: default
+        in: query
+        name: filter
+        type: string
       produces:
       - application/json
       responses:
@@ -12645,6 +13074,11 @@ paths:
         example: lxd01
         in: query
         name: target
+        type: string
+      - description: Collection filter
+        example: default
+        in: query
+        name: filter
         type: string
       produces:
       - application/json

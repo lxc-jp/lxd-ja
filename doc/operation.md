@@ -5,6 +5,8 @@
 
 Backups <backup>
 clustering
+instance-exec
 production-setup
 remotes
+authentication
 ```

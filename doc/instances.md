@@ -106,7 +106,7 @@ security.syscalls.intercept.mount.allowed   | string    | -                 | ye
 security.syscalls.intercept.mount.fuse      | string    | -                 | yes           | container                 | Whether to redirect mounts of a given filesystem to their fuse implemenation (e.g. ext4=fuse2fs)
 security.syscalls.intercept.mount.shift     | boolean   | false             | yes           | container                 | Whether to mount shiftfs on top of filesystems handled through mount syscall interception
 security.syscalls.intercept.setxattr        | boolean   | false             | no            | container                 | Handles the `setxattr` system call (allows setting a limited subset of restricted extended attributes)
-snapshots.schedule                          | string    | -                 | no            | -                         | Cron expression (`<minute> <hour> <dom> <month> <dow>`), or a comma separated list of schedule aliases `<@hourly> <@daily> <@midnight> <@weekly> <@monthly> <@annually> <@yearly> <@startup>`
+snapshots.schedule                          | string    | -                 | no            | -                         | Cron expression (`<minute> <hour> <dom> <month> <dow>`), or a comma separated list of schedule aliases `<@hourly> <@daily> <@midnight> <@weekly> <@monthly> <@annually> <@yearly> <@startup> <@never>`
 snapshots.schedule.stopped                  | bool      | false             | no            | -                         | Controls whether or not stopped instances are to be snapshoted automatically
 snapshots.pattern                           | string    | snap%d            | no            | -                         | Pongo2 template string which represents the snapshot name (used for scheduled snapshots and unnamed snapshots)
 snapshots.expiry                            | string    | -                 | no            | -                         | Controls when snapshots are to be deleted (expects expression like `1M 2H 3d 4w 5m 6y`)
@@ -352,10 +352,10 @@ host\_name               | string  | randomly assigned | no       | no      | Th
 limits.ingress           | string  | -                 | no       | no      | I/O limit in bit/s for incoming traffic (various suffixes supported, see below)
 limits.egress            | string  | -                 | no       | no      | I/O limit in bit/s for outgoing traffic (various suffixes supported, see below)
 limits.max               | string  | -                 | no       | no      | Same as modifying both limits.ingress and limits.egress
-ipv4.address             | string  | -                 | no       | no      | An IPv4 address to assign to the instance through DHCP
-ipv6.address             | string  | -                 | no       | no      | An IPv6 address to assign to the instance through DHCP
-ipv4.routes              | string  | -                 | no       | no      | Comma delimited list of IPv4 static routes to add on host to NIC (Can be `none` to restrict all IPv4 traffic when security.ipv4\_filtering is set)
-ipv6.routes              | string  | -                 | no       | no      | Comma delimited list of IPv6 static routes to add on host to NIC (Can be `none` to restrict all IPv6 traffic when security.ipv6\_filtering is set)
+ipv4.address             | string  | -                 | no       | no      | An IPv4 address to assign to the instance through DHCP (Can be `none` to restrict all IPv4 traffic when security.ipv4\_filtering is set)
+ipv6.address             | string  | -                 | no       | no      | An IPv6 address to assign to the instance through DHCP (Can be `none` to restrict all IPv6 traffic when security.ipv6\_filtering is set)
+ipv4.routes              | string  | -                 | no       | no      | Comma delimited list of IPv4 static routes to add on host to NIC
+ipv6.routes              | string  | -                 | no       | no      | Comma delimited list of IPv6 static routes to add on host to NIC
 ipv4.routes.external     | string  | -                 | no       | no      | Comma delimited list of IPv4 static routes to route to the NIC and publish on uplink network (BGP)
 ipv6.routes.external     | string  | -                 | no       | no      | Comma delimited list of IPv6 static routes to route to the NIC and publish on uplink network (BGP)
 security.mac\_filtering  | boolean | false             | no       | no      | Prevent the instance from spoofing another's MAC address
@@ -365,7 +365,7 @@ maas.subnet.ipv4         | string  | -                 | no       | yes     | MA
 maas.subnet.ipv6         | string  | -                 | no       | yes     | MAAS IPv6 subnet to register the instance in
 boot.priority            | integer | -                 | no       | no      | Boot priority for VMs (higher boots first)
 vlan                     | integer | -                 | no       | no      | The VLAN ID to use for untagged traffic (Can be `none` to remove port from default VLAN)
-vlan.tagged              | integer | -                 | no       | no      | Comma delimited list of VLAN IDs to join for tagged traffic
+vlan.tagged              | integer | -                 | no       | no      | Comma delimited list of VLAN IDs or VLAN ranges to join for tagged traffic
 security.port\_isolation | boolean | false             | no       | no      | Prevent the NIC from communicating with other NICs in the network that have port isolation enabled
 
 ##### nic: macvlan
@@ -849,6 +849,10 @@ required    | boolean   | false             | no        | Whether or not this de
 
 GPU device entries simply make the requested gpu device appear in the
 instance.
+
+```{note}
+Container devices may match multiple GPUs at once. However, for virtual machines a device can only match a single GPU. 
+```
 
 ##### GPUs Available:
 
