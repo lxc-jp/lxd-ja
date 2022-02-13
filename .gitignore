@@ -20,8 +20,9 @@ test/macaroon-identity/macaroon-identity
 # Sphinx
 doc/html/
 .sphinx/deps/
-.sphinx/themes/
+doc/themes/
 .sphinx/venv/
+doc/warnings.txt
 .sphinx/warnings.txt
 .sphinx/_static/swagger-ui
 .sphinx/_static/download
