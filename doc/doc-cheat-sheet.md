@@ -484,13 +484,13 @@ By combining file inclusion and substitutions, you can even replace parts of the
     % Include parts of the content from file [../README.md](../README.md)
     ```{include} ../README.md
        :start-after: Installing LXD from packages
-       :end-before: <!-- Include end installing -->
+       :end-before:
     ```
     ````
   - % Include parts of the content from file [../README.md](../README.md)
     ```{include} ../README.md
        :start-after: Installing LXD from packages
-       :end-before: <!-- Include end installing -->
+       :end-before:
     ```
 `````
 

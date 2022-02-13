@@ -1,84 +1,39 @@
 # API 拡張
-<!-- API extensions -->
-
-以下の変更は 1.0 API が確定した後に LXD API に導入されました。
-<!--
-The changes below were introduced to the LXD API after the 1.0 API was finalized.
--->
 
 それらの変更は全て後方互換であり、 `GET /1.0/` の `api_extensions` を
 見ることでクライアントツールにより検出可能です。
-<!--
-They are all backward compatible and can be detected by client tools by
-looking at the `api_extensions` field in `GET /1.0/`.
--->
 
 
 ## storage\_zfs\_remove\_snapshots
 `storage.zfs_remove_snapshots` というデーモン設定キーが導入されました。
-<!--
-A `storage.zfs_remove_snapshots` daemon configuration key was introduced.
--->
 
 値の型は boolean でデフォルトは false です。 true にセットすると、スナップショットを
 復元しようとするときに必要なスナップショットを全て削除するように LXD に
 指示します。
-<!--
-It's a boolean that defaults to false and that when set to true instructs LXD
-to remove any needed snapshot when attempting to restore another.
--->
 
 ZFS でスナップショットの復元が出来るのは最新のスナップショットに限られるので、
 この対応が必要になります。
-<!--
-This is needed as ZFS will only let you restore the latest snapshot.
--->
 
 ## container\_host\_shutdown\_timeout
 `boot.host_shutdown_timeout` というコンテナー設定キーが導入されました。
-<!--
-A `boot.host_shutdown_timeout` container configuration key was introduced.
--->
 
 値の型は integer でコンテナーを停止しようとした後 kill するまでどれだけ
 待つかを LXD に指示します。
-<!--
-It's an integer which indicates how long LXD should wait for the container
-to stop before killing it.
--->
 
 この値は LXD デーモンのクリーンなシャットダウンのときにのみ使用されます。
 デフォルトは 30s です。
-<!--
-Its value is only used on clean LXD daemon shutdown. It defaults to 30s.
--->
 
 ## container\_stop\_priority
 `boot.stop.priority` というコンテナー設定キーが導入されました。
-<!--
-A `boot.stop.priority` container configuration key was introduced.
--->
 
 値の型は integer でシャットダウン時のコンテナーの優先度を指示します。
-<!--
-It's an integer which indicates the priority of a container during shutdown.
--->
 
 コンテナーは優先度レベルの高いものからシャットダウンを開始します。
-<!--
-Containers will shutdown starting with the highest priority level.
--->
 
 同じ優先度のコンテナーは並列にシャットダウンします。デフォルトは 0 です。
-<!--
-Containers with the same priority will shutdown in parallel.  It defaults to 0.
--->
 
 ## container\_syscall\_filtering
 コンテナー設定キーに関するいくつかの新しい syscall が導入されました。
-<!--
-A number of new syscalls related container configuration keys were introduced.
--->
 
  * `security.syscalls.blacklist_default`
  * `security.syscalls.blacklist_compat`
@@ -86,411 +41,220 @@ A number of new syscalls related container configuration keys were introduced.
  * `security.syscalls.whitelist`
 
 使い方は [インスタンスの設定](instances.md) を参照してください。
-<!--
-See [Instance configuration](instances.md) for how to use them.
--->
 
 ## auth\_pki
 これは PKI 認証モードのサポートを指示します。
-<!--
-This indicates support for PKI authentication mode.
--->
 
 このモードではクライアントとサーバは同じ PKI によって発行された証明書を使わなければなりません。
-<!--
-In this mode, the client and server both must use certificates issued by the same PKI.
--->
 
 詳細は [security.md](Security.md) を参照してください。
-<!--
-See [security.md](security.md) for details.
--->
 
 ## container\_last\_used\_at
 `GET /1.0/containers/<name>` エンドポイントに `last_used_at` フィールドが追加されました。
-<!--
-A `last_used_at` field was added to the `GET /1.0/containers/<name>` endpoint.
--->
 
 これはコンテナーが開始した最新の時刻のタイムスタンプです。
-<!--
-It is a timestamp of the last time the container was started.
--->
 
 コンテナーが作成されたが開始はされていない場合は `last_used_at` フィールドは
 `1970-01-01T00:00:00Z` になります。
-<!--
-If a container has been created but not started yet, `last_used_at` field
-will be `1970-01-01T00:00:00Z`
--->
 
 ## etag
 関連性のある全てのエンドポイントに ETag ヘッダのサポートが追加されました。
-<!--
-Add support for the ETag header on all relevant endpoints.
--->
 
 この変更により GET のレスポンスに次の HTTP ヘッダが追加されます。
-<!--
-This adds the following HTTP header on answers to GET:
--->
 
- - ETag (ユーザーが変更可能なコンテンツの SHA-256) <!-- ETag (SHA-256 of user modifiable content) -->
+ - ETag (ユーザーが変更可能なコンテンツの SHA-256)
 
 また PUT リクエストに次の HTTP ヘッダのサポートが追加されます。
-<!--
-And adds support for the following HTTP header on PUT requests:
--->
 
- - If-Match (前回の GET で得られた ETag の値を指定) <!-- If-Match (ETag value retrieved through previous GET) -->
+ - If-Match (前回の GET で得られた ETag の値を指定)
 
 これにより GET で LXD のオブジェクトを取得して PUT で変更する際に、
 レースコンディションになったり、途中で別のクライアントがオブジェクトを
 変更していた (訳注: のを上書きしてしまう) というリスク無しに PUT で
 変更できるようになります。
-<!--
-This makes it possible to GET a LXD object, modify it and PUT it without
-risking to hit a race condition where LXD or another client modified the
-object in the meantime.
--->
 
 ## patch
 HTTP の PATCH メソッドのサポートを追加します。
-<!--
-Add support for the HTTP PATCH method.
--->
 
 PUT の代わりに PATCH を使うとオブジェクトの部分的な変更が出来ます。
-<!--
-PATCH allows for partial update of an object in place of PUT.
--->
 
 ## usb\_devices
 USB ホットプラグのサポートを追加します。
-<!--
-Add support for USB hotplug.
--->
 
 ## https\_allowed\_credentials
 LXD API を全てのウェブブラウザで (SPA 経由で) 使用するには、 XHR の度に
-認証情報を送る必要があります。それぞれの XHR リクエストで 
+認証情報を送る必要があります。それぞれの XHR リクエストで
 ["withCredentials=true"](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/withCredentials)
 とセットします。
-<!--
-To use LXD API with all Web Browsers (via SPAs) you must send credentials
-(certificate) with each XHR (in order for this to happen, you should set
-["withCredentials=true"](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/withCredentials)
-flag to each XHR Request).
--->
 
 Firefox や Safari などいくつかのブラウザは
 `Access-Control-Allow-Credentials: true` ヘッダがないレスポンスを受け入れる
 ことができません。サーバがこのヘッダ付きのレスポンスを返すことを保証するには
 `core.https_allowed_credentials=true` と設定してください。
-<!--
-Some browsers like Firefox and Safari can't accept server response without
-`Access-Control-Allow-Credentials: true` header. To ensure that the server will
-return a response with that header, set `core.https_allowed_credentials=true`.
--->
 
 ## image\_compression\_algorithm
 この変更はイメージを作成する時 (`POST /1.0/images`) に `compression_algorithm`
 というプロパティのサポートを追加します。
-<!--
-This adds support for a `compression_algorithm` property when creating an image (`POST /1.0/images`).
--->
 
 このプロパティを設定するとサーバのデフォルト値 (`images.compression_algorithm`) をオーバーライドします。
-<!--
-Setting this property overrides the server default value (`images.compression_algorithm`).
--->
 
 ## directory\_manipulation
 LXD API 経由でディレクトリを作成したり一覧したりでき、ファイルタイプを X-LXD-type ヘッダに付与するようになります。
 現状はファイルタイプは "file" か "directory" のいずれかです。
-<!--
-This allows for creating and listing directories via the LXD API, and exports
-the file type via the X-LXD-type header, which can be either "file" or
-"directory" right now.
--->
 
 ## container\_cpu\_time
 この拡張により実行中のコンテナーの CPU 時間を取得できます。
-<!--
-This adds support for retrieving cpu time for a running container.
--->
 
 ## storage\_zfs\_use\_refquota
 この拡張により新しいサーバプロパティ `storage.zfs_use_refquota` が追加されます。
 これはコンテナーにサイズ制限を設定する際に "quota" の代わりに "refquota" を設定する
 ように LXD に指示します。また LXD はディスク使用量を調べる際に "used" の代わりに
 "usedbydataset" を使うようになります。
-<!--
-Introduces a new server property `storage.zfs_use_refquota` which instructs LXD
-to set the "refquota" property instead of "quota" when setting a size limit
-on a container. LXD will also then use "usedbydataset" in place of "used"
-when being queried about disk utilization.
--->
 
 これはスナップショットによるディスク消費をコンテナーのディスク利用の一部と
 みなすかどうかを実質的に切り替えることになります。
-<!--
-This effectively controls whether disk usage by snapshots should be
-considered as part of the container's disk space usage.
--->
 
 ## storage\_lvm\_mount\_options
 この拡張は `storage.lvm_mount_options` という新しいデーモン設定オプションを
 追加します。デフォルト値は "discard" で、このオプションにより LVM LV で使用する
 ファイルシステムの追加マウントオプションをユーザーが指定できるようになります。
-<!--
-Adds a new `storage.lvm_mount_options` daemon configuration option
-which defaults to "discard" and allows the user to set addition mount
-options for the filesystem used by the LVM LV.
--->
 
 ## network
 LXD のネットワーク管理 API 。
-<!--
-Network management API for LXD.
--->
 
 次のものを含みます。
-<!--
-This includes:
--->
 
- * `/1.0/networks` エントリーに "managed" プロパティを追加 <!-- Addition of the "managed" property on `/1.0/networks` entries -->
- * ネットワーク設定オプションの全て (詳細は [ネットワーク設定](networks.md) を参照) <!-- All the network configuration options (see [Network configuration](networks.md) for details) -->
- * `POST /1.0/networks` (詳細は [RESTful API](rest-api.md) を参照) <!-- `POST /1.0/networks` (see [RESTful API](rest-api.md) for details) -->
- * `PUT /1.0/networks/<entry>` (詳細は [RESTful API](rest-api.md) を参照) <!-- `PUT /1.0/networks/<entry>` (see [RESTful API](rest-api.md)for details) -->
- * `PATCH /1.0/networks/<entry>` (詳細は [RESTful API](rest-api.md) を参照) <!-- `PATCH /1.0/networks/<entry>` (see [RESTful API](rest-api.md) for details) -->
- * `DELETE /1.0/networks/<entry>` (詳細は [RESTful API](rest-api.md) を参照) <!-- `DELETE /1.0/networks/<entry>` (see [RESTful API](rest-api.md) for details) -->
- * "nic" タイプのデバイスの `ipv4.address` プロパティ (nictype が "bridged" の場合) <!-- `ipv4.address` property on "nic" type devices (when nictype is "bridged") -->
- * "nic" タイプのデバイスの `ipv6.address` プロパティ (nictype が "bridged" の場合) <!-- `ipv6.address` property on "nic" type devices (when nictype is "bridged") -->
- * "nic" タイプのデバイスの `security.mac_filtering` プロパティ (nictype が "bridged" の場合) <!-- `security.mac_filtering` property on "nic" type devices (when nictype is "bridged") -->
+ * `/1.0/networks` エントリーに "managed" プロパティを追加
+ * ネットワーク設定オプションの全て (詳細は [ネットワーク設定](networks.md) を参照)
+ * `POST /1.0/networks` (詳細は [RESTful API](rest-api.md) を参照)
+ * `PUT /1.0/networks/<entry>` (詳細は [RESTful API](rest-api.md) を参照)
+ * `PATCH /1.0/networks/<entry>` (詳細は [RESTful API](rest-api.md) を参照)
+ * `DELETE /1.0/networks/<entry>` (詳細は [RESTful API](rest-api.md) を参照)
+ * "nic" タイプのデバイスの `ipv4.address` プロパティ (nictype が "bridged" の場合)
+ * "nic" タイプのデバイスの `ipv6.address` プロパティ (nictype が "bridged" の場合)
+ * "nic" タイプのデバイスの `security.mac_filtering` プロパティ (nictype が "bridged" の場合)
 
 ## profile\_usedby
 プロファイルを使用しているコンテナーをプロファイルエントリーの一覧の used\_by フィールド
 として新たに追加します。
-<!--
-Adds a new used\_by field to profile entries listing the containers that are using it.
--->
 
 ## container\_push
 コンテナーが push モードで作成される時、クライアントは作成元と作成先のサーバ間の
 プロキシとして機能します。作成先のサーバが NAT やファイアウォールの後ろにいて
 作成元のサーバと直接通信できず pull モードで作成できないときにこれは便利です。
-<!--
-When a container is created in push mode, the client serves as a proxy between
-the source and target server. This is useful in cases where the target server
-is behind a NAT or firewall and cannot directly communicate with the source
-server and operate in pull mode.
--->
 
 ## container\_exec\_recording
 新しい boolean 型の "record-output" を導入します。これは `/1.0/containers/<name>/exec`
 のパラメータでこれを "true" に設定し "wait-for-websocket" を fales に設定すると
 標準出力と標準エラー出力をディスクに保存し logs インタフェース経由で利用可能にします。
-<!--
-Introduces a new boolean "record-output", parameter to
-`/1.0/containers/<name>/exec` which when set to "true" and combined with
-with "wait-for-websocket" set to false, will record stdout and stderr to
-disk and make them available through the logs interface.
--->
 
 記録された出力の URL はコマンドが実行完了したら操作のメタデータに含まれます。
-<!--
-The URL to the recorded output is included in the operation metadata
-once the command is done running.
--->
 
 出力は他のログファイルと同様に、通常は 48 時間後に期限切れになります。
-<!--
-That output will expire similarly to other log files, typically after 48 hours.
--->
 
 ## certificate\_update
 REST API に次のものを追加します。
-<!--
-Adds the following to the REST API:
--->
 
- * 証明書の GET に ETag ヘッダ <!-- ETag header on GET of a certificate -->
- * 証明書エントリーの PUT <!-- PUT of certificate entries -->
- * 証明書エントリーの PATCH <!-- PATCH of certificate entries -->
+ * 証明書の GET に ETag ヘッダ
+ * 証明書エントリーの PUT
+ * 証明書エントリーの PATCH
 
 ## container\_exec\_signal\_handling
 クライアントに送られたシグナルをコンテナー内で実行中のプロセスにフォワーディング
 するサポートを `/1.0/containers/<name>/exec` に追加します。現状では SIGTERM と
 SIGHUP がフォワードされます。フォワード出来るシグナルは今後さらに追加される
 かもしれません。
-<!--
-Adds support `/1.0/containers/<name>/exec` for forwarding signals sent to the
-client to the processes executing in the container. Currently SIGTERM and
-SIGHUP are forwarded. Further signals that can be forwarded might be added
-later.
--->
 
 ## gpu\_devices
 コンテナーに GPU を追加できるようにします。
-<!--
-Enables adding GPUs to a container.
--->
 
 ## container\_image\_properties
 設定キー空間に新しく `image` を導入します。これは読み取り専用で、親のイメージのプロパティを
 含みます。
-<!--
-Introduces a new `image` config key space. Read-only, includes the properties of the parent image.
--->
 
 ## migration\_progress
 転送の進捗が操作の一部として送信側と受信側の両方に公開されます。これは操作のメタデータの
 "fs\_progress" 属性として現れます。
-<!--
-Transfer progress is now exported as part of the operation, on both sending and receiving ends.
-This shows up as a "fs\_progress" attribute in the operation metadata.
--->
 
 ## id\_map
 `security.idmap.isolated`, `security.idmap.isolated`,
 `security.idmap.size`, `raw.id_map` のフィールドを設定できるようにします。
-<!--
-Enables setting the `security.idmap.isolated` and `security.idmap.isolated`,
-`security.idmap.size`, and `raw.id_map` fields.
--->
 
 ## network\_firewall\_filtering
 `ipv4.firewall` と `ipv6.firewall` という 2 つのキーを追加します。
 false に設置すると iptables の FORWARDING ルールの生成をしないように
 なります。 NAT ルールは対応する `ipv4.nat` や `ipv6.nat` キーが true に
 設定されている限り引き続き追加されます。
-<!--
-Add two new keys, `ipv4.firewall` and `ipv6.firewall` which if set to
-false will turn off the generation of iptables FORWARDING rules. NAT
-rules will still be added so long as the matching `ipv4.nat` or
-`ipv6.nat` key is set to true.
--->
 
 ブリッジに対して dnsmasq が有効な場合、 dnsmasq が機能する (DHCP/DNS)
 ために必要なルールは常に適用されます。
-<!--
-Rules necessary for dnsmasq to work (DHCP/DNS) will always be applied if
-dnsmasq is enabled on the bridge.
--->
 
 ## network\_routes
 `ipv4.routes` と `ipv6.routes` を導入します。これらは LXD ブリッジに
 追加のサブネットをルーティングできるようにします。
-<!--
-Introduces `ipv4.routes` and `ipv6.routes` which allow routing additional subnets to a LXD bridge.
--->
 
 ## storage
 LXD のストレージ管理 API 。
-<!--
-Storage management API for LXD.
--->
 
 これは次のものを含みます。
-<!--
-This includes:
--->
 
 * `GET /1.0/storage-pools`
-* `POST /1.0/storage-pools` (詳細は [RESTful API](rest-api.md) を参照) <!-- (see [RESTful API](rest-api.md) for details) -->
+* `POST /1.0/storage-pools` (詳細は [RESTful API](rest-api.md) を参照)
 
-* `GET /1.0/storage-pools/<name>` (詳細は [RESTful API](rest-api.md) を参照) <!-- (see [RESTful API](rest-api.md) for details) -->
-* `POST /1.0/storage-pools/<name>` (詳細は [RESTful API](rest-api.md) を参照) <!-- (see [RESTful API](rest-api.md) for details) -->
-* `PUT /1.0/storage-pools/<name>` (詳細は [RESTful API](rest-api.md) を参照) <!-- (see [RESTful API](rest-api.md) for details) -->
-* `PATCH /1.0/storage-pools/<name>` (詳細は [RESTful API](rest-api.md) を参照) <!-- (see [RESTful API](rest-api.md) for details) -->
-* `DELETE /1.0/storage-pools/<name>` (詳細は [RESTful API](rest-api.md) を参照) <!-- (see [RESTful API](rest-api.md) for details) -->
+* `GET /1.0/storage-pools/<name>` (詳細は [RESTful API](rest-api.md) を参照)
+* `POST /1.0/storage-pools/<name>` (詳細は [RESTful API](rest-api.md) を参照)
+* `PUT /1.0/storage-pools/<name>` (詳細は [RESTful API](rest-api.md) を参照)
+* `PATCH /1.0/storage-pools/<name>` (詳細は [RESTful API](rest-api.md) を参照)
+* `DELETE /1.0/storage-pools/<name>` (詳細は [RESTful API](rest-api.md) を参照)
 
-* `GET /1.0/storage-pools/<name>/volumes` (詳細は [RESTful API](rest-api.md) を参照) <!-- (see [RESTful API](rest-api.md) for details) -->
+* `GET /1.0/storage-pools/<name>/volumes` (詳細は [RESTful API](rest-api.md) を参照)
 
-* `GET /1.0/storage-pools/<name>/volumes/<volume_type>` (詳細は [RESTful API](rest-api.md) を参照) <!-- (see [RESTful API](rest-api.md) for details) -->
-* `POST /1.0/storage-pools/<name>/volumes/<volume_type>` (詳細は [RESTful API](rest-api.md) を参照) <!-- (see [RESTful API](rest-api.md) for details) -->
+* `GET /1.0/storage-pools/<name>/volumes/<volume_type>` (詳細は [RESTful API](rest-api.md) を参照)
+* `POST /1.0/storage-pools/<name>/volumes/<volume_type>` (詳細は [RESTful API](rest-api.md) を参照)
 
-* `GET /1.0/storage-pools/<pool>/volumes/<volume_type>/<name>` (詳細は [RESTful API](rest-api.md) を参照) <!-- (see [RESTful API](rest-api.md) for details) -->
-* `POST /1.0/storage-pools/<pool>/volumes/<volume_type>/<name>` (詳細は [RESTful API](rest-api.md) を参照) <!-- (see [RESTful API](rest-api.md) for details) -->
-* `PUT /1.0/storage-pools/<pool>/volumes/<volume_type>/<name>` (詳細は [RESTful API](rest-api.md) を参照) <!-- (see [RESTful API](rest-api.md) for details) -->
-* `PATCH /1.0/storage-pools/<pool>/volumes/<volume_type>/<name>` (詳細は [RESTful API](rest-api.md) を参照) <!-- (see [RESTful API](rest-api.md) for details) -->
-* `DELETE /1.0/storage-pools/<pool>/volumes/<volume_type>/<name>` (詳細は [RESTful API](rest-api.md) を参照) <!-- (see [RESTful API](rest-api.md) for details) -->
+* `GET /1.0/storage-pools/<pool>/volumes/<volume_type>/<name>` (詳細は [RESTful API](rest-api.md) を参照)
+* `POST /1.0/storage-pools/<pool>/volumes/<volume_type>/<name>` (詳細は [RESTful API](rest-api.md) を参照)
+* `PUT /1.0/storage-pools/<pool>/volumes/<volume_type>/<name>` (詳細は [RESTful API](rest-api.md) を参照)
+* `PATCH /1.0/storage-pools/<pool>/volumes/<volume_type>/<name>` (詳細は [RESTful API](rest-api.md) を参照)
+* `DELETE /1.0/storage-pools/<pool>/volumes/<volume_type>/<name>` (詳細は [RESTful API](rest-api.md) を参照)
 
-* 全てのストレージ設定オプション (詳細は [ストレージの設定](storage.md) を参照) <!-- All storage configuration options (see [Storage configuration](storage.md) for details) -->
+* 全てのストレージ設定オプション (詳細は [ストレージの設定](storage.md) を参照)
 
 ## file\_delete
 `/1.0/containers/<name>/files` の DELETE メソッドを実装
-<!--
-Implements `DELETE` in `/1.0/containers/<name>/files`
--->
 
 ## file\_append
 `X-LXD-write` ヘッダを実装しました。値は `overwrite` か `append` のいずれかです。
-<!--
-Implements the `X-LXD-write` header which can be one of `overwrite` or `append`.
--->
 
 ## network\_dhcp\_expiry
 `ipv4.dhcp.expiry` と `ipv6.dhcp.expiry` を導入します。 DHCP のリース期限を設定
 できるようにします。
-<!--
-Introduces `ipv4.dhcp.expiry` and `ipv6.dhcp.expiry` allowing to set the DHCP lease expiry time.
--->
 
 ## storage\_lvm\_vg\_rename
 `storage.lvm.vg_name` を設定することでボリュームグループをリネームできるようにします。
-<!--
-Introduces the ability to rename a volume group by setting `storage.lvm.vg_name`.
--->
 
 ## storage\_lvm\_thinpool\_rename
 `storage.thinpool_name` を設定することで thinpool をリネームできるようにします。
-<!--
-Introduces the ability to rename a thinpool name by setting `storage.thinpool_name`.
--->
 
 ## network\_vlan
 `macvlan` ネットワークデバイスに `vlan` プロパティを新たに追加します。
-<!--
-This adds a new `vlan` property to `macvlan` network devices.
--->
 
 これを設定すると、指定した VLAN にアタッチするように LXD に指示します。
 LXD はホスト上でその VLAN を持つ既存のインタフェースを探します。
 もし見つからない場合は LXD がインタフェースを作成して macvlan の親として
 使用します。
-<!--
-When set, this will instruct LXD to attach to the specified VLAN. LXD
-will look for an existing interface for that VLAN on the host. If one
-can't be found it will create one itself and then use that as the
-macvlan parent.
--->
 
 ## image\_create\_aliases
 `POST /1.0/images` に `aliases` フィールドを新たに追加します。イメージの
 作成／インポート時にエイリアスを設定できるようになります。
-<!--
-Adds a new `aliases` field to `POST /1.0/images` allowing for aliases to
-be set at image creation/import time.
--->
 
 ## container\_stateless\_copy
 `POST /1.0/containers/<name>` に `live` という属性を新たに導入します。
 false に設定すると、実行状態を転送しようとしないように LXD に伝えます。
-<!--
-This introduces a new `live` attribute in `POST /1.0/containers/<name>`.
-Setting it to false tells LXD not to attempt running state transfer.
--->
 
 ## container\_only\_migration
 `container_only` という boolean 型の属性を導入します。 true に設定すると
 コンテナーだけがコピーや移動されるようになります。
-<!--
-Introduces a new boolean `container_only` attribute. When set to true only the
-container will be copied or moved.
--->
 
 ## storage\_zfs\_clone\_copy
 ZFS ストレージプールに `storage_zfs_clone_copy` という boolean 型のプロパティを導入します。
@@ -501,16 +265,6 @@ false に設定すると、コンテナーのコピーは zfs send と receive �
 という結果を伴います。
 このプロパティのデフォルト値は true です。つまり明示的に "false" に設定
 しない限り、空間効率の良いスナップショットが使われます。
-<!--
-Introduces a new boolean `storage_zfs_clone_copy` property for ZFS storage
-pools. When set to false copying a container will be done through zfs send and
-receive. This will make the target container independent of its source
-container thus avoiding the need to keep dependent snapshots in the ZFS pool
-around. However, this also entails less efficient storage usage for the
-affected pool.
-The default value for this property is true, i.e. space-efficient snapshots
-will be used unless explicitly set to "false".
--->
 
 ## unix\_device\_rename
 `path` を設定することによりコンテナー内部で unix-block/unix-char デバイスをリネーム
@@ -519,332 +273,167 @@ will be used unless explicitly set to "false".
 扱います。 `source` や `major`/`minor` を設定せずに `path` を設定すると
 `source` は `path` と同じものとして扱います。ですので、最低どちらか 1 つは
 設定しなければなりません。
-<!--
-Introduces the ability to rename the unix-block/unix-char device inside container by setting `path`,
-and the `source` attribute is added to specify the device on host.
-If `source` is set without a `path`, we should assume that `path` will be the same as `source`.
-If `path` is set without `source` and `major`/`minor` isn't set,
-we should assume that `source` will be the same as `path`.
-So at least one of them must be set.
--->
 
 ## storage\_rsync\_bwlimit
 ストレージエンティティを転送するために rsync が起動される場合に
 `rsync.bwlimit` を設定すると使用できるソケット I/O の量に上限を
 設定します。
-<!--
-When rsync has to be invoked to transfer storage entities setting `rsync.bwlimit`
-places an upper limit on the amount of socket I/O allowed.
--->
 
 ## network\_vxlan\_interface
 ネットワークに `tunnel.NAME.interface` オプションを新たに導入します。
-<!--
-This introduces a new `tunnel.NAME.interface` option for networks.
--->
 
 このキーは VXLAN トンネルにホストのどのネットワークインタフェースを使うかを
 制御します。
-<!--
-This key control what host network interface is used for a VXLAN tunnel.
--->
 
 ## storage\_btrfs\_mount\_options
 btrfs ストレージプールに `btrfs.mount_options` プロパティを導入します。
-<!--
-This introduces the `btrfs.mount_options` property for btrfs storage pools.
--->
 
 このキーは btrfs ストレージプールに使われるマウントオプションを制御します。
-<!--
-This key controls what mount options will be used for the btrfs storage pool.
--->
 
 ## entity\_description
 これはエンティティにコンテナー、スナップショット、ストレージプール、ボリュームの
 ような説明を追加します。
-<!--
-This adds descriptions to entities like containers, snapshots, networks, storage pools and volumes.
--->
 
 ## image\_force\_refresh
 既存のイメージを強制的にリフレッシュできます。
-<!--
-This allows forcing a refresh for an existing image.
--->
 
 ## storage\_lvm\_lv\_resizing
 これはコンテナーの root ディスクデバイス内に `size` プロパティを設定することで
 論理ボリュームをリサイズできるようにします。
-<!--
-This introduces the ability to resize logical volumes by setting the `size`
-property in the containers root disk device.
--->
 
 ## id\_map\_base
 これは `security.idmap.base` を新しく導入します。これにより分離されたコンテナー
 に map auto-selection するプロセスをスキップし、ホストのどの uid/gid をベース
 として使うかをユーザーが指定できるようにします。
-<!--
-This introduces a new `security.idmap.base` allowing the user to skip the
-map auto-selection process for isolated containers and specify what host
-uid/gid to use as the base.
--->
 
 ## file\_symlinks
 これは file API 経由でシンボリックリンクを転送するサポートを追加します。
 X-LXD-type に "symlink" を指定できるようになり、リクエストの内容はターゲットの
 パスを指定します。
-<!--
-This adds support for transferring symlinks through the file API.
-X-LXD-type can now be "symlink" with the request content being the target path.
--->
 
 ## container\_push\_target
 `POST /1.0/containers/<name>` に `target` フィールドを新たに追加します。
 これはマイグレーション中に作成元の LXD ホストが作成先に接続するために
 利用可能です。
-<!--
-This adds the `target` field to `POST /1.0/containers/<name>` which can be
-used to have the source LXD host connect to the target during migration.
--->
 
 ## network\_vlan\_physical
 `physical` ネットワークデバイスで `vlan` プロパティが使用できるようにします。
-<!--
-Allows use of `vlan` property with `physical` network devices.
--->
 
 設定すると、 `parent` インタフェース上で指定された VLAN にアタッチするように
 LXD に指示します。 LXD はホスト上でその `parent` と VLAN を既存のインタフェース
 で探します。
 見つからない場合は作成します。
 その後コンテナーにこのインタフェースを直接アタッチします。
-<!--
-When set, this will instruct LXD to attach to the specified VLAN on the `parent` interface.
-LXD will look for an existing interface for that `parent` and VLAN on the host.
-If one can't be found it will create one itself.
-Then, LXD will directly attach this interface to the container.
--->
 
 ## storage\_images\_delete
 これは指定したストレージプールからイメージのストレージボリュームを
 ストレージ API で削除できるようにします。
-<!--
-This enabled the storage API to delete storage volumes for images from
-a specific storage pool.
--->
 
 ## container\_edit\_metadata
 これはコンテナーの metadata.yaml と関連するテンプレートを
 `/1.0/containers/<name>/metadata` 配下の URL にアクセスすることにより
 API で編集できるようにします。コンテナーからイメージを発行する前にコンテナーを
 編集できるようになります。
-<!--
-This adds support for editing a container metadata.yaml and related templates
-via API, by accessing urls under `/1.0/containers/<name>/metadata`. It can be used
-to edit a container before publishing an image from it.
--->
 
 ## container\_snapshot\_stateful\_migration
 これは stateful なコンテナーのスナップショットを新しいコンテナーにマイグレート
 できるようにします。
-<!--
-This enables migrating stateful container snapshots to new containers.
--->
 
 ## storage\_driver\_ceph
 これは ceph ストレージドライバを追加します。
-<!--
-This adds a ceph storage driver.
--->
 
 ## storage\_ceph\_user\_name
 これは ceph ユーザーを指定できるようにします。
-<!--
-This adds the ability to specify the ceph user.
--->
 
 ## instance\_types
 これはコンテナーの作成リクエストに `instance_type` フィールドを追加します。
 値は LXD のリソース制限に展開されます。
-<!--
-This adds the `instance_type` field to the container creation request.
-Its value is expanded to LXD resource limits.
--->
 
 ## storage\_volatile\_initial\_source
 これはストレージプール作成中に LXD に渡された実際の作成元を記録します。
-<!--
-This records the actual source passed to LXD during storage pool creation.
--->
 
 ## storage\_ceph\_force\_osd\_reuse
 これは ceph ストレージドライバに `ceph.osd.force_reuse` プロパティを
 導入します。 `true` に設定すると LXD は別の LXD インスタンスで既に使用中の
 osd ストレージプールを再利用するようになります。
-<!--
-This introduces the `ceph.osd.force_reuse` property for the ceph storage
-driver. When set to `true` LXD will reuse a osd storage pool that is already in
-use by another LXD instance.
--->
 
 ## storage\_block\_filesystem\_btrfs
 これは ext4 と xfs に加えて btrfs をストレージボリュームファイルシステムとして
 サポートするようになります。
-<!--
-This adds support for btrfs as a storage volume filesystem, in addition to ext4
-and xfs.
--->
 
 ## resources
 これは LXD が利用可能なシステムリソースを LXD デーモンに問い合わせできるようにします。
-<!--
-This adds support for querying an LXD daemon for the system resources it has
-available.
--->
 
 ## kernel\_limits
 これは `nofile` でコンテナーがオープンできるファイルの最大数といったプロセスの
 リミットを設定できるようにします。形式は `limits.kernel.[リミット名]` です。
-<!--
-This adds support for setting process limits such as maximum number of open
-files for the container via `nofile`. The format is `limits.kernel.[limit name]`.
--->
 
 ## storage\_api\_volume\_rename
 これはカスタムストレージボリュームをリネームできるようにします。
-<!--
-This adds support for renaming custom storage volumes.
--->
 
 ## external\_authentication
 これは Macaroons での外部認証をできるようにします。
-<!--
-This adds support for external authentication via Macaroons.
--->
 
 ## network\_sriov
 これは SR-IOV を有効にしたネットワークデバイスのサポートを追加します。
-<!--
-This adds support for SR-IOV enabled network devices.
--->
 
 ## console
 これはコンテナーのコンソールデバイスとコンソールログを利用可能にします。
-<!--
-This adds support to interact with the container console device and console log.
--->
 
 ## restrict\_devlxd
 security.devlxd コンテナー設定キーを新たに導入します。このキーは /dev/lxd
 インタフェースがコンテナーで利用可能になるかを制御します。
 false に設定すると、コンテナーが LXD デーモンと連携するのを実質無効に
 することになります。
-<!--
-A new security.devlxd container configuration key was introduced.
-The key controls whether the /dev/lxd interface is made available to the container.
-If set to false, this effectively prevents the container from interacting with the LXD daemon.
--->
 
 ## migration\_pre\_copy
 これはライブマイグレーション中に最適化されたメモリ転送をできるようにします。
-<!--
-This adds support for optimized memory transfer during live migration.
--->
 
 ## infiniband
 これは infiniband ネットワークデバイスを使用できるようにします。
-<!--
-This adds support to use infiniband network devices.
--->
 
 ## maas\_network
 これは MAAS ネットワーク統合をできるようにします。
-<!--
-This adds support for MAAS network integration.
--->
 
 デーモンレベルで設定すると、 "nic" デバイスを特定の MAAS サブネットに
 アタッチできるようになります。
-<!--
-When configured at the daemon level, it's then possible to attach a "nic"
-device to a particular MAAS subnet.
--->
 
 ## devlxd\_events
 これは devlxd ソケットに websocket API を追加します。
-<!--
-This adds a websocket API to the devlxd socket.
--->
 
 devlxd ソケット上で /1.0/events に接続すると、 websocket 上で
 イベントのストリームを受け取れるようになります。
-<!--
-When connecting to /1.0/events over the devlxd socket, you will now be
-getting a stream of events over websocket.
--->
 
 ## proxy
 これはコンテナーに `proxy` という新しいデバイスタイプを追加します。
 これによりホストとコンテナー間で接続をフォワーディングできるようになります。
-<!--
-This adds a new `proxy` device type to containers, allowing forwarding
-of connections between the host and container.
--->
 
 ## network\_dhcp\_gateway
 代替のゲートウェイを設定するための ipv4.dhcp.gateway ネットワーク設定キーを
 新たに追加します。
-<!--
-Introduces a new ipv4.dhcp.gateway network config key to set an alternate gateway.
--->
 
 ## file\_get\_symlink
 これは file API を使ってシンボリックリンクを取得できるようにします。
-<!--
-This makes it possible to retrieve symlinks using the file API.
--->
 
 ## network\_leases
 /1.0/networks/NAME/leases API エンドポイントを追加します。 LXD が管理する
 DHCP サーバが稼働するブリッジ上のリースデータベースに問い合わせできるように
 なります。
-<!--
-Adds a new /1.0/networks/NAME/leases API endpoint to query the lease database on
-bridges which run a LXD-managed DHCP server.
--->
 
 ## unix\_device\_hotplug
 これは unix デバイスに "required" プロパティのサポートを追加します。
-<!--
-This adds support for the "required" property for unix devices.
--->
 
 ## storage\_api\_local\_volume\_handling
 これはカスタムストレージボリュームを同じあるいは異なるストレージプール間で
 コピーしたり移動したりできるようにします。
-<!--
-This add the ability to copy and move custom storage volumes locally in the
-same and between storage pools.
--->
 
 ## operation\_description
 全ての操作に "description" フィールドを追加します。
-<!--
-Adds a "description" field to all operations.
--->
 
 ## clustering
 LXD のクラスタリング API 。
-<!--
-Clustering API for LXD.
--->
 
 これは次の新しいエンドポイントを含みます (詳細は [RESTful API](rest-api.md) を参照)。
-<!--
-This includes the following new endpoints (see [RESTful API](rest-api.md) for details):
--->
 
 * `GET /1.0/cluster`
 * `UPDATE /1.0/cluster`
@@ -856,61 +445,37 @@ This includes the following new endpoints (see [RESTful API](rest-api.md) for de
 * `DELETE /1.0/cluster/members/<name>`
 
 次の既存のエンドポイントは以下のように変更されます。
-<!--
-The following existing endpoints have been modified:
--->
 
- * `POST /1.0/containers` 新しい target クエリパラメータを受け付けるようになります。 <!-- accepts a new target query parameter -->
- * `POST /1.0/storage-pools` 新しい target クエリパラメータを受け付けるようになります <!-- accepts a new target query parameter -->
- * `GET /1.0/storage-pool/<name>` 新しい target クエリパラメータを受け付けるようになります <!-- accepts a new target query parameter -->
- * `POST /1.0/storage-pool/<pool>/volumes/<type>` 新しい target クエリパラメータを受け付けるようになります <!-- accepts a new target query parameter -->
- * `GET /1.0/storage-pool/<pool>/volumes/<type>/<name>` 新しい target クエリパラメータを受け付けるようになります <!-- accepts a new target query parameter -->
- * `POST /1.0/storage-pool/<pool>/volumes/<type>/<name>` 新しい target クエリパラメータを受け付けるようになります <!-- accepts a new target query parameter -->
- * `PUT /1.0/storage-pool/<pool>/volumes/<type>/<name>` 新しい target クエリパラメータを受け付けるようになります <!-- accepts a new target query parameter -->
- * `PATCH /1.0/storage-pool/<pool>/volumes/<type>/<name>` 新しい target クエリパラメータを受け付けるようになります <!-- accepts a new target query parameter -->
- * `DELETE /1.0/storage-pool/<pool>/volumes/<type>/<name>` 新しい target クエリパラメータを受け付けるようになります <!-- accepts a new target query parameter -->
- * `POST /1.0/networks` 新しい target クエリパラメータを受け付けるようになります <!-- accepts a new target query parameter -->
- * `GET /1.0/networks/<name>` 新しい target クエリパラメータを受け付けるようになります <!-- accepts a new target query parameter -->
+ * `POST /1.0/containers` 新しい target クエリパラメータを受け付けるようになります。
+ * `POST /1.0/storage-pools` 新しい target クエリパラメータを受け付けるようになります
+ * `GET /1.0/storage-pool/<name>` 新しい target クエリパラメータを受け付けるようになります
+ * `POST /1.0/storage-pool/<pool>/volumes/<type>` 新しい target クエリパラメータを受け付けるようになります
+ * `GET /1.0/storage-pool/<pool>/volumes/<type>/<name>` 新しい target クエリパラメータを受け付けるようになります
+ * `POST /1.0/storage-pool/<pool>/volumes/<type>/<name>` 新しい target クエリパラメータを受け付けるようになります
+ * `PUT /1.0/storage-pool/<pool>/volumes/<type>/<name>` 新しい target クエリパラメータを受け付けるようになります
+ * `PATCH /1.0/storage-pool/<pool>/volumes/<type>/<name>` 新しい target クエリパラメータを受け付けるようになります
+ * `DELETE /1.0/storage-pool/<pool>/volumes/<type>/<name>` 新しい target クエリパラメータを受け付けるようになります
+ * `POST /1.0/networks` 新しい target クエリパラメータを受け付けるようになります
+ * `GET /1.0/networks/<name>` 新しい target クエリパラメータを受け付けるようになります
 
 ## event\_lifecycle
 これはイベント API に `lifecycle` メッセージ種別を新たに追加します。
-<!--
-This adds a new `lifecycle` message type to the events API.
--->
 
 ## storage\_api\_remote\_volume\_handling
 これはリモート間でカスタムストレージボリュームをコピーや移動できるようにします。
-<!--
-This adds the ability to copy and move custom storage volumes between remote.
--->
 
 ## nvidia\_runtime
 コンテナーに `nvidia_runtime` という設定オプションを追加します。これを true に
 設定すると NVIDIA ランタイムと CUDA ライブラリーがコンテナーに渡されます。
-<!--
-Adds a `nvidia_runtime` config option for containers, setting this to
-true will have the NVIDIA runtime and CUDA libraries passed to the
-container.
--->
 
 ## container\_mount\_propagation
 これはディスクデバイスタイプに "propagation" オプションを新たに追加します。
 これによりカーネルのマウントプロパゲーションの設定ができるようになります。
-<!--
-This adds a new "propagation" option to the disk device type, allowing
-the configuration of kernel mount propagation.
--->
 
 ## container\_backup
 コンテナーのバックアップサポートを追加します。
-<!--
-Add container backup support.
--->
 
 これは次のエンドポイントを新たに追加します (詳細は [RESTful API](rest-api.md) を参照)。
-<!--
-This includes the following new endpoints (see [RESTful API](rest-api.md) for details):
--->
 
 * `GET /1.0/containers/<name>/backups`
 * `POST /1.0/containers/<name>/backups`
@@ -922,47 +487,26 @@ This includes the following new endpoints (see [RESTful API](rest-api.md) for de
 * `GET /1.0/containers/<name>/backups/<name>/export`
 
 次の既存のエンドポイントは以下のように変更されます。
-<!--
-The following existing endpoint has been modified:
--->
 
- * `POST /1.0/containers` 新たな作成元の種別 `backup` を受け付けるようになります <!-- accepts the new source type `backup` -->
+ * `POST /1.0/containers` 新たな作成元の種別 `backup` を受け付けるようになります
 
 ## devlxd\_images
 コンテナーに `security.devlxd.images` 設定オプションを追加します。これに
 より devlxd 上で `/1.0/images/FINGERPRINT/export` API が利用可能に
 なります。 nested LXD を動かすコンテナーがホストから生のイメージを
 取得するためにこれは利用できます。
-<!--
-Adds a `security.devlxd.images` config option for containers which
-controls the availability of a `/1.0/images/FINGERPRINT/export` API over
-devlxd. This can be used by a container running nested LXD to access raw
-images from the host.
--->
 
 ## container\_local\_cross\_pool\_handling
 これは同じ LXD インスタンス上のストレージプール間でコンテナーをコピー・移動
 できるようにします。
-<!--
-This enables copying or moving containers between storage pools on the same LXD
-instance.
--->
 
 ## proxy\_unix
 proxy デバイスで unix ソケットと abstract unix ソケットの両方のサポートを
 追加します。これらは `unix:/path/to/unix.sock` (通常のソケット) あるいは
 `unix:@/tmp/unix.sock` (abstract ソケット) のようにアドレスを指定して
 利用可能です。
-<!--
-Add support for both unix sockets and abstract unix sockets in proxy devices.
-They can be used by specifying the address as `unix:/path/to/unix.sock` (normal
-socket) or `unix:@/tmp/unix.sock` (abstract socket).
--->
 
 現状サポートされている接続は次のとおりです。
-<!--
-Supported connections are now:
--->
 
 * `TCP <-> TCP`
 * `UNIX <-> UNIX`
@@ -971,14 +515,8 @@ Supported connections are now:
 
 ## proxy\_udp
 proxy デバイスで udp のサポートを追加します。
-<!--
-Add support for udp in proxy devices.
--->
 
 現状サポートされている接続は次のとおりです。
-<!--
-Supported connections are now:
--->
 
 * `TCP <-> TCP`
 * `UNIX <-> UNIX`
@@ -994,140 +532,71 @@ Supported connections are now:
 際にどのノード固有の設定キーを使う必要があるかについての情報も返します。
 同様に PUT /1.0/cluster エンドポイントも同じ形式でストレージプールとネットワークに
 ついての情報を受け付け、クラスタに参加する前にこれらが自動的に作成されるようになります。
-<!--
-This makes GET /1.0/cluster return information about which storage pools and
-networks are required to be created by joining nodes and which node-specific
-configuration keys they are required to use when creating them. Likewise the PUT
-/1.0/cluster endpoint now accepts the same format to pass information about
-storage pools and networks to be automatically created before attempting to join
-a cluster.
--->
 
 ## proxy\_tcp\_udp\_multi\_port\_handling
 複数のポートにトラフィックをフォワーディングできるようにします。フォワーディングは
 ポートの範囲が転送元と転送先で同じ (例えば `1.2.3.4 0-1000 -> 5.6.7.8 1000-2000`)
 場合か転送元で範囲を指定し転送先で単一のポートを指定する
 (例えば `1.2.3.4 0-1000 -> 5.6.7.8 1000`) 場合に可能です。
-<!--
-Adds support for forwarding traffic for multiple ports. Forwarding is allowed
-between a range of ports if the port range is equal for source and target
-(for example `1.2.3.4 0-1000 -> 5.6.7.8 1000-2000`) and between a range of source
-ports and a single target port (for example `1.2.3.4 0-1000 -> 5.6.7.8 1000`).
--->
 
 ## network\_state
 ネットワークの状態を取得できるようになります。
-<!--
-Adds support for retrieving a network's state.
--->
 
 これは次のエンドポイントを新たに追加します (詳細は [RESTful API](rest-api.md) を参照)。
-<!--
-This adds the following new endpoint (see [RESTful API](rest-api.md) for details):
--->
 
 * `GET /1.0/networks/<name>/state`
 
 ## proxy\_unix\_dac\_properties
 これは抽象的 unix ソケットではない unix ソケットに gid, uid, パーミションのプロパティを追加します。
-<!--
-This adds support for gid, uid, and mode properties for non-abstract unix
-sockets.
--->
 
 ## container\_protection\_delete
 `security.protection.delete` フィールドを設定できるようにします。 true に設定すると
 コンテナーが削除されるのを防ぎます。スナップショットはこの設定により影響を受けません。
-<!--
-Enables setting the `security.protection.delete` field which prevents containers
-from being deleted if set to true. Snapshots are not affected by this setting.
--->
 
 ## proxy\_priv\_drop
 proxy デバイスに security.uid と security.gid を追加します。これは root 権限を
 落とし (訳注: 非 root 権限で動作させるという意味です)、 Unix ソケットに接続する
 際に用いられる uid/gid も変更します。
-<!--
-Adds security.uid and security.gid for the proxy devices, allowing
-privilege dropping and effectively changing the uid/gid used for
-connections to Unix sockets too.
--->
 
 ## pprof\_http
 これはデバッグ用の HTTP サーバを起動するために、新たに core.debug\_address
 オプションを追加します。
-<!--
-This adds a new core.debug\_address config option to start a debugging HTTP server.
--->
 
 このサーバは現在 pprof API を含んでおり、従来の cpu-profile, memory-profile
 と print-goroutines デバッグオプションを置き換えるものです。
-<!--
-That server currently includes a pprof API and replaces the old
-cpu-profile, memory-profile and print-goroutines debug options.
--->
 
 ## proxy\_haproxy\_protocol
 proxy デバイスに proxy\_protocol キーを追加します。これは HAProxy PROXY プロトコルヘッダ
 の使用を制御します。
-<!--
-Adds a proxy\_protocol key to the proxy device which controls the use of the HAProxy PROXY protocol header.
--->
 
 ## network\_hwaddr
 ブリッジの MAC アドレスを制御する bridge.hwaddr キーを追加します。
-<!--
-Adds a bridge.hwaddr key to control the MAC address of the bridge.
--->
 
 ## proxy\_nat
 これは最適化された UDP/TCP プロキシを追加します。設定上可能であれば
 プロキシ処理は proxy デバイスの代わりに iptables 経由で行われるように
 なります。
-<!--
-This adds optimized UDP/TCP proxying. If the configuration allows, proxying
-will be done via iptables instead of proxy devices.
--->
 
 ## network\_nat\_order
 LXD ブリッジに `ipv4.nat.order` と `ipv6.nat.order` 設定キーを導入します。
 これらのキーは LXD のルールをチェイン内の既存のルールの前に置くか後に置くかを
 制御します。
-<!--
-This introduces the `ipv4.nat.order` and `ipv6.nat.order` configuration keys for LXD bridges.
-Those keys control whether to put the LXD rules before or after any pre-existing rules in the chain.
--->
 
 ## container\_full
 これは `GET /1.0/containers` に recursion=2 という新しいモードを導入します。
 これにより状態、スナップショットとバックアップの構造を含むコンテナーの全ての構造を
 取得できるようになります。
-<!--
-This introduces a new recursion=2 mode for `GET /1.0/containers` which allows for the retrieval of
-all container structs, including the state, snapshots and backup structs.
--->
 
 この結果 "lxc list" は必要な全ての情報を 1 つのクエリで取得できるように
 なります。
-<!--
-This effectively allows for "lxc list" to get all it needs in one query.
--->
 
 ## candid\_authentication
 これは新たに candid.api.url 設定キーを導入し core.macaroon.endpoint を
 削除します。
-<!--
-This introduces the new candid.api.url config option and removes
-core.macaroon.endpoint.
--->
 
 ## backup\_compression
 これは新たに `backups.compression_algorithm` 設定キーを導入します。
 これによりバックアップの圧縮の設定が可能になります。
-<!--
-This introduces a new `backups.compression_algorithm` config key which
-allows configuration of backup compression.
--->
 
 ## candid\_config
 これは `candid.domains` と `candid.expiry` 設定キーを導入します。
@@ -1135,21 +604,11 @@ allows configuration of backup compression.
 後者は macaroon の有効期限を設定可能にします。 `lxc remote add` コマンドに
 新たに `--domain` フラグが追加され、これにより Candid ドメインを
 指定可能になります。
-<!--
-This introduces the config keys `candid.domains` and `candid.expiry`. The
-former allows specifying allowed/valid Candid domains, the latter makes the
-macaroon's expiry configurable. The `lxc remote add` command now has a
-`\-\-domain` flag which allows specifying a Candid domain.
--->
 
 ## nvidia\_runtime\_config
 これは nvidia.runtime と libnvidia-container ライブラリーを使用する際に追加の
 いくつかの設定キーを導入します。これらのキーは nvidia-container の対応する
 環境変数にほぼそのまま置き換えられます。
-<!--
-This introduces a few extra config keys when using nvidia.runtime and the libnvidia-container library.
-Those keys translate pretty much directly to the matching nvidia-container environment variables:
--->
 
  - nvidia.driver.capabilities => NVIDIA\_DRIVER\_CAPABILITIES
  - nvidia.require.cuda => NVIDIA\_REQUIRE\_CUDA
@@ -1159,15 +618,8 @@ Those keys translate pretty much directly to the matching nvidia-container envir
 ストレージボリュームスナップショットのサポートを追加します。これらは
 コンテナースナップショットのように振る舞いますが、ボリュームに対してのみ
 作成できます。
-<!--
-Add support for storage volume snapshots. They work like container snapshots,
-only for volumes.
--->
 
 これにより次の新しいエンドポイントが追加されます (詳細は [RESTful API](rest-api.md) を参照)。
-<!--
-This adds the following new endpoint (see [RESTful API](rest-api.md) for details):
--->
 
 * `GET /1.0/storage-pools/<pool>/volumes/<type>/<name>/snapshots`
 * `POST /1.0/storage-pools/<pool>/volumes/<type>/<name>/snapshots`
@@ -1179,100 +631,48 @@ This adds the following new endpoint (see [RESTful API](rest-api.md) for details
 
 ## storage\_unmapped
 ストレージボリュームに新たに `security.unmapped` という設定を導入します。
-<!--
-Introduces a new `security.unmapped` boolean on storage volumes.
--->
 
 true に設定するとボリューム上の現在のマップをフラッシュし、以降の
 idmap のトラッキングとボリューム上のリマッピングを防ぎます。
-<!--
-Setting it to true will flush the current map on the volume and prevent
-any further idmap tracking and remapping on the volume.
--->
 
 これは隔離されたコンテナー間でデータを共有するために使用できます。
 この際コンテナーを書き込みアクセスを要求するコンテナーにアタッチした
 後にデータを共有します。
-<!--
-This can be used to share data between isolated containers after
-attaching it to the container which requires write access.
--->
 
 ## projects
 新たに project API を追加します。プロジェクトの作成、更新、削除ができます。
-<!--
-Add a new project API, supporting creation, update and deletion of projects.
--->
 
 現時点では、プロジェクトは、コンテナー、プロファイル、イメージを保持できます。そして、プロジェクトを切り替えることで、独立した LXD リソースのビューを見せられます。
-<!--
-Projects can hold containers, profiles or images at this point and let
-you get a separate view of your LXD resources by switching to it.
--->
 
 ## candid\_config\_key
 新たに `candid.api.key` オプションが使えるようになります。これにより、エンドポイントが期待する公開鍵を設定でき、HTTP のみの Candid サーバを安全に利用できます。
-<!--
-This introduces a new `candid.api.key` option which allows for setting
-the expected public key for the endpoint, allowing for safe use of a
-HTTP-only candid server.
--->
 
 ## network\_vxlan\_ttl
 新たにネットワークの設定に `tunnel.NAME.ttl` が指定できるようになります。これにより、VXLAN トンネルの TTL を増加させることができます。
-<!--
-This adds a new `tunnel.NAME.ttl` network configuration option which
-makes it possible to raise the ttl on VXLAN tunnels.
--->
 
 ## container\_incremental\_copy
 新たにコンテナーのインクリメンタルコピーができるようになります。`--refresh` オプションを指定してコンテナーをコピーすると、見つからないファイルや、更新されたファイルのみを
 コピーします。コンテナーが存在しない場合は、通常のコピーを実行します。
-<!--
-This adds support for incremental container copy. When copying a container
-using the `\-\-refresh` flag, only the missing or outdated files will be
-copied over. Should the target container not exist yet, a normal copy operation
-is performed.
--->
 
 ## usb\_optional\_vendorid
 名前が暗示しているように、コンテナーにアタッチされた USB デバイスの
 `vendorid` フィールドが省略可能になります。これにより全ての USB デバイスが
 コンテナーに渡されます (GPU に対してなされたのと同様)。
-<!--
-As the name implies, the `vendorid` field on USB devices attached to
-containers has now been made optional, allowing for all USB devices to
-be passed to a container (similar to what's done for GPUs).
--->
 
 ## snapshot\_scheduling
 これはスナップショットのスケジューリングのサポートを追加します。これにより
 3 つの新しい設定キーが導入されます。 `snapshots.schedule`, `snapshots.schedule.stopped`,
 そして `snapshots.pattern` です。スナップショットは最短で 1 分間隔で自動的に
 作成されます。
-<!--
-This adds support for snapshot scheduling. It introduces three new
-configuration keys: `snapshots.schedule`, `snapshots.schedule.stopped`, and
-`snapshots.pattern`. Snapshots can be created automatically up to every minute.
--->
 
 ## snapshots\_schedule\_aliases
 スナップショットのスケジュールはスケジュールエイリアスのカンマ区切りリストで設定できます。
 インスタンスには `<@hourly> <@daily> <@midnight> <@weekly> <@monthly> <@annually> <@yearly> <@startup>`、
 ストレージボリュームには `<@hourly> <@daily> <@midnight> <@weekly> <@monthly> <@annually> <@yearly>` のエイリアスが利用できます。
-<!--
-Snapshot schedule can be configured by a comma separated list of schedule aliases.
-Available aliases are `<@hourly> <@daily> <@midnight> <@weekly> <@monthly> <@annually> <@yearly> <@startup>` for instances,
-and `<@hourly> <@daily> <@midnight> <@weekly> <@monthly> <@annually> <@yearly>` for storage volumes.
--->
 
 ## container\_copy\_project
 コピー元のコンテナーの dict に `project` フィールドを導入します。これにより
 プロジェクト間でコンテナーをコピーあるいは移動できるようになります。
-<!--
-Introduces a `project` field to the container source dict, allowing for
-copy/move of containers between projects.
--->
 
 ## clustering\_server\_address
 これはサーバのネットワークアドレスを REST API のクライアントネットワーク
@@ -1284,167 +684,80 @@ copy/move of containers between projects.
 クラスタリングトラフィックに使用すべきアドレスに設定できます (```server_address```
 の値は自動的に参加するサーバの ```cluster.https_address``` 設定キーに
 コピーされます)。
-<!--
-This adds support for configuring a server network address which differs from
-the REST API client network address. When bootstrapping a new cluster, clients
-can set the new ```cluster.https_address``` config key to specify the address of
-the initial server. When joining a new server, clients can set the
-```core.https_address``` config key of the joining server to the REST API
-address the joining server should listen at, and set the ```server_address```
-key in the ```PUT /1.0/cluster``` API to the address the joining server should
-use for clustering traffic (the value of ```server_address``` will be
-automatically copied to the ```cluster.https_address``` config key of the
-joining server).
--->
 
 ## clustering\_image\_replication
 クラスタ内のノードをまたいだイメージのレプリケーションを可能にします。
 新しい cluster.images_minimal_replica 設定キーが導入され、イメージの
 リプリケーションに対するノードの最小数を指定するのに使用できます。
-<!--
-Enable image replication across the nodes in the cluster.
-A new cluster.images_minimal_replica configuration key was introduced can be used
-to specify to the minimal numbers of nodes for image replication.
--->
 
 ## container\_protection\_shift
 `security.protection.shift` の設定を可能にします。これによりコンテナーの
 ファイルシステム上で uid/gid をシフト (再マッピング) させることを防ぎます。
-<!--
-Enables setting the `security.protection.shift` option which prevents containers
-from having their filesystem shifted.
--->
 
 ## snapshot\_expiry
 これはスナップショットの有効期限のサポートを追加します。タスクは 1 分おきに実行されます。
 `snapshots.expiry` 設定オプションは、`1M 2H 3d 4w 5m 6y` （それぞれ 1 分、2 時間、3 日、4 週間、5 ヶ月、6 年）といった形式を取ります。
 この指定ではすべての部分を使う必要はありません。
-<!--
-This adds support for snapshot expiration. The task is run minutely. The config
-option `snapshots.expiry` takes an expression in the form of `1M 2H 3d 4w 5m
-6y` (1 minute, 2 hours, 3 days, 4 weeks, 5 months, 6 years), however not all
-parts have to be used.
--->
 
 作成されるスナップショットには、指定した式に基づいて有効期限が設定されます。
 `expires_at` で定義される有効期限は、API や `lxc config edit` コマンドを使って手動で編集できます。
 有効な有効期限が設定されたスナップショットはタスク実行時に削除されます。
 有効期限は `expires_at` に空文字列や `0001-01-01T00:00:00Z`（zero time）を設定することで無効化できます。
 `snapshots.expiry` が設定されていない場合はこれがデフォルトです。
-<!--
-Snapshots which are then created will be given an expiry date based on the
-expression. This expiry date, defined by `expires_at`, can be manually edited
-using the API or `lxc config edit`. Snapshots with a valid expiry date will be
-removed when the task in run. Expiry can be disabled by setting `expires_at` to
-an empty string or `0001-01-01T00:00:00Z` (zero time). This is the default if
-`snapshots.expiry` is not set.
--->
 
 これは次のような新しいエンドポイントを追加します（詳しくは [RESTful API](rest-api.md) をご覧ください）:
-<!--
-This adds the following new endpoint (see [RESTful API](rest-api.md) for details):
--->
 
 * `PUT /1.0/containers/<name>/snapshots/<name>`
 
 ## snapshot\_expiry\_creation
 コンテナー作成に `expires\_at` を追加し、作成時にスナップショットの有効期限を上書きできます。
-<!--
-Adds `expires\_at` to container creation, allowing for override of a
-snapshot's expiry at creation time.
--->
 
 ## network\_leases\_location
 ネットワークのリースリストに "Location" フィールドを導入します。
 これは、特定のリースがどのノードに存在するかを問い合わせるときに使います。
-<!--
-Introductes a "Location" field in the leases list.
-This is used when querying a cluster to show what node a particular
-lease was found on.
--->
 
 ## resources\_cpu\_socket
 ソケットの情報が入れ替わる場合に備えて CPU リソースにソケットフィールドを追加します。
-<!--
-Add Socket field to CPU resources in case we get out of order socket information.
--->
 
 ## resources\_gpu
 サーバリソースに新規にGPU構造を追加し、システム上で利用可能な全てのGPUを一覧表示します。
-<!--
-Add a new GPU struct to the server resources, listing all usable GPUs on the system.
--->
 
 ## resources\_numa
 全てのCPUとGPUに対するNUMAノードを表示します。
-<!--
-Shows the NUMA node for all CPUs and GPUs.
--->
 
 ## kernel\_features
 サーバの環境からオプショナルなカーネル機能の使用可否状態を取得します。
-<!--
-Exposes the state of optional kernel features through the server environment.
--->
 
 ## id\_map\_current
 内部的な `volatile.idmap.current` キーを新規に導入します。これはコンテナーに
 対する現在のマッピングを追跡するのに使われます。
-<!--
-This introduces a new internal `volatile.idmap.current` key which is
-used to track the current mapping for the container.
--->
 
 実質的には以下が利用可能になります。
-<!--
-This effectively gives us:
--->
 
- - `volatile.last_state.idmap` => ディスク上の idmap <!-- On-disk idmap -->
- - `volatile.idmap.current` => 現在のカーネルマップ <!-- Current kernel map -->
- - `volatile.idmap.next` => 次のディスク上の idmap <!-- Next on-disk idmap -->
+ - `volatile.last_state.idmap` => ディスク上の idmap
+ - `volatile.idmap.current` => 現在のカーネルマップ
+ - `volatile.idmap.next` => 次のディスク上の idmap
 
 これはディスク上の map が変更されていないがカーネルマップは変更されている
 (例: shiftfs) ような環境を実装するために必要です。
-<!--
-This is required to implement environments where the on-disk map isn't
-changed but the kernel map is (e.g. shiftfs).
--->
 
 ## event\_location
 API イベントの世代の場所を公開します。
-<!--
-Expose the location of the generation of API events.
--->
 
 ## storage\_api\_remote\_volume\_snapshots
 ストレージボリュームをそれらのスナップショットを含んで移行できます。
-<!--
-This allows migrating storage volumes including their snapshots.
--->
 
 ## network\_nat\_address
 これは LXD ブリッジに `ipv4.nat.address` と `ipv6.nat.address` 設定キーを導入します。
 これらのキーはブリッジからの送信トラフィックに使うソースアドレスを制御します。
-<!--
-This introduces the `ipv4.nat.address` and `ipv6.nat.address` configuration keys for LXD bridges.
-Those keys control the source address used for outbound traffic from the bridge.
--->
 
 ## container\_nic\_routes
 これは "nic" タイプのデバイスに `ipv4.routes` と `ipv6.routes` プロパティを導入します。
 ホストからコンテナーへの nic への静的ルートが追加できます。
-<!--
-This introduces the `ipv4.routes` and `ipv6.routes` properties on "nic" type devices.
-This allows adding static routes on host to container's nic.
--->
 
 ## rbac
 RBAC (role based access control; ロールベースのアクセス制御) のサポートを追加します。
 これは以下の設定キーを新規に導入します。
-<!--
-Adds support for RBAC (role based access control). This introduces new config keys:
--->
 
   * rbac.api.url
   * rbac.api.key
@@ -1458,352 +771,179 @@ Adds support for RBAC (role based access control). This introduces new config ke
 これは通常の "POST /1.0/containers" を実行することでクラスタノード間で
 コンテナーをコピーすることを可能にします。この際 LXD はマイグレーションが
 必要かどうかを内部的に判定します。
-<!--
-This makes it possible to do a normal "POST /1.0/containers" to copy a
-container between cluster nodes with LXD internally detecting whether a
-migration is required.
--->
 
 ## seccomp\_notify
 カーネルが seccomp ベースの syscall インターセプトをサポートする場合に
 登録された syscall が実行されたことをコンテナーから LXD に通知することが
 できます。 LXD はそれを受けて様々なアクションをトリガーするかを決定します。
-<!--
-If the kernel supports seccomp-based syscall interception LXD can be notified
-by a container that a registered syscall has been performed. LXD can then
-decide to trigger various actions.
--->
 
 ## lxc\_features
 これは `GET /1.0/` ルート経由で `lxc info` コマンドの出力に `lxc_features`
 セクションを導入します。配下の LXC ライブラリーに存在するキー・フィーチャーに
 対するチェックの結果を出力します。
-<!--
-This introduces the `lxc_features` section output from the `lxc info` command
-via the `GET /1.0/` route. It outputs the result of checks for key features being present in the
-underlying LXC library.
--->
 
 ## container\_nic\_ipvlan
 これは "nic" デバイスに `ipvlan` のタイプを導入します。
-<!--
-This introduces the `ipvlan` "nic" device type.
--->
 
 ## network\_vlan\_sriov
 これは SR-IOV デバイスに VLAN (`vlan`) と MAC フィルタリング (`security.mac_filtering`) のサポートを導入します。
-<!--
-This introduces VLAN (`vlan`) and MAC filtering (`security.mac_filtering`) support for SR-IOV devices.
--->
 
 ## storage\_cephfs
 ストレージプールドライバとして CEPHFS のサポートを追加します。これは
 カスタムボリュームとしての利用のみが可能になり、イメージとコンテナーは
 CEPHFS ではなく CEPH (RBD) 上に構築する必要があります。
-<!--
-Add support for CEPHFS as a storage pool driver. This can only be used
-for custom volumes, images and containers should be on CEPH (RBD)
-instead.
--->
 
 ## container\_nic\_ipfilter
 これは `bridged` の NIC デバイスに対してコンテナーの IP フィルタリング
 (`security.ipv4_filtering` and `security.ipv6_filtering`) を導入します。
-<!--
-This introduces container IP filtering (`security.ipv4_filtering` and `security.ipv6_filtering`) support for `bridged` nic devices.
--->
 
 ## resources\_v2
 /1.0/resources のリソース API を見直しました。主な変更は以下の通りです。
-<!--
-Rework the resources API at /1.0/resources, especially:
--->
 
  - CPU
-   - ソケット、コア、スレッドのトラッキングのレポートを修正しました <!-- Fix reporting to track sockets, cores and threads -->
-   - コア毎の NUMA ノードのトラッキング <!-- Track NUMA node per core -->
-   - ソケット毎のベースとターボの周波数のトラッキング <!-- Track base and turbo frequency per socket -->
-   - コア毎の現在の周波数のトラッキング <!-- Track current frequency per core -->
-   - CPU のキャッシュ情報の追加 <!-- Add CPU cache information -->
-   - CPU アーキテクチャをエクスポート <!-- Export the CPU architecture -->
-   - スレッドのオンライン／オフライン状態を表示 <!-- Show online/offline status of threads -->
- - メモリ <!-- Memory -->
-   - HugePages のトラッキングを追加 <!-- Add hugepages tracking -->
-   - NUMA ノード毎でもメモリ消費を追跡 <!-- Track memory consumption per NUMA node too -->
+   - ソケット、コア、スレッドのトラッキングのレポートを修正しました
+   - コア毎の NUMA ノードのトラッキング
+   - ソケット毎のベースとターボの周波数のトラッキング
+   - コア毎の現在の周波数のトラッキング
+   - CPU のキャッシュ情報の追加
+   - CPU アーキテクチャをエクスポート
+   - スレッドのオンライン／オフライン状態を表示
+ - メモリ
+   - HugePages のトラッキングを追加
+   - NUMA ノード毎でもメモリ消費を追跡
  - GPU
-   - DRM 情報を別の構造体に分離 <!-- Split DRM information to separate struct -->
-   - DRM 構造体内にデバイスの名前とノードを公開 <!-- Export device names and nodes in DRM struct -->
-   - NVIDIA 構造体内にデバイスの名前とノードを公開 <!-- Export device name and node in NVIDIA struct -->
-   - SR-IOV VF のトラッキングを追加 <!-- Add SR-IOV VF tracking -->
+   - DRM 情報を別の構造体に分離
+   - DRM 構造体内にデバイスの名前とノードを公開
+   - NVIDIA 構造体内にデバイスの名前とノードを公開
+   - SR-IOV VF のトラッキングを追加
 
 ## container\_exec\_user\_group\_cwd
 `POST /1.0/containers/NAME/exec` の実行時に User, Group と Cwd を指定するサポートを追加
-<!--
-Adds support for specifying User, Group and Cwd during `POST /1.0/containers/NAME/exec`.
--->
 
 ## container\_syscall\_intercept
 `security.syscalls.intercept.\*` 設定キーを追加します。これはどのシステムコールを LXD がインターセプトし昇格された権限で処理するかを制御します。
-<!--
-Adds the `security.syscalls.intercept.\*` configuration keys to control
-what system calls will be interecepted by LXD and processed with
-elevated permissions.
--->
 
 ## container\_disk\_shift
 `disk` デバイスに `shift` プロパティを追加します。これは shiftfs のオーバーレイの使用を制御します。
-<!--
-Adds the `shift` property on `disk` devices which controls the use of the shiftfs overlay.
--->
 
 ## storage\_shifted
-ストレージボリュームに新しく `security.shifted` という boolean の設定を導入します。 
-<!--
-Introduces a new `security.shifted` boolean on storage volumes.
--->
+ストレージボリュームに新しく `security.shifted` という boolean の設定を導入します。
 
 これを true に設定すると複数の隔離されたコンテナーが、それら全てがファイルシステムに
 書き込み可能にしたまま、同じストレージボリュームにアタッチするのを許可します。
-<!--
-Setting it to true will allow multiple isolated containers to attach the
-same storage volume while keeping the filesystem writable from all of
-them.
--->
 
 これは shiftfs をオーバーレイファイルシステムとして使用します。
-<!--
-This makes use of shiftfs as an overlay filesystem.
--->
 
 ## resources\_infiniband
 リソース API の一部として infiniband キャラクタデバイス (issm, umad, uverb) の情報を公開します。
-<!--
-Export infiniband character device information (issm, umad, uverb) as part of the resources API.
--->
 
 ## daemon\_storage
 これは `storage.images_volume` と `storage.backups_volume` という 2 つの新しい設定項目を導入します。これらは既存のプール上のストレージボリュームがデーモン全体のイメージとバックアップを保管するのに使えるようにします。
-<!--
-This introduces two new configuration keys `storage.images_volume` and
-`storage.backups_volume` to allow for a storage volume on an existing
-pool be used for storing the daemon-wide images and backups artifacts.
--->
 
 ## instances
 これはインスタンスの概念を導入します。現状ではインスタンスの唯一の種別は "container" です。
-<!--
-This introduces the concept of instances, of which currently the only type is "container".
--->
 
 ## image\_types
 これはイメージに新しく Type フィールドのサポートを導入します。 Type フィールドはイメージがどういう種別かを示します。
-<!--
-This introduces support for a new Type field on images, indicating what type of images they are.
--->
 
 ## resources\_disk\_sata
 ディスクリソース API の構造体を次の項目を含むように拡張します。
-<!--
-Extends the disk resource API struct to include:
--->
 
- - sata デバイス(種別)の適切な検出 <!-- Proper detection of sata devices (type) -->
- - デバイスパス <!-- Device path -->
- - ドライブの RPM <!-- Drive RPM -->
- - ブロックサイズ <!-- Block size -->
- - ファームウェアバージョン <!-- Firmware version -->
- - シリアルナンバー <!-- Serial number -->
+ - sata デバイス(種別)の適切な検出
+ - デバイスパス
+ - ドライブの RPM
+ - ブロックサイズ
+ - ファームウェアバージョン
+ - シリアルナンバー
 
 ## clustering\_roles
 これはクラスタのエントリーに `roles` という新しい属性を追加し、クラスタ内のメンバーが提供する role の一覧を公開します。
-<!--
-This adds a new `roles` attribute to cluster entries, exposing a list of
-roles that the member serves in the cluster.
--->
 
 ## images\_expiry
 イメージの有効期限を設定できます。
-<!--
-This allows for editing of the expiry date on images.
--->
 
 ## resources\_network\_firmware
 ネットワークカードのエントリーに FirmwareVersion フィールドを追加します。
-<!--
-Adds a FirmwareVersion field to network card entries.
--->
 
 ## backup\_compression\_algorithm
 バックアップを作成する (`POST /1.0/containers/<name>/backups`) 際に `compression_algorithm` プロパティのサポートを追加します。
-<!--
-This adds support for a `compression_algorithm` property when creating a backup (`POST /1.0/containers/<name>/backups`).
--->
 
 このプロパティを設定するとデフォルト値 (`backups.compression_algorithm`) をオーバーライドすることができます。
-<!--
-Setting this property overrides the server default value (`backups.compression_algorithm`).
--->
 
 ## ceph\_data\_pool\_name
 Ceph RBD を使ってストレージプールを作成する際にオプショナルな引数 (`ceph.osd.data_pool_name`) のサポートを追加します。
 この引数が指定されると、プールはメタデータは `pool_name` で指定されたプールに保持しつつ実際のデータは `data_pool_name` で指定されたプールに保管するようになります。
-<!--
-This adds support for an optional argument (`ceph.osd.data_pool_name`) when creating
-storage pools using Ceph RBD, when this argument is used the pool will store it's
-actual data in the pool specified with `data_pool_name` while keeping the metadata
-in the pool specified by `pool_name`.
--->
 
 ## container\_syscall\_intercept\_mount
 `security.syscalls.intercept.mount`, `security.syscalls.intercept.mount.allowed`, `security.syscalls.intercept.mount.shift` 設定キーを追加します。
 これらは mount システムコールを LXD にインターセプトさせるかどうか、昇格されたパーミションでどのように処理させるかを制御します。
-<!--
-Adds the `security.syscalls.intercept.mount`,
-`security.syscalls.intercept.mount.allowed`, and
-`security.syscalls.intercept.mount.shift` configuration keys to control whether
-and how the mount system call will be interecepted by LXD and processed with
-elevated permissions.
--->
 
 ## compression\_squashfs
 イメージやバックアップを SquashFS ファイルシステムの形式でインポート／エクスポートするサポートを追加します。
-<!--
-Adds support for importing/exporting of images/backups using SquashFS file system format.
--->
 
 ## container\_raw\_mount
 ディスクデバイスに raw mount オプションを渡すサポートを追加します。
-<!--
-This adds support for passing in raw mount options for disk devices.
--->
 
 ## container\_nic\_routed
 `routed` "nic" デバイスタイプを導入します。
-<!--
-This introduces the `routed` "nic" device type.
--->
 
 ## container\_syscall\_intercept\_mount\_fuse
 `security.syscalls.intercept.mount.fuse` キーを追加します。これはファイルシステムのマウントを fuse 実装にリダイレクトするのに使えます。
 このためには例えば `security.syscalls.intercept.mount.fuse=ext4=fuse2fs` のように設定します。
-<!--
-Adds the `security.syscalls.intercept.mount.fuse` key. It can be used to
-redirect filesystem mounts to their fuse implementation. To this end, set e.g.
-`security.syscalls.intercept.mount.fuse=ext4=fuse2fs`.
--->
 
 ## container\_disk\_ceph
 既存の CEPH RDB もしくは FS を直接 LXD コンテナーに接続できます。
-<!--
-This allows for existing a CEPH RDB or FS to be directly connected to a LXD container.
--->
 
 ## virtual\_machines
 仮想マシンサポートが追加されます。
-<!--
-Add virtual machine support.
--->
 
 ## image\_profiles
 新しいコンテナーを起動するときに、イメージに適用するプロファイルのリストが指定できます。
-<!--
-Allows a list of profiles to be applied to an image when launching a new container. 
--->
 
 ## clustering\_architecture
 クラスタメンバーに `architecture` 属性を追加します。
 この属性はクラスタメンバーのアーキテクチャを示します。
-<!--
-This adds a new `architecture` attribute to cluster members which indicates a cluster
-member's architecture.
--->
 
 ## resources\_disk\_id
 リソース API のディスクのエントリーに device\_id フィールドを追加します。
-<!--
-Add a new device\_id field in the disk entries on the resources API.
--->
 
 ## storage\_lvm\_stripes
 通常のボリュームと thin pool ボリューム上で LVM ストライプを使う機能を追加します。
-<!--
-This adds the ability to use LVM stripes on normal volumes and thin pool volumes.
--->
 
 ## vm\_boot\_priority
 ブートの順序を制御するため nic とディスクデバイスに `boot.priority` プロパティを追加します。
-<!--
-Adds a `boot.priority` property on nic and disk devices to control the boot order.
--->
 
 ## unix\_hotplug\_devices
 UNIX のキャラクタデバイスとブロックデバイスのホットプラグのサポートを追加します。
-<!--
-Adds support for unix char and block device hotplugging.
--->
 
 ## api\_filtering
 インスタンスとイメージに対する GET リクエストの結果をフィルタリングする機能を追加します。
-<!--
-Adds support for filtering the result of a GET request for instances and images.
--->
 
 ## instance\_nic\_network
 NIC デバイスの `network` プロパティのサポートを追加し、管理されたネットワークへ NIC をリンクできるようにします。
 これによりネットワーク設定の一部を引き継ぎ、 IP 設定のより良い検証を行うことができます。
-<!--
-Adds support for the `network` property on a NIC device to allow a NIC to be linked to a managed network.
-This allows it to inherit some of the network's settings and allows better validation of IP settings.
--->
 
 ## clustering\_sizing
 データベースの投票者とスタンバイに対してカスタムの値を指定するサポートです。
 `cluster.max_voters` と `cluster.max_standby` という新しい設定キーが導入され、データベースの投票者とスタンバイの理想的な数を指定できます。
-<!--
-Support specifying a custom values for database voters and standbys.
-The new `cluster.max_voters` and `cluster.max_standby` configuration keys were introduced
-to specify to the ideal number of database voter and standbys.
--->
 
 ## firewall\_driver
 ServerEnvironment 構造体にファイアーウォールのドライバーが使用されていることを示す `Firewall` プロパティを追加します。
-<!--
-Adds the `Firewall` property to the ServerEnvironment struct indicating the firewall driver being used.
--->
 
 ## storage\_lvm\_vg\_force\_reuse
 既存の空でないボリュームグループからストレージボリュームを作成する機能を追加します。
 このオプションの使用には注意が必要です。
 というのは、同じボリュームグループ内に LXD 以外で作成されたボリュームとボリューム名が衝突しないことを LXD が保証できないからです。
 このことはもし名前の衝突が起きたときは LXD 以外で作成されたボリュームを LXD が削除してしまう可能性があることを意味します。
-<!--
-Introduces the ability to create a storage pool from an existing non-empty volume group.
-This option should be used with care, as LXD can then not guarantee that volume name conflicts won't occur
-with non-LXD created volumes in the same volume group.
-This could also potentially lead to LXD deleting a non-LXD volume should name conflicts occur.
--->
 
 ## container\_syscall\_intercept\_hugetlbfs
 mount システムコール・インターセプションが有効にされ hugetlbfs が許可されたファイルシステムとして指定された場合、 LXD は別の hugetlbfs インスタンスを uid と gid をコンテナーの root の uid と gid に設定するマウントオプションを指定してコンテナーにマウントします。
 これによりコンテナー内のプロセスが hugepage を確実に利用できるようにします。
-<!--
-When mount syscall interception is enabled and hugetlbfs is specified as an
-allowed filesystem type LXD will mount a separate hugetlbfs instance for the
-container with the uid and gid mount options set to the container's root uid
-and gid. This ensures that processes in the container can use hugepages.
--->
 
 ## limits\_hugepages
 コンテナーが使用できる hugepage の数を hugetlb cgroup を使って制限できるようにします。
 この機能を使用するには hugetlb cgroup が利用可能になっている必要があります。
 注意: hugetlbfs ファイルシステムの mount システムコールをインターセプトするときは、ホストの hugepage のリソースをコンテナーが使い切ってしまわないように hugepage を制限することを推奨します。
-<!--
-This allows to limit the number of hugepages a container can use through the
-hugetlb cgroup. This means the hugetlb cgroup needs to be available. Note, that
-limiting hugepages is recommended when intercepting the mount syscall for the
-hugetlbfs filesystem to avoid allowing the container to exhaust the host's
-hugepages resources.
--->
 
 ## container\_nic\_routed\_gateway
 この拡張は `ipv4.gateway` と `ipv6.gateway` という NIC の設定キーを追加します。
@@ -1812,39 +952,19 @@ hugepages resources.
 auto に設定した場合は、デフォルトゲートウェイがコンテナー内部に追加され、ホスト側のインタフェースにも同じゲートウェイアドレスが追加されるという現在の挙動と同じになります。
 none に設定すると、デフォルトゲートウェイもアドレスもホスト側のインターフェースには追加されません。
 これにより複数のルートを持つ NIC デバイスをコンテナーに追加できます。
-<!--
-This introduces the `ipv4.gateway` and `ipv6.gateway` NIC config keys that can take a value of either "auto" or
-"none". The default value for the key if unspecified is "auto". This will cause the current behaviour of a default
-gateway being added inside the container and the same gateway address being added to the host-side interface.
-If the value is set to "none" then no default gateway nor will the address be added to the host-side interface.
-This allows multiple routed NIC devices to be added to a container.
--->
 
 ## projects\_restrictions
 この拡張はプロジェクトに `restricted` という設定キーを追加します。
 これによりプロジェクト内でセキュリティセンシティブな機能を使うのを防ぐことができます。
-<!--
-This introduces support for the `restricted` configuration key on project, which
-can prevent the use of security-sensitive features in a project.
--->
 
 ## custom\_volume\_snapshot\_expiry
 この拡張はカスタムボリュームのスナップショットに有効期限を設定できるようにします。
 有効期限は `snapshots.expiry` 設定キーにより個別に設定することも出来ますし、親のカスタムボリュームに設定してそこから作成された全てのスナップショットに自動的にその有効期限を適用することも出来ます。
-<!--
-This allows custom volume snapshots to expiry.
-Expiry dates can be set individually, or by setting the `snapshots.expiry` config key on the parent custom volume which then automatically applies to all created snapshots.
--->
 
 ## volume\_snapshot\_scheduling
 この拡張はカスタムボリュームのスナップショットにスケジュール機能を追加します。
 `snapshots.schedule` と `snapshots.pattern` という 2 つの設定キーが新たに追加されます。
 スナップショットは最短で 1 分毎に作成可能です。
-<!--
-This adds support for custom volume snapshot scheduling. It introduces two new
-configuration keys: `snapshots.schedule` and
-`snapshots.pattern`. Snapshots can be created automatically up to every minute.
--->
 
 ## trust\_ca\_certificates
 この拡張により提供された CA (`server.ca`) によって信頼されたクライアント証明書のチェックが可能になります。
@@ -1852,54 +972,26 @@ configuration keys: `snapshots.schedule` and
 有効な場合、クライアント証明書のチェックを行い、チェックが OK であれば信頼されたパスワードの要求はスキップします。
 ただし、提供された CRL (`ca.crl`) に接続してきたクライアント証明書が含まれる場合は例外です。
 この場合は、パスワードが求められます。
-<!--
-This allows for checking client certificates trusted by the provided CA (`server.ca`).
-It can be enabled by setting `core.trust_ca_certificates` to true.
-If enabled, it will perform the check, and bypass the trusted password if true.
-An exception will be made if the connecting client certificate is in the provided CRL (`ca.crl`).
-In this case, it will ask for the password.
--->
 
 ## snapshot\_disk\_usage
 この拡張はスナップショットのディスク使用量を示す `/1.0/instances/<name>/snapshots/<snapshot>` の出力に `size` フィールドを新たに追加します。
-<!--
-This adds a new `size` field to the output of `/1.0/instances/<name>/snapshots/<snapshot>` which represents the disk usage of the snapshot.
--->
 
 ## clustering\_edit\_roles
 この拡張はクラスターメンバーに書き込み可能なエンドポイントを追加し、ロールの編集を可能にします。
-<!--
-This adds a writable endpoint for cluster members, allowing the editing of their roles.
--->
 
 ## container\_nic\_routed\_host\_address
 この拡張は NIC の設定キーに `ipv4.host_address` と `ipv6.host_address` を追加し、ホスト側の veth インターフェースの IP アドレスを制御できるようにします。
 これは同時に複数の routed NIC を使用し、予測可能な next-hop のアドレスを使用したい場合に有用です。
-<!--
-This introduces the `ipv4.host_address` and `ipv6.host_address` NIC config keys that can be used to control the
-host-side veth interface's IP addresses. This can be useful when using multiple routed NICs at the same time and
-needing a predictable next-hop address to use.
--->
 
 さらにこの拡張は `ipv4.gateway` と `ipv6.gateway` の NIC 設定キーの振る舞いを変更します。
 auto に設定するとコンテナーはデフォルトゲートウェイをそれぞれ `ipv4.host_address` と `ipv6.host_address` で指定した値にします。
-<!--
-This also alters the behaviour of `ipv4.gateway` and `ipv6.gateway` NIC config keys. When they are set to "auto"
-the container will have its default gateway set to the value of `ipv4.host_address` or `ipv6.host_address` respectively.
--->
 
 デフォルト値は次の通りです。
-<!--
-The default values are:
--->
 
 `ipv4.host_address`: 169.254.0.1
 `ipv6.host_address`: fe80::1
 
 これは以前のデフォルトの挙動と後方互換性があります。
-<!--
-This is backward compatible with the previous default behaviour.
--->
 
 ## container\_nic\_ipvlan\_gateway
 この拡張は `ipv4.gateway` と `ipv6.gateway` の NIC 設定キーを追加し auto か none の値を指定できます。
@@ -1907,131 +999,63 @@ This is backward compatible with the previous default behaviour.
 この場合は従来同様の挙動になりコンテナー内部に追加されるデフォルトゲートウェイと同じアドレスがホスト側のインターフェースにも追加されます。
 none に設定された場合、ホスト側のインターフェースにはデフォルトゲートウェイもアドレスも追加されません。
 これによりコンテナーに ipvlan の NIC デバイスを複数追加することができます。
-<!--
-This introduces the `ipv4.gateway` and `ipv6.gateway` NIC config keys that can take a value of either "auto" or
-"none". The default value for the key if unspecified is "auto". This will cause the current behaviour of a default
-gateway being added inside the container and the same gateway address being added to the host-side interface.
-If the value is set to "none" then no default gateway nor will the address be added to the host-side interface.
-This allows multiple ipvlan NIC devices to be added to a container.
--->
 
 ## resources\_usb\_pci
 この拡張は `/1.0/resources` の出力に USB と PC デバイスを追加します。
-<!--
-This adds USB and PCI devices to the output of `/1.0/resources`.
--->
 
 ## resources\_cpu\_threads\_numa
 この拡張は numa\_node フィールドをコアごとではなくスレッドごとに記録するように変更します。
 これは一部のハードウェアでスレッドを異なる NUMA ドメインに入れる場合があるようなのでそれに対応するためのものです。
-<!--
-This indicates that the numa\_node field is now recorded per-thread
-rather than per core as some hardware apparently puts threads in
-different NUMA domains.
--->
 
 ## resources\_cpu\_core\_die
 それぞれのコアごとに `die_id` 情報を公開します。
-<!--
-Exposes the `die_id` information on each core.
--->
 
 ## api\_os
 この拡張は `/1.0` 内に `os` と `os_version` の 2 つのフィールドを追加します。
-<!--
-This introduces two new fields in `/1.0`, `os` and `os_version`.
--->
 
 これらの値はシステム上の os-release のデータから取得されます。
-<!--
-Those are taken from the os-release data on the system.
--->
 
 ## container\_nic\_routed\_host\_table
 この拡張は `ipv4.host_table` と `ipv6.host_table` という NIC の設定キーを導入します。
 これで指定した ID のカスタムポリシーのルーティングテーブルにインスタンスの IP のための静的ルートを追加できます。
-<!--
-This introduces the `ipv4.host_table` and `ipv6.host_table` NIC config keys that can be used to add static routes
-for the instance's IPs to a custom policy routing table by ID.
--->
 
 ## container\_nic\_ipvlan\_host\_table
 この拡張は `ipv4.host_table` と `ipv6.host_table` という NIC の設定キーを導入します。
 これで指定した ID のカスタムポリシーのルーティングテーブルにインスタンスの IP のための静的ルートを追加できます。
-<!--
-This introduces the `ipv4.host_table` and `ipv6.host_table` NIC config keys that can be used to add static routes
-for the instance's IPs to a custom policy routing table by ID.
--->
 
 ## container\_nic\_ipvlan\_mode
 この拡張は `mode` という NIC の設定キーを導入します。
 これにより `ipvlan` モードを `l2` か `l3s` のいずれかに切り替えられます。
 指定しない場合、デフォルトは `l3s` （従来の挙動）です。
-<!--
-This introduces the `mode` NIC config key that can be used to switch the `ipvlan` mode into either `l2` or `l3s`.
-If not specified, the default value is `l3s` (which is the old behavior).
--->
 
 `l2` モードでは `ipv4.address` と `ipv6.address` キーは CIDR か単一アドレスの形式を受け付けます。
 単一アドレスの形式を使う場合、デフォルトのサブネットのサイズは IPv4 では /24 、 IPv6 では /64 となります。
-<!--
-In `l2` mode the `ipv4.address` and `ipv6.address` keys will accept addresses in either CIDR or singular formats.
-If singular format is used, the default subnet size is taken to be /24 and /64 for IPv4 and IPv6 respectively.
--->
 
 `l2` モードでは `ipv4.gateway` と `ipv6.gateway` キーは単一の IP アドレスのみを受け付けます。
-<!--
-In `l2` mode the `ipv4.gateway` and `ipv6.gateway` keys accept only a singular IP address.
--->
 
 ## resources\_system
 この拡張は `/1.0/resources` の出力にシステム情報を追加します。
-<!--
-This adds system information to the output of `/1.0/resources`.
--->
 
 ## images\_push\_relay
 この拡張はイメージのコピーに push と relay モードを追加します。
 また以下の新しいエンドポイントも追加します。
-<!--
-This adds the push and relay modes to image copy.
-It also introduces the following new endpoint:
--->
  - `POST 1.0/images/<fingerprint>/export`
 
 ## network\_dns\_search
 この拡張はネットワークに `dns.search` という設定オプションを追加します。
-<!--
-This introduces the `dns.search` config option on networks.
--->
 
 ## container\_nic\_routed\_limits
 この拡張は routed NIC に `limits.ingress`, `limits.egress`, `limits.max` を追加します。
-<!--
-This introduces `limits.ingress`, `limits.egress` and `limits.max` for routed NICs.
--->
 
 ## instance\_nic\_bridged\_vlan
 この拡張は `bridged` NIC に `vlan` と `vlan.tagged` の設定を追加します。
-<!--
-This introduces the `vlan` and `vlan.tagged` settings for `bridged` NICs.
--->
 
 `vlan` には参加するタグなし VLAN を指定し、 `vlan.tagged` は参加するタグ VLAN のカンマ区切りリストを指定します。
-<!--
-`vlan` specifies the untagged VLAN to join, and `vlan.tagged` is a comma delimited list of tagged VLANs to join.
--->
 
 ## network\_state\_bond\_bridge
 この拡張は /1.0/networks/NAME/state API に bridge と bond のセクションを追加します。
-<!--
-This adds a "bridge" and "bond" section to the /1.0/networks/NAME/state API.
--->
 
 これらはそれぞれの特定のタイプに関連する追加の状態の情報を含みます。
-<!--
-Those contain additional state information relevant to those particular types.
--->
 
 Bond:
 
@@ -2055,50 +1079,28 @@ Bridge:
 ## resources\_cpu\_isolated
 この拡張は CPU スレッドに `Isolated` プロパティーを追加します。
 これはスレッドが物理的には `Online` ですがタスクを受け付けないように設定しているかを示します。
-<!--
-Add an `Isolated` property on CPU threads to indicate if the thread is
-physically `Online` but is configured not to accept tasks.
--->
 
 ## usedby\_consistency
 この拡張により、可能な時は UsedBy が適切な ?project= と ?target= に対して一貫性があるようになるはずです。
-<!--
-This extension indicates that UsedBy should now be consistent with
-suitable ?project= and ?target= when appropriate.
--->
 
 UsedBy を持つ 5 つのエンティティーは以下の通りです。
-<!--
-The 5 entities that have UsedBy are:
--->
 
- - プロファイル <!-- Profiles -->
- - プロジェクト <!-- Projects -->
- - ネットワーク <!-- Networks -->
- - ストレージプール <!-- Storage pools -->
- - ストレージボリューム <!-- Storage volumes -->
+ - プロファイル
+ - プロジェクト
+ - ネットワーク
+ - ストレージプール
+ - ストレージボリューム
 
 ## custom\_block\_volumes
 この拡張によりカスタムブロックボリュームを作成しインスタンスにアタッチできるようになります。
 カスタムストレージボリュームの作成時に `--type` フラグが新規追加され、 `fs` と `block` の値を受け付けます。
-<!--
-This adds support for creating and attaching custom block volumes to instances.
-It introduces the new `-\-type` flag when creating custom storage volumes, and accepts the values `fs` and `block`.
--->
 
 ## clustering\_failure\_domains
 この拡張は `PUT /1.0/cluster/<node>` API に `failure\_domain` フィールドを追加します。
 これはノードの failure domain を設定するのに使えます。
-<!--
-This extension adds a new `failure\_domain` field to the `PUT /1.0/cluster/<node>` API,
-which can be used to set the failure domain of a node.
--->
 
 ## container\_syscall\_filtering\_allow\_deny\_syntax
 いくつかのシステムコールに関連したコンテナーの設定キーが更新されました。
-<!--
-A number of new syscalls related container configuration keys were updated.
--->
 
  * `security.syscalls.deny_default`
  * `security.syscalls.deny_compat`
@@ -2107,113 +1109,54 @@ A number of new syscalls related container configuration keys were updated.
 
 ## resources\_gpu\_mdev
 /1.0/resources の利用可能な媒介デバイス (mediated device) のプロファイルとデバイスを公開します。
-<!--
-Expose available mediated device profiles and devices in /1.0/resources.
--->
 
 ## console\_vga\_type
 この拡張は `/1.0/console` エンドポイントが `?type=` 引数を取るように拡張します。
 これは `console` (デフォルト) か `vga` (この拡張で追加される新しいタイプ) を指定可能です。
-<!--
-This extends the `/1.0/console` endpoint to take a `?type=` argument, which can
-be set to `console` (default) or `vga` (the new type added by this extension).
--->
 
 `/1.0/<instance name>/console?type=vga` に POST する際はメタデータフィールド内の操作の結果ウェブソケットにより返されるデータはターゲットの仮想マシンの SPICE unix ソケットにアタッチされた双方向のプロキシーになります。
-<!--
-When POST'ing to `/1.0/<instance name>/console?type=vga` the data websocket
-returned by the operation in the metadata field will be a bidirectional proxy
-attached to a SPICE unix socket of the target virtual machine.
--->
 
 ## projects\_limits\_disk
 利用可能なプロジェクトの設定キーに `limits.disk` を追加します。
 これが設定されるとプロジェクト内でインスタンスボリューム、カスタムボリューム、イメージボリュームが使用できるディスクスペースの合計の量を制限できます。
-<!--
-Add `limits.disk` to the available project configuration keys. If set, it limits
-the total amount of disk space that instances volumes, custom volumes and images
-volumes can use in the project.
--->
 
 ## network\_type\_macvlan
 ネットワークタイプ `macvlan` のサポートを追加し、このネットワークタイプに `parent` 設定キーを追加します。
 これは NIC デバイスインターフェースを作る際にどの親インターフェースを使用するべきかを指定します。
-<!--
-Adds support for additional network type `macvlan` and adds `parent` configuration key for this network type to
-specify which parent interface should be used for creating NIC device interfaces on top of.
--->
 
 さらに `macvlan` の NIC に `network` 設定キーを追加します。
 これは NIC デバイスの設定の基礎として使う network を指定します。
-<!--
-Also adds `network` configuration key support for `macvlan` NICs to allow them to specify the associated network of
-the same type that they should use as the basis for the NIC device.
--->
 
 ## network\_type\_sriov
 ネットワークタイプ `sriov` のサポートを追加し、このネットワークタイプに `parent` 設定キーを追加します。
 これは NIC デバイスインターフェースを作る際にどの親インターフェースを使用するべきかを指定します。
-<!--
-Adds support for additional network type `sriov` and adds `parent` configuration key for this network type to
-specify which parent interface should be used for creating NIC device interfaces on top of.
--->
 
 さらに `sriov` の NIC に `network` 設定キーを追加します。
 これは NIC デバイスの設定の基礎として使う network を指定します。
-<!--
-Also adds `network` configuration key support for `sriov` NICs to allow them to specify the associated network of
-the same type that they should use as the basis for the NIC device.
--->
 
 ## container\_syscall\_intercept\_bpf\_devices
 この拡張はコンテナー内で bpf のシステムコールをインターセプトする機能を提供します。具体的には device cgroup の bpf のプログラムを管理できるようにします。
-<!--
-This adds support to intercept the bpf syscall in containers. Specifically, it allows to manage device cgroup bpf programs.
--->
 
 ## network\_type\_ovn
 ネットワークタイプ `ovn` のサポートを追加し、 `bridge` タイプのネットワークを `parent` として設定できるようにします。
-<!--
-Adds support for additional network type `ovn` with the ability to specify a `bridge` type network as the `parent`.
--->
 
 `ovn` という新しい NIC のデバイスタイプを追加します。これにより `network` 設定キーにどの `ovn` のタイプのネットワークに接続すべきかを指定できます。
-<!--
-Introduces a new NIC device type of `ovn` which allows the `network` configuration key to specify which `ovn`
-type network they should connect to.
--->
 
 さらに全ての `ovn` ネットワークと NIC デバイスに適用される 2 つのグローバルの設定キーを追加します。
-<!--
-Also introduces two new global config keys that apply to all `ovn` networks and NIC devices:
--->
 
- - network.ovn.integration\_bridge - 使用する OVS 統合ブリッジ <!-- the OVS integration bridge to use. -->
- - network.ovn.northbound\_connection - OVN northbound データベース接続文字列 <!-- the OVN northbound database connection string. -->
+ - network.ovn.integration\_bridge - 使用する OVS 統合ブリッジ
+ - network.ovn.northbound\_connection - OVN northbound データベース接続文字列
 
 ## projects\_networks
 プロジェクトに `features.networks` 設定キーを追加し、プロジェクトがネットワークを保持できるようにします。
-<!--
-Adds the `features.networks` config key to projects and the ability for a project to hold networks.
--->
 
 ## projects\_networks\_restricted\_uplinks
 プロジェクトに `restricted.networks.uplinks` 設定キーを追加し、プロジェクト内で作られたネットワークがそのアップリンクのネットワークとしてどのネットワークが使えるかを（カンマ区切りリストで）指定します。
-<!--
-Adds the `restricted.networks.uplinks` project config key to indicate (as a comma delimited list) which networks
-the networks created inside the project can use as their uplink network.
--->
 
 ## custom\_volume\_backup
 カスタムボリュームのバックアップサポートを追加します。
-<!--
-Add custom volume backup support.
--->
 
 この拡張は以下の新しい API エンドポイント （詳細は [RESTful API](rest-api.md) を参照）を含みます。
-<!--
-This includes the following new endpoints (see [RESTful API](rest-api.md) for details):
--->
 
 * `GET /1.0/storage-pools/<pool>/<type>/<volume>/backups`
 * `POST /1.0/storage-pools/<pool>/<type>/<volume>/backups`
@@ -2225,374 +1168,181 @@ This includes the following new endpoints (see [RESTful API](rest-api.md) for de
 * `GET /1.0/storage-pools/<pool>/<type>/<volume>/backups/<name>/export`
 
 以下の既存のエンドポイントが変更されます。
-<!--
-The following existing endpoint has been modified:
--->
 
- * `POST /1.0/storage-pools/<pool>/<type>/<volume>` が新しいソースタイプとして `backup` を受け付けます <!-- accepts the new source type `backup` -->
+ * `POST /1.0/storage-pools/<pool>/<type>/<volume>` が新しいソースタイプとして `backup` を受け付けます
 
 ## backup\_override\_name
 `InstanceBackupArgs` に `Name` フィールドを追加し、バックアップをリストアする際に別のインスタンス名を指定できるようにします。
-<!--
-Adds `Name` field to `InstanceBackupArgs` to allow specifying a different instance name when restoring a backup.
--->
 
 `StoragePoolVolumeBackupArgs` に `Name` と `PoolName` フィールドを追加し、カスタムボリュームのバックアップをリストアする際に別のボリューム名を指定できるようにします。
-<!--
-Adds `Name` and `PoolName` fields to `StoragePoolVolumeBackupArgs` to allow specifying a different volume name
-when restoring a custom volume backup.
--->
 
 ## storage\_rsync\_compression
 ストレージプールに `rsync.compression` 設定キーを追加します。
 このキーはストレージプールをマイグレートする際に rsync での圧縮を無効にするために使うことができます。
-<!--
-Adds `rsync.compression` config key to storage pools. This key can be used
-to disable compression in rsync while migrating storage pools.
--->
 
 ## network\_type\_physical
 新たに `physical` というネットワークタイプのサポートを追加し、 `ovn` ネットワークのアップリンクとして使用できるようにします。
-<!--
-Adds support for additional network type `physical` that can be used as an uplink for `ovn` networks.
--->
 
 `physical` ネットワークの `parent` で指定するインターフェースは `ovn` ネットワークのゲートウェイに接続されます。
-<!--
-The interface specified by `parent` on the `physical` network will be connected to the `ovn` network's gateway.
--->
 
 ## network\_ovn\_external\_subnets
 `ovn` ネットワークがアップリンクネットワークの外部のサブネットを使用できるようにします。
-<!--
-Adds support for `ovn` networks to use external subnets from uplink networks.
--->
 
 `physical` ネットワークに `ipv4.routes` と `ipv6.routes` の設定を追加します。
 これは子供の OVN ネットワークで `ipv4.routes.external` と `ipv6.routes.external` の設定で使用可能な外部のルートを指定します。
-<!--
-Introduces the `ipv4.routes` and `ipv6.routes` setting on `physical` networks that defines the external routes
-allowed to be used in child OVN networks in their `ipv4.routes.external` and `ipv6.routes.external` settings.
--->
 
 プロジェクトに `restricted.networks.subnets` 設定を追加します。
 これはプロジェクト内の OVN ネットワークで使用可能な外部のサブネットを指定します（未設定の場合はアップリンクネットワークで定義される全てのルートが使用可能です）。
-<!--
-Introduces the `restricted.networks.subnets` project setting that specifies which external subnets are allowed to
-be used by OVN networks inside the project (if not set then all routes defined on the uplink network are allowed).
--->
 
 ## network\_ovn\_nat
 `ovn` ネットワークに `ipv4.nat` と `ipv6.nat` の設定を追加します。
-<!--
-Adds support for `ipv4.nat` and `ipv6.nat` settings on `ovn` networks.
--->
 
 これらの設定（訳注: ipv4.nat や ipv6.nat）を未設定でネットワークを作成する際、（訳注: ipv4.address や ipv6.address が未設定あるいは auto の場合に）対応するアドレス （訳注: ipv4.nat であれば ipv4.address、ipv6.nat であれば ipv6.address）がサブネット用に生成される場合は適切な NAT が生成され、ipv4.nat や ipv6.nat は true に設定されます。
-<!--
-When creating the network if these settings are unspecified, and an equivalent IP address is being generated for
-the subnet, then the appropriate NAT setting will added set to `true`.
--->
 
 この設定がない場合は値は `false` として扱われます。
-<!--
-If the setting is missing then the value is taken as `false`.
--->
 
 ## network\_ovn\_external\_routes\_remove
 `ovn` ネットワークから `ipv4.routes.external` と `ipv6.routes.external` の設定を削除します。
-<!--
-Removes the settings `ipv4.routes.external` and `ipv6.routes.external` from `ovn` networks.
--->
 
 ネットワークと NIC レベルの両方で指定するのではなく、 `ovn` NIC タイプ上で等価な設定を使えます。
-<!--
-The equivalent settings on the `ovn` NIC type can be used instead for this, rather than having to specify them
-both at the network and NIC level.
--->
 
 ## tpm\_device\_type
 `tpm` デバイスタイプを導入します。
-<!--
-This introduces the `tpm` device type.
--->
 
 ## storage\_zfs\_clone\_copy\_rebase
 zfs.clone\_copy に `rebase` という値を導入します。
 この設定で LXD は先祖の系列上の "image" データセットを追跡し、その最上位に対して send/receive を実行します。
-<!--
-This introduces `rebase` as a value for zfs.clone\_copy causing LXD to
-track down any "image" dataset in the ancestry line and then perform
-send/receive on top of that.
--->
 
 ## gpu\_mdev
 これは仮想 CPU のサポートを追加します。
 GPU デバイスに `mdev` 設定キーを追加し、i915-GVTg\_V5\_4 のようなサポートされる mdev のタイプを指定します。
-<!--
-This adds support for virtual GPUs. It introduces the `mdev` config key for GPU devices which takes
-a supported mdev type, e.g. i915-GVTg\_V5\_4.
--->
 
 ## resources\_pci\_iommu
 これはリソース API の PCI エントリーに IOMMUGroup フィールドを追加します。
-<!--
-This adds the IOMMUGroup field for PCI entries in the resources API.
--->
 
 ## resources\_network\_usb
 リソース API のネットワークカードエントリーに usb\_address フィールドを追加します。
-<!--
-Adds the usb\_address field to the network card entries in the resources API.
--->
 
 ## resources\_disk\_address
 リソース API のディスクエントリーに usb\_address と pci\_address フィールドを追加します。
-<!--
-Adds the usb\_address and pci\_address fields to the disk entries in the resources API.
--->
 
 ## network\_physical\_ovn\_ingress\_mode
 `physical` ネットワークに `ovn.ingress_mode` 設定を追加します。
-<!--
-Adds `ovn.ingress_mode` setting for `physical` networks.
--->
 
 OVN NIC ネットワークの外部 IP アドレスがアップリンクネットワークにどのように広告されるかの方法を設定します。
-<!--
-Sets the method that OVN NIC external IPs will be advertised on uplink network.
--->
 
 `l2proxy` (proxy ARP/NDP) か `routed` のいずれかを指定します。
-<!--
-Either `l2proxy` (proxy ARP/NDP) or `routed`.
--->
 
 ## network\_ovn\_dhcp
 `ovn` ネットワークに `ipv4.dhcp` と `ipv6.dhcp` の設定を追加します。
-<!--
-Adds `ipv4.dhcp` and `ipv6.dhcp` settings for `ovn` networks.
--->
 
 DHCP (と IPv6 の RA) を無効にできます。デフォルトはオンです。
-<!--
-Allows DHCP (and RA for IPv6) to be disabled. Defaults to on.
--->
 
 ## network\_physical\_routes\_anycast
 `physical` ネットワークに `ipv4.routes.anycast` と `ipv6.routes.anycast` の boolean の設定を追加します。デフォルトは false です。
-<!--
-Adds `ipv4.routes.anycast` and `ipv6.routes.anycast` boolean settings for `physical` networks. Defaults to false.
--->
 
 `ovn.ingress_mode=routed` と共に使うと physical ネットワークをアップリンクとして使う OVN ネットワークでサブネット／ルートのオーバーラップ検出を緩和できます。
-<!--
-Allows OVN networks using physical network as uplink to relax external subnet/route overlap detection when used
-with `ovn.ingress_mode=routed`.
--->
 
 ## projects\_limits\_instances
 `limits.instances` を利用可能なプロジェクトの設定キーに追加します。
 設定するとプロジェクト内で使われるインスタンス（VMとコンテナー）の合計数を制限します。
-<!--
-Adds `limits.instances` to the available project configuration keys. If set, it
-limits the total number of instances (VMs and containers) that can be used in the project.
--->
 
 ## network\_state\_vlan
 これは /1.0/networks/NAME/state API に "vlan" セクションを追加します。
-<!--
-This adds a "vlan" section to the /1.0/networks/NAME/state API.
--->
 
 これらは VLAN インターフェースに関連する追加の状態の情報を含みます。
-<!--
-Those contain additional state information relevant to VLAN interfaces:
--->
  - lower\_device
  - vid
 
 ## instance\_nic\_bridged\_port\_isolation
 これは `bridged` NIC に `security.port_isolation` のフィールドを追加します。
-<!--
-This adds the `security.port_isolation` field for bridged NIC instances.
--->
 
 ## instance\_bulk\_state\_change
 一括状態変更（詳細は [REST API](rest-api.md) を参照）のために次のエンドポイントを追加します。
-<!--
-Adds the following endpoint for bulk state change (see [RESTful API](rest-api.md) for details):
--->
 
 * `PUT /1.0/instances`
 
 ## network\_gvrp
 これはオプショナルな `gvrp` プロパティを `macvlan` と `physical` ネットワークに追加し、
 さらに `ipvlan`, `macvlan`, `routed`, `physical` NIC デバイスにも追加します。
-<!--
-This adds an optional `gvrp` property to `macvlan` and `physical` networks,
-and to `ipvlan`, `macvlan`, `routed` and `physical` NIC devices.
--->
 
 設定された場合は、これは VLAN が GARP VLAN Registration Protocol を使って登録すべきかどうかを指定します。
 デフォルトは false です。
-<!--
-When set, this specifies whether the VLAN should be registered using GARP VLAN
-Registration Protocol. Defaults to false.
--->
 
 ## instance\_pool\_move
 これは `POST /1.0/instances/NAME` API に `pool` フィールドを追加し、プール間でインスタンスのルートディスクを簡単に移動できるようにします。
-<!--
-This adds a `pool` field to the `POST /1.0/instances/NAME` API,
-allowing for easy move of an instance root disk between pools.
--->
 
 ## gpu\_sriov
 これは SR-IOV を有効にした GPU のサポートを追加します。
 これにより `sriov` という GPU タイプのプロパティーが追加されます。
-<!--
-This adds support for SR-IOV enabled GPUs.
-It introduces the `sriov` gpu type property.
--->
 
 ## pci\_device\_type
 これは `pci` デバイスタイプを追加します。
-<!--
-This introduces the `pci` device type.
--->
 
 ## storage\_volume\_state
 `/1.0/storage-pools/POOL/volumes/VOLUME/state` API エンドポイントを新規追加しボリュームの使用量を取得できるようにします。
-<!--
-Add new `/1.0/storage-pools/POOL/volumes/VOLUME/state` API endpoint to get usage data on a volume.
--->
 
 ## network\_acl
 これは `/1.0/network-acls` の API エンドポイントプリフィクス以下の API にネットワークの ACL のコンセプトを追加します。
-<!--
-This adds the concept of network ACLs to API under the API endpoint prefix `/1.0/network-acls`.
--->
 
 ## migration\_stateful
 `migration.stateful` という設定キーを追加します。
-<!--
-Add a new `migration.stateful` config key.
--->
 
 ## disk\_state\_quota
 これは `disk` デバイスに `size.state` というデバイス設定キーを追加します。
-<!--
-This introduces the `size.state` device config key on `disk` devices.
--->
 
 ## storage\_ceph\_features
 ストレージプールに `ceph.rbd.features` 設定キーを追加し、新規ボリュームに使用する RBD の機能を制御します。
-<!--
-Adds a new `ceph.rbd.features` config key on storage pools to control the RBD features used for new volumes.
--->
 
 ## projects\_compression
 `backups.compression_algorithm` と `images.compression_algorithm` 設定キーを追加します。
 これらによりプロジェクトごとのバックアップとイメージの圧縮の設定が出来るようになります。
-<!--
-Adds new `backups.compression_algorithm` and `images.compression_algorithm` config keys which
-allows configuration of backup and image compression per-project.
--->
 
 ## projects\_images\_remote\_cache\_expiry
 プロジェクトに `images.remote_cache_expiry` 設定キーを追加します。
 これを設定するとキャッシュされたリモートのイメージが指定の日数使われない場合は削除されるようになります。
-<!--
-Add new `images.remote_cache_expiry` config key to projects,
-allowing for set number of days after which an unused cached remote image will be flushed.
--->
 
 ## certificate\_project
 API 内の証明書に `restricted` と `projects` プロパティーを追加します。
 `projects` は証明書がアクセスしたプロジェクト名の一覧を保持します。
-<!--
-Adds a new `restricted` property to certificates in the API as well as
-`projects` holding a list of project names that the certificate has
-access to.
--->
 
 ## network\_ovn\_acl
 OVN ネットワークと OVN NIC に `security.acls` プロパティーを追加します。
 これにより ネットワークに ACL をかけられるようになります。
-<!--
-Adds a new `security.acls` property to OVN networks and OVN NICs, allowing Network ACLs to be applied.
--->
 
 ## projects\_images\_auto\_update
 `images.auto_update_cached` と `images.auto_update_interval` 設定キーを追加します。
 これらによりプロジェクト内のイメージの自動更新を設定できるようになります。
-<!--
-Adds new `images.auto_update_cached` and `images.auto_update_interval` config keys which
-allows configuration of images auto update in projects
--->
 
 ## projects\_restricted\_cluster\_target
 プロジェクトに `restricted.cluster.target` 設定キーを追加します。
 これによりどのクラスターメンバーにワークロードを配置するかやメンバー間のワークロードを移動する能力を指定する --target オプションをユーザーに使わせないように出来ます。
-<!--
-Adds new `restricted.cluster.target` config key to project which prevent the user from using -\-target
-to specify what cluster member to place a workload on or the ability to move a workload between members.
--->
 
 ## images\_default\_architecture
 `images.default_architecture` をグローバルの設定キーとプロジェクトごとの設定キーとして追加します。
 これはイメージリクエストの一部として明示的に指定しなかった場合にどのアーキテクチャーを使用するかを LXD に指定します。
-<!--
-Adds new `images.default_architecture` global config key and matching per-project key which lets user tell LXD
-what architecture to go with when no specific one is specified as part of the image request.
--->
 
 ## network\_ovn\_acl\_defaults
 OVN ネットワークと NIC に `security.acls.default.{in,e}gress.action` と `security.acls.default.{in,e}gress.logged` 設定キーを追加します。
 これは削除された ACL の `default.action` と `default.logged` キーの代わりになるものです。
-<!--
-Adds new `security.acls.default.{in,e}gress.action` and `security.acls.default.{in,e}gress.logged` config keys for
-OVN networks and NICs. This replaces the removed ACL `default.action` and `default.logged` keys.
--->
 
 ## gpu\_mig
 これは NVIDIA MIG のサポートを追加します。
 `mig` gputype と関連する設定キーを追加します。
-<!--
-This adds support for NVIDIA MIG. It introduces the `mig` gputype and associated config keys.
--->
 
 ## project\_usage
 プロジェクトに現在のリソース割り当ての情報を取得する API エンドポイントを追加します。
 API の `GET /1.0/projects/<name>/state` で利用できます。
-<!--
-Adds an API endpoint to get current resource allocations in a project.
-Accessible at API `GET /1.0/projects/<name>/state`.
--->
 
 ## network\_bridge\_acl
 `bridge` ネットワークに `security.acls` 設定キーを追加し、ネットワーク ACL を適用できるようにします。
-<!--
-Adds a new `security.acls` config key to `bridge` networks, allowing Network ACLs to be applied.
--->
 
 さらにマッチしなかったトラフィックに対するデフォルトの振る舞いを指定する `security.acls.default.{in,e}gress.action` と `security.acls.default.{in,e}gress.logged` 設定キーを追加します。
-<!--
-Also adds `security.acls.default.{in,e}gress.action` and `security.acls.default.{in,e}gress.logged` config keys for
-specifying the default behaviour for unmatched traffic.
--->
 
 ## warnings
 LXD の警告 API です。
-<!--
-Warning API for LXD.
--->
 
 この拡張は次のエンドポイントを含みます（詳細は [Restful API](rest-api.md) 参照）。
-<!--
-This includes the following endpoints (see  [Restful API](rest-api.md) for details):
--->
 
 * `GET /1.0/warnings`
 
@@ -2602,110 +1352,54 @@ This includes the following endpoints (see  [Restful API](rest-api.md) for detai
 
 ## projects\_restricted\_backups\_and\_snapshots
 プロジェクトに `restricted.backups` と `restricted.snapshots` 設定キーを追加し、ユーザーがバックアップやスナップショットを作成できないようにします。
-<!--
-Adds new `restricted.backups` and `restricted.snapshots` config keys to project which
-prevents the user from creation of backups and snapshots.
--->
 
 ## clustering\_join\_token
 トラスト・パスワードを使わずに新しいクラスターメンバーを追加する際に使用する参加トークンをリクエストするための `POST /1.0/cluster/members` API エンドポイントを追加します。
-<!--
-Adds `POST /1.0/cluster/members` API endpoint for requesting a join token used when adding new cluster members
-without using the trust password.
--->
 
 ## clustering\_description
 クラスターメンバーに編集可能な説明を追加します。
-<!--
-Adds an editable description to the cluster members.
--->
 
 ## server\_trusted\_proxy
 `core.https_trusted_proxy` のサポートを追加します。 この設定は、LXD が HAProxy スタイルの connection ヘッダーをパースし、そのような（HAProxy などのリバースプロキシーサーバーが LXD の前面に存在するような）接続の場合でヘッダーが存在する場合は、プロキシーサーバーが（ヘッダーで）提供するリクエストの（実際のクライアントの）ソースアドレスへ（LXDが）ソースアドレスを書き換え（て、LXDの管理するクラスターにリクエストを送出し）ます。（LXDのログにもオリジナルのアドレスを記録します）
-<!--
-This introduces support for `core.https_trusted_proxy` which has LXD
-parse a HAProxy style connection header on such connections and if
-present, will rewrite the request's source address to that provided by
-the proxy server.
--->
 
 ## clustering\_update\_cert
 クラスター全体に適用されるクラスター証明書を更新するための `PUT /1.0/cluster/certificate` エンドポイントを追加します。
-<!--
-Adds `PUT /1.0/cluster/certificate` endpoint for updating the cluster
-certificate across the whole cluster
--->
 
 ## storage\_api\_project
 これはプロジェクト間でカスタムストレージボリュームをコピー／移動できるようにします。
-<!--
-This adds support for copy/move custom storage volumes between projects.
--->
 
 ## server\_instance\_driver\_operational
 これは `/1.0` エンドポイントの `driver` の出力をサーバー上で実際にサポートされ利用可能であるドライバーのみを含めるように修正します（LXD に含まれるがサーバー上では利用不可なドライバーも含めるのとは違って）。
-<!--
-This modifies the `driver` output for the `/1.0` endpoint to only include drivers which are actually supported and
-operational on the server (as opposed to being included in LXD but not operational on the server).
--->
 
 ## server\_supported\_storage\_drivers
 これはサーバーの環境情報にサポートされているストレージドライバーの情報を追加します。
-<!--
-This adds supported storage driver info to server environment info.
--->
 
 ## event\_lifecycle\_requestor\_address
 lifecycle requestor に address のフィールドを追加します。
-<!--
-Adds a new address field to lifecycle requestor.
--->
 
 ## resources\_gpu\_usb
 リソース API 内の ResourcesGPUCard (GPU エントリ) に USBAddress (usb\_address) を追加します。
-<!--
-Add a new USBAddress (usb\_address) field to ResourcesGPUCard (GPU entries) in the resources API.
--->
 
 ## clustering\_evacuation
 クラスターメンバーを待避と復元するための `POST /1.0/cluster/members/<name>/state` エンドポイントを追加します。
 また設定キー `cluster.evacuate` と `volatile.evacuate.origin` も追加します。
 これらはそれぞれ待避の方法 (`auto`, `stop` or `migrate`) と移動したインスタンスのオリジンを設定します。
-<!--
-Adds `POST /1.0/cluster/members/<name>/state` endpoint for evacuating and restoring cluster members.
-It also adds the config keys `cluster.evacuate` and `volatile.evacuate.origin` for setting the evacuation method (`auto`, `stop` or `migrate`) and the origin of any migrated instance respectively.
--->
 
 ## network\_ovn\_nat\_address
 これは LXD の `ovn` ネットワークに `ipv4.nat.address` と `ipv6.nat.address` 設定キーを追加します。
 これらのキーで OVN 仮想ネットワークからの外向きトラフィックのソースアドレスを制御します。
 これらのキーは OVN ネットワークのアップリンクネットワークが `ovn.ingress_mode=routed` という設定を持つ場合にのみ指定可能です。
-<!--
-This introduces the `ipv4.nat.address` and `ipv6.nat.address` configuration keys for LXD `ovn` networks.
-Those keys control the source address used for outbound traffic from the OVN virtual network.
-These keys can only be specified when the OVN network's uplink network has `ovn.ingress_mode=routed`.
--->
 
 ## network\_bgp
 これは LXD を BGP ルーターとして振る舞わせルートを `bridge` と `ovn` ネットワークに広告するようにします。
-<!--
-This introduces support for LXD acting as a BGP router to advertise
-routes to `bridge` and `ovn` networks.
--->
 
 以下のグローバル設定が追加されます。
-<!--
-This comes with the addition to global config of:
--->
 
  - `core.bgp_address`
  - `core.bgp_asn`
  - `core.bgp_routerid`
 
 以下のネットワーク設定キーが追加されます（`bridge` と `physical`）。
-<!--
-The following network configurations keys (`bridge` and `physical`):
--->
 
  - `bgp.peers.<name>.address`
  - `bgp.peers.<name>.asn`
@@ -2714,9 +1408,6 @@ The following network configurations keys (`bridge` and `physical`):
  - `bgp.ipv6.nexthop`
 
 そして下記の NIC 特有な設定が追加されます（nictype が `bridged` の場合）。
-<!--
-And the following NIC-specific configuration keys (`bridged` nictype):
--->
 
  - `ipv4.routes.external`
  - `ipv6.routes.external`
@@ -2724,95 +1415,50 @@ And the following NIC-specific configuration keys (`bridged` nictype):
 ## network\_forward
 これはネットワークアドレスのフォワード機能を追加します。
 `bridge` と `ovn` ネットワークで外部 IP アドレスを定義して対応するネットワーク内の内部 IP アドレス(複数指定可能) にフォワード出来ます。
-<!--
-This introduces the networking address forward functionality. Allowing for `bridge` and `ovn` networks to define
-external IP addresses that can be forwarded to internal IP(s) inside their respective networks.
--->
 
 ## custom\_volume\_refresh
 ボリュームマイグレーションに refresh オプションのサポートを追加します。
-<!--
-Adds support for refresh during volume migration.
--->
 
 ## network\_counters\_errors\_dropped
 これはネットワークカウンターに受信エラー数、送信エラー数とインバウンドとアウトバウンドのドロップしたパケット数を追加します。
-<!--
-This adds the received and sent errors as well as inbound and outbound dropped packets to the network counters.
--->
 
 ## metrics
 これは LXD にメトリクスを追加します。実行中のインスタンスのメトリクスを OpenMetrics 形式で返します。
-<!--
-This adds metrics to LXD. It returns metrics of running instances using the OpenMetrics format.
--->
 
 この拡張は次のエンドポイントを含みます。
-<!--
-This includes the following endpoints:
--->
 
 * `GET /1.0/metrics`
 
 ## image\_source\_project
 `POST /1.0/images` に `project` フィールドを追加し、イメージコピー時にコピー元プロジェクトを設定できるようにします。
-<!--
-Adds a new `project` field to `POST /1.0/images` allowing for the source project
-to be set at image copy time.
--->
 
 ## clustering\_config
 クラスターメンバーに `config` プロパティーを追加し、キー・バリュー・ペアを設定可能にします。
-<!--
-Adds new `config` property to cluster members with configurable key/value pairs.
--->
 
 ## network\_peer
 ネットワークピアリングを追加し、 OVN ネットワーク間のトラフィックが OVN サブシステムの外に出ずに通信できるようにします。
-<!--
-This adds network peering to allow traffic to flow between OVN networks without leaving the OVN subsystem.
--->
 
 ## linux\_sysctl
 `linux.sysctl.*` 設定キーを追加し、ユーザーが一コンテナー内の一部のカーネルパラメータを変更できるようにします。
-<!--
-Adds new `linux.sysctl.*` configuration keys allowing users to modify certain kernel parameters
-within containers.
--->
 
 ## network\_dns
 組み込みの DNS サーバーとゾーン API を追加し、 LXD インスタンスに DNS レコードを提供します。
-<!--
-Introduces a built-in DNS server and zones API to provide DNS records for LXD instances.
--->
 
 以下のサーバー設定キーが追加されます。
-<!--
-This introduces the following server configuration key:
--->
 
  - `core.dns_address`
 
 以下のネットワーク設定キーが追加されます。
-<!--
-The following network configuration key:
--->
 
  - `dns.zone.forward`
  - `dns.zone.reverse.ipv4`
  - `dns.zone.reverse.ipv6`
 
 以下のプロジェクト設定キーが追加されます。
-<!--
-And the following project configuration key:
--->
 
  - `restricted.networks.zones`
 
 DNS ゾーンを管理するために下記の REST API が追加されます。
-<!--
-A new REST API is also introduced to manage DNS zones:
--->
 
  - `/1.0/network-zones` (GET, POST)
  - `/1.0/network-zones/<name>` (GET, PUT, PATCH, DELETE)
@@ -2820,149 +1466,75 @@ A new REST API is also introduced to manage DNS zones:
 ## ovn\_nic\_acceleration
 OVN NIC に `acceleration` 設定キーを追加し、ハードウェアオフロードを有効にするのに使用できます。
 設定値は `none` または `sriov` です。
-<!--
-Adds new `acceleration` config key to OVN NICs which can be used for enabling hardware offloading.
-It takes the values `none` or `sriov`.
--->
 
 ## certificate\_self\_renewal
 これはクライアント自身の信頼証明書の更新のサポートを追加します。
-<!--
-This adds support for renewing a client's own trust certificate.
--->
 
 ## instance\_project\_move
 これは `POST /1.0/instances/NAME` API に `project` フィールドを追加し、インスタンスをプロジェクト間で簡単に移動できるようにします。
-<!--
-This adds a `project` field to the `POST /1.0/instances/NAME` API,
-allowing for easy move of an instance between projects.
--->
 
 ## storage\_volume\_project\_move
 これはストレージボリュームのプロジェクト間での移動のサポートを追加します。
-<!--
-This adds support for moving storage volume between projects.
--->
 
 ## cloud\_init
 これは以下のキーを含む `project` 設定キー名前空間を追加します。
-<!--
-This adds a new `cloud-init` config key namespace which contains the following keys:
--->
 
  - `cloud-init.vendor-data`
  - `cloud-init.user-data`
  - `cloud-init.network-config`
 
 これはまた devlxd にインスタンスのデバイスを表示する `/1.0/devices` エンドポイントを追加します。
-<!--
- It also adds a new endpoint `/1.0/devices` to devlxd which shows an instance's devices.
--->
 
 ## network\_dns\_nat
 これはネットワークゾーン (DNS) に `network.nat` を設定オプションとして追加します。
-<!--
-This introduces `network.nat` as a config option on network zones (DNS).
--->
 
 デフォルトでは全てのインスタンスの NIC のレコードを生成するという現状の挙動になりますが、
 `false` に設定すると外部から到達可能なアドレスのレコードのみを生成するよう LXD に指示します。
-<!--
-It defaults to the current behavior of generating records for all
-instances NICs but if set to `false`, it will instruct LXD to only
-generate records for externally reachable addreses.
--->
 
 ## database\_leader
 クラスター・リーダーに設定される "database-leader" ロールを追加します。
-<!--
-Adds new "database-leader" role which is assigned to cluster leader.
--->
 
 ## instance\_all\_projects
 全てのプロジェクトのインスタンス表示のサポートを追加します。
-<!--
-This adds support for displaying instances from all projects.
--->
 
 ## clustering\_groups
 クラスター・メンバーのグループ化のサポートを追加します。
-<!--
-Add support for grouping cluster members.
--->
 
 これは以下の新しいエンドポイントを追加します。
-<!--
-This introduces the following new endpoints:
--->
 
  - `/1.0/cluster/groups` (GET, POST)
  - `/1.0/cluster/groups/<name>` (GET, POST, PUT, PATCH, DELETE)
 
 以下のプロジェクトの制限が追加されます。
-<!--
- The following project restriction is added:
--->
 
   - `restricted.cluster.groups`
 
 ## ceph\_rbd\_du
 Ceph ストレージブールに `ceph.rbd.du` という boolean の設定を追加します。
 実行に時間がかかるかもしれない `rbd du` の呼び出しの使用を無効化できます。
-<!--
-Adds a new `ceph.rbd.du` boolean on Ceph storage pools which allows
-disabling the use of the potentially slow `rbd du` calls.
--->
 
 ## instance\_get\_full
 これは `GET /1.0/instances/{name}` に recursion=1 のモードを追加します。
 これは状態、スナップショット、バックアップの構造体を含む全てのインスタンスの構造体が取得できます。
-<!--
-This introduces a new recursion=1 mode for `GET /1.0/instances/{name}` which allows for the retrieval of
-all instance structs, including the state, snapshots and backup structs.
--->
 
 ## qemu\_metrics
 これは `security.agent.metrics` という boolean 値を追加します。デフォルト値は `true` です。
 `false` に設定するとメトリクスや他の状態の取得のために lxd-agent に接続することはせず、 QEMU からの統計情報に頼ります。
-<!--
-This adds a new `security.agent.metrics` boolean which defaults to `true`.
-When set to `false`, it doesn't connect to the lxd-agent for metrics and other state information, but relies on stats from QEMU.
--->
 
 ## gpu\_mig\_uuid
 Nvidia `470+` ドライバー (例. `MIG-74c6a31a-fde5-5c61-973b-70e12346c202`) で使用される MIG UUID 形式のサポートを追加します。
 `MIG-` の接頭辞は省略できます。
-<!--
-Adds support for the new MIG UUID format used by Nvidia `470+` drivers (eg. `MIG-74c6a31a-fde5-5c61-973b-70e12346c202`),
-the `MIG-` prefix can be omitted
--->
 
 この拡張が古い `mig.gi` と `mig.ci` パラメーターに取って代わります。これらは古いドライバーとの互換性のため残されますが、
 同時には設定できません。
-<!--
-This extension supersedes old `mig.gi` and `mig.ci` parameters which are kept for compatibility with old drivers and
-cannot be set together.
--->
 
 ## event\_project
 イベントの API にイベントが属するプロジェクトを公開します。
-<!--
-Expose the project an API event belongs to.
--->
 
 ## clustering\_evacuation\_live
 `cluster.evacuate` への設定値 `live-migrate` を追加します。
 これはクラスター待避の際にインスタンスのライブマイグレーションを強制します。
-<!--
-This adds `live-migrate` as a config option to `cluster.evacuate`, which forces live-migration
-of instances during cluster evacuation.
--->
 
 ## instance\_allow\_inconsistent\_copy
 `POST /1.0/instances` のインスタンスソースに `allow_inconsistent` フィールドを追加します。
 true の場合、 rsync はコピーからインスタンスを生成するときに `Partial transfer due to vanished source files` (code 24) エラーを無視します。
-<!--
-Adds `allow_inconsistent` field to instance source on `POST /1.0/instances`. If true, rsync will ignore the 
-`Partial transfer due to vanished source files` (code 24) error when creating an instance from a copy. 
--->
