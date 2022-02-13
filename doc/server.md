@@ -17,7 +17,7 @@ key/value 設定は現在サポートされている以下のネームスペー�
 キー                               | 型      | スコープ | デフォルト値                     | 説明
 :--                                | :---    | :----    | :------                          | :----------
 backups.compression\_algorithm     | string  | global   | gzip                             | 新規のイメージに用いる圧縮アルゴリズム (bzip2, gzip, lzma, xz, none のいずれか)
-candid.api.key                     | string  | global   | -                                | Candid サーバーの公開鍵（HTTPのみのサーバーで必要）
+candid.api.key                     | string  | global   | -                                | Candid サーバの公開鍵（HTTPのみのサーバで必要）
 candid.api.url                     | string  | global   | -                                | Candid を使用する外部認証エンドポイントの URL
 candid.domains                     | string  | global   | -                                | 許可される Candid ドメインのカンマ区切りリスト (空文字は全てのドメインが有効という意味になります)
 candid.expiry                      | integer | global   | 3600                             | Canded macaroon の有効期間 (秒で指定)
@@ -26,22 +26,22 @@ cluster.images\_minimal\_replica   | integer | global   | 3                     
 cluster.max\_standby               | integer | global   | 2                                | データベースのスタンバイの役割を割り当てられるクラスターメンバーの最大数
 cluster.max\_voters                | integer | global   | 3                                | データベースの投票者の役割を割り当てられるクラスターメンバーの最大数
 cluster.offline\_threshold         | integer | global   | 20                               | 無反応なノードをオフラインとみなす秒数
-core.bgp\_address                  | string  | local    | -                                | BGP サーバーをバインドさせるアドレス (BGP)
-core.bgp\_asn                      | string  | global   | -                                | ローカルサーバーに使用する BGP の AS番号 (Autonomous System Number)
-core.bgp\_routerid                 | string  | local    |                                  | この BGP サーバーのユニークな ID (IPv4 アドレス形式)
+core.bgp\_address                  | string  | local    | -                                | BGP サーバをバインドさせるアドレス (BGP)
+core.bgp\_asn                      | string  | global   | -                                | ローカルサーバに使用する BGP の AS番号 (Autonomous System Number)
+core.bgp\_routerid                 | string  | local    |                                  | この BGP サーバのユニークな ID (IPv4 アドレス形式)
 core.debug\_address                | string  | local    | -                                | pprof デバッグサーバがバインドするアドレス (HTTP)
-core.dns\_address                  | string  | local    | -                                | 権威 DNS サーバーをバインドするアドレス (DNS)
+core.dns\_address                  | string  | local    | -                                | 権威 DNS サーバをバインドするアドレス (DNS)
 core.https\_address                | string  | local    | -                                | リモート API がバインドするアドレス (HTTPS)
 core.https\_allowed\_credentials   | boolean | global   | -                                | Access-Control-Allow-Credentials HTTP ヘッダの値を "true" にするかどうか
 core.https\_allowed\_headers       | string  | global   | -                                | Access-Control-Allow-Headers HTTP ヘッダの値
 core.https\_allowed\_methods       | string  | global   | -                                | Access-Control-Allow-Methods HTTP ヘッダの値
 core.https\_allowed\_origin        | string  | global   | -                                | Access-Control-Allow-Origin HTTP ヘッダの値
-core.https\_trusted\_proxy         | string  | global   | -                                | プロキシの connection ヘッダーでクライアントのアドレスを渡す信頼するサーバーの IP アドレスのカンマ区切りリスト
-core.metrics\_address              | string  | global   | -                                | メトリクスサーバーをバインドさせるアドレス (HTTPS)
+core.https\_trusted\_proxy         | string  | global   | -                                | プロキシの connection ヘッダーでクライアントのアドレスを渡す信頼するサーバの IP アドレスのカンマ区切りリスト
+core.metrics\_address              | string  | global   | -                                | メトリクスサーバをバインドさせるアドレス (HTTPS)
 core.proxy\_https                  | string  | global   | -                                | HTTPS プロキシを使用する場合はその URL (未指定の場合は HTTPS\_PROXY 環境変数を参照)
 core.proxy\_http                   | string  | global   | -                                | HTTP プロキシを使用する場合はその URL (未指定の場合は HTTP\_PROXY 環境変数を参照)
 core.proxy\_ignore\_hosts          | string  | global   | -                                | プロキシが不要なホスト (NO\_PROXY と同様な形式、例えば 1.2.3.4,1.2.3.5, を指定。未指定の場合は NO\_PROXY 環境変数を参照)
-core.shutdown\_timeout             | integer | global   | 5                                | LXD サーバーがシャットダウンを完了するまでに待つ時間を分で指定
+core.shutdown\_timeout             | integer | global   | 5                                | LXD サーバがシャットダウンを完了するまでに待つ時間を分で指定
 core.trust\_ca\_certificates       | boolean | global   | -                                | CA に署名されたクライアント証明書を自動的に信頼するかどうか
 core.trust\_password               | string  | global   | -                                | 信頼を確立するためにクライアントに要求するパスワード
 images.auto\_update\_cached        | boolean | global   | true                             | LXD がキャッシュしているイメージを自動的に更新するかどうか
@@ -78,7 +78,7 @@ lxc config set <key> <value>
 LXD をネットワーク上に公開するには `core.https_address` を設定する必要があります。
 すると全てのリモートクライアントが LXD に接続でき、公開利用可能とマークされた全てのイメージにアクセスできます。
 
-信頼されたクライアントはサーバーのトラストストアーに手動で追加できます。
+信頼されたクライアントはサーバのトラストストアーに手動で追加できます。
 `lxc config trust add` を実行するか `core.trust_password` キーを設定し、設定したパスワードを接続時に提供することでクライアントがトラストストアーに追加されます。
 
 認証についての詳細は [セキュリティ](security.md) を参照してください。
@@ -88,7 +88,7 @@ LXD をネットワーク上に公開するには `core.https_address` を設定
 
 上記の `candid.*` 設定キーをデプロイ済みの Candid に対応する値に設定することでユーザーはウェブブラウザーで認証し LXD に信頼されることができます。
 
-Candid サーバーの手前に Canonical RBAC サーバーがある場合、 `candid.*` の代わりにそれらのスーパーセットである `rbac.*` 設定キーを設定でき、これにより LXD を RBAC サービスと統合できます。
+Candid サーバの手前に Canonical RBAC サーバがある場合、 `candid.*` の代わりにそれらのスーパーセットである `rbac.*` 設定キーを設定でき、これにより LXD を RBAC サービスと統合できます。
 
 RBAC と統合されると、個々のユーザーとグループはプロジェクト単位にさまざまなアクセスレベルで許可が与えられます。
 これらは全て RBAC サービスにより外部で制御されます。

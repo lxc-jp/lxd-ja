@@ -70,19 +70,19 @@ lxc storage volume create [<remote>]:<pool> <name> --type=block
 LXD では、イメージ、インスタンス、カスタムボリューム用のストレージとして ZFS、btrfs、LVM、単なるディレクトリが使えます。
 可能であれば、各システムの高度な機能を使って、LXD は操作を最適化しようとします。
 
-機能                        | ディレクトリ | Btrfs | LVM   | ZFS  | CEPH
-:---                                        | :---      | :---  | :---  | :--- | :---
-最適化されたイメージストレージ   | no | yes | yes | yes | yes
-最適化されたインスタンスの作成 | no | yes | yes | yes | yes
-最適化されたスナップショットの作成 | no | yes | yes | yes | yes
-最適化されたイメージの転送 | no | yes | no | yes | yes
-最適化されたインスタンスの転送 | no | yes | no | yes | yes
-コピーオンライト | no | yes | yes | yes | yes
-ブロックデバイスベース | no | no    | yes   | no   | yes
-インスタントクローン | no | yes | yes | yes | yes
-コンテナ内でストレージドライバの使用 | yes | yes | no | no | no
-古い（最新ではない）スナップショットからのリストア | yes | yes | yes | no | yes
-ストレージクオータ | yes(\*) | yes | no | yes | no
+機能                                               | ディレクトリ | Btrfs | LVM  | ZFS  | CEPH
+:---                                               | :---         | :---  | :--- | :--- | :---
+最適化されたイメージストレージ                     | no           | yes   | yes  | yes  | yes
+最適化されたインスタンスの作成                     | no           | yes   | yes  | yes  | yes
+最適化されたスナップショットの作成                 | no           | yes   | yes  | yes  | yes
+最適化されたイメージの転送                         | no           | yes   | no   | yes  | yes
+最適化されたインスタンスの転送                     | no           | yes   | no   | yes  | yes
+コピーオンライト                                   | no           | yes   | yes  | yes  | yes
+ブロックデバイスベース                             | no           | no    | yes  | no   | yes
+インスタントクローン                               | no           | yes   | yes  | yes  | yes
+コンテナ内でストレージドライバの使用               | yes          | yes   | no   | no   | no
+古い（最新ではない）スナップショットからのリストア | yes          | yes   | yes  | no   | yes
+ストレージクオータ                                 | yes(\*)      | yes   | no   | yes  | no
 
 ### おすすめのセットアップ
 LXD から使う場合のベストなオプションは ZFS と btrfs を使うことです。

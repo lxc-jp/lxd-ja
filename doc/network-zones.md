@@ -12,13 +12,13 @@
 LXD は全てのインスタンス、ネットワークゲートウェイ、ダウンストリーム (下流)
 のネットワークポートの全てに対して正引きと逆引きのレコードを自動で管理します。
 
-組み込みの DNS サーバーを有効にするには、サーバー設定内の `core.dns_address`
+組み込みの DNS サーバを有効にするには、サーバ設定内の `core.dns_address`
 を設定する必要があります。
 
-組み込みの DNS サーバーは AXFR 経由でのゾーン転送のみをサポートしており、
+組み込みの DNS サーバは AXFR 経由でのゾーン転送のみをサポートしており、
 DNS レコードへの直接の問い合わせはできません。
-つまりこの機能は外部の DNS サーバー (bind9, nsd, ...) の使用を前提としています。
-外部の DNS サーバーが LXD からの全体のゾーンを転送し、有効期限を過ぎたら更新し、
+つまりこの機能は外部の DNS サーバ (bind9, nsd, ...) の使用を前提としています。
+外部の DNS サーバが LXD からの全体のゾーンを転送し、有効期限を過ぎたら更新し、
 DNS 問い合わせに対する管理権限を持つ応答 (authoritative answers) を提供します。
 
 ゾーン転送の認証はゾーン毎に設定され、各ゾーンでピアごとに IP アドレスと TSIG キーを設定して、
@@ -37,9 +37,9 @@ TSIG キーベースの認証を行います。
 
 プロパティー | 型 | 必須 | デフォルト値 | 説明
 :--                 | :--        | :--      | -       | :--
-peers.NAME.address  | string     | no       | -       | DNS サーバーの IP アドレス
-peers.NAME.key      | string     | no       | -       | サーバー用の TSIG キー
-dns.nameservers     | string set | no       | -       | (NS レコード用の) DNS サーバーの FQDN のカンマ区切りリスト
+peers.NAME.address  | string     | no       | -       | DNS サーバの IP アドレス
+peers.NAME.key      | string     | no       | -       | サーバ用の TSIG キー
+dns.nameservers     | string set | no       | -       | (NS レコード用の) DNS サーバの FQDN のカンマ区切りリスト
 network.nat         | bool       | no       | true    | NAT されたサブネットのレコードを生成するかどうか
 
 さらに、 `user.` キーの名前空間もユーザー提供の自由形式のキー・バリュー用にサポートされています。

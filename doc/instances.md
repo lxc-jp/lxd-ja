@@ -120,7 +120,7 @@ volatile.idmap.next                         | string    | -             | 次に
 volatile.last\_state.idmap                  | string    | -             | シリアライズ化したインスタンスの uid/gid マップ
 volatile.last\_state.power                  | string    | -             | 最後にホストがシャットダウンした時点のインスタンスの状態
 volatile.vsock\_id                          | string    | -             | 最後の起動時に使用されたインスタンスの vsock ID
-volatile.uuid                               | string    | -             | インスタンスの UUID （全サーバーとプロジェクト内でグローバルにユニーク）
+volatile.uuid                               | string    | -             | インスタンスの UUID （全サーバとプロジェクト内でグローバルにユニーク）
 volatile.\<name\>.apply\_quota              | string    | -             | 次回のインスタンス起動時に適用されるディスククォータ
 volatile.\<name\>.ceph\_rbd                 | string    | -             | Ceph のディスクデバイスの RBD デバイスパス
 volatile.\<name\>.host\_name                | string    | -             | ホスト上のネットワークデバイス名
