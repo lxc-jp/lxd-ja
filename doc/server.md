@@ -11,6 +11,9 @@ key/value 設定は現在サポートされている以下のネームスペー�
  - `maas` MAAS 統合
  - `rbac` 外部の Candid と Canonical の RBAC を使ったロールベースのアクセス制御 (Role Based Access Control)
 
+```{rst-class} break-col-4 min-width-4-8
+```
+
 キー | 型 | スコープ | デフォルト値  | 説明
 :--                                 | :---      | :----     | :------                          | :----------
 backups.compression\_algorithm      | string    | global    | gzip                             | 新規のイメージに用いる圧縮アルゴリズム (bzip2, gzip, lzma, xz, none のいずれか)
