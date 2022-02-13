@@ -35,82 +35,81 @@ key/value 形式の設定は、名前空間構造を取っており、現在は�
 ```{rst-class} dec-font-size break-col-1 min-width-1-15
 ```
 
-キー                    | 型 | デフォルト値 | ライブアップデート | 条件 | 説明
-:--                                         | :---      | :------                              | :----------   | :----------               | :----------
-boot.autostart                              | boolean   | -                                    | n/a           | -                         | LXD起動時に常にインスタンスを起動するかどうか（設定しない場合、最後の状態
-がリストアされます）
-boot.autostart.delay                        | integer   | 0                                    | n/a           | -                         | インスタンスが起動した後に次のインスタンスが起動するまで待つ秒数
-boot.autostart.priority                     | integer   | 0                                    | n/a           | -                         | インスタンスを起動させる順番（高いほど早く起動します）
-boot.host\_shutdown\_timeout                | integer   | 30                                   | yes           | -                         | 強制停止前にインスタンスが停止するのを待つ秒数
-boot.stop.priority                          | integer   | 0                                    | n/a           | -                         | インスタンスの停止順（高いほど早く停止します）
-cloud-init.network-config                   | string    | eth0 上の DHCP | no            | -                         | Cloud-init network-config。設定はシード値として使用
-cloud-init.user-data                        | string    | #cloud-config                        | no            | -                         | Cloud-init user-data。設定はシード値として使用
-cloud-init.vendor-data                      | string    | #cloud-config                        | no            | -                         | Cloud-init vendor-data。設定はシード値として使用
-cluster.evacuate                            | string    | auto                                 | n/a           | -                         | インスタンス待避時に何をするか（auto, migrate, live-migrate, stop）
-environment.\*                              | string    | -                                    | yes (exec)    | -                         | インスタンス実行時に設定される key/value 形式の環境変数
-limits.cpu                                  | string    | -                                    | yes           | -                         | インスタンスに割り当てる CPU 番号、もしくは番号の範囲（デフォルトは VM 毎に 1 CPU）
-limits.cpu.allowance                        | string    | 100%                                 | yes           | container                 | どれくらい CPU を使えるか。ソフトリミットとしてパーセント指定（例、50%）か固定値として単位時間内に使える時間（25ms/100ms）を指定できます
-limits.cpu.priority                         | integer   | 10 (maximum)                         | yes           | container                 | 同じ CPU をシェアする他のインスタンスと比較した CPU スケジューリングの優先度（オーバーコミット）（0 〜 10 の整数）
-limits.disk.priority                        | integer   | 5 (medium)                           | yes           | -                         | 負荷がかかった状態で、インスタンスの I/O リクエストに割り当てる優先度（0 〜 10 の整数）
-limits.hugepages.64KB                       | string    | -                                    | yes           | container                 | 64 KB hugepages の数を制限するため（利用可能な hugepage のサイズはアーキテクチャー依存）のサイズの固定値（さまざまな単位が指定可能、下記参照）
-limits.hugepages.1MB                        | string    | -                                    | yes           | container                 | 1 MB hugepages の数を制限するため（利用可能な hugepage のサイズはアーキテクチャー依存）のサイズの固定値（さまざまな単位が指定可能、下記参照）
-limits.hugepages.2MB                        | string    | -                                    | yes           | container                 | 2 MB hugepages の数を制限するため（利用可能な hugepage のサイズはアーキテクチャー依存）のサイズの固定値（さまざまな単位が指定可能、下記参照）
-limits.hugepages.1GB                        | string    | -                                    | yes           | container                 | 1 GB hugepages の数を制限するため（利用可能な hugepage のサイズはアーキテクチャー依存）のサイズの固定値（さまざまな単位が指定可能、下記参照）
-limits.kernel.\*                            | string    | -                                    | no            | container                 | インスタンスごとのカーネルリソースの制限（例、オープンできるファイルの数）
-limits.memory                               | string    | -                                    | yes           | -                         | ホストメモリに対する割合（パーセント）もしくはメモリサイズの固定値（さまざまな単位が指定可能、下記参照）（デフォルトは VM 毎に 1GiB）
-limits.memory.enforce                       | string    | hard                                 | yes           | container                 | hard に設定すると、インスタンスはメモリー制限値を超過できません。soft に設定すると、ホストでメモリに余裕がある場合は超過できる可能性があります
-limits.memory.hugepages                     | boolean   | false                                | no            | virtual-machine           | インスタンスを動かすために通常のシステムメモリではなく hugepage を使用するかどうか
-limits.memory.swap                          | boolean   | true                                 | yes           | container                 | このインスタンスのあまり使われないページのスワップを推奨／非推奨するかを制御する
-limits.memory.swap.priority                 | integer   | 10 (maximum)                         | yes           | container                 | 高い値を設定するほど、インスタンスがディスクにスワップされにくくなります （0 〜 10 の整数）
-limits.network.priority                     | integer   | 0 (minimum)                          | yes           | -                         | 負荷がかかった状態で、インスタンスのネットワークリクエストに割り当てる優先度（0 〜 10 の整数）
-limits.processes                            | integer   | - (max)                              | yes           | container                 | インスタンス内で実行できるプロセスの最大数
-linux.kernel\_modules                       | string    | -                                    | yes           | container                 | インスタンスを起動する前にロードするカーネルモジュールのカンマ区切りのリスト
-linux.sysctl.\*                             | string    | -                                    | no            | container                 | sysctl 設定の変更に使用可能
-migration.incremental.memory                | boolean   | false                                | yes           | container                 | インスタンスのダウンタイムを短くするためにインスタンスのメモリを増分転送するかどうか
-migration.incremental.memory.goal           | integer   | 70                                   | yes           | container                 | インスタンスを停止させる前に同期するメモリの割合
-migration.incremental.memory.iterations     | integer   | 10                                   | yes           | container                 | インスタンスを停止させる前に完了させるメモリ転送処理の最大数
-migration.stateful                          | boolean   | false                                | no            | virtual-machine           | ステートフルな停止/開始とスナップショットを許可。これはこれと非互換ないくつかの機能の使用を防ぎます。
-nvidia.driver.capabilities                  | string    | compute,utility                      | no            | container                 | インスタンスに必要なドライバケーパビリティ（libnvidia-container に環境変数 NVIDIA\_DRIVER\_CAPABILITIES を設定）
-nvidia.runtime                              | boolean   | false                                | no            | container                 | ホストの NVIDIA と CUDA ラインタイムライブラリーをインスタンス内でも使えるようにする
-nvidia.require.cuda                         | string    | -                                    | no            | container                 | 必要となる CUDA バージョン（libnvidia-container に環境変数 NVIDIA\_REQUIRE\_CUDA を設定）
-nvidia.require.driver                       | string    | -                                    | no            | container                 | 必要となるドライバーバージョン（libnvidia-container に環境変数 NVIDIA\_REQUIRE\_DRIVER を設定）
-raw.apparmor                                | blob      | -                                    | yes           | -                         | 生成されたプロファイルに追加する Apparmor プロファイルエントリー
-raw.idmap                                   | blob      | -                                    | no            | unprivileged conta        iner | 生（raw）の idmap 設定（例: "both 1000 1000"）
-raw.lxc                                     | blob      | -                                    | no            | container                 | 生成された設定に追加する生（raw）の LXC 設定
-raw.qemu                                    | blob      | -                                    | no            | virtual-machine           | 生成されたコマンドラインに追加される生（raw）の Qemu 設定
-raw.seccomp                                 | blob      | -                                    | no            | container                 | 生（raw）の seccomp 設定
-security.devlxd                             | boolean   | true                                 | no            | -                         | インスタンス内の `/dev/lxd` の存在を制御する
-security.devlxd.images                      | boolean   | false                                | no            | container                 | devlxd 経由の `/1.0/images` の利用可否を制御する
-security.idmap.base                         | integer   | -                                    | no            | unprivileged container    | 割り当てに使う host の ID の base（auto-detection （自動検出）を上書きします）
-security.idmap.isolated                     | boolean   | false                                | no            | unprivileged container    | インスタンス間で独立した idmap のセットを使用するかどうか
-security.idmap.size                         | integer   | -                                    | no            | unprivileged container    | 使用する idmap のサイズ
-security.nesting                            | boolean   | false                                | yes           | container                 | インスタンス内でネストした lxd の実行を許可するかどうか
-security.privileged                         | boolean   | false                                | no            | container                 | 特権モードでインスタンスを実行するかどうか
-security.protection.delete                  | boolean   | false                                | yes           | -                         | インスタンスを削除から保護する
-security.protection.shift                   | boolean   | false                                | yes           | container                 | インスタンスのファイルシステムが起動時に uid/gid がシフト（再マッピング） されるのを防ぐ
-security.agent.metrics                      | boolean   | true                                 | no            | virtual-machine           | 状態の情報とメトリクスを lxd-agent に問い合わせるかどうかを制御する
-security.secureboot                         | boolean   | true                                 | no            | virtual-machine           | UEFI セキュアブートがデフォルトの Microsoft のキーで有効になるかを制御する
-security.syscalls.allow                     | string    | -                                    | no            | container                 | `\n` 区切りのシステムコールの許可リスト（security.syscalls.deny\* を使う場合は使用不可）
-security.syscalls.deny                      | string    | -                                    | no            | container                 | `\n` 区切りのシステムコールの拒否リスト
-security.syscalls.deny\_compat              | boolean   | false                                | no            | container                 | `x86_64` で `compat_*` システムコールのブロックを有効にするかどうか。他のアーキテクチャでは何もしません
-security.syscalls.deny\_default             | boolean   | true                                 | no            | container                 | デフォルトのシステムコールの拒否リストを有効にするかどうか
-security.syscalls.intercept.bpf             | boolean   | false                                | no            | container                 | `bpf` システムコールを処理するかどうか
-security.syscalls.intercept.bpf.devices     | boolean   | false                                | no            | container                 | device cgroup の `bpf` プログラムの統合された階層へのロードを許可するかどうか
-security.syscalls.intercept.mknod           | boolean   | false                                | no            | container                 | `mknod` と `mknodat` システムコールを処理するかどうか (限定されたサブセットのキャラクタ／ブロックデバイスの作成を許可する)
-security.syscalls.intercept.mount           | boolean   | false                                | no            | container                 | `mount` システムコールを処理するかどうか
-security.syscalls.intercept.mount.allowed   | string    | -                                    | yes           | container                 | インスタンス内のプロセスが安全にマウントできるファイルシステムのカンマ区切りリストを指定
-security.syscalls.intercept.mount.fuse      | string    | -                                    | yes           | container                 | 指定されたファイルシステムを対応する fuse 実装にリダイレクトするかどうか（例: ext4-fuse2fs）
-security.syscalls.intercept.mount.shift     | boolean   | false                                | yes           | container                 | `mount` システムコールをインターセプトして処理対象のファイルシステムの上に shiftfs をマウントするかどうか
-security.syscalls.intercept.setxattr        | boolean   | false                                | no            | container                 | `setxattr` システムコールを処理するかどうか (限定されたサブセットの制限された拡張属性の設定を許可する)
-snapshots.schedule                          | string    | -                                    | no            | -                         | Cron の書式 (`<minute> <hour> <dom> <month> <dow>`)、またはスケジュールエイリアスのカンマ区切りリスト `<@hourly> <@daily> <@midnight> <@weekly> <@monthly> <@annually> <@yearly> <@startup>`
-snapshots.schedule.stopped                  | bool      | false                                | no            | -                         | 停止したインスタンスのスナップショットを自動的に作成するかどうか
-snapshots.pattern                           | string    | snap%d                               | no            | -                         | スナップショット名を表す Pongo2 テンプレート（スケジュールされたスナップショットと名前を指定されないスナップショットに使用される）
-snapshots.expiry                            | string    | -                                    | no            | -                         | スナップショットをいつ削除するかを設定します（`1M 2H 3d 4w 5m 6y` のような書式で設定します）
-user.\*                                     | string    | -                                    | n/a           | -                         | 自由形式のユーザー定義の key/value の設定の組（検索に使えます）
+キー                                        | 型        | デフォルト値     | ライブアップデート | 条件                      | 説明
+:--                                         | :---      | :------          | :----------        | :----------               | :----------
+boot.autostart                              | boolean   | -                | n/a                | -                         | LXD起動時に常にインスタンスを起動するかどうか（設定しない場合、最後の状態がリストアされます）
+boot.autostart.delay                        | integer   | 0                | n/a                | -                         | インスタンスが起動した後に次のインスタンスが起動するまで待つ秒数
+boot.autostart.priority                     | integer   | 0                | n/a                | -                         | インスタンスを起動させる順番（高いほど早く起動します）
+boot.host\_shutdown\_timeout                | integer   | 30               | yes                | -                         | 強制停止前にインスタンスが停止するのを待つ秒数
+boot.stop.priority                          | integer   | 0                | n/a                | -                         | インスタンスの停止順（高いほど早く停止します）
+cloud-init.network-config                   | string    | eth0 上の DHCP   | no                 | -                         | Cloud-init network-config。設定はシード値として使用
+cloud-init.user-data                        | string    | #cloud-config    | no                 | -                         | Cloud-init user-data。設定はシード値として使用
+cloud-init.vendor-data                      | string    | #cloud-config    | no                 | -                         | Cloud-init vendor-data。設定はシード値として使用
+cluster.evacuate                            | string    | auto             | n/a                | -                         | インスタンス待避時に何をするか（auto, migrate, live-migrate, stop）
+environment.\*                              | string    | -                | yes (exec)         | -                         | インスタンス実行時に設定される key/value 形式の環境変数
+limits.cpu                                  | string    | -                | yes                | -                         | インスタンスに割り当てる CPU 番号、もしくは番号の範囲（デフォルトは VM 毎に 1 CPU）
+limits.cpu.allowance                        | string    | 100%             | yes                | container                 | どれくらい CPU を使えるか。ソフトリミットとしてパーセント指定（例、50%）か固定値として単位時間内に使える時間（25ms/100ms）を指定できます
+limits.cpu.priority                         | integer   | 10 (maximum)     | yes                | container                 | 同じ CPU をシェアする他のインスタンスと比較した CPU スケジューリングの優先度（オーバーコミット）（0 〜 10 の整数）
+limits.disk.priority                        | integer   | 5 (medium)       | yes                | -                         | 負荷がかかった状態で、インスタンスの I/O リクエストに割り当てる優先度（0 〜 10 の整数）
+limits.hugepages.64KB                       | string    | -                | yes                | container                 | 64 KB hugepages の数を制限するため（利用可能な hugepage のサイズはアーキテクチャー依存）のサイズの固定値（さまざまな単位が指定可能、下記参照）
+limits.hugepages.1MB                        | string    | -                | yes                | container                 | 1 MB hugepages の数を制限するため（利用可能な hugepage のサイズはアーキテクチャー依存）のサイズの固定値（さまざまな単位が指定可能、下記参照）
+limits.hugepages.2MB                        | string    | -                | yes                | container                 | 2 MB hugepages の数を制限するため（利用可能な hugepage のサイズはアーキテクチャー依存）のサイズの固定値（さまざまな単位が指定可能、下記参照）
+limits.hugepages.1GB                        | string    | -                | yes                | container                 | 1 GB hugepages の数を制限するため（利用可能な hugepage のサイズはアーキテクチャー依存）のサイズの固定値（さまざまな単位が指定可能、下記参照）
+limits.kernel.\*                            | string    | -                | no                 | container                 | インスタンスごとのカーネルリソースの制限（例、オープンできるファイルの数）
+limits.memory                               | string    | -                | yes                | -                         | ホストメモリに対する割合（パーセント）もしくはメモリサイズの固定値（さまざまな単位が指定可能、下記参照）（デフォルトは VM 毎に 1GiB）
+limits.memory.enforce                       | string    | hard             | yes                | container                 | hard に設定すると、インスタンスはメモリー制限値を超過できません。soft に設定すると、ホストでメモリに余裕がある場合は超過できる可能性があります
+limits.memory.hugepages                     | boolean   | false            | no                 | virtual-machine           | インスタンスを動かすために通常のシステムメモリではなく hugepage を使用するかどうか
+limits.memory.swap                          | boolean   | true             | yes                | container                 | このインスタンスのあまり使われないページのスワップを推奨／非推奨するかを制御する
+limits.memory.swap.priority                 | integer   | 10 (maximum)     | yes                | container                 | 高い値を設定するほど、インスタンスがディスクにスワップされにくくなります （0 〜 10 の整数）
+limits.network.priority                     | integer   | 0 (minimum)      | yes                | -                         | 負荷がかかった状態で、インスタンスのネットワークリクエストに割り当てる優先度（0 〜 10 の整数）
+limits.processes                            | integer   | - (max)          | yes                | container                 | インスタンス内で実行できるプロセスの最大数
+linux.kernel\_modules                       | string    | -                | yes                | container                 | インスタンスを起動する前にロードするカーネルモジュールのカンマ区切りのリスト
+linux.sysctl.\*                             | string    | -                | no                 | container                 | sysctl 設定の変更に使用可能
+migration.incremental.memory                | boolean   | false            | yes                | container                 | インスタンスのダウンタイムを短くするためにインスタンスのメモリを増分転送するかどうか
+migration.incremental.memory.goal           | integer   | 70               | yes                | container                 | インスタンスを停止させる前に同期するメモリの割合
+migration.incremental.memory.iterations     | integer   | 10               | yes                | container                 | インスタンスを停止させる前に完了させるメモリ転送処理の最大数
+migration.stateful                          | boolean   | false            | no                 | virtual-machine           | ステートフルな停止/開始とスナップショットを許可。これはこれと非互換ないくつかの機能の使用を防ぎます。
+nvidia.driver.capabilities                  | string    | compute,utility  | no                 | container                 | インスタンスに必要なドライバケーパビリティ（libnvidia-container に環境変数 NVIDIA\_DRIVER\_CAPABILITIES を設定）
+nvidia.runtime                              | boolean   | false            | no                 | container                 | ホストの NVIDIA と CUDA ラインタイムライブラリーをインスタンス内でも使えるようにする
+nvidia.require.cuda                         | string    | -                | no                 | container                 | 必要となる CUDA バージョン（libnvidia-container に環境変数 NVIDIA\_REQUIRE\_CUDA を設定）
+nvidia.require.driver                       | string    | -                | no                 | container                 | 必要となるドライバーバージョン（libnvidia-container に環境変数 NVIDIA\_REQUIRE\_DRIVER を設定）
+raw.apparmor                                | blob      | -                | yes                | -                         | 生成されたプロファイルに追加する Apparmor プロファイルエントリー
+raw.idmap                                   | blob      | -                | no                 | unprivileged conta        iner | 生（raw）の idmap 設定（例: "both 1000 1000"）
+raw.lxc                                     | blob      | -                | no                 | container                 | 生成された設定に追加する生（raw）の LXC 設定
+raw.qemu                                    | blob      | -                | no                 | virtual-machine           | 生成されたコマンドラインに追加される生（raw）の Qemu 設定
+raw.seccomp                                 | blob      | -                | no                 | container                 | 生（raw）の seccomp 設定
+security.devlxd                             | boolean   | true             | no                 | -                         | インスタンス内の `/dev/lxd` の存在を制御する
+security.devlxd.images                      | boolean   | false            | no                 | container                 | devlxd 経由の `/1.0/images` の利用可否を制御する
+security.idmap.base                         | integer   | -                | no                 | unprivileged container    | 割り当てに使う host の ID の base（auto-detection （自動検出）を上書きします）
+security.idmap.isolated                     | boolean   | false            | no                 | unprivileged container    | インスタンス間で独立した idmap のセットを使用するかどうか
+security.idmap.size                         | integer   | -                | no                 | unprivileged container    | 使用する idmap のサイズ
+security.nesting                            | boolean   | false            | yes                | container                 | インスタンス内でネストした lxd の実行を許可するかどうか
+security.privileged                         | boolean   | false            | no                 | container                 | 特権モードでインスタンスを実行するかどうか
+security.protection.delete                  | boolean   | false            | yes                | -                         | インスタンスを削除から保護する
+security.protection.shift                   | boolean   | false            | yes                | container                 | インスタンスのファイルシステムが起動時に uid/gid がシフト（再マッピング） されるのを防ぐ
+security.agent.metrics                      | boolean   | true             | no                 | virtual-machine           | 状態の情報とメトリクスを lxd-agent に問い合わせるかどうかを制御する
+security.secureboot                         | boolean   | true             | no                 | virtual-machine           | UEFI セキュアブートがデフォルトの Microsoft のキーで有効になるかを制御する
+security.syscalls.allow                     | string    | -                | no                 | container                 | `\n` 区切りのシステムコールの許可リスト（security.syscalls.deny\* を使う場合は使用不可）
+security.syscalls.deny                      | string    | -                | no                 | container                 | `\n` 区切りのシステムコールの拒否リスト
+security.syscalls.deny\_compat              | boolean   | false            | no                 | container                 | `x86_64` で `compat_*` システムコールのブロックを有効にするかどうか。他のアーキテクチャでは何もしません
+security.syscalls.deny\_default             | boolean   | true             | no                 | container                 | デフォルトのシステムコールの拒否リストを有効にするかどうか
+security.syscalls.intercept.bpf             | boolean   | false            | no                 | container                 | `bpf` システムコールを処理するかどうか
+security.syscalls.intercept.bpf.devices     | boolean   | false            | no                 | container                 | device cgroup の `bpf` プログラムの統合された階層へのロードを許可するかどうか
+security.syscalls.intercept.mknod           | boolean   | false            | no                 | container                 | `mknod` と `mknodat` システムコールを処理するかどうか (限定されたサブセットのキャラクタ／ブロックデバイスの作成を許可する)
+security.syscalls.intercept.mount           | boolean   | false            | no                 | container                 | `mount` システムコールを処理するかどうか
+security.syscalls.intercept.mount.allowed   | string    | -                | yes                | container                 | インスタンス内のプロセスが安全にマウントできるファイルシステムのカンマ区切りリストを指定
+security.syscalls.intercept.mount.fuse      | string    | -                | yes                | container                 | 指定されたファイルシステムを対応する fuse 実装にリダイレクトするかどうか（例: ext4-fuse2fs）
+security.syscalls.intercept.mount.shift     | boolean   | false            | yes                | container                 | `mount` システムコールをインターセプトして処理対象のファイルシステムの上に shiftfs をマウントするかどうか
+security.syscalls.intercept.setxattr        | boolean   | false            | no                 | container                 | `setxattr` システムコールを処理するかどうか (限定されたサブセットの制限された拡張属性の設定を許可する)
+snapshots.schedule                          | string    | -                | no                 | -                         | Cron の書式 (`<minute> <hour> <dom> <month> <dow>`)、またはスケジュールエイリアスのカンマ区切りリスト `<@hourly> <@daily> <@midnight> <@weekly> <@monthly> <@annually> <@yearly> <@startup>`
+snapshots.schedule.stopped                  | bool      | false            | no                 | -                         | 停止したインスタンスのスナップショットを自動的に作成するかどうか
+snapshots.pattern                           | string    | snap%d           | no                 | -                         | スナップショット名を表す Pongo2 テンプレート（スケジュールされたスナップショットと名前を指定されないスナップショットに使用される）
+snapshots.expiry                            | string    | -                | no                 | -                         | スナップショットをいつ削除するかを設定します（`1M 2H 3d 4w 5m 6y` のような書式で設定します）
+user.\*                                     | string    | -                | n/a                | -                         | 自由形式のユーザー定義の key/value の設定の組（検索に使えます）
 
 LXD は内部的に次の揮発性の設定を使います:
 
-Key                                         | Type      | Default       | Description
+キー                                        | 型        | デフォルト値  | 説明
 :--                                         | :---      | :------       | :----------
 volatile.apply\_template                    | string    | -             | 次の起動時にトリガーされるテンプレートフックの名前
 volatile.base\_image                        | string    | -             | インスタンスを作成したイメージのハッシュ（存在する場合）
@@ -136,7 +135,7 @@ volatile.\<name\>.last\_state.vf.spoofcheck | string    | -             | SR-IOV
 
 加えて、次のユーザー設定がイメージで共通になっています（サポートを保証するものではありません）:
 
-Key                         | Type          | Default           | Description
+キー                        | 型            | デフォルト値      | 説明
 :--                         | :---          | :------           | :----------
 user.meta-data              | string        | -                 | cloud-init メタデータ。設定は seed 値に追加されます
 
@@ -306,32 +305,32 @@ NIC ごとにどのプロパティーが設定可能かの詳細については�
 
 デバイス設定プロパティは以下の通りです。
 
-Key                      | Type      | Default                                       | Required | Managed | Description
-:--                      | :--       | :--                                           | :--      | :--     | :--
-parent                   | string    | -                                             | yes      | yes     | ホストデバイスの名前
-network                  | string    | -                                             | yes      | no      | （parent の代わりに）デバイスをリンクする先の LXD ネットワーク
-name                     | string    | カーネルが割り当て   | no       | no      | インスタンス内でのインタフェースの名前
-mtu                      | integer   | 親の MTU                  | no       | yes     | 新しいインタフェースの MTU
-hwaddr                   | string    | ランダムに割り当て | no       | no      | 新しいインタフェースの MAC アドレス
-host\_name               | string    | ランダムに割り当て | no       | no      | ホスト内でのインタフェースの名前
-limits.ingress           | string    | -                                             | no       | no      | 入力トラフィックの I/O 制限値（さまざまな単位が使用可能、下記参照）
-limits.egress            | string    | -                                             | no       | no      | 出力トラフィックの I/O 制限値（さまざまな単位が使用可能、下記参照）
-limits.max               | string    | -                                             | no       | no      | `limits.ingress` と `limits.egress` の両方を同じ値に変更する
-ipv4.address             | string    | -                                             | no       | no      | DHCP でインスタンスに割り当てる IPv4 アドレス
-ipv6.address             | string    | -                                             | no       | no      | DHCP でインスタンスに割り当てる IPv6 アドレス
-ipv4.routes              | string    | -                                             | no       | no      | ホスト上で NIC に追加する IPv4 静的ルートのカンマ区切りリスト（security.ipv4\_filtering 設定時に全ての IPv4 トラフィックを制限するには `none` と設定可能）
-ipv6.routes              | string    | -                                             | no       | no      | ホスト上で NIC に追加する IPv6 静的ルートのカンマ区切りリスト（security.ipv6\_filtering 設定時に全ての IPv6 トラフィックを制限するには `none` と設定可能）
-ipv4.routes.external     | string    | -                                             | no       | no      | NIC にルーティングしアップリンクのネットワーク (BGP) で公開する IPv4 静的ルートのカンマ区切りリスト
-ipv6.routes.external     | string    | -                                             | no       | no      | NIC にルーティングしアップリンクのネットワーク (BGP) で公開する IPv6 静的ルートのカンマ区切りリスト
-security.mac\_filtering  | boolean   | false                                         | no       | no      | インスタンスが他の MAC アドレスになりすますのを防ぐ
-security.ipv4\_filtering | boolean   | false                                         | no       | no      | インスタンスが他の IPv4 アドレスになりすますのを防ぐ (これを設定すると mac\_filtering も有効になります）
-security.ipv6\_filtering | boolean   | false                                         | no       | no      | インスタンスが他の IPv6 アドレスになりすますのを防ぐ (これを設定すると mac\_filtering も有効になります）
-maas.subnet.ipv4         | string    | -                                             | no       | yes     | インスタンスを登録する MAAS IPv4 サブネット
-maas.subnet.ipv6         | string    | -                                             | no       | yes     | インスタンスを登録する MAAS IPv6 サブネット
-boot.priority            | integer   | -                                             | no       | no      | VM のブート優先度 (高いほうが先にブート)
-vlan                     | integer   | -                                             | no       | no      | タグなしのトラフィックに使用する VLAN ID （デフォルトの VLAN からポートを削除するには `none` を指定）
-vlan.tagged              | integer   | -                                             | no       | no      | タグありのトラフィックに参加する VLAN ID のカンマ区切りリスト
-security.port\_isolation | boolean   | false                                         | no       | no      | NIC がポート隔離を有効にしたネットワーク内の他の NIC と通信するのを防ぐ
+Key                      | Type      | Default             | Required | Managed | Description
+:--                      | :--       | :--                 | :--      | :--     | :--
+parent                   | string    | -                   | yes      | yes     | ホストデバイスの名前
+network                  | string    | -                   | yes      | no      | （parent の代わりに）デバイスをリンクする先の LXD ネットワーク
+name                     | string    | カーネルが割り当て  | no       | no      | インスタンス内でのインタフェースの名前
+mtu                      | integer   | 親の MTU            | no       | yes     | 新しいインタフェースの MTU
+hwaddr                   | string    | ランダムに割り当て  | no       | no      | 新しいインタフェースの MAC アドレス
+host\_name               | string    | ランダムに割り当て  | no       | no      | ホスト内でのインタフェースの名前
+limits.ingress           | string    | -                   | no       | no      | 入力トラフィックの I/O 制限値（さまざまな単位が使用可能、下記参照）
+limits.egress            | string    | -                   | no       | no      | 出力トラフィックの I/O 制限値（さまざまな単位が使用可能、下記参照）
+limits.max               | string    | -                   | no       | no      | `limits.ingress` と `limits.egress` の両方を同じ値に変更する
+ipv4.address             | string    | -                   | no       | no      | DHCP でインスタンスに割り当てる IPv4 アドレス
+ipv6.address             | string    | -                   | no       | no      | DHCP でインスタンスに割り当てる IPv6 アドレス
+ipv4.routes              | string    | -                   | no       | no      | ホスト上で NIC に追加する IPv4 静的ルートのカンマ区切りリスト（security.ipv4\_filtering 設定時に全ての IPv4 トラフィックを制限するには `none` と設定可能）
+ipv6.routes              | string    | -                   | no       | no      | ホスト上で NIC に追加する IPv6 静的ルートのカンマ区切りリスト（security.ipv6\_filtering 設定時に全ての IPv6 トラフィックを制限するには `none` と設定可能）
+ipv4.routes.external     | string    | -                   | no       | no      | NIC にルーティングしアップリンクのネットワーク (BGP) で公開する IPv4 静的ルートのカンマ区切りリスト
+ipv6.routes.external     | string    | -                   | no       | no      | NIC にルーティングしアップリンクのネットワーク (BGP) で公開する IPv6 静的ルートのカンマ区切りリスト
+security.mac\_filtering  | boolean   | false               | no       | no      | インスタンスが他の MAC アドレスになりすますのを防ぐ
+security.ipv4\_filtering | boolean   | false               | no       | no      | インスタンスが他の IPv4 アドレスになりすますのを防ぐ (これを設定すると mac\_filtering も有効になります）
+security.ipv6\_filtering | boolean   | false               | no       | no      | インスタンスが他の IPv6 アドレスになりすますのを防ぐ (これを設定すると mac\_filtering も有効になります）
+maas.subnet.ipv4         | string    | -                   | no       | yes     | インスタンスを登録する MAAS IPv4 サブネット
+maas.subnet.ipv6         | string    | -                   | no       | yes     | インスタンスを登録する MAAS IPv6 サブネット
+boot.priority            | integer   | -                   | no       | no      | VM のブート優先度 (高いほうが先にブート)
+vlan                     | integer   | -                   | no       | no      | タグなしのトラフィックに使用する VLAN ID （デフォルトの VLAN からポートを削除するには `none` を指定）
+vlan.tagged              | integer   | -                   | no       | no      | タグありのトラフィックに参加する VLAN ID のカンマ区切りリスト
+security.port\_isolation | boolean   | false               | no       | no      | NIC がポート隔離を有効にしたネットワーク内の他の NIC と通信するのを防ぐ
 
 ##### nic: macvlan
 
@@ -343,18 +342,18 @@ security.port\_isolation | boolean   | false                                    
 
 デバイス設定プロパティは以下の通りです。
 
-Key                     | Type      | Default                                       | Required | Managed | Description
-:--                     | :--       | :--                                           | :--      | :--     | :--
-parent                  | string    | -                                             | yes      | yes     | ホストデバイスの名前
-network                 | string    | -                                             | yes      | no      | （parent の代わりに）デバイスをリンクする先の LXD ネットワーク
-name                    | string    | カーネルが割り当て   | no       | no      | インスタンス内部でのインタフェース名
-mtu                     | integer   | 親の MTU                  | no       | yes     | 新しいインタフェースの MTU
+Key                     | Type      | Default            | Required | Managed | Description
+:--                     | :--       | :--                | :--      | :--     | :--
+parent                  | string    | -                  | yes      | yes     | ホストデバイスの名前
+network                 | string    | -                  | yes      | no      | （parent の代わりに）デバイスをリンクする先の LXD ネットワーク
+name                    | string    | カーネルが割り当て | no       | no      | インスタンス内部でのインタフェース名
+mtu                     | integer   | 親の MTU           | no       | yes     | 新しいインタフェースの MTU
 hwaddr                  | string    | ランダムに割り当て | no       | no      | 新しいインタフェースの MAC アドレス
-vlan                    | integer   | -                                             | no       | no      | アタッチ先の VLAN ID
-gvrp                    | boolean   | false                                         | no       | no      | GARP VLAN Registration Protocol を使って VLAN を登録する
-maas.subnet.ipv4        | string    | -                                             | no       | yes     | インスタンスを登録する MAAS IPv4 サブネット
-maas.subnet.ipv6        | string    | -                                             | no       | yes     | インスタンスを登録する MAAS IPv6 サブネット
-boot.priority           | integer   | -                                             | no       | no      | VM のブート優先度 (高いほうが先にブート)
+vlan                    | integer   | -                  | no       | no      | アタッチ先の VLAN ID
+gvrp                    | boolean   | false              | no       | no      | GARP VLAN Registration Protocol を使って VLAN を登録する
+maas.subnet.ipv4        | string    | -                  | no       | yes     | インスタンスを登録する MAAS IPv4 サブネット
+maas.subnet.ipv6        | string    | -                  | no       | yes     | インスタンスを登録する MAAS IPv6 サブネット
+boot.priority           | integer   | -                  | no       | no      | VM のブート優先度 (高いほうが先にブート)
 
 ##### nic: sriov
 
@@ -366,18 +365,18 @@ SR-IOV を有効にした物理ネットワークデバイスの仮想ファン�
 
 デバイス設定プロパティは以下の通りです。
 
-Key                     | Type      | Default                                       | Required | Managed | Description
-:--                     | :--       | :--                                           | :--      | :--     | :--
-parent                  | string    | -                                             | yes      | yes     | ホストデバイスの名前
-network                 | string    | -                                             | yes      | no      | （parent の代わりに）デバイスをリンクする先の LXD ネットワーク
-name                    | string    | カーネルが割り当て   | no       | no      | インスタンス内部でのインタフェース名
-mtu                     | integer   | カーネルが割り当て   | no       | yes     | 新しいインタフェースの MTU
+Key                     | Type      | Default            | Required | Managed | Description
+:--                     | :--       | :--                | :--      | :--     | :--
+parent                  | string    | -                  | yes      | yes     | ホストデバイスの名前
+network                 | string    | -                  | yes      | no      | （parent の代わりに）デバイスをリンクする先の LXD ネットワーク
+name                    | string    | カーネルが割り当て | no       | no      | インスタンス内部でのインタフェース名
+mtu                     | integer   | カーネルが割り当て | no       | yes     | 新しいインタフェースの MTU
 hwaddr                  | string    | ランダムに割り当て | no       | no      | 新しいインタフェースの MAC アドレス
-security.mac\_filtering | boolean   | false                                         | no       | no      | インスタンスが他の MAC アドレスになりすますのを防ぐ
-vlan                    | integer   | -                                             | no       | no      | アタッチ先の VLAN ID
-maas.subnet.ipv4        | string    | -                                             | no       | yes     | インスタンスを登録する MAAS IPv4 サブネット
-maas.subnet.ipv6        | string    | -                                             | no       | yes     | インスタンスを登録する MAAS IPv6 サブネット
-boot.priority           | integer   | -                                             | no       | no      | VM のブート優先度 (高いほうが先にブート)
+security.mac\_filtering | boolean   | false              | no       | no      | インスタンスが他の MAC アドレスになりすますのを防ぐ
+vlan                    | integer   | -                  | no       | no      | アタッチ先の VLAN ID
+maas.subnet.ipv4        | string    | -                  | no       | yes     | インスタンスを登録する MAAS IPv4 サブネット
+maas.subnet.ipv6        | string    | -                  | no       | yes     | インスタンスを登録する MAAS IPv6 サブネット
+boot.priority           | integer   | -                  | no       | no      | VM のブート優先度 (高いほうが先にブート)
 
 ##### nic: ovn
 
@@ -389,25 +388,25 @@ boot.priority           | integer   | -                                         
 
 デバイス設定プロパティは以下の通りです。
 
-Key                                  | Type    | Default                                       | Required | Managed | Description
-:--                                  | :--     | :--                                           | :--      | :--     | :--
-network                              | string  | -                                             | yes      | yes     | デバイスの接続先の LXD ネットワーク
-acceleration                         | string  | none                                          | no       | no      | ハードウェアオフローディングを有効にする。 `none` か `sriov` (下記の SR-IOV ハードウェアアクセラレーション参照)
-name                                 | string  | カーネルが割り当て   | no       | no      | インスタンス内部でのインタフェース名
+Key                                  | Type    | Default            | Required | Managed | Description
+:--                                  | :--     | :--                | :--      | :--     | :--
+network                              | string  | -                  | yes      | yes     | デバイスの接続先の LXD ネットワーク
+acceleration                         | string  | none               | no       | no      | ハードウェアオフローディングを有効にする。 `none` か `sriov` (下記の SR-IOV ハードウェアアクセラレーション参照)
+name                                 | string  | カーネルが割り当て | no       | no      | インスタンス内部でのインタフェース名
 host\_name                           | string  | ランダムに割り当て | no       | no      | ホスト内部でのインタフェース名
 hwaddr                               | string  | ランダムに割り当て | no       | no      | 新しいインターフェースの MAC アドレス
-ipv4.address                         | string  | -                                             | no       | no      | DHCP でインスタンスに割り当てる IPv4 アドレス
-ipv6.address                         | string  | -                                             | no       | no      | DHCP でインスタンスに割り当てる IPv6 アドレス
-ipv4.routes                          | string  | -                                             | no       | no      | ホスト上で nic に追加する IPv4 静的ルートのカンマ区切りリスト
-ipv6.routes                          | string  | -                                             | no       | no      | ホスト上で nic に追加する IPv6 静的ルートのカンマ区切りリスト
-ipv4.routes.external                 | string  | -                                             | no       | no      | NIC へのルートとアップリンクネットワークでの公開に使用する IPv4 静的ルートのカンマ区切りリスト
-ipv6.routes.external                 | string  | -                                             | no       | no      | NIC へのルートとアップリンクネットワークでの公開に使用する IPv6 静的ルートのカンマ区切りリスト
-boot.priority                        | integer | -                                             | no       | no      | VM のブート優先度 (高いほうが先にブート)
-security.acls                        | string  | -                                             | no       | no      | 適用するネットワーク ACL のカンマ区切りリスト
-security.acls.default.ingress.action | string  | reject                                        | no       | no      | どの ACL ルールにもマッチしない ingress トラフィックに使うアクション
-security.acls.default.egress.action  | string  | reject                                        | no       | no      | どの ACL ルールにもマッチしない egress トラフィックに使うアクション
-security.acls.default.ingress.logged | boolean | false                                         | no       | no      | どの ACL ルールにもマッチしない ingress トラフィックをログ出力するかどうか
-security.acls.default.egress.logged  | boolean | false                                         | no       | no      | どの ACL ルールにもマッチしない egress トラフィックをログ出力するかどうか
+ipv4.address                         | string  | -                  | no       | no      | DHCP でインスタンスに割り当てる IPv4 アドレス
+ipv6.address                         | string  | -                  | no       | no      | DHCP でインスタンスに割り当てる IPv6 アドレス
+ipv4.routes                          | string  | -                  | no       | no      | ホスト上で nic に追加する IPv4 静的ルートのカンマ区切りリスト
+ipv6.routes                          | string  | -                  | no       | no      | ホスト上で nic に追加する IPv6 静的ルートのカンマ区切りリスト
+ipv4.routes.external                 | string  | -                  | no       | no      | NIC へのルートとアップリンクネットワークでの公開に使用する IPv4 静的ルートのカンマ区切りリスト
+ipv6.routes.external                 | string  | -                  | no       | no      | NIC へのルートとアップリンクネットワークでの公開に使用する IPv6 静的ルートのカンマ区切りリスト
+boot.priority                        | integer | -                  | no       | no      | VM のブート優先度 (高いほうが先にブート)
+security.acls                        | string  | -                  | no       | no      | 適用するネットワーク ACL のカンマ区切りリスト
+security.acls.default.ingress.action | string  | reject             | no       | no      | どの ACL ルールにもマッチしない ingress トラフィックに使うアクション
+security.acls.default.egress.action  | string  | reject             | no       | no      | どの ACL ルールにもマッチしない egress トラフィックに使うアクション
+security.acls.default.ingress.logged | boolean | false              | no       | no      | どの ACL ルールにもマッチしない ingress トラフィックをログ出力するかどうか
+security.acls.default.egress.logged  | boolean | false              | no       | no      | どの ACL ルールにもマッチしない egress トラフィックをログ出力するかどうか
 
 SR-IOV ハードウェアアクセラレーション:
 
@@ -451,17 +450,17 @@ ip link set enp9s0f0np0 up
 
 デバイス設定プロパティは以下の通りです。
 
-Key                     | Type      | Default                                       | Required | Description
-:--                     | :--       | :--                                           | :--      | :--
-parent                  | string    | -                                             | yes      | ホストデバイスの名前
-name                    | string    | カーネルが割り当て   | no       | インスタンス内部でのインタフェース名
-mtu                     | integer   | 親の MTU                  | no       | 新しいインタフェースの MTU
+Key                     | Type      | Default            | Required | Description
+:--                     | :--       | :--                | :--      | :--
+parent                  | string    | -                  | yes      | ホストデバイスの名前
+name                    | string    | カーネルが割り当て | no       | インスタンス内部でのインタフェース名
+mtu                     | integer   | 親の MTU           | no       | 新しいインタフェースの MTU
 hwaddr                  | string    | ランダムに割り当て | no       | 新しいインタフェースの MAC アドレス
-vlan                    | integer   | -                                             | no       | アタッチ先の VLAN ID
-gvrp                    | boolean   | false                                         | no       | GARP VLAN Registration Protocol を使って VLAN を登録する
-maas.subnet.ipv4        | string    | -                                             | no       | インスタンスを登録する MAAS IPv4 サブネット
-maas.subnet.ipv6        | string    | -                                             | no       | インスタンスを登録する MAAS IPv6 サブネット
-boot.priority           | integer   | -                                             | no       | VM のブート優先度 (高いほうが先にブート)
+vlan                    | integer   | -                  | no       | アタッチ先の VLAN ID
+gvrp                    | boolean   | false              | no       | GARP VLAN Registration Protocol を使って VLAN を登録する
+maas.subnet.ipv4        | string    | -                  | no       | インスタンスを登録する MAAS IPv4 サブネット
+maas.subnet.ipv6        | string    | -                  | no       | インスタンスを登録する MAAS IPv6 サブネット
+boot.priority           | integer   | -                  | no       | VM のブート優先度 (高いほうが先にブート)
 
 ##### nic: ipvlan
 
@@ -495,21 +494,21 @@ net.ipv6.conf.<parent>.proxy_ndp=1
 
 デバイス設定プロパティは以下の通りです。
 
-Key                     | Type      | Default                                       | Required | Description
-:--                     | :--       | :--                                           | :--      | :--
-parent                  | string    | -                                             | yes      | ホストデバイスの名前
-name                    | string    | カーネルが割り当て   | no       | インスタンス内部でのインタフェース名
-mtu                     | integer   | 親の MTU                  | no       | 新しいインタフェースの MTU
-mode                    | string    | l3s                                           | no       | IPVLAN のモード (`l2` か `l3s` のいずれか）
+Key                     | Type      | Default            | Required | Description
+:--                     | :--       | :--                | :--      | :--
+parent                  | string    | -                  | yes      | ホストデバイスの名前
+name                    | string    | カーネルが割り当て | no       | インスタンス内部でのインタフェース名
+mtu                     | integer   | 親の MTU           | no       | 新しいインタフェースの MTU
+mode                    | string    | l3s                | no       | IPVLAN のモード (`l2` か `l3s` のいずれか）
 hwaddr                  | string    | ランダムに割り当て | no       | 新しいインタフェースの MAC アドレス
-ipv4.address            | string    | -                                             | no       | インスタンスに追加する IPv4 静的アドレスのカンマ区切りリスト。 `l2` モードでは CIDR 形式か単一アドレス形式で指定可能（単一アドレスの場合はサブネットは /24）
-ipv4.gateway            | string    | auto                                          | no       | `l3s` モードではデフォルト IPv4 ゲートウェイを自動的に追加するかどうか (auto か none を指定可能)。 `l2` モードではゲートウェイの IPv4 アドレスを指定。
-ipv4.host\_table        | integer   | -                                             | no       | （メインのルーティングテーブルに加えて） IPv4 の静的ルートを追加する先のルーティングテーブル ID
-ipv6.address            | string    | -                                             | no       | インスタンスに追加する IPv6 静的アドレスのカンマ区切りリスト。 `l2` モードでは CIDR 形式か単一アドレス形式で指定可能（単一アドレスの場合はサブネットは /64）
-ipv6.gateway            | string    | auto (l3s), - (l2)                            | no       | `l3s` モードではデフォルト IPv6 ゲートウェイを自動的に追加するかどうか (auto か none を指定可能)。 `l2` モードではゲートウェイの IPv6 アドレスを指定。
-ipv6.host\_table        | integer   | -                                             | no       | （メインのルーティングテーブルに加えて） IPv6 の静的ルートを追加する先のルーティングテーブル ID
-vlan                    | integer   | -                                             | no       | アタッチ先の VLAN ID
-gvrp                    | boolean   | false                                         | no       | GARP VLAN Registration Protocol を使って VLAN を登録する
+ipv4.address            | string    | -                  | no       | インスタンスに追加する IPv4 静的アドレスのカンマ区切りリスト。 `l2` モードでは CIDR 形式か単一アドレス形式で指定可能（単一アドレスの場合はサブネットは /24）
+ipv4.gateway            | string    | auto               | no       | `l3s` モードではデフォルト IPv4 ゲートウェイを自動的に追加するかどうか (auto か none を指定可能)。 `l2` モードではゲートウェイの IPv4 アドレスを指定。
+ipv4.host\_table        | integer   | -                  | no       | （メインのルーティングテーブルに加えて） IPv4 の静的ルートを追加する先のルーティングテーブル ID
+ipv6.address            | string    | -                  | no       | インスタンスに追加する IPv6 静的アドレスのカンマ区切りリスト。 `l2` モードでは CIDR 形式か単一アドレス形式で指定可能（単一アドレスの場合はサブネットは /64）
+ipv6.gateway            | string    | auto (l3s), - (l2) | no       | `l3s` モードではデフォルト IPv6 ゲートウェイを自動的に追加するかどうか (auto か none を指定可能)。 `l2` モードではゲートウェイの IPv6 アドレスを指定。
+ipv6.host\_table        | integer   | -                  | no       | （メインのルーティングテーブルに加えて） IPv6 の静的ルートを追加する先のルーティングテーブル ID
+vlan                    | integer   | -                  | no       | アタッチ先の VLAN ID
+gvrp                    | boolean   | false              | no       | GARP VLAN Registration Protocol を使って VLAN を登録する
 
 ##### nic: p2p
 
@@ -521,18 +520,18 @@ gvrp                    | boolean   | false                                     
 
 デバイス設定プロパティは以下の通りです。
 
-Key                     | Type      | Default                                       | Required | Description
-:--                     | :--       | :--                                           | :--      | :--
-name                    | string    | カーネルが割り当て   | no       | インスタンス内部でのインタフェース名
-mtu                     | integer   | カーネルが割り当て   | no       | 新しいインタフェースの MTU
+Key                     | Type      | Default            | Required | Description
+:--                     | :--       | :--                | :--      | :--
+name                    | string    | カーネルが割り当て | no       | インスタンス内部でのインタフェース名
+mtu                     | integer   | カーネルが割り当て | no       | 新しいインタフェースの MTU
 hwaddr                  | string    | ランダムに割り当て | no       | 新しいインタフェースの MAC アドレス
 host\_name              | string    | ランダムに割り当て | no       | ホスト内でのインタフェースの名前
-limits.ingress          | string    | -                                             | no       | 入力トラフィックの I/O 制限値（さまざまな単位が使用可能、下記参照）
-limits.egress           | string    | -                                             | no       | 出力トラフィックの I/O 制限値（さまざまな単位が使用可能、下記参照）
-limits.max              | string    | -                                             | no       | `limits.ingress` と `limits.egress` の両方を同じ値に変更する
-ipv4.routes             | string    | -                                             | no       | ホスト上で NIC に追加する IPv4 静的ルートのカンマ区切りリスト
-ipv6.routes             | string    | -                                             | no       | ホスト上で NIC に追加する IPv6 静的ルートのカンマ区切りリスト
-boot.priority           | integer   | -                                             | no       | VM のブート優先度 (高いほうが先にブート)
+limits.ingress          | string    | -                  | no       | 入力トラフィックの I/O 制限値（さまざまな単位が使用可能、下記参照）
+limits.egress           | string    | -                  | no       | 出力トラフィックの I/O 制限値（さまざまな単位が使用可能、下記参照）
+limits.max              | string    | -                  | no       | `limits.ingress` と `limits.egress` の両方を同じ値に変更する
+ipv4.routes             | string    | -                  | no       | ホスト上で NIC に追加する IPv4 静的ルートのカンマ区切りリスト
+ipv6.routes             | string    | -                  | no       | ホスト上で NIC に追加する IPv6 静的ルートのカンマ区切りリスト
+boot.priority           | integer   | -                  | no       | VM のブート優先度 (高いほうが先にブート)
 
 ##### nic: routed
 
@@ -589,28 +588,28 @@ net.ipv6.conf.<parent>.proxy_ndp=1
 
 デバイス設定プロパティ
 
-Key                     | Type      | Default                                       | Required | Description
-:--                     | :--       | :--                                           | :--      | :--
-parent                  | string    | -                                             | no       | インスタンスが参加するホストデバイス名
-name                    | string    | カーネルが割り当て   | no       | インスタンス内でのインタフェース名
+Key                     | Type      | Default            | Required | Description
+:--                     | :--       | :--                | :--      | :--
+parent                  | string    | -                  | no       | インスタンスが参加するホストデバイス名
+name                    | string    | カーネルが割り当て | no       | インスタンス内でのインタフェース名
 host\_name              | string    | ランダムに割り当て | no       | ホスト内でのインターフェース名
-mtu                     | integer   | 親の MTU                  | no       | 新しいインタフェースの MTU
+mtu                     | integer   | 親の MTU           | no       | 新しいインタフェースの MTU
 hwaddr                  | string    | ランダムに割り当て | no       | 新しいインタフェースの MAC アドレス
-limits.ingress          | string    | -                                             | no       | 内向きトラフィックに対する bit/s での I/O 制限（さまざまな単位をサポート、下記参照）
-limits.egress           | string    | -                                             | no       | 外向きトラフィックに対する bit/s での I/O 制限（さまざまな単位をサポート、下記参照）
-limits.max              | string    | -                                             | no       | limits.ingress と limits.egress の両方を指定するのと同じ
-ipv4.routes             | string    | -                                             | no       | ホスト上で NIC に追加する IPv4 静的ルートのカンマ区切りリスト（L2 ARP/NDP プロキシーを除く）
-ipv4.address            | string    | -                                             | no       | インスタンスに追加する IPv4 静的アドレスのカンマ区切りリスト
-ipv4.gateway            | string    | auto                                          | no       | 自動的に IPv4 のデフォルトゲートウェイを追加するかどうか（ auto か none を指定可能）
-ipv4.host\_address      | string    | 169.254.0.1                                   | no       | ホスト側の veth インターフェースに追加する IPv4 アドレス
-ipv4.host\_table        | integer   | -                                             | no       | （メインのルーティングテーブルに加えて） IPv4 の静的ルートを追加する先のルーティングテーブル ID
-ipv6.address            | string    | -                                             | no       | インスタンスに追加する IPv6 静的アドレスのカンマ区切りリスト
-ipv6.routes             | string    | -                                             | no       | ホスト上で NIC に追加する IPv6 静的ルートのカンマ区切りリスト（L2 ARP/NDP プロキシーを除く）
-ipv6.gateway            | string    | auto                                          | no       | 自動的に IPv6 のデフォルトゲートウェイを追加するかどうか（ auto か none を指定可能）
-ipv6.host\_address      | string    | fe80::1                                       | no       | ホスト側の veth インターフェースに追加する IPv6 アドレス
-ipv6.host\_table        | integer   | -                                             | no       | （メインのルーティングテーブルに加えて） IPv6 の静的ルートを追加する先のルーティングテーブル ID
-vlan                    | integer   | -                                             | no       | アタッチ先の VLAN ID
-gvrp                    | boolean   | false                                         | no       | GARP VLAN Registration Protocol を使って VLAN を登録する
+limits.ingress          | string    | -                  | no       | 内向きトラフィックに対する bit/s での I/O 制限（さまざまな単位をサポート、下記参照）
+limits.egress           | string    | -                  | no       | 外向きトラフィックに対する bit/s での I/O 制限（さまざまな単位をサポート、下記参照）
+limits.max              | string    | -                  | no       | limits.ingress と limits.egress の両方を指定するのと同じ
+ipv4.routes             | string    | -                  | no       | ホスト上で NIC に追加する IPv4 静的ルートのカンマ区切りリスト（L2 ARP/NDP プロキシーを除く）
+ipv4.address            | string    | -                  | no       | インスタンスに追加する IPv4 静的アドレスのカンマ区切りリスト
+ipv4.gateway            | string    | auto               | no       | 自動的に IPv4 のデフォルトゲートウェイを追加するかどうか（ auto か none を指定可能）
+ipv4.host\_address      | string    | 169.254.0.1        | no       | ホスト側の veth インターフェースに追加する IPv4 アドレス
+ipv4.host\_table        | integer   | -                  | no       | （メインのルーティングテーブルに加えて） IPv4 の静的ルートを追加する先のルーティングテーブル ID
+ipv6.address            | string    | -                  | no       | インスタンスに追加する IPv6 静的アドレスのカンマ区切りリスト
+ipv6.routes             | string    | -                  | no       | ホスト上で NIC に追加する IPv6 静的ルートのカンマ区切りリスト（L2 ARP/NDP プロキシーを除く）
+ipv6.gateway            | string    | auto               | no       | 自動的に IPv6 のデフォルトゲートウェイを追加するかどうか（ auto か none を指定可能）
+ipv6.host\_address      | string    | fe80::1            | no       | ホスト側の veth インターフェースに追加する IPv6 アドレス
+ipv6.host\_table        | integer   | -                  | no       | （メインのルーティングテーブルに加えて） IPv6 の静的ルートを追加する先のルーティングテーブル ID
+vlan                    | integer   | -                  | no       | アタッチ先の VLAN ID
+gvrp                    | boolean   | false              | no       | GARP VLAN Registration Protocol を使って VLAN を登録する
 
 ##### ブリッジ、ipvlan、macvlan を使った物理ネットワークへの接続
 `bridged`、`ipvlan`、`macvlan` インターフェースタイプのいずれも、既存の物理ネットワークへ接続できます。
@@ -662,13 +661,13 @@ LXD では、InfiniBand デバイスに対する 2 種類の異なったネッ�
 
 ネットワークインターフェースの種類が異なると追加のプロパティが異なります。現時点のリストは次の通りです:
 
-Key                     | Type      | Default           | Required  | Used by         | Description
-:--                     | :--       | :--               | :--       | :--             | :--
-nictype                 | string    | -                 | yes       | all             | デバイスタイプ。`physical` か `sriov` のいずれか
-name                    | string    | カーネルが割り当て   | no        | all             | インスタンス内部でのインターフェース名
+Key                     | Type      | Default            | Required  | Used by         | Description
+:--                     | :--       | :--                | :--       | :--             | :--
+nictype                 | string    | -                  | yes       | all             | デバイスタイプ。`physical` か `sriov` のいずれか
+name                    | string    | カーネルが割り当て | no        | all             | インスタンス内部でのインターフェース名
 hwaddr                  | string    | ランダムに割り当て | no        | all             | 新しいインターフェースの MAC アドレス。 20 バイト全てを指定するか短い 8 バイト (この場合親デバイスの最後の 8 バイトだけを変更) のどちらかを設定可能
-mtu                     | integer   | 親の MTU        | no        | all             | 新しいインターフェースの MTU
-parent                  | string    | -                 | yes       | physical, sriov | ホスト上のデバイス、ブリッジの名前
+mtu                     | integer   | 親の MTU           | no        | all             | 新しいインターフェースの MTU
+parent                  | string    | -                  | yes       | physical, sriov | ホスト上のデバイス、ブリッジの名前
 
 `physical` な `infiniband` デバイスを作成するには次のように実行します:
 
@@ -1059,8 +1058,8 @@ LXD は単純に `limits.kernel.*` の後に指定されるリソースキーと
 カーネルが適切な確認を行います。これにより、ユーザーは使っているシステム上で使えるどんな制限でも指定できます。
 いくつか一般的に使える制限は次の通りです:
 
-Key                      | Resource          | Description
-:--                      | :---              | :----------
+Key                      | Resource           | Description
+:--                      | :---               | :----------
 limits.kernel.as         | RLIMIT\_AS         | プロセスの仮想メモリーの最大サイズ
 limits.kernel.core       | RLIMIT\_CORE       | プロセスのコアダンプファイルの最大サイズ
 limits.kernel.cpu        | RLIMIT\_CPU        | プロセスが使える CPU 時間の秒単位の制限
