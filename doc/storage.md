@@ -163,21 +163,21 @@ lxc profile device add default root disk path=/ pool=default
 
 
 #### ストレージプール設定
-キー             | 型              | デフォルト値            | 説明
-:--                           | :---                          | :------                                 | :----------
-rsync.bwlimit                 | string                        | 0 (no limit)                            | ストレージエンティティの転送に rsync を使う必要があるときにソケット I/O に指定する上限を設定
-rsync.compression             | bool                          | true                                    | ストレージブールのマイグレーションの際に圧縮を使うかどうか
-source                        | string                        | -                                       | ブロックデバイスかループファイルかファイルシステムエントリのパス
+キー              | 型     | デフォルト値 | 説明
+:--               | :---   | :------      | :----------
+rsync.bwlimit     | string | 0 (no limit) | ストレージエンティティの転送に rsync を使う必要があるときにソケット I/O に指定する上限を設定
+rsync.compression | bool   | true         | ストレージブールのマイグレーションの際に圧縮を使うかどうか
+source            | string | -            | ブロックデバイスかループファイルかファイルシステムエントリのパス
 
 #### ストレージボリューム設定
-キー       | 型 | 条件 | デフォルト値               | 説明
-:--                     | :---      | :--------                 | :------                                         | :----------
-security.shifted        | bool      | custom volume             | false                                           | id シフトオーバーレイを有効にする（複数の独立したインスタンスによるアタッチを許可する）
-security.unmapped       | bool      | custom volume             | false                                           | ボリュームへの id マッピングを無効にする
-size                    | string    | appropriate driver        | volume.size と同じ | ストレージボリュームのサイズ
-snapshots.expiry        | string    | custom volume             | -                                               | スナップショットがいつ削除されるかを制御（`1M 2H 3d 4w 5m 6y` のような設定形式を想定）
-snapshots.pattern       | string    | custom volume             | snap%d                                          | スナップショット名を表す Pongo2 テンプレート文字列（スケジュールされたスナップショットと名前指定なしのスナップショットに使用）
-snapshots.schedule      | string    | custom volume             | -                                               | Cron の書式 (`<minute> <hour> <dom> <month> <dow>`)、またはスケジュールアイリアスのカンマ区切りリスト `<@hourly> <@daily> <@midnight> <@weekly> <@monthly> <@annually> <@yearly>`
+キー               | 型     | 条件               | デフォルト値       | 説明
+:--                | :---   | :--------          | :------            | :----------
+security.shifted   | bool   | custom volume      | false              | id シフトオーバーレイを有効にする（複数の独立したインスタンスによるアタッチを許可する）
+security.unmapped  | bool   | custom volume      | false              | ボリュームへの id マッピングを無効にする
+size               | string | appropriate driver | volume.size と同じ | ストレージボリュームのサイズ
+snapshots.expiry   | string | custom volume      | -                  | スナップショットがいつ削除されるかを制御（`1M 2H 3d 4w 5m 6y` のような設定形式を想定）
+snapshots.pattern  | string | custom volume      | snap%d             | スナップショット名を表す Pongo2 テンプレート文字列（スケジュールされたスナップショットと名前指定なしのスナップショットに使用）
+snapshots.schedule | string | custom volume      | -                  | Cron の書式 (`<minute> <hour> <dom> <month> <dow>`)、またはスケジュールアイリアスのカンマ区切りリスト `<@hourly> <@daily> <@midnight> <@weekly> <@monthly> <@annually> <@yearly>`
 
 #### ディレクトリストレージプールを作成するコマンド
 
@@ -222,30 +222,30 @@ lxc storage create pool2 dir source=/data/lxd
 
 
 #### ストレージプール設定
-キー             | 型              | デフォルト値            | 説明
-:--                           | :---                          | :------                                 | :----------
-ceph.cluster\_name            | string                        | ceph                                    | 新しいストレージプールを作成する ceph クラスターの名前
-ceph.osd.data\_pool\_name     | string                        | -                                       | osd data pool の名前
-ceph.osd.force\_reuse         | bool                          | false                                   | 別の LXD インスタンスで既に使用されている osd ストレージプールの使用を強制するか
-ceph.osd.pg\_num              | string                        | 32                                      | osd ストレージプール用の placement グループの数
-ceph.osd.pool\_name           | string                        | プールの名前  | osd ストレージプールの名前
-ceph.rbd.clone\_copy          | bool                          | true                                    | フルのデータセットコピーではなく RBD のライトウェイトクローンを使うかどうか
-ceph.rbd.du                   | bool                          | true                                    | 停止したインスタンスのディスク使用データを取得するのに rbd du を使用するかどうか
-ceph.rbd.features             | string                        | layering                                | ボリュームで有効にする RBD の機能のカンマ区切りリスト
-ceph.user.name                | string                        | admin                                   | ストレージプールとボリュームの作成に使用する ceph ユーザー
-volatile.pool.pristine        | string                        | true                                    | プールが作成時に空かどうか
+キー                      | 型     | デフォルト値 | 説明
+:--                       | :---   | :------      | :----------
+ceph.cluster\_name        | string | ceph         | 新しいストレージプールを作成する ceph クラスターの名前
+ceph.osd.data\_pool\_name | string | -            | osd data pool の名前
+ceph.osd.force\_reuse     | bool   | false        | 別の LXD インスタンスで既に使用されている osd ストレージプールの使用を強制するか
+ceph.osd.pg\_num          | string | 32           | osd ストレージプール用の placement グループの数
+ceph.osd.pool\_name       | string | プールの名前 | osd ストレージプールの名前
+ceph.rbd.clone\_copy      | bool   | true         | フルのデータセットコピーではなく RBD のライトウェイトクローンを使うかどうか
+ceph.rbd.du               | bool   | true         | 停止したインスタンスのディスク使用データを取得するのに rbd du を使用するかどうか
+ceph.rbd.features         | string | layering     | ボリュームで有効にする RBD の機能のカンマ区切りリスト
+ceph.user.name            | string | admin        | ストレージプールとボリュームの作成に使用する ceph ユーザー
+volatile.pool.pristine    | string | true         | プールが作成時に空かどうか
 
 #### ストレージボリューム設定
-キー       | 型 | 条件 | デフォルト値                   | 説明
-:--                     | :---      | :--------                 | :------                                             | :----------
-block.filesystem        | string    | block based driver        | volume.block.filesystem と同じ     | ストレージボリュームのファイルシステム
-block.mount\_options    | string    | block based driver        | volume.block.mount\_options と同じ | ブロックデバイスのマウントオプション
-security.shifted        | bool      | custom volume             | false                                               | id シフトオーバーレイを有効にする（複数の独立したインスタンスによるアタッチを許可する）
-security.unmapped       | bool      | custom volume             | false                                               | ボリュームへの id マッピングを無効にする
-size                    | string    | appropriate driver        | volume.size と同じ     | ストレージボリュームのサイズ
-snapshots.expiry        | string    | custom volume             | -                                                   | スナップショットがいつ削除されるかを制御（`1M 2H 3d 4w 5m 6y` のような設定形式を想定）
-snapshots.pattern       | string    | custom volume             | snap%d                                              | スナップショット名を表す Pongo2 テンプレート文字列（スケジュールされたスナップショットと名前指定なしのスナップショットに使用）
-snapshots.schedule      | string    | custom volume             | -                                                   | Cron の書式 (`<minute> <hour> <dom> <month> <dow>`)、またはスケジュールアイリアスのカンマ区切りリスト `<@hourly> <@daily> <@midnight> <@weekly> <@monthly> <@annually> <@yearly>`
+キー                 | 型     | 条件               | デフォルト値                       | 説明
+:--                  | :---   | :--------          | :------                            | :----------
+block.filesystem     | string | block based driver | volume.block.filesystem と同じ     | ストレージボリュームのファイルシステム
+block.mount\_options | string | block based driver | volume.block.mount\_options と同じ | ブロックデバイスのマウントオプション
+security.shifted     | bool   | custom volume      | false                              | id シフトオーバーレイを有効にする（複数の独立したインスタンスによるアタッチを許可する）
+security.unmapped    | bool   | custom volume      | false                              | ボリュームへの id マッピングを無効にする
+size                 | string | appropriate driver | volume.size と同じ                 | ストレージボリュームのサイズ
+snapshots.expiry     | string | custom volume      | -                                  | スナップショットがいつ削除されるかを制御（`1M 2H 3d 4w 5m 6y` のような設定形式を想定）
+snapshots.pattern    | string | custom volume      | snap%d                             | スナップショット名を表す Pongo2 テンプレート文字列（スケジュールされたスナップショットと名前指定なしのスナップショットに使用）
+snapshots.schedule   | string | custom volume      | -                                  | Cron の書式 (`<minute> <hour> <dom> <month> <dow>`)、またはスケジュールアイリアスのカンマ区切りリスト `<@hourly> <@daily> <@midnight> <@weekly> <@monthly> <@annually> <@yearly>`
 
 
 #### Ceph ストレージプールを作成するコマンド
@@ -286,24 +286,24 @@ lxc storage create pool1 ceph source=rpl-pool ceph.osd.data_pool_name=ecpool
  - サーバサイドで許可されていればスナップショットもサポート
 
 #### ストレージプール設定
-キー             | 型              | デフォルト値            | 説明
-:--                           | :---                          | :------                                 | :----------
-ceph.cluster\_name            | string                        | ceph                                    | 新しいストレージプールを作成する ceph クラスターの名前
-ceph.user.name                | string                        | admin                                   | ストレージプールやボリュームを作成する際に使用する Ceph ユーザー名
-cephfs.cluster\_name          | string                        | ceph                                    | 新しいストレージプールを作成する ceph のクラスター名
-cephfs.path                   | string                        | /                                       | CEPHFS をマウントするベースのパス
-cephfs.user.name              | string                        | admin                                   | ストレージプールとボリュームを作成する際に用いる ceph のユーザー
-volatile.pool.pristine        | string                        | true                                    | プールが作成時に空かどうか
+キー                   | 型     | デフォルト値 | 説明
+:--                    | :---   | :------      | :----------
+ceph.cluster\_name     | string | ceph         | 新しいストレージプールを作成する ceph クラスターの名前
+ceph.user.name         | string | admin        | ストレージプールやボリュームを作成する際に使用する Ceph ユーザー名
+cephfs.cluster\_name   | string | ceph         | 新しいストレージプールを作成する ceph のクラスター名
+cephfs.path            | string | /            | CEPHFS をマウントするベースのパス
+cephfs.user.name       | string | admin        | ストレージプールとボリュームを作成する際に用いる ceph のユーザー
+volatile.pool.pristine | string | true         | プールが作成時に空かどうか
 
 #### ストレージボリューム設定
-キー       | 型 | 条件 | デフォルト値                   | 説明
-:--                     | :---      | :--------                 | :------                                             | :----------
-security.shifted        | bool      | custom volume             | false                                               | id シフトオーバーレイを有効にする（複数の独立したインスタンスによるアタッチを許可する）
-security.unmapped       | bool      | custom volume             | false                                               | ボリュームへの id マッピングを無効にする
-size                    | string    | appropriate driver        | volume.size と同じ     | ストレージボリュームのサイズ
-snapshots.expiry        | string    | custom volume             | -                                                   | スナップショットがいつ削除されるかを制御（`1M 2H 3d 4w 5m 6y` のような設定形式を想定）
-snapshots.pattern       | string    | custom volume             | snap%d                                              | スナップショット名を表す Pongo2 テンプレート文字列（スケジュールされたスナップショットと名前指定なしのスナップショットに使用）
-snapshots.schedule      | string    | custom volume             | -                                                   | Cron の書式 (`<minute> <hour> <dom> <month> <dow>`)、またはスケジュールアイリアスのカンマ区切りリスト `<@hourly> <@daily> <@midnight> <@weekly> <@monthly> <@annually> <@yearly>`
+キー               | 型     | 条件               | デフォルト値       | 説明
+:--                | :---   | :--------          | :------            | :----------
+security.shifted   | bool   | custom volume      | false              | id シフトオーバーレイを有効にする（複数の独立したインスタンスによるアタッチを許可する）
+security.unmapped  | bool   | custom volume      | false              | ボリュームへの id マッピングを無効にする
+size               | string | appropriate driver | volume.size と同じ | ストレージボリュームのサイズ
+snapshots.expiry   | string | custom volume      | -                  | スナップショットがいつ削除されるかを制御（`1M 2H 3d 4w 5m 6y` のような設定形式を想定）
+snapshots.pattern  | string | custom volume      | snap%d             | スナップショット名を表す Pongo2 テンプレート文字列（スケジュールされたスナップショットと名前指定なしのスナップショットに使用）
+snapshots.schedule | string | custom volume      | -                  | Cron の書式 (`<minute> <hour> <dom> <month> <dow>`)、またはスケジュールアイリアスのカンマ区切りリスト `<@hourly> <@daily> <@midnight> <@weekly> <@monthly> <@annually> <@yearly>`
 
 
 ### Btrfs
@@ -325,19 +325,19 @@ snapshots.schedule      | string    | custom volume             | -             
 
 
 #### ストレージプール設定
-キー               | 型 | 条件    | デフォルト値 | 説明
-:--                             | :---      | :--------                         | :------                    | :----------
-btrfs.mount\_options            | string    | btrfs driver                      | user\_subvol\_rm\_allowed  | ブロックデバイスのマウントオプション
+キー                 | 型     | 条件         | デフォルト値              | 説明
+:--                  | :---   | :--------    | :------                   | :----------
+btrfs.mount\_options | string | btrfs driver | user\_subvol\_rm\_allowed | ブロックデバイスのマウントオプション
 
 #### ストレージボリューム設定
-キー       | 型 | 条件 | デフォルト値                   | 説明
-:--                     | :---      | :--------                 | :------                                             | :----------
-security.shifted        | bool      | custom volume             | false                                               | id シフトオーバーレイを有効にする（複数の独立したインスタンスによるアタッチを許可する）
-security.unmapped       | bool      | custom volume             | false                                               | ボリュームへの id マッピングを無効にする
-size                    | string    | appropriate driver        | volume.size と同じ     | ストレージボリュームのサイズ
-snapshots.expiry        | string    | custom volume             | -                                                   | スナップショットがいつ削除されるかを制御（`1M 2H 3d 4w 5m 6y` のような設定形式を想定）
-snapshots.pattern       | string    | custom volume             | snap%d                                              | スナップショット名を表す Pongo2 テンプレート文字列（スケジュールされたスナップショットと名前指定なしのスナップショットに使用）
-snapshots.schedule      | string    | custom volume             | -                                                   | Cron の書式 (`<minute> <hour> <dom> <month> <dow>`)、またはスケジュールアイリアスのカンマ区切りリスト `<@hourly> <@daily> <@midnight> <@weekly> <@monthly> <@annually> <@yearly>`
+キー               | 型     | 条件               | デフォルト値       | 説明
+:--                | :---   | :--------          | :------            | :----------
+security.shifted   | bool   | custom volume      | false              | id シフトオーバーレイを有効にする（複数の独立したインスタンスによるアタッチを許可する）
+security.unmapped  | bool   | custom volume      | false              | ボリュームへの id マッピングを無効にする
+size               | string | appropriate driver | volume.size と同じ | ストレージボリュームのサイズ
+snapshots.expiry   | string | custom volume      | -                  | スナップショットがいつ削除されるかを制御（`1M 2H 3d 4w 5m 6y` のような設定形式を想定）
+snapshots.pattern  | string | custom volume      | snap%d             | スナップショット名を表す Pongo2 テンプレート文字列（スケジュールされたスナップショットと名前指定なしのスナップショットに使用）
+snapshots.schedule | string | custom volume      | -                  | Cron の書式 (`<minute> <hour> <dom> <month> <dow>`)、またはスケジュールアイリアスのカンマ区切りリスト `<@hourly> <@daily> <@midnight> <@weekly> <@monthly> <@annually> <@yearly>`
 
 #### Btrfs ストレージプールを作成するコマンド
 
@@ -390,29 +390,29 @@ losetup -l
 
 
 #### ストレージプール設定
-キー             | 型              | デフォルト値            | 説明
-:--                           | :---                          | :------                                 | :----------
-lvm.thinpool\_name            | string                        | LXDThinPool                             | イメージを作る Thin pool 名
-lvm.use\_thinpool             | bool                          | true                                    | ストレージプールは論理ボリュームに Thinpool を使うかどうか
-lvm.vg.force\_reuse           | bool                          | false                                   | 既存の空でないボリュームグループの使用を強制
-lvm.vg\_name                  | string                        | name of the pool                        | 作成するボリュームグループ名
-rsync.bwlimit                 | string                        | 0 (no limit)                            | ストレージエンティティーの転送にrsyncを使う場合、I/Oソケットに設定する上限を指定
-rsync.compression             | bool                          | true                                    | ストレージプールをマイグレートする際に圧縮を使用するかどうか
-source                        | string                        | -                                       | ブロックデバイスかループファイルかファイルシステムエントリのパス
+キー                | 型     | デフォルト値     | 説明
+:--                 | :---   | :------          | :----------
+lvm.thinpool\_name  | string | LXDThinPool      | イメージを作る Thin pool 名
+lvm.use\_thinpool   | bool   | true             | ストレージプールは論理ボリュームに Thinpool を使うかどうか
+lvm.vg.force\_reuse | bool   | false            | 既存の空でないボリュームグループの使用を強制
+lvm.vg\_name        | string | name of the pool | 作成するボリュームグループ名
+rsync.bwlimit       | string | 0 (no limit)     | ストレージエンティティーの転送にrsyncを使う場合、I/Oソケットに設定する上限を指定
+rsync.compression   | bool   | true             | ストレージプールをマイグレートする際に圧縮を使用するかどうか
+source              | string | -                | ブロックデバイスかループファイルかファイルシステムエントリのパス
 
 #### ストレージボリューム設定
-キー       | 型 | 条件 | デフォルト値                   | 説明
-:--                     | :---      | :--------                 | :------                                             | :----------
-block.filesystem        | string    | block based driver        |volume.block.filesystem と同じ      | ストレージボリュームのファイルシステム
-block.mount\_options    | string    | block based driver        |volume.block.mount\_options と同じ  | ブロックデバイスのマウントオプション
-lvm.stripes             | string    | lvm driver                | -                                                   | 新しいボリューム (あるいは thin pool ボリューム) に使用するストライプ数
-lvm.stripes.size        | string    | lvm driver                | -                                                   | 使用するストライプのサイズ (最低 4096 バイトで 512 バイトの倍数を指定)
-security.shifted        | bool      | custom volume             | false                                               | id シフトオーバーレイを有効にする（複数の独立したインスタンスによるアタッチを許可する）
-security.unmapped       | bool      | custom volume             | false                                               | ボリュームへの id マッピングを無効にする
-size                    | string    | appropriate driver        | volume.size と同じ     | ストレージボリュームのサイズ
-snapshots.expiry        | string    | custom volume             | -                                                   | スナップショットがいつ削除されるかを制御（`1M 2H 3d 4w 5m 6y` のような設定形式を想定）
-snapshots.pattern       | string    | custom volume             | snap%d                                              | スナップショット名を表す Pongo2 テンプレート文字列（スケジュールされたスナップショットと名前指定なしのスナップショットに使用）
-snapshots.schedule      | string    | custom volume             | -                                                   | Cron の書式 (`<minute> <hour> <dom> <month> <dow>`)、またはスケジュールアイリアスのカンマ区切りリスト `<@hourly> <@daily> <@midnight> <@weekly> <@monthly> <@annually> <@yearly>`
+キー                 | 型     | 条件               | デフォルト値                       | 説明
+:--                  | :---   | :--------          | :------                            | :----------
+block.filesystem     | string | block based driver | volume.block.filesystem と同じ     | ストレージボリュームのファイルシステム
+block.mount\_options | string | block based driver | volume.block.mount\_options と同じ | ブロックデバイスのマウントオプション
+lvm.stripes          | string | lvm driver         | -                                  | 新しいボリューム (あるいは thin pool ボリューム) に使用するストライプ数
+lvm.stripes.size     | string | lvm driver         | -                                  | 使用するストライプのサイズ (最低 4096 バイトで 512 バイトの倍数を指定)
+security.shifted     | bool   | custom volume      | false                              | id シフトオーバーレイを有効にする（複数の独立したインスタンスによるアタッチを許可する）
+security.unmapped    | bool   | custom volume      | false                              | ボリュームへの id マッピングを無効にする
+size                 | string | appropriate driver | volume.size と同じ                 | ストレージボリュームのサイズ
+snapshots.expiry     | string | custom volume      | -                                  | スナップショットがいつ削除されるかを制御（`1M 2H 3d 4w 5m 6y` のような設定形式を想定）
+snapshots.pattern    | string | custom volume      | snap%d                             | スナップショット名を表す Pongo2 テンプレート文字列（スケジュールされたスナップショットと名前指定なしのスナップショットに使用）
+snapshots.schedule   | string | custom volume      | -                                  | Cron の書式 (`<minute> <hour> <dom> <month> <dow>`)、またはスケジュールアイリアスのカンマ区切りリスト `<@hourly> <@daily> <@midnight> <@weekly> <@monthly> <@annually> <@yearly>`
 
 #### LVM ストレージプールを作成するコマンド
 
@@ -485,25 +485,25 @@ lxc storage create pool1 lvm source=/dev/sdX lvm.vg_name=my-pool
 
 
 #### ストレージプール設定
-キー             | 型              | デフォルト値            | 説明
-:--                           | :---                          | :------                                 | :----------
-size                          | string                        | 0                                       | ストレージプールのサイズ。バイト単位（suffixも使えます）（現時点では loop ベースのプールと zfs で有効）
-source                        | string                        | -                                       | ブロックデバイスかループファイルかファイルシステムエントリのパス
-zfs.clone\_copy               | string                        | true                                    | boolean の文字列を指定した場合は ZFS のフルデータセットコピーの代わりに軽量なクローンを使うかどうかを制御し、 "rebase" という文字列を指定した場合は初期イメージをベースにコピーします。
-zfs.pool\_name                | string                        | name of the pool                        | Zpool 名
+キー            | 型     | デフォルト値     | 説明
+:--             | :---   | :------          | :----------
+size            | string | 0                | ストレージプールのサイズ。バイト単位（suffixも使えます）（現時点では loop ベースのプールと zfs で有効）
+source          | string | -                | ブロックデバイスかループファイルかファイルシステムエントリのパス
+zfs.clone\_copy | string | true             | boolean の文字列を指定した場合は ZFS のフルデータセットコピーの代わりに軽量なクローンを使うかどうかを制御し、 "rebase" という文字列を指定した場合は初期イメージをベースにコピーします。
+zfs.pool\_name  | string | name of the pool | Zpool 名
 
 #### ストレージボリューム設定
-キー       | 型 | 条件 | デフォルト値                   | 説明
-:--                     | :---      | :--------                 | :------                                             | :----------
-security.shifted        | bool      | custom volume             | false                                               | id シフトオーバーレイを有効にする（複数の独立したインスタンスによるアタッチを許可する）
-security.unmapped       | bool      | custom volume             | false                                               | ボリュームへの id マッピングを無効にする
-size                    | string    | appropriate driver        | volume.size と同じ     | ストレージボリュームのサイズ
-snapshots.expiry        | string    | custom volume             | -                                                   | スナップショットがいつ削除されるかを制御（`1M 2H 3d 4w 5m 6y` のような設定形式を想定）
-snapshots.pattern       | string    | custom volume             | snap%d                                              | スナップショット名を表す Pongo2 テンプレート文字列（スケジュールされたスナップショットと名前指定なしのスナップショットに使用）
-snapshots.schedule      | string    | custom volume             | -                                                   | Cron の書式 (`<minute> <hour> <dom> <month> <dow>`)、またはスケジュールアイリアスのカンマ区切りリスト `<@hourly> <@daily> <@midnight> <@weekly> <@monthly> <@annually> <@yearly>`
+キー                  | 型     | 条件               | デフォルト値                        | 説明
+:--                   | :---   | :--------          | :------                             | :----------
+security.shifted      | bool   | custom volume      | false                               | id シフトオーバーレイを有効にする（複数の独立したインスタンスによるアタッチを許可する）
+security.unmapped     | bool   | custom volume      | false                               | ボリュームへの id マッピングを無効にする
+size                  | string | appropriate driver | volume.size と同じ                  | ストレージボリュームのサイズ
+snapshots.expiry      | string | custom volume      | -                                   | スナップショットがいつ削除されるかを制御（`1M 2H 3d 4w 5m 6y` のような設定形式を想定）
+snapshots.pattern     | string | custom volume      | snap%d                              | スナップショット名を表す Pongo2 テンプレート文字列（スケジュールされたスナップショットと名前指定なしのスナップショットに使用）
+snapshots.schedule    | string | custom volume      | -                                   | Cron の書式 (`<minute> <hour> <dom> <month> <dow>`)、またはスケジュールアイリアスのカンマ区切りリスト `<@hourly> <@daily> <@midnight> <@weekly> <@monthly> <@annually> <@yearly>`
 
-zfs.remove\_snapshots   | string    | zfs driver                |volume.zfs.remove\_snapshots と同じ | 必要に応じてスナップショットを削除するかどうか
-zfs.use\_refquota       | string    | zfs driver                |volume.zfs.zfs\_requota と同じ      | 領域の quota の代わりに refquota を使うかどうか
+zfs.remove\_snapshots | string | zfs driver         | volume.zfs.remove\_snapshots と同じ | 必要に応じてスナップショットを削除するかどうか
+zfs.use\_refquota     | string | zfs driver         | volume.zfs.zfs\_requota と同じ      | 領域の quota の代わりに refquota を使うかどうか
 
 #### ZFS ストレージプールを作成するコマンド
 
