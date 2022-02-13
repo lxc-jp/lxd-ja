@@ -19,7 +19,7 @@ lxc network create <name> --type=bridge [options...]
  - `maas` (MAAS ネットワーク識別)
  - `user` (ユーザーのメタデータに対する自由形式の key/value)
 
-## <a name="network-bridge"></a> ネットワーク: ブリッジ
+## ネットワーク: ブリッジ
 
 LXD でのネットワークの設定タイプの 1 つとして、 LXD はネットワークブリッジの作成と管理をサポートしています。
 LXD のブリッジは下層のネイティブな Linux のブリッジと Open vSwitch を利用できます。
@@ -280,7 +280,7 @@ firewall-cmd --direct --get-all-rules
 
 警告：上記の手順はフールプルーフなアプローチではなく、不注意にセキュリティリスクをもたらすことにつながる可能性があります。
 
-## <a name="network-macvlan"></a> ネットワーク: macvlan
+## ネットワーク: macvlan
 
 macvlan ネットワークタイプではインスタンスを macvlan NIC を使って親のインターフェースに接続する際に使用するプリセットを指定可能です。
 これによりインスタンスの NIC 自体は下層の詳しい設定を一切知ることなく、接続する `network` を単に指定するだけで設定できます。
@@ -296,7 +296,7 @@ parent                          | string    | -             | -                 
 vlan                            | integer   | -             | -                    | アタッチする先の VLAN ID
 gvrp                            | boolean   | -             | false                | GARP VLAN Registration Protocol を使って VLAN を登録する
 
-## <a name="network-sriov"></a> ネットワーク: sriov
+## ネットワーク: sriov
 
 sriov ネットワークタイプではインスタンスを sriov NIC を使って親のインターフェースに接続する際に使用するプリセットを指定可能です。
 これによりインスタンスの NIC 自体は下層の詳しい設定を一切知ることなく、接続する `network` を単に指定するだけで設定できます。
@@ -311,7 +311,7 @@ mtu                             | integer   | -             | -                 
 parent                          | string    | -             | -                     | sriov NIC を作成する親のインターフェース
 vlan                            | integer   | -             | -                     | アタッチする先の VLAN ID
 
-## <a name="network-ovn"></a> ネットワーク: ovn
+## ネットワーク: ovn
 
 ovn ネットワークタイプは OVN SDN を使って論理的なネットワークの作成を可能にします。
 これは複数の個別のネットワーク内で同じ論理ネットワークのサブネットを使うような検証環境やマルチテナントの環境で便利です。
@@ -385,7 +385,7 @@ security.acls.default.egress.action  | string    | security.acls    | reject    
 security.acls.default.ingress.logged | boolean   | security.acls    | false                       | どの ACL ルールにもマッチしない ingress トラフィックをログ出力するかどうか
 security.acls.default.egress.logged  | boolean   | security.acls    | false                       | どの ACL ルールにもマッチしない egress トラフィックをログ出力するかどうか
 
-## <a name="network-physical"></a> ネットワーク: physical
+## ネットワーク: physical
 
 physical ネットワークは OVN ネットワークを親インターフェースに接続する際に使用するプリセットの設定を提供します。
 

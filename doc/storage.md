@@ -154,7 +154,7 @@ lxc profile device add default root disk path=/ pool=default
 このことは、キャッシュされたデータへのアクセスは、制限の影響を受けないことも意味します。
 
 ## 各ストレージバックエンドに対する注意と例
-### <a name="dir"></a> ディレクトリ (dir)
+### ディレクトリ (dir)
 
  - このバックエンドでは全ての機能を使えますが、他のバックエンドに比べて非常に時間がかかります。
    これは、イメージを展開したり、インスタンスやスナップショットやイメージのその時点のコピーを作成する必要があるからです。
@@ -193,7 +193,7 @@ lxc storage create pool1 dir
 lxc storage create pool2 dir source=/data/lxd
 ```
 
-### <a name="ceph"></a> CEPH
+### CEPH
 
 - イメージとして RBD イメージを使い、インスタンスやスナップショットを作成するためにスナップショットやクローンを実行します
 
@@ -280,7 +280,7 @@ lxc storage create pool1 ceph source=my-already-existing-osd
 lxc storage create pool1 ceph source=rpl-pool ceph.osd.data_pool_name=ecpool
 ```
 
-### <a name="cephfs"></a> CEPHFS
+### CEPHFS
 
  - カスタムストレージボリュームにのみ利用可能
  - サーバサイドで許可されていればスナップショットもサポート
@@ -306,7 +306,7 @@ snapshots.pattern       | string    | custom volume             | snap%d        
 snapshots.schedule      | string    | custom volume             | -                                                   | Cron の書式 (`<minute> <hour> <dom> <month> <dow>`)、またはスケジュールアイリアスのカンマ区切りリスト `<@hourly> <@daily> <@midnight> <@weekly> <@monthly> <@annually> <@yearly>`
 
 
-### <a name="btrfs"></a> Btrfs
+### Btrfs
 
  - インスタンス、イメージ、スナップショットごとにサブボリュームを使い、新しいオブジェクトを作成する際に btrfs スナップショットを作成します
  - btrfs は、親コンテナー自身が btrfs 上に作成されているときには、コンテナー内のストレージバックエンドとして使えます（ネストコンテナー）（qgroup を使った btrfs クオータについての注意を参照してください）
@@ -375,7 +375,7 @@ sudo btrfs filesystem resize max /var/lib/lxd/storage-pools/<POOL>/
 losetup -l
 ```
 
-### <a name="lvm"></a> LVM
+### LVM
 
  - イメージ用に LV を使うと、インスタンスとインスタンススナップショット用に LV のスナップショットを使います
  - LV で使われるファイルシステムは ext4 です（代わりに xfs を使うように設定できます）
@@ -446,7 +446,7 @@ lxc storage create pool1 lvm source=/dev/sdX
 lxc storage create pool1 lvm source=/dev/sdX lvm.vg_name=my-pool
 ```
 
-### <a name="zfs"></a> ZFS
+### ZFS
 
  - LXD が ZFS プールを作成した場合は、デフォルトで圧縮が有効になります
  - イメージ用に ZFS を使うと、インスタンスとスナップショットの作成にスナップショットとクローンを使います

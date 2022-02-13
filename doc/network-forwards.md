@@ -30,7 +30,7 @@ target\_address   | string     | yes      | フォワード先の IP アドレ�
 target\_port      | string     | no       | ターゲットのポート (例 `70,80-90` or `90`)、 空の場合は `listen_port` と同じ
 description       | string     | no       | ポートの説明
 
-## <a name="network-types"></a> ネットワーク種別
+## ネットワーク種別
 
 以下のネットワーク種別がフォワードをサポートします。詳細は各ネットワーク種別の項を参照してください。
 
@@ -38,13 +38,13 @@ description       | string     | no       | ポートの説明
  - [ovn](#network-ovn)
 
 
-### <a name="network-bridge"></a> ブリッジ
+### ブリッジ
 
 衝突しない任意のリッスンアドレスを指定可能です。
 
 使用するリッスンアドレスは他のネットワークで使用中のサブネットとオーバーラップはできません。
 
-### <a name="network-ovn"></a> ovn
+### ovn
 
 使用可能なリッスンアドレスはアップリンクのネットワークの `ipv{n}.routes` 設定と（設定されていれば）プロジェクトの `restricted.networks.subnets` 設定で定義されているアドレスです。
 
