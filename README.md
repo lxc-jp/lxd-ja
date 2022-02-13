@@ -75,5 +75,5 @@ LXDコミュニティと交流するために以下のチャンネルが用意�
 ### IRC
 ライブの議論がお好みならば、irc.libera.chatの[#lxc](https://kiwiirc.com/client/irc.libera.chat/#lxc)で私たちを見つけることができます。必要であれば [Getting started with IRC](https://discuss.linuxcontainers.org/t/getting-started-with-irc/11920) を参照してください。
 
-## 貢献する
+## コントリビュート
 修正や新機能を提供していただけると助かります。<!-- Include end support --> まず [contributing guidelines](CONTRIBUTING.md) を読んでください!
