@@ -7,7 +7,7 @@
 
 requirements
 installing
-Frequently asked <faq>
+faq
 security
 contributing
 ```

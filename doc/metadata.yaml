@@ -10,7 +10,7 @@ navigation:
         - title: Installing LXD
           location: installing.md
 
-        - title: Frequently asked
+        - title: よく聞かれる質問 (FAQ)
           location: faq.md
 
         - title: Security
