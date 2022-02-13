@@ -1,4 +1,4 @@
-# Main API specification
+# API 仕様
 
 <link rel="stylesheet" type="text/css" href="../_static/swagger-ui/swagger-ui.css" ></link>
 <link rel="stylesheet" type="text/css" href="../_static/swagger-override.css" ></link>

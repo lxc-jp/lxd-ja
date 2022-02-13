@@ -1,9 +1,9 @@
-# Operation
+# オペレーション
 
 ```{toctree}
 :maxdepth: 1
 
-Backups <backup>
+バックアップ <backup>
 clustering
 production-setup
 remotes

@@ -1,89 +1,86 @@
-site_title: LXD
+site_title: LXDドキュメント翻訳プロジェクト
 site_logo_url: https://linuxcontainers.org/static/img/containers.png
 navigation:
-    - title: Getting started
+    - title: はじめに
       location: index.md
       children:
-        - title: Requirements
+        - title: 動作環境
           location: requirements.md
 
-        - title: Installing LXD
+        - title: LXDのインストール
           location: installing.md
 
         - title: よく聞かれる質問 (FAQ)
           location: faq.md
 
-        - title: Security
+        - title: セキュリティ
           location: security.md
 
-        - title: Contributing
+        - title: コントリビュート
           location: contributing.md
 
-    - title: Configuration
+    - title: 設定
       location: configuration.md
       children:
-        - title: Containers
+        - title: コンテナ
           location: containers.md
 
-        - title: Instances
+        - title: インスタンス
           location: instances.md
 
-        - title: Networks
+        - title: ネットワーク
           location: networks.md
 
-        - title: Network ACLs
+        - title: ネットワーク ACL
           location: network-acls.md
 
-        - title: Network Forwards
+        - title: ネットワークフォワード
           location: network-forwards.md
 
-        - title: Network Peers
+        - title: ネットワークピア
           location: network-peers.md
 
-        - title: Network Zones
+        - title: ネットワークゾーン
           location: network-zones.md
 
-        - title: Preseed files
+        - title: プリシードYAML
           location: preseed.md
 
-        - title: Profiles
+        - title: プロファイル
           location: profiles.md
 
-        - title: Projects
+        - title: プロジェクト
           location: projects.md
 
-        - title: Server settings
+        - title: サーバ
           location: server.md
 
-        - title: Storage pools
+        - title: ストレージプール
           location: storage.md
 
-        - title: Virtual machines
+        - title: 仮想マシン
           location: virtual-machines.md
 
-    - title: Images
+    - title: イメージ
       children:
-        - title: Architectures
+        - title: アーキテクチャ
           location: architectures.md
 
-        - title: Cloud-init
+        - title: cloud-initファイル
           location: cloud-init.md
 
-        - title: Handling
+        - title: イメージの扱い
           location: image-handling.md
 
-    - title: Operation
+    - title: オペレーション
       children:
-        - title: Backups
+        - title: バックアップ
           location: backup.md
 
-        - title: Clustering
+        - title: クラスタリング
           location: clustering.md
 
-        - title: Instance command execution
-          location: instance-exec.md
-
-        - title: Production setup
+        - title: プロダクション環境のセットアップ
           location: production-setup.md
 
         - title: Remotes
@@ -91,53 +88,53 @@ navigation:
 
     - title: REST API
       children:
-        - title: Main API documentation
+        - title: REST API
           location: rest-api.md
 
-        - title: Main API extensions
+        - title: API拡張
           location: api-extensions.md
 
-        - title: Instance API documentation
+        - title: インスタンス API
           location: dev-lxd.md
 
-        - title: Events API documentation
+        - title: イベント API
           location: events.md
 
-        - title: Metrics API documentation
+        - title: メトリクス API
           location: metrics.md
 
-    - title: Internals & debugging
+    - title: 内部動作とデバッグ
       children:
-        - title: Container environment
+        - title: コンテナ実行環境
           location: container-environment.md
 
-        - title: Instance migration
+        - title: インスタンスのマイグレーション
           location: migration.md
 
-        - title: Daemon behavior
+        - title: デーモンの動作
           location: daemon-behavior.md
 
-        - title: Database
+        - title: データベース
           location: database.md
 
-        - title: Debugging
+        - title: デバッグ
           location: debugging.md
 
-        - title: Environment variables
+        - title: 環境変数
           location: environment.md
 
-        - title: System call interception
+        - title: システムコールのインターセプト
           location: syscall-interception.md
 
-        - title: User namespace setup
+        - title: ユーザー名前空間の設定
           location: userns-idmap.md
 
-    - title: External resources
+    - title: 外部リソース
       children:
-        - title: Project repository
+        - title: プロジェクトレポジトリ
           location: https://github.com/lxc/lxd
           external: true
 
-        - title: Image server
+        - title: イメージサーバ
           location: https://images.linuxcontainers.org
           external: true

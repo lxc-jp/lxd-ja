@@ -11,16 +11,16 @@ LXD は次のコンポーネントの設定を保管しています。
 :maxdepth: 1
 
 containers
-Instances <instances>
-Networks <networks>
-Network ACLs <network-acls>
-Network Forwards <network-forwards>
-Network Peers <network-peers>
-Network Zones <network-zones>
-Preseed files <preseed>
+インスタンス <instances>
+ネットワーク <networks>
+ネットワー ACL <network-acls>
+ネットワークフォワード <network-forwards>
+ネットワークピア <network-peers>
+ネットワークゾーン <network-zones>
+プリシード YAML <preseed>
 profiles
-Projects <projects>
-Server settings <server>
-Storage pools <storage>
-Virtual machines <virtual-machines>
+プロジェクト <projects>
+サーバ <server>
+ストレージプール <storage>
+仮想マシン <virtual-machines>
 ```
