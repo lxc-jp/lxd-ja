@@ -7,7 +7,7 @@ LXD は次のコンポーネントの設定を保管しています。
 containers
 インスタンス <instances>
 ネットワーク <networks>
-ネットワー ACL <network-acls>
+ネットワーク ACL <network-acls>
 ネットワークフォワード <network-forwards>
 ネットワークピア <network-peers>
 ネットワークゾーン <network-zones>

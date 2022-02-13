@@ -1,10 +1,10 @@
 # ネットワーク設定
 
- - [bridge](#network-bridge): インスタンスを接続する L2 ブリッジを作成（ローカルの DHCP と DNS を提供可能）。これがデフォルトです。
- - [macvlan](#network-macvlan): インスタンスを親の macvlan インターフェースに接続する際に使用するプリセットの設定を提供。
- - [sriov](#network-sriov): インスタンスを親の SR-IOV インターフェースに接続する際に使用するプリセットの設定を提供。
- - [ovn](#network-ovn): OVN SDN (software defined network) システムを使って論理的なネットワークを作成。
- - [physical](#network-physical): OVN ネットワークを親のインターフェースに接続する際に使用するプリセットの設定を提供。
+ - {ref}`ブリッジ <network-bridge>`: インスタンスを接続する L2 ブリッジを作成（ローカルの DHCP と DNS を提供可能）。これがデフォルトです。
+ - {ref}`macvlan <network-macvlan>`: インスタンスを親の macvlan インターフェースに接続する際に使用するプリセットの設定を提供。
+ - {ref}`sriov <network-sriov>`: インスタンスを親の SR-IOV インターフェースに接続する際に使用するプリセットの設定を提供。
+ - {ref}`ovn <network-ovn>`: OVN SDN (software defined network) システムを使って論理的なネットワークを作成。
+ - {ref}`物理 <network-physical>`: OVN ネットワークを親のインターフェースに接続する際に使用するプリセットの設定を提供。
 
 希望するタイプは以下のように `--type` 引数で指定できます。
 
@@ -19,6 +19,7 @@ lxc network create <name> --type=bridge [options...]
  - `maas` (MAAS ネットワーク識別)
  - `user` (ユーザーのメタデータに対する自由形式の key/value)
 
+(network-bridge)=
 ## ネットワーク: ブリッジ
 
 LXD でのネットワークの設定タイプの 1 つとして、 LXD はネットワークブリッジの作成と管理をサポートしています。
@@ -280,6 +281,7 @@ firewall-cmd --direct --get-all-rules
 
 警告：上記の手順はフールプルーフなアプローチではなく、不注意にセキュリティリスクをもたらすことにつながる可能性があります。
 
+(network-macvlan)=
 ## ネットワーク: macvlan
 
 macvlan ネットワークタイプではインスタンスを macvlan NIC を使って親のインターフェースに接続する際に使用するプリセットを指定可能です。
@@ -296,6 +298,7 @@ parent                          | string    | -             | -                 
 vlan                            | integer   | -             | -                    | アタッチする先の VLAN ID
 gvrp                            | boolean   | -             | false                | GARP VLAN Registration Protocol を使って VLAN を登録する
 
+(network-sriov)=
 ## ネットワーク: sriov
 
 sriov ネットワークタイプではインスタンスを sriov NIC を使って親のインターフェースに接続する際に使用するプリセットを指定可能です。
@@ -311,6 +314,7 @@ mtu                             | integer   | -             | -                 
 parent                          | string    | -             | -                     | sriov NIC を作成する親のインターフェース
 vlan                            | integer   | -             | -                     | アタッチする先の VLAN ID
 
+(network-ovn)=
 ## ネットワーク: ovn
 
 ovn ネットワークタイプは OVN SDN を使って論理的なネットワークの作成を可能にします。
@@ -385,9 +389,10 @@ security.acls.default.egress.action  | string    | security.acls    | reject    
 security.acls.default.ingress.logged | boolean   | security.acls    | false                       | どの ACL ルールにもマッチしない ingress トラフィックをログ出力するかどうか
 security.acls.default.egress.logged  | boolean   | security.acls    | false                       | どの ACL ルールにもマッチしない egress トラフィックをログ出力するかどうか
 
-## ネットワーク: physical
+(network-physical)=
+## ネットワーク: 物理
 
-physical ネットワークは OVN ネットワークを親インターフェースに接続する際に使用するプリセットの設定を提供します。
+物理ネットワークは OVN ネットワークを親インターフェースに接続する際に使用するプリセットの設定を提供します。
 
 ネットワーク設定プロパティ:
 

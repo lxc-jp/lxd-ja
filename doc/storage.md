@@ -1,6 +1,6 @@
 # ストレージの設定
 
-- [dir](#dir)
+- {ref}`dir`
 - [ceph](#ceph)
 - [cephfs](#cephfs)
 - [btrfs](#btrfs)
@@ -154,6 +154,7 @@ lxc profile device add default root disk path=/ pool=default
 このことは、キャッシュされたデータへのアクセスは、制限の影響を受けないことも意味します。
 
 ## 各ストレージバックエンドに対する注意と例
+(dir)=
 ### ディレクトリ (dir)
 
  - このバックエンドでは全ての機能を使えますが、他のバックエンドに比べて非常に時間がかかります。
