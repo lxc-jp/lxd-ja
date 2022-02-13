@@ -45,7 +45,7 @@ devices:
 
 ネットワークフォワード:
 
-ブリッジのネットワークサポートは [network forwards](network-forwards.md#network-bridge) 参照。
+ブリッジのネットワークサポートは {ref}`ネットワークフォワード <network-forwards-bridge>` 参照。
 
 ネットワークの設定プロパティ:
 
@@ -121,7 +121,7 @@ tunnel.NAME.port                     | integer   | vxlan                   | 0  
 tunnel.NAME.protocol                 | string    | 標準モード              | -                   | トンネリングのプロトコル ("vxlan" か "gre")
 tunnel.NAME.remote                   | string    | gre か vxlan            | -                   | トンネルに使用するリモートアドレス (マルチキャスト vxlan の場合は不要)
 tunnel.NAME.ttl                      | integer   | vxlan                   | 1                   | マルチキャストルーティングトポロジーに使用する固有の TTL
-security.acls                        | string    | -                       | -                   | このネットワークに接続されたNICに適用するカンマ区切りのネットワークACL（[ブリッジの制限](network-acls.md#_4)参照）
+security.acls                        | string    | -                       | -                   | このネットワークに接続されたNICに適用するカンマ区切りのネットワークACL（{ref}`network-acls-bridge-limitations`参照）
 security.acls.default.ingress.action | string    | security.acls           | reject              | どの ACL ルールにもマッチしない ingress トラフィックに使うアクション
 security.acls.default.egress.action  | string    | security.acls           | reject              | どの ACL ルールにもマッチしない egress トラフィックに使うアクション
 security.acls.default.ingress.logged | boolean   | security.acls           | false               | どの ACL ルールにもマッチしない ingress トラフィックをログ出力するかどうか
@@ -356,7 +356,7 @@ lxc ls
 
 ネットワークフォワード:
 
-OVN のネットワークサポートは [ネットワークフォワード](network-forwards.md) 参照。
+OVN のネットワークサポートは {ref}`ネットワークフォワード <network-forward-ovn>` 参照。
 
 ネットワークピア:
 

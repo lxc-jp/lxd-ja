@@ -101,7 +101,7 @@ security.syscalls.intercept.mount.allowed   | string    | -                | yes
 security.syscalls.intercept.mount.fuse      | string    | -                | yes                | container                 | 指定されたファイルシステムを対応する fuse 実装にリダイレクトするかどうか（例: ext4-fuse2fs）
 security.syscalls.intercept.mount.shift     | boolean   | false            | yes                | container                 | `mount` システムコールをインターセプトして処理対象のファイルシステムの上に shiftfs をマウントするかどうか
 security.syscalls.intercept.setxattr        | boolean   | false            | no                 | container                 | `setxattr` システムコールを処理するかどうか (限定されたサブセットの制限された拡張属性の設定を許可する)
-snapshots.schedule                          | string    | -                | no                 | -                         | Cron の書式 (`<minute> <hour> <dom> <month> <dow>`)、またはスケジュールエイリアスのカンマ区切りリスト `<@hourly> <@daily> <@midnight> <@weekly> <@monthly> <@annually> <@yearly> <@startup>`
+snapshots.schedule                          | string    | -                | no                 | -                         | Cron の書式 (`<minute> <hour> <dom> <month> <dow>`)、またはスケジュールエイリアスのカンマ区切りリスト `<@hourly> <@daily> <@midnight> <@weekly> <@monthly> <@annually> <@yearly> <@startup> <@never>`
 snapshots.schedule.stopped                  | bool      | false            | no                 | -                         | 停止したインスタンスのスナップショットを自動的に作成するかどうか
 snapshots.pattern                           | string    | snap%d           | no                 | -                         | スナップショット名を表す Pongo2 テンプレート（スケジュールされたスナップショットと名前を指定されないスナップショットに使用される）
 snapshots.expiry                            | string    | -                | no                 | -                         | スナップショットをいつ削除するかを設定します（`1M 2H 3d 4w 5m 6y` のような書式で設定します）
@@ -316,10 +316,10 @@ host\_name               | string    | ランダムに割り当て  | no       |
 limits.ingress           | string    | -                   | no       | no      | 入力トラフィックの I/O 制限値（さまざまな単位が使用可能、下記参照）
 limits.egress            | string    | -                   | no       | no      | 出力トラフィックの I/O 制限値（さまざまな単位が使用可能、下記参照）
 limits.max               | string    | -                   | no       | no      | `limits.ingress` と `limits.egress` の両方を同じ値に変更する
-ipv4.address             | string    | -                   | no       | no      | DHCP でインスタンスに割り当てる IPv4 アドレス
-ipv6.address             | string    | -                   | no       | no      | DHCP でインスタンスに割り当てる IPv6 アドレス
-ipv4.routes              | string    | -                   | no       | no      | ホスト上で NIC に追加する IPv4 静的ルートのカンマ区切りリスト（security.ipv4\_filtering 設定時に全ての IPv4 トラフィックを制限するには `none` と設定可能）
-ipv6.routes              | string    | -                   | no       | no      | ホスト上で NIC に追加する IPv6 静的ルートのカンマ区切りリスト（security.ipv6\_filtering 設定時に全ての IPv6 トラフィックを制限するには `none` と設定可能）
+ipv4.address             | string    | -                   | no       | no      | DHCP でインスタンスに割り当てる IPv4 アドレス（security.ipv4\_filtering 設定時に全ての IPv4 トラフィックを制限するには `none` と設定可能）
+ipv6.address             | string    | -                   | no       | no      | DHCP でインスタンスに割り当てる IPv6 アドレス（security.ipv6\_filtering 設定時に全ての IPv6 トラフィックを制限するには `none` と設定可能）
+ipv4.routes              | string    | -                   | no       | no      | ホスト上で NIC に追加する IPv4 静的ルートのカンマ区切りリスト
+ipv6.routes              | string    | -                   | no       | no      | ホスト上で NIC に追加する IPv6 静的ルートのカンマ区切りリスト
 ipv4.routes.external     | string    | -                   | no       | no      | NIC にルーティングしアップリンクのネットワーク (BGP) で公開する IPv4 静的ルートのカンマ区切りリスト
 ipv6.routes.external     | string    | -                   | no       | no      | NIC にルーティングしアップリンクのネットワーク (BGP) で公開する IPv6 静的ルートのカンマ区切りリスト
 security.mac\_filtering  | boolean   | false               | no       | no      | インスタンスが他の MAC アドレスになりすますのを防ぐ
@@ -329,7 +329,7 @@ maas.subnet.ipv4         | string    | -                   | no       | yes     
 maas.subnet.ipv6         | string    | -                   | no       | yes     | インスタンスを登録する MAAS IPv6 サブネット
 boot.priority            | integer   | -                   | no       | no      | VM のブート優先度 (高いほうが先にブート)
 vlan                     | integer   | -                   | no       | no      | タグなしのトラフィックに使用する VLAN ID （デフォルトの VLAN からポートを削除するには `none` を指定）
-vlan.tagged              | integer   | -                   | no       | no      | タグありのトラフィックに参加する VLAN ID のカンマ区切りリスト
+vlan.tagged              | integer   | -                   | no       | no      | タグありのトラフィックに参加する VLAN ID または VLAN の範囲のカンマ区切りリスト
 security.port\_isolation | boolean   | false               | no       | no      | NIC がポート隔離を有効にしたネットワーク内の他の NIC と通信するのを防ぐ
 
 ##### nic: macvlan
@@ -791,6 +791,10 @@ required    | boolean   | false             | no        | このデバイスが�
 #### Type: gpu
 
 GPU デバイスエントリーは、シンプルにリクエストのあった GPU デバイスをインスタンスに出現させます。
+
+```{note}
+コンテナデバイスは、同時に複数のGPUとマッチングさせることができます。しかし、仮想マシンの場合、デバイスは1つのGPUにしかマッチしません。
+```
 
 ##### 利用可能な GPU
 

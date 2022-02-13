@@ -82,7 +82,7 @@ LXD では、イメージ、インスタンス、カスタムボリューム用�
 インスタントクローン                               | no           | yes   | yes  | yes  | yes
 コンテナ内でストレージドライバの使用               | yes          | yes   | no   | no   | no
 古い（最新ではない）スナップショットからのリストア | yes          | yes   | yes  | no   | yes
-ストレージクオータ                                 | yes(\*)      | yes   | no   | yes  | no
+ストレージクオータ                                 | yes(\*)      | yes   | no   | yes  | yes
 
 ### おすすめのセットアップ
 LXD から使う場合のベストなオプションは ZFS と btrfs を使うことです。
@@ -369,7 +369,7 @@ sudo losetup -c <LOOPDEV>
 sudo btrfs filesystem resize max /var/lib/lxd/storage-pools/<POOL>/
 ```
 
-(注意: snap のユーザーは `/var/lib/lxd/` の代わりに `/var/snap/lxd/common/lxd/` を使ってください)
+(注意: snap のユーザーは `/var/lib/lxd/` の代わりに `/var/snap/lxd/common/mntns/var/snap/lxd/common/lxd/` を使ってください)
 - LOOPDEV はストレージプールイメージに関連付けられたマウントされたループデバイス（例: `/dev/loop8`）を参照します。
 - マウントされたループデバイスは次のコマンドで確認できます。
 ```bash
@@ -479,6 +479,7 @@ lxc storage create pool1 lvm source=/dev/sdX lvm.vg_name=my-pool
    ストレージプール上で "volume.zfs.use\_refquota" を "true" に設定するかします。
    前者のオプションは、与えられたストレージプールだけに refquota を設定します。
    後者のオプションは、ストレージプール内のストレージボリュームすべてに refquota を使うようにします。
+   また、ボリュームに"zfs.reserve\_space"、ストレージプールに"volume.zfs.reserve\_space"を設定することで、ZFSの"quota"/"refquota"に加えて"reservation"/"refreservation"を使用することができます。
 
  - I/O クオータ（IOps/MBs）は ZFS ファイルシステムにはあまり影響を及ぼさないでしょう。
    これは、ZFS が（SPL を使った）Solaris モジュールの移植であり、
@@ -486,12 +487,13 @@ lxc storage create pool1 lvm source=/dev/sdX lvm.vg_name=my-pool
 
 
 #### ストレージプール設定
-キー            | 型     | デフォルト値     | 説明
-:--             | :---   | :------          | :----------
-size            | string | 0                | ストレージプールのサイズ。バイト単位（suffixも使えます）（現時点では loop ベースのプールと zfs で有効）
-source          | string | -                | ブロックデバイスかループファイルかファイルシステムエントリのパス
-zfs.clone\_copy | string | true             | boolean の文字列を指定した場合は ZFS のフルデータセットコピーの代わりに軽量なクローンを使うかどうかを制御し、 "rebase" という文字列を指定した場合は初期イメージをベースにコピーします。
-zfs.pool\_name  | string | name of the pool | Zpool 名
+キー            | 型     | デフォルト値 | 説明
+:--             | :---   | :------      | :----------
+size            | string | 0            | ストレージプールのサイズ。バイト単位（suffixも使えます）（現時点では loop ベースのプールと zfs で有効）
+source          | string | -            | ブロックデバイスかループファイルかファイルシステムエントリのパス
+zfs.clone\_copy | string | true         | boolean の文字列を指定した場合は ZFS のフルデータセットコピーの代わりに軽量なクローンを使うかどうかを制御し、 "rebase" という文字列を指定した場合は初期イメージをベースにコピーします。
+zfs.export      | bool   | true         | アンマウントの実行中にzpoolのエクスポートを無効にする
+zfs.pool\_name  | string | プールの名前 | Zpool 名
 
 #### ストレージボリューム設定
 キー                  | 型     | 条件               | デフォルト値                        | 説明
@@ -502,9 +504,10 @@ size                  | string | appropriate driver | volume.size と同じ     
 snapshots.expiry      | string | custom volume      | -                                   | スナップショットがいつ削除されるかを制御（`1M 2H 3d 4w 5m 6y` のような設定形式を想定）
 snapshots.pattern     | string | custom volume      | snap%d                              | スナップショット名を表す Pongo2 テンプレート文字列（スケジュールされたスナップショットと名前指定なしのスナップショットに使用）
 snapshots.schedule    | string | custom volume      | -                                   | Cron の書式 (`<minute> <hour> <dom> <month> <dow>`)、またはスケジュールアイリアスのカンマ区切りリスト `<@hourly> <@daily> <@midnight> <@weekly> <@monthly> <@annually> <@yearly>`
-
+zfs.blocksize           | string    | zfs driver                | volume.zfs.blocksize と同じ          | ZFSブロックのサイズを512～16MiBの範囲で指定します（2の累乗でなければなりません）。ブロックボリュームでは、より大きな値が設定されていても、最大値の128KiBが使用されます。
 zfs.remove\_snapshots | string | zfs driver         | volume.zfs.remove\_snapshots と同じ | 必要に応じてスナップショットを削除するかどうか
-zfs.use\_refquota     | string | zfs driver         | volume.zfs.zfs\_requota と同じ      | 領域の quota の代わりに refquota を使うかどうか
+zfs.use\_refquota     | string | zfs driver         | volume.zfs.zfs\_refquota と同じ      | 領域の quota の代わりに refquota を使うかどうか
+zfs.reserve\_space      | string    | zfs driver                | false                                 | qouta/refquota に加えて reservation/refreservation も使用するかどうか
 
 #### ZFS ストレージプールを作成するコマンド
 

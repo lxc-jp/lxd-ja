@@ -11,7 +11,7 @@ LXD は全ての実行中のインスタンスについてのメトリクスを�
 新しい証明書は以下のように作成します（この手順はメトリクス用の証明書に限ったものではありません）。
 
 ```bash
-openssl req -x509 -newkey rsa:2048 -keyout ~/.config/lxc/metrics.key -nodes -out ~/.config/lxc/metrics.crt -subj "/CN=lxd.local"
+openssl req -x509 -newkey ec -pkeyopt ec_paramgen_curve:prime256v1 -keyout metrics.key -nodes -out metrics.crt -days 3650 -subj "/CN=metrics.local"
 ```
 
 作成後、証明書を信頼済みクライアントのリストに追加する必要があります。
@@ -57,12 +57,13 @@ chown -R prometheus:prometheus /etc/prometheus/tls
 ```yaml
 scrape_configs:
   - job_name: lxd
-    tls_config:
-      ca_file: 'tls/lxd.crt'
-      key_file: 'tls/metrics.key'
-      cert_file: 'tls/metrics.crt'
-    static_configs:
-      - targets: ['127.0.0.1:8443']
     metrics_path: '/1.0/metrics'
     scheme: 'https'
+    scrape_interval: 30s
+    static_configs:
+      - targets: ['127.0.0.1:8443']
+    tls_config:
+      ca_file: 'tls/lxd.crt'
+      cert_file: 'tls/metrics.crt'
+      key_file: 'tls/metrics.key'
 ```

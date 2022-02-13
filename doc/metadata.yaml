@@ -80,6 +80,9 @@ navigation:
         - title: クラスタリング
           location: clustering.md
 
+        - title: インスタンスでのコマンドの実行
+          location: instance-exec.md
+
         - title: プロダクション環境のセットアップ
           location: production-setup.md
 

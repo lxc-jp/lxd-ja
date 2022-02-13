@@ -1538,3 +1538,50 @@ Nvidia `470+` ドライバー (例. `MIG-74c6a31a-fde5-5c61-973b-70e12346c202`) 
 ## instance\_allow\_inconsistent\_copy
 `POST /1.0/instances` のインスタンスソースに `allow_inconsistent` フィールドを追加します。
 true の場合、 rsync はコピーからインスタンスを生成するときに `Partial transfer due to vanished source files` (code 24) エラーを無視します。
+
+## network\_state\_ovn
+これにより、/1.0/networks/NAME/state APIに "ovn "セクションが追加され、以下に関連する追加の状態情報が含まれます。
+OVNネットワークに関連する追加の状態情報を含みます。
+- chassis (シャーシ)
+
+## storage\_volume\_api\_filtering
+ストレージボリュームの GET リクエストの結果をフィルタリングする機能を追加します。
+
+## image\_restrictions
+この拡張機能は、イメージのプロパティに、イメージの制限やホストの要件を追加します。これらの要件は
+インスタンスとホストシステムとの互換性を決定するのに役立ちます。
+
+## storage\_zfs\_export
+`zfs.export` を設定することで、プールのアンマウント時に zpool のエクスポートを無効にする機能を導入しました。
+
+## network\_dns\_records
+network zones (DNS) APIを拡張し、カスタムレコードの作成と管理機能を追加します。
+
+これにより、以下が追加されます。
+
+ - `GET /1.0/network-zones/ZONE/records`
+ - `POST /1.0/network-zones/ZONE/records`
+ - `GET /1.0/network-zones/ZONE/records/RECORD`
+ - `PUT /1.0/network-zones/ZONE/records/RECORD`
+ - `PATCH /1.0/network-zones/ZONE/records/RECORD`
+ - `DELETE /1.0/network-zones/ZONE/records/RECORD`
+
+## storage\_zfs\_reserve\_space
+quota/refquotaに加えて、ZFSプロパティのreservation/refreservationを設定する機能を追加します。
+
+## network\_acl\_log
+ACL ファイアウォールのログを取得するための API `GET /1.0/networks-acls/NAME/log` を追加します。
+
+## storage\_zfs\_blocksize
+ZFS ストレージボリュームに新しい `zfs.blocksize` プロパティを導入し、ボリュームのブロックサイズを設定できるようになります。
+
+## metrics\_cpu\_seconds
+LXDが使用するCPU時間をミリ秒ではなく秒単位で出力するように修正されたかどうかを検出するために使用されます。
+
+## instance\_snapshot\_never
+`snapshots.schedule`に`@never`オプションを追加し、継承を無効にすることができます。
+
+## certificate\_token
+トラストストアに、トラストパスワードに代わる安全な手段として、トークンベースの証明書を追加します。
+
+これは `POST /1.0/certificates` に `token` フィールドを追加します。

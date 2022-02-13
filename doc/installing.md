@@ -96,3 +96,5 @@ echo "root:1000000:1000000000" | sudo tee -a /etc/subuid /etc/subgid
 ```bash
 sudo -E PATH=${PATH} LD_LIBRARY_PATH=${LD_LIBRARY_PATH} $(go env GOPATH)/bin/lxd --group sudo
 ```
+
+*注：`newuidmap/newgidmap`ツールがシステムに存在し、`/etc/subuid`、`/etc/subgid`が存在する場合は、rootユーザーに少なくとも10Mのuid/gidの連続した範囲を許可するように設定する必要があります*。

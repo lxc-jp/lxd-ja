@@ -45,7 +45,6 @@ fs.inotify.max\_user\_watches      | 1048576    | 8192       | これは実ユ�
 kernel.dmesg\_restrict             | 1          | 0          | この設定を有効にするとコンテナがカーネルのリングバッファー内のメッセージにアクセスするのを拒否します。この設定はホスト・システム上の非 root ユーザーへのアクセスも拒否することに注意してください。
 kernel.keys.maxbytes               | 2000000    | 20000      | 非 root ユーザーが使用できる keyring の最大サイズ
 kernel.keys.maxkeys                | 2000       | 200        | 非 root ユーザーが使用できるキーの最大数で、コンテナ数より大きくなければなりません
-net.core.bpf\_jit\_limit           | 3000000000 | 264241152  | eBPF JIT アロケーションのサイズの上限値で、通常は PAGE_SIZE * 40000 に設定されます。カーネルが `CONFIG_BPF_JIT_ALWAYS_ON=y` の設定でコンパイルされている場合は `/proc/sys/net/core/bpf_jit_enable` が `1` に設定され変更できません。そのようなカーネルでは eBPF JIT コンパイラーは `seccomp` のような bpf のプログラムを JIT コンパイルする際の失敗を他のカーネルでは続行可能なエラーとして扱う場合でも致命的なエラーとして扱います。そのようなカーネルでは eBPF の JIT コンパイルされたプログラムのサイズの上限値は大幅に増やす必要があります。
 net.ipv4.neigh.default.gc\_thresh3 | 8192       | 1024       | これは ARP テーブル (IPv4) 内のエントリーの最大数です。1024 個を超えるコンテナを作成するなら増やすべきです。増やさなければ ARP テーブルがフルになったときに `neighbour: ndisc_cache: neighbor table overflow!` というエラーが発生し、コンテナがネットワーク設定を取得できなくなります。 [2]
 net.ipv6.neigh.default.gc\_thresh3 | 8192       | 1024       | これは ARP テーブル (IPv6) 内のエントリーの最大数です。1024 個を超えるコンテナを作成するなら増やすべきです。増やさなければ ARP テーブルがフルになったときに `neighbour: ndisc_cache: neighbor table overflow!` というエラーが発生し、コンテナがネットワーク設定を取得できなくなります。 [2]
 vm.max\_map\_count                 | 262144     | 65530      | このファイルはプロセスが持つメモリマップ領域の最大数を含みます。malloc の呼び出しの副作用として、 直接的にはmmap と mprotect によって、また、共有ライブラリーをロードすることによって、メモリマップ領域を使います。

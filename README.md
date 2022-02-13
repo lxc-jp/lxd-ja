@@ -1,4 +1,6 @@
 [![LXD](https://linuxcontainers.org/static/img/containers.png)](https://linuxcontainers.org/lxd)
+
+<!-- Include start LXD intro -->
 # LXD
 LXDは、次世代のシステムコンテナおよび仮想マシンマネージャです。
 コンテナや仮想マシンの中で動作する完全なLinuxシステムに統一されたユーザーエクスペリエンスを提供します。
@@ -41,21 +43,28 @@ MacOS   | [Homebrew](https://formulae.brew.sh/formula/lxc)  | brew install lxc
 
 LXDをソースからインストールするには、ドキュメントの[Installing LXD](doc/installing.md)を参照してください。
 
+## セキュリティ
+
 <!-- Include start security -->
 
-## セキュリティ
-LXDは、他のコンテナやVMマネージャと同様に、ローカル通信用のUNIXソケットを提供しています。
+LXDのインストールが安全であることを保証するために、以下の点を考慮してください。
 
-**WARNING**: このソケットにアクセスできる人は、LXDを完全に制御することができ、それはホストデバイスやファイルシステムをアタッチする能力を含みます。
-したがって、この機能は、ホストへのルートアクセスを信頼できるユーザーにのみ与えられるべきです。
-ホストへのルートアクセスを信頼できるユーザーのみに与えられるべきです。
+- オペレーティングシステムを最新に保ち、利用可能なすべてのセキュリティパッチをインストールする。
+- サポートされているLXDのバージョン（LTSリリースまたは月例機能リリース）のみを使用する。
+- LXDデーモンとリモートAPIへのアクセスを制限すること。
+- 必要とされない限り、特権コンテナを使わないこと。特権的なコンテナを使う場合は、適切なセキュリティ対策をしてください。詳細は[LXCセキュリティページ](https://linuxcontainers.org/lxc/security/)を参照してください。
+- ネットワークインターフェイスを安全に設定してください。
+<!--Include end security -->
 
-ネットワーク上でリスニングするとき、同じAPIはTLSソケット(HTTPS)で利用できます。リモートAPIへの特定のアクセスは、Canonical RBACによって制限できます。
+詳しい情報は[Security](doc/security.md)を参照してください。
 
-<!-- Include end security -->
+**重要：**。
+<!-- Include start security note -->
+UNIXソケットを介したLXDへのローカルアクセスは、常にLXDへのフルアクセスを許可します。
+これは、任意のインスタンス上のセキュリティ機能を微調整するのと同様に、任意のインスタンスにファイルシステムパスやデバイスをアタッチする能力を含みます。
 
-詳細は[こちら](doc/security.md)をご覧ください。
-
+したがって、あなたのシステムへのルートアクセスを信頼できるユーザーにのみ、このようなアクセスを与えるべきです。
+<!-- Include end security note -->
 <!-- Include start support -->
 
 ## サポートとコミュニティ
@@ -75,5 +84,16 @@ LXDコミュニティと交流するために以下のチャンネルが用意�
 ### IRC
 ライブの議論がお好みならば、irc.libera.chatの[#lxc](https://kiwiirc.com/client/irc.libera.chat/#lxc)で私たちを見つけることができます。必要であれば [Getting started with IRC](https://discuss.linuxcontainers.org/t/getting-started-with-irc/11920) を参照してください。
 
+### 商用サポート
+
+LXDの商用サポートは、[Canonical Ltd](https://www.canonical.com)を通じて受けることができます。
+
+## ドキュメント
+公式ドキュメントは https://lxd-ja.readthedocs.io/ja/latest/ (原文は https://linuxcontainers.org/lxd/docs/master/) で入手できます。
+
+その他の資料は、[website](https://linuxcontainers.org/lxd/articles)、[YouTube](https://www.youtube.com/channel/UCuP6xPt0WTeZu32CkQPpbvA)、フォーラムの[Tutorials section](https://discuss.linuxcontainers.org/c/tutorials/)にあります。
+
+<!-- Include end support -->
+
 ## コントリビュート
-修正や新機能を提供していただけると助かります。<!-- Include end support --> まず [contributing guidelines](CONTRIBUTING.md) を読んでください!
+修正や新機能の提供は大歓迎です。まずは、[コントリビュートガイド](CONTRIBUTING.md)をお読みください!

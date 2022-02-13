@@ -65,6 +65,7 @@ restricted.virtual-machines.lowlevel | string    | -                     | block
 ```bash
 lxc project set <project> <key> <value>
 ```
+
 ## プロジェクトの制限
 
 注意: `limits.*` 設定キーの 1 つを設定する際はプロジェクト内の **全ての** インスタンスに直接あるいはプロファイル経由で同じ設定キーを設定 **する必要があります**。
@@ -81,7 +82,8 @@ lxc project set <project> <key> <value>
 
 同様にプロジェクトの `limits.cpu` 設定キーを `100` に設定すると、個々の `limits.cpu` の値の **合計** が `100` 以下に維持されることを意味します。
 
-## プロジェクトに対する制限
+(projects-restrictions)=
+## プロジェクトのセキュリティ規制
 
 `restricted` 設定キーが `true` に設定されると、プロジェクトのインスタンスはコンテナネスティングや生の LXC 設定といったセキュリティセンシティブな機能にアクセスできなくなります。
 

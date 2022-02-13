@@ -75,6 +75,10 @@ Signed-off-by: Random J Developer <random@developer.org>
 また、それぞれのコミットには作者が個別に署名する必要があります。
 大きなセットの一部であってもです。`git commit -s`が役に立つでしょう。
 
+## Code of Conduct
+
+投稿する際には、行動規範を遵守しなければなりません。行動規範は、以下のサイトから入手できます。https://github.com/lxc/lxd/blob/master/CODE_OF_CONDUCT.md
+
 <!-- Include end contributing -->
 
 ## その他の情報
