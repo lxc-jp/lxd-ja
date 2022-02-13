@@ -11,7 +11,6 @@ LXD は次のコンポーネントの設定を保管しています。
 - [プロファイル](profiles.md) <!-- [Profiles](profiles.md) -->
 - [ストレージ](storage.md) <!-- [Storage](storage.md) -->
 
-<!--
 ```{toctree}
 :maxdepth: 1
 
@@ -29,4 +28,3 @@ Server settings <server>
 Storage pools <storage>
 Virtual machines <virtual-machines>
 ```
--->

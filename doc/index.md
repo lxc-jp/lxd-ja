@@ -130,7 +130,6 @@ If you prefer live discussions, you can find us in [#lxc](https://kiwiirc.com/cl
 Fixes and new features are greatly appreciated. Make sure to read our [contributing guidelines](contributing.md) first!
 -->
 
-<!--
 ```{toctree}
 :hidden:
 :titlesonly:
@@ -144,4 +143,3 @@ restapi_landing
 internals
 external_resources
 ```
--->

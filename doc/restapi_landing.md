@@ -1,6 +1,5 @@
 # REST API
 
-<!--
 ```{toctree}
 :maxdepth: 1
 
@@ -11,4 +10,3 @@ Instance API documentation <dev-lxd>
 Events API documentation <events>
 Metrics API documentation <metrics>
 ```
--->
