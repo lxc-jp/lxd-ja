@@ -1,6 +1,17 @@
-# Configuration
-LXD stores the configuration for the following components:
+# 設定
+<!-- Configuration -->
+<!--
+Current LXD stores configurations for a few components:
+-->
+LXD は次のコンポーネントの設定を保管しています。
 
+- [サーバ](server.md) <!--[Server](server.md) -->
+- [インスタンス](instances.md)  <!-- [Instances](instances.md) -->
+- [ネットワーク](networks.md) <!-- [Network](networks.md) -->
+- [プロファイル](profiles.md) <!-- [Profiles](profiles.md) -->
+- [ストレージ](storage.md) <!-- [Storage](storage.md) -->
+
+<!--
 ```{toctree}
 :maxdepth: 1
 
@@ -18,3 +29,4 @@ Server settings <server>
 Storage pools <storage>
 Virtual machines <virtual-machines>
 ```
+-->
