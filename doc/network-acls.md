@@ -27,8 +27,8 @@ ingress のルールは NIC に向かうトラフィックに適用し、 egress
 - 数字やハイフンから始まらない
 - ハイフンで終わらない
 
-## プロパティー
-ACL のプロパティーには次のものがあります。
+## プロパティ
+ACL のプロパティには次のものがあります。
 
 
 Property         | Type       | Required | Description
@@ -39,7 +39,7 @@ ingress          | rule list  | no       | ingress のトラフィックルー�
 egress           | rule list  | no       | egress のトラフィックルールのリスト
 config           | string set | no       | 設定のキー・バリューペア (`user.*` カスタムキーのみサポート)
 
-ACL ルールには次のプロパティーがあります。
+ACL ルールには次のプロパティがあります。
 
 Property          | Type       | Required | Description
 :--               | :--        | :--      | :--
@@ -56,7 +56,7 @@ icmp\_code        | string     | no       | protocol が `icmp4` か `icmp6` の
 
 ## ルールの順序と優先度
 
-ルールは明示的に順序を指定できません。しかし、 LXD はルールを `action` プロパティーに基づいて次のように順序付けます。
+ルールは明示的に順序を指定できません。しかし、 LXD はルールを `action` プロパティに基づいて次のように順序付けます。
 
  - `drop`
  - `reject`

@@ -102,7 +102,7 @@ lxc config device add container-name home disk source=/home/${USER} path=/home/u
 しかしこれは特権コンテナのセキュリティの問題のほとんどの原因でもあります。
 
 ### LXD コンテナ内で docker を動かすには？
-LXD のコンテナ内で Docker を動かすにはコンテナの `security.nesting` プロパティーを `true` にする必要があります。
+LXD のコンテナ内で Docker を動かすにはコンテナの `security.nesting` プロパティを `true` にする必要があります。
 
 ```bash
 lxc config set <container> security.nesting true

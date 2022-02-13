@@ -1077,7 +1077,7 @@ Bridge:
  - Upper devices
 
 ## resources\_cpu\_isolated
-この拡張は CPU スレッドに `Isolated` プロパティーを追加します。
+この拡張は CPU スレッドに `Isolated` プロパティを追加します。
 これはスレッドが物理的には `Online` ですがタスクを受け付けないように設定しているかを示します。
 
 ## usedby\_consistency
@@ -1274,7 +1274,7 @@ DHCP (と IPv6 の RA) を無効にできます。デフォルトはオンです
 
 ## gpu\_sriov
 これは SR-IOV を有効にした GPU のサポートを追加します。
-これにより `sriov` という GPU タイプのプロパティーが追加されます。
+これにより `sriov` という GPU タイプのプロパティが追加されます。
 
 ## pci\_device\_type
 これは `pci` デバイスタイプを追加します。
@@ -1303,11 +1303,11 @@ DHCP (と IPv6 の RA) を無効にできます。デフォルトはオンです
 これを設定するとキャッシュされたリモートのイメージが指定の日数使われない場合は削除されるようになります。
 
 ## certificate\_project
-API 内の証明書に `restricted` と `projects` プロパティーを追加します。
+API 内の証明書に `restricted` と `projects` プロパティを追加します。
 `projects` は証明書がアクセスしたプロジェクト名の一覧を保持します。
 
 ## network\_ovn\_acl
-OVN ネットワークと OVN NIC に `security.acls` プロパティーを追加します。
+OVN ネットワークと OVN NIC に `security.acls` プロパティを追加します。
 これにより ネットワークに ACL をかけられるようになります。
 
 ## projects\_images\_auto\_update
@@ -1433,7 +1433,7 @@ lifecycle requestor に address のフィールドを追加します。
 `POST /1.0/images` に `project` フィールドを追加し、イメージコピー時にコピー元プロジェクトを設定できるようにします。
 
 ## clustering\_config
-クラスターメンバーに `config` プロパティーを追加し、キー・バリュー・ペアを設定可能にします。
+クラスターメンバーに `config` プロパティを追加し、キー・バリュー・ペアを設定可能にします。
 
 ## network\_peer
 ネットワークピアリングを追加し、 OVN ネットワーク間のトラフィックが OVN サブシステムの外に出ずに通信できるようにします。
