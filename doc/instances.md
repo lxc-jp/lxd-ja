@@ -250,7 +250,7 @@ ID (database)   | Name                               | Condition     | Descripti
 
 #### Type: none
 
-サポートされるインスタンスタイプ: コンテナー, VM
+サポートされるインスタンスタイプ: コンテナ, VM
 
 none タイプのデバイスはプロパティを一切持たず、インスタンス内に何も作成しません。
 
@@ -297,7 +297,7 @@ NIC ごとにどのプロパティーが設定可能かの詳細については�
 
 ##### nic: bridged
 
-サポートされるインスタンスタイプ: コンテナー, VM
+サポートされるインスタンスタイプ: コンテナ, VM
 
 この NIC の指定に使えるプロパティー: `nictype`, `network`
 
@@ -334,7 +334,7 @@ security.port\_isolation | boolean   | false               | no       | no      
 
 ##### nic: macvlan
 
-サポートされるインスタンスタイプ: コンテナー, VM
+サポートされるインスタンスタイプ: コンテナ, VM
 
 この NIC の指定に使えるプロパティー: `nictype`, `network`
 
@@ -357,7 +357,7 @@ boot.priority           | integer   | -                  | no       | no      | 
 
 ##### nic: sriov
 
-サポートされるインスタンスタイプ: コンテナー, VM
+サポートされるインスタンスタイプ: コンテナ, VM
 
 この NIC の指定に使えるプロパティー: `nictype`, `network`
 
@@ -380,7 +380,7 @@ boot.priority           | integer   | -                  | no       | no      | 
 
 ##### nic: ovn
 
-サポートされるインスタンスタイプ: コンテナー, VM
+サポートされるインスタンスタイプ: コンテナ, VM
 
 この NIC の指定に使えるプロパティー: `network`
 
@@ -442,7 +442,7 @@ ip link set enp9s0f0np0 up
 
 ##### nic: physical
 
-サポートされるインスタンスタイプ: コンテナー, VM
+サポートされるインスタンスタイプ: コンテナ, VM
 
 この NIC の指定に使えるプロパティー: `nictype`
 
@@ -464,7 +464,7 @@ boot.priority           | integer   | -                  | no       | VM のブ�
 
 ##### nic: ipvlan
 
-サポートされるインスタンスタイプ: コンテナー
+サポートされるインスタンスタイプ: コンテナ
 
 この NIC の指定に使えるプロパティー: `nictype`
 
@@ -512,7 +512,7 @@ gvrp                    | boolean   | false              | no       | GARP VLAN 
 
 ##### nic: p2p
 
-サポートされるインスタンスタイプ: コンテナー, VM
+サポートされるインスタンスタイプ: コンテナ, VM
 
 この NIC の指定に使えるプロパティー: `nictype`
 
@@ -535,7 +535,7 @@ boot.priority           | integer   | -                  | no       | VM のブ�
 
 ##### nic: routed
 
-サポートされるインスタンスタイプ: コンテナー, VM
+サポートされるインスタンスタイプ: コンテナ, VM
 
 この NIC の指定に使えるプロパティー: `nictype`
 
@@ -547,15 +547,15 @@ boot.priority           | integer   | -                  | no       | VM のブ�
 
 IP アドレスは `ipv4.address` と `ipv6.address` の設定のいずれかあるいは両方を使って、インスタンスが起動する前に手動で指定する必要があります。
 
-コンテナーでは veth ペアを使用し、VM では TAP デバイスを使用します。そしてホスト側の veth の上に下記のリンクローカルゲートウェイ IP アドレスを設定し、それらをインスタンス内のデフォルトゲートウェイに設定します。
+コンテナでは veth ペアを使用し、VM では TAP デバイスを使用します。そしてホスト側の veth の上に下記のリンクローカルゲートウェイ IP アドレスを設定し、それらをインスタンス内のデフォルトゲートウェイに設定します。
 
   169.254.0.1
   fe80::1
 
-コンテナーではこれらはインスタンスの NIC インタフェースのデフォルトゲートウェイに自動的に設定されます。
+コンテナではこれらはインスタンスの NIC インタフェースのデフォルトゲートウェイに自動的に設定されます。
 しかし VM では IP アドレスとデフォルトゲートウェイは手動か cloud-init のような仕組みを使って設定する必要があります。
 
-またお使いのコンテナーイメージがインタフェースに対して DHCP を使うように設定されている場合、上記の自動的に追加される設定は削除される可能性が高く、その後手動か cloud-init のような仕組みを使って設定する必要があることにもご注意ください。
+またお使いのコンテナイメージがインタフェースに対して DHCP を使うように設定されている場合、上記の自動的に追加される設定は削除される可能性が高く、その後手動か cloud-init のような仕組みを使って設定する必要があることにもご注意ください。
 
 次にインスタンスの IP アドレス全てをインスタンスの veth インタフェースに向ける静的ルートをホスト上に設定します。
 
@@ -652,7 +652,7 @@ lxc config device add <instance> <device-name> nic nictype=sriov parent=<sriov-e
 
 #### Type: infiniband
 
-サポートされるインスタンスタイプ: コンテナー
+サポートされるインスタンスタイプ: コンテナ
 
 LXD では、InfiniBand デバイスに対する 2 種類の異なったネットワークタイプが使えます:
 
@@ -687,7 +687,7 @@ lxc config device add <instance> <device-name> infiniband nictype=sriov parent=<
 
 #### Type: disk
 
-サポートされるインスタンスタイプ: コンテナー, VM
+サポートされるインスタンスタイプ: コンテナ, VM
 
 ディスクエントリーは基本的にインスタンス内のマウントポイントです。ホスト上の既存ファイルやディレクトリのバインドマウントでも構いませんし、ソースがブロックデバイスであるなら、通常のマウントでも構いません。
 
@@ -727,7 +727,7 @@ size.state          | string    | -         | no        | 上の size と同じ�
 recursive           | boolean   | false     | no        | ソースパスを再帰的にマウントするかどうか
 pool                | string    | -         | no        | ディスクデバイスが属するストレージプール。LXD が管理するストレージボリュームにのみ適用されます
 propagation         | string    | -         | no        | バインドマウントをインスタンスとホストでどのように共有するかを管理する（デフォルトである `private`, `shared`, `slave`, `unbindable`,  `rshared`, `rslave`, `runbindable`,  `rprivate` のいずれか。詳しくは Linux kernel の文書 [shared subtree](https://www.kernel.org/doc/Documentation/filesystems/sharedsubtree.txt) をご覧ください）
-shift               | boolean   | false     | no        | ソースの uid/gid をインスタンスにマッチするように変換させるためにオーバーレイの shift を設定するか（コンテナーのみ）
+shift               | boolean   | false     | no        | ソースの uid/gid をインスタンスにマッチするように変換させるためにオーバーレイの shift を設定するか（コンテナのみ）
 raw.mount.options   | string    | -         | no        | ファイルシステム固有のマウントオプション
 ceph.user\_name     | string    | admin     | no        | ソースが ceph か cephfs の場合に適切にマウントするためにユーザーが ceph user\_name を指定しなければなりません
 ceph.cluster\_name  | string    | ceph      | no        | ソースが ceph か cephfs の場合に適切にマウントするためにユーザーが ceph cluster\_name を指定しなければなりません
@@ -735,7 +735,7 @@ boot.priority       | integer   | -         | no        | VM のブート優先�
 
 #### Type: unix-char
 
-サポートされるインスタンスタイプ: コンテナー
+サポートされるインスタンスタイプ: コンテナ
 
 UNIX キャラクターデバイスエントリーは、シンプルにインスタンスの `/dev` に、リクエストしたキャラクターデバイスを出現させます。そしてそれに対して読み書き操作を許可します。
 
@@ -754,7 +754,7 @@ required    | boolean   | true              | no        | このデバイスが�
 
 #### Type: unix-block
 
-サポートされるインスタンスタイプ: コンテナー
+サポートされるインスタンスタイプ: コンテナ
 
 UNIX ブロックデバイスエントリーは、シンプルにインスタンスの `/dev` に、リクエストしたブロックデバイスを出現させます。そしてそれに対して読み書き操作を許可します。
 
@@ -773,7 +773,7 @@ required    | boolean   | true              | no        | このデバイスが�
 
 #### Type: usb
 
-サポートされるインスタンスタイプ: コンテナー, VM
+サポートされるインスタンスタイプ: コンテナ, VM
 
 USB デバイスエントリーは、シンプルにリクエストのあった USB デバイスをインスタンスに出現させます。
 
@@ -803,7 +803,7 @@ GPU デバイスエントリーは、シンプルにリクエストのあった 
 
 ##### gpu: physical
 
-サポートされるインスタンスタイプ: コンテナー, VM
+サポートされるインスタンスタイプ: コンテナ, VM
 
 GPU 全体をパススルーします。
 
@@ -815,9 +815,9 @@ vendorid    | string    | -                 | no        | GPU デバイスのベ
 productid   | string    | -                 | no        | GPU デバイスのプロダクト ID
 id          | string    | -                 | no        | GPU デバイスのカード ID
 pci         | string    | -                 | no        | GPU デバイスの PCI アドレス
-uid         | int       | 0                 | no        | インスタンス（コンテナーのみ）内のデバイス所有者の UID
-gid         | int       | 0                 | no        | インスタンス（コンテナーのみ）内のデバイス所有者の GID
-mode        | int       | 0660              | no        | インスタンス（コンテナーのみ）内のデバイスのモード
+uid         | int       | 0                 | no        | インスタンス（コンテナのみ）内のデバイス所有者の UID
+gid         | int       | 0                 | no        | インスタンス（コンテナのみ）内のデバイス所有者の GID
+mode        | int       | 0660              | no        | インスタンス（コンテナのみ）内のデバイスのモード
 
 ##### gpu: mdev
 
@@ -837,7 +837,7 @@ mdev        | string    | -                 | yes       | 使用する mdev プ�
 
 ##### gpu: mig
 
-サポートされるインスタンスタイプ: コンテナー
+サポートされるインスタンスタイプ: コンテナ
 
 MIG コンピュートインスタンスを作成しパススルーします。
 現状これは NVIDIA MIG を事前に作成しておく必要があります。
@@ -873,7 +873,7 @@ pci         | string    | -                 | no        | GPU デバイスの PC
 
 #### Type: proxy
 
-サポートされるインスタンスタイプ: コンテナー（`nat` と 非 `nat` モード）、 VM （`nat` モードのみ）
+サポートされるインスタンスタイプ: コンテナ（`nat` と 非 `nat` モード）、 VM （`nat` モードのみ）
 
 プロキシーデバイスにより、ホストとインスタンス間のネットワーク接続を転送できます。
 このデバイスを使って、ホストのアドレスの一つに到達したトラフィックをインスタンス内のアドレスに転送したり、その逆を行ったりして、ホストを通してインスタンス内にアドレスを持てます。
@@ -936,7 +936,7 @@ lxc config device add <instance> <device-name> proxy listen=<type>:<addr>:<port>
 
 #### Type: unix-hotplug
 
-サポートされるインスタンスタイプ: コンテナー
+サポートされるインスタンスタイプ: コンテナ
 
 Unix ホットプラグデバイスのエントリーは依頼された unix デバイスをインスタンスの `/dev` に出現させ、デバイスがホストシステムに存在する場合はデバイスへの読み書き操作を許可します。
 実装はホスト上で稼働する systemd-udev に依存します。
@@ -954,7 +954,7 @@ required    | boolean   | false             | no        | このデバイスが�
 
 #### Type: tpm
 
-サポートされるインスタンスタイプ: コンテナー, VM
+サポートされるインスタンスタイプ: コンテナ, VM
 
 TPM デバイスのエントリーは TPM エミュレーターへのアクセスを可能にします。
 
@@ -962,7 +962,7 @@ TPM デバイスのエントリーは TPM エミュレーターへのアクセ�
 
 Key                 | Type      | Default   | Required  | Description
 :--                 | :--       | :--       | :--       | :--
-path                | string    | -         | yes       | インスタンス内でのパス（コンテナーのみ）
+path                | string    | -         | yes       | インスタンス内でのパス（コンテナのみ）
 
 #### Type: pci
 
@@ -1039,16 +1039,16 @@ lxc launch ubuntu:20.04 my-instance -t t2.micro
   https://github.com/dustinkirkland/instance-type
 
 ### `limits.hugepages.[size]` を使った hugepage の制限
-LXD では `limits.hugepage.[size]` キーを使ってコンテナーが利用できる hugepage の数を制限できます。
+LXD では `limits.hugepage.[size]` キーを使ってコンテナが利用できる hugepage の数を制限できます。
 hugepage の制限は hugetlb cgroup コントローラーを使って行われます。
 これはつまりこれらの制限を適用するためにホストシステムが hugetlb コントローラーを legacy あるいは unified cgroup の階層に公開する必要があることを意味します。
 アーキテクチャーによって複数の hugepage のサイズを公開していることに注意してください。
 さらに、アーキテクチャーによっては他のアーキテクチャーとは異なる hugepage のサイズを公開しているかもしれません。
 
-hugepage の制限は非特権コンテナー内で `hugetlbfs` ファイルシステムの mount システムコールをインターセプトするように LXD を設定しているときには特に有用です。
-LXD が `hugetlbfs` mount システムコールをインターセプトすると LXD は正しい `uid` と `gid` の値を mount オプションに指定して `hugetblfs` ファイルシステムをコンテナーにマウントします。
-これにより非特権コンテナーからも hugepage が利用可能となります。
-しかし、ホストで利用可能な hugepage をコンテナーが使い切ってしまうのを防ぐため、 `limits.hugepages.[size]` を使ってコンテナーが利用可能な hugepage の数を制限することを推奨します。
+hugepage の制限は非特権コンテナ内で `hugetlbfs` ファイルシステムの mount システムコールをインターセプトするように LXD を設定しているときには特に有用です。
+LXD が `hugetlbfs` mount システムコールをインターセプトすると LXD は正しい `uid` と `gid` の値を mount オプションに指定して `hugetblfs` ファイルシステムをコンテナにマウントします。
+これにより非特権コンテナからも hugepage が利用可能となります。
+しかし、ホストで利用可能な hugepage をコンテナが使い切ってしまうのを防ぐため、 `limits.hugepages.[size]` を使ってコンテナが利用可能な hugepage の数を制限することを推奨します。
 
 ### `limits.kernel.[limit name]` を使ったリソース制限
 LXD では、指定したインスタンスのリソース制限を設定するのに、 `limits.kernel.*` という名前空間のキーが使えます。

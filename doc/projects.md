@@ -11,7 +11,7 @@ key/value 設定は現在サポートされている以下のネームスペー�
 名前空間が分けられています。
 
  - `features` プロジェクトのフィーチャーセットのどの部分が使用中か
- - `limits` プロジェクトに属するコンテナーと VM に適用されるリソース制限
+ - `limits` プロジェクトに属するコンテナと VM に適用されるリソース制限
  - `user` ユーザーメタデータに対する自由形式の key/value
 
 キー       | 型 | 条件 | デフォルト値 | 説明
@@ -26,7 +26,7 @@ images.auto\_update\_interval        | integer   | -                     | -    
 images.compression\_algorithm        | string    | -                     | -                         | プロジェクト内のイメージに使う圧縮アルゴリズム（bzip2, gzip, lzma, xz あるいは none）
 images.default\_architecture         | string    | -                     | -                         | アーキテクチャーが混在するクラスター内で使用するデフォルトのアーキテクチャー
 images.remote\_cache\_expiry         | integer   | -                     | -                         | プロジェクト内の使用されないリモートイメージのキャッシュが削除されるまでの日数
-limits.containers                    | integer   | -                     | -                         | プロジェクト内に作成可能なコンテナーの最大数
+limits.containers                    | integer   | -                     | -                         | プロジェクト内に作成可能なコンテナの最大数
 limits.cpu                           | integer   | -                     | -                         | プロジェクトのインスタンスに設定する個々の "limits.cpu" 設定の合計の最大値
 limits.disk                          | string    | -                     | -                         | プロジェクトの全てのインスタンスボリューム、カスタムボリューム、イメージで使用するディスクスペースの合計の最大値
 limits.instances                     | integer   | -                     | -                         | プロジェクト内に作成できるインスタンスの合計数の最大値
@@ -38,7 +38,7 @@ restricted                           | boolean   | -                     | false
 restricted.backups                   | string    | -                     | block                     | インスタンスやボリュームのバックアップの作成を禁止するかどうか
 restricted.cluster.groups            | string    | -                     | -                         | 指定したグループ以外のクラスターグループにターゲットするのを防ぐ
 restricted.cluster.target            | string    | -                     | block                     | インスタンスを作成・移動する際にクラスターメンバーを直接指定するのを防ぐかどうか
-restricted.containers.lowlevel       | string    | -                     | block                     | block と設定すると raw.lxc, raw.idmap, volatile などの低レベルのコンテナーオプションを防ぐ。
+restricted.containers.lowlevel       | string    | -                     | block                     | block と設定すると raw.lxc, raw.idmap, volatile などの低レベルのコンテナオプションを防ぐ。
 restricted.containers.nesting        | string    | -                     | block                     | block と設定すると security.nesting=true と設定するのを防ぐ
 restricted.containers.privilege      | string    | -                     | unpriviliged              | unpriviliged と設定すると security.privileged=true と設定するのを防ぐ。 isolated と設定すると security.privileged=true に加えて security.idmap.isolated=true と設定するのを防ぐ。 allow と設定すると制限なし。
 restricted.devices.disk              | string    | -                     | managed                   | block と設定すると root 以外のディスクデバイスを使用できなくする。 managed に設定すると pool= が設定されているときだけディスクデバイスの使用を許可する。  allow と設定すると制限なし。
@@ -83,7 +83,7 @@ lxc project set <project> <key> <value>
 
 ## プロジェクトに対する制限
 
-`restricted` 設定キーが `true` に設定されると、プロジェクトのインスタンスはコンテナーネスティングや生の LXC 設定といったセキュリティセンシティブな機能にアクセスできなくなります。
+`restricted` 設定キーが `true` に設定されると、プロジェクトのインスタンスはコンテナネスティングや生の LXC 設定といったセキュリティセンシティブな機能にアクセスできなくなります。
 
 `restricted` 設定キーがブロックする機能の正確な組み合わせは LXD の今後のリリースに伴って、より多くの機能がセキュリティセンシテイブであると判断されて増えていく可能性があります。
 
@@ -96,7 +96,7 @@ lxc project set <project> restricted=true
 lxc project set <project> restricted.containers.nesting=allow
 ```
 
-はコンテナーネスティング **以外の** 全てのセキュリティセンシティブな機能をブロックします。
+はコンテナネスティング **以外の** 全てのセキュリティセンシティブな機能をブロックします。
 
 それぞれのセキュリティセンシティブな機能は対応する `restricted.*` プロジェクト設定サブキーを持ち、その機能を許可しプロジェクトで使えるようにするにはデフォルト値から変更する必要があります。
 

@@ -251,7 +251,7 @@ firewall-cmd --zone=trusted --change-interface=lxdbr0 --permanent
 
 ### Firewalld に LXD の iptables ルールを制御させるには
 
-firewalld と LXD を一緒に使う場合、 iptables のルールがオーバーラップするかもしれません。例えば firewalld が LXD デーモンより後に起動すると firewalld が LXD の iptables ルールを削除し、 LXD コンテナーが外向きのインターネットアクセスが全くできなくなるかもしれません。
+firewalld と LXD を一緒に使う場合、 iptables のルールがオーバーラップするかもしれません。例えば firewalld が LXD デーモンより後に起動すると firewalld が LXD の iptables ルールを削除し、 LXD コンテナが外向きのインターネットアクセスが全くできなくなるかもしれません。
 これを修正する 1 つの方法は LXD の iptables ルールを firewalld に移譲し、 LXD の iptables ルールは無効にすることです。
 
 最初のステップは [Firewalld で DHCP, DNS を許可する](#allow-dhcp-dns-with-firewalld) ことです。

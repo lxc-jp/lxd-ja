@@ -85,7 +85,7 @@ export LD_LIBRARY_PATH="$(go env GOPATH)/deps/dqlite/.libs/:$(go env GOPATH)/dep
 これで `lxd` と `lxc` コマンドの実行ファイルが利用可能になり LXD をセットアップするのに使用できます。 `LD_LIBRARY_PATH` 環境変数のおかげで実行ファイルは `$(go env GOPATH)/deps` にビルドされた依存ライブラリーを自動的に見つけて使用します。
 
 ### マシンセットアップ
-LXD が非特権コンテナーを作成できるように、root ユーザーに対する sub{u,g}id の設定が必要です:
+LXD が非特権コンテナを作成できるように、root ユーザーに対する sub{u,g}id の設定が必要です:
 
 ```bash
 echo "root:1000000:1000000000" | sudo tee -a /etc/subuid /etc/subgid
