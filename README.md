@@ -1,4 +1,4 @@
-[![LXD](https://linuxcontainers.org/static/img/containers.png)](https://linuxcontainers.org/lxd)
+[![LXD](https://linuxcontainers.org/static/img/containers.png)](https://linuxcontainers.org/ja/lxd/)
 
 <!-- Include start LXD intro -->
 # LXD
@@ -8,12 +8,12 @@ LXDは、次世代のシステムコンテナおよび仮想マシンマネー�
 LXDはイメージベースで、[多くのLinuxディストリビューション](https://images.linuxcontainers.org)に対応しています。
 そして、非常にパワフルでありながら、非常にシンプルなREST APIを中心に構築されています。
 
-LXDとは何か、何ができるのか、より良いアイデアを得るためには、[オンラインで試す](https://linuxcontainers.org/lxd/try-it/)ことができます!
-また、ローカルで動作させたい場合は、[Getting Started Guide](https://linuxcontainers.org/lxd/getting-started-cli/)をご覧ください。
+LXDとは何か、何ができるのか、より良いアイデアを得るためには、[オンラインで試す](https://linuxcontainers.org/ja/lxd/try-it/)ことができます!
+また、ローカルで動作させたい場合は、[LXDを使い始めるには](https://linuxcontainers.org/ja/lxd/getting-started-cli/)をご覧ください。
 
-- リリースのアナウンス: <https://linuxcontainers.org/lxd/news/>
-- リリースのtarball: <https://linuxcontainers.org/lxd/downloads/>
-- ドキュメント: <https://linuxcontainers.org/lxd/docs/master/>
+- リリースのアナウンス: <https://linuxcontainers.org/ja/lxd/news/>
+- リリースのtarball: <https://linuxcontainers.org/ja/lxd/downloads/>
+- ドキュメント: <https://lxd-ja.readthedocs.io/ja/latest/>
 
 <!-- Include end LXD intro -->
 
@@ -38,7 +38,7 @@ Linux   | [Snap](https://snapcraft.io/lxd)                  | snap install lxd
 Windows | [Chocolatey](https://chocolatey.org/packages/lxc) | choco install lxc
 MacOS   | [Homebrew](https://formulae.brew.sh/formula/lxc)  | brew install lxc
 
-様々なLinuxディストリビューションやOSへのLXDのインストールについては、[私たちのウェブサイト](https://linuxcontainers.org/lxd/getting-started-cli/)に詳しい説明があります。
+様々なLinuxディストリビューションやOSへのLXDのインストールについては、[私たちのウェブサイト](https://linuxcontainers.org/ja/lxd/getting-started-cli/)に詳しい説明があります。
 <!-- Include end installing -->
 
 LXDをソースからインストールするには、ドキュメントの[Installing LXD](doc/installing.md)を参照してください。
@@ -52,16 +52,16 @@ LXDのインストールが安全であることを保証するために、以�
 - オペレーティングシステムを最新に保ち、利用可能なすべてのセキュリティパッチをインストールする。
 - サポートされているLXDのバージョン（LTSリリースまたは月例機能リリース）のみを使用する。
 - LXDデーモンとリモートAPIへのアクセスを制限すること。
-- 必要とされない限り、特権コンテナを使わないこと。特権的なコンテナを使う場合は、適切なセキュリティ対策をしてください。詳細は[LXCセキュリティページ](https://linuxcontainers.org/lxc/security/)を参照してください。
+- 必要とされない限り、特権コンテナを使わないこと。特権的なコンテナを使う場合は、適切なセキュリティ対策をしてください。詳細は[LXCセキュリティページ](https://linuxcontainers.org/ja/lxc/security/)を参照してください。
 - ネットワークインターフェイスを安全に設定してください。
-<!--Include end security -->
+<!-- Include end security -->
 
 詳しい情報は[Security](doc/security.md)を参照してください。
 
 **重要：**。
 <!-- Include start security note -->
 UNIXソケットを介したLXDへのローカルアクセスは、常にLXDへのフルアクセスを許可します。
-これは、任意のインスタンス上のセキュリティ機能を微調整するのと同様に、任意のインスタンスにファイルシステムパスやデバイスをアタッチする能力を含みます。
+これは、任意のインスタンス上のセキュリティ機能を変更できる能力に加えて、任意のインスタンスにファイルシステムパスやデバイスをアタッチする能力を含みます。
 
 したがって、あなたのシステムへのルートアクセスを信頼できるユーザーにのみ、このようなアクセスを与えるべきです。
 <!-- Include end security note -->
