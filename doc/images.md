@@ -1,11 +1,9 @@
-# Images
+# イメージ
 
-<!--
 ```{toctree}
 :maxdepth: 1
 
 architectures
-Cloud-init <cloud-init>
-Handling <image-handling>
+cloud-initファイル <cloud-init>
+イメージの扱い <image-handling>
 ```
--->

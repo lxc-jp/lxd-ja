@@ -1,38 +1,33 @@
 # 環境変数
-<!-- Environment variables -->
-## イントロダクション <!-- Introduction -->
 以下の環境変数を設定することで、 LXD のクライアントとデーモンを
 ユーザーの環境に適合させることができ、いくつかの高度な機能を有効または
 無効にすることができます。
-<!--
-The LXD client and daemon respect some environment variables to adapt to
-the user's environment and to turn some advanced features on and off.
--->
 
-## クライアントとサーバ共通の環境変数 <!-- Common -->
-名前 <!-- Name -->                           | 説明 <!-- Description -->
-:---                            | :----
-`LXD_DIR`                       | LXD のデータディレクトリ <!-- The LXD data directory -->
-`PATH`                          | 実行ファイルの検索対象のパスのリスト <!-- List of paths to look into when resolving binaries -->
-`http_proxy`                    | HTTP 用のプロキシサーバの URL <!-- Proxy server URL for HTTP -->
-`https_proxy`                   | HTTPS 用のプロキシサーバの URL <!-- Proxy server URL for HTTPS -->
-`no_proxy`                      | プロキシが不要なドメイン、IPアドレスあるいは CIDR レンジのリスト <!-- List of domains, IP addresses or CIDR ranges that don't require the use of a proxy -->
+## クライアントとサーバ共通の環境変数
+名前          | 説明
+:---          | :----
+`LXD_DIR`     | LXD のデータディレクトリ
+`PATH`        | 実行ファイルの検索対象のパスのリスト
+`http_proxy`  | HTTP 用のプロキシサーバの URL
+`https_proxy` | HTTPS 用のプロキシサーバの URL
+`no_proxy`    | プロキシが不要なドメイン、IPアドレスあるいは CIDR レンジのリスト
 
-## クライアントの環境変数 <!-- Client environment variable -->
-名前 <!-- Name -->                           | 説明 <!-- Description -->
-:---                            | :----
-`EDITOR`                        | 使用するテキストエディタ <!-- What text editor to use -->
-`VISUAL`                        | (`EDITOR` が設定されてないときに) 使用するテキストエディタ <!-- What text editor to use (if `EDITOR` isn't set) -->
-`LXD_CONF`                      | LXC 設定ディレクトリーのパス <!-- Path to the LXC configuration directory -->
-`LXD_GLOBAL_CONF`               | LXC グローバル設定ディレクトリーのパス <!-- Path to the global LXC configuration directory -->
+## クライアントの環境変数
+名前              | 説明
+:---              | :----
+`EDITOR`          | 使用するテキストエディタ
+`VISUAL`          | (`EDITOR` が設定されてないときに) 使用するテキストエディタ
+`LXD_CONF`        | LXC 設定ディレクトリーのパス
+`LXD_GLOBAL_CONF` | LXC グローバル設定ディレクトリーのパス
+`LXC_REMOTE`      | 使用するリモートの名前（設定されたデフォルトのリモートよりも優先されます）
 
-## サーバの環境変数 <!-- Server environment variable -->
-名前 <!-- Name -->                           | 説明 <!-- Description -->
-:---                            | :----
-`LXD_EXEC_PATH`                 | (サブコマンド実行時に使用される) LXD 実行ファイルのフルパス <!-- Full path to the LXD binary (used when forking subcommands) -->
-`LXD_LXC_TEMPLATE_CONFIG`       | LXC テンプレート設定ディレクトリ <!-- Path to the LXC template configuration directory -->
-`LXD_SECURITY_APPARMOR`         | `false` に設定すると AppArmor を無効にします <!-- If set to `false`, forces AppArmor off -->
-`LXD_UNPRIVILEGED_ONLY`         | `true` に設定すると非特権コンテナーしか作れなくなるように強制します。 LXD_UNPRIVILEGED_ONLY を設定する前に作られた特権コンテナーだけが引き続き特権を持つことに注意してください。このオプションを LXD デーモンを最初にセットアップするときに設定するのが実用的です。 <!-- If set to `true`, enforces that only unprivileged containers can be created. Note that any privileged containers that have been created before setting LXD_UNPRIVILEGED_ONLY will continue to be privileged. To use this option effectively it should be set when the LXD daemon is first setup. -->
-`LXD_OVMF_PATH`                 | `OVMF_CODE.fd` と `OVMF_VARS.ms.fd` を含む OVMF ビルドへのパス <!-- Path to an OVMF build including `OVMF_CODE.fd` and `OVMF_VARS.ms.fd` -->
-`LXD_SHIFTFS_DISABLE`           | shiftfs のサポートを無効にする（従来の UID シフトを試す際に有用です） <!-- Disable shiftfs support (useful when testing traditional UID shifting) -->
-`LXD_DEVMONITOR_DIR`            | デバイスモニターでモニターするパス。主にテスト用。 <!-- Path to be monitored by the device monitor. This is primarily for testing. -->
+## サーバの環境変数
+名前                      | 説明
+:---                      | :----
+`LXD_EXEC_PATH`           | (サブコマンド実行時に使用される) LXD 実行ファイルのフルパス
+`LXD_LXC_TEMPLATE_CONFIG` | LXC テンプレート設定ディレクトリ
+`LXD_SECURITY_APPARMOR`   | `false` に設定すると AppArmor を無効にします
+`LXD_UNPRIVILEGED_ONLY`   | `true` に設定すると非特権コンテナしか作れなくなるように強制します。 LXD_UNPRIVILEGED_ONLY を設定する前に作られた特権コンテナだけが引き続き特権を持つことに注意してください。このオプションを LXD デーモンを最初にセットアップするときに設定するのが実用的です。
+`LXD_OVMF_PATH`           | `OVMF_CODE.fd` と `OVMF_VARS.ms.fd` を含む OVMF ビルドへのパス
+`LXD_SHIFTFS_DISABLE`     | shiftfs のサポートを無効にする（従来の UID シフトを試す際に有用です）
+`LXD_DEVMONITOR_DIR`      | デバイスモニターでモニターするパス。主にテスト用。

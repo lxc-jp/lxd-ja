@@ -1,14 +1,12 @@
 # REST API
 
-<!--
 ```{toctree}
 :maxdepth: 1
 
-Main API documentation <rest-api>
+REST API <rest-api>
 api
-Main API extensions <api-extensions>
-Instance API documentation <dev-lxd>
-Events API documentation <events>
-Metrics API documentation <metrics>
+API 拡張 <api-extensions>
+インスタンス API <dev-lxd>
+イベント API <events>
+メトリクス API <metrics>
 ```
--->

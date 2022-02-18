@@ -1,80 +1,38 @@
 # インスタンス〜ホスト間の通信
-<!-- Communication between instance and host -->
-## イントロダクション <!-- Introduction -->
-<!--
-Communication between the hosted workload (instance) and its host while
-not strictly needed is a pretty useful feature.
--->
 ホストされているワークロード (インスタンス) とそのホストのコミュニケーションは
 厳密には必要とされているわけではないですが、とても便利な機能です。
 
-<!--
-In LXD, this feature is implemented through a `/dev/lxd/sock` node which is
-created and setup for all LXD instances.
--->
 LXD ではこの機能は `/dev/lxd/sock` というノードを通して実装されており、
 このノードは全ての LXD のインスタンスに対して作成、セットアップされます。
 
-<!--
-This file is a Unix socket which processes inside the instance can
-connect to. It's multi-threaded so multiple clients can be connected at the
-same time.
--->
 このファイルはインスタンス内部のプロセスが接続できる Unix ソケットです。
 マルチスレッドで動いているので複数のクライアントが同時に接続できます。
 
-## 実装詳細 <!-- Implementation details -->
-<!--
-LXD on the host binds `/var/lib/lxd/devlxd/sock` and starts listening for new
-connections on it.
--->
+## 実装詳細
 ホストでは LXD は `/var/lib/lxd/devlxd/sock` をバインドして新しいコネクションの
 リッスンを開始します。
 
-<!--
-This socket is then exposed into every single instance started by
-LXD at `/dev/lxd/sock`.
--->
 このソケットは、LXD が開始させたすべてのインスタンス内の `/dev/lxd/sock` に
 公開されます。
 
-<!--
-The single socket is required so we can exceed 4096 instances, otherwise,
-LXD would have to bind a different socket for every instance, quickly
-reaching the FD limit.
--->
 4096 を超えるインスタンスを扱うのに単一のソケットが必要です。そうでなければ、
 LXD は各々のインスタンスに異なるソケットをバインドする必要があり、
 ファイルディスクリプタ数の上限にすぐ到達してしまいます。
 
-## 認証 <!-- Authentication -->
-<!--
-Queries on `/dev/lxd/sock` will only return information related to the
-requesting instance. To figure out where a request comes from, LXD will
-extract the initial socket ucred and compare that to the list of
-instances it manages.
--->
+## 認証
 `/dev/lxd/sock` への問い合わせは依頼するインスタンスに関連した情報のみを
 返します。リクエストがどこから来たかを知るために、 LXD は初期のソケットの
 ucred 構造体を取り出し、 LXD が管理しているインスタンスのリストと比較します。
 
-## プロトコル <!-- Protocol -->
-<!--
-The protocol on `/dev/lxd/sock` is plain-text HTTP with JSON messaging, so very
-similar to the local version of the LXD protocol.
--->
+## プロトコル
 `/dev/lxd/sock` のプロトコルは JSON メッセージを用いたプレーンテキストの
 HTTP であり、 LXD プロトコルのローカル版に非常に似ています。
 
-<!--
-Unlike the main LXD API, there is no background operation and no
-authentication support in the `/dev/lxd/sock` API.
--->
 メインの LXD API とは異なり、 `/dev/lxd/sock` API にはバックグラウンド処理と
 認証サポートはありません。
 
 ## REST-API
-### API の構造 <!-- API structure -->
+### API の構造
  * /
    * /1.0
      * /1.0/config
@@ -84,19 +42,12 @@ authentication support in the `/dev/lxd/sock` API.
      * /1.0/images/{fingerprint}/export
      * /1.0/meta-data
 
-### API の詳細 <!-- API details -->
+### API の詳細
 #### `/`
 ##### GET
-<!--
- * Description: List of supported APIs
- * Return: list of supported API endpoint URLs (by default `['/1.0']`)
--->
  * 説明: サポートされている API のリスト
  * 出力: サポートされている API エンドポイント URL のリスト (デフォルトでは ['/1.0']`)
 
-<!--
-Return value:
--->
 戻り値:
 
 ```json
@@ -106,16 +57,9 @@ Return value:
 ```
 #### `/1.0`
 ##### GET
-<!--
- * Description: Information about the 1.0 API
- * Return: dict
--->
  * 説明: 1.0 API についての情報
  * 出力: dict 形式のオブジェクト
 
-<!--
-Return value:
--->
 戻り値:
 
 ```json
@@ -125,21 +69,9 @@ Return value:
 ```
 #### `/1.0/config`
 ##### GET
-<!--
- * Description: List of configuration keys
- * Return: list of configuration keys URL
--->
  * 説明: 設定キーの一覧
  * 出力: 設定キー URL のリスト
 
-<!--
-Note that the configuration key names match those in the instance
-config, however not all configuration namespaces will be exported to
-`/dev/lxd/sock`.
-Currently only the `cloud-init.*` and `user.*` keys are accessible to the instance.
-
-At this time, there also aren't any instance-writable namespace.
--->
 設定キーの名前はインスタンスの設定の名前と一致するようにしています。
 しかし、設定の namespace の全てが `/dev/lxd/sock` にエクスポート
 されているわけではありません。
@@ -147,9 +79,6 @@ At this time, there also aren't any instance-writable namespace.
 
 現時点ではインスタンスが書き込み可能な名前空間はありません。
 
-<!--
-Return value:
--->
 戻り値:
 
 ```json
@@ -160,32 +89,18 @@ Return value:
 
 #### `/1.0/config/<KEY>`
 ##### GET
-<!--
- * Description: Value of that key
- * Return: Plain-text value
--->
  * 説明: そのキーの値
  * 出力: プレーンテキストの値
 
-<!--
-Return value:
--->
 戻り値:
 
     blah
 
 #### `/1.0/devices`
 ##### GET
-<!--
- * Description: Map of instance devices
- * Return: dict
--->
  * 説明: インスタンスのデバイスのマップ
  * 出力: dict
 
-<!--
-Return value:
--->
 戻り値:
 
 ```json
@@ -206,37 +121,19 @@ Return value:
 
 #### `/1.0/events`
 ##### GET
-<!--
- * Description: websocket upgrade
- * Return: none (never ending flow of events)
--->
  * 説明: この API ではプロトコルが websocket にアップグレードされます。
  * 出力: 無し (イベントのフローが終わることがなくずっと続く)
 
-<!--
-Supported arguments are:
-
- * type: comma separated list of notifications to subscribe to (defaults to all)
--->
 サポートされる引数は以下の通りです。
 
  * type: 購読する通知の種別のカンマ区切りリスト (デフォルトは all)
 
-<!--
-The notification types are:
-
- * config (changes to any of the user.\* config keys)
- * device (any device addition, change or removal)
--->
 通知の種別には以下のものがあります。
 
  * config (あらゆる user.\* 設定キーの変更)
  * device (あらゆるデバイスの追加、変更、削除)
 
 
-<!--
-This never returns. Each notification is sent as a separate JSON dict:
--->
 この API は決して終了しません。それぞれの通知は別々の JSON の dict として
 送られます。
 
@@ -269,38 +166,20 @@ This never returns. Each notification is sent as a separate JSON dict:
 
 #### `/1.0/images/<FINGERPRINT>/export`
 ##### GET
-<!--
- * Description: Download a public/cached image from the host
- * Return: raw image or error
- * Access: Requires security.devlxd.images set to true
--->
  * 説明: 公開されたあるいはキャッシュされたイメージをホストからダウンロードする
  * 出力: 生のイメージあるいはエラー
  * アクセス権: security.devlxd.images を true に設定する必要があります
 
-<!--
-Return value:
--->
 戻り値:
 
-<!--
-    See /1.0/images/<FINGERPRINT>/export in the daemon API.
--->
     LXD デーモン API の /1.0/images/<FINGERPRINT>/export を参照してください。
 
 
 #### `/1.0/meta-data`
 ##### GET
-<!--
- * Description: Container meta-data compatible with cloud-init
- * Return: cloud-init meta-data
--->
- * 説明: cloud-init と互換性のあるコンテナーのメタデータ
+ * 説明: cloud-init と互換性のあるコンテナのメタデータ
  * 出力: cloud-init のメタデータ
 
-<!--
-Return value:
--->
 戻り値:
 
     #cloud-config

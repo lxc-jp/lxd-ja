@@ -1,140 +1,143 @@
-site_title: LXD
+site_title: LXDドキュメント翻訳プロジェクト
 site_logo_url: https://linuxcontainers.org/static/img/containers.png
 navigation:
-    - title: LXD を使い始めるには # Getting started
+    - title: はじめに
       location: index.md
       children:
-        - title: 動作環境 # Requirements
+        - title: 動作環境
           location: requirements.md
 
-        - title: LXD のインストール # Installing LXD
+        - title: LXDのインストール
           location: installing.md
 
-        - title: FAQ # Frequently asked
+        - title: よく聞かれる質問 (FAQ)
           location: faq.md
 
-        - title: セキュリティー # Security
+        - title: セキュリティ
           location: security.md
 
-        - title: コントリビュート # Contributing
+        - title: コントリビュート
           location: contributing.md
 
-    - title: 設定 # Configuration
+    - title: 設定
       location: configuration.md
       children:
-        - title: コンテナー # Containers
+        - title: コンテナ
           location: containers.md
 
-        - title: インスタンス # Instances
+        - title: インスタンス
           location: instances.md
 
-        - title: ネットワーク # Networks
+        - title: ネットワーク
           location: networks.md
 
-        - title: ネットワーク ACL # Network ACLs
+        - title: ネットワーク ACL
           location: network-acls.md
 
-        - title: ネットワークフォワード # Network Forwards
+        - title: ネットワークフォワード
           location: network-forwards.md
 
-        - title: ネットワークピア # Network Peers
+        - title: ネットワークピア
           location: network-peers.md
 
-        - title: ネットワークゾーン # Network Zones
+        - title: ネットワークゾーン
           location: network-zones.md
 
-        - title: presseed YAML # Preseed files
+        - title: プリシードYAML
           location: preseed.md
 
-        - title: プロファイル # Profiles
+        - title: プロファイル
           location: profiles.md
 
-        - title: プロジェクト # Projects
+        - title: プロジェクト
           location: projects.md
 
-        - title: サーバ # Server settings
+        - title: サーバ
           location: server.md
 
-        - title: ストレージプール # Storage pools
+        - title: ストレージプール
           location: storage.md
 
-        - title: 仮想マシン # Virtual machines
+        - title: 仮想マシン
           location: virtual-machines.md
 
-    - title: イメージ # Images
+    - title: イメージ
       children:
-        - title: アーキテクチャ # Architectures
+        - title: アーキテクチャ
           location: architectures.md
 
-        - title: Cloud-init # Cloud-init
+        - title: cloud-initファイル
           location: cloud-init.md
 
-        - title: イメージの扱い # Handling
+        - title: イメージの扱い
           location: image-handling.md
 
-    - title: オペレーション # Operation
+    - title: オペレーション
       children:
-        - title: バックアップ # Backups
+        - title: バックアップ
           location: backup.md
 
-        - title: クラスタリング # Clustering
+        - title: クラスタリング
           location: clustering.md
 
-        - title: プロダクション環境のセットアップ # Production setup
+        - title: インスタンスでのコマンドの実行
+          location: instance-exec.md
+
+        - title: プロダクション環境のセットアップ
           location: production-setup.md
 
-        - title: リモート # Remotes
+        - title: Remotes
           location: remotes.md
 
     - title: REST API
       children:
-        - title: メインの API ドキュメント # Main API documentation
+        - title: REST API
           location: rest-api.md
 
-        - title: メインの API 拡張 # Main API extensions
+        - title: API拡張
           location: api-extensions.md
 
-        - title: インスタンス API ドキュメント # Instance API documentation
+        - title: インスタンス API
           location: dev-lxd.md
 
-        - title: イベント API ドキュメント # Events API documentation
+        - title: イベント API
           location: events.md
 
-        - title: メトリクス API ドキュメント # Metrics API documentation
+        - title: メトリクス API
           location: metrics.md
 
-    - title: 内部動作とデバッグ # Internals & debugging
+    - title: 内部動作とデバッグ
       children:
-        - title: コンテナー環境 # Container environment
+        - title: コンテナ実行環境
           location: container-environment.md
 
-        - title: インスタンスのマイグレーション # Instance migration
+        - title: インスタンスのマイグレーション
           location: migration.md
 
-        - title: デーモンの動作 # Daemon behavior
+        - title: デーモンの動作
           location: daemon-behavior.md
 
-        - title: データベース # Database
+        - title: データベース
           location: database.md
 
-        - title: デバッグ # Debugging
+        - title: デバッグ
           location: debugging.md
 
-        - title: 環境変数 # Environment variables
+        - title: 環境変数
           location: environment.md
 
-        - title: システムコールのインターセプション # System call interception
+        - title: システムコールのインターセプト
           location: syscall-interception.md
 
-        - title: ユーザー名前空間の設定 # User namespace setup
+        - title: ユーザー名前空間の設定
           location: userns-idmap.md
 
-    - title: 外部リソース # External resources
+    - title: 外部リソース
       children:
-        - title: プロジェクトのレポジトリ # Project repository
+        - title: プロジェクトレポジトリ
           location: https://github.com/lxc/lxd
           external: true
 
-        - title: イメージサーバー # Image server
+        - title: イメージサーバ
           location: https://images.linuxcontainers.org
           external: true

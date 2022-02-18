@@ -1,18 +1,14 @@
-# LXD を使い始めるには <!-- Getting started -->
+# LXD を使い始めるには
 
-このセクションのドキュメントに加えて、ウェブサイト上の [Getting Started guide](https://linuxcontainers.org/lxd/getting-started-cli/) を戦勝してください。
-<!--
-In addition to the documentation in this section, see the [Getting Started guide](https://linuxcontainers.org/lxd/getting-started-cli/) on the website.
--->
+このセクションのドキュメントに加えて、ウェブサイト上の [LXDを使い始めるには](https://linuxcontainers.org/ja/lxd/getting-started-cli/) を参照してください。
 
-<!--
 ```{toctree}
 :maxdepth: 1
 
 requirements
 installing
-Frequently asked <faq>
+faq
 security
 contributing
+support
 ```
--->

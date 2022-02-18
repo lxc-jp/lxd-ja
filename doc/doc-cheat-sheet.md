@@ -1,111 +1,111 @@
 ---
 orphan: true
 substitutions:
-  reuse_key: "This is **included** text."
-  advanced_reuse_key: "This is a substitution that includes a code block:
+  reuse_key: "これは **インクルードされた** テキストです"
+  advanced_reuse_key: "これはコードブロックを含む置換文です。
                        ```
-                       code block
+                       コードブロック
                        ```"
 ---
 
-# Documentation cheat sheet
+# ドキュメントチートシート
 
-The documentation files use a mixture of [Markdown](https://commonmark.org/) and [MyST](https://myst-parser.readthedocs.io/) syntax.
+ドキュメントファイルには、[Markdown](https://commonmark.org/)と[MyST](https://myst-parser.readthedocs.io/)の構文が混在しています。
 
-See the following sections for syntax help and conventions.
+シンタックスのヘルプと規約については、以下のセクションを参照してください。
 
-## Headings
+## 見出し
 
-```{list-table}
+``{list-table}.
    :header-rows: 1
 
-* - Input
-  - Description
-* - `# Title`
-  - Page title and H1 heading
-* - `## Heading`
-  - H2 heading
-* - `### Heading`
-  - H3 heading
-* - `#### Heading`
-  - H4 heading
+* - 入力
+  - 説明
+* - `#Title` (タイトル)
+  - ページのタイトルとH1の見出し
+* - `## ヘディング` (見出し)
+  - H2の見出し
+* - `### ヘディング` (見出し)
+  - H3の見出し
+* - `#### 見出し` のようになります。
+  - H4の見出し
 * - ...
-  - Further headings
+  - その他の見出し
 ```
 
-Adhere to the following conventions:
+以下の規則に従ってください。
 
-- Do not use consecutive headings without intervening text.
-- Use sentence style for headings (capitalise only the first word).
-- Do not skip levels (for example, always follow an H2 with an H3, not an H4).
+- 間にテキストを挟まずに連続した見出しを使用しない。
+- 見出しには文型を使用する（最初の単語だけを大文字にする）。
+- レベルを飛ばさない（例えば、H2の後にはH4ではなく必ずH3をつける）。
 
-## Inline formatting
+## インラインフォーマット
 
-```{list-table}
+``{list-table}.
    :header-rows: 1
 
-* - Input
-  - Output
+* - 入力
+  - 出力
 * - `*Italic*`
-  - *Italic*
-* - `**Bold**`
-  - **Bold**
+  - **イタリック*
+* - `**Bold**` (太字)
+  - **ボールド**
 * - `` `code` ``
-  - `code`
+  - `code` (コードネーム)
 
 ```
 
-Adhere to the following conventions:
+以下の規則に従ってください。
 
-- Use italics sparingly. Common uses for italics are titles and names (for example, when referring to a section title that you cannot link to, or when introducing the name for a concept).
-- Use bold sparingly. A common use for bold is UI elements ("Click **OK**"). Avoid using bold for emphasis and rather rewrite the sentence to get your point across.
+- イタリック体は控えめに使用してください。一般的にイタリック体を使うのは、タイトルや名前です（例えば、リンクできないセクションのタイトルを参照する場合や、コンセプトの名前を紹介する場合など）。
+- 太字は控えめに使いましょう。太字の一般的な使用方法は、UI要素です（「**OK**をクリックしてください」）。強調のために太字を使うことは避け、むしろ言いたいことが伝わるように文章を書き換えましょう。
 
-## Code blocks
+## コードブロック
 
-Start and end a code block with three back ticks: `` ``` ``
+コードブロックの開始と終了は3つのバックティックで行います。`` ``` ``
 
-You can specify the code language after the back ticks to enforce a specific lexer, but in many cases, the default lexer works just fine.
+バックティックの後にコード言語を指定して、特定のレキサーを強制することもできますが、多くの場合、デフォルトのレキサーで十分に機能します。
 
 
-```{list-table}
+``{list-table}.
    :header-rows: 1
 
-* - Input
-  - Output
+* - 入力
+  - 出力
 * - ````
     ```
-    # Demonstrate a code block
-    code:
-    - example: true
+    # コードブロックのデモ
+    コードを表示します。
+    - 例：真
     ```
     ````
   - ```
-    # Demonstrate a code block
-    code:
-    - example: true
+    # コードブロックのデモ
+    コードを表示します。
+    - 例：真
     ```
 * - ````
-    ```yaml
-    # Demonstrate a code block
-    code:
-    - example: true
+    ``yaml
+    # コードブロックのデモ
+    コードを表示します。
+    - 例：真
     ```
     ````
-  - ```yaml
-    # Demonstrate a code block
-    code:
-    - example: true
+  - ``yaml
+    # コードブロックのデモ
+    コードを表示します。
+    - 例：真
     ```
 
 ```
 
-To include back ticks in a code block, increase the number of surrounding back ticks:
+コードブロックにバックティックを含めるには、周囲のバックティックの数を増やします。
 
-```{list-table}
+``{list-table}.
    :header-rows: 1
 
-* - Input
-  - Output
+* - 入力
+  - 出力
 * - `````
     ````
     ```
@@ -116,118 +116,158 @@ To include back ticks in a code block, increase the number of surrounding back t
     ````
 ```
 
-## Links
+## リンク
 
-How to link depends on if you are linking to an external URL or to another page in the documentation.
+リンクの方法は、外部のURLにリンクするのか、ドキュメントの他のページにリンクするのかによって異なります。
 
-### External links
+### 外部リンク
 
-For external links, use only the URL, or Markdown syntax if you want to override the link text.
+外部リンクの場合、URLのみを使用し、リンクテキストを上書きしたい場合はMarkdownの構文を使用します。
 
-```{list-table}
+``{list-table}.
    :header-rows: 1
 
-* - Input
-  - Output
+* - 入力
+  - 出力
 * - `https://linuxcontainers.org`
   - https://linuxcontainers.org
-* - `[Linux Containers](https://linuxcontainers.org)`
-  - [Linux Containers](https://linuxcontainers.org)
+* - `[Linux コンテナ](https://linuxcontainers.org)`
+  - [Linux コンテナ](https://linuxcontainers.org)
 ```
 
-To display a URL as text and prevent it from being linked, add a `<span></span>`:
+URL をテキストとして表示し、リンクされないようにするには、`<span></span>` を追加します。
 
-```{list-table}
+``{list-table}.
    :header-rows: 1
 
-* - Input
-  - Output
-* - `https:/<span></span>/linuxcontainers.org`
+* - 入力
+  - 出力
+* - `https:/<span></span>/linuxcontainers.org` (日本語)
   - https:/<span></span>/linuxcontainers.org
 
 ```
 
-### Internal references
+### 内部参照
 
-For internal references, both Markdown and MyST syntax are supported. In most cases, you should use MyST syntax though, because it resolves the link text automatically and gives an indication of the link in GitHub rendering.
+内部参照の場合、Markdown と MyST の両方の構文がサポートされています。リンクテキストを自動的に解決し、GitHubのレンダリングでリンクを示すことができるので、ほとんどの場合、MyST構文を使用するべきです。
 
-#### Referencing a page
+#### ページの参照
 
-To reference a documentation page, use MyST syntax to automatically extract the link text. When overriding the link text, use Markdown syntax.
+ドキュメントのページを参照するには、MyST 構文を使ってリンクテキストを自動的に抽出します。リンクテキストを上書きする場合は、Markdownの構文を使用します。
 
-```{list-table}
+``{list-table}.
    :header-rows: 1
 
-* - Input
-  - Output
-  - Output on GitHub
-  - Status
+* - 入力
+  - 出力
+  - GitHubでの出力
+  - ステータス
 * - `` {doc}`index` ``
   - {doc}`index`
   - {doc}<span></span>`index`
-  - Preferred.
-* - `[](index)`
-  - [](index)
+  - 望ましいのは
+* - `[](インデックス)`
+  - [](インデックス)
   -
-  - Do not use.
-* - `[LXD documentation](index)`
-  - [LXD documentation](index)
-  - [LXD documentation](index)
-  - Preferred when overriding the link text.
+  - 使用しないでください。
+* - `[LXDドキュメント](インデックス)`
+  - [LXDドキュメント](インデックス)
+  - LXDドキュメンテーション](index)
+  - リンクテキストをオーバーライドするときに好ましい。
 * - `` {doc}`LXD documentation <index>` ``
-  - {doc}`LXD documentation <index>`
-  - {doc}<span></span>`LXD documentation <index>`
-  - Alternative when overriding the link text.
+  - {doc}`LXDドキュメント <index>`
+  - {doc}<span></span>`LXD ドキュメント <index>` {doc}<span></span>`LXD ドキュメント <index>`
+  - リンクテキストをオーバーライドする場合の代替手段
 
 ```
-Adhere to the following conventions:
-- Override the link text only when it is necessary. If you can use the document title as link text, do so, because the text will then update automatically if the title changes.
-- Never "override" the link text with the same text that would be generated automatically.
+以下の規則に従ってください。
+- リンクテキストを上書きするのは、必要なときだけにしてください。ドキュメントのタイトルをリンクテキストとして使用できる場合は、そうしてください。なぜなら、タイトルが変更された場合、テキストは自動的に更新されるからです。
+- リンクテキストを、自動生成されるテキストと同じもので「上書き」してはいけません。
 
 (a_section_target)=
-#### Referencing a section
+#### セクションの参照
 
-To reference a section within the documentation (either on the same page or on another page), add a target to that section and reference that target with MyST syntax.
+ドキュメント内のセクション（同じページまたは別のページ）を参照するには、セクションにターゲットを追加してそのターゲットを参照するか、自動生成されたアンカーとファイル名を組み合わせて使用します。
+
+以下のような規約を守ってください。
+- 中心となるセクションにはターゲットを追加し、「典型的な」リンク先であることから、頻繁にリンクされることが予想されます。単発的なリンクには、自動生成されたアンカーを使用する。
+- 必要な場合のみリンクテキストを上書きする。セクションのタイトルをリンクテキストとして使用できる場合は、そうしてください。タイトルが変更された場合、テキストは自動的に更新されます。
+- リンクテキストを、自動生成されるテキストと同じもので「上書き」してはいけません。
+
+##### ターゲットの使用
+
+ドキュメント内の任意の場所にターゲットを追加することができます。ただし、対象となる要素に見出しやタイトルがない場合は、リンクテキストを指定する必要があります。
 
 (a_random_target)=
 
-You can add targets at any place in the documentation. However, if there is no heading or title for the targeted element, you must specify a link text.
-
-```{list-table}
+``{list-table}.
    :header-rows: 1
 
-* - Input
-  - Output
-  - Description
-* - `(target_ID)=`
+* - 入力
+  - 出力
+  - GitHubでの出力
+  - 説明
+* - `(ターゲット_ID)=`
   -
-  - Adds the target ``target_ID``.
-* - `` {ref}`a_section_target` ``
-  - {ref}`a_section_target`
-  - References a target that has a title.
-* - `` {ref}`link text <a_random_target>` ``
-  - {ref}`link text <a_random_target>`
-  - References a target and specifies a title.
+  - (target_ID\)=
+  - ターゲットである ``target_ID`` を追加します。
+* - `` {ref}`a_section_target` `` を追加します。
+  - a_section_target` {ref}`a_section_target`
+  - a_section_target` `` {ref}`a_section_target`
+  - タイトルを持っているターゲットを参照します。
+* - `` {ref}`リンクテキスト <a_random_target>` ``
+  - {ref}`リンクテキスト <a_random_target>`
+  - \{ref\}`リンクテキスト <a_random_target>`
+  - ターゲットを参照して、タイトルを指定します。
 ```
 
-While it is possible to use Markdown syntax to link to an automatically generated section anchor on a page, you should never do this because it is likely to cause a broken link in the future.
+##### 自動生成アンカーの使用
 
-## Navigation
+MyST構文を使用する場合、リンク先が同じファイル内のセクションを指している場合でも、必ずファイル名を指定する必要があります。
+Markdownの構文を使用している場合、同じファイル内でリンクするときはファイル名を省略することができます。
 
-Every documentation page must be included as a subpage to another page in the navigation.
+``{list-table}.
+   :header-rows: 1
 
-This is achieved with the [`toctree`](https://www.sphinx-doc.org/en/master/usage/restructuredtext/directives.html#directive-toctree) directive in the parent page:
+* - 入力
+  - 出力
+  - GitHubでの出力
+  - 説明
+* - `` {ref}`doc-heat-sheet.md#referencing-a-section` ``
+  - {ref}`doc-heat-sheet.md#referencing-a-section`
+  - \{ref\}`doc-heat-sheet.md#referencing-a-section`
+  - 自動生成されたアンカーを参照します。
+* - `[](#referencing-a-section)`
+  - [](#referencing-a-section)
+  -
+  - 使用しないでください。
+* - `[リンクテキスト](#referencing-a-section)`
+  - [リンクテキスト](#referencing-a-section)
+  - [リンクテキスト](#referencing-a-section)
+  - リンクテキストをオーバーライドする場合に好ましい。
+* - `` {ref}`リンクテキスト <doc-cheat-sheet.md#referencing-a-section>` ``
+  - {ref}`リンクテキスト <doc-heat-sheet.md#referencing-a-section>`
+  - \{ref\}`リンクテキスト <doc-heat-sheet.md#referencing-a-section>`
+  - リンクテキストを上書きする場合の代替手段です。
+```
+
+## ナビゲーション
+
+すべてのドキュメントページは、ナビゲーションの中の他のページのサブページとして含まれていなければなりません。
+
+これは、親ページの[`toctree`](https://www.sphinx-doc.org/en/master/usage/restructuredtext/directives.html#directive-toctree)ディレクティブで実現します。
 
 ````
-```{toctree}
+``{toctree}
 :hidden:
 
+サブページ1
 subpage1
 subpage2
 ```
 ````
 
-If a page should not be included in the navigation, you can suppress the resulting build warning by putting the following instruction at the top of the file:
+ナビゲーションに含めてはいけないページがある場合、ファイルの先頭に次のような命令を記述することで、結果として生じるビルド警告を抑制することができます。
 
 ```
 ---
@@ -235,94 +275,94 @@ orphan: true
 ---
 ```
 
-Use orphan pages sparingly and only if there is a clear reason for it.
+孤児ページを使うのは、明確な理由がある場合に限られます。
 
-## Lists
+## リスト
 
-```{list-table}
+``{list-table}.
    :header-rows: 1
 
-* - Input
-  - Output
+* - 入力
+  - 出力
 * - ```
-    - Item 1
-    - Item 2
-    - Item 3
+    - 項目1
+    - 項目2
+    - 項目3
     ```
-  - - Item 1
-    - Item 2
-    - Item 3
+  - 項目1
+    - 項目2
+    - 項目3
 * - ```
-    1. Step 1
-    1. Step 2
-    1. Step 3
+    1. ステップ1
+    1. ステップ2
+    1. ステップ3
     ```
-  - 1. Step 1
-    1. Step 2
-    1. Step 3
+  - 1. ステップ1
+    1. ステップ2
+    1. ステップ3
 * - ```
-    1. Step 1
-       - Item 1
-         * Subitem
-       - Item 2
-    1. Step 2
-       1. Substep 1
-       1. Substep 2
+    1. ステップ1
+       - アイテム1
+         * 小項目
+       - 項目2
+    1. ステップ2
+       1. サブステップ1
+       1. サブステップ2
     ```
-  - 1. Step 1
-       - Item 1
-         * Subitem
-       - Item 2
-    1. Step 2
-       1. Substep 1
-       1. Substep 2
+  - 1.ステップ1
+       - 項目1
+         * 小項目
+       - 項目2
+    1. ステップ2
+       1. サブステップ1
+       1. サブステップ2
 ```
 
-Adhere to the following conventions:
-- In numbered lists, use ``1.`` for all items to generate the step numbers automatically.
-- Use `-` for unordered lists. When using nested lists, you can use `*` for the nested level.
+以下の規則に従ってください。
+- 番号付きリストでは、ステップ番号を自動的に生成するために、すべての項目に ``1.`` を使用してください。
+- 順不同のリストには`-`を使用してください。入れ子のリストを使用する場合は、入れ子のレベルに `*` を使用します。
 
-### Definition lists
+### 定義リスト
 
-```{list-table}
+``{list-table}.
    :header-rows: 1
 
-* - Input
-  - Output
+* - 入力
+  - 出力
 * - ```
-    Term 1
-    : Definition
+    項番
+    : 定義
 
-    Term 2
-    : Definition
+    用語2
+    : 定義
     ```
-  - Term 1
-    : Definition
+  - 用語1
+    : 定義
 
-    Term 2
-    : Definition
+    用語2
+    : 定義
 ```
 
-## Tables
+## テーブル
 
-You can use standard Markdown tables. However, using the rST [list table](https://docutils.sourceforge.io/docs/ref/rst/directives.html#list-table) syntax is usually much easier.
+標準的なMarkdownのテーブルを使用することができます。しかし、rST [list table](https://docutils.sourceforge.io/docs/ref/rst/directives.html#list-table)の構文を使用する方が通常ははるかに簡単です。
 
-Both markups result in the following output:
+どちらのマークアップも以下のような出力になります。
 
-```{list-table}
+``{list-table}.
    :header-rows: 1
 
-* - Header 1
-  - Header 2
-* - Cell 1
+* - ヘッダ1
+  - ヘッダー2
+* - セル1
 
-    2nd paragraph cell 1
-  - Cell 2
-* - Cell 3
-  - Cell 4
+    第2段落 セル1
+  - セル2
+* - セル3
+  - セル4
 ```
 
-### Markdown tables
+### マークダウンテーブル
 
 ```
 | Header 1                           | Header 2 |
@@ -331,7 +371,7 @@ Both markups result in the following output:
 | Cell 3                             | Cell 4   |
 ```
 
-### List tables
+### リストテーブル
 
 ````
 ```{list-table}
@@ -348,13 +388,13 @@ Both markups result in the following output:
 ```
 ````
 
-## Notes
+## ノート
 
 ```{list-table}
    :header-rows: 1
 
-* - Input
-  - Output
+* - 入力
+  - 出力
 * - ````
     ```{note}
     A note.
@@ -391,95 +431,91 @@ Both markups result in the following output:
 
 ```
 
-Adhere to the following conventions:
-- Use notes sparingly.
-- Only use the following note types: `note`, `tip`, `important`, `caution`
-- Only use a caution if there is a clear hazard of hardware damage or data loss.
+以下の規則に従ってください。
+- メモの使用は控えめに。
+- 以下のタイプのノートのみを使用してください。note`, `tip`, `important`, `caution` です。
+- `caution` は、ハードウェアの破損やデータの損失の危険性が明らかな場合にのみ使用してください。
 
-## Images
+## 画像
 
 ```{list-table}
    :header-rows: 1
 
-* - Input
-  - Output
+* - 入力
+  - 出力
 * - ```
-    ![Alt text](https://linuxcontainers.org/static/img/containers.png)
+    ![Altテキスト](https://linuxcontainers.org/static/img/containers.png)
     ```
-  - ![Alt text](https://linuxcontainers.org/static/img/containers.png)
+  - ![Altテキスト](https://linuxcontainers.org/static/img/containers.png)
 * - ````
     ```{figure} https://linuxcontainers.org/static/img/containers.png
        :width: 100px
-       :alt: Alt text
+       :alt: Altテキスト
 
-       Figure caption
+       図のキャプション
     ```
     ````
   - ```{figure} https://linuxcontainers.org/static/img/containers.png
        :width: 100px
-       :alt: Alt text
+       :alt: Altテキスト
 
-       Figure caption
+       図のキャプション
     ```
 ```
 
-Adhere to the following conventions:
-- For pictures in the `doc` folder, start the path with `/` (for example, `/images/image.png`).
-- Use PNG format for screenshots and SVG format for graphics.
+以下のような規約があります。
+- `doc` フォルダー内の画像は、パスを `/` で始めてください (例: `/images/image.png`)。
+- スクリーンショットはPNG形式、グラフィックはSVG形式を使用してください。
 
-## Reuse
+### 代用
 
-A big advantage of MyST in comparison to plain Markdown is that it allows to reuse content.
+あまり多くのマークアップや特殊なフォーマットをせずに文や段落を再利用するには、置換を使用します。
 
-### Substitution
-
-To reuse sentences or paragraphs without too much markup and special formatting, use substitutions.
-
-Substitutions can be defined in the following locations:
-- In the `reuse/substitutions.py` file. Substitutions defined in this file are available in all documentation pages.
-- At the top of a single file in the following format:
+置換機能は以下の場所で定義できます。
+- reuse/substitutions.py` というファイルがあります。このファイルで定義された置換は、すべてのドキュメントページで利用できます。
+- 次のような形式の単一のファイルの先頭に。
 
   ````
   ---
+  orphan: true
   substitutions:
-    reuse_key: "This is **included** text."
-    advanced_reuse_key: "This is a substitution that includes a code block:
+    reuse_key: "これは **インクルードされた** テキストです"
+    advanced_reuse_key: "これはコードブロックを含む置換文です。
                          ```
-                         code block
+                         コードブロック
                          ```"
-
   ---
   ````
 
-You can combine both options by defining a default substitution in `reuse/substitutions.py` and overriding it at the top of a file.
+`reuse/substitutions.py` でデフォルトの置換を定義し、ファイルの先頭でそれをオーバーライドすることで、両方のオプションを組み合わせることができます。
 
 ```{list-table}
    :header-rows: 1
 
-* - Input
-  - Output
+* - 入力
+  - 出力
 * - `{{reuse_key}}`
   - {{reuse_key}}
 * - `{{advanced_reuse_key}}`
   - {{advanced_reuse_key}}
 ```
 
-Adhere to the following convention:
-- Substitutions do not work on GitHub. Therefore, use key names that indicate the included text (for example, `note_not_supported` instead of `reuse_note`).
+以下の規約に従ってください。
+- 置換はGitHubでは機能しません。そのため、インクルードされたテキストを示すキー名を使用してください (例えば、`reuse_note` の代わりに `note_not_supported` とします)。
 
-### File inclusion
+### ファイルのインクルード
 
-To reuse longer sections or text with more advanced markup, you can put the content in a separate file and include the file or parts of the file in several locations.
+長いセクションや高度なマークアップを施したテキストを再利用するには、コンテンツを別のファイルに置き、そのファイルまたはファイルの一部を複数の場所にインクルードすることができます。
 
-You cannot put any targets into the content that is being reused (because references to this target would be ambiguous then). You can, however, put a target right before including the file.
+再利用するコンテンツにターゲットを入れることはできません (このターゲットへの参照が曖昧になるため)。ただし、ファイルをインクルードする直前にターゲットを置くことはできます。
 
-By combining file inclusion and substitutions, you can even replace parts of the included text.
+ファイルのインクルードと置換を組み合わせれば、インクルードされたテキストの一部を置き換えることもできます。
 
 `````{list-table}
    :header-rows: 1
 
-* - Input
-  - Output
+* - 入力
+  - 出力
 * - ````
     % Include parts of the content from file [../README.md](../README.md)
     ```{include} ../README.md
@@ -494,18 +530,18 @@ By combining file inclusion and substitutions, you can even replace parts of the
     ```
 `````
 
-Adhere to the following convention:
-- File inclusion does not work on GitHub. Therefore, always add a comment linking to the included file.
-- To select parts of the text, add HTML comments for the start and end points and use `:start-after:` and `:end-before:`, if possible. You can combine `:start-after:` and `:end-before:` with `:start-line:` and `:end-line:` if required. Using only `:start-line:` and `:end-line:` is error-prone though.
+以下の規則に従ってください。
+- ファイルのインクルードはGitHubでは機能しません。そのため、必ずインクルードしたファイルにリンクするコメントを追加してください。
+- テキストの一部を選択するには、開始点と終了点にHTMLコメントを追加し、可能であれば `:start-after:` と `:end-before:` を使用します。必要に応じて、`:start-after:`と`:end-before:`を`:start-line:`と`:end-line:`と組み合わせることができます。ただし`:start-line:`と`:end-line:`だけの使用はエラーになりやすいです。
 
-## Tabs
+## タブ
 
 
 ``````{list-table}
    :header-rows: 1
 
-* - Input
-  - Output
+* - 入力
+  - 出力
 * - `````
     ````{tabs}
 
@@ -532,15 +568,15 @@ Adhere to the following convention:
     ````
 ``````
 
-## Collapsible sections
+## 折りたたみ可能なセクション
 
-There is no support for details sections in rST, but you can insert HTML to create them.
+rSTには詳細セクションのサポートはありませんが、HTMLを挿入してセクションを作成することができます。
 
 ```{list-table}
    :header-rows: 1
 
-* - Input
-  - Output
+* - 入力
+  - 出力
 * - ```
     <details>
     <summary><a>Details</a></summary>
@@ -555,15 +591,15 @@ There is no support for details sections in rST, but you can insert HTML to crea
     </details>
 ```
 
-## Glossary
+## 用語集
 
-You can define glossary terms in any file. Ideally, all terms should be collected in one glossary file though, and they can then be referenced from any file.
+用語集はどのファイルでも定義することができます。理想的には、すべての用語を1つの用語集ファイルにまとめ、どのファイルからでも参照できるようにすることです。
 
 `````{list-table}
    :header-rows: 1
 
-* - Input
-  - Output
+* - 入力
+  - 出力
 * - ````
     ```{glossary}
 

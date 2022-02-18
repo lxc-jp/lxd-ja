@@ -1,4 +1,4 @@
-# Main API specification
+# API 仕様
 
 <link rel="stylesheet" type="text/css" href="../_static/swagger-ui/swagger-ui.css" ></link>
 <link rel="stylesheet" type="text/css" href="../_static/swagger-override.css" ></link>
@@ -10,7 +10,7 @@
 window.onload = function() {
   // Begin Swagger UI call region
   const ui = SwaggerUIBundle({
-    url: "../rest-api.yaml",
+    url: window.location.pathname +"../rest-api.yaml",
     dom_id: '#swagger-ui',
     deepLinking: true,
     presets: [
