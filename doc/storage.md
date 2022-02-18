@@ -82,7 +82,7 @@ LXD では、イメージ、インスタンス、カスタムボリューム用�
 インスタントクローン                               | no           | yes   | yes  | yes  | yes
 コンテナ内でストレージドライバの使用               | yes          | yes   | no   | no   | no
 古い（最新ではない）スナップショットからのリストア | yes          | yes   | yes  | no   | yes
-ストレージクオータ                                 | yes(\*)      | yes   | no   | yes  | yes
+ストレージクオータ                                 | yes(\*)      | yes   | yes  | yes  | yes
 
 ### おすすめのセットアップ
 LXD から使う場合のベストなオプションは ZFS と btrfs を使うことです。

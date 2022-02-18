@@ -42,26 +42,41 @@ CLI ツール (`lxc/`) 内の文字列を更新する際は、テンプレート
 サインオフとは、あなたがそのコミットを書いたことを証明する、そのコミットの説明の最後にある単純な行です。
 この行は、自分が書いたものであることを証明したり、オープンソースとして渡す権利があることを証明したりします。
 
-> 開発者の出所証明書
-> バージョン1.1
+> Developer Certificate of Origin
+> Version 1.1
 >
 > Copyright (C) 2004, 2006 The Linux Foundation and its contributors.
 > 660 York Street, Suite 102,
 > San Francisco, CA 94110 USA
 >
-> このライセンス文書をそのままコピーして配布することは誰にでも許されています。
+> Everyone is permitted to copy and distribute verbatim copies of this
+> license document, but changing it is not allowed.
 >
-> 開発者の原産地証明書 1.1
+> Developer's Certificate of Origin 1.1
 >
-> このプロジェクトに貢献することで、私は以下のことを証明します。
+> By making a contribution to this project, I certify that:
 >
-> (a) 貢献の全部または一部が私によって作成され、私はそのファイルに示されたオープンソース・ライセンスの下で提出する権利を有しています。
+> (a) The contribution was created in whole or in part by me and I
+>     have the right to submit it under the open source license
+>     indicated in the file; or
 >
-> (b) 貢献は、私の知る限り、適切なオープンソース・ライセンスの下でカバーされている過去の作品に基づいており、私はそのライセンスの下で、私が全体または一部を作成したかどうかにかかわらず、その作品を修正して、ファイルに示された同じオープンソース・ライセンス（異なるライセンスの下で提出することが許可されている場合を除く）の下で提出する権利を有しています。
+> (b) The contribution is based upon previous work that, to the best
+>     of my knowledge, is covered under an appropriate open source
+>     license and I have the right under that license to submit that
+>     work with modifications, whether created in whole or in part
+>     by me, under the same open source license (unless I am
+>     permitted to submit under a different license), as indicated
+>     in the file; or
 >
-> (c) その寄稿物は、(a)、(b)または(c)を認証した他の誰かが私に直接提供したものであり、私はそれを改変していません。
+> (c) The contribution was provided directly to me by some other
+>     person who certified (a), (b) or (c) and I have not modified
+>     it.
 >
-> (d) 私は、このプロジェクトと寄稿物が公開され、寄稿物の記録（私が一緒に提出したすべての個人情報、私のサインオフを含む）が無期限に維持され、このプロジェクトまたは関係するオープンソース・ライセンスと一致して再配布される可能性があることを理解し、同意します。
+> (d) I understand and agree that this project and the contribution
+>     are public and that a record of the contribution (including all
+>     personal information I submit with it, including my sign-off) is
+>     maintained indefinitely and may be redistributed consistent with
+>     this project or the open source license(s) involved.
 
 有効なサインオフラインの例は以下の通りです。
 
@@ -77,7 +92,7 @@ Signed-off-by: Random J Developer <random@developer.org>
 
 ## Code of Conduct
 
-投稿する際には、行動規範を遵守しなければなりません。行動規範は、以下のサイトから入手できます。https://github.com/lxc/lxd/blob/master/CODE_OF_CONDUCT.md
+コントリビュートする際には、行動規範を遵守しなければなりません。行動規範は、以下のサイトから入手できます。https://github.com/lxc/lxd/blob/master/CODE_OF_CONDUCT.md
 
 <!-- Include end contributing -->
 

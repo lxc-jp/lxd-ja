@@ -1540,8 +1540,7 @@ Nvidia `470+` ドライバー (例. `MIG-74c6a31a-fde5-5c61-973b-70e12346c202`) 
 true の場合、 rsync はコピーからインスタンスを生成するときに `Partial transfer due to vanished source files` (code 24) エラーを無視します。
 
 ## network\_state\_ovn
-これにより、/1.0/networks/NAME/state APIに "ovn "セクションが追加され、以下に関連する追加の状態情報が含まれます。
-OVNネットワークに関連する追加の状態情報を含みます。
+これにより、/1.0/networks/NAME/state APIに "ovn "セクションが追加されます。これにはOVNネットワークに関連する追加の状態情報が含まれます:
 - chassis (シャーシ)
 
 ## storage\_volume\_api\_filtering

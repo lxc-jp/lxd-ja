@@ -95,7 +95,7 @@ DHCPv4を使用しているインスタンスには、IPv4アドレスが割り�
 しかし、LXDはいくつかのブリッジド{abbr}`NIC(Network interface controller)`セキュリティ機能を提供しており、インスタンスがネットワーク上に送信することを許可されるトラフィックの種類を制御するために使用することができます。
 これらのNIC設定は、インスタンスが使用しているプロファイルに追加する必要がありますが、以下のように個々のインスタンスに追加することもできます。
 
-ブリッジングされたNICには、以下のようなセキュリティ機能があります。
+ブリッジ型NICには、以下のようなセキュリティ機能があります。
 
 キー                     | タイプ  | デフォルト | 必須 | 説明
 :--                      | :--     | :--        | :--  | :--
@@ -103,7 +103,7 @@ security.mac\_filtering  | boolean | false      | no   | インスタンスが�
 security.ipv4\_filtering | boolean | false      | no   | インスタンスが他の IPv4 アドレスになりすますことを防ぎます（mac\_filtering を有効にします）。
 security.ipv6\_filtering | boolean | false      | no   | インスタンスが他の IPv6 アドレスになりすますことを防ぎます（mac\_filtering を有効にします）。
 
-プロファイルで設定されたデフォルトのブリッジドNICの設定は、インスタンスごとに以下の方法で上書きすることができます。
+プロファイルで設定されたデフォルトのブリッジ型NICの設定は、インスタンスごとに以下の方法で上書きすることができます。
 
 ```
 lxc config device override <instance> <NIC> security.mac_filtering=true

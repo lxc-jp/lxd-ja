@@ -1,55 +1,68 @@
-# コントリビューター誓約書 行動規範
-## 私たちの誓い
-オープンで歓迎される環境を育成するために、私たちコントリビューターとメンテナーはオープンで歓迎すべき環境を促進するために、私たちのプロジェクトとコミュニティに参加することを誓います。
-私たちコントリビューターとメンテナーは、年齢、体格、障害、民族、年齢に関わらず 年齢、体格、障害、民族性、性の特徴、性同一性、表現にかかわらず、すべての人がハラスメントのない経験をすることを誓います。
-私たちコントリビューターとメンテナーは、オープンで歓迎すべき環境を促進するために、私たちのプロジェクトとコミュニティに参加することを誓います。
-私たちコントリビューターとメンテナーは、年齢、体格、障害、民族、年齢に関わらず 年齢、体格、障害、民族性、性の特徴、性同一性、表現にかかわらず、すべての人がハラスメントのない経験をすることを誓います。
+# Contributor Covenant Code of Conduct
+## Our Pledge
+In the interest of fostering an open and welcoming environment, we as
+contributors and maintainers pledge to making participation in our project and
+our community a harassment-free experience for everyone, regardless of age, body
+size, disability, ethnicity, sex characteristics, gender identity and expression,
+level of experience, education, socio-economic status, nationality, personal
+appearance, race, religion, or sexual identity and orientation.
 
-年齢、体格、障害、民族、性別の特徴、性自認と表現、経験の程度、教育、社会経済的地位、国籍、容姿、人種、宗教、性的アイデンティティと指向にかかわらず
+## Our Standards
+Examples of behavior that contributes to creating a positive environment
+include:
 
-## 私たちの基準
-良好な環境づくりに貢献する行動の例
-以下が含まれます。
+* Using welcoming and inclusive language
+* Being respectful of differing viewpoints and experiences
+* Gracefully accepting constructive criticism
+* Focusing on what is best for the community
+* Showing empathy towards other community members
 
-* 歓迎の意を込めた包括的な言葉を使う
-* 異なる視点や経験を尊重すること
-* 建設的な批判を寛大に受け止める
-* コミュニティのために何がベストかを考える。
-* 他のコミュニティのメンバーに共感を示すこと
+Examples of unacceptable behavior by participants include:
 
-参加者が受け入れられない行為の例は以下の通りです。
+* The use of sexualized language or imagery and unwelcome sexual attention or advances
+* Trolling, insulting/derogatory comments, and personal or political attacks
+* Public or private harassment
+* Publishing others' private information, such as a physical or electronic  address, without explicit permission
+* Other conduct which could reasonably be considered inappropriate in a  professional setting
 
-* 性的な言葉やイメージの使用、歓迎されない性的な注目や誘い。
-* 荒らし、侮辱的・中傷的なコメント、個人的または政治的な攻撃
-* 公的または私的なハラスメント
-* 明示的な許可なく、物理的または電子的な住所などの他人の個人情報を公開すること
-* その他、プロフェッショナルな場で不適切とみなされる可能性のある行為
+## Our Responsibilities
+Project maintainers are responsible for clarifying the standards of acceptable
+behavior and are expected to take appropriate and fair corrective action in
+response to any instances of unacceptable behavior.
 
-## 私たちの責任
-プロジェクトのメンテナは、許容できる行動の基準を明確にする責任があります。
-プロジェクトのメンテナは、許容される行動の基準を明確にする責任があり、許容されない事例に対して適切かつ公正な是正措置を取ることが期待されます。
-また、許容できない行動があった場合には、適切かつ公正な是正措置をとることが期待されています。
+Project maintainers have the right and responsibility to remove, edit, or
+reject comments, commits, code, wiki edits, issues, and other contributions
+that are not aligned to this Code of Conduct, or to ban temporarily or
+permanently any contributor for other behaviors that they deem inappropriate,
+threatening, offensive, or harmful.
 
-プロジェクトのメンテナは、以下のようなコメント、コミット、コード、その他を削除、編集、拒否する権利と責任を持ちます。コメント、コミット、コード、ウィキの編集、課題、その他の貢献を削除、編集、拒否する権利と責任があります。この行動規範に沿っていないコメント、コミット、コード、ウィキ編集、課題、その他の貢献を削除、編集、拒否する権利と責任があります。また、不適切と思われる行動をとった投稿者を一時的または永続的に禁止する権利もあります。不適切、脅迫的、攻撃的、有害であると判断した投稿者を一時的または永久に禁止することができます。
+## Scope
+This Code of Conduct applies both within project spaces and in public spaces
+when an individual is representing the project or its community. Examples of
+representing a project or community include using an official project e-mail
+address, posting via an official social media account, or acting as an appointed
+representative at an online or offline event. Representation of a project may be
+further defined and clarified by project maintainers.
 
-## 範囲
-この行動規範は、プロジェクト・スペースとパブリック・スペースの両方に適用されます。この行動規範は、プロジェクトやコミュニティを代表しているときに、プロジェクトのスペースと公共のスペースの両方に適用されます。
-例 プロジェクトやコミュニティを代表している場合の例としては、プロジェクトの公式Eメールアドレスの使用 プロジェクトやコミュニティを代表する例としては、プロジェクトの公式メールアドレスの使用、ソーシャルメディアの公式アカウントでの投稿、オンラインまたはオフラインのイベントで任命された代表者としてオンラインまたはオフラインのイベントに参加することなどが挙げられます。プロジェクトを代表するということは プロジェクトの代表者は、プロジェクトのメンテナによってさらに定義され、明確にされます。
+## Enforcement
+Instances of abusive, harassing, or otherwise unacceptable behavior may be
+reported by contacting the project team at maintainers@linuxcontainers.org. All
+complaints will be reviewed and investigated and will result in a response that
+is deemed necessary and appropriate to the circumstances. The project team is
+obligated to maintain confidentiality with regard to the reporter of an incident.
+Further details of specific enforcement policies may be posted separately.
 
-## エンフォースメント
-虐待、ハラスメント、その他許容できない行為があった場合は、以下の連絡先に報告してください。
-プロジェクトチーム（maintainers@linuxcontainers.org）までご連絡ください。すべての
-苦情はすべて審査、調査され、状況に応じて必要かつ適切と思われる対応がとられます。
-状況に応じて必要かつ適切と思われる対応を行います。プロジェクト・チームは
-プロジェクトチームは、報告者の秘密を保持する義務があります。
-具体的な実施方針の詳細については、別途掲載する場合があります。
+Project maintainers who do not follow or enforce the Code of Conduct in good
+faith may face temporary or permanent repercussions as determined by other
+members of the project's leadership.
 
-行動規範に誠実に従わない、または実施しないプロジェクト・メンテナーは、一時的または永続的な処分を受ける可能性があります。
-
-## 帰属
-この行動規範は、[Contributor Covenant][homepage], version 1.4,
-https://www.contributor-covenant.org/version/1/4/code-of-conduct.html にあります。
+## Attribution
+This Code of Conduct is adapted from the [Contributor Covenant][homepage], version 1.4,
+available at https://www.contributor-covenant.org/version/1/4/code-of-conduct.html
 
 [homepage]: https://www.contributor-covenant.org
 
-この行動規範に関する一般的な質問への回答は、https://www.contributor-covenant.org/faq をご覧ください。
+For answers to common questions about this code of conduct, see https://www.contributor-covenant.org/faq
+
+(訳注: https://www.contributor-covenant.org/ja/version/1/4/code-of-conduct/code_of_conduct.txt
+に日本語訳があります)
