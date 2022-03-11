@@ -4848,6 +4848,13 @@ definitions:
         example: false
         type: boolean
         x-go-name: ServerClustered
+      server_event_mode:
+        description: |-
+          Mode that the event distribution subsystem is operating in on this server.
+          Either "full-mesh", "hub-server" or "hub-client".
+        example: full-mesh
+        type: string
+        x-go-name: ServerEventMode
       server_name:
         description: Server hostname
         example: castiana
@@ -8221,6 +8228,8 @@ paths:
               description: File owner GID
             X-LXD-mode:
               description: Mode mask
+            X-LXD-modified:
+              description: Last modified date
             X-LXD-type:
               description: Type of file (file, symlink or directory)
             X-LXD-uid:
@@ -8606,6 +8615,27 @@ paths:
         "500":
           $ref: '#/responses/InternalServerError'
       summary: Create or replace a template file
+      tags:
+      - instances
+  /1.0/instances/{name}/sftp:
+    get:
+      description: Upgrades the request to an SFTP connection of the instance's filesystem.
+      operationId: instance_sftp
+      produces:
+      - application/json
+      - application/octet-stream
+      responses:
+        "101":
+          description: Switching protocols to SFTP
+        "400":
+          $ref: '#/responses/BadRequest'
+        "403":
+          $ref: '#/responses/Forbidden'
+        "404":
+          $ref: '#/responses/NotFound'
+        "500":
+          $ref: '#/responses/InternalServerError'
+      summary: Get the instance SFTP connection
       tags:
       - instances
   /1.0/instances/{name}/snapshots:
@@ -9128,6 +9158,11 @@ paths:
         example: default
         in: query
         name: project
+        type: string
+      - description: Cluster member name
+        example: lxd01
+        in: query
+        name: target
         type: string
       produces:
       - text/plain

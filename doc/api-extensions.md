@@ -1613,3 +1613,23 @@ Adds a `@never` option to `snapshots.schedule` which allows disabling inheritanc
 This adds token-based certificate addition to the trust store as a safer alternative to a trust password.
 
 It adds the `token` field to `POST /1.0/certificates`.
+
+## instance\_nic\_routed\_neighbor\_probe
+This adds the ability to disable the `routed` NIC IP neighbor probing for availability on the parent network.
+
+Adds the `ipv4.neighbor_probe` and `ipv6.neighbor_probe` NIC settings. Defaulting to `true` if not specified.
+
+## event\_hub
+This adds support for `event-hub` cluster member role and the `ServerEventMode` environment field.
+
+## agent\_nic\_config
+If set to true, on VM start-up the lxd-agent will apply NIC config to change the names and MTU of the instance NIC
+devices.
+
+## projects\_restricted\_intercept
+Adds new `restricted.container.intercept` config key to allow usually safe system call interception options.
+
+## metrics\_authentication
+Introduces a new `core.metrics_authentication` server config option to
+allow for the /1.0/metrics endpoint to be generally available without
+client authentication.

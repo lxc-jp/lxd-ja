@@ -2,7 +2,8 @@
 LXD provides metrics for all running instances. Those covers CPU, memory, network, disk and process usage and are meant to be consumed by Prometheus and likely graphed in Grafana.
 In cluster environments, LXD will only return the values for instances running on the server being accessed. It's expected that each cluster member will be scraped separately.
 The instance metrics are updated when calling the `/1.0/metrics` endpoint.
-They are cached for 15s to handle multiple scrapers. Fetching metrics is a relatively expensive operation for LXD to perform so we would recommend scraping at a 30s or 60s rate to limit impact.
+They are cached for 8s to handle multiple scrapers. Fetching metrics is a relatively expensive operation for LXD to perform so consider scraping at a higher than default interval
+if the impact is too high.
 
 ## Create metrics certificate
 The `/1.0/metrics` endpoint is a special one as it also accepts a `metrics` type certificate.
@@ -11,13 +12,13 @@ This kind of certificate is meant for metrics only, and won't work for interacti
 Here's how to create a new certificate (this is not specific to metrics):
 
 ```bash
-openssl req -x509 -newkey ec -pkeyopt ec_paramgen_curve:prime256v1 -keyout metrics.key -nodes -out metrics.crt -days 3650 -subj "/CN=metrics.local"
+openssl req -x509 -newkey ec -pkeyopt ec_paramgen_curve:secp384r1 -sha384 -keyout metrics.key -nodes -out metrics.crt -days 3650 -subj "/CN=metrics.local"
 ```
 
 Now, this certificate needs to be added to the list of trusted clients:
 
 ```bash
-lxc config trust add ~/.config/lxc/metrics.crt --type=metrics
+lxc config trust add metrics.crt --type=metrics
 ```
 
 ## Add target to Prometheus
@@ -40,7 +41,7 @@ For this, these three files can be copied to `/etc/prometheus/tls`:
 mkdir /etc/prometheus/tls
 
 # Copy newly created certificate and key to tls directory
-cp ~/.config/lxc/metrics.crt ~/.config/lxc/metrics.key /etc/prometheus/tls
+cp metrics.crt metrics.key /etc/prometheus/tls
 
 # Copy LXD server certificate to tls directory
 cp /var/snap/lxd/common/lxd/server.crt /etc/prometheus/tls
@@ -58,7 +59,6 @@ scrape_configs:
   - job_name: lxd
     metrics_path: '/1.0/metrics'
     scheme: 'https'
-    scrape_interval: 30s
     static_configs:
       - targets: ['127.0.0.1:8443']
     tls_config:

@@ -42,6 +42,7 @@ The currently supported keys are:
 
 Key                                         | Type      | Default           | Live update   | Condition                 | Description
 :--                                         | :---      | :------           | :----------   | :----------               | :----------
+agent.nic\_config                           | boolean   | false             | n/a           | virtual-machine           | Set the name and MTU of the default network interfaces to be the same as the instance devices (this is automatic for containers).
 boot.autostart                              | boolean   | -                 | n/a           | -                         | Always start the instance when LXD starts (if not set, restore last state)
 boot.autostart.delay                        | integer   | 0                 | n/a           | -                         | Number of seconds to wait after the instance started before starting the next one
 boot.autostart.priority                     | integer   | 0                 | n/a           | -                         | What order to start the instances in (starting with highest)
@@ -414,6 +415,7 @@ maas.subnet.ipv4        | string  | -                 | no       | yes     | MAA
 maas.subnet.ipv6        | string  | -                 | no       | yes     | MAAS IPv6 subnet to register the instance in
 boot.priority           | integer | -                 | no       | no      | Boot priority for VMs (higher boots first)
 
+(instance_device_type_nic_ovn)=
 ##### nic: ovn
 
 Supported instance types: container, VM
@@ -640,11 +642,13 @@ ipv4.routes             | string  | -                 | no       | Comma delimit
 ipv4.gateway            | string  | auto              | no       | Whether to add an automatic default IPv4 gateway, can be "auto" or "none"
 ipv4.host\_address      | string  | 169.254.0.1       | no       | The IPv4 address to add to the host-side veth interface
 ipv4.host\_table        | integer | -                 | no       | The custom policy routing table ID to add IPv4 static routes to (in addition to main routing table)
+ipv4.neighbor\_probe    | boolean | true              | no       | Whether to probe the parent network for IP address availability.
 ipv6.address            | string  | -                 | no       | Comma delimited list of IPv6 static addresses to add to the instance
 ipv6.routes             | string  | -                 | no       | Comma delimited list of IPv6 static routes to add on host to NIC (without L2 ARP/NDP proxy)
 ipv6.gateway            | string  | auto              | no       | Whether to add an automatic default IPv6 gateway, can be "auto" or "none"
 ipv6.host\_address      | string  | fe80::1           | no       | The IPv6 address to add to the host-side veth interface
 ipv6.host\_table        | integer | -                 | no       | The custom policy routing table ID to add IPv6 static routes to (in addition to main routing table)
+ipv6.neighbor\_probe    | boolean | true              | no       | Whether to probe the parent network for IP address availability.
 vlan                    | integer | -                 | no       | The VLAN ID to attach to
 gvrp                    | boolean | false             | no       | Register VLAN using GARP VLAN Registration Protocol
 
@@ -851,7 +855,7 @@ GPU device entries simply make the requested gpu device appear in the
 instance.
 
 ```{note}
-Container devices may match multiple GPUs at once. However, for virtual machines a device can only match a single GPU. 
+Container devices may match multiple GPUs at once. However, for virtual machines a device can only match a single GPU.
 ```
 
 ##### GPUs Available:

@@ -21,6 +21,7 @@ The configuration keys are namespaced with the following namespaces currently su
  - `maas` (MAAS network identification)
  - `user` (free form key/value for user metadata)
 
+(network-bridge)=
 ## network: bridge
 
 As one of the possible network configuration types under LXD, LXD supports creating and managing network bridges.
@@ -46,7 +47,7 @@ devices:
 
 Network forwards:
 
-Bridge networks support {ref}`network forwards <network-forwards-bridge>`.
+Bridge networks support {doc}`network forwards <network-forwards>`.
 
 Network configuration properties:
 
@@ -328,6 +329,7 @@ mtu                             | integer   | -                     | -         
 parent                          | string    | -                     | -                         | Parent interface to create sriov NICs on
 vlan                            | integer   | -                     | -                         | The VLAN ID to attach to
 
+(network-ovn)=
 ## network: ovn
 
 The ovn network type allows the creation of logical networks using the OVN SDN. This can be useful for labs and
@@ -369,7 +371,7 @@ lxc ls
 
 Network forwards:
 
-OVN networks support {ref}`network forwards <network-forwards-ovn>`.
+OVN networks support {doc}`network forwards <network-forwards>`.
 
 Network peers:
 
