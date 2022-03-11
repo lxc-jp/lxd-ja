@@ -2,7 +2,7 @@
 LXD は全ての実行中のインスタンスについてのメトリクスを提供します。これは CPU、メモリー、ネットワーク、ディスク、プロセスの使用量を含み、Prometheus で読み取って Grafana でグラフを表示するのに使うことを想定しています。
 クラスター環境では、 LXD はアクセスされているサーバ上で稼働中のインスタンスの値だけを返します。各クラスターメンバーから別々にデータを取得する想定です。
 インスタンスメトリクスは `/1.0/metrics` エンドポイントを呼ぶと更新されます。
-メトリクスは複数からデータ取得するのに対応するため 15 秒キャッシュします。メトリクスの取得は比較的重い処理ですので、影響を抑えるため 30 秒か 60 秒間隔でメトリクスを取得することをお勧めします。
+メトリクスは複数のスクレイパーに対応するため 8 秒キャッシュします。メトリクスの取得は比較的重い処理ですので、影響が大きすぎるようならデフォルトの間隔より長い間隔でスクレイピングすることを検討してください。
 
 ## メトリクス用証明書の作成
 `1.0/metrics` エンドポイントは他の証明書に加えて `metrics` タイプの証明書を受け付けるという点で特別なエンドポイントです。
@@ -11,13 +11,13 @@ LXD は全ての実行中のインスタンスについてのメトリクスを�
 新しい証明書は以下のように作成します（この手順はメトリクス用の証明書に限ったものではありません）。
 
 ```bash
-openssl req -x509 -newkey ec -pkeyopt ec_paramgen_curve:prime256v1 -keyout metrics.key -nodes -out metrics.crt -days 3650 -subj "/CN=metrics.local"
+openssl req -x509 -newkey ec -pkeyopt ec_paramgen_curve:secp384r1 -sha384 -keyout metrics.key -nodes -out metrics.crt -days 3650 -subj "/CN=metrics.local"
 ```
 
 作成後、証明書を信頼済みクライアントのリストに追加する必要があります。
 
 ```bash
-lxc config trust add ~/.config/lxc/metrics.crt --type=metrics
+lxc config trust add metrics.crt --type=metrics
 ```
 
 ## Prometheus にターゲットを追加
@@ -40,7 +40,7 @@ lxc config set core.https_address ":8443"
 mkdir /etc/prometheus/tls
 
 # 新規に作成された証明書と鍵を tls ディレクトリーにコピー
-cp ~/.config/lxc/metrics.crt ~/.config/lxc/metrics.key /etc/prometheus/tls
+cp metrics.crt metrics.key /etc/prometheus/tls
 
 # LXD サーバ証明書を tls ディレクトリーにコピー
 cp /var/snap/lxd/common/lxd/server.crt /etc/prometheus/tls
@@ -59,7 +59,6 @@ scrape_configs:
   - job_name: lxd
     metrics_path: '/1.0/metrics'
     scheme: 'https'
-    scrape_interval: 30s
     static_configs:
       - targets: ['127.0.0.1:8443']
     tls_config:

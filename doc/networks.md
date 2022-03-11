@@ -45,7 +45,7 @@ devices:
 
 ネットワークフォワード:
 
-ブリッジのネットワークサポートは {ref}`ネットワークフォワード <network-forwards-bridge>` 参照。
+ブリッジのネットワークサポートは {doc}`ネットワークフォワード <network-forwards>` 参照。
 
 ネットワークの設定プロパティ:
 
@@ -356,7 +356,7 @@ lxc ls
 
 ネットワークフォワード:
 
-OVN のネットワークサポートは {ref}`ネットワークフォワード <network-forward-ovn>` 参照。
+OVN のネットワークサポートは {doc}`ネットワークフォワード <network-forwards>` 参照。
 
 ネットワークピア:
 

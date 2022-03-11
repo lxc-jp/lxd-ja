@@ -37,6 +37,7 @@ key/value 形式の設定は、名前空間構造を取っており、現在は�
 
 キー                                        | 型        | デフォルト値     | ライブアップデート | 条件                      | 説明
 :--                                         | :---      | :------          | :----------        | :----------               | :----------
+agent.nic\_config                           | boolean   | false            | n/a                | virtual-machine           | デフォルトのネットワークインタフェースの名前と MTU をインスタンスデバイスと同じにするかどうか(これはコンテナでは自動でそうなります)
 boot.autostart                              | boolean   | -                | n/a                | -                         | LXD起動時に常にインスタンスを起動するかどうか（設定しない場合、最後の状態がリストアされます）
 boot.autostart.delay                        | integer   | 0                | n/a                | -                         | インスタンスが起動した後に次のインスタンスが起動するまで待つ秒数
 boot.autostart.priority                     | integer   | 0                | n/a                | -                         | インスタンスを起動させる順番（高いほど早く起動します）
@@ -378,6 +379,7 @@ maas.subnet.ipv4        | string    | -                  | no       | yes     | 
 maas.subnet.ipv6        | string    | -                  | no       | yes     | インスタンスを登録する MAAS IPv6 サブネット
 boot.priority           | integer   | -                  | no       | no      | VM のブート優先度 (高いほうが先にブート)
 
+(instance_device_type_nic_ovn)=
 ##### nic: ovn
 
 サポートされるインスタンスタイプ: コンテナ, VM
@@ -603,11 +605,13 @@ ipv4.address            | string    | -                  | no       | インス�
 ipv4.gateway            | string    | auto               | no       | 自動的に IPv4 のデフォルトゲートウェイを追加するかどうか（ auto か none を指定可能）
 ipv4.host\_address      | string    | 169.254.0.1        | no       | ホスト側の veth インターフェースに追加する IPv4 アドレス
 ipv4.host\_table        | integer   | -                  | no       | （メインのルーティングテーブルに加えて） IPv4 の静的ルートを追加する先のルーティングテーブル ID
+ipv4.neighbor\_probe    | boolean   | true               | no       | IP アドレスが利用可能か知るために親のネットワークを調べるかどうか
 ipv6.address            | string    | -                  | no       | インスタンスに追加する IPv6 静的アドレスのカンマ区切りリスト
 ipv6.routes             | string    | -                  | no       | ホスト上で NIC に追加する IPv6 静的ルートのカンマ区切りリスト（L2 ARP/NDP プロキシを除く）
 ipv6.gateway            | string    | auto               | no       | 自動的に IPv6 のデフォルトゲートウェイを追加するかどうか（ auto か none を指定可能）
 ipv6.host\_address      | string    | fe80::1            | no       | ホスト側の veth インターフェースに追加する IPv6 アドレス
 ipv6.host\_table        | integer   | -                  | no       | （メインのルーティングテーブルに加えて） IPv6 の静的ルートを追加する先のルーティングテーブル ID
+ipv6.neighbor\_probe    | boolean   | true               | no       | IP アドレスが利用可能か知るために親のネットワークを調べるかどうか
 vlan                    | integer   | -                  | no       | アタッチ先の VLAN ID
 gvrp                    | boolean   | false              | no       | GARP VLAN Registration Protocol を使って VLAN を登録する
 

@@ -41,6 +41,7 @@ restricted.cluster.target            | string    | -                     | block
 restricted.containers.lowlevel       | string    | -                     | block                     | block と設定すると raw.lxc, raw.idmap, volatile などの低レベルのコンテナオプションを防ぐ。
 restricted.containers.nesting        | string    | -                     | block                     | block と設定すると security.nesting=true と設定するのを防ぐ
 restricted.containers.privilege      | string    | -                     | unpriviliged              | unpriviliged と設定すると security.privileged=true と設定するのを防ぐ。 isolated と設定すると security.privileged=true に加えて security.idmap.isolated=true と設定するのを防ぐ。 allow と設定すると制限なし。
+restricted.containers.interception   | string    | -                     | block                     | システムコールのインターセプションオプションの使用を防ぐ。 `allow` に設定すると通常の安全なインターセプションオプションは許可されます (ファイルシステムのマウントは引き続きブロックされる)。
 restricted.devices.disk              | string    | -                     | managed                   | block と設定すると root 以外のディスクデバイスを使用できなくする。 managed に設定すると pool= が設定されているときだけディスクデバイスの使用を許可する。  allow と設定すると制限なし。
 restricted.devices.disk.paths        | string    | -                     | -                         | `restricted.devices.disk` が `allow` に設定された場合これは `disk` デバイスに設定される `source` 設定を制限するパスのプリフィクスのカンマ区切りを設定する。空の場合は全てのパスが許可される。
 restricted.devices.gpu               | string    | -                     | block                     | block と設定すると gpu タイプのデバイスの使用を防ぐ

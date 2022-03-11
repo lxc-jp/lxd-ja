@@ -1584,3 +1584,20 @@ LXDが使用するCPU時間をミリ秒ではなく秒単位で出力するよ�
 トラストストアに、トラストパスワードに代わる安全な手段として、トークンベースの証明書を追加します。
 
 これは `POST /1.0/certificates` に `token` フィールドを追加します。
+
+## instance\_nic\_routed\_neighbor\_probe
+これは `routed` NIC が親のネットワークが利用可能かを調べるために IP 近傍探索するのを無効化できるようにします。
+
+`ipv4.neighbor_probe` と `ipv6.neighbor_probe` の NIC 設定を追加します。未指定の場合のデフォルト値は `true` です。
+
+## event\_hub
+これは `event-hub` というクラスターメンバの役割と `ServerEventMode` 環境フィールドを追加します。
+
+## agent\_nic\_config
+これを true に設定すると、仮想マシンの起動時に lxd-agent がインスタンスの NIC デバイスの名前と MTU を変更するための NIC 設定を適用します。
+
+## projects\_restricted\_intercept
+`restricted.container.intercept` という設定キーを追加し通常は安全なシステムコールのインターセプションオプションを可能にします。
+
+## metrics\_authentication
+`core.metrics_authentication` というサーバ設定オプションを追加し /1.0/metrics のエンドポイントをクライアント認証無しでアクセスすることを可能にします。

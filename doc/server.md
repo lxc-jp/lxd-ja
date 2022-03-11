@@ -38,6 +38,7 @@ core.https\_allowed\_methods       | string  | global   | -                     
 core.https\_allowed\_origin        | string  | global   | -                                | Access-Control-Allow-Origin HTTP ヘッダの値
 core.https\_trusted\_proxy         | string  | global   | -                                | プロキシの connection ヘッダーでクライアントのアドレスを渡す信頼するサーバの IP アドレスのカンマ区切りリスト
 core.metrics\_address              | string  | global   | -                                | メトリクスサーバをバインドさせるアドレス (HTTPS)
+core.metrics\_authentication       | boolean | global   | true                             | メトリクスエンドポイントの認証を強制するかどうか
 core.proxy\_https                  | string  | global   | -                                | HTTPS プロキシを使用する場合はその URL (未指定の場合は HTTPS\_PROXY 環境変数を参照)
 core.proxy\_http                   | string  | global   | -                                | HTTP プロキシを使用する場合はその URL (未指定の場合は HTTP\_PROXY 環境変数を参照)
 core.proxy\_ignore\_hosts          | string  | global   | -                                | プロキシが不要なホスト (NO\_PROXY と同様な形式、例えば 1.2.3.4,1.2.3.5, を指定。未指定の場合は NO\_PROXY 環境変数を参照)
