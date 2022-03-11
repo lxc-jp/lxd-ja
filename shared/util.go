@@ -25,7 +25,6 @@ import (
 	"time"
 
 	"github.com/flosch/pongo2"
-	"github.com/pkg/errors"
 
 	"github.com/lxc/lxd/shared/cancel"
 	"github.com/lxc/lxd/shared/ioprogress"
@@ -481,7 +480,7 @@ func DirCopy(source string, dest string) error {
 	// Get info about source.
 	info, err := os.Stat(source)
 	if err != nil {
-		return errors.Wrapf(err, "failed to get source directory info")
+		return fmt.Errorf("failed to get source directory info: %w", err)
 	}
 
 	if !info.IsDir() {
@@ -492,20 +491,20 @@ func DirCopy(source string, dest string) error {
 	if PathExists(dest) {
 		err := os.RemoveAll(dest)
 		if err != nil {
-			return errors.Wrapf(err, "failed to remove destination directory %s", dest)
+			return fmt.Errorf("failed to remove destination directory %s: %w", dest, err)
 		}
 	}
 
 	// Create dest.
 	err = os.MkdirAll(dest, info.Mode())
 	if err != nil {
-		return errors.Wrapf(err, "failed to create destination directory %s", dest)
+		return fmt.Errorf("failed to create destination directory %s: %w", dest, err)
 	}
 
 	// Copy all files.
 	entries, err := ioutil.ReadDir(source)
 	if err != nil {
-		return errors.Wrapf(err, "failed to read source directory %s", source)
+		return fmt.Errorf("failed to read source directory %s: %w", source, err)
 	}
 
 	for _, entry := range entries {
@@ -516,12 +515,12 @@ func DirCopy(source string, dest string) error {
 		if entry.IsDir() {
 			err := DirCopy(sourcePath, destPath)
 			if err != nil {
-				return errors.Wrapf(err, "failed to copy sub-directory from %s to %s", sourcePath, destPath)
+				return fmt.Errorf("failed to copy sub-directory from %s to %s: %w", sourcePath, destPath, err)
 			}
 		} else {
 			err := FileCopy(sourcePath, destPath)
 			if err != nil {
-				return errors.Wrapf(err, "failed to copy file from %s to %s", sourcePath, destPath)
+				return fmt.Errorf("failed to copy file from %s to %s: %w", sourcePath, destPath, err)
 			}
 		}
 
@@ -645,12 +644,24 @@ func Uint64InSlice(key uint64, list []uint64) bool {
 	return false
 }
 
+// IsTrue returns true if value is "true", "1", "yes" or "on" (case insensitive).
 func IsTrue(value string) bool {
 	return StringInSlice(strings.ToLower(value), []string{"true", "1", "yes", "on"})
 }
 
+// IsTrueOrEmpty returns true if value is empty or if IsTrue() returns true.
+func IsTrueOrEmpty(value string) bool {
+	return value == "" || IsTrue(value)
+}
+
+// IsFalse returns true if value is "false", "0", "no" or "off" (case insensitive).
 func IsFalse(value string) bool {
 	return StringInSlice(strings.ToLower(value), []string{"false", "0", "no", "off"})
+}
+
+// IsFalseOrEmpty returns true if value is empty or if IsFalse() returns true.
+func IsFalseOrEmpty(value string) bool {
+	return value == "" || IsFalse(value)
 }
 
 func IsUserConfig(key string) bool {
@@ -718,36 +729,6 @@ func RunningInUserNS() bool {
 		return false
 	}
 	return true
-}
-
-// ValidHostname checks the string is valid DNS hostname.
-func ValidHostname(name string) error {
-	// Validate length
-	if len(name) < 1 || len(name) > 63 {
-		return fmt.Errorf("Name must be 1-63 characters long")
-	}
-
-	// Validate first character
-	if strings.HasPrefix(name, "-") {
-		return fmt.Errorf(`Name must not start with "-" character`)
-	}
-
-	if _, err := strconv.Atoi(string(name[0])); err == nil {
-		return fmt.Errorf("Name must not be a number")
-	}
-
-	// Validate last character
-	if strings.HasSuffix(name, "-") {
-		return fmt.Errorf(`Name must not end with "-" character`)
-	}
-
-	// Validate the character set
-	match, _ := regexp.MatchString("^[-a-zA-Z0-9]*$", name)
-	if !match {
-		return fmt.Errorf("Name can only contain alphanumeric and hyphen characters")
-	}
-
-	return nil
 }
 
 // Spawn the editor with a temporary YAML file for editing configs

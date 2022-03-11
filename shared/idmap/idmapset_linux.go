@@ -16,10 +16,10 @@ import (
 	"strconv"
 	"strings"
 	"sync/atomic"
+	"syscall"
 
 	"github.com/lxc/lxd/shared"
 	"github.com/lxc/lxd/shared/logger"
-	"github.com/pkg/errors"
 )
 
 const VFS3FscapsUnsupported int32 = 0
@@ -492,6 +492,42 @@ func (m IdmapSet) ToLxcString() []string {
 	return lines
 }
 
+func (m IdmapSet) ToUidMappings() []syscall.SysProcIDMap {
+	mapping := []syscall.SysProcIDMap{}
+
+	for _, e := range m.Idmap {
+		if !e.Isuid {
+			continue
+		}
+
+		mapping = append(mapping, syscall.SysProcIDMap{
+			ContainerID: int(e.Nsid),
+			HostID:      int(e.Hostid),
+			Size:        int(e.Maprange),
+		})
+	}
+
+	return mapping
+}
+
+func (m IdmapSet) ToGidMappings() []syscall.SysProcIDMap {
+	mapping := []syscall.SysProcIDMap{}
+
+	for _, e := range m.Idmap {
+		if !e.Isgid {
+			continue
+		}
+
+		mapping = append(mapping, syscall.SysProcIDMap{
+			ContainerID: int(e.Nsid),
+			HostID:      int(e.Hostid),
+			Size:        int(e.Maprange),
+		})
+	}
+
+	return mapping
+}
+
 func (m IdmapSet) Append(s string) (IdmapSet, error) {
 	e := IdmapEntry{}
 	err := e.parse(s)
@@ -563,7 +599,7 @@ func (set *IdmapSet) doUidshiftIntoContainer(dir string, testmode bool, how stri
 	tmp := filepath.Dir(dir)
 	tmp, err := filepath.EvalSymlinks(tmp)
 	if err != nil {
-		return errors.Wrap(err, "Expand symlinks")
+		return fmt.Errorf("Expand symlinks: %w", err)
 	}
 	dir = filepath.Join(tmp, filepath.Base(dir))
 	dir = strings.TrimRight(dir, "/")
@@ -1019,4 +1055,49 @@ func JSONMarshal(idmapSet *IdmapSet) (string, error) {
 	}
 
 	return string(idmapBytes), nil
+}
+
+// GetIdmapSet reads the uid/gid allocation.
+func GetIdmapSet() *IdmapSet {
+	idmapSet, err := DefaultIdmapSet("", "")
+	if err != nil {
+		logger.Warn("Error reading default uid/gid map", map[string]interface{}{"err": err.Error()})
+		logger.Warnf("Only privileged containers will be able to run")
+		idmapSet = nil
+	} else {
+		kernelIdmapSet, err := CurrentIdmapSet()
+		if err == nil {
+			logger.Infof("Kernel uid/gid map:")
+			for _, lxcmap := range kernelIdmapSet.ToLxcString() {
+				logger.Infof(fmt.Sprintf(" - %s", lxcmap))
+			}
+		}
+
+		if len(idmapSet.Idmap) == 0 {
+			logger.Warnf("No available uid/gid map could be found")
+			logger.Warnf("Only privileged containers will be able to run")
+			idmapSet = nil
+		} else {
+			logger.Infof("Configured LXD uid/gid map:")
+			for _, lxcmap := range idmapSet.Idmap {
+				suffix := ""
+
+				if lxcmap.Usable() != nil {
+					suffix = " (unusable)"
+				}
+
+				for _, lxcEntry := range lxcmap.ToLxcString() {
+					logger.Infof(" - %s%s", lxcEntry, suffix)
+				}
+			}
+
+			err = idmapSet.Usable()
+			if err != nil {
+				logger.Warnf("One or more uid/gid map entry isn't usable (typically due to nesting)")
+				logger.Warnf("Only privileged containers will be able to run")
+				idmapSet = nil
+			}
+		}
+	}
+	return idmapSet
 }
