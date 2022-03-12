@@ -4,7 +4,7 @@
 ネットワーク ACL は {ref}`OVN NIC タイプ <instance_device_type_nic_ovn>`、{ref}`OVN ネットワーク <network-ovn>` と {ref}`ブリッジネットワーク <network-bridge>` (いくつか制限あり、{ref}`network-acls-bridge-limitations` 参照) で利用できます。
 ```
 
-ネットワーク {abbr}`ACL (Access Control Lists; アクセス制御リスト)` は同じネットワークに接続された異なるインスタンス間のネットワークアクセスと他のネットワークとのアクセスを制御するトラフィクルールを定義します。
+ネットワーク {abbr}`ACL (Access Control Lists; アクセス制御リスト)` は同じネットワークに接続された異なるインスタンス間のネットワークアクセスや、他のネットワークとのアクセスを制御するトラフィクルールを定義します。
 
 ネットワーク ACL は インスタンスの {abbr}`NIC (Network Interface Controller; ネットワークインタフェースコントローラ)` やネットワークに直接適用できます。
 ネットワークに適用するときは、ネットワークに接続された全ての NIC に ACL が適用されます。
