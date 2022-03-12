@@ -6,13 +6,13 @@ package subprocess
 import (
 	"context"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"os"
 	"os/exec"
 	"strings"
 	"syscall"
 
-	"github.com/pkg/errors"
 	"gopkg.in/yaml.v2"
 
 	"github.com/lxc/lxd/shared"
@@ -25,13 +25,15 @@ type Process struct {
 
 	chExit     chan struct{} `yaml:"-"`
 	hasMonitor bool          `yaml:"-"`
+	closeFds   bool          `yaml:"-"`
 
-	Name     string   `yaml:"name"`
-	Args     []string `yaml:"args,flow"`
-	Apparmor string   `yaml:"apparmor"`
-	PID      int64    `yaml:"pid"`
-	Stdout   string   `yaml:"stdout"`
-	Stderr   string   `yaml:"stderr"`
+	Name     string         `yaml:"name"`
+	Args     []string       `yaml:"args,flow"`
+	Apparmor string         `yaml:"apparmor"`
+	PID      int64          `yaml:"pid"`
+	Stdin    io.ReadCloser  `yaml:"-"`
+	Stdout   io.WriteCloser `yaml:"-"`
+	Stderr   io.WriteCloser `yaml:"-"`
 
 	UID       uint32 `yaml:"uid"`
 	GID       uint32 `yaml:"gid"`
@@ -99,7 +101,7 @@ func (p *Process) Stop() error {
 		return ErrNotRunning
 	}
 
-	return errors.Wrapf(err, "Could not kill process")
+	return fmt.Errorf("Could not kill process: %w", err)
 }
 
 // Start will start the given process object
@@ -120,7 +122,9 @@ func (p *Process) start(fds []*os.File) error {
 	} else {
 		cmd = exec.Command(p.Name, p.Args...)
 	}
-	cmd.Stdin = nil
+	cmd.Stdout = p.Stdout
+	cmd.Stderr = p.Stderr
+	cmd.Stdin = p.Stdin
 	cmd.SysProcAttr = &syscall.SysProcAttr{}
 	cmd.SysProcAttr.Setsid = true
 
@@ -134,31 +138,18 @@ func (p *Process) start(fds []*os.File) error {
 		cmd.ExtraFiles = fds
 	}
 
-	// Setup output capture.
-	if p.Stdout != "" {
-		out, err := os.Create(p.Stdout)
-		if err != nil {
-			return errors.Wrapf(err, "Unable to open stdout file")
-		}
-		defer out.Close()
-		cmd.Stdout = out
+	if p.Stdout != nil && p.closeFds {
+		defer p.Stdout.Close()
 	}
 
-	if p.Stderr == p.Stdout {
-		cmd.Stderr = cmd.Stdout
-	} else if p.Stderr != "" {
-		out, err := os.Create(p.Stderr)
-		if err != nil {
-			return errors.Wrapf(err, "Unable to open stderr file")
-		}
-		defer out.Close()
-		cmd.Stderr = out
+	if p.Stderr != nil && p.Stderr != p.Stdout && p.closeFds {
+		defer p.Stderr.Close()
 	}
 
 	// Start the process.
 	err := cmd.Start()
 	if err != nil {
-		return errors.Wrapf(err, "Unable to start process")
+		return fmt.Errorf("Unable to start process: %w", err)
 	}
 
 	p.PID = int64(cmd.Process.Pid)
@@ -195,12 +186,12 @@ func (p *Process) start(fds []*os.File) error {
 func (p *Process) Restart() error {
 	err := p.Stop()
 	if err != nil {
-		return errors.Wrapf(err, "Unable to stop process")
+		return fmt.Errorf("Unable to stop process: %w", err)
 	}
 
 	err = p.Start()
 	if err != nil {
-		return errors.Wrapf(err, "Unable to start process")
+		return fmt.Errorf("Unable to start process: %w", err)
 	}
 
 	return nil
@@ -213,26 +204,26 @@ func (p *Process) Reload() error {
 	if err == nil {
 		err = pr.Signal(syscall.SIGHUP)
 		if err != nil {
-			return errors.Wrapf(err, "Could not reload process")
+			return fmt.Errorf("Could not reload process: %w", err)
 		}
 		return nil
 	} else if strings.Contains(err.Error(), "process already finished") {
 		return ErrNotRunning
 	}
 
-	return errors.Wrapf(err, "Could not reload process")
+	return fmt.Errorf("Could not reload process: %w", err)
 }
 
 // Save will save the given process object to a YAML file. Can be imported at a later point.
 func (p *Process) Save(path string) error {
 	dat, err := yaml.Marshal(p)
 	if err != nil {
-		return errors.Wrapf(err, "Unable to serialize process struct to YAML")
+		return fmt.Errorf("Unable to serialize process struct to YAML: %w", err)
 	}
 
 	err = ioutil.WriteFile(path, dat, 0644)
 	if err != nil {
-		return errors.Wrapf(err, "Unable to write to file '%s'", path)
+		return fmt.Errorf("Unable to write to file '%s': %w", path, err)
 	}
 
 	return nil
@@ -245,14 +236,14 @@ func (p *Process) Signal(signal int64) error {
 	if err == nil {
 		err = pr.Signal(syscall.Signal(signal))
 		if err != nil {
-			return errors.Wrapf(err, "Could not signal process")
+			return fmt.Errorf("Could not signal process: %w", err)
 		}
 		return nil
 	} else if strings.Contains(err.Error(), "process already finished") {
 		return ErrNotRunning
 	}
 
-	return errors.Wrapf(err, "Could not signal process")
+	return fmt.Errorf("Could not signal process: %w", err)
 }
 
 // Wait will wait for the given process object exit code

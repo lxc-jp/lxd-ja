@@ -276,6 +276,8 @@ var InstanceConfigKeysVM = map[string]func(value string) error{
 
 	"security.agent.metrics": validate.Optional(validate.IsBool),
 	"security.secureboot":    validate.Optional(validate.IsBool),
+
+	"agent.nic_config": validate.Optional(validate.IsBool),
 }
 
 // ConfigKeyChecker returns a function that will check whether or not

@@ -317,6 +317,11 @@ var APIExtensions = []string{
 	"metrics_cpu_seconds",
 	"instance_snapshot_never",
 	"certificate_token",
+	"instance_nic_routed_neighbor_probe",
+	"event_hub",
+	"agent_nic_config",
+	"projects_restricted_intercept",
+	"metrics_authentication",
 }
 
 // APIExtensionsCount returns the number of available API extensions.

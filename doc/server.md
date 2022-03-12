@@ -5,7 +5,7 @@ key/value 設定は現在サポートされている以下のネームスペー�
 
  - `backups` バックアップ設定
  - `candid` Candid を使った外部のユーザー認証 (External user authentication through Candid)
- - `cluster` クラスター設定
+ - `cluster` クラスタ設定
  - `core` コア・デーモン設定
  - `images` イメージ設定
  - `maas` MAAS 統合
@@ -21,10 +21,10 @@ candid.api.key                     | string  | global   | -                     
 candid.api.url                     | string  | global   | -                                | Candid を使用する外部認証エンドポイントの URL
 candid.domains                     | string  | global   | -                                | 許可される Candid ドメインのカンマ区切りリスト (空文字は全てのドメインが有効という意味になります)
 candid.expiry                      | integer | global   | 3600                             | Canded macaroon の有効期間 (秒で指定)
-cluster.https\_address             | string  | local    | -                                | クラスターのトラフィックに使用するアドレス
-cluster.images\_minimal\_replica   | integer | global   | 3                                | 特定のイメージのコピーを持つべきクラスターメンバーの最小数 (リプリケーションなしは 1 を、全メンバーにコピーは -1 を設定)
-cluster.max\_standby               | integer | global   | 2                                | データベースのスタンバイの役割を割り当てられるクラスターメンバーの最大数
-cluster.max\_voters                | integer | global   | 3                                | データベースの投票者の役割を割り当てられるクラスターメンバーの最大数
+cluster.https\_address             | string  | local    | -                                | クラスタのトラフィックに使用するアドレス
+cluster.images\_minimal\_replica   | integer | global   | 3                                | 特定のイメージのコピーを持つべきクラスタメンバーの最小数 (リプリケーションなしは 1 を、全メンバーにコピーは -1 を設定)
+cluster.max\_standby               | integer | global   | 2                                | データベースのスタンバイの役割を割り当てられるクラスタメンバーの最大数
+cluster.max\_voters                | integer | global   | 3                                | データベースの投票者の役割を割り当てられるクラスタメンバーの最大数
 cluster.offline\_threshold         | integer | global   | 20                               | 無反応なノードをオフラインとみなす秒数
 core.bgp\_address                  | string  | local    | -                                | BGP サーバをバインドさせるアドレス (BGP)
 core.bgp\_asn                      | string  | global   | -                                | ローカルサーバに使用する BGP の AS番号 (Autonomous System Number)
@@ -38,6 +38,7 @@ core.https\_allowed\_methods       | string  | global   | -                     
 core.https\_allowed\_origin        | string  | global   | -                                | Access-Control-Allow-Origin HTTP ヘッダの値
 core.https\_trusted\_proxy         | string  | global   | -                                | プロキシの connection ヘッダーでクライアントのアドレスを渡す信頼するサーバの IP アドレスのカンマ区切りリスト
 core.metrics\_address              | string  | global   | -                                | メトリクスサーバをバインドさせるアドレス (HTTPS)
+core.metrics\_authentication       | boolean | global   | true                             | メトリクスエンドポイントの認証を強制するかどうか
 core.proxy\_https                  | string  | global   | -                                | HTTPS プロキシを使用する場合はその URL (未指定の場合は HTTPS\_PROXY 環境変数を参照)
 core.proxy\_http                   | string  | global   | -                                | HTTP プロキシを使用する場合はその URL (未指定の場合は HTTP\_PROXY 環境変数を参照)
 core.proxy\_ignore\_hosts          | string  | global   | -                                | プロキシが不要なホスト (NO\_PROXY と同様な形式、例えば 1.2.3.4,1.2.3.5, を指定。未指定の場合は NO\_PROXY 環境変数を参照)
@@ -47,7 +48,7 @@ core.trust\_password               | string  | global   | -                     
 images.auto\_update\_cached        | boolean | global   | true                             | LXD がキャッシュしているイメージを自動的に更新するかどうか
 images.auto\_update\_interval      | integer | global   | 6                                | キャッシュされているイメージが更新されているかチェックする間隔を時間単位で指定
 images.compression\_algorithm      | string  | global   | gzip                             | 新しいイメージに使用する圧縮アルゴリズム (bzip2, gzip, lzma, xz あるいは none)
-images.default\_architecture       | string  | -        | -                                | アーキテクチャーが混在するクラスター内で使用するデフォルトのアーキテクチャー
+images.default\_architecture       | string  | -        | -                                | アーキテクチャーが混在するクラスタ内で使用するデフォルトのアーキテクチャー
 images.remote\_cache\_expiry       | integer | global   | 10                               | キャッシュされたが未使用のイメージを破棄するまでの日数
 maas.api.key                       | string  | global   | -                                | MAAS を管理するための API キー
 maas.api.url                       | string  | global   | -                                | MAAS サーバの URL
@@ -70,7 +71,7 @@ storage.images\_volume             | string  | local    | -                     
 lxc config set <key> <value>
 ```
 
-クラスターの一部として動作するときは、上記の表でスコープが `global` のキーは全てのクラスターメンバーに即座に反映されます。スコープが `local` のキーはコマンドラインツールの `\-\-target` オプションを使ってメンバーごとに設定する必要があります。
+クラスタの一部として動作するときは、上記の表でスコープが `global` のキーは全てのクラスタメンバーに即座に反映されます。スコープが `local` のキーはコマンドラインツールの `\-\-target` オプションを使ってメンバーごとに設定する必要があります。
 
 ## LXD をネットワーク上に公開する
 デフォルトでは LXD は UNIX ソケット経由でローカルのユーザーのみが使用できます。
