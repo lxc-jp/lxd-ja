@@ -114,7 +114,7 @@ LXD は内部的に次の揮発性の設定を使います:
 :--                                         | :---      | :------       | :----------
 volatile.apply\_template                    | string    | -             | 次の起動時にトリガーされるテンプレートフックの名前
 volatile.base\_image                        | string    | -             | インスタンスを作成したイメージのハッシュ（存在する場合）
-volatile.evacuate.origin                    | string    | -             | 待避したインスタンスのオリジン（クラスターメンバー）
+volatile.evacuate.origin                    | string    | -             | 待避したインスタンスのオリジン（クラスタメンバー）
 volatile.idmap.base                         | integer   | -             | インスタンスの主 idmap の範囲の最初の ID
 volatile.idmap.current                      | string    | -             | インスタンスで現在使用中の idmap
 volatile.idmap.next                         | string    | -             | 次にインスタンスが起動する際に使う idmap

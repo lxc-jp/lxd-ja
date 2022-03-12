@@ -977,7 +977,7 @@ none に設定すると、デフォルトゲートウェイもアドレスもホ
 この拡張はスナップショットのディスク使用量を示す `/1.0/instances/<name>/snapshots/<snapshot>` の出力に `size` フィールドを新たに追加します。
 
 ## clustering\_edit\_roles
-この拡張はクラスターメンバーに書き込み可能なエンドポイントを追加し、ロールの編集を可能にします。
+この拡張はクラスタメンバーに書き込み可能なエンドポイントを追加し、ロールの編集を可能にします。
 
 ## container\_nic\_routed\_host\_address
 この拡張は NIC の設定キーに `ipv4.host_address` と `ipv6.host_address` を追加し、ホスト側の veth インターフェースの IP アドレスを制御できるようにします。
@@ -1316,7 +1316,7 @@ OVN ネットワークと OVN NIC に `security.acls` プロパティを追加�
 
 ## projects\_restricted\_cluster\_target
 プロジェクトに `restricted.cluster.target` 設定キーを追加します。
-これによりどのクラスターメンバーにワークロードを配置するかやメンバー間のワークロードを移動する能力を指定する --target オプションをユーザーに使わせないように出来ます。
+これによりどのクラスタメンバーにワークロードを配置するかやメンバー間のワークロードを移動する能力を指定する --target オプションをユーザーに使わせないように出来ます。
 
 ## images\_default\_architecture
 `images.default_architecture` をグローバルの設定キーとプロジェクトごとの設定キーとして追加します。
@@ -1354,16 +1354,16 @@ LXD の警告 API です。
 プロジェクトに `restricted.backups` と `restricted.snapshots` 設定キーを追加し、ユーザーがバックアップやスナップショットを作成できないようにします。
 
 ## clustering\_join\_token
-トラスト・パスワードを使わずに新しいクラスターメンバーを追加する際に使用する参加トークンをリクエストするための `POST /1.0/cluster/members` API エンドポイントを追加します。
+トラスト・パスワードを使わずに新しいクラスタメンバーを追加する際に使用する参加トークンをリクエストするための `POST /1.0/cluster/members` API エンドポイントを追加します。
 
 ## clustering\_description
-クラスターメンバーに編集可能な説明を追加します。
+クラスタメンバーに編集可能な説明を追加します。
 
 ## server\_trusted\_proxy
-`core.https_trusted_proxy` のサポートを追加します。 この設定は、LXD が HAProxy スタイルの connection ヘッダーをパースし、そのような（HAProxy などのリバースプロキシサーバが LXD の前面に存在するような）接続の場合でヘッダーが存在する場合は、プロキシサーバが（ヘッダーで）提供するリクエストの（実際のクライアントの）ソースアドレスへ（LXDが）ソースアドレスを書き換え（て、LXDの管理するクラスターにリクエストを送出し）ます。（LXDのログにもオリジナルのアドレスを記録します）
+`core.https_trusted_proxy` のサポートを追加します。 この設定は、LXD が HAProxy スタイルの connection ヘッダーをパースし、そのような（HAProxy などのリバースプロキシサーバが LXD の前面に存在するような）接続の場合でヘッダーが存在する場合は、プロキシサーバが（ヘッダーで）提供するリクエストの（実際のクライアントの）ソースアドレスへ（LXDが）ソースアドレスを書き換え（て、LXDの管理するクラスタにリクエストを送出し）ます。（LXDのログにもオリジナルのアドレスを記録します）
 
 ## clustering\_update\_cert
-クラスター全体に適用されるクラスター証明書を更新するための `PUT /1.0/cluster/certificate` エンドポイントを追加します。
+クラスタ全体に適用されるクラスタ証明書を更新するための `PUT /1.0/cluster/certificate` エンドポイントを追加します。
 
 ## storage\_api\_project
 これはプロジェクト間でカスタムストレージボリュームをコピー／移動できるようにします。
@@ -1381,7 +1381,7 @@ lifecycle requestor に address のフィールドを追加します。
 リソース API 内の ResourcesGPUCard (GPU エントリ) に USBAddress (usb\_address) を追加します。
 
 ## clustering\_evacuation
-クラスターメンバーを待避と復元するための `POST /1.0/cluster/members/<name>/state` エンドポイントを追加します。
+クラスタメンバーを待避と復元するための `POST /1.0/cluster/members/<name>/state` エンドポイントを追加します。
 また設定キー `cluster.evacuate` と `volatile.evacuate.origin` も追加します。
 これらはそれぞれ待避の方法 (`auto`, `stop` or `migrate`) と移動したインスタンスのオリジンを設定します。
 
@@ -1433,7 +1433,7 @@ lifecycle requestor に address のフィールドを追加します。
 `POST /1.0/images` に `project` フィールドを追加し、イメージコピー時にコピー元プロジェクトを設定できるようにします。
 
 ## clustering\_config
-クラスターメンバーに `config` プロパティを追加し、キー・バリュー・ペアを設定可能にします。
+クラスタメンバーに `config` プロパティを追加し、キー・バリュー・ペアを設定可能にします。
 
 ## network\_peer
 ネットワークピアリングを追加し、 OVN ネットワーク間のトラフィックが OVN サブシステムの外に出ずに通信できるようにします。
@@ -1492,13 +1492,13 @@ OVN NIC に `acceleration` 設定キーを追加し、ハードウェアオフ�
 `false` に設定すると外部から到達可能なアドレスのレコードのみを生成するよう LXD に指示します。
 
 ## database\_leader
-クラスター・リーダーに設定される "database-leader" ロールを追加します。
+クラスタ・リーダーに設定される "database-leader" ロールを追加します。
 
 ## instance\_all\_projects
 全てのプロジェクトのインスタンス表示のサポートを追加します。
 
 ## clustering\_groups
-クラスター・メンバーのグループ化のサポートを追加します。
+クラスタ・メンバーのグループ化のサポートを追加します。
 
 これは以下の新しいエンドポイントを追加します。
 
@@ -1533,7 +1533,7 @@ Nvidia `470+` ドライバー (例. `MIG-74c6a31a-fde5-5c61-973b-70e12346c202`) 
 
 ## clustering\_evacuation\_live
 `cluster.evacuate` への設定値 `live-migrate` を追加します。
-これはクラスター待避の際にインスタンスのライブマイグレーションを強制します。
+これはクラスタ待避の際にインスタンスのライブマイグレーションを強制します。
 
 ## instance\_allow\_inconsistent\_copy
 `POST /1.0/instances` のインスタンスソースに `allow_inconsistent` フィールドを追加します。
@@ -1591,7 +1591,7 @@ LXDが使用するCPU時間をミリ秒ではなく秒単位で出力するよ�
 `ipv4.neighbor_probe` と `ipv6.neighbor_probe` の NIC 設定を追加します。未指定の場合のデフォルト値は `true` です。
 
 ## event\_hub
-これは `event-hub` というクラスターメンバの役割と `ServerEventMode` 環境フィールドを追加します。
+これは `event-hub` というクラスタメンバの役割と `ServerEventMode` 環境フィールドを追加します。
 
 ## agent\_nic\_config
 これを true に設定すると、仮想マシンの起動時に lxd-agent がインスタンスの NIC デバイスの名前と MTU を変更するための NIC 設定を適用します。

@@ -211,7 +211,7 @@ lxc storage create pool2 dir source=/data/lxd
   このような場合には、`ceph.osd.force_reuse` プロパティを true に設定する必要があります。
   設定しない場合、LXD は他の LXD インスタンスが OSD ストレージプールを使っていることを検出した場合には、OSD ストレージプールの再利用を拒否します
 
-- LXD が使う Ceph クラスターを設定するときは、OSD ストレージプールを保持するために使うストレージエンティティ用のファイルシステムとして `xfs` の使用をおすすめします。
+- LXD が使う Ceph クラスタを設定するときは、OSD ストレージプールを保持するために使うストレージエンティティ用のファイルシステムとして `xfs` の使用をおすすめします。
   ストレージエンティティ用のファイルシステムとして ext4 を使用することは、Ceph の開発元では推奨していません。
   LXD と関係ない予期しない不規則な障害が発生するかもしれません
 
@@ -225,7 +225,7 @@ lxc storage create pool2 dir source=/data/lxd
 #### ストレージプール設定
 キー                      | 型     | デフォルト値 | 説明
 :--                       | :---   | :------      | :----------
-ceph.cluster\_name        | string | ceph         | 新しいストレージプールを作成する ceph クラスターの名前
+ceph.cluster\_name        | string | ceph         | 新しいストレージプールを作成する ceph クラスタの名前
 ceph.osd.data\_pool\_name | string | -            | osd data pool の名前
 ceph.osd.force\_reuse     | bool   | false        | 別の LXD インスタンスで既に使用されている osd ストレージプールの使用を強制するか
 ceph.osd.pg\_num          | string | 32           | osd ストレージプール用の placement グループの数
@@ -251,13 +251,13 @@ snapshots.schedule   | string | custom volume      | -                          
 
 #### Ceph ストレージプールを作成するコマンド
 
-- Ceph クラスター "ceph" 内に "pool1" という OSD ストレージプールを作成する
+- Ceph クラスタ "ceph" 内に "pool1" という OSD ストレージプールを作成する
 
 ```bash
 lxc storage create pool1 ceph
 ```
 
-- Ceph クラスター "my-cluster" 内に "pool1" という OSD ストレージプールを作成する
+- Ceph クラスタ "my-cluster" 内に "pool1" という OSD ストレージプールを作成する
 
 ```bash
 lxc storage create pool1 ceph ceph.cluster_name=my-cluster
@@ -289,9 +289,9 @@ lxc storage create pool1 ceph source=rpl-pool ceph.osd.data_pool_name=ecpool
 #### ストレージプール設定
 キー                   | 型     | デフォルト値 | 説明
 :--                    | :---   | :------      | :----------
-ceph.cluster\_name     | string | ceph         | 新しいストレージプールを作成する ceph クラスターの名前
+ceph.cluster\_name     | string | ceph         | 新しいストレージプールを作成する ceph クラスタの名前
 ceph.user.name         | string | admin        | ストレージプールやボリュームを作成する際に使用する Ceph ユーザー名
-cephfs.cluster\_name   | string | ceph         | 新しいストレージプールを作成する ceph のクラスター名
+cephfs.cluster\_name   | string | ceph         | 新しいストレージプールを作成する ceph のクラスタ名
 cephfs.path            | string | /            | CEPHFS をマウントするベースのパス
 cephfs.user.name       | string | admin        | ストレージプールとボリュームを作成する際に用いる ceph のユーザー
 volatile.pool.pristine | string | true         | プールが作成時に空かどうか
