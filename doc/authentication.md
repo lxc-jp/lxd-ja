@@ -1,3 +1,8 @@
+---
+discourse: 13114
+relatedlinks: https://www.youtube.com/watch?v=6O0q3rSWr8A
+---
+
 # リモートAPI認証
 
 LXDデーモンとのリモート通信は、HTTPS上のJSONを使って行われます。
@@ -13,6 +18,9 @@ LXDデーモンとのリモート通信は、HTTPS上のJSONを使って行わ�
 (authentication-tls-certs)=
 ## TLSクライアント証明書
 
+```{youtube} https://www.youtube.com/watch?v=4iNpiL-lrXU
+```
+
 認証に{abbr}`TLS(Transport Layer Security)`クライアント証明書を使用する場合、クライアントとサーバーの両方が最初に起動したときにキーペアを生成します。
 サーバはそのキーペアをLXDソケットへの全てのHTTPS接続に使用します。
 クライアントは、その証明書をクライアント証明書として、あらゆるクライアント・サーバ間の通信に使用します。
@@ -25,7 +33,7 @@ LXDデーモンとのリモート通信は、HTTPS上のJSONを使って行わ�
 通信プロトコルは TLS1.2 以上に対応しています。
 すべての通信には完全な前方秘匿を使用し、暗号は強力な楕円曲線（ECDHE-RSA や ECDHE-ECDSA など）に限定してください。
 
-生成される鍵は最低でも4096ビットのRSA、できればEC384が望ましいです。
+生成される鍵は最低でも4096ビットのRSA、できれば384ビットのECDSAが望ましいです。
 署名を使用する場合は、SHA-2署名のみを信頼すべきです。
 
 我々はクライアントとサーバーの両方を管理しているので、壊れたプロトコルや暗号の下位互換をサポートする理由はありません。
@@ -106,6 +114,9 @@ PKIモードを有効にするには、以下の手順を実行します。
 (authentication-candid)=
 ## Candidベースの認証
 
+```{youtube} https://www.youtube.com/watch?v=FebTipM1jJk
+```
+
 LXDが[Candid](https://github.com/canonical/candid)認証を使用するように設定されている場合、サーバーで認証を行おうとするクライアントは、`candid.api.url`設定（{doc}`server`参照）で指定された認証サーバーからディスチャージトークンを取得しなければなりません。
 
 認証サーバーの証明書は、LXDサーバーから信頼されていなければなりません。
@@ -120,6 +131,9 @@ Candidベースの認証を設定する方法については、チュートリ�
 
 (authentication-rbac)=
 ## 役割ベースのアクセスコントロール(RBAC)
+
+```{youtube} https://www.youtube.com/watch?v=VE60AbJHT6E
+```
 
 LXDはCanonicalのRBACサービスとの連携をサポートしています。
 Candidベースの認証と組み合わせることで、{abbr}`RBAC (Role Based Access Control)`は、APIクライアントがLXD上でできることを制限するために使うことができます。

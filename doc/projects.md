@@ -1,3 +1,7 @@
+---
+relatedlinks: https://www.youtube.com/watch?v=6O0q3rSWr8A
+---
+
 # プロジェクト設定
 
 プロジェクトに何を含めるかは `features` 設定キーによって決められます。

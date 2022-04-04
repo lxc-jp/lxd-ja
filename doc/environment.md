@@ -22,12 +22,13 @@
 `LXC_REMOTE`      | 使用するリモートの名前（設定されたデフォルトのリモートよりも優先されます）
 
 ## サーバの環境変数
-名前                      | 説明
-:---                      | :----
-`LXD_EXEC_PATH`           | (サブコマンド実行時に使用される) LXD 実行ファイルのフルパス
-`LXD_LXC_TEMPLATE_CONFIG` | LXC テンプレート設定ディレクトリ
-`LXD_SECURITY_APPARMOR`   | `false` に設定すると AppArmor を無効にします
-`LXD_UNPRIVILEGED_ONLY`   | `true` に設定すると非特権コンテナしか作れなくなるように強制します。 LXD_UNPRIVILEGED_ONLY を設定する前に作られた特権コンテナだけが引き続き特権を持つことに注意してください。このオプションを LXD デーモンを最初にセットアップするときに設定するのが実用的です。
-`LXD_OVMF_PATH`           | `OVMF_CODE.fd` と `OVMF_VARS.ms.fd` を含む OVMF ビルドへのパス
-`LXD_SHIFTFS_DISABLE`     | shiftfs のサポートを無効にする（従来の UID シフトを試す際に有用です）
-`LXD_DEVMONITOR_DIR`      | デバイスモニターでモニターするパス。主にテスト用。
+名前                            | 説明
+:---                            | :----
+`LXD_EXEC_PATH`                 | (サブコマンド実行時に使用される) LXD 実行ファイルのフルパス
+`LXD_LXC_TEMPLATE_CONFIG`       | LXC テンプレート設定ディレクトリ
+`LXD_SECURITY_APPARMOR`         | `false` に設定すると AppArmor を無効にします
+`LXD_UNPRIVILEGED_ONLY`         | `true` に設定すると非特権コンテナしか作れなくなるように強制します。 LXD_UNPRIVILEGED_ONLY を設定する前に作られた特権コンテナだけが引き続き特権を持つことに注意してください。このオプションを LXD デーモンを最初にセットアップするときに設定するのが実用的です。
+`LXD_OVMF_PATH`                 | `OVMF_CODE.fd` と `OVMF_VARS.ms.fd` を含む OVMF ビルドへのパス
+`LXD_SHIFTFS_DISABLE`           | shiftfs のサポートを無効にする（従来の UID シフトを試す際に有用です）
+`LXD_IDMAPPED_MOUNTS_DISABLE`   | idmap を使ったマウントを無効にする（従来の UID シフトを試す際に有用です）
+`LXD_DEVMONITOR_DIR`            | デバイスモニターでモニターするパス。主にテスト用。

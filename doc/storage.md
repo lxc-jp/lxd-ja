@@ -1,3 +1,7 @@
+---
+discourse: 7735
+---
+
 # ストレージの設定
 
 - {ref}`dir`
@@ -391,15 +395,16 @@ losetup -l
 
 
 #### ストレージプール設定
-キー                | 型     | デフォルト値     | 説明
-:--                 | :---   | :------          | :----------
-lvm.thinpool\_name  | string | LXDThinPool      | イメージを作る Thin pool 名
-lvm.use\_thinpool   | bool   | true             | ストレージプールは論理ボリュームに Thinpool を使うかどうか
-lvm.vg.force\_reuse | bool   | false            | 既存の空でないボリュームグループの使用を強制
-lvm.vg\_name        | string | name of the pool | 作成するボリュームグループ名
-rsync.bwlimit       | string | 0 (no limit)     | ストレージエンティティーの転送にrsyncを使う場合、I/Oソケットに設定する上限を指定
-rsync.compression   | bool   | true             | ストレージプールをマイグレートする際に圧縮を使用するかどうか
-source              | string | -                | ブロックデバイスかループファイルかファイルシステムエントリのパス
+キー                          | 型     | デフォルト値     | 説明
+:--                           | :---   | :------          | :----------
+lvm.thinpool\_name            | string | LXDThinPool      | イメージを作る Thin pool 名
+lvm.thinpool\_metadata\_size  | string | 0 (auto)         | thinpool メタデータボリュームのサイズ。デフォルトは LVM が適切なサイズを計算。
+lvm.use\_thinpool             | bool   | true             | ストレージプールは論理ボリュームに Thinpool を使うかどうか
+lvm.vg.force\_reuse           | bool   | false            | 既存の空でないボリュームグループの使用を強制
+lvm.vg\_name                  | string | name of the pool | 作成するボリュームグループ名
+rsync.bwlimit                 | string | 0 (no limit)     | ストレージエンティティーの転送にrsyncを使う場合、I/Oソケットに設定する上限を指定
+rsync.compression             | bool   | true             | ストレージプールをマイグレートする際に圧縮を使用するかどうか
+source                        | string | -                | ブロックデバイスかループファイルかファイルシステムエントリのパス
 
 #### ストレージボリューム設定
 キー                 | 型     | 条件               | デフォルト値                       | 説明
