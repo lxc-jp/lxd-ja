@@ -1,3 +1,8 @@
+---
+discourse: 8178
+relatedlinks: "[LXD&#32;-&#32;Installation](https://linuxcontainers.org/lxd/getting-started-cli/)"
+---
+
 # Installing LXD
 
 The easiest way to install LXD is to install one of the available packages, but you can also install LXD from the sources.

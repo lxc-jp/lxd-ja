@@ -1,3 +1,8 @@
+---
+discourse: 13114
+relatedlinks: https://www.youtube.com/watch?v=6O0q3rSWr8A
+---
+
 # Remote API authentication
 
 Remote communications with the LXD daemon happen using JSON over HTTPS.
@@ -13,6 +18,9 @@ The following authentication methods are supported:
 (authentication-tls-certs)=
 ## TLS client certificates
 
+```{youtube} https://www.youtube.com/watch?v=4iNpiL-lrXU
+```
+
 When using {abbr}`TLS (Transport Layer Security)` client certificates for authentication, both the client and the server will generate a key pair the first time they're launched.
 The server will use that key pair for all HTTPS connections to the LXD socket.
 The client will use its certificate as a client certificate for any client-server communication.
@@ -25,7 +33,7 @@ On the next connection, a new certificate is generated.
 The supported protocol must be TLS 1.2 or better.
 All communications must use perfect forward secrecy, and ciphers must be limited to strong elliptic curve ones (such as ECDHE-RSA or ECDHE-ECDSA).
 
-Any generated key should be at least 4096 bit RSA, preferably EC384.
+Any generated key should be at least 4096 bit RSA, preferably 384 bit ECDSA.
 When using signatures, only SHA-2 signatures should be trusted.
 
 Since we control both client and server, there is no reason to support
@@ -108,6 +116,9 @@ Note that the generated certificates are not automatically trusted. You must sti
 (authentication-candid)=
 ## Candid-based authentication
 
+```{youtube} https://www.youtube.com/watch?v=FebTipM1jJk
+```
+
 When LXD is configured to use [Candid](https://github.com/canonical/candid) authentication, clients that try to authenticate with the server must get a Discharge token from the authentication server specified by the `candid.api.url` setting (see {doc}`server`).
 
 The authentication server certificate must be trusted by the LXD server.
@@ -122,6 +133,9 @@ For instructions on how to set up Candid-based authentication, see the [Candid a
 
 (authentication-rbac)=
 ## Role Based Access Control (RBAC)
+
+```{youtube} https://www.youtube.com/watch?v=VE60AbJHT6E
+```
 
 LXD supports integrating with the Canonical RBAC service.
 Combined with Candid-based authentication, {abbr}`RBAC (Role Based Access Control)` can be used to limit what an API client is allowed to do on LXD.

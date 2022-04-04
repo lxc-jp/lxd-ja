@@ -1633,3 +1633,21 @@ Adds new `restricted.container.intercept` config key to allow usually safe syste
 Introduces a new `core.metrics_authentication` server config option to
 allow for the /1.0/metrics endpoint to be generally available without
 client authentication.
+
+## images\_target\_project
+Adds ability to copy image to a project different from the source.
+
+## cluster\_migration\_inconsistent\_copy
+Adds `allow_inconsistent` field to `POST /1.0/instances/<name>`. Set to true to allow inconsistent copying between cluster
+members.
+
+## cluster\_ovn\_chassis
+Introduces a new `ovn-chassis` cluster role which allows for specifying what cluster member should act as an OVN chassis.
+
+## container\_syscall\_intercept\_sched\_setscheduler
+Adds the `security.syscalls.intercept.sched_setscheduler` to allow advanced process priority management in containers.
+
+## storage\_lvm\_thinpool\_metadata\_size
+Introduces the ability to specify the thinpool metadata volume size via `storage.thinpool_metadata_size`.
+
+If this is not specified then the default is to let LVM pick an appropriate thinpool metadata volume size.
