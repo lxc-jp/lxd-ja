@@ -384,7 +384,7 @@ losetup -l
 
  - イメージ用に LV を使うと、インスタンスとインスタンススナップショット用に LV のスナップショットを使います
  - LV で使われるファイルシステムは ext4 です（代わりに xfs を使うように設定できます）
- - デフォルトでは、すべての LVM ストレージプールは LVM thinpool を使います。すべての LXD ストレージエンティティ（イメージやインスタンスなど）のための論理ボリュームは、その LVM thinpool 内に作られます。
+ - デフォルトでは、すべての LVM ストレージプールは LVM thin pool を使います。すべての LXD ストレージエンティティ（イメージやインスタンスなど）のための論理ボリュームは、その LVM thin pool 内に作られます。
    この動作は、`lvm.use_thinpool` を "false" に設定して変更できます。
    この場合、LXD はインスタンススナップショットではないすべてのストレージエンティティ（イメージやインスタンスなど）に、通常の論理ボリュームを使います。
    Thinpool 以外の論理ボリュームは、スナップショットのスナップショットをサポートしていないので、ほとんどのストレージ操作を rsync にフォールバックする必要があります。
@@ -397,9 +397,9 @@ losetup -l
 #### ストレージプール設定
 キー                          | 型     | デフォルト値     | 説明
 :--                           | :---   | :------          | :----------
-lvm.thinpool\_name            | string | LXDThinPool      | イメージを作る thinpool 名
-lvm.thinpool\_metadata\_size  | string | 0 (auto)         | thinpool メタデータボリュームのサイズ。デフォルトは LVM が適切なサイズを計算
-lvm.use\_thinpool             | bool   | true             | ストレージプールは論理ボリュームに thinpool を使うかどうか
+lvm.thinpool\_name            | string | LXDThinPool      | イメージを作る thin pool 名
+lvm.thinpool\_metadata\_size  | string | 0 (auto)         | thin pool メタデータボリュームのサイズ。デフォルトは LVM が適切なサイズを計算
+lvm.use\_thinpool             | bool   | true             | ストレージプールは論理ボリュームに thin pool を使うかどうか
 lvm.vg.force\_reuse           | bool   | false            | 既存の空でないボリュームグループの使用を強制
 lvm.vg\_name                  | string | name of the pool | 作成するボリュームグループ名
 rsync.bwlimit                 | string | 0 (no limit)     | ストレージエンティティーの転送にrsyncを使う場合、I/Oソケットに設定する上限を指定
@@ -434,7 +434,7 @@ lxc storage create pool1 lvm
 lxc storage create pool1 lvm source=my-pool
 ```
 
- - ボリュームグループ "my-vg" 内の "my-pool" という既存の LVM thinpool を使う
+ - ボリュームグループ "my-vg" 内の "my-pool" という既存の LVM thin pool を使う
 
 ```bash
 lxc storage create pool1 lvm source=my-vg lvm.thinpool_name=my-pool
