@@ -1603,7 +1603,7 @@ LXDが使用するCPU時間をミリ秒ではなく秒単位で出力するよ�
 `core.metrics_authentication` というサーバ設定オプションを追加し /1.0/metrics のエンドポイントをクライアント認証無しでアクセスすることを可能にします。
 
 ## images\_target\_project
-コピー元とは異なるイメージをプロジェクトにコピーできるようにします。
+コピー元とは異なるプロジェクトにイメージをコピーできるようにします。
 
 ## cluster\_migration\_inconsistent\_copy
 `POST /1.0/instances/<name>` に `allow_inconsistent` フィールドを追加します。 true に設定するとクラスタメンバー間で不整合なコピーを許します。
