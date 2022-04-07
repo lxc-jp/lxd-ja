@@ -1,3 +1,8 @@
+---
+discourse: 8178
+relatedlinks: "[LXD のインストール](https://linuxcontainers.org/ja/lxd/getting-started-cli/)"
+---
+
 # LXD のインストール
 
 LXD をインストールする最も簡単な方法は提供されているパッケージのどれかをインストールすることですが、ソースから LXD をインストールすることもできます。

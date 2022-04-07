@@ -1,4 +1,12 @@
+---
+discourse: 12559
+relatedlinks: https://cloudinit.readthedocs.org/
+---
+
 # cloud-init
+
+```{youtube} https://www.youtube.com/watch?v=8OCG15TAldI
+```
 
 * `cloud-init.vendor-data`
 * `cloud-init.user-data`

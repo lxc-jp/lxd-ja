@@ -1,5 +1,6 @@
 import datetime
 import os
+import sys
 import yaml
 
 # Project config.
@@ -10,11 +11,16 @@ copyright = "2014-%s %s" % (datetime.date.today().year, author)
 with open("../shared/version/flex.go") as fd:
     version = fd.read().split("\n")[-2].split()[-1].strip("\"")
 
+sys.path.append(os.path.abspath("_extensions"))
+
 # Extensions.
 extensions = [
     "myst_parser",
     "sphinx_tabs.tabs",
-    "sphinx_reredirects"
+    "sphinx_reredirects",
+    "sphinxext.opengraph",
+    "youtube-link",
+    "related-links"
 ]
 
 myst_enable_extensions = [
@@ -101,8 +107,10 @@ html_context = {
     "github_url": "https://github.com/lxc-jp/lxd-ja",
     "github_version": "staging",
     "github_folder": "/doc/",
-    "github_filetype": "md"
+    "github_filetype": "md",
+    "discourse_prefix": "https://discuss.linuxcontainers.org/t/"
 }
+
 
 source_suffix = ".md"
 
@@ -110,6 +118,12 @@ source_suffix = ".md"
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = ['html', 'README.md']
+
+# Open Graph configuration
+
+ogp_site_url = "https://linuxcontainers.org/lxd/docs/master/"
+ogp_site_name = "LXD documentation"
+ogp_image = "https://linuxcontainers.org/static/img/containers.png"
 
 # Setup redirects (https://documatt.gitlab.io/sphinx-reredirects/usage.html)
 redirects = {

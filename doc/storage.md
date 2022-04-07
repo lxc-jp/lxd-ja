@@ -1,3 +1,7 @@
+---
+discourse: 7735
+---
+
 # ストレージの設定
 
 - {ref}`dir`
@@ -380,7 +384,7 @@ losetup -l
 
  - イメージ用に LV を使うと、インスタンスとインスタンススナップショット用に LV のスナップショットを使います
  - LV で使われるファイルシステムは ext4 です（代わりに xfs を使うように設定できます）
- - デフォルトでは、すべての LVM ストレージプールは LVM thinpool を使います。すべての LXD ストレージエンティティ（イメージやインスタンスなど）のための論理ボリュームは、その LVM thinpool 内に作られます。
+ - デフォルトでは、すべての LVM ストレージプールは LVM thin pool を使います。すべての LXD ストレージエンティティ（イメージやインスタンスなど）のための論理ボリュームは、その LVM thin pool 内に作られます。
    この動作は、`lvm.use_thinpool` を "false" に設定して変更できます。
    この場合、LXD はインスタンススナップショットではないすべてのストレージエンティティ（イメージやインスタンスなど）に、通常の論理ボリュームを使います。
    Thinpool 以外の論理ボリュームは、スナップショットのスナップショットをサポートしていないので、ほとんどのストレージ操作を rsync にフォールバックする必要があります。
@@ -391,22 +395,23 @@ losetup -l
 
 
 #### ストレージプール設定
-キー                | 型     | デフォルト値     | 説明
-:--                 | :---   | :------          | :----------
-lvm.thinpool\_name  | string | LXDThinPool      | イメージを作る Thin pool 名
-lvm.use\_thinpool   | bool   | true             | ストレージプールは論理ボリュームに Thinpool を使うかどうか
-lvm.vg.force\_reuse | bool   | false            | 既存の空でないボリュームグループの使用を強制
-lvm.vg\_name        | string | name of the pool | 作成するボリュームグループ名
-rsync.bwlimit       | string | 0 (no limit)     | ストレージエンティティーの転送にrsyncを使う場合、I/Oソケットに設定する上限を指定
-rsync.compression   | bool   | true             | ストレージプールをマイグレートする際に圧縮を使用するかどうか
-source              | string | -                | ブロックデバイスかループファイルかファイルシステムエントリのパス
+キー                          | 型     | デフォルト値     | 説明
+:--                           | :---   | :------          | :----------
+lvm.thinpool\_name            | string | LXDThinPool      | イメージを作る thin pool 名
+lvm.thinpool\_metadata\_size  | string | 0 (auto)         | thin pool メタデータボリュームのサイズ。デフォルトは LVM が適切なサイズを計算
+lvm.use\_thinpool             | bool   | true             | ストレージプールは論理ボリュームに thin pool を使うかどうか
+lvm.vg.force\_reuse           | bool   | false            | 既存の空でないボリュームグループの使用を強制
+lvm.vg\_name                  | string | name of the pool | 作成するボリュームグループ名
+rsync.bwlimit                 | string | 0 (no limit)     | ストレージエンティティーの転送にrsyncを使う場合、I/Oソケットに設定する上限を指定
+rsync.compression             | bool   | true             | ストレージプールをマイグレートする際に圧縮を使用するかどうか
+source                        | string | -                | ブロックデバイスかループファイルかファイルシステムエントリのパス
 
 #### ストレージボリューム設定
 キー                 | 型     | 条件               | デフォルト値                       | 説明
 :--                  | :---   | :--------          | :------                            | :----------
 block.filesystem     | string | block based driver | volume.block.filesystem と同じ     | ストレージボリュームのファイルシステム
 block.mount\_options | string | block based driver | volume.block.mount\_options と同じ | ブロックデバイスのマウントオプション
-lvm.stripes          | string | lvm driver         | -                                  | 新しいボリューム (あるいは thin pool ボリューム) に使用するストライプ数
+lvm.stripes          | string | lvm driver         | -                                  | 新しいボリューム (あるいは thinpool ボリューム) に使用するストライプ数
 lvm.stripes.size     | string | lvm driver         | -                                  | 使用するストライプのサイズ (最低 4096 バイトで 512 バイトの倍数を指定)
 security.shifted     | bool   | custom volume      | false                              | id シフトオーバーレイを有効にする（複数の独立したインスタンスによるアタッチを許可する）
 security.unmapped    | bool   | custom volume      | false                              | ボリュームへの id マッピングを無効にする
@@ -429,7 +434,7 @@ lxc storage create pool1 lvm
 lxc storage create pool1 lvm source=my-pool
 ```
 
- - ボリュームグループ "my-vg" 内の "my-pool" という既存の LVM thinpool を使う
+ - ボリュームグループ "my-vg" 内の "my-pool" という既存の LVM thin pool を使う
 
 ```bash
 lxc storage create pool1 lvm source=my-vg lvm.thinpool_name=my-pool

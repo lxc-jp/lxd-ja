@@ -1,4 +1,13 @@
+---
+discourse: 12281,11735
+relatedlinks: https://grafana.com/grafana/dashboards/15726
+---
+
 # インスタンスメトリクス
+
+```{youtube} https://www.youtube.com/watch?v=EthK-8hm_fY
+```
+
 LXD は全ての実行中のインスタンスについてのメトリクスを提供します。これは CPU、メモリー、ネットワーク、ディスク、プロセスの使用量を含み、Prometheus で読み取って Grafana でグラフを表示するのに使うことを想定しています。
 クラスタ環境では、 LXD はアクセスされているサーバ上で稼働中のインスタンスの値だけを返します。各クラスタメンバーから別々にデータを取得する想定です。
 インスタンスメトリクスは `/1.0/metrics` エンドポイントを呼ぶと更新されます。
