@@ -1,0 +1,5 @@
+msgid "Previous"
+msgstr "前へ"
+
+msgid "Next"
+msgstr "次へ"

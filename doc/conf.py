@@ -129,3 +129,7 @@ ogp_image = "https://linuxcontainers.org/static/img/containers.png"
 redirects = {
     "index/index": "../index.html",
 }
+
+language = "ja"
+locale_dirs = ["../doc/locale/"]
+gettext_compact = False
