@@ -1,5 +1,4 @@
 //go:build linux && cgo
-// +build linux,cgo
 
 package idmap
 
@@ -38,18 +37,6 @@ type IdRange struct {
 
 func (i *IdRange) Contains(id int64) bool {
 	return id >= i.Startid && id <= i.Endid
-}
-
-/*
- * One entry in id mapping set - a single range of either
- * uid or gid mappings.
- */
-type IdmapEntry struct {
-	Isuid    bool
-	Isgid    bool
-	Hostid   int64 // id as seen on the host - i.e. 100000
-	Nsid     int64 // id as seen in the ns - i.e. 0
-	Maprange int64
 }
 
 func (e *IdmapEntry) ToLxcString() []string {
@@ -304,10 +291,6 @@ func Extend(slice []IdmapEntry, element IdmapEntry) []IdmapEntry {
 	slice = slice[0 : n+1]
 	slice[n] = element
 	return slice
-}
-
-type IdmapSet struct {
-	Idmap []IdmapEntry
 }
 
 func (m *IdmapSet) Equals(other *IdmapSet) bool {
@@ -1061,7 +1044,7 @@ func JSONMarshal(idmapSet *IdmapSet) (string, error) {
 func GetIdmapSet() *IdmapSet {
 	idmapSet, err := DefaultIdmapSet("", "")
 	if err != nil {
-		logger.Warn("Error reading default uid/gid map", map[string]interface{}{"err": err.Error()})
+		logger.Warn("Error reading default uid/gid map", map[string]any{"err": err.Error()})
 		logger.Warnf("Only privileged containers will be able to run")
 		idmapSet = nil
 	} else {

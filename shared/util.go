@@ -598,6 +598,13 @@ func MkdirAllOwner(path string, perm os.FileMode, uid int, gid int) error {
 	return nil
 }
 
+// HasKey returns true if map has key.
+func HasKey[K comparable, V any](key K, m map[K]V) bool {
+	_, found := m[key]
+
+	return found
+}
+
 func StringInSlice(key string, list []string) bool {
 	for _, entry := range list {
 		if entry == key {
@@ -605,6 +612,28 @@ func StringInSlice(key string, list []string) bool {
 		}
 	}
 	return false
+}
+
+// RemoveElementsFromStringSlice returns a slice equivalent to removing the given elements from the given list.
+// Elements not present in the list are ignored.
+func RemoveElementsFromStringSlice(list []string, elements ...string) []string {
+	for i := len(elements) - 1; i >= 0; i-- {
+		element := elements[i]
+		match := false
+		for j := len(list) - 1; j >= 0; j-- {
+			if element == list[j] {
+				match = true
+				list = append(list[:j], list[j+1:]...)
+				break
+			}
+		}
+
+		if match {
+			elements = append(elements[:i], elements[i+1:]...)
+		}
+	}
+
+	return list
 }
 
 // StringHasPrefix returns true if value has one of the supplied prefixes.
@@ -694,7 +723,7 @@ func IsBlockdevPath(pathName string) bool {
 }
 
 // DeepCopy copies src to dest by using encoding/gob so its not that fast.
-func DeepCopy(src, dest interface{}) error {
+func DeepCopy(src, dest any) error {
 	buff := new(bytes.Buffer)
 	enc := gob.NewEncoder(buff)
 	dec := gob.NewDecoder(buff)
@@ -797,8 +826,8 @@ func TextEditor(inPath string, inContent []byte) ([]byte, error) {
 	return content, nil
 }
 
-func ParseMetadata(metadata interface{}) (map[string]interface{}, error) {
-	newMetadata := make(map[string]interface{})
+func ParseMetadata(metadata any) (map[string]any, error) {
+	newMetadata := make(map[string]any)
 	s := reflect.ValueOf(metadata)
 	if !s.IsValid() {
 		return nil, nil
@@ -918,10 +947,9 @@ func RunCommandWithFds(stdin io.Reader, stdout io.Writer, name string, arg ...st
 	err := cmd.Run()
 	if err != nil {
 		err := RunError{
-			msg: fmt.Sprintf("Failed to run: %s %s: %s", name, strings.Join(arg, " "),
-				strings.TrimSpace(buffer.String())),
-			Err:    err,
+			msg:    fmt.Sprintf("Failed to run: %s %s: %s", name, strings.Join(arg, " "), strings.TrimSpace(buffer.String())),
 			Stderr: buffer.String(),
+			Err:    err,
 		}
 
 		return err
@@ -972,7 +1000,7 @@ func EscapePathFstab(path string) string {
 	return r.Replace(path)
 }
 
-func SetProgressMetadata(metadata map[string]interface{}, stage, displayPrefix string, percent, processed, speed int64) {
+func SetProgressMetadata(metadata map[string]any, stage, displayPrefix string, percent, processed, speed int64) {
 	progress := make(map[string]string)
 	// stage, percent, speed sent for API callers.
 	progress["stage"] = stage
@@ -997,7 +1025,7 @@ func SetProgressMetadata(metadata map[string]interface{}, stage, displayPrefix s
 	}
 }
 
-func DownloadFileHash(ctx context.Context, httpClient *http.Client, useragent string, progress func(progress ioprogress.ProgressData), canceler *cancel.Canceler, filename string, url string, hash string, hashFunc hash.Hash, target io.WriteSeeker) (int64, error) {
+func DownloadFileHash(ctx context.Context, httpClient *http.Client, useragent string, progress func(progress ioprogress.ProgressData), canceler *cancel.HTTPRequestCanceller, filename string, url string, hash string, hashFunc hash.Hash, target io.WriteSeeker) (int64, error) {
 	// Always seek to the beginning
 	target.Seek(0, 0)
 
@@ -1200,4 +1228,20 @@ func JoinUrls(baseUrl, p string) (string, error) {
 	}
 	u.Path = path.Join(u.Path, p)
 	return u.String(), nil
+}
+
+// SplitNTrimSpace returns result of strings.SplitN() and then strings.TrimSpace() on each element.
+// Accepts nilIfEmpty argument which if true, will return nil slice if s is empty (after trimming space).
+func SplitNTrimSpace(s string, sep string, n int, nilIfEmpty bool) []string {
+	if nilIfEmpty && strings.TrimSpace(s) == "" {
+		return nil
+	}
+
+	parts := strings.SplitN(s, sep, n)
+
+	for i, v := range parts {
+		parts[i] = strings.TrimSpace(v)
+	}
+
+	return parts
 }
