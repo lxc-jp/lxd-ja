@@ -1618,3 +1618,25 @@ LXDが使用するCPU時間をミリ秒ではなく秒単位で出力するよ�
 `storage.thinpool_metadata_size` により thinpool のメタデータボリュームサイズを指定できるようにします。
 
 指定しない場合のデフォルトは LVM が適切な thinpool のメタデータボリュームサイズを選択します。
+
+## storage\_volume\_state\_total
+これは `GET /1.0/storage-pools/{name}/volumes/{type}/{volume}/state` API に 'total' フィールドを追加します。
+
+## instance\_file\_head
+`/1.0/instances/NAME/file` に HEAD を実装します。
+
+## instances\_nic\_host\_name
+`instances.nic.host_name` サーバ設定キーを追加します。これは "random" か "mac" を指定できます。
+指定しない場合のデフォルト値は "random" です。
+"random" に設定するとランダムなホストインタフェース名を使用します。
+"mac" に設定すると `lxd1122334455` の形式で名前を生成します。
+
+## image\_copy\_profile
+イメージをコピーする際にプロファイルの組を修正できるようにします。
+
+## container\_syscall\_intercept\_sysinfo
+`security.syscalls.intercept.sysinfo` を追加し `sysinfo` システムコールで cgroup ベースのリソース使用状況を追加できるようにします。
+
+## clustering\_evacuation\_mode
+退避リクエストに `mode` フィールドを追加します。
+これにより従来 `cluster.evacuate` で設定されていた退避モードをオーバーライドできます。

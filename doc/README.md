@@ -8,7 +8,7 @@ GitHubでもドキュメントの基本的なレンダリングを提供して�
 
 ドキュメントは[Markdown](https://commonmark.org/)と[MyST](https://myst-parser.readthedocs.io/)の拡張で書かれています。
 
-構文のヘルプやガイドラインについては、[documentation cheat sheet](https://linuxcontainers.org/lxd/docs/master/doc-cheat-sheet/) ([source](doc-heat-sheet.md?plain=1))を参照してください。
+構文のヘルプやガイドラインについては、[ドキュメントチートシート](https://lxd-ja.readthedocs.io/ja/latest/doc-cheat-sheet/) ([ソース](doc-cheat-sheet.md?plain=1))を参照してください。
 
 ## ドキュメンテーションの構築
 

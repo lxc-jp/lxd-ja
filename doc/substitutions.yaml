@@ -1,2 +1,2 @@
 # Key/value substitutions to use within the Sphinx doc.
-{}
+{note_ip_addresses_CIDR: "ネットワークのサブネット情報を指定する箇所では LXD は [CIDR 表記](https://ja.wikipedia.org/wiki/Classless_Inter-Domain_Routing) (例えば `192.0.2.0/24` や `2001:db8::/32`) を使用します。これは単一のアドレスが必要なケース (例えば、トンネルのローカル／リモートアドレス、インスタンスに適用する NAT アドレスや特定のアドレス) では適用されません。"}

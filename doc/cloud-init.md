@@ -17,7 +17,7 @@ relatedlinks: https://cloudinit.readthedocs.org/
 `cloud-init` パッケージがインストールされているわけではないからです。
 
 `ubuntu` と `ubuntu-daily` の remote にあるイメージは全て cloud-init が有効です。
-`images` remote のイメージで `cloud-init` が有効なイメージがあるものは `/cloud` という接尾辞がつきます（例: `images:ubuntu/20.04/cloud`）。
+`images` remote のイメージで `cloud-init` が有効なイメージがあるものは `/cloud` という接尾辞がつきます（例: `images:ubuntu/22.04/cloud`）。
 
 `vendor-data` と `user-data` は同じルールに従いますが、以下の制約があります。
 

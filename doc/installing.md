@@ -16,12 +16,12 @@ LXD をインストールする最も簡単な方法は提供されているパ�
 (installing_from_source)=
 ## LXD のソースからのインストール
 LXD の開発には liblxc の最新バージョン（4.0.0 以上が必要）を使用することをおすすめします。
-さらに LXD が動作するためには Golang 1.16 以上が必要です。
+さらに LXD が動作するためには Golang 1.18 以上が必要です。
 Ubuntu では次のようにインストールできます:
 
 ```bash
 sudo apt update
-sudo apt install acl attr autoconf dnsmasq-base git golang libacl1-dev libcap-dev liblxc1 liblxc-dev libsqlite3-dev libtool libudev-dev liblz4-dev libuv1-dev make pkg-config rsync squashfs-tools tar tcl xz-utils ebtables
+sudo apt install acl attr autoconf automake dnsmasq-base git golang libacl1-dev libcap-dev liblxc1 liblxc-dev libsqlite3-dev libtool libudev-dev liblz4-dev libuv1-dev make pkg-config rsync squashfs-tools tar tcl xz-utils ebtables
 ```
 
 デフォルトのストレージバックエンドである "directory" に加えて、LXD ではいくつかのストレージバックエンドが使えます。
@@ -35,7 +35,7 @@ sudo apt install btrfs-progs
 テストスイートを実行するには、次のパッケージも必要です:
 
 ```bash
-sudo apt install curl gettext jq sqlite3 uuid-runtime socat bind9-dnsutils
+sudo apt install curl gettext jq sqlite3 socat bind9-dnsutils
 ```
 
 ### ソースからの最新版のビルド

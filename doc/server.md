@@ -1,15 +1,17 @@
+(server)=
 # サーバ設定
 
 key/value 設定は現在サポートされている以下のネームスペースによって
 名前空間が分けられています。
 
- - `backups` バックアップ設定
- - `candid` Candid を使った外部のユーザー認証 (External user authentication through Candid)
- - `cluster` クラスタ設定
- - `core` コア・デーモン設定
- - `images` イメージ設定
- - `maas` MAAS 統合
- - `rbac` 外部の Candid と Canonical の RBAC を使ったロールベースのアクセス制御 (Role Based Access Control)
+ - `backups` (バックアップ設定)
+ - `candid` (Candid を使った外部のユーザー認証)
+ - `cluster` (クラスタ設定)
+ - `core` (コア・デーモン設定)
+ - `images` (イメージ設定)
+ - `instances` (インスタンス設定)
+ - `maas` (MAAS 統合)
+ - `rbac` (外部の Candid と Canonical の RBAC を使ったロールベースのアクセス制御)
 
 ```{rst-class} break-col-4 min-width-4-8
 ```
@@ -50,6 +52,7 @@ images.auto\_update\_interval      | integer | global   | 6                     
 images.compression\_algorithm      | string  | global   | gzip                             | 新しいイメージに使用する圧縮アルゴリズム (bzip2, gzip, lzma, xz あるいは none)
 images.default\_architecture       | string  | -        | -                                | アーキテクチャーが混在するクラスタ内で使用するデフォルトのアーキテクチャー
 images.remote\_cache\_expiry       | integer | global   | 10                               | キャッシュされたが未使用のイメージを破棄するまでの日数
+instances.nic.host\_name           | string  | global   | random                           | `random` に設定するとランダムなホストインタフェース名を使用し、`mac` に設定すると `lxd<mac_address>` の形式 (先頭2桁を除いた MAC アドレス) で名前を生成
 maas.api.key                       | string  | global   | -                                | MAAS を管理するための API キー
 maas.api.url                       | string  | global   | -                                | MAAS サーバの URL
 maas.machine                       | string  | local    | hostname                         | この LXD ホストの MAAS での名前

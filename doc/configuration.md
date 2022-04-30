@@ -6,11 +6,6 @@ LXD は次のコンポーネントの設定を保管しています。
 
 containers
 インスタンス <instances>
-ネットワーク <networks>
-ネットワーク ACL <network-acls>
-ネットワークフォワード <network-forwards>
-ネットワークピア <network-peers>
-ネットワークゾーン <network-zones>
 プリシード YAML <preseed>
 profiles
 プロジェクト <projects>

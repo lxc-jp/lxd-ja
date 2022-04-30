@@ -23,6 +23,8 @@ LXD は全ての実行中のインスタンスについてのメトリクスを�
 openssl req -x509 -newkey ec -pkeyopt ec_paramgen_curve:secp384r1 -sha384 -keyout metrics.key -nodes -out metrics.crt -days 3650 -subj "/CN=metrics.local"
 ```
 
+*注意*: 上のコマンドが正しい証明書を生成するには OpenSSL 1.1.0+ が必要です。
+
 作成後、証明書を信頼済みクライアントのリストに追加する必要があります。
 
 ```bash

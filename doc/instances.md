@@ -109,11 +109,14 @@ security.syscalls.intercept.mount.fuse          | string    | -                |
 security.syscalls.intercept.mount.shift         | boolean   | false            | yes                | container                 | `mount` システムコールをインターセプトして処理対象のファイルシステムの上に shiftfs をマウントするかどうか
 security.syscalls.intercept.sched_setscheduler  | boolean   | false            | no                 | container                 | `sched_setscheduler` システムコールを処理するかどうか  (プロセスの優先度を上げられるようにする)
 security.syscalls.intercept.setxattr            | boolean   | false            | no                 | container                 | `setxattr` システムコールを処理するかどうか (限定されたサブセットの制限された拡張属性の設定を許可する)
+security.syscalls.intercept.sysinfo             | boolean   | false             | no                | container                 | `sysinfo` システムコールを (cgroup ベースのリソース使用情報を取得するために) 処理するかどうか
 snapshots.schedule                              | string    | -                | no                 | -                         | Cron の書式 (`<minute> <hour> <dom> <month> <dow>`)、またはスケジュールエイリアスのカンマ区切りリスト `<@hourly> <@daily> <@midnight> <@weekly> <@monthly> <@annually> <@yearly> <@startup> <@never>`
 snapshots.schedule.stopped                      | bool      | false            | no                 | -                         | 停止したインスタンスのスナップショットを自動的に作成するかどうか
 snapshots.pattern                               | string    | snap%d           | no                 | -                         | スナップショット名を表す Pongo2 テンプレート（スケジュールされたスナップショットと名前を指定されないスナップショットに使用される）
 snapshots.expiry                                | string    | -                | no                 | -                         | スナップショットをいつ削除するかを設定します（`1M 2H 3d 4w 5m 6y` のような書式で設定します）
 user.\*                                         | string    | -                | n/a                | -                         | 自由形式のユーザー定義の key/value の設定の組（検索に使えます）
+
+デバイス名は最大 64 文字に制限されます。
 
 LXD は内部的に次の揮発性の設定を使います:
 
@@ -268,6 +271,7 @@ none タイプのデバイスはプロパティを一切持たず、インスタ
 継承を止めるには、継承をスキップしたいデバイスと同じ名前の none タイプのデバイスを追加するだけです。
 デバイスは、もともと含まれているプロファイルの後にプロファイルに追加されるか、直接インスタンスに追加されます。
 
+(instance_device_type_nic)=
 #### Type: nic
 LXD では、様々な種類のネットワークデバイス（ネットワークインターフェースコントローラーや NIC と呼びます）が使えます:
 
@@ -304,6 +308,7 @@ NIC ごとにどのプロパティが設定可能かの詳細については下�
  - [routed](#nictype-routed): 仮想デバイスペアを作成し、ホストからインスタンスに繋いで静的ルートをセットアップし ARP/NDP エントリーをプロキシします。これにより指定された親インタフェースのネットワークに
 インスタンスが参加できるようになります。
 
+(instance_device_type_nic_bridged)=
 ##### nic: bridged
 
 サポートされるインスタンスタイプ: コンテナ, VM
@@ -1047,7 +1052,7 @@ LXD ではシンプルなインスタンスタイプが使えます。これは�
 コマンドラインでは、インスタンスタイプは次のように指定します:
 
 ```bash
-lxc launch ubuntu:20.04 my-instance -t t2.micro
+lxc launch ubuntu:22.04 my-instance -t t2.micro
 ```
 
 使えるクラウドとインスタンスタイプのリストは次をご覧ください:

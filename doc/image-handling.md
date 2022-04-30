@@ -25,7 +25,7 @@ LXD は 3 つの異なるソースからのイメージのインポートをサ�
 
 CLI の視点では、これは以下の一般的なアクションによって実行されます。
 
- - lxc launch ubuntu:20.04 u1
+ - lxc launch ubuntu:22.04 u1
  - lxc launch images:centos/8 c1
  - lxc launch my-server:SHA256 a1
  - lxc image copy images:gentoo local: --copy-aliases --auto-update
@@ -39,11 +39,11 @@ CLI の視点では、これは以下の一般的なアクションによって�
 
 そのような状況ではイメージファイルは他のシステムで以下のコマンドを使ってダウンロードできます。
 
- - lxc image export ubuntu:20.04
+ - lxc image export ubuntu:22.04
 
 その後ターゲットのシステムにイメージを転送してローカルイメージストアーに手動でインポートします。
 
- - lxc image import META ROOTFS --alias ubuntu-20.04
+ - lxc image import META ROOTFS --alias ubuntu-22.04
 
 `lxc image import` は統合イメージ (単一ファイル) と分割イメージ (2つのファイル) の両方をサポートします。
 上の例では後者を使用しています。
@@ -192,9 +192,9 @@ VM ではこれは代わりに `rootfs.img` ファイルでメインのディス
 architecture: x86_64
 creation_date: 1424284563
 properties:
-  description: Ubuntu 20.04 LTS Intel 64bit
+  description: Ubuntu 22.04 LTS Intel 64bit
   os: Ubuntu
-  release: focal 20.04
+  release: jammy 22.04
 templates:
   /etc/hosts:
     when:
