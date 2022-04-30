@@ -34,7 +34,7 @@ definitions:
         type: boolean
         x-go-name: Restricted
       type:
-        description: Usage type for the certificate (only client currently)
+        description: Usage type for the certificate
         example: client
         type: string
         x-go-name: Type
@@ -98,7 +98,7 @@ definitions:
         type: boolean
         x-go-name: Restricted
       type:
-        description: Usage type for the certificate (only client currently)
+        description: Usage type for the certificate
         example: client
         type: string
         x-go-name: Type
@@ -143,7 +143,7 @@ definitions:
         type: boolean
         x-go-name: Token
       type:
-        description: Usage type for the certificate (only client currently)
+        description: Usage type for the certificate
         example: client
         type: string
         x-go-name: Type
@@ -458,6 +458,11 @@ definitions:
         example: evacuate
         type: string
         x-go-name: Action
+      mode:
+        description: Override the configured evacuation mode.
+        example: stop
+        type: string
+        x-go-name: Mode
     title: ClusterMemberStatePost represents the fields required to evacuate a cluster
       member.
     type: object
@@ -618,7 +623,7 @@ definitions:
         description: Descriptive properties
         example:
           os: Ubuntu
-          release: focal
+          release: jammy
           variant: cloud
         type: object
         x-go-name: Properties
@@ -658,7 +663,7 @@ definitions:
         x-go-name: Description
       name:
         description: Name of the alias
-        example: ubuntu-20.04
+        example: ubuntu-22.04
         type: string
         x-go-name: Name
     type: object
@@ -673,7 +678,7 @@ definitions:
         x-go-name: Description
       name:
         description: Alias name
-        example: ubuntu-20.04
+        example: ubuntu-22.04
         type: string
         x-go-name: Name
       target:
@@ -694,7 +699,7 @@ definitions:
     properties:
       name:
         description: Alias name
-        example: ubuntu-20.04
+        example: ubuntu-22.04
         type: string
         x-go-name: Name
     type: object
@@ -725,7 +730,7 @@ definitions:
         x-go-name: Description
       name:
         description: Alias name
-        example: ubuntu-20.04
+        example: ubuntu-22.04
         type: string
         x-go-name: Name
       target:
@@ -754,6 +759,14 @@ definitions:
         example: X509 PEM certificate
         type: string
         x-go-name: Certificate
+      profiles:
+        description: List of profiles to use
+        example:
+        - default
+        items:
+          type: string
+        type: array
+        x-go-name: Profiles
       project:
         description: Project name
         example: project1
@@ -797,7 +810,7 @@ definitions:
         description: Descriptive properties
         example:
           os: Ubuntu
-          release: focal
+          release: jammy
           variant: cloud
         type: object
         x-go-name: Properties
@@ -869,7 +882,7 @@ definitions:
         description: Descriptive properties
         example:
           os: Ubuntu
-          release: focal
+          release: jammy
           variant: cloud
         type: object
         x-go-name: Properties
@@ -885,7 +898,7 @@ definitions:
     properties:
       alias:
         description: Source alias to download from
-        example: focal
+        example: jammy
         type: string
         x-go-name: Alias
       certificate:
@@ -959,7 +972,7 @@ definitions:
         description: Descriptive properties
         example:
           os: Ubuntu
-          release: focal
+          release: jammy
           variant: cloud
         type: object
         x-go-name: Properties
@@ -977,7 +990,7 @@ definitions:
     properties:
       alias:
         description: Source alias to download from
-        example: focal
+        example: jammy
         type: string
         x-go-name: Alias
       certificate:
@@ -1756,7 +1769,7 @@ definitions:
     properties:
       alias:
         description: Image alias name (for image source)
-        example: ubuntu/20.04
+        example: ubuntu/22.04
         type: string
         x-go-name: Alias
       allow_inconsistent:
@@ -1816,7 +1829,7 @@ definitions:
         description: Image filters (for image source)
         example:
           os: Ubuntu
-          release: focal
+          release: jammy
           variant: cloud
         type: object
         x-go-name: Properties
@@ -4840,7 +4853,7 @@ definitions:
         x-go-name: OSName
       os_version:
         description: Version of the operating system (Linux distribution)
-        example: "20.04"
+        example: "22.04"
         type: string
         x-go-name: OSVersion
       project:
@@ -5452,6 +5465,12 @@ definitions:
   StorageVolumeStateUsage:
     description: StorageVolumeStateUsage represents the disk usage of a volume
     properties:
+      total:
+        description: Storage volume size in bytes
+        example: 5189222192
+        format: int64
+        type: integer
+        x-go-name: Total
       used:
         description: Used space in bytes
         example: 1693552640
@@ -5631,7 +5650,7 @@ paths:
                 example: sync
                 type: string
             type: object
-      summary: Get the supported API enpoints
+      summary: Get the supported API endpoints
       tags:
       - server
   /1.0:
@@ -6700,6 +6719,30 @@ paths:
         name: X-LXD-fingerprint
         schema:
           type: string
+      - description: Descriptive properties
+        in: header
+        name: X-LXD-properties
+        schema:
+          additionalProperties:
+            type: string
+          type: object
+      - description: Whether the image is available to unauthenticated users
+        in: header
+        name: X-LXD-public
+        schema:
+          type: boolean
+      - description: Original filename of the image
+        in: header
+        name: X-LXD-filename
+        schema:
+          type: string
+      - description: List of profiles to use
+        in: header
+        name: X-LXD-profiles
+        schema:
+          items:
+            type: string
+          type: array
       produces:
       - application/json
       responses:
@@ -8253,6 +8296,45 @@ paths:
         "500":
           $ref: '#/responses/InternalServerError'
       summary: Get a file
+      tags:
+      - instances
+    head:
+      description: Gets the file or directory metadata.
+      operationId: instance_files_head
+      parameters:
+      - description: Path to the file
+        example: default
+        in: query
+        name: path
+        type: string
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        type: string
+      responses:
+        "200":
+          description: Raw file or directory listing
+          headers:
+            X-LXD-gid:
+              description: File owner GID
+            X-LXD-mode:
+              description: Mode mask
+            X-LXD-modified:
+              description: Last modified date
+            X-LXD-type:
+              description: Type of file (file, symlink or directory)
+            X-LXD-uid:
+              description: File owner UID
+        "400":
+          $ref: '#/responses/BadRequest'
+        "403":
+          $ref: '#/responses/Forbidden'
+        "404":
+          $ref: '#/responses/NotFound'
+        "500":
+          $ref: '#/responses/InternalServerError'
+      summary: Get metadata for a file
       tags:
       - instances
     post:

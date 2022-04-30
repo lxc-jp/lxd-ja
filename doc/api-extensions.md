@@ -1651,3 +1651,25 @@ Adds the `security.syscalls.intercept.sched_setscheduler` to allow advanced proc
 Introduces the ability to specify the thinpool metadata volume size via `storage.thinpool_metadata_size`.
 
 If this is not specified then the default is to let LVM pick an appropriate thinpool metadata volume size.
+
+## storage\_volume\_state\_total
+This adds 'total' field to the `GET /1.0/storage-pools/{name}/volumes/{type}/{volume}/state` API.
+
+## instance\_file\_head
+Implements HEAD on `/1.0/instances/NAME/file`.
+
+## instances\_nic\_host\_name
+This introduces the `instances.nic.host_name` server config key that can take a value of either "random" or
+"mac". The default value for the key if unspecified is "random". If it is set to random then use the random host interface names.
+If it's set to mac, then generate a name in the form `lxd1122334455`.
+
+## image\_copy\_profile
+Adds ability to modify the set of profiles when image is copied.
+
+## container\_syscall\_intercept\_sysinfo
+Adds the `security.syscalls.intercept.sysinfo` to allow the `sysinfo` syscall to be populated with cgroup-based resource usage information.
+
+## clustering\_evacuation\_mode
+This introduces a `mode` field to the evacuation request which allows
+for overriding the evacuation mode traditionally set through
+`cluster.evacuate`.

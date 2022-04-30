@@ -112,6 +112,7 @@ security.syscalls.intercept.mount.fuse          | string    | -                 
 security.syscalls.intercept.mount.shift         | boolean   | false             | yes           | container                 | Whether to mount shiftfs on top of filesystems handled through mount syscall interception
 security.syscalls.intercept.sched_setscheduler  | boolean   | false             | no            | container                 | Handles the `sched_setscheduler` system call (allows increasing process priority)
 security.syscalls.intercept.setxattr            | boolean   | false             | no            | container                 | Handles the `setxattr` system call (allows setting a limited subset of restricted extended attributes)
+security.syscalls.intercept.sysinfo             | boolean   | false             | no            | container                 | Handles the `sysinfo` system call (to get cgroup-based resource usage information)
 snapshots.schedule                              | string    | -                 | no            | -                         | Cron expression (`<minute> <hour> <dom> <month> <dow>`), or a comma separated list of schedule aliases `<@hourly> <@daily> <@midnight> <@weekly> <@monthly> <@annually> <@yearly> <@startup> <@never>`
 snapshots.schedule.stopped                      | bool      | false             | no            | -                         | Controls whether or not stopped instances are to be snapshoted automatically
 snapshots.pattern                               | string    | snap%d            | no            | -                         | Pongo2 template string which represents the snapshot name (used for scheduled snapshots and unnamed snapshots)
@@ -261,6 +262,8 @@ Every device entry is identified by a unique name. If the same name is used in
 a subsequent profile or in the instance's own configuration, the whole entry
 is overridden by the new definition.
 
+Device names are limited to a maximum of 64 characters.
+
 Device entries are added to an instance through:
 
 ```bash
@@ -302,6 +305,7 @@ It's only purpose it to stop inheritance of devices coming from profiles.
 To do so, just add a none type device with the same name of the one you wish to skip inheriting.
 It can be added in a profile being applied after the profile it originated from or directly on the instance.
 
+(instance_device_type_nic)=
 #### Type: nic
 LXD supports several different kinds of network devices (referred to as Network Interface Controller or NIC).
 
@@ -338,6 +342,7 @@ The following NICs can be specified using only the `nictype` property:
  - [p2p](#nic-p2p): Creates a virtual device pair, putting one side in the instance and leaving the other side on the host.
  - [routed](#nic-routed): Creates a virtual device pair to connect the host to the instance and sets up static routes and proxy ARP/NDP entries to allow the instance to join the network of a designated parent interface.
 
+(instance_device_type_nic_bridged)=
 ##### nic: bridged
 
 Supported instance types: container, VM
@@ -1113,7 +1118,7 @@ For example, those 3 are equivalent:
 On the command line, this is passed like this:
 
 ```bash
-lxc launch ubuntu:20.04 my-instance -t t2.micro
+lxc launch ubuntu:22.04 my-instance -t t2.micro
 ```
 
 The list of supported clouds and instance types can be found here:
