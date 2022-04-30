@@ -47,7 +47,7 @@ ZFS でスナップショットの復元が出来るのは最新のスナップ�
 
 このモードではクライアントとサーバは同じ PKI によって発行された証明書を使わなければなりません。
 
-詳細は [security.md](Security.md) を参照してください。
+詳細は [security.md](security.md) を参照してください。
 
 ## container\_last\_used\_at
 `GET /1.0/containers/<name>` エンドポイントに `last_used_at` フィールドが追加されました。

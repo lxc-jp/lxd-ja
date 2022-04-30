@@ -1,6 +1,7 @@
 (network-bridge-firewalld)=
 # Firewalld を設定するには
 
+(allow-dhcp-dns-with-firewalld)=
 ## Firewalld で DHCP, DNS を許可する
 
 firewalld を使用する際に LXD が動いているホストの DHCP と DNS サーバにインスタンスがアクセスできるようにするために
@@ -26,7 +27,7 @@ firewall-cmd --zone=trusted --change-interface=lxdbr0 --permanent
 firewalld と LXD を一緒に使う場合、 iptables のルールがオーバーラップすることがあります。例えば firewalld が LXD デーモンより後に起動した場合、 LXD の iptables のルールを消してしまうことがあり、すると LXD コンテナが外向きのインターネットアクセスができなくなってしまいます。
 これを修正する 1 つの方法は firewalld に LXD の iptables ルールを移譲し LXD のほうを無効化することです。
 
-最初のステップは [DNS と DHCP を許可する](#allow-dhcp-dns-with-firewalld) ことです。
+最初のステップは {ref}`DNS と DHCP を許可する <allow-dhcp-dns-with-firewalld>` ことです。
 
 次に LXD に iptables ルールの設定を完全に停止します (firewalld が代わりに行うので)。
 ```
