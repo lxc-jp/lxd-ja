@@ -322,6 +322,17 @@ var APIExtensions = []string{
 	"agent_nic_config",
 	"projects_restricted_intercept",
 	"metrics_authentication",
+	"images_target_project",
+	"cluster_migration_inconsistent_copy",
+	"cluster_ovn_chassis",
+	"container_syscall_intercept_sched_setscheduler",
+	"storage_lvm_thinpool_metadata_size",
+	"storage_volume_state_total",
+	"instance_file_head",
+	"instances_nic_host_name",
+	"image_copy_profile",
+	"container_syscall_intercept_sysinfo",
+	"clustering_evacuation_mode",
 }
 
 // APIExtensionsCount returns the number of available API extensions.

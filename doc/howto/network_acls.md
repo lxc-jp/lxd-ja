@@ -2,10 +2,11 @@
 discourse: 13223
 ---
 
+(network-acls)=
 # ネットワーク ACL を設定するには
 
 ```{note}
-ネットワーク ACL は {ref}`OVN NIC タイプ <instance_device_type_nic_ovn>`、{ref}`OVN ネットワーク <network-ovn>` と {ref}`ブリッジネットワーク <network-bridge>` (いくつか制限あり、{ref}`network-acls-bridge-limitations` 参照) で利用できます。
+ネットワーク ACL は {ref}`OVN NIC タイプ <instance_device_type_nic_ovn>`、{ref}`network-ovn` と {ref}`network-bridge` (いくつか制限あり、{ref}`network-acls-bridge-limitations` 参照) で利用できます。
 ```
 
 ネットワーク {abbr}`ACL (Access Control Lists; アクセス制御リスト)` は同じネットワークに接続された異なるインスタンス間のネットワークアクセスや、他のネットワークとのアクセスを制御するトラフィクルールを定義します。
@@ -108,7 +109,7 @@ icmp\_code        | string     | no       | protocol が `icmp4` か `icmp6` の
 ### ルール内でセレクタを使う
 
 ```{note}
-この機能は {ref}`OVN NIC タイプ <instance_device_type_nic_ovn>` と {ref}`OVN ネットワーク <network-ovn>` でのみサポートされます。
+この機能は {ref}`OVN NIC タイプ <instance_device_type_nic_ovn>` と {ref}`network-ovn` でのみサポートされます。
 ```
 
 (ingress ルールの) `source` フィールドと (egress ルールの) `destination` フィールドは CIDR や IP の範囲の代わりにセレクタの使用をサポートします。
@@ -136,7 +137,7 @@ icmp\_code        | string     | no       | protocol が `icmp4` か `icmp6` の
 source=@internal
 ```
 
-ネットワークが [ネットワークピア](network-peers.md) をサポートする場合、ピア接続間のトラフィックを
+ネットワークが [ネットワークピア](network_ovn_peers.md) をサポートする場合、ピア接続間のトラフィックを
 `@<network_name>/<peer_name>` という形式のネットワークサブジェクトセレクタで参照できます。
 例:
 

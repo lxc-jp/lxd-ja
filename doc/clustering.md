@@ -332,10 +332,10 @@ members:
 クラスタ上の任意のノード上でインスタンスを起動できます。例えば、node1 から:
 
 ```bash
-lxc launch --target node2 ubuntu:18.04 c1
+lxc launch --target node2 ubuntu:22.04 c1
 ```
 
-のように実行すれば、node2 上で Ubuntu 20.04 コンテナが起動します。
+のように実行すれば、node2 上で Ubuntu 22.04 コンテナが起動します。
 
 ターゲットを指定せずにインスタンスを起動したときは、インスタンスの数が一番少ないサーバ上でインスタンスが起動されます。全てのサーバが同じ数のインスタンスを持っている場合はランダムに選ばれます。
 
@@ -518,7 +518,7 @@ lxc cluster group assign cluster:node1 gpu
 
 例
 ```bash
-lxc launch images:ubuntu/20.04 cluster:ubuntu --target=@gpu
+lxc launch ubuntu/22.04 cluster:ubuntu --target=@gpu
 ```
 
 もし `scheduler.instance` が `all` (デフォルト) か `group` に設定されていれば、上のコマンドにより `gpu` グループに属するクラスタメンバー上にインスタンスが作成されます。

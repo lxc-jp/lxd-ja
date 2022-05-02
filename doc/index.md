@@ -42,6 +42,7 @@ self
 getting_started
 configuration
 images
+networks
 operation
 restapi_landing
 internals

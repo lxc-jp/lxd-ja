@@ -26,6 +26,7 @@ doc/warnings.txt
 .sphinx/warnings.txt
 .sphinx/_static/swagger-ui
 .sphinx/_static/download
+doc/_extensions/__pycache__/
 
 # For Atom ctags
 .tags

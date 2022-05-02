@@ -2,10 +2,11 @@
 discourse: 12033,13128
 ---
 
+(network-zones)=
 # ネットワークゾーンを設定するには
 
 ```{note}
-ネットワークゾーンは {ref}`OVN ネットワーク <network-ovn>` と  {ref}`ブリッジネットワーク <network-bridge>` で利用できます。
+ネットワークゾーンは {ref}`network-ovn` と  {ref}`network-bridge` で利用できます。
 ```
 
 ネットワークゾーンは LXD のネットワークの DNS レコードを保持するのに使用します。
@@ -54,7 +55,7 @@ lxd.example.net.              3600	IN	SOA	lxd.example.net. hostmaster.lxd.exampl
 
 ネットワークゾーンを使用するには、組み込みの DNS サーバを有効にする必要があります。
 
-そのためには、 LXD サーバのローカルアドレスに `core.dns_address` 設定オプション ({doc}`server` 参照) を設定してください。
+そのためには、 LXD サーバのローカルアドレスに `core.dns_address` 設定オプション ({ref}`server` 参照) を設定してください。
 
 これは DNS サーバがリッスンするアドレスです。
 LXD クラスタの場合、アドレスは各クラスタメンバーによって異なるかもしれないことに注意してください。

@@ -190,3 +190,61 @@ func TestGetSnapshotExpiry(t *testing.T) {
 	require.Error(t, err)
 	require.Equal(t, time.Time{}, expiryDate)
 }
+
+func TestHasKey(t *testing.T) {
+	m1 := map[string]string{
+		"foo":   "bar",
+		"empty": "",
+	}
+
+	m2 := map[int]string{
+		1: "foo",
+	}
+
+	assert.True(t, HasKey("foo", m1))
+	assert.True(t, HasKey("empty", m1))
+	assert.False(t, HasKey("missing", m1))
+
+	assert.True(t, HasKey(1, m2))
+	assert.False(t, HasKey(0, m2))
+}
+
+func TestRemoveElementsFromStringSlice(t *testing.T) {
+	type test struct {
+		elementsToRemove []string
+		list             []string
+		expectedList     []string
+	}
+	tests := []test{
+		{
+			elementsToRemove: []string{"one", "two", "three"},
+			list:             []string{"one", "two", "three", "four", "five"},
+			expectedList:     []string{"four", "five"},
+		},
+		{
+			elementsToRemove: []string{"two", "three", "four"},
+			list:             []string{"one", "two", "three", "four", "five"},
+			expectedList:     []string{"one", "five"},
+		},
+		{
+			elementsToRemove: []string{"two", "three", "four"},
+			list:             []string{"two", "three"},
+			expectedList:     []string{},
+		},
+		{
+			elementsToRemove: []string{"two", "two", "two"},
+			list:             []string{"two"},
+			expectedList:     []string{},
+		},
+		{
+			elementsToRemove: []string{"two", "two", "two"},
+			list:             []string{"one", "two", "three", "four", "five"},
+			expectedList:     []string{"one", "three", "four", "five"},
+		},
+	}
+
+	for _, tt := range tests {
+		gotList := RemoveElementsFromStringSlice(tt.list, tt.elementsToRemove...)
+		assert.ElementsMatch(t, tt.expectedList, gotList)
+	}
+}
