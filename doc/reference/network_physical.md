@@ -30,12 +30,12 @@
 :--                             | :--       | :--              | :--                                       | :--
 gvrp                            | boolean   | -                | false                                     | GARP VLAN Registration Protocol を使って VLAN を登録する
 mtu                             | integer   | -                | -                                         | 作成するインターフェースの MTU
-parent                          | string    | -                | -                                         | sriov NIC を作成する親のインターフェース
+parent                          | string    | -                | -                                         | ネットワークで使う既存のインターフェース
 vlan                            | integer   | -                | -                                         | アタッチする先の VLAN ID
 bgp.peers.NAME.address          | string    | bgp server       | -                                         | `ovn` ダウンストリームネットワークで使用するピアアドレス (IPv4 か IPv6)
 bgp.peers.NAME.asn              | integer   | bgp server       | -                                         | `ovn` ダウンストリームネットワークで使用する AS 番号
 bgp.peers.NAME.password         | string    | bgp server       | - (パスワード無し)                        | `ovn` ダウンストリームネットワークで使用するピアのセッションパスワード（省略可能）
-dns.nameservers                 | string    | 標準モード       | -                                         | 物理ネットワークの DNS サーバ IP のリスト
+dns.nameservers                 | string    | 標準モード       | -                                         | 物理 (`physical`) ネットワークの DNS サーバ IP のリスト
 ipv4.gateway                    | string    | 標準モード       | -                                         | ゲートウェイとネットワークの IPv4 アドレス（CIDR表記）
 ipv4.ovn.ranges                 | string    | -                | -                                         | 子供の OVN ネットワークルーターに使用する IPv4 アドレスの範囲（開始-終了 形式) のカンマ区切りリスト
 ipv4.routes                     | string    | ipv4 アドレス    | -                                         | 子供の OVN ネットワークの ipv4.routes.external 設定で利用可能な追加の IPv4 CIDR サブネットのカンマ区切りリスト
