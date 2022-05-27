@@ -9,6 +9,9 @@ discourse: 11567
 The BGP server feature is available for the {ref}`network-bridge` and the {ref}`network-physical`.
 ```
 
+```{youtube} https://www.youtube.com/watch?v=C9zU-FEqtTw
+```
+
 {abbr}`BGP (Border Gateway Protocol)` is a protocol that allows exchanging routing information between autonomous systems.
 
 If you want to directly route external addresses to specific LXD servers or instances, you can configure LXD as a BGP server.
@@ -55,7 +58,7 @@ Once these configuration options are set, LXD starts listening for BGP sessions.
 For bridge networks, you can override the next-hop configuration.
 By default, the next-hop is set to the address used for the BGP session.
 
-To configure a different address, set `bgp.ipv4.nexthop` or `bgp.ipvg.nexthop`.
+To configure a different address, set `bgp.ipv4.nexthop` or `bgp.ipv6.nexthop`.
 
 ### Configure BGP peers for OVN networks
 

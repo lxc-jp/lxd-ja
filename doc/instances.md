@@ -124,6 +124,7 @@ The following volatile keys are currently internally used by LXD:
 Key                                         | Type      | Default       | Description
 :--                                         | :---      | :------       | :----------
 volatile.apply\_template                    | string    | -             | The name of a template hook which should be triggered upon next startup
+volatile.apply\_nvram                       | string    | -             | Whether or not to regenerate VM NVRAM on next start
 volatile.base\_image                        | string    | -             | The hash of the image the instance was created from, if any
 volatile.cloud-init.instance-id             | string    | -             | The instance-id (UUID) exposed to cloud-init
 volatile.evacuate.origin                    | string    | -             | The origin (cluster member) of the evacuated instance
@@ -761,12 +762,12 @@ if the source is a block device, a regular mount.
 
 LXD supports the following additional source types:
 
-- Ceph-rbd: Mount from existing ceph RBD device that is externally managed. LXD can use ceph to manage an internal file system for the instance, but in the event that a user has a previously existing ceph RBD that they would like use for this instance, they can use this command.
+- Ceph-rbd: Mount from existing Ceph RBD device that is externally managed. LXD can use Ceph to manage an internal file system for the instance, but in the event that a user has a previously existing Ceph RBD that they would like use for this instance, they can use this command.
 Example command
 ```
 lxc config device add <instance> ceph-rbd1 disk source=ceph:<my_pool>/<my-volume> ceph.user_name=<username> ceph.cluster_name=<username> path=/ceph
 ```
-- Ceph-fs: Mount from existing ceph FS device that is externally managed. LXD can use ceph to manage an internal file system for the instance, but in the event that a user has a previously existing ceph file sys that they would like use for this instancer, they can use this command.
+- Ceph-fs: Mount from existing CephFS device that is externally managed. LXD can use Ceph to manage an internal file system for the instance, but in the event that a user has a previously existing Ceph file sys that they would like use for this instancer, they can use this command.
 Example command.
 ```
 lxc config device add <instance> ceph-fs1 disk source=cephfs:<my-fs>/<some-path> ceph.user_name=<username> ceph.cluster_name=<username> path=/cephfs
@@ -795,11 +796,11 @@ size                | string    | -         | no        | Disk size in bytes (va
 size.state          | string    | -         | no        | Same as size above but applies to the filesystem volume used for saving runtime state in virtual machines.
 recursive           | boolean   | false     | no        | Whether or not to recursively mount the source path
 pool                | string    | -         | no        | The storage pool the disk device belongs to. This is only applicable for storage volumes managed by LXD
-propagation         | string    | -         | no        | Controls how a bind-mount is shared between the instance and the host. (Can be one of `private`, the default, or `shared`, `slave`, `unbindable`,  `rshared`, `rslave`, `runbindable`,  `rprivate`. Please see the Linux Kernel [shared subtree](https://www.kernel.org/doc/Documentation/filesystems/sharedsubtree.txt) documentation for a full explanation)
+propagation         | string    | -         | no        | Controls how a bind-mount is shared between the instance and the host. (Can be one of `private`, the default, or `shared`, `slave`, `unbindable`,  `rshared`, `rslave`, `runbindable`,  `rprivate`. Please see the Linux Kernel [shared subtree](https://www.kernel.org/doc/Documentation/filesystems/sharedsubtree.txt) documentation for a full explanation) <!-- wokeignore:rule=slave -->
 shift               | boolean   | false     | no        | Setup a shifting overlay to translate the source uid/gid to match the instance (only for containers)
 raw.mount.options   | string    | -         | no        | Filesystem specific mount options
-ceph.user\_name     | string    | admin     | no        | If source is ceph or cephfs then ceph user\_name must be specified by user for proper mount
-ceph.cluster\_name  | string    | ceph      | no        | If source is ceph or cephfs then ceph cluster\_name must be specified by user for proper mount
+ceph.user\_name     | string    | admin     | no        | If source is Ceph or CephFS then Ceph user\_name must be specified by user for proper mount
+ceph.cluster\_name  | string    | ceph      | no        | If source is Ceph or CephFS then Ceph cluster\_name must be specified by user for proper mount
 boot.priority       | integer   | -         | no        | Boot priority for VMs (higher boots first)
 
 #### Type: unix-char

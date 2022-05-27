@@ -34,10 +34,10 @@ Containers with the same priority will shutdown in parallel.  It defaults to 0.
 ## container\_syscall\_filtering
 A number of new syscalls related container configuration keys were introduced.
 
- * `security.syscalls.blacklist_default`
- * `security.syscalls.blacklist_compat`
- * `security.syscalls.blacklist`
- * `security.syscalls.whitelist`
+ * `security.syscalls.blacklist_default` <!-- wokeignore:rule=blacklist -->
+ * `security.syscalls.blacklist_compat` <!-- wokeignore:rule=blacklist -->
+ * `security.syscalls.blacklist` <!-- wokeignore:rule=blacklist -->
+ * `security.syscalls.whitelist` <!-- wokeignore:rule=whitelist -->
 
 See [Instance configuration](instances.md) for how to use them.
 
@@ -280,9 +280,9 @@ This introduces a new `tunnel.NAME.interface` option for networks.
 This key control what host network interface is used for a VXLAN tunnel.
 
 ## storage\_btrfs\_mount\_options
-This introduces the `btrfs.mount_options` property for btrfs storage pools.
+This introduces the `btrfs.mount_options` property for Btrfs storage pools.
 
-This key controls what mount options will be used for the btrfs storage pool.
+This key controls what mount options will be used for the Btrfs storage pool.
 
 ## entity\_description
 This adds descriptions to entities like containers, snapshots, networks, storage pools and volumes.
@@ -328,10 +328,10 @@ to edit a container before publishing an image from it.
 This enables migrating stateful container snapshots to new containers.
 
 ## storage\_driver\_ceph
-This adds a ceph storage driver.
+This adds a Ceph storage driver.
 
 ## storage\_ceph\_user\_name
-This adds the ability to specify the ceph user.
+This adds the ability to specify the Ceph user.
 
 ## instance\_types
 This adds the `instance_type` field to the container creation request.
@@ -341,12 +341,12 @@ Its value is expanded to LXD resource limits.
 This records the actual source passed to LXD during storage pool creation.
 
 ## storage\_ceph\_force\_osd\_reuse
-This introduces the `ceph.osd.force_reuse` property for the ceph storage
+This introduces the `ceph.osd.force_reuse` property for the Ceph storage
 driver. When set to `true` LXD will reuse a osd storage pool that is already in
 use by another LXD instance.
 
 ## storage\_block\_filesystem\_btrfs
-This adds support for btrfs as a storage volume filesystem, in addition to ext4
+This adds support for Btrfs as a storage volume filesystem, in addition to ext4
 and xfs.
 
 ## resources
@@ -776,8 +776,8 @@ This introduces the `ipvlan` "nic" device type.
 This introduces VLAN (`vlan`) and MAC filtering (`security.mac_filtering`) support for SR-IOV devices.
 
 ## storage\_cephfs
-Add support for CEPHFS as a storage pool driver. This can only be used
-for custom volumes, images and containers should be on CEPH (RBD)
+Add support for CephFS as a storage pool driver. This can only be used
+for custom volumes, images and containers should be on Ceph (RBD)
 instead.
 
 ## container\_nic\_ipfilter
@@ -890,7 +890,7 @@ redirect filesystem mounts to their fuse implementation. To this end, set e.g.
 `security.syscalls.intercept.mount.fuse=ext4=fuse2fs`.
 
 ## container\_disk\_ceph
-This allows for existing a CEPH RDB or FS to be directly connected to a LXD container.
+This allows for existing a Ceph RDB or FS to be directly connected to a LXD container.
 
 ## virtual\_machines
 Add virtual machine support.
@@ -1673,3 +1673,7 @@ Adds the `security.syscalls.intercept.sysinfo` to allow the `sysinfo` syscall to
 This introduces a `mode` field to the evacuation request which allows
 for overriding the evacuation mode traditionally set through
 `cluster.evacuate`.
+
+## resources\_pci\_vpd
+Adds a new VPD struct to the PCI resource entries.
+This struct extracts vendor provided data including the full product name and additional key/value configuration pairs.
