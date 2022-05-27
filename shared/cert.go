@@ -259,15 +259,32 @@ func GenCert(certf string, keyf string, certtype bool, addHosts bool) error {
 	if err != nil {
 		return fmt.Errorf("Failed to open %s for writing: %w", certf, err)
 	}
-	certOut.Write(certBytes)
-	certOut.Close()
+
+	_, err = certOut.Write(certBytes)
+	if err != nil {
+		return fmt.Errorf("Failed to write cert file: %w", err)
+	}
+
+	err = certOut.Close()
+	if err != nil {
+		return fmt.Errorf("Failed to close cert file: %w", err)
+	}
 
 	keyOut, err := os.OpenFile(keyf, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0600)
 	if err != nil {
 		return fmt.Errorf("Failed to open %s for writing: %w", keyf, err)
 	}
-	keyOut.Write(keyBytes)
-	keyOut.Close()
+
+	_, err = keyOut.Write(keyBytes)
+	if err != nil {
+		return fmt.Errorf("Failed to write key file: %w", err)
+	}
+
+	err = keyOut.Close()
+	if err != nil {
+		return fmt.Errorf("Failed to close key file: %w", err)
+	}
+
 	return nil
 }
 
@@ -400,9 +417,12 @@ func GetRemoteCertificate(address string, useragent string) (*x509.Certificate, 
 	tlsConfig.InsecureSkipVerify = true
 
 	tr := &http.Transport{
-		TLSClientConfig: tlsConfig,
-		Dial:            RFC3493Dialer,
-		Proxy:           ProxyFromEnvironment,
+		TLSClientConfig:       tlsConfig,
+		Dial:                  RFC3493Dialer,
+		Proxy:                 ProxyFromEnvironment,
+		ExpectContinueTimeout: time.Second * 30,
+		ResponseHeaderTimeout: time.Second * 3600,
+		TLSHandshakeTimeout:   time.Second * 5,
 	}
 
 	// Connect
