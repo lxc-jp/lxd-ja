@@ -255,7 +255,7 @@ Markdownの構文を使用している場合、同じファイル内でリンク
 
 すべてのドキュメントページは、ナビゲーションの中の他のページのサブページとして含まれていなければなりません。
 
-これは、親ページの[`toctree`](https://www.sphinx-doc.org/en/master/usage/restructuredtext/directives.html#directive-toctree)ディレクティブで実現します。
+これは、親ページの[`toctree`](https://www.sphinx-doc.org/en/master/usage/restructuredtext/directives.html#directive-toctree)ディレクティブで実現します。 <!-- wokeignore:rule=master -->
 
 ````
 ``{toctree}

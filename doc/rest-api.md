@@ -227,5 +227,5 @@ PUT を使う必要がある場合もあります。
 
 ## API 構造
 LXD は API エンドポイントを記述する [Swagger](https://swagger.io/) 仕様を自動生成しています。
-この API 仕様の YAML 版が [rest-api.yaml](https://github.com/lxc/lxd/blob/master/doc/rest-api.yaml) にあります。
-手軽にウェブで見る場合は [https://linuxcontainers.org/lxd/api/master/](https://linuxcontainers.org/lxd/api/master/) を参照してください。
+この API 仕様の YAML 版が [rest-api.yaml](https://github.com/lxc/lxd/blob/master/doc/rest-api.yaml) にあります。 <!-- wokeignore:rule=master -->
+手軽にウェブで見る場合は [https://linuxcontainers.org/lxd/api/master/](https://linuxcontainers.org/lxd/api/master/) を参照してください。 <!-- wokeignore:rule=master -->

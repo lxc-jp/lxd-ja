@@ -10,6 +10,5 @@ containers
 profiles
 プロジェクト <projects>
 サーバ <server>
-ストレージプール <storage>
 仮想マシン <virtual-machines>
 ```

@@ -71,9 +71,24 @@ scrape_configs:
     metrics_path: '/1.0/metrics'
     scheme: 'https'
     static_configs:
-      - targets: ['127.0.0.1:8443']
+      - targets: ['foo.example.com:8443']
     tls_config:
-      ca_file: 'tls/lxd.crt'
+      ca_file: 'tls/server.crt'
       cert_file: 'tls/metrics.crt'
       key_file: 'tls/metrics.key'
+      # XXX: server_name は targets のホスト名が証明書でカバーされない
+      #      (証明書の SAN リストに含まれない) 場合は必須です
+      server_name: 'foo'
 ```
+
+上の例では `/etc/prometheus/tls/server.crt` は以下のような内容になっています。
+
+```
+$ openssl x509 -noout -text -in /etc/prometheus/tls/server.crt
+...
+            X509v3 Subject Alternative Name:
+                DNS:foo, IP Address:127.0.0.1, IP Address:0:0:0:0:0:0:0:1
+...
+```
+
+Subject Alternative Name (SAN) リストが `targets` リストのホスト名を含んでいないので、 `server_name` ディレクティブを使用して比較に使用する名前を上書きする必要があります。

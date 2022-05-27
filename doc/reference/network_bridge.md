@@ -16,7 +16,7 @@ LXD で作成されたブリッジは "managed" です。
 つまり、ブリッジインタフェース自体を作成するのに加えて、LXD さらに DHCP、 IPv6 ルート広告と DNS サービスを提供するローカルの `dnsmasq` プロセスをセットアップします。
 デフォルトではブリッジに対して NAT も行います。
 
-LXD ブリッジネットワークで firewalld を使用するための設定については {ref}`network-bridge-firewalld` を参照してください。
+LXD ブリッジネットワークでファイアウォールを設定するための手順については {ref}`network-bridge-firewall` を参照してください。
 
 ## IPv6 プリフィクスサイズ
 
@@ -129,5 +129,5 @@ user.*                               | string    | -                       | -  
 :hidden:
 
 systemd-resolved との統合 </howto/network_bridge_resolved>
-Firewalld の設定 </howto/network_bridge_firewalld>
+ファイアウォールの設定 </howto/network_bridge_firewalld>
 ```

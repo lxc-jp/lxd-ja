@@ -35,10 +35,10 @@ ZFS でスナップショットの復元が出来るのは最新のスナップ�
 ## container\_syscall\_filtering
 コンテナ設定キーに関するいくつかの新しい syscall が導入されました。
 
- * `security.syscalls.blacklist_default`
- * `security.syscalls.blacklist_compat`
- * `security.syscalls.blacklist`
- * `security.syscalls.whitelist`
+ * `security.syscalls.blacklist_default` <!-- wokeignore:rule=blacklist -->
+ * `security.syscalls.blacklist_compat` <!-- wokeignore:rule=blacklist -->
+ * `security.syscalls.blacklist` <!-- wokeignore:rule=blacklist -->
+ * `security.syscalls.whitelist` <!-- wokeignore:rule=whitelist -->
 
 使い方は [インスタンスの設定](instances.md) を参照してください。
 
@@ -286,9 +286,9 @@ false に設定すると、コンテナのコピーは zfs send と receive 経�
 制御します。
 
 ## storage\_btrfs\_mount\_options
-btrfs ストレージプールに `btrfs.mount_options` プロパティを導入します。
+Btrfs ストレージプールに `btrfs.mount_options` プロパティを導入します。
 
-このキーは btrfs ストレージプールに使われるマウントオプションを制御します。
+このキーは Btrfs ストレージプールに使われるマウントオプションを制御します。
 
 ## entity\_description
 これはエンティティにコンテナ、スナップショット、ストレージプール、ボリュームの
@@ -340,10 +340,10 @@ API で編集できるようにします。コンテナからイメージを発�
 できるようにします。
 
 ## storage\_driver\_ceph
-これは ceph ストレージドライバを追加します。
+これは Ceph ストレージドライバを追加します。
 
 ## storage\_ceph\_user\_name
-これは ceph ユーザーを指定できるようにします。
+これは Ceph ユーザーを指定できるようにします。
 
 ## instance\_types
 これはコンテナの作成リクエストに `instance_type` フィールドを追加します。
@@ -353,12 +353,12 @@ API で編集できるようにします。コンテナからイメージを発�
 これはストレージプール作成中に LXD に渡された実際の作成元を記録します。
 
 ## storage\_ceph\_force\_osd\_reuse
-これは ceph ストレージドライバに `ceph.osd.force_reuse` プロパティを
+これは Ceph ストレージドライバに `ceph.osd.force_reuse` プロパティを
 導入します。 `true` に設定すると LXD は別の LXD インスタンスで既に使用中の
 osd ストレージプールを再利用するようになります。
 
 ## storage\_block\_filesystem\_btrfs
-これは ext4 と xfs に加えて btrfs をストレージボリュームファイルシステムとして
+これは ext4 と xfs に加えて Btrfs をストレージボリュームファイルシステムとして
 サポートするようになります。
 
 ## resources
@@ -789,9 +789,9 @@ RBAC (role based access control; ロールベースのアクセス制御) のサ
 これは SR-IOV デバイスに VLAN (`vlan`) と MAC フィルタリング (`security.mac_filtering`) のサポートを導入します。
 
 ## storage\_cephfs
-ストレージプールドライバとして CEPHFS のサポートを追加します。これは
+ストレージプールドライバとして CephFS のサポートを追加します。これは
 カスタムボリュームとしての利用のみが可能になり、イメージとコンテナは
-CEPHFS ではなく CEPH (RBD) 上に構築する必要があります。
+CephFS ではなく Ceph (RBD) 上に構築する必要があります。
 
 ## container\_nic\_ipfilter
 これは `bridged` の NIC デバイスに対してコンテナの IP フィルタリング
@@ -892,7 +892,7 @@ Ceph RBD を使ってストレージプールを作成する際にオプショ�
 このためには例えば `security.syscalls.intercept.mount.fuse=ext4=fuse2fs` のように設定します。
 
 ## container\_disk\_ceph
-既存の CEPH RDB もしくは FS を直接 LXD コンテナに接続できます。
+既存の Ceph RDB もしくは FS を直接 LXD コンテナに接続できます。
 
 ## virtual\_machines
 仮想マシンサポートが追加されます。
@@ -1640,3 +1640,7 @@ LXDが使用するCPU時間をミリ秒ではなく秒単位で出力するよ�
 ## clustering\_evacuation\_mode
 退避リクエストに `mode` フィールドを追加します。
 これにより従来 `cluster.evacuate` で設定されていた退避モードをオーバーライドできます。
+
+## resources\_pci\_vpd
+PCI リソースエントリに VPS 構造体を追加します。
+この構造体には完全な製品名と追加の設定キーバリューペアを含むベンダー提供のデータが含まれます。

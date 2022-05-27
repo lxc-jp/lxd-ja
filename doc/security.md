@@ -8,7 +8,7 @@
 
 詳細な情報は以下のセクションを参照してください。
 
-セキュリティ上の問題を発見した場合、その問題の報告方法については [LXDのセキュリティポリシー](https://github.com/lxc-jp/lxd-ja/blob/master/SECURITY.md) (原文: [LXD security policy](https://github.com/lxc/lxd/blob/master/SECURITY.md))を参照してください。
+セキュリティ上の問題を発見した場合、その問題の報告方法については [LXDのセキュリティポリシー](https://github.com/lxc-jp/lxd-ja/blob/master/SECURITY.md) (原文: [LXD security policy](https://github.com/lxc/lxd/blob/master/SECURITY.md))を参照してください。 <!-- wokeignore:rule=master -->
 
 ## サポートされているバージョン
 

@@ -78,5 +78,5 @@ user.*                               | string    | -                | -         
 :hidden:
 
 OVN のセットアップ </howto/network_ovn_setup>
-ルーティングの関係を作成 </howto/network_ovn_peers>
+ルーティング関係を作成 </howto/network_ovn_peers>
 ```

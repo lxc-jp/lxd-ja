@@ -41,7 +41,7 @@ lxc config trust add client.crt
 詳細は {doc}`authentication` を参照してください。
 
 ### LXD のストレージを設定するには？
-LXD は btrfs, ceph, directory, lvm と zfs ベースのストレージをサポートします。
+LXD は Btrfs, Ceph, directory, LVM と ZFS ベースのストレージをサポートします。
 
 まず、あなたが選択したファイルシステムに関連するツール（btrfs-progs, lvm2 あるいは zfsutils-linux）をマシーン上にインストールしてください。
 
