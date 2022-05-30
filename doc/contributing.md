@@ -13,12 +13,15 @@
 
 ### あなたの fork の remote を追加
 
-依存ライブラリーをビルドし終わったら、 GitHub の fork を remote として追加しその fork  にスイッチできます。
-```bash
-git remote add myfork git@github.com:<your_username>/lxd.git
-git remote update
-git checkout myfork/master
-```
+依存ライブラリーをビルドし終わったら、 GitHub の fork を remote として追加できます。
+
+    git remote add myfork git@github.com:<your_username>/lxd.git
+    git remote update
+
+次にこちらに切り替えます。
+
+<!-- wokeignore:rule=master -->
+    git checkout myfork/master
 
 ### LXD のビルド
 

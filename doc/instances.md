@@ -123,6 +123,7 @@ LXD は内部的に次の揮発性の設定を使います:
 キー                                        | 型        | デフォルト値  | 説明
 :--                                         | :---      | :------       | :----------
 volatile.apply\_template                    | string    | -             | 次の起動時にトリガーされるテンプレートフックの名前
+volatile.apply\_nvram                       | string    | -             | 次の起動時に仮想マシンの NVRAM を再生成するかどうか
 volatile.base\_image                        | string    | -             | インスタンスを作成したイメージのハッシュ（存在する場合）
 volatile.cloud-init.instance-id             | string    | -             | cloud-init に公開するインスタンスID (UUID)
 volatile.evacuate.origin                    | string    | -             | 待避したインスタンスのオリジン（クラスタメンバー）
@@ -710,12 +711,12 @@ lxc config device add <instance> <device-name> infiniband nictype=sriov parent=<
 
 LXD では以下の追加のソースタイプをサポートします。
 
-- Ceph-rbd: 外部で管理されている既存の ceph RBD デバイスからマウントします。 LXD は ceph をインスタンスの内部のファイルシステムを管理するのに使用できます。ユーザーが事前に既存の ceph RBD を持っておりそれをインスタンスに使いたい場合はこのコマンドを使用できます。
+- Ceph-rbd: 外部で管理されている既存の Ceph RBD デバイスからマウントします。 LXD は Ceph をインスタンスの内部のファイルシステムを管理するのに使用できます。ユーザーが事前に既存の Ceph RBD を持っておりそれをインスタンスに使いたい場合はこのコマンドを使用できます。
 コマンド例
 ```
 lxc config device add <instance> ceph-rbd1 disk source=ceph:<my_pool>/<my-volume> ceph.user_name=<username> ceph.cluster_name=<username> path=/ceph
 ```
-- Ceph-fs: 外部で管理されている既存の ceph FS からマウントします。 LXD は ceph をインスタンスの内部のファイルシステムを管理するのに使用できます。ユーザーが事前に既存の ceph ファイルシステムを持っておりそれをインスタンスに使いたい場合はこのコマンドを使用できます。
+- Ceph-fs: 外部で管理されている既存の Ceph FS からマウントします。 LXD は Ceph をインスタンスの内部のファイルシステムを管理するのに使用できます。ユーザーが事前に既存の Ceph ファイルシステムを持っておりそれをインスタンスに使いたい場合はこのコマンドを使用できます。
 コマンド例
 ```
 lxc config device add <instance> ceph-fs1 disk source=cephfs:<my-fs>/<some-path> ceph.user_name=<username> ceph.cluster_name=<username> path=/cephfs
@@ -743,11 +744,11 @@ size                | string    | -         | no        | byte（さまざまな
 size.state          | string    | -         | no        | 上の size と同じですが仮想マシン内のランタイム状態を保存するために使われるファイルシステムボリュームに適用されます
 recursive           | boolean   | false     | no        | ソースパスを再帰的にマウントするかどうか
 pool                | string    | -         | no        | ディスクデバイスが属するストレージプール。LXD が管理するストレージボリュームにのみ適用されます
-propagation         | string    | -         | no        | バインドマウントをインスタンスとホストでどのように共有するかを管理する（デフォルトである `private`, `shared`, `slave`, `unbindable`,  `rshared`, `rslave`, `runbindable`,  `rprivate` のいずれか。詳しくは Linux kernel の文書 [shared subtree](https://www.kernel.org/doc/Documentation/filesystems/sharedsubtree.txt) をご覧ください）
+propagation         | string    | -         | no        | バインドマウントをインスタンスとホストでどのように共有するかを管理する（デフォルトである `private`, `shared`, `slave`, `unbindable`,  `rshared`, `rslave`, `runbindable`,  `rprivate` のいずれか。詳しくは Linux kernel の文書 [shared subtree](https://www.kernel.org/doc/Documentation/filesystems/sharedsubtree.txt) をご覧ください） <!-- wokeignore:rule=slave -->
 shift               | boolean   | false     | no        | ソースの uid/gid をインスタンスにマッチするように変換させるためにオーバーレイの shift を設定するか（コンテナのみ）
 raw.mount.options   | string    | -         | no        | ファイルシステム固有のマウントオプション
-ceph.user\_name     | string    | admin     | no        | ソースが ceph か cephfs の場合に適切にマウントするためにユーザーが ceph user\_name を指定しなければなりません
-ceph.cluster\_name  | string    | ceph      | no        | ソースが ceph か cephfs の場合に適切にマウントするためにユーザーが ceph cluster\_name を指定しなければなりません
+ceph.user\_name     | string    | admin     | no        | ソースが Ceph か CephFS の場合に適切にマウントするためにユーザーが Ceph user\_name を指定しなければなりません
+ceph.cluster\_name  | string    | ceph      | no        | ソースが Ceph か CephFS の場合に適切にマウントするためにユーザーが Ceph cluster\_name を指定しなければなりません
 boot.priority       | integer   | -         | no        | VM のブート優先度 (高いほうが先にブート)
 
 #### Type: unix-char

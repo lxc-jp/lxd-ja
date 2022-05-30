@@ -9,6 +9,9 @@ discourse: 11567
 BGP サーバ機能は　{ref}`network-bridge` と {ref}`network-physical` で利用できます。
 ```
 
+```{youtube} https://www.youtube.com/watch?v=C9zU-FEqtTw
+```
+
 {abbr}`BGP (Border Gateway Protocol)` は自律システム間でルーティング情報を交換できるプロトコルです。
 
 外部アドレスを特定の LXD サーバやインスタンスに直接ルーティングしたい場合は、 LXD を BGP サーバとして設定できます。
