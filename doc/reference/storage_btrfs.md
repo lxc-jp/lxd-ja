@@ -1,5 +1,5 @@
 (storage-btrfs)=
-# Btrfs
+# Btrfs - `btrfs`
 
  - Uses a subvolume per instance, image and snapshot, creating Btrfs snapshots when creating a new object.
  - Btrfs can be used as a storage backend inside a container (nesting), so long as the parent container is itself on Btrfs. (But see notes about Btrfs quota via qgroups.)
@@ -22,9 +22,10 @@
    it will affect all volumes on the pool.
 
 ## Storage pool configuration
-Key                             | Type      | Condition                         | Default                    | Description
-:--                             | :---      | :--------                         | :------                    | :----------
-btrfs.mount\_options            | string    | Btrfs driver                      | user\_subvol\_rm\_allowed  | Mount options for block devices
+Key                             | Type      | Default                    | Description
+:--                             | :---      | :------                    | :----------
+btrfs.mount\_options            | string    | user\_subvol\_rm\_allowed  | Mount options for block devices
+source                          | string    | -                          | Path to block device or loop file or filesystem entry
 
 ## Storage volume configuration
 Key                     | Type      | Condition                 | Default                               | Description
@@ -34,27 +35,7 @@ security.unmapped       | bool      | custom volume             | false         
 size                    | string    | appropriate driver        | same as volume.size                   | Size of the storage volume
 snapshots.expiry        | string    | custom volume             | -                                     | Controls when snapshots are to be deleted (expects expression like `1M 2H 3d 4w 5m 6y`)
 snapshots.pattern       | string    | custom volume             | snap%d                                | Pongo2 template string which represents the snapshot name (used for scheduled snapshots and unnamed snapshots)
-snapshots.schedule      | string    | custom volume             | -                                     | Cron expression (`<minute> <hour> <dom> <month> <dow>`), or a comma separated list of schedule aliases `<@hourly> <@daily> <@midnight> <@weekly> <@monthly> <@annually> <@yearly>`
-
-## The following commands can be used to create Btrfs storage pools
-
- - Create loop-backed pool named "pool1".
-
-```bash
-lxc storage create pool1 btrfs
-```
-
- - Create a new pool called "pool1" using an existing Btrfs filesystem at `/some/path`.
-
-```bash
-lxc storage create pool1 btrfs source=/some/path
-```
-
- - Create a new pool called "pool1" on `/dev/sdX`.
-
-```bash
-lxc storage create pool1 btrfs source=/dev/sdX
-```
+snapshots.schedule      | string    | custom volume             | -                                     | {{snapshot_schedule_format}}
 
 ## Growing a loop backed Btrfs pool
 LXD doesn't let you directly grow a loop backed Btrfs pool, but you can do so with:

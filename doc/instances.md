@@ -61,12 +61,12 @@ limits.cpu                                      | string    | -                 
 limits.cpu.allowance                            | string    | 100%              | yes           | container                 | How much of the CPU can be used. Can be a percentage (e.g. 50%) for a soft limit or hard a chunk of time (25ms/100ms)
 limits.cpu.priority                             | integer   | 10 (maximum)      | yes           | container                 | CPU scheduling priority compared to other instances sharing the same CPUs (overcommit) (integer between 0 and 10)
 limits.disk.priority                            | integer   | 5 (medium)        | yes           | -                         | When under load, how much priority to give to the instance's I/O requests (integer between 0 and 10)
-limits.hugepages.64KB                           | string    | -                 | yes           | container                 | Fixed value in bytes (various suffixes supported, see below) to limit number of 64 KB hugepages (Available hugepage sizes are architecture dependent.)
-limits.hugepages.1MB                            | string    | -                 | yes           | container                 | Fixed value in bytes (various suffixes supported, see below) to limit number of 1 MB hugepages (Available hugepage sizes are architecture dependent.)
-limits.hugepages.2MB                            | string    | -                 | yes           | container                 | Fixed value in bytes (various suffixes supported, see below) to limit number of 2 MB hugepages (Available hugepage sizes are architecture dependent.)
-limits.hugepages.1GB                            | string    | -                 | yes           | container                 | Fixed value in bytes (various suffixes supported, see below) to limit number of 1 GB hugepages (Available hugepage sizes are architecture dependent.)
+limits.hugepages.64KB                           | string    | -                 | yes           | container                 | Fixed value in bytes (various suffixes supported, see {ref}`instances-limit-units`) to limit number of 64 KB hugepages (Available hugepage sizes are architecture dependent.)
+limits.hugepages.1MB                            | string    | -                 | yes           | container                 | Fixed value in bytes (various suffixes supported, see {ref}`instances-limit-units`) to limit number of 1 MB hugepages (Available hugepage sizes are architecture dependent.)
+limits.hugepages.2MB                            | string    | -                 | yes           | container                 | Fixed value in bytes (various suffixes supported, see {ref}`instances-limit-units`) to limit number of 2 MB hugepages (Available hugepage sizes are architecture dependent.)
+limits.hugepages.1GB                            | string    | -                 | yes           | container                 | Fixed value in bytes (various suffixes supported, see {ref}`instances-limit-units`) to limit number of 1 GB hugepages (Available hugepage sizes are architecture dependent.)
 limits.kernel.\*                                | string    | -                 | no            | container                 | This limits kernel resources per instance (e.g. number of open files)
-limits.memory                                   | string    | -                 | yes           | -                         | Percentage of the host's memory or fixed value in bytes (various suffixes supported, see below) (defaults to 1GiB for VMs)
+limits.memory                                   | string    | -                 | yes           | -                         | Percentage of the host's memory or fixed value in bytes (various suffixes supported, see {ref}`instances-limit-units`) (defaults to 1GiB for VMs)
 limits.memory.enforce                           | string    | hard              | yes           | container                 | If hard, instance can't exceed its memory limit. If soft, the instance can exceed its memory limit when extra host memory is available
 limits.memory.hugepages                         | boolean   | false             | no            | virtual-machine           | Controls whether to back the instance using hugepages rather than regular system memory
 limits.memory.swap                              | boolean   | true              | yes           | container                 | Controls whether to encourage/discourage swapping less used pages for this instance
@@ -87,6 +87,7 @@ raw.apparmor                                    | blob      | -                 
 raw.idmap                                       | blob      | -                 | no            | unprivileged container    | Raw idmap configuration (e.g. "both 1000 1000")
 raw.lxc                                         | blob      | -                 | no            | container                 | Raw LXC configuration to be appended to the generated one
 raw.qemu                                        | blob      | -                 | no            | virtual-machine           | Raw Qemu configuration to be appended to the generated command line
+raw.qemu.conf                                   | blob      | -                 | no            | virtual-machine           | Addition/override to the generated qemu.conf file
 raw.seccomp                                     | blob      | -                 | no            | container                 | Raw Seccomp configuration
 security.devlxd                                 | boolean   | true              | no            | -                         | Controls the presence of /dev/lxd in the instance
 security.devlxd.images                          | boolean   | false             | no            | container                 | Controls the availability of the /1.0/images API over devlxd
@@ -232,6 +233,7 @@ guest scheduler can properly reason about sockets, cores and threads as
 well as consider NUMA topology when sharing memory or moving processes
 across NUMA nodes.
 
+(devices)=
 ## Devices configuration
 LXD will always provide the instance with the basic devices which are required
 for a standard POSIX system to work. These aren't visible in instance or
@@ -362,8 +364,8 @@ name                     | string  | kernel assigned   | no       | no      | Th
 mtu                      | integer | parent MTU        | no       | yes     | The MTU of the new interface
 hwaddr                   | string  | randomly assigned | no       | no      | The MAC address of the new interface
 host\_name               | string  | randomly assigned | no       | no      | The name of the interface inside the host
-limits.ingress           | string  | -                 | no       | no      | I/O limit in bit/s for incoming traffic (various suffixes supported, see below)
-limits.egress            | string  | -                 | no       | no      | I/O limit in bit/s for outgoing traffic (various suffixes supported, see below)
+limits.ingress           | string  | -                 | no       | no      | I/O limit in bit/s for incoming traffic (various suffixes supported, see {ref}`instances-limit-units`)
+limits.egress            | string  | -                 | no       | no      | I/O limit in bit/s for outgoing traffic (various suffixes supported, see {ref}`instances-limit-units`)
 limits.max               | string  | -                 | no       | no      | Same as modifying both limits.ingress and limits.egress
 ipv4.address             | string  | -                 | no       | no      | An IPv4 address to assign to the instance through DHCP (Can be `none` to restrict all IPv4 traffic when security.ipv4\_filtering is set)
 ipv6.address             | string  | -                 | no       | no      | An IPv6 address to assign to the instance through DHCP (Can be `none` to restrict all IPv6 traffic when security.ipv6\_filtering is set)
@@ -576,8 +578,8 @@ name                    | string  | kernel assigned   | no       | The name of t
 mtu                     | integer | kernel assigned   | no       | The MTU of the new interface
 hwaddr                  | string  | randomly assigned | no       | The MAC address of the new interface
 host\_name              | string  | randomly assigned | no       | The name of the interface inside the host
-limits.ingress          | string  | -                 | no       | I/O limit in bit/s for incoming traffic (various suffixes supported, see below)
-limits.egress           | string  | -                 | no       | I/O limit in bit/s for outgoing traffic (various suffixes supported, see below)
+limits.ingress          | string  | -                 | no       | I/O limit in bit/s for incoming traffic (various suffixes supported, see {ref}`instances-limit-units`)
+limits.egress           | string  | -                 | no       | I/O limit in bit/s for outgoing traffic (various suffixes supported, see {ref}`instances-limit-units`)
 limits.max              | string  | -                 | no       | Same as modifying both limits.ingress and limits.egress
 ipv4.routes             | string  | -                 | no       | Comma delimited list of IPv4 static routes to add on host to NIC
 ipv6.routes             | string  | -                 | no       | Comma delimited list of IPv6 static routes to add on host to NIC
@@ -646,8 +648,8 @@ name                    | string  | kernel assigned   | no       | The name of t
 host\_name              | string  | randomly assigned | no       | The name of the interface inside the host
 mtu                     | integer | parent MTU        | no       | The MTU of the new interface
 hwaddr                  | string  | randomly assigned | no       | The MAC address of the new interface
-limits.ingress          | string  | -                 | no       | I/O limit in bit/s for incoming traffic (various suffixes supported, see below)
-limits.egress           | string  | -                 | no       | I/O limit in bit/s for outgoing traffic (various suffixes supported, see below)
+limits.ingress          | string  | -                 | no       | I/O limit in bit/s for incoming traffic (various suffixes supported, see {ref}`instances-limit-units`)
+limits.egress           | string  | -                 | no       | I/O limit in bit/s for outgoing traffic (various suffixes supported, see {ref}`instances-limit-units`)
 limits.max              | string  | -                 | no       | Same as modifying both limits.ingress and limits.egress
 ipv4.address            | string  | -                 | no       | Comma delimited list of IPv4 static addresses to add to the instance
 ipv4.routes             | string  | -                 | no       | Comma delimited list of IPv4 static routes to add on host to NIC (without L2 ARP/NDP proxy)
@@ -752,6 +754,7 @@ To create a `sriov` `infiniband` device use:
 lxc config device add <instance> <device-name> infiniband nictype=sriov parent=<sriov-enabled-device>
 ```
 
+(instance_device_type_disk)=
 #### Type: disk
 
 Supported instance types: container, VM
@@ -759,6 +762,8 @@ Supported instance types: container, VM
 Disk entries are essentially mountpoints inside the instance. They can
 either be a bind-mount of an existing file or directory on the host, or
 if the source is a block device, a regular mount.
+
+They can also be created by {ref}`attaching a storage volume to an instance <storage-attach-volume>`.
 
 LXD supports the following additional source types:
 
@@ -785,14 +790,14 @@ The following properties exist:
 
 Key                 | Type      | Default   | Required  | Description
 :--                 | :--       | :--       | :--       | :--
-limits.read         | string    | -         | no        | I/O limit in byte/s (various suffixes supported, see below) or in iops (must be suffixed with "iops")
-limits.write        | string    | -         | no        | I/O limit in byte/s (various suffixes supported, see below) or in iops (must be suffixed with "iops")
+limits.read         | string    | -         | no        | I/O limit in byte/s (various suffixes supported, see {ref}`instances-limit-units`) or in iops (must be suffixed with "iops") - see also {ref}`storage-configure-IO`
+limits.write        | string    | -         | no        | I/O limit in byte/s (various suffixes supported, see {ref}`instances-limit-units`) or in iops (must be suffixed with "iops") - see also {ref}`storage-configure-IO`
 limits.max          | string    | -         | no        | Same as modifying both limits.read and limits.write
 path                | string    | -         | yes       | Path inside the instance where the disk will be mounted (only for containers).
 source              | string    | -         | yes       | Path on the host, either to a file/directory or to a block device
 required            | boolean   | true      | no        | Controls whether to fail if the source doesn't exist
 readonly            | boolean   | false     | no        | Controls whether to make the mount read-only
-size                | string    | -         | no        | Disk size in bytes (various suffixes supported, see below). This is only supported for the rootfs (/)
+size                | string    | -         | no        | Disk size in bytes (various suffixes supported, see {ref}`instances-limit-units`). This is only supported for the rootfs (/)
 size.state          | string    | -         | no        | Same as size above but applies to the filesystem volume used for saving runtime state in virtual machines.
 recursive           | boolean   | false     | no        | Whether or not to recursively mount the source path
 pool                | string    | -         | no        | The storage pool the disk device belongs to. This is only applicable for storage volumes managed by LXD
@@ -1060,7 +1065,7 @@ Key                 | Type      | Default   | Required  | Description
 :--                 | :--       | :--       | :--       | :--
 address             | string    | -         | yes       | PCI address of the device.
 
-
+(instances-limit-units)=
 ### Units for storage and network limits
 Any value representing bytes or bits can make use of a number of useful
 suffixes to make it easier to understand what a particular limit is.
@@ -1205,3 +1210,89 @@ Example of using pongo2 syntax to format snapshot names with timestamps:
 lxc config set INSTANCE snapshots.pattern "{{ creation_date|date:'2006-01-02_15-04-05' }}"
 ```
 This results in snapshots named `{date/time of creation}` down to the precision of a second.
+
+### Overriding qemu configuration
+For VM instances, LXD configures qemu via a somewhat undocumented configuration
+file format passed to qemu with the `-readconfig` command-line option, with
+each instance having a configuration file generated before boot. The generated
+configuration file can be found at `/var/log/lxd/[instance-name]/qemu.conf`.
+
+The default configuration works fine for LXD most common use case: Modern UEFI
+guests with virtio devices. In some situations however, it can be desirable to
+override the generated configuration:
+
+- Running an old guest OS that doesn't support UEFI.
+- Specify custom virtual devices when virtio is not supported by the guest OS .
+- Add devices not supported by LXD before the machines boots.
+- Remove devices that conflict with the guest OS.
+
+This level of customization can be achieved through the `raw.qemu.conf` config
+option, which supports a format similar to `qemu.conf` with some additions.
+Here's how to override the default "virtio-gpu-pci" GPU driver:
+
+```
+raw.qemu.conf: |-
+    [device "qemu_gpu"]
+    driver = "qxl-vga"
+```
+
+The above would replace the corresponding section/key in the generated config
+file. Since `raw.qemu.conf` is a multi-line config option, multiple
+sections/keys can be modified.
+
+It is also possible to entirely remove sections/keys by specifying a section
+without any keys:
+
+```
+raw.qemu.conf: |-
+    [device "qemu_gpu"]
+```
+
+To remove a key, specify an empty string as the value:
+
+```
+raw.qemu.conf: |-
+    [device "qemu_gpu"]
+    driver = ""
+```
+
+The configuration file format used by qemu allows multiple sections with the
+same name. Here's a piece of the config generated by LXD:
+
+```
+[global]
+driver = "ICH9-LPC"
+property = "disable_s3"
+value = "1"
+
+[global]
+driver = "ICH9-LPC"
+property = "disable_s4"
+value = "1"
+```
+
+To specify which section will be overridden, an index can be specified like this:
+
+```
+raw.qemu.conf: |-
+    [global][1]
+    value = "0"
+```
+
+Section indexes start at 0 (which is the default value when not specified), so
+the `raw.qemu.conf` above example would generate this:
+
+```
+[global]
+driver = "ICH9-LPC"
+property = "disable_s3"
+value = "1"
+
+[global]
+driver = "ICH9-LPC"
+property = "disable_s4"
+value = "0"
+```
+
+To add new sections, simply specify section names that are not present in the
+config file.
