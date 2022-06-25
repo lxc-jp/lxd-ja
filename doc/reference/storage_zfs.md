@@ -1,5 +1,9 @@
+---
+discourse: 1333
+---
+
 (storage-zfs)=
-# ZFS
+# ZFS - `zfs`
 
  - LXD が ZFS プールを作成した場合は、デフォルトで圧縮が有効になります
  - イメージ用に ZFS を使うと、インスタンスとスナップショットの作成にスナップショットとクローンを使います
@@ -49,58 +53,21 @@ security.unmapped     | bool   | custom volume      | false                     
 size                  | string | appropriate driver | volume.size と同じ                  | ストレージボリュームのサイズ
 snapshots.expiry      | string | custom volume      | -                                   | スナップショットがいつ削除されるかを制御（`1M 2H 3d 4w 5m 6y` のような設定形式を想定）
 snapshots.pattern     | string | custom volume      | snap%d                              | スナップショット名を表す Pongo2 テンプレート文字列（スケジュールされたスナップショットと名前指定なしのスナップショットに使用）
-snapshots.schedule    | string | custom volume      | -                                   | Cron の書式 (`<minute> <hour> <dom> <month> <dow>`)、またはスケジュールアイリアスのカンマ区切りリスト `<@hourly> <@daily> <@midnight> <@weekly> <@monthly> <@annually> <@yearly>`
+snapshots.schedule      | string    | custom volume             | -                                     | {{snapshot_schedule_format}}
 zfs.blocksize         | string | zfs driver         | volume.zfs.blocksize と同じ         | ZFSブロックのサイズを512～16MiBの範囲で指定します（2の累乗でなければなりません）。ブロックボリュームでは、より大きな値が設定されていても、最大値の128KiBが使用されます。
 zfs.remove\_snapshots | string | zfs driver         | volume.zfs.remove\_snapshots と同じ | 必要に応じてスナップショットを削除するかどうか
-zfs.use\_refquota     | string | zfs driver         | volume.zfs.zfs\_refquota と同じ     | 領域の quota の代わりに refquota を使うかどうか
+zfs.use\_refquota     | string | zfs driver         | volume.zfs.use\_refquota と同じ     | 領域の quota の代わりに refquota を使うかどうか
 zfs.reserve\_space    | string | zfs driver         | false                               | qouta/refquota に加えて reservation/refreservation も使用するかどうか
-
-## ZFS ストレージプールを作成するには以下のコマンドが使用できます
-
- - "pool1" というループバックプールを作成する。ZFS の Zpool 名も "pool1" となります
-
-```bash
-lxc storage create pool1 zfs
-```
-
- - ZFS Zpool 名を "my-tank" とし、"pool1" というループバックプールを作成する
-
-```bash
-lxc storage create pool1 zfs zfs.pool_name=my-tank
-```
-
- - 既存の ZFS Zpool "my-tank" を使う
-
-```bash
-lxc storage create pool1 zfs source=my-tank
-```
-
- - 既存の ZFS データセット "my-tank/slice" を使う
-
-```bash
-lxc storage create pool1 zfs source=my-tank/slice
-```
-
- - `/dev/sdX` 上に "pool1" という新しいプールを作成する。ZFS Zpool 名も "pool1" となります
-
-```bash
-lxc storage create pool1 zfs source=/dev/sdX
-```
-
- - `/dev/sdX` 上に "my-tank" という ZFS Zpool 名で新しいプールを作成する
-
-```bash
-lxc storage create pool1 zfs source=/dev/sdX zfs.pool_name=my-tank
-```
 
 ## ループバックの ZFS プールの拡張
 LXD からは直接はループバックの ZFS プールを拡張できません。しかし、次のようにすればできます:
 
 ```bash
 sudo truncate -s +5G /var/lib/lxd/disks/<POOL>.img
-sudo zpool set autoexpand=on lxd
-sudo zpool online -e lxd /var/lib/lxd/disks/<POOL>.img
-sudo zpool set autoexpand=off lxd
+sudo zpool set autoexpand=on <POOL>
+sudo zpool status -vg <POOL> # デバイス ID をメモしておきます
+sudo zpool online -e <POOL> <device_ID>
+sudo zpool set autoexpand=off <POOL>
 ```
 
 (注意: snap のユーザーは `/var/lib/lxd/` の代わりに `/var/snap/lxd/common/lxd/` を使ってください)

@@ -9,6 +9,9 @@ discourse: 12033,13128
 ネットワークゾーンは {ref}`network-ovn` と  {ref}`network-bridge` で利用できます。
 ```
 
+```{youtube} https://www.youtube.com/watch?v=2MqpJOogNVQ
+```
+
 ネットワークゾーンは LXD のネットワークの DNS レコードを保持するのに使用します。
 
 ネットワークゾーンを使うと全てのインスタンスの有効な正引きと逆引きのレコードを自動的に維持できます。

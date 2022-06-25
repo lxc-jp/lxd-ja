@@ -1,5 +1,5 @@
 (storage-dir)=
-# ディレクトリ (dir)
+# ディレクトリ - `dir`
 
  - このバックエンドでは全ての機能を使えますが、他のバックエンドに比べて非常に時間がかかります。
    これは、イメージを展開したり、インスタンスやスナップショットやイメージのその時点のコピーを作成する必要があるからです。
@@ -21,18 +21,4 @@ security.unmapped  | bool   | custom volume      | false              | ボリ�
 size               | string | appropriate driver | volume.size と同じ | ストレージボリュームのサイズ
 snapshots.expiry   | string | custom volume      | -                  | スナップショットがいつ削除されるかを制御（`1M 2H 3d 4w 5m 6y` のような設定形式を想定）
 snapshots.pattern  | string | custom volume      | snap%d             | スナップショット名を表す Pongo2 テンプレート文字列（スケジュールされたスナップショットと名前指定なしのスナップショットに使用）
-snapshots.schedule | string | custom volume      | -                  | Cron の書式 (`<minute> <hour> <dom> <month> <dow>`)、またはスケジュールアイリアスのカンマ区切りリスト `<@hourly> <@daily> <@midnight> <@weekly> <@monthly> <@annually> <@yearly>`
-
-## ディレクトリストレージプールを作成するには以下のコマンドが使用できます
-
- - "pool1" という新しいディレクトリプールを作成します
-
-```bash
-lxc storage create pool1 dir
-```
-
- - 既存のディレクトリ "pool2" を使います
-
-```bash
-lxc storage create pool2 dir source=/data/lxd
-```
+snapshots.schedule | string | custom volume      | -                  | {{snapshot_schedule_format}}

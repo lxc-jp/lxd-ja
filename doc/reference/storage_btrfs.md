@@ -1,5 +1,5 @@
 (storage-btrfs)=
-# Btrfs
+# Btrfs - `btrfs`
 
  - インスタンス、イメージ、スナップショットごとにサブボリュームを使い、新しいオブジェクトを作成する際に btrfs スナップショットを作成します
  - btrfs は、親コンテナ自身が btrfs 上に作成されているときには、コンテナ内のストレージバックエンドとして使えます（ネストコンテナ）（qgroup を使った btrfs クオータについての注意を参照してください）
@@ -17,9 +17,10 @@
    ただしこれはストレージプールのオプションですので、プール上の全てのボリュームに影響します。
 
 ## ストレージプール設定
-キー                 | 型     | 条件         | デフォルト値              | 説明
-:--                  | :---   | :--------    | :------                   | :----------
-btrfs.mount\_options | string | btrfs driver | user\_subvol\_rm\_allowed | ブロックデバイスのマウントオプション
+キー                 | 型     | デフォルト値              | 説明
+:--                  | :---   | :--------                 | :----------
+btrfs.mount\_options | string | user\_subvol\_rm\_allowed | ブロックデバイスのマウントオプション
+source               | string | -                         | ブロックデバイスまたはループファイルまたはファイルシステムエントリーのパス
 
 ## ストレージボリューム設定
 キー               | 型     | 条件               | デフォルト値       | 説明
@@ -29,27 +30,7 @@ security.unmapped  | bool   | custom volume      | false              | ボリ�
 size               | string | appropriate driver | volume.size と同じ | ストレージボリュームのサイズ
 snapshots.expiry   | string | custom volume      | -                  | スナップショットがいつ削除されるかを制御（`1M 2H 3d 4w 5m 6y` のような設定形式を想定）
 snapshots.pattern  | string | custom volume      | snap%d             | スナップショット名を表す Pongo2 テンプレート文字列（スケジュールされたスナップショットと名前指定なしのスナップショットに使用）
-snapshots.schedule | string | custom volume      | -                  | Cron の書式 (`<minute> <hour> <dom> <month> <dow>`)、またはスケジュールアイリアスのカンマ区切りリスト `<@hourly> <@daily> <@midnight> <@weekly> <@monthly> <@annually> <@yearly>`
-
-## Btrfs ストレージプールを作成するには以下のコマンドが使用できます
-
- - "pool1" という名前の loop を使ったプールを作成する
-
-```bash
-lxc storage create pool1 btrfs
-```
-
- - `/some/path` の既存の `btrfs ファイルシステムを使って "pool1" という新しいプールを作成する。
-
-```bash
-lxc storage create pool1 btrfs source=/some/path
-```
-
- - `/dev/sdX` 上に "pool1" という新しいプールを作成する
-
-```bash
-lxc storage create pool1 btrfs source=/dev/sdX
-```
+snapshots.schedule | string | custom volume      | -                  | {{snapshot_schedule_format}}
 
 ## ループバックデバイスを使った btrfs プールの拡張
 LXD では、ループバックデバイスの btrfs プールを直接は拡張できませんが、次のように拡張できます:

@@ -41,80 +41,81 @@ key/value 形式の設定は、名前空間構造を取っており、現在は�
 ```{rst-class} dec-font-size break-col-1 min-width-1-15
 ```
 
-キー                                            | 型        | デフォルト値     | ライブアップデート | 条件                      | 説明
-:--                                             | :---      | :------          | :----------        | :----------               | :----------
-agent.nic\_config                               | boolean   | false            | n/a                | virtual-machine           | デフォルトのネットワークインタフェースの名前と MTU をインスタンスデバイスと同じにするかどうか(これはコンテナでは自動でそうなります)
-boot.autostart                                  | boolean   | -                | n/a                | -                         | LXD起動時に常にインスタンスを起動するかどうか（設定しない場合、最後の状態がリストアされます）
-boot.autostart.delay                            | integer   | 0                | n/a                | -                         | インスタンスが起動した後に次のインスタンスが起動するまで待つ秒数
-boot.autostart.priority                         | integer   | 0                | n/a                | -                         | インスタンスを起動させる順番（高いほど早く起動します）
-boot.host\_shutdown\_timeout                    | integer   | 30               | yes                | -                         | 強制停止前にインスタンスが停止するのを待つ秒数
-boot.stop.priority                              | integer   | 0                | n/a                | -                         | インスタンスの停止順（高いほど早く停止します）
-cloud-init.network-config                       | string    | eth0 上の DHCP   | no                 | -                         | Cloud-init network-config。設定はシード値として使用
-cloud-init.user-data                            | string    | #cloud-config    | no                 | -                         | Cloud-init user-data。設定はシード値として使用
-cloud-init.vendor-data                          | string    | #cloud-config    | no                 | -                         | Cloud-init vendor-data。設定はシード値として使用
-cluster.evacuate                                | string    | auto             | n/a                | -                         | インスタンス待避時に何をするか（auto, migrate, live-migrate, stop）
-environment.\*                                  | string    | -                | yes (exec)         | -                         | インスタンス実行時に設定される key/value 形式の環境変数
-limits.cpu                                      | string    | -                | yes                | -                         | インスタンスに割り当てる CPU 番号、もしくは番号の範囲（デフォルトは VM 毎に 1 CPU）
-limits.cpu.allowance                            | string    | 100%             | yes                | container                 | どれくらい CPU を使えるか。ソフトリミットとしてパーセント指定（例、50%）か固定値として単位時間内に使える時間（25ms/100ms）を指定できます
-limits.cpu.priority                             | integer   | 10 (maximum)     | yes                | container                 | 同じ CPU をシェアする他のインスタンスと比較した CPU スケジューリングの優先度（オーバーコミット）（0 〜 10 の整数）
-limits.disk.priority                            | integer   | 5 (medium)       | yes                | -                         | 負荷がかかった状態で、インスタンスの I/O リクエストに割り当てる優先度（0 〜 10 の整数）
-limits.hugepages.64KB                           | string    | -                | yes                | container                 | 64 KB hugepages の数を制限するため（利用可能な hugepage のサイズはアーキテクチャー依存）のサイズの固定値（さまざまな単位が指定可能、下記参照）
-limits.hugepages.1MB                            | string    | -                | yes                | container                 | 1 MB hugepages の数を制限するため（利用可能な hugepage のサイズはアーキテクチャー依存）のサイズの固定値（さまざまな単位が指定可能、下記参照）
-limits.hugepages.2MB                            | string    | -                | yes                | container                 | 2 MB hugepages の数を制限するため（利用可能な hugepage のサイズはアーキテクチャー依存）のサイズの固定値（さまざまな単位が指定可能、下記参照）
-limits.hugepages.1GB                            | string    | -                | yes                | container                 | 1 GB hugepages の数を制限するため（利用可能な hugepage のサイズはアーキテクチャー依存）のサイズの固定値（さまざまな単位が指定可能、下記参照）
-limits.kernel.\*                                | string    | -                | no                 | container                 | インスタンスごとのカーネルリソースの制限（例、オープンできるファイルの数）
-limits.memory                                   | string    | -                | yes                | -                         | ホストメモリに対する割合（パーセント）もしくはメモリサイズの固定値（さまざまな単位が指定可能、下記参照）（デフォルトは VM 毎に 1GiB）
-limits.memory.enforce                           | string    | hard             | yes                | container                 | hard に設定すると、インスタンスはメモリー制限値を超過できません。soft に設定すると、ホストでメモリに余裕がある場合は超過できる可能性があります
-limits.memory.hugepages                         | boolean   | false            | no                 | virtual-machine           | インスタンスを動かすために通常のシステムメモリではなく hugepage を使用するかどうか
-limits.memory.swap                              | boolean   | true             | yes                | container                 | このインスタンスのあまり使われないページのスワップを推奨／非推奨するかを制御する
-limits.memory.swap.priority                     | integer   | 10 (maximum)     | yes                | container                 | 高い値を設定するほど、インスタンスがディスクにスワップされにくくなります （0 〜 10 の整数）
-limits.network.priority                         | integer   | 0 (minimum)      | yes                | -                         | 負荷がかかった状態で、インスタンスのネットワークリクエストに割り当てる優先度（0 〜 10 の整数）
-limits.processes                                | integer   | - (max)          | yes                | container                 | インスタンス内で実行できるプロセスの最大数
-linux.kernel\_modules                           | string    | -                | yes                | container                 | インスタンスを起動する前にロードするカーネルモジュールのカンマ区切りのリスト
-linux.sysctl.\*                                 | string    | -                | no                 | container                 | sysctl 設定の変更に使用可能
-migration.incremental.memory                    | boolean   | false            | yes                | container                 | インスタンスのダウンタイムを短くするためにインスタンスのメモリを増分転送するかどうか
-migration.incremental.memory.goal               | integer   | 70               | yes                | container                 | インスタンスを停止させる前に同期するメモリの割合
-migration.incremental.memory.iterations         | integer   | 10               | yes                | container                 | インスタンスを停止させる前に完了させるメモリ転送処理の最大数
-migration.stateful                              | boolean   | false            | no                 | virtual-machine           | ステートフルな停止/開始とスナップショットを許可。これはこれと非互換ないくつかの機能の使用を防ぎます。
-nvidia.driver.capabilities                      | string    | compute,utility  | no                 | container                 | インスタンスに必要なドライバケーパビリティ（libnvidia-container に環境変数 NVIDIA\_DRIVER\_CAPABILITIES を設定）
-nvidia.runtime                                  | boolean   | false            | no                 | container                 | ホストの NVIDIA と CUDA ラインタイムライブラリーをインスタンス内でも使えるようにする
-nvidia.require.cuda                             | string    | -                | no                 | container                 | 必要となる CUDA バージョン（libnvidia-container に環境変数 NVIDIA\_REQUIRE\_CUDA を設定）
-nvidia.require.driver                           | string    | -                | no                 | container                 | 必要となるドライバーバージョン（libnvidia-container に環境変数 NVIDIA\_REQUIRE\_DRIVER を設定）
-raw.apparmor                                    | blob      | -                | yes                | -                         | 生成されたプロファイルに追加する Apparmor プロファイルエントリー
-raw.idmap                                       | blob      | -                | no                 | unprivileged conta        iner | 生（raw）の idmap 設定（例: "both 1000 1000"）
-raw.lxc                                         | blob      | -                | no                 | container                 | 生成された設定に追加する生（raw）の LXC 設定
-raw.qemu                                        | blob      | -                | no                 | virtual-machine           | 生成されたコマンドラインに追加される生（raw）の Qemu 設定
-raw.seccomp                                     | blob      | -                | no                 | container                 | 生（raw）の seccomp 設定
-security.devlxd                                 | boolean   | true             | no                 | -                         | インスタンス内の `/dev/lxd` の存在を制御する
-security.devlxd.images                          | boolean   | false            | no                 | container                 | devlxd 経由の `/1.0/images` の利用可否を制御する
-security.idmap.base                             | integer   | -                | no                 | unprivileged container    | 割り当てに使う host の ID の base（auto-detection （自動検出）を上書きします）
-security.idmap.isolated                         | boolean   | false            | no                 | unprivileged container    | インスタンス間で独立した idmap のセットを使用するかどうか
-security.idmap.size                             | integer   | -                | no                 | unprivileged container    | 使用する idmap のサイズ
-security.nesting                                | boolean   | false            | yes                | container                 | インスタンス内でネストした lxd の実行を許可するかどうか
-security.privileged                             | boolean   | false            | no                 | container                 | 特権モードでインスタンスを実行するかどうか
-security.protection.delete                      | boolean   | false            | yes                | -                         | インスタンスを削除から保護する
-security.protection.shift                       | boolean   | false            | yes                | container                 | インスタンスのファイルシステムが起動時に uid/gid がシフト（再マッピング） されるのを防ぐ
-security.agent.metrics                          | boolean   | true             | no                 | virtual-machine           | 状態の情報とメトリクスを lxd-agent に問い合わせるかどうかを制御する
-security.secureboot                             | boolean   | true             | no                 | virtual-machine           | UEFI セキュアブートがデフォルトの Microsoft のキーで有効になるかを制御する
-security.syscalls.allow                         | string    | -                | no                 | container                 | `\n` 区切りのシステムコールの許可リスト（security.syscalls.deny\* を使う場合は使用不可）
-security.syscalls.deny                          | string    | -                | no                 | container                 | `\n` 区切りのシステムコールの拒否リスト
-security.syscalls.deny\_compat                  | boolean   | false            | no                 | container                 | `x86_64` で `compat_*` システムコールのブロックを有効にするかどうか。他のアーキテクチャでは何もしません
-security.syscalls.deny\_default                 | boolean   | true             | no                 | container                 | デフォルトのシステムコールの拒否リストを有効にするかどうか
-security.syscalls.intercept.bpf                 | boolean   | false            | no                 | container                 | `bpf` システムコールを処理するかどうか
-security.syscalls.intercept.bpf.devices         | boolean   | false            | no                 | container                 | device cgroup の `bpf` プログラムの統合された階層へのロードを許可するかどうか
-security.syscalls.intercept.mknod               | boolean   | false            | no                 | container                 | `mknod` と `mknodat` システムコールを処理するかどうか (限定されたサブセットのキャラクタ／ブロックデバイスの作成を許可する)
-security.syscalls.intercept.mount               | boolean   | false            | no                 | container                 | `mount` システムコールを処理するかどうか
-security.syscalls.intercept.mount.allowed       | string    | -                | yes                | container                 | インスタンス内のプロセスが安全にマウントできるファイルシステムのカンマ区切りリストを指定
-security.syscalls.intercept.mount.fuse          | string    | -                | yes                | container                 | 指定されたファイルシステムを対応する fuse 実装にリダイレクトするかどうか（例: ext4-fuse2fs）
-security.syscalls.intercept.mount.shift         | boolean   | false            | yes                | container                 | `mount` システムコールをインターセプトして処理対象のファイルシステムの上に shiftfs をマウントするかどうか
-security.syscalls.intercept.sched_setscheduler  | boolean   | false            | no                 | container                 | `sched_setscheduler` システムコールを処理するかどうか  (プロセスの優先度を上げられるようにする)
-security.syscalls.intercept.setxattr            | boolean   | false            | no                 | container                 | `setxattr` システムコールを処理するかどうか (限定されたサブセットの制限された拡張属性の設定を許可する)
-security.syscalls.intercept.sysinfo             | boolean   | false             | no                | container                 | `sysinfo` システムコールを (cgroup ベースのリソース使用情報を取得するために) 処理するかどうか
-snapshots.schedule                              | string    | -                | no                 | -                         | Cron の書式 (`<minute> <hour> <dom> <month> <dow>`)、またはスケジュールエイリアスのカンマ区切りリスト `<@hourly> <@daily> <@midnight> <@weekly> <@monthly> <@annually> <@yearly> <@startup> <@never>`
-snapshots.schedule.stopped                      | bool      | false            | no                 | -                         | 停止したインスタンスのスナップショットを自動的に作成するかどうか
-snapshots.pattern                               | string    | snap%d           | no                 | -                         | スナップショット名を表す Pongo2 テンプレート（スケジュールされたスナップショットと名前を指定されないスナップショットに使用される）
-snapshots.expiry                                | string    | -                | no                 | -                         | スナップショットをいつ削除するかを設定します（`1M 2H 3d 4w 5m 6y` のような書式で設定します）
-user.\*                                         | string    | -                | n/a                | -                         | 自由形式のユーザー定義の key/value の設定の組（検索に使えます）
+キー                                           | 型      | デフォルト値    | ライブアップデート | 条件                   | 説明
+:--                                            | :---    | :------         | :----------        | :----------            | :----------
+agent.nic\_config                              | boolean | false           | n/a                | virtual-machine        | デフォルトのネットワークインタフェースの名前と MTU をインスタンスデバイスと同じにするかどうか(これはコンテナでは自動でそうなります)
+boot.autostart                                 | boolean | -               | n/a                | -                      | LXD起動時に常にインスタンスを起動するかどうか（設定しない場合、最後の状態がリストアされます）
+boot.autostart.delay                           | integer | 0               | n/a                | -                      | インスタンスが起動した後に次のインスタンスが起動するまで待つ秒数
+boot.autostart.priority                        | integer | 0               | n/a                | -                      | インスタンスを起動させる順番（高いほど早く起動します）
+boot.host\_shutdown\_timeout                   | integer | 30              | yes                | -                      | 強制停止前にインスタンスが停止するのを待つ秒数
+boot.stop.priority                             | integer | 0               | n/a                | -                      | インスタンスの停止順（高いほど早く停止します）
+cloud-init.network-config                      | string  | eth0 上の DHCP  | no                 | -                      | Cloud-init network-config。設定はシード値として使用
+cloud-init.user-data                           | string  | #cloud-config   | no                 | -                      | Cloud-init user-data。設定はシード値として使用
+cloud-init.vendor-data                         | string  | #cloud-config   | no                 | -                      | Cloud-init vendor-data。設定はシード値として使用
+cluster.evacuate                               | string  | auto            | n/a                | -                      | インスタンス待避時に何をするか（auto, migrate, live-migrate, stop）
+environment.\*                                 | string  | -               | yes (exec)         | -                      | インスタンス実行時に設定される key/value 形式の環境変数
+limits.cpu                                     | string  | -               | yes                | -                      | インスタンスに割り当てる CPU 番号、もしくは番号の範囲（デフォルトは VM 毎に 1 CPU）
+limits.cpu.allowance                           | string  | 100%            | yes                | container              | どれくらい CPU を使えるか。ソフトリミットとしてパーセント指定（例、50%）か固定値として単位時間内に使える時間（25ms/100ms）を指定できます
+limits.cpu.priority                            | integer | 10 (maximum)    | yes                | container              | 同じ CPU をシェアする他のインスタンスと比較した CPU スケジューリングの優先度（オーバーコミット）（0 〜 10 の整数）
+limits.disk.priority                           | integer | 5 (medium)      | yes                | -                      | 負荷がかかった状態で、インスタンスの I/O リクエストに割り当てる優先度（0 〜 10 の整数）
+limits.hugepages.64KB                          | string  | -               | yes                | container              | 64 KB hugepages の数を制限するため（利用可能な hugepage のサイズはアーキテクチャー依存）のサイズの固定値（さまざまな単位が指定可能、 {ref}`instances-limit-units` 参照）
+limits.hugepages.1MB                           | string  | -               | yes                | container              | 1 MB hugepages の数を制限するため（利用可能な hugepage のサイズはアーキテクチャー依存）のサイズの固定値（さまざまな単位が指定可能、 {ref}`instances-limit-units` 参照）
+limits.hugepages.2MB                           | string  | -               | yes                | container              | 2 MB hugepages の数を制限するため（利用可能な hugepage のサイズはアーキテクチャー依存）のサイズの固定値（さまざまな単位が指定可能、 {ref}`instances-limit-units` 参照）
+limits.hugepages.1GB                           | string  | -               | yes                | container              | 1 GB hugepages の数を制限するため（利用可能な hugepage のサイズはアーキテクチャー依存）のサイズの固定値（さまざまな単位が指定可能、 {ref}`instances-limit-units` 参照）
+limits.kernel.\*                               | string  | -               | no                 | container              | インスタンスごとのカーネルリソースの制限（例、オープンできるファイルの数）
+limits.memory                                  | string  | -               | yes                | -                      | ホストメモリに対する割合（パーセント）もしくはメモリサイズの固定値（さまざまな単位が指定可能、 {ref}`instances-limit-units` 参照）（デフォルトは VM 毎に 1GiB）
+limits.memory.enforce                          | string  | hard            | yes                | container              | hard に設定すると、インスタンスはメモリー制限値を超過できません。soft に設定すると、ホストでメモリに余裕がある場合は超過できる可能性があります
+limits.memory.hugepages                        | boolean | false           | no                 | virtual-machine        | インスタンスを動かすために通常のシステムメモリではなく hugepage を使用するかどうか
+limits.memory.swap                             | boolean | true            | yes                | container              | このインスタンスのあまり使われないページのスワップを推奨／非推奨するかを制御する
+limits.memory.swap.priority                    | integer | 10 (maximum)    | yes                | container              | 高い値を設定するほど、インスタンスがディスクにスワップされにくくなります （0 〜 10 の整数）
+limits.network.priority                        | integer | 0 (minimum)     | yes                | -                      | 負荷がかかった状態で、インスタンスのネットワークリクエストに割り当てる優先度（0 〜 10 の整数）
+limits.processes                               | integer | - (max)         | yes                | container              | インスタンス内で実行できるプロセスの最大数
+linux.kernel\_modules                          | string  | -               | yes                | container              | インスタンスを起動する前にロードするカーネルモジュールのカンマ区切りのリスト
+linux.sysctl.\*                                | string  | -               | no                 | container              | sysctl 設定の変更に使用可能
+migration.incremental.memory                   | boolean | false           | yes                | container              | インスタンスのダウンタイムを短くするためにインスタンスのメモリを増分転送するかどうか
+migration.incremental.memory.goal              | integer | 70              | yes                | container              | インスタンスを停止させる前に同期するメモリの割合
+migration.incremental.memory.iterations        | integer | 10              | yes                | container              | インスタンスを停止させる前に完了させるメモリ転送処理の最大数
+migration.stateful                             | boolean | false           | no                 | virtual-machine        | ステートフルな停止/開始とスナップショットを許可。これはこれと非互換ないくつかの機能の使用を防ぎます。
+nvidia.driver.capabilities                     | string  | compute,utility | no                 | container              | インスタンスに必要なドライバケーパビリティ（libnvidia-container に環境変数 NVIDIA\_DRIVER\_CAPABILITIES を設定）
+nvidia.runtime                                 | boolean | false           | no                 | container              | ホストの NVIDIA と CUDA ラインタイムライブラリーをインスタンス内でも使えるようにする
+nvidia.require.cuda                            | string  | -               | no                 | container              | 必要となる CUDA バージョン（libnvidia-container に環境変数 NVIDIA\_REQUIRE\_CUDA を設定）
+nvidia.require.driver                          | string  | -               | no                 | container              | 必要となるドライバーバージョン（libnvidia-container に環境変数 NVIDIA\_REQUIRE\_DRIVER を設定）
+raw.apparmor                                   | blob    | -               | yes                | -                      | 生成されたプロファイルに追加する Apparmor プロファイルエントリー
+raw.idmap                                      | blob    | -               | no                 | unprivileged container | 生（raw）の idmap 設定（例: "both 1000 1000"）
+raw.lxc                                        | blob    | -               | no                 | container              | 生成された設定に追加する生（raw）の LXC 設定
+raw.qemu                                       | blob    | -               | no                 | virtual-machine        | 生成されたコマンドラインに追加される生（raw）の Qemu 設定
+raw.qemu.conf                                  | blob    | -               | no                 | virtual-machine        | 生成された qemu.conf に追加/オーバーライドする
+raw.seccomp                                    | blob    | -               | no                 | container              | 生（raw）の seccomp 設定
+security.devlxd                                | boolean | true            | no                 | -                      | インスタンス内の `/dev/lxd` の存在を制御する
+security.devlxd.images                         | boolean | false           | no                 | container              | devlxd 経由の `/1.0/images` の利用可否を制御する
+security.idmap.base                            | integer | -               | no                 | unprivileged container | 割り当てに使う host の ID の base（auto-detection （自動検出）を上書きします）
+security.idmap.isolated                        | boolean | false           | no                 | unprivileged container | インスタンス間で独立した idmap のセットを使用するかどうか
+security.idmap.size                            | integer | -               | no                 | unprivileged container | 使用する idmap のサイズ
+security.nesting                               | boolean | false           | yes                | container              | インスタンス内でネストした lxd の実行を許可するかどうか
+security.privileged                            | boolean | false           | no                 | container              | 特権モードでインスタンスを実行するかどうか
+security.protection.delete                     | boolean | false           | yes                | -                      | インスタンスを削除から保護する
+security.protection.shift                      | boolean | false           | yes                | container              | インスタンスのファイルシステムが起動時に uid/gid がシフト（再マッピング） されるのを防ぐ
+security.agent.metrics                         | boolean | true            | no                 | virtual-machine        | 状態の情報とメトリクスを lxd-agent に問い合わせるかどうかを制御する
+security.secureboot                            | boolean | true            | no                 | virtual-machine        | UEFI セキュアブートがデフォルトの Microsoft のキーで有効になるかを制御する
+security.syscalls.allow                        | string  | -               | no                 | container              | `\n` 区切りのシステムコールの許可リスト（security.syscalls.deny\* を使う場合は使用不可）
+security.syscalls.deny                         | string  | -               | no                 | container              | `\n` 区切りのシステムコールの拒否リスト
+security.syscalls.deny\_compat                 | boolean | false           | no                 | container              | `x86_64` で `compat_*` システムコールのブロックを有効にするかどうか。他のアーキテクチャでは何もしません
+security.syscalls.deny\_default                | boolean | true            | no                 | container              | デフォルトのシステムコールの拒否リストを有効にするかどうか
+security.syscalls.intercept.bpf                | boolean | false           | no                 | container              | `bpf` システムコールを処理するかどうか
+security.syscalls.intercept.bpf.devices        | boolean | false           | no                 | container              | device cgroup の `bpf` プログラムの統合された階層へのロードを許可するかどうか
+security.syscalls.intercept.mknod              | boolean | false           | no                 | container              | `mknod` と `mknodat` システムコールを処理するかどうか (限定されたサブセットのキャラクタ／ブロックデバイスの作成を許可する)
+security.syscalls.intercept.mount              | boolean | false           | no                 | container              | `mount` システムコールを処理するかどうか
+security.syscalls.intercept.mount.allowed      | string  | -               | yes                | container              | インスタンス内のプロセスが安全にマウントできるファイルシステムのカンマ区切りリストを指定
+security.syscalls.intercept.mount.fuse         | string  | -               | yes                | container              | 指定されたファイルシステムを対応する fuse 実装にリダイレクトするかどうか（例: ext4-fuse2fs）
+security.syscalls.intercept.mount.shift        | boolean | false           | yes                | container              | `mount` システムコールをインターセプトして処理対象のファイルシステムの上に shiftfs をマウントするかどうか
+security.syscalls.intercept.sched_setscheduler | boolean | false           | no                 | container              | `sched_setscheduler` システムコールを処理するかどうか  (プロセスの優先度を上げられるようにする)
+security.syscalls.intercept.setxattr           | boolean | false           | no                 | container              | `setxattr` システムコールを処理するかどうか (限定されたサブセットの制限された拡張属性の設定を許可する)
+security.syscalls.intercept.sysinfo            | boolean | false           | no                 | container              | `sysinfo` システムコールを (cgroup ベースのリソース使用情報を取得するために) 処理するかどうか
+snapshots.schedule                             | string  | -               | no                 | -                      | Cron の書式 (`<minute> <hour> <dom> <month> <dow>`)、またはスケジュールエイリアスのカンマ区切りリスト `<@hourly> <@daily> <@midnight> <@weekly> <@monthly> <@annually> <@yearly> <@startup> <@never>`
+snapshots.schedule.stopped                     | bool    | false           | no                 | -                      | 停止したインスタンスのスナップショットを自動的に作成するかどうか
+snapshots.pattern                              | string  | snap%d          | no                 | -                      | スナップショット名を表す Pongo2 テンプレート（スケジュールされたスナップショットと名前を指定されないスナップショットに使用される）
+snapshots.expiry                               | string  | -               | no                 | -                      | スナップショットをいつ削除するかを設定します（`1M 2H 3d 4w 5m 6y` のような書式で設定します）
+user.\*                                        | string  | -               | n/a                | -                      | 自由形式のユーザー定義の key/value の設定の組（検索に使えます）
 
 デバイス名は最大 64 文字に制限されます。
 
@@ -243,6 +244,7 @@ lxc config device add <instance> <name> <type> [key=value]...
 lxc profile device add <profile> <name> <type> [key=value]...
 ```
 
+(devices)=
 ### デバイスタイプ
 LXD では次のデバイスタイプが使えます:
 
@@ -328,8 +330,8 @@ name                     | string    | カーネルが割り当て  | no       |
 mtu                      | integer   | 親の MTU            | no       | yes     | 新しいインタフェースの MTU
 hwaddr                   | string    | ランダムに割り当て  | no       | no      | 新しいインタフェースの MAC アドレス
 host\_name               | string    | ランダムに割り当て  | no       | no      | ホスト内でのインタフェースの名前
-limits.ingress           | string    | -                   | no       | no      | 入力トラフィックの I/O 制限値（さまざまな単位が使用可能、下記参照）
-limits.egress            | string    | -                   | no       | no      | 出力トラフィックの I/O 制限値（さまざまな単位が使用可能、下記参照）
+limits.ingress           | string    | -                   | no       | no      | 入力トラフィックの I/O 制限値（さまざまな単位が使用可能、 {ref}`instances-limit-units` 参照）
+limits.egress            | string    | -                   | no       | no      | 出力トラフィックの I/O 制限値（さまざまな単位が使用可能、 {ref}`instances-limit-units` 参照）
 limits.max               | string    | -                   | no       | no      | `limits.ingress` と `limits.egress` の両方を同じ値に変更する
 ipv4.address             | string    | -                   | no       | no      | DHCP でインスタンスに割り当てる IPv4 アドレス（security.ipv4\_filtering 設定時に全ての IPv4 トラフィックを制限するには `none` と設定可能）
 ipv6.address             | string    | -                   | no       | no      | DHCP でインスタンスに割り当てる IPv6 アドレス（security.ipv6\_filtering 設定時に全ての IPv6 トラフィックを制限するには `none` と設定可能）
@@ -542,8 +544,8 @@ name                    | string    | カーネルが割り当て | no       | �
 mtu                     | integer   | カーネルが割り当て | no       | 新しいインタフェースの MTU
 hwaddr                  | string    | ランダムに割り当て | no       | 新しいインタフェースの MAC アドレス
 host\_name              | string    | ランダムに割り当て | no       | ホスト内でのインタフェースの名前
-limits.ingress          | string    | -                  | no       | 入力トラフィックの I/O 制限値（さまざまな単位が使用可能、下記参照）
-limits.egress           | string    | -                  | no       | 出力トラフィックの I/O 制限値（さまざまな単位が使用可能、下記参照）
+limits.ingress          | string    | -                  | no       | 入力トラフィックの I/O 制限値（さまざまな単位が使用可能、 {ref}`instances-limit-units` 参照）
+limits.egress           | string    | -                  | no       | 出力トラフィックの I/O 制限値（さまざまな単位が使用可能、 {ref}`instances-limit-units` 参照）
 limits.max              | string    | -                  | no       | `limits.ingress` と `limits.egress` の両方を同じ値に変更する
 ipv4.routes             | string    | -                  | no       | ホスト上で NIC に追加する IPv4 静的ルートのカンマ区切りリスト
 ipv6.routes             | string    | -                  | no       | ホスト上で NIC に追加する IPv6 静的ルートのカンマ区切りリスト
@@ -611,8 +613,8 @@ name                    | string    | カーネルが割り当て | no       | �
 host\_name              | string    | ランダムに割り当て | no       | ホスト内でのインターフェース名
 mtu                     | integer   | 親の MTU           | no       | 新しいインタフェースの MTU
 hwaddr                  | string    | ランダムに割り当て | no       | 新しいインタフェースの MAC アドレス
-limits.ingress          | string    | -                  | no       | 内向きトラフィックに対する bit/s での I/O 制限（さまざまな単位をサポート、下記参照）
-limits.egress           | string    | -                  | no       | 外向きトラフィックに対する bit/s での I/O 制限（さまざまな単位をサポート、下記参照）
+limits.ingress          | string    | -                  | no       | 内向きトラフィックに対する bit/s での I/O 制限（さまざまな単位をサポート、 {ref}`instances-limit-units` 参照）
+limits.egress           | string    | -                  | no       | 外向きトラフィックに対する bit/s での I/O 制限（さまざまな単位をサポート、 {ref}`instances-limit-units` 参照）
 limits.max              | string    | -                  | no       | limits.ingress と limits.egress の両方を指定するのと同じ
 ipv4.routes             | string    | -                  | no       | ホスト上で NIC に追加する IPv4 静的ルートのカンマ区切りリスト（L2 ARP/NDP プロキシを除く）
 ipv4.address            | string    | -                  | no       | インスタンスに追加する IPv4 静的アドレスのカンマ区切りリスト
@@ -703,11 +705,14 @@ InfiniBand デバイスは SR-IOV をサポートしますが、他の SR-IOV �
 lxc config device add <instance> <device-name> infiniband nictype=sriov parent=<sriov-enabled-device>
 ```
 
+(instance_device_type_disk)=
 #### Type: disk
 
 サポートされるインスタンスタイプ: コンテナ, VM
 
 ディスクエントリーは基本的にインスタンス内のマウントポイントです。ホスト上の既存ファイルやディレクトリのバインドマウントでも構いませんし、ソースがブロックデバイスであるなら、通常のマウントでも構いません。
+
+これらは {ref}`ストレージボリュームをインスタンスにアタッチする <storage-attach-volume>` ことでも作成できます。
 
 LXD では以下の追加のソースタイプをサポートします。
 
@@ -733,14 +738,14 @@ lxc config device add <instance> config disk source=cloud-init:config
 
 Key                 | Type      | Default   | Required  | Description
 :--                 | :--       | :--       | :--       | :--
-limits.read         | string    | -         | no        | byte/s（さまざまな単位が使用可能、下記参照）もしくは iops（あとに "iops" と付けなければなりません）で指定する読み込みの I/O 制限値
-limits.write        | string    | -         | no        | byte/s（さまざまな単位が使用可能、下記参照）もしくは iops（あとに "iops" と付けなければなりません）で指定する書き込みの I/O 制限値
+limits.read         | string    | -         | no        | byte/s（さまざまな単位が使用可能、 {ref}`instances-limit-units` 参照）もしくは iops（あとに "iops" と付けなければなりません）で指定する読み込みの I/O 制限値 - {ref}`storage-configure-IO` も参照
+limits.write        | string    | -         | no        | byte/s（さまざまな単位が使用可能、 {ref}`instances-limit-units` 参照）もしくは iops（あとに "iops" と付けなければなりません）で指定する書き込みの I/O 制限値 - {ref}`storage-configure-IO` も参照
 limits.max          | string    | -         | no        | `limits.read` と `limits.write` の両方を同じ値に変更する
 path                | string    | -         | yes       | ディスクをマウントするインスタンス内のパス
 source              | string    | -         | yes       | ファイル・ディレクトリ、もしくはブロックデバイスのホスト上のパス
 required            | boolean   | true      | no        | ソースが存在しないときに失敗とするかどうかを制御する
 readonly            | boolean   | false     | no        | マウントを読み込み専用とするかどうかを制御する
-size                | string    | -         | no        | byte（さまざまな単位が使用可能、下記参照す）で指定するディスクサイズ。rootfs（/）でのみサポートされます
+size                | string    | -         | no        | byte（さまざまな単位が使用可能、 {ref}`instances-limit-units` 参照）で指定するディスクサイズ。rootfs（/）でのみサポートされます
 size.state          | string    | -         | no        | 上の size と同じですが仮想マシン内のランタイム状態を保存するために使われるファイルシステムボリュームに適用されます
 recursive           | boolean   | false     | no        | ソースパスを再帰的にマウントするかどうか
 pool                | string    | -         | no        | ディスクデバイスが属するストレージプール。LXD が管理するストレージボリュームにのみ適用されます
@@ -998,6 +1003,7 @@ Key                 | Type      | Default   | Required  | Description
 :--                 | :--       | :--       | :--       | :--
 address             | string    | -         | yes       | デバイスの PCI アドレス
 
+(instances-limit-units)=
 ### ストレージとネットワーク制限の単位
 バイト数とビット数を表す値は全ていくつかの有用な単位を使用し特定の制限がどういう値かをより理解しやすいようにできます。
 
@@ -1123,3 +1129,86 @@ pongo2 の文法を使ってスナップショット名にタイムスタンプ�
 lxc config set INSTANCE snapshots.pattern "{{ creation_date|date:'2006-01-02_15-04-05' }}"
 ```
 これにより作成日時 `{date/time of creation}` を秒の精度まで含んだスナップショット名になります。
+
+### qemnu 設定をオーバーライドする
+仮想マシンのインスタンスでは LXD は `-readconfig` コマンドラインオプションを
+指定して渡されるドキュメント化されていない設定ファイル形式を通じて qemu を設定します。
+各インスタンスは起動前に生成された設定ファイルを持ちます。
+生成された設定ファイルは `/var/log/lxd/[instance-name]/qemu.conf` で確認できます。
+
+デフォルト設定は モダンな UEFI ゲストと virtio デバイスを持つような LXD のほとんどの
+通常のユースケースでは問題なく動作します。しかし状況によっては生成される設定を
+オーバーライドしたいこともあります。
+
+- UEFI をサポートしない古いゲスト OS を実行する。
+- virtio がゲスト OS でサポートされない際にカスタムの仮想デバイスを指定する。
+- マシンが起動する前に LXD がサポートしないデバイスを追加する。
+- ゲスト OS と衝突するデバイスを削除する。
+
+このレベルのカスタマイズは `raw.qemu.conf` 設定オプションを使って実現できます。
+これは `qemu.conf` に似た形式に少し独自拡張を加えたものをサポートします。
+デフォルトの "virtio-gpu-pci" GPU ドライバーをオーバーライドするには以下のようにします。
+
+```
+raw.qemu.conf: |-
+    [device "qemu_gpu"]
+    driver = "qxl-vga"
+```
+
+上の設定は生成された設定ファイルの対応するセクション/キーを置き換えます。
+`raw.qemu.conf` は複数行の設定オプションなので、複数のセクション/キーを変更できます。
+
+キーを全く持たないセクションを指定することでセクション/キーを完全に削除することもできます。
+
+```
+raw.qemu.conf: |-
+    [device "qemu_gpu"]
+```
+
+キーを削除するには空の文字列を値として指定します。
+
+```
+raw.qemu.conf: |-
+    [device "qemu_gpu"]
+    driver = ""
+```
+
+qemu で使用される設定ファイルフォーマットは同じ名前で複数のセクションを指定できます。
+以下は LXD が生成する設定の一部です。
+
+```
+[global]
+driver = "ICH9-LPC"
+property = "disable_s3"
+value = "1"
+
+[global]
+driver = "ICH9-LPC"
+property = "disable_s4"
+value = "1"
+```
+
+どのセクションをオーバーライドするか指定するには、以下のようにインデクスを指定できます。
+
+```
+raw.qemu.conf: |-
+    [global][1]
+    value = "0"
+```
+
+セクションのインデクスは 0 (インデクスを指定しない場合のデフォルト値) から始まりますので、
+上の例の `raw.qemu.conf` は以下の設定を生成します。
+
+```
+[global]
+driver = "ICH9-LPC"
+property = "disable_s3"
+value = "1"
+
+[global]
+driver = "ICH9-LPC"
+property = "disable_s4"
+value = "0"
+```
+
+新しいセクションを追加するには、単に設定ファイルに存在しないセクション名を指定します。
