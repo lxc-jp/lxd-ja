@@ -46,11 +46,11 @@ LXD は初期化中にストレージプールを作成します。
 
     lxc storage create pool1 lvm
 
-`my-pool` という既存の LVM ボリュームグループを使って `pool2` を作成。
+`my-pool` という既存の LVM ボリュームグループを使って `pool2` を作成する。
 
     lxc storage create pool2 lvm source=my-pool
 
-`my-vg` というボリュームグループ内の `my-pool` という既存の LVM thin-pool を使って `pool3` を作成。
+`my-vg` というボリュームグループ内の `my-pool` という既存の LVM thin-pool を使って `pool3` を作成する。
 
     lxc storage create pool3 lvm source=my-vg lvm.thinpool_name=my-pool
 
@@ -58,73 +58,73 @@ LXD は初期化中にストレージプールを作成します。
 
     lxc storage create pool4 lvm source=/dev/sdX
 
-`/dev/sdX` 上に `my-pool` というLVM ボリュームグループ名で `pool5` という名前のプールを作成。
+`/dev/sdX` 上に `my-pool` というLVM ボリュームグループ名で `pool5` という名前のプールを作成する。
 
     lxc storage create pool5 lvm source=/dev/sdX lvm.vg_name=my-pool
 ```
 ```{group-tab} ZFS
 
-`pool1` という名前のループバックプールを作成 (ZFS zpool 名も `pool1` になります)。
+`pool1` という名前のループバックプールを作成する (ZFS zpool 名も `pool1` になります)。
 
     lxc storage create pool1 zfs
 
-`pool2` という名前のループバックプールを `my-tank` という ZFS zpool 名で作成。
+`pool2` という名前のループバックプールを `my-tank` という ZFS zpool 名で作成する。
 
     lxc storage create pool2 zfs zfs.pool_name=my-tank
 
-`my-tank` という既存の ZFS zpool を使用して `pool3` を作成。
+`my-tank` という既存の ZFS zpool を使用して `pool3` を作成する。
 
     lxc storage create pool3 zfs source=my-tank
 
-`my-tank/slice` という既存の ZFS データセットを使用して `pool4` を作成。
+`my-tank/slice` という既存の ZFS データセットを使用して `pool4` を作成する。
 
     lxc storage create pool4 zfs source=my-tank/slice
 
-`/dev/sdX` 上に `pool5` という名前のプールを作成 (ZFS zpool 名も `pool5` になります)。
+`/dev/sdX` 上に `pool5` という名前のプールを作成する (ZFS zpool 名も `pool5` になります)。
 
     lxc storage create pool1 zfs source=/dev/sdX
 
-`/dev/sdX` 上に `my-tank` という ZFS zpool 名で `pool6` という名前のプールを作成。
+`/dev/sdX` 上に `my-tank` という ZFS zpool 名で `pool6` という名前のプールを作成する。
 
     lxc storage create pool6 zfs source=/dev/sdX zfs.pool_name=my-tank
 ```
 ```{group-tab} Ceph
 
-デフォルトの Ceph クラスター (名前は `ceph`) 内に `pool1` という名前の OSD ストレージプールを作成。
+デフォルトの Ceph クラスター (名前は `ceph`) 内に `pool1` という名前の OSD ストレージプールを作成する。
 
     lxc storage create pool1 ceph
 
-`my-cluster` という Ceph クラスター内に `pool2` という名前の OSD ストレージプールを作成。
+`my-cluster` という Ceph クラスター内に `pool2` という名前の OSD ストレージプールを作成する。
 
     lxc storage create pool2 ceph ceph.cluster_name=my-cluster
 
-デフォルトの Ceph クラスター内に `my-osd` という on-disk 名で `pool3` という名前の OSD ストレージプールを作成。
+デフォルトの Ceph クラスター内に `my-osd` という on-disk 名で `pool3` という名前の OSD ストレージプールを作成する。
 
     lxc storage create pool3 ceph ceph.osd.pool_name=my-osd
 
-`my-already-existing-osd` という既存の OSD ストレージプールを使って `pool4` を作成。
+`my-already-existing-osd` という既存の OSD ストレージプールを使って `pool4` を作成する。
 
     lxc storage create pool4 ceph source=my-already-existing-osd
 
-`ecpool` という既存の OSD ストレージプールと `rpl-pool` という OSD リプリケーテッドプールを使って `pool5` を作成。
+`ecpool` という既存の OSD ストレージプールと `rpl-pool` という OSD リプリケーテッドプールを使って `pool5` を作成する。
 
     lxc storage create pool5 ceph source=rpl-pool ceph.osd.data_pool_name=ecpool
 ```
 ```{group-tab} CephFS
 
-デフォルト Ceph クラスター (名前は `ceph`) 内に `pool1` という名前のストレージプールを作成。
+デフォルト Ceph クラスター (名前は `ceph`) 内に `pool1` という名前のストレージプールを作成する。
 
     lxc storage create pool1 cephfs
 
-Ceph クラスター `my-cluster` 内に `pool2` という名前のストレージプールを作成。
+Ceph クラスター `my-cluster` 内に `pool2` という名前のストレージプールを作成する。
 
     lxc storage create pool2 cephfs cephfs.cluster_name=my-cluster
 
-既存のストレージプール `my-filesystem` を使って `pool3` を作成。
+既存のストレージプール `my-filesystem` を使って `pool3` を作成する。
 
     lxc storage create pool3 cephfs source=my-filesystem
 
-`my-filesystem` プールからサブディレクトリ `my-directory` を使って `pool4` を作成。
+`my-filesystem` プールからサブディレクトリ `my-directory` を使って `pool4` を作成する。
 
     lxc storage create pool4 cephfs source=my-filesystem/my-directory
 
