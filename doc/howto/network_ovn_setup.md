@@ -74,7 +74,8 @@ LXD と同様に、 OVN の分散データベースは奇数のメンバーで�
 
    f. 以下の設定をペーストします (`<server_1>`, `<server_2>` and `<server_3>` をそれぞれのマシンの IP アドレスに、 `<local>` をあなたがいるマシンの IP アドレスに置き換えてください)。
 
-        OVN_CTL_OPTS= \
+     ```
+     OVN_CTL_OPTS=" \
           --db-nb-addr=<server_1> \
           --db-nb-create-insecure-remote=yes \
           --db-sb-addr=<server_1> \
@@ -82,7 +83,8 @@ LXD と同様に、 OVN の分散データベースは奇数のメンバーで�
           --db-nb-cluster-local-addr=<local> \
           --db-sb-cluster-local-addr=<local> \
           --ovn-northd-nb-db=tcp:<server_1>:6641,tcp:<server_2>:6641,tcp:<server_3>:6641 \
-          --ovn-northd-sb-db=tcp:<server_1>:6642,tcp:<server_2>:6642,tcp:<server_3>:6642
+          --ovn-northd-sb-db=tcp:<server_1>:6642,tcp:<server_2>:6642,tcp:<server_3>:6642"
+     ```
 
    g. OVN を起動します。
 

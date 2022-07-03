@@ -1644,3 +1644,9 @@ LXDが使用するCPU時間をミリ秒ではなく秒単位で出力するよ�
 ## resources\_pci\_vpd
 PCI リソースエントリに VPS 構造体を追加します。
 この構造体には完全な製品名と追加の設定キーバリューペアを含むベンダー提供のデータが含まれます。
+
+## qemu\_raw\_conf
+生成された qemu.conf の指定したセクションをオーバライドするための `raw.qemu.conf` 設定キーを追加します。
+
+## storage\_cephfs\_fscache
+cephfs プール上の fscache/cachefilesd をサポートするための `cephfs.fscache` 設定オプションを追加します。

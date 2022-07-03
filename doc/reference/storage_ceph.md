@@ -1,5 +1,5 @@
 (storage-ceph)=
-# Ceph
+# Ceph - `ceph`
 
 - イメージとして RBD イメージを使い、インスタンスやスナップショットを作成するためにスナップショットやクローンを実行します
 - RBD でコピーオンライトが動作するため、すべての子がなくなるまでは、親のファイルシステムは削除できません。
@@ -33,6 +33,7 @@ ceph.rbd.clone\_copy      | bool   | true         | フルのデータセット�
 ceph.rbd.du               | bool   | true         | 停止したインスタンスのディスク使用データを取得するのに rbd du を使用するかどうか
 ceph.rbd.features         | string | layering     | ボリュームで有効にする RBD の機能のカンマ区切りリスト
 ceph.user.name            | string | admin        | ストレージプールとボリュームの作成に使用する Ceph ユーザー
+source                    | string | -            | 使用する既存の OSD ストレージプール
 volatile.pool.pristine    | string | true         | プールが作成時に空かどうか
 
 ## ストレージボリューム設定
@@ -45,37 +46,4 @@ security.unmapped    | bool   | custom volume      | false                      
 size                 | string | appropriate driver | volume.size と同じ                 | ストレージボリュームのサイズ
 snapshots.expiry     | string | custom volume      | -                                  | スナップショットがいつ削除されるかを制御（`1M 2H 3d 4w 5m 6y` のような設定形式を想定）
 snapshots.pattern    | string | custom volume      | snap%d                             | スナップショット名を表す Pongo2 テンプレート文字列（スケジュールされたスナップショットと名前指定なしのスナップショットに使用）
-snapshots.schedule   | string | custom volume      | -                                  | Cron の書式 (`<minute> <hour> <dom> <month> <dow>`)、またはスケジュールアイリアスのカンマ区切りリスト `<@hourly> <@daily> <@midnight> <@weekly> <@monthly> <@annually> <@yearly>`
-
-
-## Ceph ストレージプールを作成するには以下のコマンドが使用できます
-
-- Ceph クラスタ "ceph" 内に "pool1" という OSD ストレージプールを作成する
-
-```bash
-lxc storage create pool1 ceph
-```
-
-- Ceph クラスタ "my-cluster" 内に "pool1" という OSD ストレージプールを作成する
-
-```bash
-lxc storage create pool1 ceph ceph.cluster_name=my-cluster
-```
-
-- ディスク上の名前を "my-osd" で "pool1" という名前の OSD ストレージプールを作成する
-
-```bash
-lxc storage create pool1 ceph ceph.osd.pool_name=my-osd
-```
-
-- 既存の OSD ストレージプール "my-already-existing-osd" を使用する
-
-```bash
-lxc storage create pool1 ceph source=my-already-existing-osd
-```
-
-- 既存の osd イレージャーコードされたプール "ecpool" と osd リプリケートされたプール "rpl-pool" を使用する
-
-```bash
-lxc storage create pool1 ceph source=rpl-pool ceph.osd.data_pool_name=ecpool
-```
+snapshots.schedule   | string | custom volume      | -                                  | {{snapshot_schedule_format}}

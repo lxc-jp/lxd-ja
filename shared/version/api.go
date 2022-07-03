@@ -334,6 +334,8 @@ var APIExtensions = []string{
 	"container_syscall_intercept_sysinfo",
 	"clustering_evacuation_mode",
 	"resources_pci_vpd",
+	"qemu_raw_conf",
+	"storage_cephfs_fscache",
 }
 
 // APIExtensionsCount returns the number of available API extensions.
