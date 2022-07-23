@@ -72,6 +72,7 @@ The following features are supported for the `ovn` network type:
 - {ref}`network-forwards`
 - {ref}`network-zones`
 - {ref}`network-ovn-peers`
+- {ref}`network-load-balancers`
 
 ```{toctree}
 :maxdepth: 1
@@ -79,4 +80,5 @@ The following features are supported for the `ovn` network type:
 
 Set up OVN </howto/network_ovn_setup>
 Create routing relationships </howto/network_ovn_peers>
+Configure network load balancers </howto/network_load_balancers>
 ```

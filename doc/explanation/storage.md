@@ -6,7 +6,7 @@ You could think of a storage pool as the disk that is used to store data, while 
 ## Storage pools
 
 During initialization, LXD prompts you to create a first storage pool.
-If required, you can create additional storage pools later.
+If required, you can create additional storage pools later (see {ref}`storage-create-pool`).
 
 Each storage pool uses a storage driver.
 The following storage drivers are supported:
@@ -24,19 +24,19 @@ The following storage drivers are supported:
 Where the LXD data is stored depends on the configuration and the selected storage driver.
 Depending on the storage driver that is used, LXD can either share the file system with its host or keep its data separate.
 
-Storage location         | Directory | Btrfs    | LVM      | ZFS      | Ceph     | CephFS
+Storage location         | Directory | Btrfs    | LVM      | ZFS      | Ceph RBD | CephFS
 :---                     | :-:       | :-:      | :-:      | :-:      | :-:      | :-:
 Shared with the host     | &#x2713;  | &#x2713; | -        | &#x2713; | -        | -
 Dedicated disk/partition | -         | &#x2713; | &#x2713; | &#x2713; | -        | -
-Loop disk                | &#x2713;  | &#x2713; | &#x2713; | &#x2713; | -        | -
-Separate storage         | -         | -        | -        | -        | &#x2713; | &#x2713;
+Loop disk                | -         | &#x2713; | &#x2713; | &#x2713; | -        | -
+Remote storage           | -         | -        | -        | -        | &#x2713; | &#x2713;
 
 #### Shared with the host
 
 Sharing the file system with the host is usually the most space-efficient way to run LXD.
 In most cases, it is also the easiest to manage.
 
-This option is supported for the `dir` driver, the `btrfs` driver (if the host is Btrfs and you point LXD to a dedicated sub-volume) and the `zfs` driver (if the host is ZFS and you point LXD to a dedicated data set on your zpool).
+This option is supported for the `dir` driver, the `btrfs` driver (if the host is Btrfs and you point LXD to a dedicated sub-volume) and the `zfs` driver (if the host is ZFS and you point LXD to a dedicated dataset on your zpool).
 
 #### Dedicated disk or partition
 Having LXD use an empty partition on your main disk or a full dedicated disk keeps its storage completely independent from the host.
@@ -48,12 +48,16 @@ LXD can create a loop file on your main drive and have the selected storage driv
 This method is functionally similar to using a disk or partition, but it uses a large file on your main drive instead.
 This means that every write must go through the storage driver and your main drive's file system, which leads to decreased performance.
 
+The loop files reside in `/var/snap/lxd/common/lxd/disks/` if you are using the snap, or in `/var/lib/lxd/disks/` otherwise.
+
 Loop files usually cannot be shrunk.
 They will grow up to the configured limit, but deleting instances or images will not cause the file to shrink.
+You can increase their size though; see {ref}`storage-resize-grow-pool`.
 
-#### Separate storage
+#### Remote storage
 The `ceph` and `cephfs` drivers store the data in a completely independent Ceph storage cluster that must be set up separately.
 
+(storage-default-pool)=
 ### Default storage pool
 
 There is no concept of a default storage pool in LXD.
