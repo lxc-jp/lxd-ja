@@ -36,12 +36,13 @@ func NewProcess(name string, args []string, stdoutPath string, stderrPath string
 	if err != nil {
 		return nil, fmt.Errorf("Error when creating process object: %w", err)
 	}
+
 	p.closeFds = true
 
 	return p, nil
 }
 
-// NewProcessWithFds is a constructor for a process object. Represents a process with argument config. Returns an address to process
+// NewProcessWithFds is a constructor for a process object. Represents a process with argument config. Returns an address to process.
 func NewProcessWithFds(name string, args []string, stdin io.ReadCloser, stdout io.WriteCloser, stderr io.WriteCloser) (*Process, error) {
 	proc := Process{
 		Name:   name,
@@ -58,13 +59,13 @@ func NewProcessWithFds(name string, args []string, stdin io.ReadCloser, stdout i
 func ImportProcess(path string) (*Process, error) {
 	dat, err := ioutil.ReadFile(path)
 	if err != nil {
-		return nil, fmt.Errorf("Unable to read file '%s': %w", path, err)
+		return nil, fmt.Errorf("Unable to read PID file %q: %w", path, err)
 	}
 
 	proc := Process{}
 	err = yaml.Unmarshal(dat, &proc)
 	if err != nil {
-		return nil, fmt.Errorf("Unable to parse Process YAML: %w", err)
+		return nil, fmt.Errorf("Unable to parse YAML in PID file %q: %w", path, err)
 	}
 
 	return &proc, nil

@@ -54,28 +54,32 @@ func Parse(s string) (*DottedVersion, error) {
 	if len(matches) == 0 {
 		return nil, fmt.Errorf("Can't parse a version")
 	}
+
 	return NewDottedVersion(matches[1])
 }
 
-// String returns version as a string
+// String returns version as a string.
 func (v *DottedVersion) String() string {
 	version := fmt.Sprintf("%d.%d", v.Major, v.Minor)
 	if v.Patch != -1 {
 		version += fmt.Sprintf(".%d", v.Patch)
 	}
+
 	return version
 }
 
-// Compare returns result of comparison between two versions
+// Compare returns result of comparison between two versions.
 func (v *DottedVersion) Compare(other *DottedVersion) int {
 	result := compareInts(v.Major, other.Major)
 	if result != 0 {
 		return result
 	}
+
 	result = compareInts(v.Minor, other.Minor)
 	if result != 0 {
 		return result
 	}
+
 	return compareInts(v.Patch, other.Patch)
 }
 
