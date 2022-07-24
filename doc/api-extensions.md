@@ -234,7 +234,7 @@ LXD のストレージ管理 API 。
 `storage.lvm.vg_name` を設定することでボリュームグループをリネームできるようにします。
 
 ## storage\_lvm\_thinpool\_rename
-`storage.thinpool_name` を設定することで thinpool をリネームできるようにします。
+`storage.thinpool_name` を設定することで thin pool をリネームできるようにします。
 
 ## network\_vlan
 `macvlan` ネットワークデバイスに `vlan` プロパティを新たに追加します。
@@ -1615,9 +1615,9 @@ LXDが使用するCPU時間をミリ秒ではなく秒単位で出力するよ�
 `security.syscalls.intercept.sched_setscheduler` を追加し、コンテナ内の高度なプロセス優先度管理を可能にします。
 
 ## storage\_lvm\_thinpool\_metadata\_size
-`storage.thinpool_metadata_size` により thinpool のメタデータボリュームサイズを指定できるようにします。
+`storage.thinpool_metadata_size` により thin pool のメタデータボリュームサイズを指定できるようにします。
 
-指定しない場合のデフォルトは LVM が適切な thinpool のメタデータボリュームサイズを選択します。
+指定しない場合のデフォルトは LVM が適切な thin pool のメタデータボリュームサイズを選択します。
 
 ## storage\_volume\_state\_total
 これは `GET /1.0/storage-pools/{name}/volumes/{type}/{volume}/state` API に 'total' フィールドを追加します。
@@ -1650,3 +1650,10 @@ PCI リソースエントリに VPS 構造体を追加します。
 
 ## storage\_cephfs\_fscache
 cephfs プール上の fscache/cachefilesd をサポートするための `cephfs.fscache` 設定オプションを追加します。
+
+## network\_load\_balancer
+これはネットワークのロードバランサー機能を追加します。
+`ovn` ネットワークで外部 IP アドレス上にポートを定義し、ポートから対応するネットワーク内部の単一または複数の内部 IP にトラフィックをフォワードできます。
+
+## vsock\_api
+これは双方向の vsock インタフェースを導入し、 lxd-agent と LXD サーバがよりよく連携できるようにします。

@@ -72,6 +72,7 @@ user.*                               | string    | -                | -         
 - {ref}`network-forwards`
 - {ref}`network-zones`
 - {ref}`network-ovn-peers`
+- {ref}`network-load-balancers`
 
 ```{toctree}
 :maxdepth: 1
@@ -79,4 +80,5 @@ user.*                               | string    | -                | -         
 
 OVN のセットアップ </howto/network_ovn_setup>
 ルーティング関係を作成 </howto/network_ovn_peers>
+ネットワークロードバランサーを設定 </howto/network_load_balancers>
 ```

@@ -92,3 +92,94 @@ $ openssl x509 -noout -text -in /etc/prometheus/tls/server.crt
 ```
 
 Subject Alternative Name (SAN) リストが `targets` リストのホスト名を含んでいないので、 `server_name` ディレクティブを使用して比較に使用する名前を上書きする必要があります。
+
+以下は複数の LXD サーバのメトリックを収集するために複数のジョブを使用する `prometheus.yaml` の設定例です。
+
+```yaml
+scrape_configs:
+  # abydos, langara, orilla は最初に abydos からブートストラップした
+  # 単一クラスタで、このため 3 ノードで `ca_file` と `server_name` を
+  # 共有しています。
+  #
+  # 注意: 2 つのパラメータが提供されています。
+  #   `project`: `default` プロジェクトを使用しないか複数のプロジェクトを
+  #              使用する場合に必要。
+  #   `target`: 収集対象の個別のクラスタメンバー。
+  #             指定しない場合ローカルで動いているインスタンスのみレポートされます。
+  - job_name: "lxd-abydos"
+    metrics_path: '/1.0/metrics'
+    params:
+      project: ['jdoe']
+      target: ['abydos']
+    scheme: 'https'
+    static_configs:
+      - targets: ['abydos.hosts.example.net:8444']
+    tls_config:
+      ca_file: 'tls/abydos.crt'
+      cert_file: 'tls/metrics.crt'
+      key_file: 'tls/metrics.key'
+      server_name: 'abydos'
+
+  - job_name: "lxd-langara"
+    metrics_path: '/1.0/metrics'
+    params:
+      project: ['jdoe']
+      target: ['langara']
+    scheme: 'https'
+    static_configs:
+      - targets: ['langara.hosts.example.net:8444']
+    tls_config:
+      ca_file: 'tls/abydos.crt'
+      cert_file: 'tls/metrics.crt'
+      key_file: 'tls/metrics.key'
+      server_name: 'abydos'
+
+  - job_name: "lxd-orilla"
+    metrics_path: '/1.0/metrics'
+    params:
+      project: ['jdoe']
+      target: ['orilla']
+    scheme: 'https'
+    static_configs:
+      - targets: ['orilla.hosts.example.net:8444']
+    tls_config:
+      ca_file: 'tls/abydos.crt'
+      cert_file: 'tls/metrics.crt'
+      key_file: 'tls/metrics.key'
+      server_name: 'abydos'
+
+  # jupiter, mars, saturn は 3 つのスタンドアロンの LXD サーバです。
+  # 注意: これらでは `default` プロジェクトのみが使用されているため、プロジェクトの設定は省略しています。
+  - job_name: "lxd-jupiter"
+    metrics_path: '/1.0/metrics'
+    scheme: 'https'
+    static_configs:
+      - targets: ['jupiter.example.com:9101']
+    tls_config:
+      ca_file: 'tls/jupiter.crt'
+      cert_file: 'tls/metrics.crt'
+      key_file: 'tls/metrics.key'
+      server_name: 'jupiter'
+
+  - job_name: "lxd-mars"
+    metrics_path: '/1.0/metrics'
+    scheme: 'https'
+    static_configs:
+      - targets: ['mars.example.com:9101']
+    tls_config:
+      ca_file: 'tls/mars.crt'
+      cert_file: 'tls/metrics.crt'
+      key_file: 'tls/metrics.key'
+      server_name: 'mars'
+
+  - job_name: "lxd-saturn"
+    metrics_path: '/1.0/metrics'
+    scheme: 'https'
+    static_configs:
+      - targets: ['saturn.example.com:9101']
+    tls_config:
+      ca_file: 'tls/saturn.crt'
+      cert_file: 'tls/metrics.crt'
+      key_file: 'tls/metrics.key'
+      server_name: 'saturn'
+```

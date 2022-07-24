@@ -1,87 +1,118 @@
----
-discourse: 1333
----
-
 (storage-zfs)=
 # ZFS - `zfs`
 
- - LXD が ZFS プールを作成した場合は、デフォルトで圧縮が有効になります
- - イメージ用に ZFS を使うと、インスタンスとスナップショットの作成にスナップショットとクローンを使います
- - ZFS でコピーオンライトが動作するため、すべての子のファイルシステムがなくなるまで、親のファイルシステムを削除できません。
-   ですので、削除されたけれども、まだ参照されているオブジェクトを、LXD はランダムな `deleted/` なパスに自動的にリネームし、参照がなくなりオブジェクトを安全に削除できるようになるまで、そのオブジェクトを保持します。
- - 現時点では、ZFS では、プールの一部をコンテナユーザーに権限委譲できません。開発元では、この問題に積極的に取り組んでいます。
- - ZFS では最新のスナップショット以外からのリストアはできません。
-   しかし、古いスナップショットから新しいインスタンスを作成することはできます。
-   これにより、新しいスナップショットを削除する前に、スナップショットが確実にリストアしたいものかどうか確認できます。
+{abbr}`ZFS (Zettabyte file system)` は物理ボリューム管理とファイルシステムを兼ね備えています。
+ZFS のインストールは一連のストレージデバイスに広がることができ非常にスケーラブルで、ディスクを追加してストレージプールの空き容量を即座に拡大できるようにします。
 
-   LXD はリストア中に新しいスナップショットを自動的に破棄するように設定することもできます。
-   これは `volume.zfs.remove_snapshots` プールオプションを使って設定可能です。
+ZFS はブロックベースのファイルシステムで、あらゆる操作を検証、確認、訂正するのにチェックサムを使用することでデータ破壊から守ります。
+十分な速度で動作するためには、この機構には強力な環境と大量の RAM が必要です。
 
-   しかしインスタンスのコピーも ZFS スナップショットを使うこと、その結果として全ての子孫も消すことなしには最後のコピーより前に取られたスナップショットにインスタンスをリストアすることもできないことに注意してください。
+さらに、 ZFS はスナップショット、リプリケーション、RAID 管理、コピー・オン・ライトのクローン、圧縮、その他の機能を提供します。
 
-   必要なスナップショットを新しいインスタンスにコピーした後に古いインスタンスを削除できますが、インスタンスが持っているかもしれない他のスナップショットを失ってしまいます。
+ZFS を使用するにはマシンに `zfsutils-linux` をインストールしていることを確認してください。
 
- - LXD は ZFS プールとデータセットがフルコントロールできると仮定していることに注意してください。
-   LXD の ZFS プールやデータセット内に LXD と関係ないファイルシステムエンティティを維持しないことをおすすめします。LXD がそれらを消してしまう恐れがあるからです。
- - ZFS データセットでクオータを使った場合、LXD は ZFS の "quota" プロパティを設定します。
-   LXD に "refquota" プロパティを設定させるには、与えられたデータセットに対して "zfs.use\_refquota" を "true" に設定するか、
-   ストレージプール上で "volume.zfs.use\_refquota" を "true" に設定するかします。
-   前者のオプションは、与えられたストレージプールだけに refquota を設定します。
-   後者のオプションは、ストレージプール内のストレージボリュームすべてに refquota を使うようにします。
-   また、ボリュームに"zfs.reserve\_space"、ストレージプールに"volume.zfs.reserve\_space"を設定することで、ZFSの"quota"/"refquota"に加えて"reservation"/"refreservation"を使用することができます。
- - I/O クオータ（IOps/MBs）は ZFS ファイルシステムにはあまり影響を及ぼさないでしょう。
-   これは、ZFS が（SPL を使った）Solaris モジュールの移植であり、
-   I/O に対する制限が適用される Linux の VFS API を使ったネイティブな Linux ファイルシステムではないからです。
+## 用語
 
+ZFS は物理ストレージデバイスに基づいた論理ユニットを作成します。
+これらの論理ユニットは *ZFS pools* または *zpools* と呼ばれます。
+さらにそれぞれの zpool は複数の *データセット* に分割されます。
+これらのデータセットは以下の異なるタイプがあります。
+- *ZFS ファイルシステム* はパーティションまたはマウントされたファイルシステムとして扱えます。
+- *ZFS ボリューム* はブロックデバイスを表します。
+- *ZFS スナップショット* は ZFS ファイルシステムまたは ZFS ボリュームの特定の状態をキャプチャーします。
+  ZFS スナップショットは読み取り専用です。
+- *ZFS クローン* は ZFS スナップショットの書き込み可能なコピーです。
+
+## LXD の `zfs` ドライバ
+
+LXD の `zfs` ドライバは ZFS ファイルシステムと ZFS ボリュームをイメージとカスタムストレージボリュームに使用し、ZFS スナップショットとクローンをイメージからのインスタンス作成とインスタンスとカスタムボリュームスナップショットに使用します。
+デフォルトでは LXD は ZFS プール作成時に圧縮を有効にします。
+
+LXD は ZFS プールとデータセットを完全制御できると想定します。
+このため、ZFS プールまたはデータセット内に LXD が所有しないファイルシステムエンティティは LXD が消してしまうかもしれないので決して置くべきではありません。
+
+ZFS のコピー・オン・ライトが動作する仕組みのため、親の ZFS ファイルシステムは全ての子供がいなくなるまで削除できません。
+その結果、LXD は削除されたがまだ参照されている全てのオブジェクトを自動的にリネームします。
+それらのオブジェクトは全ての参照がいなくなりオブジェクトが安全に削除できるようになるまでランダムな `deleted/` パスに保管されます。
+この方法はスナップショットの復元に予期しない結果をもたらすかもしれないことに注意してください。
+下記の {ref}`storage-zfs-limitations` を参照してください。
+
+ZFS 0.8 以降の上で新しく作成された全てのプールで LXD はトリミングサポートを自動的に有効化します。
+これはコントローラによるより良いブロックの再利用を可能にすることで SSD の寿命を伸ばし、ループバックの ZFS プールを使用する際にはルートファイルシステム上の容量を解放できるようにもします。
+ZFS の 0.8 より前のバージョンを稼働していてトリミングを有効にしたい場合は、少なくともバージョン 0.8 にアップグレードしてください。
+そして以下のコマンドを実行し、今後作成されるプールにトリミングが自動的に有効化され、現在未使用のスペースの全てがトリムされることを確認してください。
+
+    zpool upgrade ZPOOL-NAME
+    zpool set autotrim=on ZPOOL-NAME
+    zpool trim ZPOOL-NAME
+
+(storage-zfs-limitations)=
+### 制限
+
+`zfs` ドライバには以下の制限があります。
+
+プールの一部を委譲する
+: ZFS はプールの一部をコンテナユーザに委譲することをサポートしていません。
+  ZFS のアップストリームではこの機能を提供すべくアクティブに作業中です。
+
+古いスナップショットからの復元
+: ZFS は最新ではないスナップショットからの復元をサポートしていません。
+  ですが、古いスナップショットから新しいインスタンスを作成することはできます。
+  この方法は特定のスナップショットが必要なものを含んでいるかを確認することを可能にします。
+  正しいスナップショットを決定したら {ref}`指定より新しいスナップショットを削除 <storage-edit-snapshots>` して必要なスナップショットが最新になるようにして復元できるようにします。
+
+  別の方法として、復元中により新しいスナップショットを自動的に破棄するように LXD を設定することもできます。
+  そのためにはボリュームの {ref}`zfs.remove_snapshots <storage-zfs-vol-config>` (あるいはプール内の全てのボリュームのストレージプールの対応する `volume.zfs.remove_snapshots` 設定) を設定します。
+
+  しかし、 {ref}`zfs.clone_copy <storage-zfs-pool-config>` が `true` に設定される場合は、インスタンスのコピーは ZFS のスナップショットも使用することに注意してください。
+  この場合は、スナップショットの全ての子孫を削除すること無しに最後のコピーの前に取られたスナップショットにインスタンスを復元することはできません。
+  この選択肢が選べない場合、欲しいスナップショットを新しいインスタンスにコピーしてから古いインスタンスを削除することはできます。
+  しかし、インスタンスが持っていたであろう他の全てのスナップショットは失うことになります。
+
+I/O クォータを観測する
+: I/O クォータは ZFS ファイルシステムに大きな影響は与えません。
+  これは ZFS は (SPL を使用した) Solaris モジュールの移植でありネイティブな Linux ファイルシステムではないためで、 I/O の制限はネイティブ Linux ファイルシステムに適用されるからです。
+
+### クォータ
+
+ZFS は `quota` と `refquota` という 2 種類の異なるクォータのプロパティを提供します。
+`quota` はスナップショットとクローンを含むデータセットの合計サイズを制限します。
+`refquota` はスナップショットとクローンは含まずデータセット内のデータのサイズだけを制限します。
+
+デフォルトでは、ストレージボリュームにクォータを設定する際は LXD は `quota` プロパティを使用します。
+代わりに `refquota` プロパティを使用したい場合はボリュームの {ref}`zfs.use_refquota <storage-zfs-vol-config>` 設定 (あるいはプール内の全てのボリュームのストレージプールの対応する `volume.zfs.use_refquota` 設定) を設定します。
+
+また {ref}`zfs.use_reserve_space <storage-zfs-vol-config>` (または `volume.zfs.use_reserve_space`) 設定を to use ZFS の `reservation` または `refreservation` を `quota` または `refquota` と使用するために設定することもできます。
+
+## 設定オプション
+
+`zfs` ドライバを使うストレージプールとこれらのプール内のストレージボリュームには以下の設定オプションが利用できます。
+
+(storage-zfs-pool-config)=
 ## ストレージプール設定
-キー            | 型     | デフォルト値 | 説明
-:--             | :---   | :------      | :----------
-size            | string | 0            | ストレージプールのサイズ。バイト単位（suffixも使えます）（現時点では loop ベースのプールと ZFS で有効）
-source          | string | -            | ブロックデバイスかループファイルかファイルシステムエントリのパス
-zfs.clone\_copy | string | true         | boolean の文字列を指定した場合は ZFS のフルデータセットコピーの代わりに軽量なクローンを使うかどうかを制御し、 "rebase" という文字列を指定した場合は初期イメージをベースにコピーします。
-zfs.export      | bool   | true         | アンマウントの実行中にzpoolのエクスポートを無効にする
-zfs.pool\_name  | string | プールの名前 | Zpool 名
+キー            | 型     | デフォルト値                                              | 説明
+:--             | :---   | :------                                                   | :----------
+size            | string | auto (空きディスクスペースの 20%, >= 5 GiB and <= 30 GiB) | ループベースのプールを作成する際のストレージプールのサイズ (バイト単位、接尾辞のサポートあり)
+source          | string | -                                                         | ブロックデバイスかループファイルかファイルシステムエントリのパス
+zfs.clone\_copy | string | true                                                      | Boolean の文字列を指定した場合は ZFS のフルデータセットコピーの代わりに軽量なクローンを使うかどうかを制御し、 `rebase` という文字列を指定した場合は初期イメージをベースにコピーします。
+zfs.export      | bool   | true                                                      | アンマウントの実行中にzpoolのエクスポートを無効にする
+zfs.pool\_name  | string | プールの名前                                              | zpool 名
 
+{{volume_configuration}}
+
+(storage-zfs-vol-config)=
 ## ストレージボリューム設定
-
 ```{rst-class} dec-font-size
 ```
-キー                  | 型     | 条件               | デフォルト値                        | 説明
-:--                   | :---   | :--------          | :------                             | :----------
-security.shifted      | bool   | custom volume      | false                               | id シフトオーバーレイを有効にする（複数の独立したインスタンスによるアタッチを許可する）
-security.unmapped     | bool   | custom volume      | false                               | ボリュームへの id マッピングを無効にする
-size                  | string | appropriate driver | volume.size と同じ                  | ストレージボリュームのサイズ
-snapshots.expiry      | string | custom volume      | -                                   | スナップショットがいつ削除されるかを制御（`1M 2H 3d 4w 5m 6y` のような設定形式を想定）
-snapshots.pattern     | string | custom volume      | snap%d                              | スナップショット名を表す Pongo2 テンプレート文字列（スケジュールされたスナップショットと名前指定なしのスナップショットに使用）
-snapshots.schedule      | string    | custom volume             | -                                     | {{snapshot_schedule_format}}
-zfs.blocksize         | string | zfs driver         | volume.zfs.blocksize と同じ         | ZFSブロックのサイズを512～16MiBの範囲で指定します（2の累乗でなければなりません）。ブロックボリュームでは、より大きな値が設定されていても、最大値の128KiBが使用されます。
-zfs.remove\_snapshots | string | zfs driver         | volume.zfs.remove\_snapshots と同じ | 必要に応じてスナップショットを削除するかどうか
-zfs.use\_refquota     | string | zfs driver         | volume.zfs.use\_refquota と同じ     | 領域の quota の代わりに refquota を使うかどうか
-zfs.reserve\_space    | string | zfs driver         | false                               | qouta/refquota に加えて reservation/refreservation も使用するかどうか
-
-## ループバックの ZFS プールの拡張
-LXD からは直接はループバックの ZFS プールを拡張できません。しかし、次のようにすればできます:
-
-```bash
-sudo truncate -s +5G /var/lib/lxd/disks/<POOL>.img
-sudo zpool set autoexpand=on <POOL>
-sudo zpool status -vg <POOL> # デバイス ID をメモしておきます
-sudo zpool online -e <POOL> <device_ID>
-sudo zpool set autoexpand=off <POOL>
-```
-
-(注意: snap のユーザーは `/var/lib/lxd/` の代わりに `/var/snap/lxd/common/lxd/` を使ってください)
-
-## 既存のプールで TRIM を有効にする
-LXD は ZFS 0.8 以降で新規に作成された全てのプールに TRIM サポートを自動で有効にします。
-
-これによりコントローラーによるブロック再利用を改善し SSD の寿命を延ばすことができます。
-さらにループバックの ZFS プールを使用している場合はルートファイルシステムの空きスペースを解放できます。
-
-0.8 より古い ZFS を 0.8 にアップグレードしたシステムでは、以下の 1 度きりの操作で TRIM の自動実行を有効にできます。
-
- - zpool upgrade ZPOOL-NAME
- - zpool set autotrim=on ZPOOL-NAME
- - zpool trim ZPOOL-NAME
-
-これにより現在未使用のスペースに TRIM を実行するだけでなく、将来 TRIM が自動的に実行されるようになります。
+キー                  | 型     | 条件               | デフォルト値                             | 説明
+:--                   | :---   | :--------          | :------                                  | :----------
+security.shifted      | bool   | custom volume      | volume.security.shifted と同じか false   | {{enable_ID_shifting}}
+security.unmapped     | bool   | custom volume      | volume.security.unmapped と同じか false  | ボリュームの ID マッピングを無効にする
+size                  | string | appropriate driver | volume.size と同じ                       | ストレージボリュームのサイズ/クォータ
+snapshots.expiry      | string | custom volume      | volume.snapshots.expiry と同じ           | {{snapshot_expiry_format}}
+snapshots.pattern     | string | custom volume      | volume.snapshots.pattern と同じか snap%d | {{snapshot_pattern_format}}
+snapshots.schedule    | string | custom volume      | snapshots.schedule と同じ                | {{snapshot_schedule_format}}
+zfs.blocksize         | string | ZFS driver         | volume.zfs.blocksize と同じ              | ZFSブロックのサイズを512～16MiBの範囲で指定します（2の累乗でなければなりません）。ブロックボリュームでは、より大きな値が設定されていても、最大値の128KiBが使用されます。
+zfs.remove\_snapshots | string | ZFS driver         | volume.zfs.remove\_snapshots と同じ      | 必要に応じてスナップショットを削除するかどうか
+zfs.use\_refquota     | string | ZFS driver         | volume.zfs.use\_refquota と同じ          | 領域の `quota` の代わりに `refquota` を使うかどうか
+zfs.reserve\_space    | string | ZFS driver         | volume.zfs.reserve\_space と同じか false | `qouta`/`refquota` に加えて `reservation`/`refreservation` も使用するかどうか

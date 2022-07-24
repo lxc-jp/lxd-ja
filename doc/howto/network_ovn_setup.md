@@ -53,51 +53,69 @@ LXD と同様に、 OVN の分散データベースは奇数のメンバーで�
 
 1. OVN の分散データベースを動かしたい 3 台のマシンで次の手順を実行してください。
 
-   a. OVN ツールをインストールします。
+   1. OVN ツールをインストールします。
 
-        sudo apt install ovn-central ovn-host
+          sudo apt install ovn-central ovn-host
 
-   b. マシンの起動時に OVN サービスが起動されるように自動起動を有効にします。
+   1. マシンの起動時に OVN サービスが起動されるように自動起動を有効にします。
 
-        systemctl enable ovn-central
-        systemctl enable ovn-host
+           systemctl enable ovn-central
+           systemctl enable ovn-host
 
-   c. OVN を停止します。
+   1. OVN を停止します。
 
-        systemctl stop ovn-central
+          systemctl stop ovn-central
 
-   d. マシンの IP アドレスをメモします。
+   1. マシンの IP アドレスをメモします。
 
-        ip -4 a
+          ip -4 a
 
-   e. `/etc/default/ovn-central` を編集します。
+   1. `/etc/default/ovn-central` を編集します。
 
-   f. 以下の設定をペーストします (`<server_1>`, `<server_2>` and `<server_3>` をそれぞれのマシンの IP アドレスに、 `<local>` をあなたがいるマシンの IP アドレスに置き換えてください)。
+   1. 以下の設定をペーストします (`<server_1>`, `<server_2>` and `<server_3>` をそれぞれのマシンの IP アドレスに、 `<local>` をあなたがいるマシンの IP アドレスに置き換えてください)。
 
-     ```
-     OVN_CTL_OPTS=" \
-          --db-nb-addr=<server_1> \
-          --db-nb-create-insecure-remote=yes \
-          --db-sb-addr=<server_1> \
-          --db-sb-create-insecure-remote=yes \
-          --db-nb-cluster-local-addr=<local> \
-          --db-sb-cluster-local-addr=<local> \
-          --ovn-northd-nb-db=tcp:<server_1>:6641,tcp:<server_2>:6641,tcp:<server_3>:6641 \
-          --ovn-northd-sb-db=tcp:<server_1>:6642,tcp:<server_2>:6642,tcp:<server_3>:6642"
-     ```
+      - 最初のマシン
 
-   g. OVN を起動します。
+        ```
+        OVN_CTL_OPTS=" \
+             --db-nb-addr=<local> \
+             --db-nb-create-insecure-remote=yes \
+             --db-sb-addr=<local> \
+             --db-sb-create-insecure-remote=yes \
+             --db-nb-cluster-local-addr=<local> \
+             --db-sb-cluster-local-addr=<local> \
+             --ovn-northd-nb-db=tcp:<server_1>:6641,tcp:<server_2>:6641,tcp:<server_3>:6641 \
+             --ovn-northd-sb-db=tcp:<server_1>:6642,tcp:<server_2>:6642,tcp:<server_3>:6642"
+        ```
 
-        systemctl start ovn-central
+      - 2番目と3番目のマシン
+
+        ```
+        OVN_CTL_OPTS=" \
+              --db-nb-addr=<local> \
+             --db-nb-cluster-remote-addr=<server_1> \
+             --db-nb-create-insecure-remote=yes \
+             --db-sb-addr=<local> \
+             --db-sb-cluster-remote-addr=<server_1> \
+             --db-sb-create-insecure-remote=yes \
+             --db-nb-cluster-local-addr=<local> \
+             --db-sb-cluster-local-addr=<local> \
+             --ovn-northd-nb-db=tcp:<server_1>:6641,tcp:<server_2>:6641,tcp:<server_3>:6641 \
+             --ovn-northd-sb-db=tcp:<server_1>:6642,tcp:<server_2>:6642,tcp:<server_3>:6642"
+        ```
+
+   1. OVN を起動します。
+
+          systemctl start ovn-central
 
 1. 残りのマシンでは `ovn-host` のみインストールし、自動起動を有効にしてください。
 
-        sudo apt install ovn-host
-        systemctl enable ovn-host
+       sudo apt install ovn-host
+       systemctl enable ovn-host
 
 1. 全てのマシンで Open vSwitch (変数は上記の通りに置き換えてください) を設定します。
 
-        sudo ovs-vsctl set open_vswitch . \
+       sudo ovs-vsctl set open_vswitch . \
           external_ids:ovn-remote=tcp:<server_1>:6642,tcp:<server_2>:6642,tcp:<server_3>:6642 \
           external_ids:ovn-encap-type=geneve \
           external_ids:ovn-encap-ip=<local>
@@ -107,11 +125,11 @@ LXD と同様に、 OVN の分散データベースは奇数のメンバーで�
    次に最初のマシンで `lxc cluster add <machine_name>` を実行してトークンを出力し、他のマシンで LXD を初期化する際にトークンを指定して他のマシンをクラスターに参加させます。
 1. 最初のマシンでアップリンクネットワークを作成し設定します。
 
-        lxc network create UPLINK --type=physical parent=<uplink_interface> --target=<machine_name_1>
-        lxc network create UPLINK --type=physical parent=<uplink_interface> --target=<machine_name_2>
-        lxc network create UPLINK --type=physical parent=<uplink_interface> --target=<machine_name_3>
-        lxc network create UPLINK --type=physical parent=<uplink_interface> --target=<machine_name_4>
-        lxc network create UPLINK --type=physical \
+       lxc network create UPLINK --type=physical parent=<uplink_interface> --target=<machine_name_1>
+       lxc network create UPLINK --type=physical parent=<uplink_interface> --target=<machine_name_2>
+       lxc network create UPLINK --type=physical parent=<uplink_interface> --target=<machine_name_3>
+       lxc network create UPLINK --type=physical parent=<uplink_interface> --target=<machine_name_4>
+       lxc network create UPLINK --type=physical \
           ipv4.ovn.ranges=<IP_range> \
           ipv6.ovn.ranges=<IP_range> \
           ipv4.gateway=<gateway> \

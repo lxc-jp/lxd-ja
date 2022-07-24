@@ -1,3 +1,8 @@
 # Key/value substitutions to use within the Sphinx doc.
 {note_ip_addresses_CIDR: "ネットワークのサブネット情報を指定する箇所では LXD は [CIDR 表記](https://ja.wikipedia.org/wiki/Classless_Inter-Domain_Routing) (例えば `192.0.2.0/24` や `2001:db8::/32`) を使用します。これは単一のアドレスが必要なケース (例えば、トンネルのローカル／リモートアドレス、インスタンスに適用する NAT アドレスや特定のアドレス) では適用されません。",
-snapshot_schedule_format: "Cron 表記 (`<minute> <hour> <dom> <month> <dow>`) かスケジュールエイリアスのカンマ区切りリスト (`@hourly`, `@daily`, `@midnight`, `@weekly`, `@monthly`, `@annually`, `@yearly`)"}
+snapshot_expiry_format: "スナップショットをいつ削除するかを制御 (`1M 2H 3d 4w 5m 6y` のような式を期待)",
+snapshot_pattern_format: "スナップショットの名前を表す Pongo2 テンプレート文字列 (スケジュールされたスナップショットと名前無しのスナップショットで使用)",
+snapshot_schedule_format: "Cron 表記 (`<minute> <hour> <dom> <month> <dow>`) かスケジュールエイリアスのカンマ区切りリスト (`@hourly`, `@daily`, `@midnight`, `@weekly`, `@monthly`, `@annually`, `@yearly`)",
+enable_ID_shifting: "ID シフトオーバーレイを有効にする (複数の分離されたインスタンスによるアタッチを許可する)",
+block_filesystem: "ストレージボリュームのファイルシステム: `btrfs`, `ext4` または `xfs` (未指定の場合 `ext4`)",
+volume_configuration: "```{tip}\nこれらの設定に加えて、ストレージボリューム設定のデフォルト値を設定できます。 {ref}`storage-configure-vol-default` を参照してください。\n```"}
