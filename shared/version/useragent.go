@@ -11,7 +11,7 @@ import (
 	"github.com/lxc/lxd/shared/osarch"
 )
 
-// UserAgent contains a string suitable as a user-agent
+// UserAgent contains a string suitable as a user-agent.
 var UserAgent = getUserAgent()
 var userAgentStorageBackends []string
 var userAgentFeatures []string
@@ -26,6 +26,7 @@ func getUserAgent() string {
 	if err != nil {
 		panic(err)
 	}
+
 	osTokens := []string{cases.Title(language.English).String(arch)}
 	osTokens = append(osTokens, getPlatformVersionStrings()...)
 
@@ -48,13 +49,13 @@ func getUserAgent() string {
 	return agent
 }
 
-// UserAgentStorageBackends updates the list of storage backends to include in the user-agent
+// UserAgentStorageBackends updates the list of storage backends to include in the user-agent.
 func UserAgentStorageBackends(backends []string) {
 	userAgentStorageBackends = backends
 	UserAgent = getUserAgent()
 }
 
-// UserAgentFeatures updates the list of advertised features
+// UserAgentFeatures updates the list of advertised features.
 func UserAgentFeatures(features []string) {
 	userAgentFeatures = features
 	UserAgent = getUserAgent()

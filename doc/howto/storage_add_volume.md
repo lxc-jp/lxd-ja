@@ -1,5 +1,5 @@
 (storage-add-volume)=
-# ストレージボリュームを追加するには
+# カスタムストレージボリュームを追加するには
 
 インスタンスを作成する際に、 LXD はインスタンスのルートディスクとして使用するストレージボリュームを自動的に作成します。
 
@@ -9,20 +9,20 @@
 
 詳細な情報は {ref}`storage-volumes` を参照してください。
 
-## ストレージボリュームを作成する
+## カスタムストレージボリュームを作成する
 
-ストレージプール内にストレージボリュームを作成するには以下のコマンドを使用します。
+ストレージプール内にカスタムストレージボリュームを作成するには以下のコマンドを使用します。
 
     lxc storage volume create <pool_name> <volume_name> [configuration_options...]
 
 各ドライバーで利用可能なストレージボリューム設定オプションについては {ref}`storage-drivers` ドキュメントを参照してください。
 
-デフォルトではストレージボリュームは `filesystem` {ref}`コンテントタイプ <storage-content-types>` を使用します。
-`block` コンテントタイプのストレージボリュームを作成するには `--type` フラグを追加してください。
+デフォルトではカスタムストレージボリュームは `filesystem` {ref}`コンテントタイプ <storage-content-types>` を使用します。
+`block` コンテントタイプのカスタムストレージボリュームを作成するには `--type` フラグを追加してください。
 
     lxc storage volume create <pool_name> <volume_name> --type=block [configuration_options...]
 
-クラスターメンバー上にストレージボリュームを追加するには `--target` フラグを追加してください。
+クラスターメンバー上にカスタムストレージボリュームを追加するには `--target` フラグを追加してください。
 
     lxc storage volume create <pool_name> <volume_name> --target=<cluster_member> [configuration_options...]
 
@@ -32,24 +32,24 @@
 ```
 
 (storage-attach-volume)=
-## インスタンスにストレージボリュームをアタッチする
+## インスタンスにカスタムストレージボリュームをアタッチする
 
-ストレージボリュームを作成したら、それを 1 つあるいは複数のインスタンスに {ref}`ディスクデバイス <instance_device_type_disk>` として追加できます。
+カスタムストレージボリュームを作成したら、それを 1 つあるいは複数のインスタンスに {ref}`ディスクデバイス <instance_device_type_disk>` として追加できます。
 
 以下の制限があります。
 
-- {ref}`コンテントタイプ <storage-content-types>` `block` のストレージボリュームはコンテナにはアタッチできず、仮想マシンのみにアタッチできます。
-- データ破壊を防ぐため、 {ref}`コンテントタイプ <storage-content-types>` `block` のストレージボリュームは同時に複数の仮想マシンには決してアタッチするべきではありません。
+- {ref}`コンテントタイプ <storage-content-types>` `block` のカスタムストレージボリュームはコンテナにはアタッチできず、仮想マシンのみにアタッチできます。
+- データ破壊を防ぐため、 {ref}`コンテントタイプ <storage-content-types>` `block` のカスタムストレージボリュームは同時に複数の仮想マシンには決してアタッチするべきではありません。
 
-コンテントタイプ `filesystem` のストレージボリュームは以下のコマンドを使用します。ここで `<location>` はインスタンス内でストレージボリュームにアクセスするためのパス (例: `/data`) です。
+コンテントタイプ `filesystem` のカスタムストレージボリュームは以下のコマンドを使用します。ここで `<location>` はインスタンス内でストレージボリュームにアクセスするためのパス (例: `/data`) です。
 
     lxc storage volume attach <pool_name> <filesystem_volume_name> <instance_name> <location>
 
-コンテントタイプ `block` のストレージボリュームは `<location>` を指定しません。
+コンテントタイプ `block` のカスタムストレージボリュームは `<location>` を指定しません。
 
     lxc storage volume attach <pool_name> <block_volume_name> <instance_name>
 
-デフォルトではストレージボリュームはインスタンスに {ref}`デバイス <devices>` の名前でボリュームが追加されます。
+デフォルトではカスタムストレージボリュームはインスタンスに {ref}`デバイス <devices>` の名前でボリュームが追加されます。
 異なるデバイス名を使用したい場合は、コマンドにデバイス名を追加できます。
 
     lxc storage volume attach <pool_name> <filesystem_volume_name> <instance_name> <device_name> <location>

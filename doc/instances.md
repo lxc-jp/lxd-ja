@@ -813,6 +813,9 @@ required    | boolean   | false             | no        | このデバイスが�
 
 #### Type: gpu
 
+```{youtube} https://www.youtube.com/watch?v=T0aV2LsMpoA
+```
+
 GPU デバイスエントリーは、シンプルにリクエストのあった GPU デバイスをインスタンスに出現させます。
 
 ```{note}

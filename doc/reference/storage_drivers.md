@@ -20,21 +20,20 @@ storage_cephfs
 ## 機能比較
 可能であれば、各システムの高度な機能を使って、LXD は操作を最適化しようとします。
 
-機能                                               | ディレクトリ | Btrfs | LVM  | ZFS  | Ceph | CephFS
-:---                                               | :---         | :---  | :--- | :--- | :--- | :---
-{ref}`storage-optimized-image-storage`             | no           | yes   | yes  | yes  | yes  | n/a
-最適化されたインスタンスの作成                     | no           | yes   | yes  | yes  | yes  | n/a
-最適化されたスナップショットの作成                 | no           | yes   | yes  | yes  | yes  | yes
-最適化されたイメージの転送                         | no           | yes   | no   | yes  | yes  | n/a
-{ref}`storage-optimized-instance-transfer`         | no           | yes   | no   | yes  | yes  | n/a
-コピーオンライト                                   | no           | yes   | yes  | yes  | yes  | yes
-ブロックデバイスベース                             | no           | no    | yes  | no   | yes  | no
-インスタントクローン                               | no           | yes   | yes  | yes  | yes  | yes
-コンテナ内でストレージドライバの使用               | yes          | yes   | no   | no   | no   | n/a
-古い（最新ではない）スナップショットからのリストア | yes          | yes   | yes  | no   | yes  | yes
-ストレージクオータ                                 | yes[^note]   | yes   | yes  | yes  | yes  | yes
-
-[^note]: ディレクトリストレージドライバーはファイルシステムのレベルでプロジェクトのクォータが有効にされた ext4 または XFS 上で稼働する場合にクォータをサポートします。
+機能                                               | ディレクトリ                                 | Btrfs | LVM  | ZFS  | Ceph RBD | CephFS
+:---                                               | :---                                         | :---  | :--- | :--- | :---     | :---
+{ref}`storage-optimized-image-storage`             | no                                           | yes   | yes  | yes  | yes      | n/a
+最適化されたインスタンスの作成                     | no                                           | yes   | yes  | yes  | yes      | n/a
+最適化されたスナップショットの作成                 | no                                           | yes   | yes  | yes  | yes      | yes
+最適化されたイメージの転送                         | no                                           | yes   | no   | yes  | yes      | n/a
+{ref}`storage-optimized-instance-transfer`         | no                                           | yes   | no   | yes  | yes      | n/a
+コピーオンライト                                   | no                                           | yes   | yes  | yes  | yes      | yes
+ブロックデバイスベース                             | no                                           | no    | yes  | no   | yes      | no
+インスタントクローン                               | no                                           | yes   | yes  | yes  | yes      | yes
+コンテナ内でストレージドライバの使用               | yes                                          | yes   | no   | no   | no       | n/a
+古い（最新ではない）スナップショットからのリストア | yes                                          | yes   | yes  | no   | yes      | yes
+ストレージクオータ                                 | yes<sup>{ref}`* <storage-dir-quotas>`</sup>] | yes   | yes  | yes  | yes      | yes
+`lxd init` で利用可能                              | yes                                          | yes   | yes  | yes  | yes      | no
 
 (storage-optimized-image-storage)=
 ### 最適化されたイメージストレージ
@@ -48,7 +47,7 @@ storage_cephfs
 (storage-optimized-instance-transfer)=
 ### 最適化されたインスタンスの転送
 
-Btrfs, ZFS と Ceph (RBD) は内部で送信/受信の機構を持ち最適化されたボリューム転送を行えます。
+Btrfs, ZFS と Ceph RBD は内部で送信/受信の機構を持ち最適化されたボリューム転送を行えます。
 LXD はサーバー間でインスタンスとスナップショットを転送するためにこの機構を使用します。
 
 この最適化された転送は同じストレージドライバーを使うストレージプール間でボリュームを転送するときのみ利用できます。

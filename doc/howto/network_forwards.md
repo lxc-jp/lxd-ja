@@ -90,7 +90,7 @@ target\_address   | string     | yes      | フォワード先の IP アドレ�
 target\_port      | string     | no       | ターゲットのポート (例 `70,80-90` or `90`)、 空の場合は `listen_port` と同じ
 description       | string     | no       | ポートの説明
 
-### ネットワークフォワードを編集する
+## ネットワークフォワードを編集する
 
 ネットワークフォワードを編集するには以下のコマンドを使用します。
 
@@ -100,3 +100,11 @@ lxc network forward edit <network_name> <listen_address>
 
 このコマンドはネットワークフォワードを編集用に YAML 形式でオープンします。
 全般の設定とポート指定の両方を編集できます。
+
+## ネットワークフォワードを削除する
+
+ネットワークフォワードを削除するには以下のコマンドを使用します。
+
+```bash
+lxc network forward delete <network_name> <listen_address>
+```

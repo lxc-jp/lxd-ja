@@ -1,49 +1,73 @@
 (storage-btrfs)=
 # Btrfs - `btrfs`
 
- - インスタンス、イメージ、スナップショットごとにサブボリュームを使い、新しいオブジェクトを作成する際に btrfs スナップショットを作成します
- - btrfs は、親コンテナ自身が btrfs 上に作成されているときには、コンテナ内のストレージバックエンドとして使えます（ネストコンテナ）（qgroup を使った btrfs クオータについての注意を参照してください）
- - btrfs では qgroup を使ったストレージクオータが使えます。btrfs qgroup は階層構造ですが、新しいサブボリュームは自動的には親のサブボリュームの qgroup には追加されません。
-   このことは、ユーザーが設定されたクオータをエスケープできるということです。
-   もし、クオータを厳格に遵守させたいときは、ユーザーはこのことに留意し、refquota を使った zfs ストレージを使うことを検討してください。
+{abbr}`Btrfs (B-tree file system)` は {abbr}`COW (copy-on-write)` 原則に基づいたローカルファイルシステムです。
+COW はデータが修正された後に既存のデータを上書きするのではなく別のブロックに保管され、データ破壊のリスクが低くなることを意味します。
+他のファイルシステムと異なり、Btrfs はエクステントベースです。これはデータを連続したメモリ領域に保管することを意味します。
 
- - クオータを使用する際は btrfs のエクステントはイミュータブルであるためブロックが書かれるときにブロックが新しいエクステントに書き込まれ古いブロックはその中のデータが全て参照されなくなるか再書き込みされるまで残ることを考慮することが非常に重要です。
-   これはサブボリューム内の現在のファイルが使用中のスペースの合計量がクオータより小さいにもかかわらずクオータに達することがあり得ることを意味します。
-   これは btrfs サブボリュームの上に生のディスクイメージファイルを使うランダム I/O の性質のため BTRFS 上で VM を使うときによく発生します。
-   VM と btrfs のストレージプールの組み合わせは使わないことを私達は推奨します。
-   もしそれでも使いたい場合は、ディスクイメージファイル内の全てのブロックが qgroup クオータの制限にかかること無く再書き込みできるように
-   インスタンスのルートディスクの `size.state` プロパティをルートディスクサイズの 2 倍に設定してください。
-   また `btrfs.mount_options=compress-force` ストレージオプションを使うことで圧縮を有効にする副作用として最大のエクステントサイズを縮小させブロックの再書き込みによりストレージの大部分が 2 倍の容量を消費するのを防ぐことができます。
-   ただしこれはストレージプールのオプションですので、プール上の全てのボリュームに影響します。
+基本的なファイルシステムの機能に加えて、Btrfs は RAID、ボリューム管理、プーリング、スナップショット、チェックサム、圧縮、その他の機能を提供します。
 
+Btrfs を使うにはマシンに `btrfs-progs` がインストールされているか確認してください。
+
+## 用語
+
+Btrfs ファイルシステムは *サブボリューム* を持つことができます。これはファイルシステムのメインツリーの名前をつけられたバイナリサブツリーでそれ自身の独立したファイルとディレクトリ階層を持ちます。
+*Btrfs スナップショット*　は特殊なタイプのサブボリュームで別のサブボリュームの特定の状態をキャプチャーします。
+スナップショットは読み書き可または読み取り専用にできます。
+
+## LXD の `btrfs` ドライバ
+
+LXD の `btrfs` ドライバはインスタンス、イメージ、スナップショットごとにサブボリュームを使用します。
+新しいオブジェクトを作成する際 (例えば、新しいインスタンスを起動する)、 Btrfs スナップショットを作成します。
+
+Btrfs はネストした LXD 環境内のコンテナ内部でストレージバックエンドとして使用できます。
+この場合、親のコンテナ自体は Btrfs を使う必要があります。
+しかし、ネストした LXD のセットアップは親から Btrfs のクォータは引き継がないことに注意してください (以下の {ref}`storage-btrfs-quotas` 参照)。
+
+(storage-btrfs-quotas)=
+### クォータ
+
+Btrfs は qgroups 経由でストレージクォータをサポートします。
+Btrfs qgroups は階層的ですが、新しいサブボリュームは親のサブボリュームの qgroups に自動的に追加されるわけではありません。
+これはユーザが設定されたクォータから逃れることができることは自明であることを意味します。
+このため、厳密なクォータが必要な場合は、別のストレージドライバを検討すべきです (例えば、refquotas ありの ZFS や LVM 上の Btrfs)。
+
+クォータを使用する際は、 Btrfs のエクステントはイミュータブルであることを考慮に入れる必要があります。
+ブロックが書かれると、それらは新しいエクステントに現れます。
+古いエクステントはその上の全てのデータが参照されなくなるか上書きされるまで残ります。
+これはサブボリューム内で現在存在するファイルで使用されている合計容量がクォータより小さい場合でもクォータに達することがあり得ることを意味します。
+
+```{note}
+この問題は Btrfs 上で仮想マシンを使用する際にもっともよく発生します。これは Btrfs サブボリューム上に生のディスクイメージを使用する際のランダムな I/O の性質のためです。
+
+このため、仮想マシンには Btrfs ストレージプールは決して使うべきではありません。
+
+どうしても仮想マシンに Btrfs ストレージプールを使う必要がある場合、インスタンスのルートディスクの {ref}`size.state <instance_device_type_disk>` をルートディスクのサイズの2倍に設定してください。
+この設定により、ディスクイメージファイルの全てのブロックが qgroup クォータに達すること無しに上書きできるようになります。
+{ref}`btrfs.mount_options=compress-force <storage-btrfs-pool-config>` ストレージプールオプションでもこのシナリオを回避できます。圧縮を有効にすることの副作用で最大のエクステントサイズを縮小しブロックの再書き込みが2倍のストレージを消費しないようになるからです。
+しかし、これはストレージプールのオプションなので、プール上の全てのボリュームに影響します。
+```
+
+## 設定オプション
+
+`btrfs` ドライバを使うストレージプールとこれらのプール内のストレージボリュームには以下の設定オプションが利用できます。
+
+(storage-btrfs-pool-config)=
 ## ストレージプール設定
-キー                 | 型     | デフォルト値              | 説明
-:--                  | :---   | :--------                 | :----------
-btrfs.mount\_options | string | user\_subvol\_rm\_allowed | ブロックデバイスのマウントオプション
-source               | string | -                         | ブロックデバイスまたはループファイルまたはファイルシステムエントリーのパス
+キー                 | 型     | デフォルト値                                              | 説明
+:--                  | :---   | :--------                                                 | :----------
+btrfs.mount\_options | string | user\_subvol\_rm\_allowed                                 | ブロックデバイスのマウントオプション
+size                 | string | auto (空きディスクスペースの 20%, >= 5 GiB and <= 30 GiB) | ループベースのプールを作成する際のストレージプールのサイズ (バイト単位、接尾辞のサポートあり)
+source               | string | -                                                         | ブロックデバイスまたはループファイルまたはファイルシステムエントリーのパス
 
-## ストレージボリューム設定
-キー               | 型     | 条件               | デフォルト値       | 説明
-:--                | :---   | :--------          | :------            | :----------
-security.shifted   | bool   | custom volume      | false              | id シフトオーバーレイを有効にする（複数の独立したインスタンスによるアタッチを許可する）
-security.unmapped  | bool   | custom volume      | false              | ボリュームへの id マッピングを無効にする
-size               | string | appropriate driver | volume.size と同じ | ストレージボリュームのサイズ
-snapshots.expiry   | string | custom volume      | -                  | スナップショットがいつ削除されるかを制御（`1M 2H 3d 4w 5m 6y` のような設定形式を想定）
-snapshots.pattern  | string | custom volume      | snap%d             | スナップショット名を表す Pongo2 テンプレート文字列（スケジュールされたスナップショットと名前指定なしのスナップショットに使用）
-snapshots.schedule | string | custom volume      | -                  | {{snapshot_schedule_format}}
+{{volume_configuration}}
 
-## ループバックデバイスを使った btrfs プールの拡張
-LXD では、ループバックデバイスの btrfs プールを直接は拡張できませんが、次のように拡張できます:
-
-```bash
-sudo truncate -s +5G /var/lib/lxd/disks/<POOL>.img
-sudo losetup -c <LOOPDEV>
-sudo btrfs filesystem resize max /var/lib/lxd/storage-pools/<POOL>/
-```
-
-(注意: snap のユーザーは `/var/lib/lxd/` の代わりに `/var/snap/lxd/common/mntns/var/snap/lxd/common/lxd/` を使ってください)
-- LOOPDEV はストレージプールイメージに関連付けられたマウントされたループデバイス（例: `/dev/loop8`）を参照します。
-- マウントされたループデバイスは次のコマンドで確認できます。
-```bash
-losetup -l
-```
+### ストレージボリューム設定
+キー               | 型     | 条件               | デフォルト値                             | 説明
+:--                | :---   | :--------          | :------                                  | :----------
+security.shifted   | bool   | custom volume      | volume.security.shifted と同じか false   | {{enable_ID_shifting}}
+security.unmapped  | bool   | custom volume      | volume.security.unmapped と同じか false  | ボリュームへの id マッピングを無効にする
+size               | string | appropriate driver | volume.size と同じ                       | ストレージボリュームのサイズ/クォータ
+snapshots.expiry   | string | custom volume      | volume.snapshots.expiry と同じ           | {{snapshot_expiry_format}}
+snapshots.pattern  | string | custom volume      | volume.snapshots.pattern と同じか snap%d | {{snapshot_pattern_format}}
+snapshots.schedule | string | custom volume      | volume.snapshots.schedule と同じ         | {{snapshot_schedule_format}}

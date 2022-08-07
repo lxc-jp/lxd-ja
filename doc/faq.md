@@ -40,32 +40,6 @@ lxc config trust add client.crt
 
 詳細は {doc}`authentication` を参照してください。
 
-### LXD のストレージを設定するには？
-LXD は Btrfs, Ceph, directory, LVM と ZFS ベースのストレージをサポートします。
-
-まず、あなたが選択したファイルシステムに関連するツール（btrfs-progs, lvm2 あるいは zfsutils-linux）をマシーン上にインストールしてください。
-
-（訳注：LXD をインストールしただけの）デフォルトの状態では LXD はネットワークやストレージが設定されていません。
-以下のコマンドにより基本の設定を実行できます。
-
-```bash
-lxd init
-```
-
-`lxd init` はディレクトリーベースのストレージと ZFS の両方をサポートします。
-それ以外のストレージを使いたい場合は `lxc storage` コマンドを使う必要があります。
-
-```bash
-lxc storage create default BACKEND [OPTIONS...]
-lxc profile device add default root disk path=/ pool=default
-```
-
-BACKEND は `btrfs`, `ceph`, `dir`, `lvm`, `zfs` のいずれかです。
-
-明示的に指定しない場合、 LXD は妥当なデフォルトサイズでループデバイスをベースにしたストレージをセットアップします。
-
-本番環境ではパフォーマンスと信頼性の両方の理由でブロックデバイスをベースにしたストレージを使うべきです。
-
 ### LXD を使ってコンテナをマイグレートするには？
 ライブマイグレーションには [CRIU](https://criu.org) と呼ばれるツールを両方のホストにインストールする必要があります。
 Ubuntu では以下のコマンドでインストールできます。

@@ -1,49 +1,110 @@
 (storage-ceph)=
-# Ceph - `ceph`
+# Ceph RBD - `ceph`
 
-- イメージとして RBD イメージを使い、インスタンスやスナップショットを作成するためにスナップショットやクローンを実行します
-- RBD でコピーオンライトが動作するため、すべての子がなくなるまでは、親のファイルシステムは削除できません。
-  その結果、LXD は削除されたにもかかわらずまだ参照されているオブジェクトに、自動的に `zombie_` というプレフィックスを付与します。
-  そして、参照されなくなるまでそれを保持します。そして安全に削除します
-- LXD は OSD ストレージプールを完全にコントロールできると想定していることに注意してください。
-  LXD OSD ストレージプール内に、LXD が所有しないファイルシステムエンティティを維持し続けないことをおすすめします。
-  LXD がそれらを削除する可能性があるからです
-- 複数の LXD インスタンス間で、同じストレージプールを共有することはサポートしないことに注意してください。
-  `lxd import` を使って既存インスタンスをバックアップする目的のときのみ、OSD ストレージプールを複数の LXD インスタンスで共有できます。
-  このような場合には、`ceph.osd.force_reuse` プロパティを true に設定する必要があります。
-  設定しない場合、LXD は他の LXD インスタンスが OSD ストレージプールを使っていることを検出した場合には、OSD ストレージプールの再利用を拒否します
-- LXD が使う Ceph クラスタを設定するときは、OSD ストレージプールを保持するために使うストレージエンティティ用のファイルシステムとして `xfs` の使用をおすすめします。
-  ストレージエンティティ用のファイルシステムとして ext4 を使用することは、Ceph の開発元では推奨していません。
-  LXD と関係ない予期しない不規則な障害が発生するかもしれません
-- "erasure" タイプの Ceph osd プールを使うためには事前に作成した osd pool とメタデータを保管するための "replicated" タイプの別の osd pool が必要です。
-  これは RBD と CephFS が omap をサポートしないために必要となります。
-  そのプールが "earasure coded" かを指定するにはリプリケートされたプールに
-  `ceph.osd.data_pool_name=<erasure-coded-pool-name>` と
-  `source=<replicated-pool-name>` を使用する必要があります。
+<!-- Include start Ceph intro -->
 
-## ストレージプール設定
-キー                      | 型     | デフォルト値 | 説明
+```{youtube} https://youtube.com/watch?v=kVLGbvRU98A
+```
+
+[Ceph](https://ceph.io/) はオープンソースのストレージプラットフォームで、データを {abbr}`RADOS (Reliable Autonomic Distributed Object Store)` に基づいたストレージクラスタ内に保管します。
+非常にスケーラブルで、単一障害点がない分散システムであり非常に信頼性が高いです。
+
+Ceph はブロックストレージ用とファイルシステム用に異なるコンポーネントを提供します。
+<!-- Include end Ceph intro -->
+
+Ceph {abbr}`RBD (RADOS Block Device)` はデータとワークロードを Ceph クラスタに分散する Ceph のブロックストレージコンポーネントです。
+これは薄いプロビジョニングを使用し、リソースをオーバーコミットできることを意味します。
+
+## 用語
+
+<!-- Include start Ceph terminology -->
+Ceph は保管するデータに *オブジェクト* という用語を使用します。
+データを保存と管理する責任を持つデーモンは *Ceph {abbr}`OSD (Object Storage Daemon)`* です。
+Ceph のストレージは *プール* に分割されます。これはオブジェクトを保管する論理的なパーティションです。
+これらは *データプール*, *ストレージプール*, *OSD プール* とも呼ばれます。
+<!-- Include end Ceph terminology -->
+
+Ceph ブロックデバイスは *RBD イメージ* とも呼ばれ、これらの RBD イメージの *スナップショット* と *クローン* を作成できます。
+
+## LXD の `ceph` ドライバ
+
+```{note}
+Ceph RBD ドライバを使用するには `ceph` と指定する必要があります。
+これは少し誤解を招く恐れがあります。 Ceph の全ての機能ではなく Ceph RBD (ブロックストレージ) の機能しか使わないからです。
+コンテントタイプ `filesystem` (イメージ、コンテナとカスタムファイルシステムボリューム) のストレージボリュームには `ceph` ドライバは Ceph RDB イメージをその上にファイルシステムがある状態で使用します ({ref}`block.filesystem <storage-ceph-vol-config>` 参照)。
+
+別の方法として、コンテントタイプ `filesystem` でストレージボリュームを作成するのに {ref}`storage-cephfs` を使用することもできます。
+```
+<!-- Include start Ceph driver cluster -->
+他のストレージドライバとは異なり、このドライバはストレージシステムをセットアップはせず、既に Ceph クラスタをインストール済みであると想定します。
+<!-- Include end Ceph driver cluster -->
+
+<!-- Include start Ceph driver remote -->
+このドライバはリモートのストレージを提供するという意味でも他のドライバとは異なる振る舞いをします。
+結果として、内部ネットワークに依存し、ストレージへのアクセスはローカルのストレージより少し遅くなるかもしれません。
+一方で、リモートのストレージを使うことはクラスタ構成では大きな利点があります。これはストレージプールを同期する必要なしに、全てのクラスタメンバが同じ内容を持つ同じストレージプールにアクセスできるからです。
+<!-- Include end Ceph driver remote -->
+
+LXD 内の `ceph` ドライバはイメージ、スナップショットに RBD イメージを使用し、インスタンスとスナップショットを作成するのにクローンを使用します。
+
+<!-- Include start Ceph driver control -->
+LXD は OSD ストレージプールに対して完全制御できることを想定します。
+このため、 LXD OSD ストレージプール内に LXD が所有しないファイルシステムエンティティは LXD が消してしまうかもしれないので決して置くべきではありません。
+<!-- Include end Ceph driver control -->
+
+Ceph RBD 内で copy-on-write が動作する方法のため、親の RBD イメージは全ての子がいなくなるまで削除できません。
+結果として LXD は削除されたがまだ参照されているオブジェクトを自動的にリネームします。
+そのようなオブジェクトは全ての参照がいなくなりオブジェクトが安全に削除できるようになるまで `zombie_` 接頭辞をつけて維持されます。
+
+### 制限
+
+`ceph` ドライバには以下の制限があります。
+
+インスタンス間でのカスタムボリュームの共有
+: {ref}`コンテントタイプ <storage-content-types>` `filesystem` のカスタムストレージボリュームは異なるクラスタメンバの複数のインスタンス間で通常は共有できます。
+  しかし、 Ceph RBD ドライバは RBD イメージ上にファイルシステムを置くことでコンテントタイプ `filesystem` のボリュームを「シミュレート」しているため、カスタムストレージボリュームは一度に1つのインスタンスにしか割り当てできません。
+  コンテントタイプ `filesystem` のカスタムボリュームを共有する必要がある場合は代わりに {ref}`storage-cephfs` ドライバを使用してください。
+
+複数インストールされた LXD 間で OSD ストレージプールの共有
+: 複数インストールされた LXD 間で同じ OSD ストレージプールを共有することはサポートされていません。
+
+タイプ "erasure" の OSD プールの使用
+: タイプ "erasure" の OSD プールを使用するには事前に OSD プールを作成する必要があります。
+  さらにタイプ "replicated" の別の OSD プールを作成する必要もあります。これはメタデータを保管するのに使用されます。
+  これは Ceph RBD が omap をサポートしないために必要となります。
+  どのプールが "erasure coded" であるかを指定するために {ref}`ceph.osd.data_pool_name <storage-ceph-pool-config>` 設定オプションをイレージャーコーディングされたプールの名前に設定し {ref}`source <storage-ceph-pool-config>` 設定オプションをリプリケートされたプールの名前に設定します。
+
+## 設定オプション
+
+`ceph` ドライバを使うストレージプールとこれらのプール内のストレージボリュームには以下の設定オプションが利用できます。
+
+(storage-ceph-pool-config)=
+### ストレージプール設定
+Key                       | Type   | Default      | Description
 :--                       | :---   | :------      | :----------
 ceph.cluster\_name        | string | ceph         | 新しいストレージプールを作成する Ceph クラスタの名前
-ceph.osd.data\_pool\_name | string | -            | osd data pool の名前
-ceph.osd.force\_reuse     | bool   | false        | 別の LXD インスタンスで既に使用されている osd ストレージプールの使用を強制するか
-ceph.osd.pg\_num          | string | 32           | osd ストレージプール用の placement グループの数
-ceph.osd.pool\_name       | string | プールの名前 | osd ストレージプールの名前
+ceph.osd.data\_pool\_name | string | -            | OSD data pool の名前
+ceph.osd.force\_reuse     | bool   | false        | 別の LXD インスタンスで既に使用されている OSD ストレージプールの使用を強制するか
+ceph.osd.pg\_num          | string | 32           | OSD ストレージプール用の placement グループの数
+ceph.osd.pool\_name       | string | プールの名前 | OSD ストレージプールの名前
 ceph.rbd.clone\_copy      | bool   | true         | フルのデータセットコピーではなく RBD のライトウェイトクローンを使うかどうか
-ceph.rbd.du               | bool   | true         | 停止したインスタンスのディスク使用データを取得するのに rbd du を使用するかどうか
+ceph.rbd.du               | bool   | true         | 停止したインスタンスのディスク使用データを取得するのに RBD `du` を使用するかどうか
 ceph.rbd.features         | string | layering     | ボリュームで有効にする RBD の機能のカンマ区切りリスト
 ceph.user.name            | string | admin        | ストレージプールとボリュームの作成に使用する Ceph ユーザー
 source                    | string | -            | 使用する既存の OSD ストレージプール
 volatile.pool.pristine    | string | true         | プールが作成時に空かどうか
 
-## ストレージボリューム設定
-キー                 | 型     | 条件               | デフォルト値                       | 説明
-:--                  | :---   | :--------          | :------                            | :----------
-block.filesystem     | string | block based driver | volume.block.filesystem と同じ     | ストレージボリュームのファイルシステム
-block.mount\_options | string | block based driver | volume.block.mount\_options と同じ | ブロックデバイスのマウントオプション
-security.shifted     | bool   | custom volume      | false                              | id シフトオーバーレイを有効にする（複数の独立したインスタンスによるアタッチを許可する）
-security.unmapped    | bool   | custom volume      | false                              | ボリュームへの id マッピングを無効にする
-size                 | string | appropriate driver | volume.size と同じ                 | ストレージボリュームのサイズ
-snapshots.expiry     | string | custom volume      | -                                  | スナップショットがいつ削除されるかを制御（`1M 2H 3d 4w 5m 6y` のような設定形式を想定）
-snapshots.pattern    | string | custom volume      | snap%d                             | スナップショット名を表す Pongo2 テンプレート文字列（スケジュールされたスナップショットと名前指定なしのスナップショットに使用）
-snapshots.schedule   | string | custom volume      | -                                  | {{snapshot_schedule_format}}
+{{volume_configuration}}
+
+(storage-ceph-vol-config)=
+### ストレージボリューム設定
+Key                  | Type   | Condition          | Default                                  | Description
+:--                  | :---   | :--------          | :------                                  | :----------
+block.filesystem     | string | block based driver | volume.block.filesystem と同じ           | {{block_filesystem}}
+block.mount\_options | string | block based driver | volume.block.mount\_options と同じ       | ブロックデバイスのマウントオプション
+security.shifted     | bool   | custom volume      | volume.security.shifted と同じか false   | {{enable_ID_shifting}}
+security.unmapped    | bool   | custom volume      | volume.security.unmapped と同じか false  | ボリュームの ID マッピングを無効にする
+size                 | string | appropriate driver | volume.size と同じ                       | ストレージボリュームのサイズ/クォータ
+snapshots.expiry     | string | custom volume      | volume.snapshots.expiry と同じ           | {{snapshot_expiry_format}}
+snapshots.pattern    | string | custom volume      | volume.snapshots.pattern と同じか snap%d | {{snapshot_pattern_format}}
+snapshots.schedule   | string | custom volume      | volume.snapshots.schedule と同じ         | {{snapshot_schedule_format}}

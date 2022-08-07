@@ -1,4 +1,4 @@
-(storage_create_pool)=
+(storage-create-pool)=
 # ストレージプールを作成するには
 
 LXD は初期化中にストレージプールを作成します。
@@ -8,15 +8,17 @@ LXD は初期化中にストレージプールを作成します。
 
     lxc storage create <pool_name> <driver> [configuration_options...]
 
+別途指定しない場合は、 LXD は実用的なデフォルトのサイズ (空きディスクスペースの20%、しかし最低5GiBで最大30GIB) でループベースのストレージをセットアップします。
+
 それぞれのドライバーで利用可能な設定オプションの一覧は {ref}`storage-drivers` ドキュメントを参照してください。
 
 ## 例
 
 それぞれのストレージドライバーでストレージプールを作成する例は以下を参照してください。
 
-````{tabs}
+`````{tabs}
 
-```{group-tab} ディレクトリ
+````{group-tab} ディレクトリ
 
 `pool1` という名前のディレクトリプールを作成する。
 
@@ -25,8 +27,8 @@ LXD は初期化中にストレージプールを作成します。
 `/data/lxd` という既存のディレクトリを使って `pool2` を作成する。
 
     lxc storage create pool2 dir source=/data/lxd
-```
-```{group-tab} Btrfs
+````
+````{group-tab} Btrfs
 
 `pool1` という名前のループバックプールを作成する。
 
@@ -39,8 +41,8 @@ LXD は初期化中にストレージプールを作成します。
 `/dev/sdX` 上に `pool3` という名前のプールを作成する。
 
     lxc storage create pool3 btrfs source=/dev/sdX
-```
-```{group-tab} LVM
+````
+````{group-tab} LVM
 
 `pool1` という名前のループバックのプールを作成する (LVM ボリュームグループ名も `pool1` になります)。
 
@@ -61,8 +63,8 @@ LXD は初期化中にストレージプールを作成します。
 `/dev/sdX` 上に `my-pool` というLVM ボリュームグループ名で `pool5` という名前のプールを作成する。
 
     lxc storage create pool5 lvm source=/dev/sdX lvm.vg_name=my-pool
-```
-```{group-tab} ZFS
+````
+````{group-tab} ZFS
 
 `pool1` という名前のループバックプールを作成する (ZFS zpool 名も `pool1` になります)。
 
@@ -87,8 +89,8 @@ LXD は初期化中にストレージプールを作成します。
 `/dev/sdX` 上に `my-tank` という ZFS zpool 名で `pool6` という名前のプールを作成する。
 
     lxc storage create pool6 zfs source=/dev/sdX zfs.pool_name=my-tank
-```
-```{group-tab} Ceph
+````
+````{group-tab} Ceph RBD
 
 デフォルトの Ceph クラスター (名前は `ceph`) 内に `pool1` という名前の OSD ストレージプールを作成する。
 
@@ -109,27 +111,24 @@ LXD は初期化中にストレージプールを作成します。
 `ecpool` という既存の OSD ストレージプールと `rpl-pool` という OSD リプリケーテッドプールを使って `pool5` を作成する。
 
     lxc storage create pool5 ceph source=rpl-pool ceph.osd.data_pool_name=ecpool
-```
-```{group-tab} CephFS
-
-デフォルト Ceph クラスター (名前は `ceph`) 内に `pool1` という名前のストレージプールを作成する。
-
-    lxc storage create pool1 cephfs
-
-Ceph クラスター `my-cluster` 内に `pool2` という名前のストレージプールを作成する。
-
-    lxc storage create pool2 cephfs cephfs.cluster_name=my-cluster
-
-既存のストレージプール `my-filesystem` を使って `pool3` を作成する。
-
-    lxc storage create pool3 cephfs source=my-filesystem
-
-`my-filesystem` プールからサブディレクトリ `my-directory` を使って `pool4` を作成する。
-
-    lxc storage create pool4 cephfs source=my-filesystem/my-directory
-
-```
 ````
+````{group-tab} CephFS
+
+```{note}
+CephFS ドライバーを使用する際は、事前に CephFS ファイルシステムを作成する必要があります。
+このファイルシステムは 2 つの OSD ストレージプールからなります。そのうち 1 つは実際のデータ、もう 1 つはファイルメタデータに使用されます。
+```
+
+既存の CephFS ファイルシステム `my-filesystem` を使って `pool1` を作成する。
+
+    lxc storage create pool1 cephfs source=my-filesystem
+
+`my-filesystem` ファイルシステムからサブディレクトリ `my-directory` を使って `pool2` を作成する。
+
+    lxc storage create pool2 cephfs source=my-filesystem/my-directory
+
+````
+`````
 
 ## クラスター内にストレージプールを作成する
 
