@@ -8,7 +8,7 @@ relatedlinks: https://cloudinit.readthedocs.org/
 ```{youtube} https://www.youtube.com/watch?v=8OCG15TAldI
 ```
 
-LXD は [cloud-init](https://launchpad.net/cloud-init) を以下のインスタンスまたはプロファイル設定キー経由でサポートします。
+LXD は次のインスタンスまたはプロファイル設定キーを使用して [cloud-init](https://launchpad.net/cloud-init) をサポートします。
 
 * `cloud-init.vendor-data`
 * `cloud-init.user-data`

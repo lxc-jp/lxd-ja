@@ -22,7 +22,7 @@ LXD の `lvm` ドライバはイメージに論理ボリュームを、インス
 
 LXD はボリュームグループを完全制御できると想定しています。
 
-このため、 LVM ボリュームグループ内に LXD が所有しないファイルシステムエンティティは LXD が消してしまうかもしれないので決して置くべきではありません。
+このため、 LXD が所有しないファイルシステムエンティティは LXD が消してしまうかもしれないので、LVM ボリュームグループ内に決して置くべきではありません。
 
 デフォルトでは LVM ストレージプールは LVM thin pool を使用しその中に全ての LXD ストレージエンティティ (イメージ、インスタンス、カスタムボリューム) の論理ボリュームを作成します。
 この挙動はプール作成時に {ref}`lvm.use_thinpool <storage-lvm-pool-config>` を `false` に設定することで変更できます。
@@ -47,7 +47,7 @@ lvm.thinpool\_metadata\_size | string | 0 (auto)                                
 lvm.use\_thinpool            | bool   | true                                                      | ストレージプールは論理ボリュームに thin pool を使うかどうか
 lvm.vg.force\_reuse          | bool   | false                                                     | 既存の空でないボリュームグループの使用を強制
 lvm.vg\_name                 | string | プールの名前                                              | 作成するボリュームグループ名
-rsync.bwlimit                | string | 0 (no limit)                                              | ストレージエンティティーの転送にrsyncを使う場合、I/Oソケットに設定する上限を指定
+rsync.bwlimit                | string | 0 (no limit)                                              | ストレージエンティティーの転送にrsyncを使う場合、ソケットI/Oに設定する上限を指定
 rsync.compression            | bool   | true                                                      | ストレージプールをマイグレートする際に圧縮を使用するかどうか
 size                         | string | auto (空きディスクスペースの 20%, >= 5 GiB and <= 30 GiB) | ループベースのプールを作成する際のストレージプールのサイズ (バイト単位、接尾辞のサポートあり)
 source                       | string | -                                                         | ブロックデバイスかループファイルかファイルシステムエントリのパス

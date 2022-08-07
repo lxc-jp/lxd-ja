@@ -72,7 +72,7 @@ Ceph RBD 内で copy-on-write が動作する方法のため、親の RBD イメ
 : タイプ "erasure" の OSD プールを使用するには事前に OSD プールを作成する必要があります。
   さらにタイプ "replicated" の別の OSD プールを作成する必要もあります。これはメタデータを保管するのに使用されます。
   これは Ceph RBD が omap をサポートしないために必要となります。
-  そのプールが "erasure coded" であるかを指定するために {ref}`ceph.osd.data_pool_name <storage-ceph-pool-config>` 設定オプションをイレージャーコーディングされたプールの名前に設定し {ref}`source <storage-ceph-pool-config>` 設定オプションをリプリケートされたプールの名前に設定します。
+  どのプールが "erasure coded" であるかを指定するために {ref}`ceph.osd.data_pool_name <storage-ceph-pool-config>` 設定オプションをイレージャーコーディングされたプールの名前に設定し {ref}`source <storage-ceph-pool-config>` 設定オプションをリプリケートされたプールの名前に設定します。
 
 ## 設定オプション
 

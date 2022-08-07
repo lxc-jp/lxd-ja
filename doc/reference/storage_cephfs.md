@@ -7,7 +7,7 @@
     :end-before: <!-- Include end Ceph intro -->
 ```
 
-{abbr}`CephFS (Ceph File System)` はロバストでフル機能の POSIX 互換の分散ファイルシステムを提供する Ceph のファイルシステムコンポーネントです。
+{abbr}`CephFS (Ceph File System)` は堅牢でフル機能の POSIX 互換の分散ファイルシステムを提供する Ceph のファイルシステムコンポーネントです。
 内部的には ファイルを Ceph オブジェクトにマップし、ファイルのメタデータ (例えば、ファイルの所有権、ディレクトリパス、アクセス権限) を別のデータプールに保管します。
 
 ## 用語
