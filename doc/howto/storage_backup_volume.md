@@ -4,7 +4,7 @@ There are different ways of backing up your custom storage volumes:
 
 - {ref}`storage-backup-snapshots`
 - {ref}`storage-backup-export`
-- {ref}`storage-copy`
+- {ref}`storage-copy-volume`
 
 Which method to choose depends both on your use case and on the storage driver you use.
 
@@ -65,7 +65,7 @@ To delete a snapshot, use the following command:
 ### Schedule snapshots of a custom storage volume
 
 You can configure a custom storage volume to automatically create snapshots at specific times.
-To do so, set the `snapshots.schedule` configuration option for the storage volume (see {ref}`storage-configure-volumes`).
+To do so, set the `snapshots.schedule` configuration option for the storage volume (see {ref}`storage-configure-volume`).
 
 For example, to configure daily snapshots, use the following command:
 
@@ -113,7 +113,7 @@ If the output file (`backup.tar.gz` or the specified file path) already exists, 
 You can add any of the following flags to the command:
 
 `--compression`
-: By default, the output file uses gzip compression.
+: By default, the output file uses `gzip` compression.
   You can specify a different compression algorithm (for example, `bzip2`) or turn off compression with `--compression=none`.
 
 `--optimized-storage`

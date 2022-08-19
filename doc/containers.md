@@ -5,7 +5,7 @@ discourse: 8767
 # Containers
 ## Introduction
 Containers are the default type for LXD and currently the most
-featureful and complete implementation of LXD instances.
+complete implementation of LXD instances, providing the most features.
 
 They are implemented through the use of `liblxc` (LXC).
 
@@ -13,9 +13,9 @@ They are implemented through the use of `liblxc` (LXC).
 See [instance configuration](instances.md) for valid configuration options.
 
 ## Live migration
-LXD supports live migration of containers using [CRIU](http://criu.org). In
+LXD supports live migration of containers using [CRIU](https://criu.org). In
 order to optimize the memory transfer for a container LXD can be instructed to
-make use of CRIU's pre-copy features by setting the
+make use of the pre-copy features in CRIU by setting the
 `migration.incremental.memory` property to `true`. This means LXD will request
 CRIU to perform a series of memory dumps for the container. After each dump LXD
 will send the memory dump to the specified remote. In an ideal scenario each

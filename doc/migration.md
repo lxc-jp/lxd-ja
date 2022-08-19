@@ -1,46 +1,28 @@
-# Live Migration in LXD
+(migration)=
+# Migration
 
-## Overview
-Migration has two pieces, a "source", that is, the host that already has the
-instance, and a "sink", the host that's getting the instance. Currently,
-in the `pull` mode, the source sets up an operation, and the sink connects
-to the source and pulls the instance.
+LXD provides tools and functionality to migrate instances in different contexts.
 
-There are three websockets (channels) used in migration:
+Migrate existing LXD instances between servers
+: The most basic kind of migration is if you have a LXD instance on one server and want to move it to a different LXD server.
+  For virtual machines, you can do that as a live migration, which means that you can migrate your VM while it is running and there will be no downtime.
 
-  1. the control stream
-  2. the criu images stream
-  3. the filesystem stream
+  See {ref}`move-instances` for more information.
 
-When a migration is initiated, information about the instance, its
-configuration, etc. are sent over the control channel (a full
-description of this process is below), the criu images and instance
-filesystem are synced over their respective channels, and the result of
-the restore operation is sent from the sink to the source over the
-control channel.
+Migrate physical or virtual machines to LXD instances
+: If you have an existing machine, either physical or virtual (VM or container), you can use the `lxd-migrate` tool to create a LXD instance based on your existing machine.
+  The tool copies the provided partition, disk or image to the LXD storage pool of the provided LXD server, sets up an instance using that storage and allows you to configure additional settings for the new instance.
 
-In particular, the protocol that is spoken over the criu channel and filesystem
-channel can vary, depending on what is negotiated over the control socket. For
-example, both the source and the sink's LXD directory is on Btrfs, the
-filesystem socket can speak btrfs-send/receive. Additionally, although we do a
-"stop the world" type migration right now, support for criu's p.haul protocol
-will happen over the criu socket at some later time.
+  See {ref}`import-machines-to-instances` for more information.
 
-## Control Socket
-Once all three websockets are connected between the two endpoints, the
-source sends a MigrationHeader (protobuf description found in
-`/lxd/migration/migrate.proto`). This header contains the instance
-configuration which will be added to the new instance.
+Migrate instances from LXC to LXD
+: If you are using LXC and want to migrate all or some of your LXC containers to a LXD installation on the same machine, you can use the `lxc-to-lxd` tool.
+  The tool analyzes the LXC configuration and copies the data and configuration of your existing LXC containers into new LXD containers.
 
-There are also two fields indicating the filesystem and criu protocol to speak.
-For example, if a server is hosted on a Btrfs filesystem, it can indicate that it
-wants to do a `btrfs send` instead of a simple rsync (similarly, it could
-indicate that it wants to speak the p.haul protocol, instead of just rsyncing
-the images over slowly).
+```{toctree}
+:maxdepth: 1
+:hidden:
 
-The sink then examines this message and responds with whatever it
-supports. Continuing our example, if the sink is not on a Btrfs
-filesystem, it responds with the lowest common denominator (rsync, in
-this case), and the source is to send the root filesystem using rsync.
-Similarly with the criu connection; if the sink doesn't have support for
-the p.haul protocol (or whatever), we fall back to rsync.
+Move instances <howto/move_instances>
+Import existing machines <howto/import_machines_to_instances>
+```

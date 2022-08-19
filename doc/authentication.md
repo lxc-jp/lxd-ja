@@ -3,6 +3,7 @@ discourse: 13114
 relatedlinks: https://www.youtube.com/watch?v=6O0q3rSWr8A
 ---
 
+(authentication)=
 # Remote API authentication
 
 Remote communications with the LXD daemon happen using JSON over HTTPS.
@@ -90,11 +91,24 @@ You can also add new clients by using tokens. This is a safer way than using the
 
 To use this method, generate a token for each client by calling `lxc config trust add`, which will prompt for the client name.
 The clients can then add their certificates to the server's trust store by providing the generated token when prompted for the trust password.
+
+```{note}
+If your LXD server is behind NAT, you must specify its external public address when adding it as a remote for a client:
+
+    lxc remote add <name> <IP_address>
+
+When you are prompted for the admin password, specify the generated token.
+
+When generating the token on the server, LXD includes a list of IP addresses that the client can use to access the server.
+However, if the server is behind NAT, these addresses might be local addresses that the client cannot connect to.
+In this case, you must specify the external address manually.
+```
+
 Alternatively, the clients can provide the token directly when adding the remote: `lxc remote add <name> <token>`.
 
 ### Using a PKI system
 
-In a {abbr}`PKI (Public key infrastructure)` setup, a system administrator manages a central PKI that issues client certificates for all the lxc clients and server certificates for all the LXD daemons.
+In a {abbr}`PKI (Public key infrastructure)` setup, a system administrator manages a central PKI that issues client certificates for all the LXD clients and server certificates for all the LXD daemons.
 
 To enable PKI mode, complete the following steps:
 
@@ -106,7 +120,7 @@ To enable PKI mode, complete the following steps:
 1. Restart the server.
 
 In that mode, any connection to a LXD daemon will be done using the
-preseeded CA certificate.
+pre-seeded CA certificate.
 
 If the server certificate isn't signed by the CA, the connection will simply go through the normal authentication mechanism.
 If the server certificate is valid and signed by the CA, then the connection continues without prompting the user for the certificate.

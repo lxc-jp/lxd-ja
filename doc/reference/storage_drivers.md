@@ -1,3 +1,7 @@
+---
+relatedlinks: https://www.youtube.com/watch?v=z_OKwO5TskA
+---
+
 (storage-drivers)=
 # Storage drivers
 
@@ -12,6 +16,7 @@ storage_lvm
 storage_zfs
 storage_ceph
 storage_cephfs
+storage_cephobject
 ```
 See the corresponding pages for driver-specific information and configuration options.
 
@@ -20,20 +25,21 @@ See the corresponding pages for driver-specific information and configuration op
 
 Where possible, LXD uses the advanced features of each storage system to optimize operations.
 
-Feature                                     | Directory | Btrfs | LVM   | ZFS  | Ceph RBD | CephFS
-:---                                        | :---      | :---  | :---  | :--- | :---     | :---
-{ref}`storage-optimized-image-storage`      | no        | yes   | yes   | yes  | yes      | n/a
-Optimized instance creation                 | no        | yes   | yes   | yes  | yes      | n/a
-Optimized snapshot creation                 | no        | yes   | yes   | yes  | yes      | yes
-Optimized image transfer                    | no        | yes   | no    | yes  | yes      | n/a
-{ref}`storage-optimized-instance-transfer`  | no        | yes   | no    | yes  | yes      | n/a
-Copy on write                               | no        | yes   | yes   | yes  | yes      | yes
-Block based                                 | no        | no    | yes   | no   | yes      | no
-Instant cloning                             | no        | yes   | yes   | yes  | yes      | yes
-Storage driver usable inside a container    | yes       | yes   | no    | no   | no       | n/a
-Restore from older snapshots (not latest)   | yes       | yes   | yes   | no   | yes      | yes
-Storage quotas                              | yes<sup>{ref}`* <storage-dir-quotas>`</sup>| yes   | yes   | yes  | yes  | yes
-Available on `lxd init`                     | yes       | yes   | yes   | yes  | yes      | no
+Feature                                     | Directory | Btrfs | LVM   | ZFS  | Ceph RBD | CephFS | Ceph Object
+:---                                        | :---      | :---  | :---  | :--- | :---     | :---   | :---
+{ref}`storage-optimized-image-storage`      | no        | yes   | yes   | yes  | yes      | n/a    | n/a
+Optimized instance creation                 | no        | yes   | yes   | yes  | yes      | n/a    | n/a
+Optimized snapshot creation                 | no        | yes   | yes   | yes  | yes      | yes    | n/a
+Optimized image transfer                    | no        | yes   | no    | yes  | yes      | n/a    | n/a
+{ref}`storage-optimized-instance-transfer`  | no        | yes   | no    | yes  | yes      | n/a    | n/a
+Copy on write                               | no        | yes   | yes   | yes  | yes      | yes    | n/a
+Block based                                 | no        | no    | yes   | no   | yes      | no     | n/a
+Instant cloning                             | no        | yes   | yes   | yes  | yes      | yes    | n/a
+Storage driver usable inside a container    | yes       | yes   | no    | no   | no       | n/a    | n/a
+Restore from older snapshots (not latest)   | yes       | yes   | yes   | no   | yes      | yes    | n/a
+Storage quotas                              | yes<sup>{ref}`* <storage-dir-quotas>`</sup>| yes   | yes   | yes  | yes  | yes    | yes
+Available on `lxd init`                     | yes       | yes   | yes   | yes  | yes      | no     | no
+Object storage                              | no        | no    | no    | no   | no       | no     | yes
 
 (storage-optimized-image-storage)=
 ### Optimized image storage
@@ -51,9 +57,9 @@ Btrfs, ZFS and Ceph RBD have an internal send/receive mechanism that allows for 
 LXD uses this mechanism to transfer instances and snapshots between servers.
 
 This optimized transfer is available only when transferring volumes between storage pools that use the same storage driver.
-When transferring between storage pools that use different drivers or drivers that don't support optimized instance transfer, LXD uses rsync to transfer the individual files instead.
+When transferring between storage pools that use different drivers or drivers that don't support optimized instance transfer, LXD uses `rsync` to transfer the individual files instead.
 
-When using rsync, you can specify an upper limit on the amount of socket I/O by setting the `rsync.bwlimit` storage pool property to a non-zero value.
+When using `rsync`, you can specify an upper limit on the amount of socket I/O by setting the `rsync.bwlimit` storage pool property to a non-zero value.
 
 ## Recommended setup
 
@@ -70,7 +76,7 @@ Therefore, it constantly copies the instance's full storage.
 
 ## Security considerations
 
-Currently, the Linux kernel might silently ignore mount options and not apply them when a block-based filesystem (for example, `ext4`) is already mounted with different mount options.
+Currently, the Linux kernel might silently ignore mount options and not apply them when a block-based file system (for example, `ext4`) is already mounted with different mount options.
 This means when dedicated disk devices are shared between different storage pools with different mount options set, the second mount might not have the expected mount options.
 This becomes security relevant when, for example, one storage pool is supposed to provide `acl` support and the second one is supposed to not provide `acl` support.
 

@@ -84,7 +84,7 @@ Use the existing ZFS dataset `my-tank/slice` for `pool4`:
 
 Create a pool named `pool5` on `/dev/sdX` (the ZFS zpool will also be called `pool5`):
 
-    lxc storage create pool1 zfs source=/dev/sdX
+    lxc storage create pool5 zfs source=/dev/sdX
 
 Create a pool named `pool6` on `/dev/sdX` with the ZFS zpool name `my-tank`:
 
@@ -127,6 +127,14 @@ Use the sub-directory `my-directory` from the `my-filesystem` file system for `p
 
     lxc storage create pool2 cephfs source=my-filesystem/my-directory
 
+````
+````{group-tab} Ceph Object
+
+```{note}
+When using the Ceph Object driver, you must have a running Ceph Object Gateway [`radosgw`](https://docs.ceph.com/en/latest/radosgw/) URL available beforehand.
+```
+
+    lxc storage create s3 cephobject cephobject.radosgsw.endpoint=http://<radosgw URL>
 ````
 `````
 
