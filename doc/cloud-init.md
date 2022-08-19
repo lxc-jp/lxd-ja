@@ -23,14 +23,14 @@ LXD は次のインスタンスまたはプロファイル設定キーを使用�
 
 `vendor-data` と `user-data` は同じルールに従いますが、以下の制約があります。
 
-* ユーザーは vendordata に対して究極のコントロールが可能です。実行を無効化したりマルチパートの入力の特定のパートの処理を無効化できます。
+* ユーザーは vendor data に対して究極のコントロールが可能です。実行を無効化したりマルチパートの入力の特定のパートの処理を無効化できます。
 * デフォルトでは初回ブート時のみ実行されます。
-* vendordata はユーザーにより無効化できます。インスタンスの実行に vendordata の使用が必須な場合は vendordata を使うべきではありません。
-* ユーザーが指定した cloud-config は vendordata の cloud-config の上にマージされます。
+* vendor data はユーザーにより無効化できます。インスタンスの実行に vendor data の使用が必須な場合は vendor data を使うべきではありません。
+* ユーザーが指定した `cloud-config` は vendor data の `cloud-config` の上にマージされます。
 
 LXD のインスタンスではインスタンスの設定よりもプロファイル内の `vendor-data` を使うべきです。
 
-cloud-config の例はこちらにあります。 https://cloudinit.readthedocs.io/en/latest/topics/examples.html
+`cloud-config` の例は [cloud-init のドキュメント](https://cloudinit.readthedocs.io/en/latest/topics/examples.html) にあります。
 
 ## cloud-init と連携する
 
@@ -62,7 +62,7 @@ devices:
 
 ### 設定に cloud-init のキーを追加する
 
-`cloud-init` キーは特殊な文法を必要とします。パイプ記号 (`|`) を使って、パイプの後のインデント付きのテキスト全体を `cloud-init` に単一の文字列として渡すことを指示します。この際改行とインデントは保持されます。これは YAML の [リテラルスタイルフォーマット](https://yaml.org/spec/1.2.2/#812-literal-style) です。
+`cloud-init` キーは特殊な文法を必要とします。パイプ記号 (`|`) を使って、パイプの後のインデント付きのテキスト全体を `cloud-init` に単一の文字列として渡すことを指示します。この際改行とインデントは保持されます。これは YAML で使用される [リテラルスタイルフォーマット](https://yaml.org/spec/1.2.2/#812-literal-style) です。
 
 ```yaml
 config:
@@ -85,7 +85,7 @@ cloud-init は `user-data` (と `vendor-data`) セクションをパッケージ
 
 `cloud-init.user-data` キーは最初の行で [データフォーマット](https://cloudinit.readthedocs.io/en/latest/topics/format.html) のどのタイプを `cloud-init` に渡すのかを指示します。パッケージのアップグレードやユーザのセットアップには `#cloud-config` のデータフォーマットを使用します。
 
-この結果インスタンスの `rootfs` には以下のファイルが作られます。
+この結果インスタンスの rootfs には以下のファイルが作られます。
 
 * `/var/lib/cloud/instance/cloud-config.txt`
 * `/var/lib/cloud/instance/user-data.txt`
@@ -146,11 +146,11 @@ config:
 
 ### カスタムネットワーク設定
 
-cloud-init は、network-config データを使い、Ubuntu リリースに応じて
-ifupdown もしくは netplan のどちらかを使って、システム上の関連する設定
+cloud-init は、`network-config` データを使い、Ubuntu リリースに応じて
+`ifupdown` もしくは `netplan` のどちらかを使って、システム上の関連する設定
 を行います。
 
-デフォルトではインスタンスの eth0 インタフェースで DHCP クライアントを使うように
+デフォルトではインスタンスの `eth0` インタフェースで DHCP クライアントを使うように
 なっています。
 
 これを変更するためには設定ディクショナリ内の `cloud-init.network-config` キーを
@@ -159,7 +159,7 @@ ifupdown もしくは netplan のどちらかを使って、システム上の�
 構成されているためです）。
 
 例えば、ある特定のネットワーク・インタフェースを静的 IPv4 アドレスを持ち、
-カスタムのネームスペースを使うようにするには、以下のようにします。
+カスタムのネームサーバを使うようにするには、以下のようにします。
 
 ```yaml
 config:
@@ -182,5 +182,5 @@ config:
 この結果、インスタンスの rootfs には以下のファイルが作られます。
 
  * `/var/lib/cloud/seed/nocloud-net/network-config`
- * `/etc/network/interfaces.d/50-cloud-init.cfg` (ifupdown を使う場合)
- * `/etc/netplan/50-cloud-init.yaml` (netplan を使う場合)
+ * `/etc/network/interfaces.d/50-cloud-init.cfg` (`ifupdown` を使う場合)
+ * `/etc/netplan/50-cloud-init.yaml` (`netplan` を使う場合)

@@ -25,8 +25,8 @@
 
 CLI ツール (`lxc/`) 内の文字列を更新する際は、テンプレートを更新してコミットする必要があるでしょう:
 
- - make i18n
- - git commit -a -s -m "i18n: Update translation templates" po/
+    make i18n
+    git commit -a -s -m "i18n: Update translation templates" po/
 
 このようにすることで、コントリビューションに対するレビューが容易になり、stable ブランチへバックポートするプロセスが大幅に簡素化されます。
 
@@ -91,7 +91,7 @@ Signed-off-by: Random J Developer <random@developer.org>
 
 ## Code of Conduct
 
-コントリビュートする際には、行動規範を遵守しなければなりません。行動規範は、以下のサイトから入手できます。https://github.com/lxc/lxd/blob/master/CODE_OF_CONDUCT.md
+コントリビュートする際には、行動規範を遵守しなければなりません。行動規範は、以下のサイトから入手できます。 [`https://github.com/lxc/lxd/blob/master/CODE_OF_CONDUCT.md`](https://github.com/lxc/lxd/blob/master/CODE_OF_CONDUCT.md)
 
 <!-- Include end contributing -->
 

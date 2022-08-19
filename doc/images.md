@@ -4,6 +4,6 @@
 :maxdepth: 1
 
 architectures
-cloud-initファイル <cloud-init>
+cloud-init <cloud-init>
 イメージの扱い <image-handling>
 ```

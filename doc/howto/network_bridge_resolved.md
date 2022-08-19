@@ -1,20 +1,20 @@
 (network-bridge-resolved)=
-# systemd-resolved と統合するには
+# `systemd-resolved` と統合するには
 
-LXD を実行するシステムが DNS ルックアップの実行に `systemd-resolved` を使用する場合、 resolved に LXD が名前解決できるドメインを通知するべきです。
-そうするには、 LXD ネットワークブリッジにより提供される DNS サーバとドメインを resolved の設定に追加してください。
+LXD を実行するシステムが DNS ルックアップの実行に `systemd-resolved` を使用する場合、 `resolved` に LXD が名前解決できるドメインを通知するべきです。
+そうするには、 LXD ネットワークブリッジにより提供される DNS サーバとドメインを `resolved` の設定に追加してください。
 
 ```{note}
 この機能を使いたい場合、 `dns.mode` オプション ({ref}`network-bridge-options` 参照) を `managed` か `dynamic` に設定する必要があります。
 
-`dns.domain` の設定によっては、 DNS 名前解決を許可するため resolved の DNSSEC を無効化する必要があるかもしれません。
+`dns.domain` の設定によっては、 DNS 名前解決を許可するため `resolved` の DNSSEC を無効化する必要があるかもしれません。
 これは `resolved.conf` 内の `DNSSEC` オプションにより実現できます。
 ```
 
 (network-bridge-resolved-configure)=
-## resolved を設定する
+## `resolved` を設定する
 
-ネットワークブリッジを resolved 設定に追加するには、対応するブリッジの DNS アドレスとドメインを指定します。
+ネットワークブリッジを `resolved` 設定に追加するには、対応するブリッジの DNS アドレスとドメインを指定します。
 
 DNS アドレス
 : IPv4 アドレス、 IPv6 アドレス、あるいは両方を使用できます。
@@ -36,11 +36,11 @@ DNS ドメイン
   このオプションが設定されていない場合、デフォルトのドメイン名は `lxd` です。
 
   DNS ドメインを指定する場合、ドメイン名に `~` の接頭辞をつけてください。
-  `~` により resolved がこのドメインをルックアップするためだけに対応するネームサーバを使うようになります。
+  `~` により `resolved` がこのドメインをルックアップするためだけに対応するネームサーバを使うようになります。
 
   ご利用のシェルによっては `~` が展開されるのを防ぐために DNS ドメインを引用符で囲む必要があるかもしれません。
 
-resolved を設定するには以下のコマンドを使用します。
+`resolved` を設定するには以下のコマンドを使用します。
 
     resolvectl dns <network_bridge> <dns_address>
     resolvectl domain <network_bridge> <dns_domain>
@@ -52,19 +52,19 @@ resolved を設定するには以下のコマンドを使用します。
 
 ```{note}
 別の方法として、 `systemd-resolve` コマンドを使用することもできます。
-このコマンドは systemd の新しいリリースでは廃止予定となっていますが、後方互換性のため引き続き提供されています。
+このコマンドは `systemd` の新しいリリースでは廃止予定となっていますが、後方互換性のため引き続き提供されています。
 
     systemd-resolve --interface <network_bridge> --set-domain <dns_domain> --set-dns <dns_address>
 ```
 
-resolved の設定はブリッジが存在する限り残ります。
+`resolved` の設定はブリッジが存在する限り残ります。
 リブートのたびに LXD が再起動した後に上記のコマンドを実行するか、下記のように設定を永続的にする必要があります。
 
-## resolved の設定を永続的にする
+## `resolved` の設定を永続的にする
 
 システムの起動時に適用され LXD がネットワークインタフェースを作成したときに有効になるように `systemd-resolved` の DNS 設定を自動化できます。
 
-そうするには、 `/etc/systemd/system/lxd-dns-<network_bridge>.service` という名前の systemd ユニットファイルを以下の内容で作成してください。
+そうするには、 `/etc/systemd/system/lxd-dns-<network_bridge>.service` という名前の `systemd` ユニットファイルを以下の内容で作成してください。
 
 ```
 [Unit]
@@ -104,7 +104,7 @@ WantedBy=sys-subsystem-net-devices-<network_bridge>.device
    Main PID: 9434 (code=exited, status=0/SUCCESS)
 ```
 
-resolved に設定が反映されたか確認するには、 `sudo resolvectl status <network_bridge>` を実行します。
+`resolved` に設定が反映されたか確認するには、 `sudo resolvectl status <network_bridge>` を実行します。
 
 ```
 Link 6 (lxdbr0)

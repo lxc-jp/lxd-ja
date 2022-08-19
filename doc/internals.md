@@ -4,7 +4,6 @@
 :maxdepth: 1
 
 コンテナ実行環境 <container-environment>
-インスタンスのマイグレーション <migration>
 daemon-behavior
 database
 debugging

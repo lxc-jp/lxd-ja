@@ -84,7 +84,7 @@ LXD は初期化中にストレージプールを作成します。
 
 `/dev/sdX` 上に `pool5` という名前のプールを作成する (ZFS zpool 名も `pool5` になります)。
 
-    lxc storage create pool1 zfs source=/dev/sdX
+    lxc storage create pool5 zfs source=/dev/sdX
 
 `/dev/sdX` 上に `my-tank` という ZFS zpool 名で `pool6` という名前のプールを作成する。
 
@@ -127,6 +127,14 @@ CephFS ドライバーを使用する際は、事前に CephFS ファイルシ�
 
     lxc storage create pool2 cephfs source=my-filesystem/my-directory
 
+````
+````{group-tab} Ceph Object
+
+```{note}
+Ceph Object ドライバーを使用する場合、事前に稼働中の Ceph Object Gateway [`radosgw`](https://docs.ceph.com/en/latest/radosgw/) の URL を用意しておく必要があります。
+```
+
+    lxc storage create s3 cephobject cephobject.radosgsw.endpoint=http://<radosgw URL>
 ````
 `````
 

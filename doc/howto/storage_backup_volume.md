@@ -4,7 +4,7 @@
 
 - {ref}`storage-backup-snapshots`
 - {ref}`storage-backup-export`
-- {ref}`storage-copy`
+- {ref}`storage-copy-volume`
 
 どの方法を選ぶかはユースケースと使用しているストレージドライバーによります。
 
@@ -65,7 +65,7 @@
 ### カスタムストレージボリュームのスナップショットをスケジュールする
 
 特定の日時にスナップショットを自動で作成するようにカスタムストレージボリュームを設定できます。
-そのためにはストレージボリュームに `snapshots.schedule` 設定オプションを設定してください ({ref}`storage-configure-volumes` 参照)。
+そのためにはストレージボリュームに `snapshots.schedule` 設定オプションを設定してください ({ref}`storage-configure-volume` 参照)。
 
 例えば、日次スナップショットを設定するには以下のコマンドを使用します。
 
@@ -113,7 +113,7 @@
 コマンドに以下のフラグを追加できます。
 
 `--compression`
-: デフォルトでは出力ファイルは gzip 圧縮を使います。
+: デフォルトでは出力ファイルは `gzip` 圧縮を使います。
   別の圧縮アリゴリズム (例えば `bzip2`) を指定することもできますし `--compression=none` で圧縮をオフにすることもできます。
 
 `--optimized-storage`

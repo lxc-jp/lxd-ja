@@ -1,4 +1,4 @@
-# Remotes
+# リモート
 ## イントロダクション
 リモートは LXD のコマンドラインクライアント内の概念でありさまざまな LXD サーバやクラスタを参照するのに使用します。
 リモートは実質的には特定の LXD サーバをサーバにログインしたり認証するのに必要な認証情報も含めて指定する URL を指す名前です。
@@ -11,9 +11,9 @@ LXD には次の 4 種類のリモートがあります。
 
 ### Static
 Static リモートは
-- local (default)
-- ubuntu
-- ubuntu-daily
+- `local` (default)
+- `ubuntu`
+- `ubuntu-daily`
 
 これらはハードコードされておりユーザーが変更できません。
 
@@ -24,7 +24,7 @@ Static リモートは
 デフォルトでは global の設定ファイルは `/etc/lxc/config.yml` に置かれます。
 `LXD_GLOBAL_CONF` 環境変数でパスを変更できます。
 この設定ファイルを手動で編集して global リモートを追加できます。
-これらのリモートの証明書は `servercerts` ディレクトリ (例: /etc/lxc/servercerts/) に置き、リモートの名前にマッチ (例: `foo.crt`) させます。
+これらのリモートの証明書は `servercerts` ディレクトリ (例: `/etc/lxc/servercerts/`) に置き、リモートの名前にマッチ (例: `foo.crt`) させます。
 
 設定例を以下に示します。
 ```

@@ -2,13 +2,10 @@
 discourse: 1333
 ---
 
-# ストレージをリサイズするには
+(storage-resize-pool)=
+# ストレージプールをリサイズするには
 
-ストレージがもっと必要な場合、ストレージプールまたはストレージボリュームのサイズを拡大できます。
-場合によってはストレージボリュームのサイズを減らすこともできます。
-
-(storage-resize-grow-pool)=
-## ストレージプールを拡大する
+ストレージがもっと必要な場合、ストレージプールのサイズを拡大できます。
 
 ストレージプールのサイズを拡大するには以下の一般的なステップに従います。
 
@@ -67,9 +64,9 @@ LVM thin pool を使っている場合は、次にプール内の `LXDThinPool`�
 
 プールが期待通りリサイズされたかは以下のコマンドで確認できます。
 
-    sudo pvs <loop_device> # Check the size of the physical volume
-    sudo vgs <pool_name> # Check the size of the volume group
-    sudo lvs <pool_name>/LXDThinPool # Thin pool only: check the size of the thin-pool logical volume
+    sudo pvs <loop_device> # 物理ボリュームのサイズを確認
+    sudo vgs <pool_name> # ボリュームグループのサイズを確認
+    sudo lvs <pool_name>/LXDThinPool # thin pool のみ: thin-pool 論理ボリュームのサイズを確認
 ```
 ```{group-tab} ZFS
 
@@ -94,17 +91,3 @@ LVM thin pool を使っている場合は、次にプール内の `LXDThinPool`�
 ```
 
 ````
-
-## ストレージボリュームをリサイズする
-
-ストレージボリュームをリサイズするにはサイズ設定を設定します。
-
-    lxc storage volume set <pool_name> <volume_name> size <new_size>
-
-```{important}
-- ストレージボリュームの拡大は通常は正常に動作します (ストレージプールが十分なストレージを持つ場合)。
-- ストレージボリュームの縮小はコンテントタイプ `filesystem` のストレージボリュームでのみ可能です。
-  ただし現在使用しているサイズより小さく縮小はできないので、縮小が保証されているわけではありません。
-- コンテントタイプ `block` のストレージボリュームの縮小は不可能です。
-
-```

@@ -8,7 +8,7 @@ macvlan は仮想的な {abbr}`LAN (Local Area Network)` で同じネットワ�
 <!-- Include end macvlan intro -->
 
 `macvlan` ネットワークタイプは親のインタフェースにインスタンスを接続する際に使用するプリセットを指定できます。
-この場合、接続先のネットワークについて基本的な設定詳細を一切知る必要なしに単に `networks` とインスタンス NIC に設定できます。
+この場合、接続先のネットワークについて基本的な設定詳細を一切知る必要なしに単に `network` オプションをインスタンス NIC に設定できます。
 
 (network-macvlan-options)=
 ## 設定オプション
@@ -24,12 +24,12 @@ macvlan は仮想的な {abbr}`LAN (Local Area Network)` で同じネットワ�
 
 `macvlan` ネットワークタイプでは以下の設定オプションが使用できます。
 
-キー                            | 型        | 条件          | デフォルト           | 説明
-:--                             | :--       | :--           | :--                  | :--
-gvrp                            | boolean   | -             | false                | GARP VLAN Registration Protocol を使って VLAN を登録する
-mtu                             | integer   | -             | -                    | 作成するインターフェースの MTU
-parent                          | string    | -             | -                    | macvlan NIC を作成する親のインターフェース
-vlan                            | integer   | -             | -                    | アタッチする先の VLAN ID
-maas.subnet.ipv4                | string    | ipv4 アドレス | -                    | インスタンスを登録する MAAS IPv4 サブネット（nic の `network` プロパティを使用する場合）
-maas.subnet.ipv6                | string    | ipv6 アドレス | -                    | インスタンスを登録する MAAS IPv6 サブネット（nic の `network` プロパティを使用する場合）
-user.*                          | string    | -             | -                    | ユーザ指定の自由形式のキー／バリューペア
+キー               | 型      | 条件          | デフォルト | 説明
+:--                | :--     | :--           | :--        | :--
+`gvrp`             | bool    | -             | `false`    | GARP VLAN Registration Protocol を使って VLAN を登録する
+`mtu`              | integer | -             | -          | 作成するインターフェースの MTU
+`parent`           | string  | -             | -          | `macvlan` NIC を作成する親のインターフェース
+`vlan`             | integer | -             | -          | アタッチする先の VLAN ID
+`maas.subnet.ipv4` | string  | IPv4 アドレス | -          | インスタンスを登録する MAAS IPv4 サブネット（NIC の `network` プロパティを使用する場合）
+`maas.subnet.ipv6` | string  | IPv6 アドレス | -          | インスタンスを登録する MAAS IPv6 サブネット（NIC の `network` プロパティを使用する場合）
+`user.*`           | string  | -             | -          | ユーザ指定の自由形式のキー／バリューペア

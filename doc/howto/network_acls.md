@@ -42,13 +42,13 @@ lxc network acl create <ACL_name> [configuration_options...]
 
 ACL のプロパティには次のものがあります。
 
-プロパティ       | 型         | 必須     | 説明
-:--              | :--        | :--      | :--
-name             | string     | yes      | プロジェクト内でユニークなネットワーク ACL の名前
-description      | string     | no       | ネットワーク ACL の説明
-ingress          | rule list  | no       | ingress のトラフィックルールのリスト
-egress           | rule list  | no       | egress のトラフィックルールのリスト
-config           | string set | no       | キー・バリューペア形式での設定オプション (`user.*` カスタムキーのみサポート)
+プロパティ    | 型         | 必須 | 説明
+:--           | :--        | :--  | :--
+`name`        | string     | yes  | プロジェクト内でユニークなネットワーク ACL の名前
+`description` | string     | no   | ネットワーク ACL の説明
+`ingress`     | rule list  | no   | 内向きのトラフィックルールのリスト
+`egress`      | rule list  | no   | 外向きのトラフィックルールのリスト
+`config`      | string set | no   | キー・バリューペア形式での設定オプション (`user.*` カスタムキーのみサポート)
 
 
 (network-acls-rules)=
@@ -95,18 +95,18 @@ ACL 内のあるルールがマッチすれば、そのルールが採用され�
 
 ACL ルールには次のプロパティがあります。
 
-プロパティ        | 型         | 必須     | 説明
-:--               | :--        | :--      | :--
-action            | string     | yes      | マッチしたトラフィックに適用するアクション(`allow`, `reject` または `drop`)
-state             | string     | yes      | ルールの状態(`enabled`, `disabled` または `logged`)、未設定の場合のデフォルト値は `enabled`
-description       | string     | no       | ルールの説明
-source            | string     | no       | CIDR か IP の範囲、送信元の ACL の名前、あるいは(ingress ルールに対しての) ソースサブジェクト名セレクターのカンマ区切りリスト、または any の場合は空を指定
-destination       | string     | no       | CIDR か IP の範囲、送信先の ACL の名前、あるいは(egress ルールに対しての) デスティネーションサブジェクト名セレクターのカンマ区切りリスト、または any の場合は空を指定
-protocol          | string     | no       | マッチ対象のプロトコル(`icmp4`, `icmp6`, `tcp`, `udp`)、または any の場合は空を指定
-source\_port      | string     | no       | protocol が `udp` か `tcp` の場合はポートかポートの範囲(開始-終了で両端含む)のカンマ区切りリスト、または any の場合は空を指定
-destination\_port | string     | no       | protocol が `udp` か `tcp` の場合はポートかポートの範囲(開始-終了で両端含む)のカンマ区切りリスト、または any の場合は空を指定
-icmp\_type        | string     | no       | protocol が `icmp4` か `icmp6` の場合は ICMP の Type 番号、または any の場合は空を指定
-icmp\_code        | string     | no       | protocol が `icmp4` か `icmp6` の場合は ICMP の Code 番号、または any の場合は空を指定
+プロパティ         | 型     | 必須 | 説明
+:--                | :--    | :--  | :--
+`action`           | string | yes  | マッチしたトラフィックに適用するアクション(`allow`, `reject` または `drop`)
+`state`            | string | yes  | ルールの状態(`enabled`, `disabled` または `logged`)、未設定の場合のデフォルト値は `enabled`
+`description`      | string | no   | ルールの説明
+`source`           | string | no   | CIDR か IP の範囲、送信元の ACL の名前、あるいは(ingress ルールに対しての) ソースサブジェクト名セレクターのカンマ区切りリスト、または any の場合は空を指定
+`destination`      | string | no   | CIDR か IP の範囲、送信先の ACL の名前、あるいは(egress ルールに対しての) デスティネーションサブジェクト名セレクターのカンマ区切りリスト、または any の場合は空を指定
+`protocol`         | string | no   | マッチ対象のプロトコル(`icmp4`, `icmp6`, `tcp`, `udp`)、または any の場合は空を指定
+`source_port`      | string | no   | protocol が `udp` か `tcp` の場合はポートかポートの範囲(開始-終了で両端含む)のカンマ区切りリスト、または any の場合は空を指定
+`destination_port` | string | no   | protocol が `udp` か `tcp` の場合はポートかポートの範囲(開始-終了で両端含む)のカンマ区切りリスト、または any の場合は空を指定
+`icmp_type`        | string | no   | protocol が `icmp4` か `icmp6` の場合は ICMP の Type 番号、または any の場合は空を指定
+`icmp_code`        | string | no   | protocol が `icmp4` か `icmp6` の場合は ICMP の Code 番号、または any の場合は空を指定
 
 (network-acls-selectors)=
 ### ルール内でセレクタを使う
@@ -219,7 +219,7 @@ lxc config device set <instance_name> <device_name> security.acls.default.ingres
 
 ブリッジネットワークにネットワーク ACL を使用する場合は以下の制限に気を付けてください。
 
-- OVN ACL とは違い、ブリッジ ACL はブリッジと LXD ホストの間の境界のみに適用されます。これは外部へと外部からのトラフィックにネットワークポリシーを適用するために使うことしかできないことを意味します。ブリッジ間のファイアウォール、つまり同じブリッジに接続されたインスタンス間のトラフィックに対するファイアウォールには使えません。
+- OVN ACL とは違い、ブリッジ ACL はブリッジと LXD ホストの間の境界のみに適用されます。これは外部へと外部からのトラフィックにネットワークポリシーを適用するために使うことしかできないことを意味します。ブリッジ間のファイアウォール、つまり同じブリッジに接続されたインスタンス間のトラフィックを制御するファイアウォールには使えません。
 - {ref}`ACL グループとネットワークセレクタ <network-acls-selectors>` はサポートされません。
 - `iptables` ファイアウォールドライバーを使う際は、 IP レンジサブジェクト（例：`192.168.1.1-192.168.1.10`）は使用できません。
 - ベースラインのネットワークサービスルールが（対応する INPUT/OUTPUT チェイン内の） ACL ルールの前に適用されます。これは一旦 ACL チェインに入ってしまうと INPUT/OUTPUT と FORWARD トラフィックを区別できないからです。このため ACL ルールはベースラインのサービスルールをブロックするのには使えません。

@@ -15,7 +15,7 @@ LXD をインストールする最も簡単な方法は提供されているパ�
 
 (installing_from_source)=
 ## LXD のソースからのインストール
-LXD の開発には liblxc の最新バージョン（4.0.0 以上が必要）を使用することをおすすめします。
+LXD の開発には `liblxc` の最新バージョン（4.0.0 以上が必要）を使用することをおすすめします。
 さらに LXD が動作するためには Golang 1.18 以上が必要です。
 Ubuntu では次のようにインストールできます:
 
@@ -24,8 +24,8 @@ sudo apt update
 sudo apt install acl attr autoconf automake dnsmasq-base git golang libacl1-dev libcap-dev liblxc1 liblxc-dev libsqlite3-dev libtool libudev-dev liblz4-dev libuv1-dev make pkg-config rsync squashfs-tools tar tcl xz-utils ebtables
 ```
 
-デフォルトのストレージバックエンドである "directory" に加えて、LXD ではいくつかのストレージバックエンドが使えます。
-これらのツールをインストールすると、initramfs への追加が行われ、ホストのブートが少しだけ遅くなるかもしれませんが、特定のバックエンドを使いたい場合には必要です:
+デフォルトのストレージドライバである `directory` ドライバに加えて、LXD ではいくつかのストレージドライバが使えます。
+これらのツールをインストールすると、initramfs への追加が行われ、ホストのブートが少しだけ遅くなるかもしれませんが、特定のドライバを使いたい場合には必要です:
 
 ```bash
 sudo apt install lvm2 thin-provisioning-tools
@@ -51,7 +51,7 @@ cd lxd
 
 ### ソースからのリリース版のビルド
 
-LXD のリリース tarball は完全な依存ツリーと libraft と LXD のデータベースのセットアップに使用する libdqlite のローカルコピーをバンドルしています。
+LXD のリリース tarball は完全な依存ツリーと `libraft` と LXD のデータベースのセットアップに使用する `libdqlite` のローカルコピーをバンドルしています。
 
 ```bash
 tar zxvf lxd-4.18.tar.gz
@@ -102,4 +102,6 @@ echo "root:1000000:1000000000" | sudo tee -a /etc/subuid /etc/subgid
 sudo -E PATH=${PATH} LD_LIBRARY_PATH=${LD_LIBRARY_PATH} $(go env GOPATH)/bin/lxd --group sudo
 ```
 
-*注：`newuidmap/newgidmap`ツールがシステムに存在し、`/etc/subuid`、`/etc/subgid`が存在する場合は、rootユーザーに少なくとも10Mのuid/gidの連続した範囲を許可するように設定する必要があります*。
+```{note}
+`newuidmap/newgidmap`ツールがシステムに存在し、`/etc/subuid`、`/etc/subgid`が存在する場合は、rootユーザーに少なくとも10MのUID/GIDの連続した範囲を許可するように設定する必要があります。
+```

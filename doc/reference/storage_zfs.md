@@ -1,6 +1,9 @@
 (storage-zfs)=
 # ZFS - `zfs`
 
+```{youtube} https://www.youtube.com/watch?v=ysLi_LYAs_M
+```
+
 {abbr}`ZFS (Zettabyte file system)` は物理ボリューム管理とファイルシステムを兼ね備えています。
 ZFS のインストールは一連のストレージデバイスに広がることができ非常にスケーラブルで、ディスクを追加してストレージプールの空き容量を即座に拡大できます。
 
@@ -15,8 +18,8 @@ ZFS を使用するにはマシンに `zfsutils-linux` をインストールし�
 
 ZFS は物理ストレージデバイスに基づいた論理ユニットを作成します。
 これらの論理ユニットは *ZFS pools* または *zpools* と呼ばれます。
-さらにそれぞれの zpool は複数の *データセット* に分割されます。
-これらのデータセットは以下の異なるタイプがあります。
+さらにそれぞれの zpool は複数の *`データセット`* に分割されます。
+これらの`データセット`は以下の異なるタイプがあります。
 - *ZFS ファイルシステム* はパーティションまたはマウントされたファイルシステムとして扱えます。
 - *ZFS ボリューム* はブロックデバイスを表します。
 - *ZFS スナップショット* は ZFS ファイルシステムまたは ZFS ボリュームの特定の状態をキャプチャーします。
@@ -25,11 +28,11 @@ ZFS は物理ストレージデバイスに基づいた論理ユニットを作�
 
 ## LXD の `zfs` ドライバ
 
-LXD の `zfs` ドライバは ZFS ファイルシステムと ZFS ボリュームをイメージとカスタムストレージボリュームに使用し、ZFS スナップショットとクローンをイメージからのインスタンス作成とインスタンスとカスタムボリュームスナップショットに使用します。
+LXD の `zfs` ドライバは `ZFS ファイルシステム`と ZFS ボリュームをイメージとカスタムストレージボリュームに使用し、ZFS スナップショットとクローンをイメージからのインスタンス作成とインスタンスとカスタムボリュームスナップショットに使用します。
 デフォルトでは LXD は ZFS プール作成時に圧縮を有効にします。
 
-LXD は ZFS プールとデータセットを完全制御できると想定します。
-このため、ZFS プールまたはデータセット内に、LXD が所有しないファイルシステムエンティティは、決して置くべきではありません。LXD が消してしまうかもしれないからです。
+LXD は ZFS プールと`データセット`を完全制御できると想定します。
+このため、ZFS プールまたは`データセット`内に、LXD が所有しないファイルシステムエンティティは、決して置くべきではありません。LXD が消してしまうかもしれないからです。
 
 ZFS のコピー・オン・ライトが動作する仕組みのため、親の ZFS ファイルシステムは全ての子供がいなくなるまで削除できません。
 その結果、LXD は削除されたがまだ参照されている全てのオブジェクトを自動的にリネームします。
@@ -62,9 +65,9 @@ ZFS の 0.8 より前のバージョンを稼働していてトリミングを�
   正しいスナップショットを決定したら {ref}`指定より新しいスナップショットを削除 <storage-edit-snapshots>` して必要なスナップショットが最新になるようにして復元できるようにします。
 
   別の方法として、復元中により新しいスナップショットを自動的に破棄するように LXD を設定することもできます。
-  そのためにはボリュームの {ref}`zfs.remove_snapshots <storage-zfs-vol-config>` (あるいはプール内の全てのボリュームのストレージプールの対応する `volume.zfs.remove_snapshots` 設定) を設定します。
+  そのためにはボリュームの [`zfs.remove_snapshots`](storage-zfs-vol-config) (あるいはプール内の全てのボリュームのストレージプールの対応する `volume.zfs.remove_snapshots` 設定) を設定します。
 
-  しかし、 {ref}`zfs.clone_copy <storage-zfs-pool-config>` が `true` に設定される場合は、インスタンスのコピーは ZFS のスナップショットも使用することに注意してください。
+  しかし、 [`zfs.clone_copy`](storage-zfs-pool-config) が `true` に設定される場合は、インスタンスのコピーは ZFS のスナップショットも使用することに注意してください。
   この場合は、スナップショットの全ての子孫を削除すること無しに、インスタンスを最後のコピーの前に取られたスナップショットに復元できません。
   この選択肢が選べない場合、欲しいスナップショットを新しいインスタンスにコピーしてから古いインスタンスを削除することはできます。
   しかし、インスタンスが持っていたであろう他の全てのスナップショットは失うことになります。
@@ -80,9 +83,9 @@ ZFS は `quota` と `refquota` という 2 種類の異なるクォータのプ�
 `refquota` はスナップショットとクローンは含まずデータセット内のデータのサイズだけを制限します。
 
 デフォルトでは、ストレージボリュームにクォータを設定する際は LXD は `quota` プロパティを使用します。
-代わりに `refquota` プロパティを使用したい場合はボリュームの {ref}`zfs.use_refquota <storage-zfs-vol-config>` 設定 (あるいはプール内の全てのボリュームのストレージプールの対応する `volume.zfs.use_refquota` 設定) を設定します。
+代わりに `refquota` プロパティを使用したい場合はボリュームの [`zfs.use_refquota`](storage-zfs-vol-config) 設定 (あるいはプール内の全てのボリュームのストレージプールの対応する `volume.zfs.use_refquota` 設定) を設定します。
 
-また {ref}`zfs.use_reserve_space <storage-zfs-vol-config>` (または `volume.zfs.use_reserve_space`) 設定を to use ZFS の `reservation` または `refreservation` を `quota` または `refquota` と使用するために設定することもできます。
+また [`zfs.use_reserve_space`](storage-zfs-vol-config) (または `volume.zfs.use_reserve_space`) 設定を to use ZFS の `reservation` または `refreservation` を `quota` または `refquota` と使用するために設定することもできます。
 
 ## 設定オプション
 
@@ -90,29 +93,27 @@ ZFS は `quota` と `refquota` という 2 種類の異なるクォータのプ�
 
 (storage-zfs-pool-config)=
 ## ストレージプール設定
-キー            | 型     | デフォルト値                                              | 説明
-:--             | :---   | :------                                                   | :----------
-size            | string | auto (空きディスクスペースの 20%, >= 5 GiB and <= 30 GiB) | ループベースのプールを作成する際のストレージプールのサイズ (バイト単位、接尾辞のサポートあり)
-source          | string | -                                                         | ブロックデバイスかループファイルかファイルシステムエントリのパス
-zfs.clone\_copy | string | true                                                      | Boolean の文字列を指定した場合は ZFS のフルデータセットコピーの代わりに軽量なクローンを使うかどうかを制御し、 `rebase` という文字列を指定した場合は初期イメージをベースにコピーします。
-zfs.export      | bool   | true                                                      | アンマウントの実行中にzpoolのエクスポートを無効にする
-zfs.pool\_name  | string | プールの名前                                              | zpool 名
+キー             | 型     | デフォルト値                                              | 説明
+:--              | :---   | :------                                                   | :----------
+`size`           | string | auto (空きディスクスペースの 20%, >= 5 GiB and <= 30 GiB) | ループベースのプールを作成する際のストレージプールのサイズ (バイト単位、接尾辞のサポートあり)
+`source`         | string | -                                                         | 既存のブロックデバイスかループファイルか ZFS データセット/プールのパス
+`zfs.clone_copy` | string | `true`                                                    | Boolean の文字列を指定した場合は ZFS のフル `データセット`コピーの代わりに軽量なクローンを使うかどうかを制御し、 `rebase` という文字列を指定した場合は初期イメージをベースにコピーします。
+`zfs.export`     | bool   | `true`                                                    | アンマウントの実行中にzpoolのエクスポートを無効にする
+`zfs.pool_name`  | string | プールの名前                                              | zpool 名
 
 {{volume_configuration}}
 
 (storage-zfs-vol-config)=
 ## ストレージボリューム設定
-```{rst-class} dec-font-size
-```
-キー                  | 型     | 条件               | デフォルト値                             | 説明
-:--                   | :---   | :--------          | :------                                  | :----------
-security.shifted      | bool   | custom volume      | volume.security.shifted と同じか false   | {{enable_ID_shifting}}
-security.unmapped     | bool   | custom volume      | volume.security.unmapped と同じか false  | ボリュームの ID マッピングを無効にする
-size                  | string | appropriate driver | volume.size と同じ                       | ストレージボリュームのサイズ/クォータ
-snapshots.expiry      | string | custom volume      | volume.snapshots.expiry と同じ           | {{snapshot_expiry_format}}
-snapshots.pattern     | string | custom volume      | volume.snapshots.pattern と同じか snap%d | {{snapshot_pattern_format}}
-snapshots.schedule    | string | custom volume      | snapshots.schedule と同じ                | {{snapshot_schedule_format}}
-zfs.blocksize         | string | ZFS driver         | volume.zfs.blocksize と同じ              | ZFSブロックのサイズを512～16MiBの範囲で指定します（2の累乗でなければなりません）。ブロックボリュームでは、より大きな値が設定されていても、最大値の128KiBが使用されます。
-zfs.remove\_snapshots | string | ZFS driver         | volume.zfs.remove\_snapshots と同じ      | 必要に応じてスナップショットを削除するかどうか
-zfs.use\_refquota     | string | ZFS driver         | volume.zfs.use\_refquota と同じ          | 領域の `quota` の代わりに `refquota` を使うかどうか
-zfs.reserve\_space    | string | ZFS driver         | volume.zfs.reserve\_space と同じか false | `qouta`/`refquota` に加えて `reservation`/`refreservation` も使用するかどうか
+キー                   | 型     | 条件               | デフォルト値                                   | 説明
+:--                    | :---   | :--------          | :------                                        | :----------
+`security.shifted`     | bool   | custom volume      | `volume.security.shifted` と同じか `false`     | {{enable_ID_shifting}}
+`security.unmapped`    | bool   | custom volume      | `volume.security.unmapped` と同じか `false`    | ボリュームの ID マッピングを無効にする
+`size`                 | string | appropriate driver | `volume.size` と同じ                           | ストレージボリュームのサイズ/クォータ
+`snapshots.expiry`     | string | custom volume      | `volume.snapshots.expiry` と同じ               | {{snapshot_expiry_format}}
+`snapshots.pattern`    | string | custom volume      | `volume.snapshots.pattern` と同じか `snap%d`   | {{snapshot_pattern_format}}
+`snapshots.schedule`   | string | custom volume      | `snapshots.schedule` と同じ                    | {{snapshot_schedule_format}}
+`zfs.blocksize`        | string | ZFS driver         | `volume.zfs.blocksize` と同じ                  | ZFSブロックのサイズを512～16MiBの範囲で指定します（2の累乗でなければなりません）。ブロックボリュームでは、より大きな値が設定されていても、最大値の128KiBが使用されます。
+`zfs.remove_snapshots` | bool   | ZFS driver         | `volume.zfs.remove_snapshots` と同じか `false` | 必要に応じてスナップショットを削除するかどうか
+`zfs.use_refquota`     | bool   | ZFS driver         | `volume.zfs.use_refquota` と同じか `false`     | 領域の `quota` の代わりに `refquota` を使うかどうか
+`zfs.reserve_space`    | bool   | ZFS driver         | `volume.zfs.reserve_space` と同じか `false`    | `qouta`/`refquota` に加えて `reservation`/`refreservation` も使用するかどうか

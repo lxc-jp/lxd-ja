@@ -34,13 +34,13 @@ lxc network load-balancer create <network_name> <listen_address> [configuration_
 
 ネットワークロードバランサーは以下のプロパティを持ちます。
 
-プロパティ         | 型           | 必須      | 説明
-:--              | :--          | :--      | :--
-listen\_address  | string       | yes      | リッスンする IP アドレス
-description      | string       | no       | ネットワークロードバランサーの説明
-config           | string set   | no       | キー/バリュー形式の設定オプション (`user.*` カスタムキーのみがサポートされます)
-backends         | backend list | no       | {ref}`バックエンド仕様 <network-load-balancers-backend-specifications>` のリスト
-ports            | port list    | no       | {ref}`ポート仕様 <network-load-balancers-port-specifications>` のリスト
+プロパティ       | 型           | 必須 | 説明
+:--              | :--          | :--  | :--
+`listen_address` | string       | yes  | リッスンする IP アドレス
+`description`    | string       | no   | ネットワークロードバランサーの説明
+`config`         | string set   | no   | キー/バリュー形式の設定オプション (`user.*` カスタムキーのみがサポートされます)
+`backends`       | backend list | no   | {ref}`バックエンド仕様 <network-load-balancers-backend-specifications>` のリスト
+`ports`          | port list    | no   | {ref}`ポート仕様 <network-load-balancers-port-specifications>` のリスト
 
 (network-load-balancers-listen-addresses)=
 ### リッスンアドレスの要件
@@ -74,12 +74,12 @@ lxc network load-balancer backend add <network_name> <listen_address> <backend_n
 
 ネットワークロードバランサーのバックエンドは以下のプロパティを持ちます。
 
-プロパティ          | 型         | 必須      | 説明
-:--               | :--        | :--      | :--
-name              | string     | yes      | バックエンドの名前
-target\_address   | string     | yes      | フォワード先の IP アドレス
-target\_port      | string     | no       | ターゲットポート (例 `70,80-90` や `90`)、空の場合 {ref}`ポート <network-load-balancers-port-specifications>` の `listen_port` と同じ
-description       | string     | no       | バックエンドの説明
+プロパティ       | 型     | 必須 | 説明
+:--              | :--    | :--  | :--
+`name`           | string | yes  | バックエンドの名前
+`target_address` | string | yes  | フォワード先の IP アドレス
+`target_port`    | string | no   | ターゲットポート (例 `70,80-90` や `90`)、空の場合 {ref}`ポート <network-load-balancers-port-specifications>` の `listen_port` と同じ
+`description`    | string | no   | バックエンドの説明
 
 (network-load-balancers-port-specifications)=
 ## ポートを設定する
@@ -99,12 +99,12 @@ lxc network load-balancer port add <network_name> <listen_address> <protocol> <l
 
 ネットワークロードバランサーのポートは以下のプロパティを持ちます。
 
-プロパティ          | 型         | 必須      | 説明
-:--               | :--          | :--      | :--
-protocol          | string       | yes      | ポートのプロトコル (`tcp` または `udp`)
-listen\_port      | string       | yes      | リッスンポート (例 `80,90-100`)
-target\_backend   | backend list | yes      | フォワード先のバックエンドの名前
-description       | string       | no       | ポートの説明
+プロパティ       | 型           | 必須 | 説明
+:--              | :--          | :--  | :--
+`protocol`       | string       | yes  | ポートのプロトコル (`tcp` または `udp`)
+`listen_port`    | string       | yes  | リッスンポート (例 `80,90-100`)
+`target_backend` | backend list | yes  | フォワード先のバックエンドの名前
+`description`    | string       | no   | ポートの説明
 
 ## ネットワークロードバランサーを編集する
 

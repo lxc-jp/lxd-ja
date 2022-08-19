@@ -30,7 +30,7 @@ Btrfs はネストした LXD 環境内のコンテナ内部でストレージバ
 Btrfs は qgroups 経由でストレージクォータをサポートします。
 Btrfs qgroups は階層的ですが、新しいサブボリュームは親のサブボリュームの qgroups に自動的に追加されるわけではありません。
 これはユーザが設定されたクォータから逃れることができることは自明であることを意味します。
-このため、厳密なクォータが必要な場合は、別のストレージドライバを検討すべきです (例えば、refquotas ありの ZFS や LVM 上の Btrfs)。
+このため、厳密なクォータが必要な場合は、別のストレージドライバを検討すべきです (例えば、`refquotas` ありの ZFS や LVM 上の Btrfs)。
 
 クォータを使用する際は、 Btrfs のエクステントはイミュータブルであることを考慮に入れる必要があります。
 ブロックが書かれると、それらは新しいエクステントに現れます。
@@ -42,9 +42,9 @@ Btrfs qgroups は階層的ですが、新しいサブボリュームは親のサ
 
 このため、仮想マシンには Btrfs ストレージプールは決して使うべきではありません。
 
-どうしても仮想マシンに Btrfs ストレージプールを使う必要がある場合、インスタンスのルートディスクの {ref}`size.state <instance_device_type_disk>` をルートディスクのサイズの2倍に設定してください。
+どうしても仮想マシンに Btrfs ストレージプールを使う必要がある場合、インスタンスのルートディスクの [`size.state`](instance_device_type_disk) をルートディスクのサイズの2倍に設定してください。
 この設定により、ディスクイメージファイルの全てのブロックが qgroup クォータに達すること無しに上書きできるようになります。
-{ref}`btrfs.mount_options=compress-force <storage-btrfs-pool-config>` ストレージプールオプションでもこのシナリオを回避できます。圧縮を有効にすることの副作用で最大のエクステントサイズを縮小しブロックの再書き込みが2倍のストレージを消費しないようになるからです。
+[`btrfs.mount_options=compress-force`](storage-btrfs-pool-config) ストレージプールオプションでもこのシナリオを回避できます。圧縮を有効にすることの副作用で最大のエクステントサイズを縮小しブロックの再書き込みが2倍のストレージを消費しないようになるからです。
 しかし、これはストレージプールのオプションなので、プール上の全てのボリュームに影響します。
 ```
 
@@ -54,20 +54,19 @@ Btrfs qgroups は階層的ですが、新しいサブボリュームは親のサ
 
 (storage-btrfs-pool-config)=
 ## ストレージプール設定
-キー                 | 型     | デフォルト値                                              | 説明
-:--                  | :---   | :--------                                                 | :----------
-btrfs.mount\_options | string | user\_subvol\_rm\_allowed                                 | ブロックデバイスのマウントオプション
-size                 | string | auto (空きディスクスペースの 20%, >= 5 GiB and <= 30 GiB) | ループベースのプールを作成する際のストレージプールのサイズ (バイト単位、接尾辞のサポートあり)
-source               | string | -                                                         | ブロックデバイスまたはループファイルまたはファイルシステムエントリーのパス
+キー                  | 型     | デフォルト値                                                | 説明
+:--                   | :---   | :--------                                                   | :----------
+`btrfs.mount_options` | string | `user_subvol_rm_allowed`                                    | ブロックデバイスのマウントオプション
+`size`                | string | `auto` (空きディスクスペースの 20%, >= 5 GiB and <= 30 GiB) | ループベースのプールを作成する際のストレージプールのサイズ (バイト単位、接尾辞のサポートあり)
 
 {{volume_configuration}}
 
 ### ストレージボリューム設定
-キー               | 型     | 条件               | デフォルト値                             | 説明
-:--                | :---   | :--------          | :------                                  | :----------
-security.shifted   | bool   | custom volume      | volume.security.shifted と同じか false   | {{enable_ID_shifting}}
-security.unmapped  | bool   | custom volume      | volume.security.unmapped と同じか false  | ボリュームへの id マッピングを無効にする
-size               | string | appropriate driver | volume.size と同じ                       | ストレージボリュームのサイズ/クォータ
-snapshots.expiry   | string | custom volume      | volume.snapshots.expiry と同じ           | {{snapshot_expiry_format}}
-snapshots.pattern  | string | custom volume      | volume.snapshots.pattern と同じか snap%d | {{snapshot_pattern_format}}
-snapshots.schedule | string | custom volume      | volume.snapshots.schedule と同じ         | {{snapshot_schedule_format}}
+キー                 | 型     | 条件               | デフォルト値                                 | 説明
+:--                  | :---   | :--------          | :------                                      | :----------
+`security.shifted`   | bool   | custom volume      | `volume.security.shifted` と同じか `false`   | {{enable_ID_shifting}}
+`security.unmapped`  | bool   | custom volume      | `volume.security.unmapped` と同じか `false`  | ボリュームへの id マッピングを無効にする
+`size`               | string | appropriate driver | `volume.size` と同じ                         | ストレージボリュームのサイズ/クォータ
+`snapshots.expiry`   | string | custom volume      | `volume.snapshots.expiry` と同じ             | {{snapshot_expiry_format}}
+`snapshots.pattern`  | string | custom volume      | `volume.snapshots.pattern` と同じか `snap%d` | {{snapshot_pattern_format}}
+`snapshots.schedule` | string | custom volume      | `volume.snapshots.schedule` と同じ           | {{snapshot_schedule_format}}

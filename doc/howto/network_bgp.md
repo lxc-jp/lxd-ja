@@ -68,6 +68,7 @@ OVN ネットワークをアップリンクネットワーク (`physical` また
 - `bgp.peers.<name>.address` - ダウンストリームネットワークで使用されるピアアドレス
 - `bgp.peers.<name>.asn` - ローカルサーバの {abbr}`ASN (Autonomous System Number)`
 - `bgp.peers.<name>.password` - ピアセッションに対するオプショナルなパスワード
+- `bgp.peers.<name>.holdtime` - ピアセッションに対する省略可能なホールドタイム (秒で指定)
 
 アップリンクネットワークが一旦設定されると、ダウンストリームの OVN ネットワークは BGP で広告される外部のサブネットとアドレスを取得します。
 ネクストホップはアップリンクネットワークの OVN ルータのアドレスに設定されます。

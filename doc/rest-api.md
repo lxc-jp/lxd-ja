@@ -162,29 +162,29 @@ API クライアントが個々の値に依存できます。文字列表記の�
 フィルタにはデフォルト値はありません。これは見つかった全ての結果が返されることを意味します。
 フィルタの引数には以下のような言語を設定します。
 
-?filter=field\_name eq desired\_field\_assignment
+    ?filter=field_name eq desired_field_assignment
 
 この言語は REST API のフィルタロジックを構成するための OData の慣習に従います。
 フィルタは下記の論理演算子もサポートします。
-not(not), equals(eq), not equals(ne), and(and), or(or)
+not(`not`), equals(`eq)`, not equals(`ne`), and(`and`), or(`or`)
 フィルタは左結合で評価されます。
 空白を含む値はクォートで囲むことができます。
 ネストしたフィルタもサポートされます。
-例えば config 内のフィールドに対してフィルタするには以下のように指定します。
+例えば設定内のフィールドに対してフィルタするには以下のように指定します。
 
-?filter=config.field\_name eq desired\_field\_assignment
+    ?filter=config.field_name eq desired_field_assignment
 
 device の属性についてフィルタするには以下のように指定します。
 
-?filter=devices.device\_name.field\_name eq desired\_field\_assignment
+    ?filter=devices.device_name.field_name eq desired_field_assignment
 
 以下に上記の異なるフィルタの方法を含む GET クエリをいくつか示します。
 
-containers?filter=name eq "my container" and status eq Running
+    containers?filter=name eq "my container" and status eq Running
 
-containers?filter=config.image.os eq ubuntu or devices.eth0.nictype eq bridged
+    containers?filter=config.image.os eq ubuntu or devices.eth0.nictype eq bridged
 
-images?filter=Properties.os eq Centos and not UpdateSource.Protocol eq simplestreams
+    images?filter=Properties.os eq Centos and not UpdateSource.Protocol eq simplestreams
 
 ## 非同期操作
 完了までに 1 秒以上かかるかもしれない操作はバックグラウンドで実行しなければ
@@ -194,7 +194,7 @@ images?filter=Properties.os eq Centos and not UpdateSource.Protocol eq simplestr
 通知を待つことが出来ます。
 
 ## 通知
-通知のために Websocket ベースの API が利用できます。クライアントへ送られる
+通知のために WebSocket ベースの API が利用できます。クライアントへ送られる
 トラフィックを制限するためにいくつかの異なる通知種別が存在します。
 
 リモート操作の状態をポーリングしなくて済むように、リモート操作を開始する
@@ -227,5 +227,5 @@ PUT を使う必要がある場合もあります。
 
 ## API 構造
 LXD は API エンドポイントを記述する [Swagger](https://swagger.io/) 仕様を自動生成しています。
-この API 仕様の YAML 版が [rest-api.yaml](https://github.com/lxc/lxd/blob/master/doc/rest-api.yaml) にあります。 <!-- wokeignore:rule=master -->
-手軽にウェブで見る場合は [https://linuxcontainers.org/lxd/api/master/](https://linuxcontainers.org/lxd/api/master/) を参照してください。 <!-- wokeignore:rule=master -->
+この API 仕様の YAML 版が [`rest-api.yaml`](https://github.com/lxc/lxd/blob/master/doc/rest-api.yaml) にあります。 <!-- wokeignore:rule=master -->
+手軽にウェブで見る場合は [`https://linuxcontainers.org/lxd/api/master/`](https://linuxcontainers.org/lxd/api/master/) を参照してください。 <!-- wokeignore:rule=master -->

@@ -29,6 +29,6 @@
 `LXD_SECURITY_APPARMOR`         | `false` に設定すると AppArmor を無効にします
 `LXD_UNPRIVILEGED_ONLY`         | `true` に設定すると非特権コンテナしか作れなくなるように強制します。 LXD_UNPRIVILEGED_ONLY を設定する前に作られた特権コンテナは引き続き特権を持つことに注意してください。このオプションを LXD デーモンを最初にセットアップするときに設定するのが実用的です。
 `LXD_OVMF_PATH`                 | `OVMF_CODE.fd` と `OVMF_VARS.ms.fd` を含む OVMF ビルドへのパス
-`LXD_SHIFTFS_DISABLE`           | shiftfs のサポートを無効にする（従来の UID シフトを試す際に有用です）
+`LXD_SHIFTFS_DISABLE`           | `shiftfs` のサポートを無効にする（従来の UID シフトを試す際に有用です）
 `LXD_IDMAPPED_MOUNTS_DISABLE`   | idmap を使ったマウントを無効にする（従来の UID シフトを試す際に有用です）
 `LXD_DEVMONITOR_DIR`            | デバイスモニターでモニターするパス。主にテスト用。
