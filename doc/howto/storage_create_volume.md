@@ -14,7 +14,7 @@
 
     lxc storage volume create <pool_name> <volume_name> [configuration_options...]
 
-各ドライバーで利用可能なストレージボリューム設定オプションについては {ref}`storage-drivers` ドキュメントを参照してください。
+各ドライバで利用可能なストレージボリューム設定オプションについては {ref}`storage-drivers` ドキュメントを参照してください。
 
 デフォルトではカスタムストレージボリュームは `filesystem` {ref}`コンテントタイプ <storage-content-types>` を使用します。
 `block` コンテントタイプのカスタムストレージボリュームを作成するには `--type` フラグを追加してください。
@@ -26,7 +26,7 @@
     lxc storage volume create <pool_name> <volume_name> --target=<cluster_member> [configuration_options...]
 
 ```{note}
-ほとんどのストレージドライバーではカスタムストレージボリュームはクラスター間で同期されず作成されたメンバー上にのみ存在します。
+ほとんどのストレージドライバではカスタムストレージボリュームはクラスター間で同期されず作成されたメンバー上にのみ存在します。
 この挙動は Ceph ベースのストレージプール (`ceph` and `cephfs`) では異なり、ボリュームはどのクラスターメンバーでも利用可能です。
 ```
 

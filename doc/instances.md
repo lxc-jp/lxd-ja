@@ -79,7 +79,7 @@ key/value 形式の設定は、名前空間構造を取っており、現在は�
 `nvidia.driver.capabilities`                     | string  | `compute,utility` | no                 | コンテナ       | インスタンスに必要なドライバケーパビリティ（`libnvidia-container` に環境変数 `NVIDIA_DRIVER_CAPABILITIES` を設定）
 `nvidia.runtime`                                 | bool    | `false`           | no                 | コンテナ       | ホストの NVIDIA と CUDA ラインタイムライブラリーをインスタンス内でも使えるようにする
 `nvidia.require.cuda`                            | string  | -                 | no                 | コンテナ       | 必要となる CUDA バージョン（`libnvidia-container` に環境変数 `NVIDIA_REQUIRE_CUDA` を設定）
-`nvidia.require.driver`                          | string  | -                 | no                 | コンテナ       | 必要となるドライバーバージョン（`libnvidia-container` に環境変数 `NVIDIA_REQUIRE_DRIVER` を設定）
+`nvidia.require.driver`                          | string  | -                 | no                 | コンテナ       | 必要となるドライババージョン（`libnvidia-container` に環境変数 `NVIDIA_REQUIRE_DRIVER` を設定）
 `raw.apparmor`                                   | blob    | -                 | yes                | -              | 生成されたプロファイルに追加する AppArmor プロファイルエントリー
 `raw.idmap`                                      | blob    | -                 | no                 | 非特権コンテナ | 生（raw）の idmap 設定（例: `both 1000 1000`）
 `raw.lxc`                                        | blob    | -                 | no                 | コンテナ       | 生成された設定に追加する生（raw）の LXC 設定
@@ -884,7 +884,7 @@ MIG コンピュートインスタンスを作成しパススルーします。
 `mig.gi`      | int       | -                 | no        | 既存の MIG GPU インスタンス ID
 `mig.uuid`    | string    | -                 | no        | 既存の MIG デバイス UUID (`MIG-` 接頭辞は省略可)
 
-注意: `mig.uuid` (NVIDIA drivers 470+) か、 `mig.ci` と  `mig.gi` (古い NVIDIA ドライバー) の両方を設定する必要があります。
+注意: `mig.uuid` (NVIDIA drivers 470+) か、 `mig.ci` と  `mig.gi` (古い NVIDIA ドライバ) の両方を設定する必要があります。
 
 ##### `gpu`: `sriov`
 
@@ -1150,7 +1150,7 @@ lxc config set INSTANCE snapshots.pattern "{{ creation_date|date:'2006-01-02_15-
 
 このレベルのカスタマイズは `raw.qemu.conf` 設定オプションを使って実現できます。
 これは `qemu.conf` に似た形式に少し独自拡張を加えたものをサポートします。
-デフォルトの `virtio-gpu-pci` GPU ドライバーをオーバーライドするには以下のようにします。
+デフォルトの `virtio-gpu-pci` GPU ドライバをオーバーライドするには以下のようにします。
 
 ```
 raw.qemu.conf: |-
