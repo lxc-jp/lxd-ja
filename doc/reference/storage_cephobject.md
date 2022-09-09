@@ -40,7 +40,7 @@ Amazon S3 RESTful API の大きなサブセットと互換性を持つオブジ�
 ```
 
 事前に `radosgw` 環境をセットアップし、 HTTP/HTTPS エンドポイント URL が LXD サーバからアクセス可能なことを確認してください。
-Ceph クラスタをどのようにセットアップするかの情報については [Manual Deployment](https://docs.ceph.com/en/latest/install/manual-deployment/) を `radosgw` 環境をどのようにセットアップするかについては [`radosgw`](https://docs.ceph.com/en/latest/radosgw/) を参照してください。
+Ceph クラスタをどのようにセットアップするかの情報については [Manual Deployment](https://docs.ceph.com/en/latest/install/manual-deployment/) を、そして `radosgw` 環境をどのようにセットアップするかについては [`radosgw`](https://docs.ceph.com/en/latest/radosgw/) を参照してください。
 
 `radosgw` URL はプールの作成時に [`cephobject.radosgsw.endpoint`](storage-cephobject-pool-config) オプションを使って指定できます。
 また LXD はバケットの管理に `radosgw-admin` コマンドを使用しています。ですのでこのコマンドが LXD サーバ上で利用可能で操作可能である必要があります。

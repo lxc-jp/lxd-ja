@@ -94,7 +94,7 @@ LXD は以下のネットワークタイプをサポートします。
       :end-before: <!-- Include end macvlan intro -->
   ```
 
-  LXD の文脈では、 `macvlan` ネットワークタイプは親の Macvlan インタフェースへインスタンスを接続する際に使用するプリセット設定を提供します。
+  LXD の文脈では、 `macvlan` ネットワークタイプは親の macvlan インタフェースへインスタンスを接続する際に使用するプリセット設定を提供します。
 
 {ref}`network-sriov`
 : % Include content from [../reference/network_sriov.md](../reference/network_sriov.md)
