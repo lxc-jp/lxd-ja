@@ -22,7 +22,7 @@
 
         lxc config device add <インスタンス名> <デバイス名> nic nictype=<NICタイプ> ...
 
-  指定可能な NIC タイプの一覧とそれらの設定プロパティについては {ref}`instance_device_type_nic` を参照してください。
+  指定可能な NIC タイプの一覧とそれらの設定プロパティについては [タイプ: `nic`](instance_device_type_nic) を参照してください。
 
   例えば、既存の Linux ブリッジ (`br0`) を追加するには以下のコマンドを使えます。
 

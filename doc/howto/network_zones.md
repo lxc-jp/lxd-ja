@@ -66,7 +66,7 @@ LXD クラスタの場合、アドレスは各クラスタメンバーによっ�
 ```{note}
 組み込みの DNS サーバは AXFR 経由でのゾーン転送のみをサポートしており、
 DNS レコードへの直接の問い合わせはできません。
-つまりこの機能は外部の DNS サーバ (bind9, nsd, ...) の使用を前提としています。
+つまりこの機能は外部の DNS サーバ (`bind9`, `nsd`, ...) の使用を前提としています。
 外部の DNS サーバが LXD からの全体のゾーンを転送し、有効期限を過ぎたら更新し、
 DNS 問い合わせに対する管理権限を持つ応答 (authoritative answers) を提供します。
 
@@ -111,13 +111,13 @@ lxc network zone edit <network_zone>
 
 ネットワークゾーンで利用可能な設定オプションは下記のとおりです。
 
-キー                | 型         | 必須     | デフォルト値 | 説明
-:--                 | :--        | :--      | -            | :--
-peers.NAME.address  | string     | no       | -            | DNS サーバの IP アドレス
-peers.NAME.key      | string     | no       | -            | サーバの TSIG キー
-dns.nameservers     | string set | no       | -            | (NS レコード用の) DNS サーバの FQDN のカンマ区切りリスト
-network.nat         | bool       | no       | true         | NAT されたサブネットのレコードを生成するかどうか
-user.*             | *          | no       | -            | ユーザー提供の自由形式のキー・バリューペア
+キー                 | 型         | 必須 | デフォルト値 | 説明
+:--                  | :--        | :--  | -            | :--
+`peers.NAME.address` | string     | no   | -            | DNS サーバの IP アドレス
+`peers.NAME.key`     | string     | no   | -            | サーバの TSIG キー
+`dns.nameservers`    | string set | no   | -            | (NS レコード用の) DNS サーバの FQDN のカンマ区切りリスト
+`network.nat`        | bool       | no   | `true`       | NAT されたサブネットのレコードを生成するかどうか
+`user.*`             | *          | no   | -            | ユーザー提供の自由形式のキー・バリューペア
 
 ## ネットワークにネットワークゾーンを追加する
 
@@ -157,12 +157,12 @@ lxc network zone record create <network_zone> <record_name>
 
 レコードは以下のプロパティを持ちます。
 
-プロパティ        | 型         | 必須     | 説明
-:--               | :--        | :--      | :--
-name              | string     | yes      | レコードのユニークな名前
-description       | string     | no       | レコードの説明
-entries           | entry list | no       | DNS エントリのリスト
-config            | string set | no       | キー／バリュー形式の設定オプション (`user.*` カスタムキーのみサポート)
+プロパティ    | 型         | 必須 | 説明
+:--           | :--        | :--  | :--
+`name`        | string     | yes  | レコードのユニークな名前
+`description` | string     | no   | レコードの説明
+`entries`     | entry list | no   | DNS エントリのリスト
+`config`      | string set | no   | キー／バリュー形式の設定オプション (`user.*` カスタムキーのみサポート)
 
 ### エントリを追加または削除する
 

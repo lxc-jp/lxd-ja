@@ -338,6 +338,11 @@ var APIExtensions = []string{
 	"storage_cephfs_fscache",
 	"network_load_balancer",
 	"vsock_api",
+	"instance_ready_state",
+	"network_bgp_holdtime",
+	"storage_volumes_all_projects",
+	"metrics_memory_oom_total",
+	"storage_buckets",
 }
 
 // APIExtensionsCount returns the number of available API extensions.

@@ -1,7 +1,11 @@
-(storage-drivers)=
-# ストレージドライバー
+---
+relatedlinks: https://www.youtube.com/watch?v=z_OKwO5TskA
+---
 
-LXD はイメージ、インスタンスとカスタムボリュームを保管するのに以下のストレージドライバーをサポートします。
+(storage-drivers)=
+# ストレージドライバ
+
+LXD はイメージ、インスタンスとカスタムボリュームを保管するのに以下のストレージドライバをサポートします。
 
 ```{toctree}
 :maxdepth: 1
@@ -12,33 +16,35 @@ storage_lvm
 storage_zfs
 storage_ceph
 storage_cephfs
+storage_cephobject
 ```
 
-ドライバー固有の情報と設定オプションについては対応するページを参照してください。
+ドライバ固有の情報と設定オプションについては対応するページを参照してください。
 
 (storage-drivers-features)=
 ## 機能比較
 可能であれば、各システムの高度な機能を使って、LXD は操作を最適化しようとします。
 
-機能                                               | ディレクトリ                                 | Btrfs | LVM  | ZFS  | Ceph RBD | CephFS
-:---                                               | :---                                         | :---  | :--- | :--- | :---     | :---
-{ref}`storage-optimized-image-storage`             | no                                           | yes   | yes  | yes  | yes      | n/a
-最適化されたインスタンスの作成                     | no                                           | yes   | yes  | yes  | yes      | n/a
-最適化されたスナップショットの作成                 | no                                           | yes   | yes  | yes  | yes      | yes
-最適化されたイメージの転送                         | no                                           | yes   | no   | yes  | yes      | n/a
-{ref}`storage-optimized-instance-transfer`         | no                                           | yes   | no   | yes  | yes      | n/a
-コピーオンライト                                   | no                                           | yes   | yes  | yes  | yes      | yes
-ブロックデバイスベース                             | no                                           | no    | yes  | no   | yes      | no
-インスタントクローン                               | no                                           | yes   | yes  | yes  | yes      | yes
-コンテナ内でストレージドライバの使用               | yes                                          | yes   | no   | no   | no       | n/a
-古い（最新ではない）スナップショットからのリストア | yes                                          | yes   | yes  | no   | yes      | yes
-ストレージクオータ                                 | yes<sup>{ref}`* <storage-dir-quotas>`</sup>] | yes   | yes  | yes  | yes      | yes
-`lxd init` で利用可能                              | yes                                          | yes   | yes  | yes  | yes      | no
+機能                                               | ディレクトリ                                 | Btrfs | LVM  | ZFS  | Ceph RBD | CephFS | Ceph Object
+:---                                               | :---                                         | :---  | :--- | :--- | :---     | :---   | :---
+{ref}`storage-optimized-image-storage`             | no                                           | yes   | yes  | yes  | yes      | n/a    | n/a
+最適化されたインスタンスの作成                     | no                                           | yes   | yes  | yes  | yes      | n/a    | n/a
+最適化されたスナップショットの作成                 | no                                           | yes   | yes  | yes  | yes      | yes    | n/a
+最適化されたイメージの転送                         | no                                           | yes   | no   | yes  | yes      | n/a    | n/a
+{ref}`storage-optimized-instance-transfer`         | no                                           | yes   | no   | yes  | yes      | n/a    | n/a
+コピーオンライト                                   | no                                           | yes   | yes  | yes  | yes      | yes    | n/a
+ブロックデバイスベース                             | no                                           | no    | yes  | no   | yes      | no     | n/a
+インスタントクローン                               | no                                           | yes   | yes  | yes  | yes      | yes    | n/a
+コンテナ内でストレージドライバの使用               | yes                                          | yes   | no   | no   | no       | n/a    | n/a
+古い（最新ではない）スナップショットからのリストア | yes                                          | yes   | yes  | no   | yes      | yes    | n/a
+ストレージクオータ                                 | yes<sup>{ref}`* <storage-dir-quotas>`</sup>] | yes   | yes  | yes  | yes      | yes    | yes
+`lxd init` で利用可能                              | yes                                          | yes   | yes  | yes  | yes      | no     | no
+オブジェクトストレージ                             | no                                           | no    | no   | no   | no       | no     | yes
 
 (storage-optimized-image-storage)=
 ### 最適化されたイメージストレージ
 
-ディレクトリドライバーを除く全てのストレージドライバーはなんらかの種類の最適化されたイメージ保管フォーマットがあります。
+ディレクトリドライバを除く全てのストレージドライバはなんらかの種類の最適化されたイメージ保管フォーマットがあります。
 インスタンスの作成をほぼ瞬時に行うため、 LXD はインスタンスの作成時にイメージの tarball を一から解凍するのではなく事前に作成したイメージボリュームを複製します。
 
 全く使われないかもしれないイメージのためにストレージプール上にそのようなボリュームを準備するのを避けるため、ボリュームはオンデマンドで生成されます。
@@ -50,14 +56,14 @@ storage_cephfs
 Btrfs, ZFS と Ceph RBD は内部で送信/受信の機構を持ち最適化されたボリューム転送を行えます。
 LXD はサーバー間でインスタンスとスナップショットを転送するためにこの機構を使用します。
 
-この最適化された転送は同じストレージドライバーを使うストレージプール間でボリュームを転送するときのみ利用できます。
-異なるドライバーや最適化されたインスタンス転送をサポートしないドライバーを使うストレージプール間で転送するときは、 LXD は代わりに個々のファイルを rsync を使って転送します。
+この最適化された転送は同じストレージドライバを使うストレージプール間でボリュームを転送するときのみ利用できます。
+異なるドライバや最適化されたインスタンス転送をサポートしないドライバを使うストレージプール間で転送するときは、 LXD は代わりに個々のファイルを `rsync` を使って転送します。
 
-rsync を使う際は、 ストレージプールプロパティの `rsync.bwlimit` を 0 でない値に設定することでソケット I/O の量の上限を指定できます。
+`rsync` を使う際は、 ストレージプールプロパティの `rsync.bwlimit` を 0 でない値に設定することでソケット I/O の量の上限を指定できます。
 
 ## おすすめのセットアップ
 
-LXD で使う場合のベストな 2 つのオプションは ZFS と btrfs です。
+LXD で使う場合のベストな 2 つのオプションは ZFS と Btrfs です。
 このふたつは同様の機能を持ちますが、ZFS のほうがより信頼性が上です。
 
 可能であれば、LXD のストレージプールにディスク全体かパーティションを専用で使用させるべきです。

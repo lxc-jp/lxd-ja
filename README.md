@@ -72,24 +72,24 @@ UNIXソケットを介したLXDへのローカルアクセスは、常にLXDへ�
 LXDコミュニティと交流するために以下のチャンネルが用意されています。
 
 ### バグレポート
-バグレポートや機能要求は以下の場所で受け付けています。<https://github.com/lxc/lxd/issues/new>
+バグレポートや機能要求は以下の場所で受け付けています。[`https://github.com/lxc/lxd/issues/new`](https://github.com/lxc/lxd/issues/new)
 
 ### フォーラム
-フォーラムは以下の場所にあります。<https://discuss.linuxcontainers.org>
+フォーラムは以下の場所にあります。[`https://discuss.linuxcontainers.org`](https://discuss.linuxcontainers.org)
 
 ### メーリングリスト
 開発者やユーザーの議論にはLXCのメーリングリストを利用しています。
-メーリングリストは以下の場所にあります。<https://lists.linuxcontainers.org>
+メーリングリストは以下の場所にあります。[`https://lists.linuxcontainers.org`](https://lists.linuxcontainers.org)
 
 ### IRC
-ライブの議論がお好みならば、irc.libera.chatの[#lxc](https://kiwiirc.com/client/irc.libera.chat/#lxc)で私たちを見つけることができます。必要であれば [Getting started with IRC](https://discuss.linuxcontainers.org/t/getting-started-with-irc/11920) を参照してください。
+ライブの議論がお好みならば、`irc.libera.chat`の[`#lxc`](https://kiwiirc.com/client/irc.libera.chat/#lxc)で私たちを見つけることができます。必要であれば [Getting started with IRC](https://discuss.linuxcontainers.org/t/getting-started-with-irc/11920) を参照してください。
 
 ### 商用サポート
 
 LXDの商用サポートは、[Canonical Ltd](https://www.canonical.com)を通じて受けることができます。
 
 ## ドキュメント
-公式ドキュメントは https://lxd-ja.readthedocs.io/ja/latest/ (原文は https://linuxcontainers.org/lxd/docs/master/) で入手できます。
+公式ドキュメントは [`https://lxd-ja.readthedocs.io/ja/latest/`](https://lxd-ja.readthedocs.io/ja/latest/) (原文は [`https://linuxcontainers.org/lxd/docs/latest/`](https://linuxcontainers.org/lxd/docs/latest/)) で入手できます。
 
 その他の資料は、[website](https://linuxcontainers.org/lxd/articles)、[YouTube](https://www.youtube.com/channel/UCuP6xPt0WTeZu32CkQPpbvA)、フォーラムの[Tutorials section](https://discuss.linuxcontainers.org/c/tutorials/)にあります。
 

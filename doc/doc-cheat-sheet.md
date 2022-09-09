@@ -131,7 +131,7 @@ myst:
 * - 入力
   - 出力
 * - `https://linuxcontainers.org`
-  - https://linuxcontainers.org
+  - [`https://linuxcontainers.org`](https://linuxcontainers.org)
 * - `[Linux コンテナ](https://linuxcontainers.org)`
   - [Linux コンテナ](https://linuxcontainers.org)
 ```
@@ -144,7 +144,7 @@ URL をテキストとして表示し、リンクされないようにするに�
 * - 入力
   - 出力
 * - `https:/<span></span>/linuxcontainers.org` (日本語)
-  - https:/<span></span>/linuxcontainers.org
+  - `https:/<span></span>/linuxcontainers.org`
 
 ```
 
@@ -220,6 +220,10 @@ URL をテキストとして表示し、リンクされないようにするに�
   - {ref}`リンクテキスト <a_random_target>`
   - \{ref\}`リンクテキスト <a_random_target>`
   - ターゲットを参照して、タイトルを指定します。
+* - ``[`option name\](a_random_target)``
+  - [`option name`](a_random_target)
+  - [`option name`](https://) (リンク切れ)
+  - リンクテキストをマークアプする必要がある場合は Markdown の文法を使ってください。
 ```
 
 ##### 自動生成アンカーの使用
@@ -234,8 +238,8 @@ Markdownの構文を使用している場合、同じファイル内でリンク
   - 出力
   - GitHubでの出力
   - 説明
-* - `` {ref}`doc-heat-sheet.md#referencing-a-section` ``
-  - {ref}`doc-heat-sheet.md#referencing-a-section`
+* - `` {ref}`doc-cheat-sheet.md#referencing-a-section` ``
+  - {ref}`doc-cheat-sheet.md#referencing-a-section`
   - \{ref\}`doc-heat-sheet.md#referencing-a-section`
   - 自動生成されたアンカーを参照します。
 * - `[](#referencing-a-section)`
@@ -581,13 +585,13 @@ rSTには詳細セクションのサポートはありませんが、HTMLを挿�
   - 出力
 * - ```
     <details>
-    <summary><a>Details</a></summary>
+    <summary>Details</summary>
 
     Content
     </details>
     ```
   - <details>
-    <summary><a>Details</a></summary>
+    <summary>Details</summary>
 
     Content
     </details>

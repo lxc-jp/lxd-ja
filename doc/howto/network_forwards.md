@@ -39,12 +39,12 @@ lxc network forward create <network_name> <listen_address> [configuration_option
 
 ネットワークフォワードのプロパティには以下のものがあります。
 
-プロパティ       | 型         | 必須     | 説明
-:--              | :--        | :--      | :--
-listen\_address  | string     | yes      | リッスンする IP アドレス
-description      | string     | no       | ネットワークフォワードの説明
-config           | string set | no       | キー/バリューペア形式の設定オプション （`target_address` と `user.*` カスタムキーのみサポート）
-ports            | port list  | no       | {ref}`ポート指定 <network-forwards-port-specifications>` のリスト
+プロパティ       | 型         | 必須 | 説明
+:--              | :--        | :--  | :--
+`listen_address` | string     | yes  | リッスンする IP アドレス
+`description`    | string     | no   | ネットワークフォワードの説明
+`config`         | string set | no   | キー/バリューペア形式の設定オプション （`target_address` と `user.*` カスタムキーのみサポート）
+`ports`          | port list  | no   | {ref}`ポート指定 <network-forwards-port-specifications>` のリスト
 
 (network-forwards-listen-addresses)=
 ### リッスンアドレスの要件
@@ -82,13 +82,13 @@ lxc network forward port add <network_name> <listen_address> <protocol> <listen_
 
 ネットワークフォワードポートのプロパティには以下のものがあります。
 
-プロパティ | 型 | 必須 | 説明
-:--               | :--        | :--      | :--
-protocol          | string     | yes      | ポートのプロトコル (`tcp` or `udp`)
-listen\_port      | string     | yes      | リッスンするポート (例 `80,90-100`)
-target\_address   | string     | yes      | フォワード先の IP アドレス
-target\_port      | string     | no       | ターゲットのポート (例 `70,80-90` or `90`)、 空の場合は `listen_port` と同じ
-description       | string     | no       | ポートの説明
+プロパティ       | 型     | 必須 | 説明
+:--              | :--    | :--  | :--
+`protocol`       | string | yes  | ポートのプロトコル (`tcp` or `udp`)
+`listen_port`    | string | yes  | リッスンするポート (例 `80,90-100`)
+`target_address` | string | yes  | フォワード先の IP アドレス
+`target_port`    | string | no   | ターゲットのポート (例 `70,80-90` or `90`)、 空の場合は `listen_port` と同じ
+`description`    | string | no   | ポートの説明
 
 ## ネットワークフォワードを編集する
 

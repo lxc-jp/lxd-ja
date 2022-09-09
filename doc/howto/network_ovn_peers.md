@@ -40,15 +40,15 @@ discourse: 12165
 
 ピアのルーティング関係には以下のプロパティがあります。
 
-プロパティ       | 型         | 必須     | 説明
-:--              | :--        | :--      | :--
-name             | string     | yes      | ローカルネットワーク上のネットワークピアの名前
-description      | string     | no       | ネットワークピアの説明
-config           | string set | no       | 設定のキーバリューペアー (`user.*` のカスタムキーのみサポート)
-ports            | port list  | no       | ネットワークフォワードのポートリスト
-target_project   | string     | yes      | 対象のネットワークがどのプロジェクト内に存在するか (作成時に必須)
-target_network   | string     | yes      | どのネットワークとピアを作成するか (作成時に必須)
-status           | string     | --       | 作成中か作成完了 (対象のネットワークと相互にピアリングした状態) かを示すステータス
+プロパティ       | 型         | 必須 | 説明
+:--              | :--        | :--  | :--
+`name`           | string     | yes  | ローカルネットワーク上のネットワークピアの名前
+`description`    | string     | no   | ネットワークピアの説明
+`config`         | string set | no   | 設定のキーバリューペアー (`user.*` のカスタムキーのみサポート)
+`ports`          | port list  | no   | ネットワークフォワードのポートリスト
+`target_project` | string     | yes  | 対象のネットワークがどのプロジェクト内に存在するか (作成時に必須)
+`target_network` | string     | yes  | どのネットワークとピアを作成するか (作成時に必須)
+`status`         | string     | --   | 作成中か作成完了 (対象のネットワークと相互にピアリングした状態) かを示すステータス
 
 ## ルーティング関係の一覧を表示する
 

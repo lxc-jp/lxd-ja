@@ -5,9 +5,9 @@
 
 ## イベント種別
 LXD は現在 3 つのイベント種別をサポートします。
-- **Logging**: サーバのログレベルに関係なく全てのログメッセージを表示します。
-- **Operation**: 作成から完了までの（状態と進捗メタデータの更新を含む）全ての実行中のオペレーションを表示します。
-- **Lifecycle**: LXD 上で発生する特定のアクションの監査証跡を表示します。
+- `logging`: サーバのログレベルに関係なく全てのログメッセージを表示します。
+- `operation`: 作成から完了までの（状態と進捗メタデータの更新を含む）全ての実行中のオペレーションを表示します。
+- `lifecycle`: LXD 上で発生する特定のアクションの監査証跡を表示します。
 
 ## イベント構造
 ### 例:
@@ -34,7 +34,7 @@ type: lifecycle
 
 ### operation イベントの構造
 - `id`: オペレーションの UUID
-- `class`: オペレーション種別（task, token, websocket のいずれか）。
+- `class`: オペレーション種別（`task`, `token`, `websocket` のいずれか）。
 - `description`: オペレーションの説明。
 - `created_at`: オペレーションの作成日時。
 - `updated_at`: オペレーションの更新日時。
@@ -46,13 +46,13 @@ type: lifecycle
 - `err`: オペレーションのエラーメッセージ。
 - `location`: クラスタメンバー名（クラスタであれば）。
 
-### lifecycle イベントの構造
+### ライフサイクルイベントの構造
 - `action`: 発生したライフサイクルアクション。
 - `requestor`: 誰がリクエストを作成したかの情報（該当するものがあれば）。
 - `source`: アクションの対象のパス。
 - `context`: イベントに含まれる追加情報。
 
-## サポートされる lifecycle イベント
+## サポートされるライフサイクルイベント
 
 | 名前                                   | 説明                                                                                                                                                    | 追加情報
 | :------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------ | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -76,7 +76,7 @@ type: lifecycle
 | `image-alias-deleted`                  | 既存イメージのエイリアスが削除された。                                                                                                                  | `target`: オリジナルのインスタンス。                                                                                                                                                              |
 | `image-alias-renamed`                  | 既存イメージのエイリアスがリネームされた。                                                                                                              | `old_name`: 以前の名前。                                                                                                                                                                          |
 | `image-alias-updated`                  | イメージ・エイリアスの設定が変更された。                                                                                                                | `target`: オリジナルのインスタンス。                                                                                                                                                              |
-| `image-created`                        | イメージ・ストアに新しいイメージが追加された。                                                                                                          | `type`: container か vm。                                                                                                                                                                         |
+| `image-created`                        | イメージ・ストアに新しいイメージが追加された。                                                                                                          | `type`: `container` か `vm`。                                                                                                                                                                     |
 | `image-deleted`                        | イメージ・ストアからイメージが削除された。                                                                                                              |                                                                                                                                                                                                   |
 | `image-refreshed`                      | ローカルのイメージコピーが現在のソースイメージのバージョンに更新された。                                                                                |                                                                                                                                                                                                   |
 | `image-retrieved`                      | raw イメージファイルがサーバからダウンロードされた。                                                                                                    | `target`: ダウンロード先のサーバ。                                                                                                                                                                |
@@ -86,7 +86,7 @@ type: lifecycle
 | `instance-backup-deleted`              | インスタンスのバックアップが削除された。                                                                                                                |                                                                                                                                                                                                   |
 | `instance-backup-renamed`              | インスタンスのバックアップがリネームされた。                                                                                                            | `old_name`: 以前の名前。                                                                                                                                                                          |
 | `instance-backup-retrieved`            | raw インスタンス・バックアップ・ファイルがダウンロードされた。                                                                                          |                                                                                                                                                                                                   |
-| `instance-console`                     | インスタンスのコンソールに接続された。                                                                                                                  | `type`: console か vga。                                                                                                                                                                          |
+| `instance-console`                     | インスタンスのコンソールに接続された。                                                                                                                  | `type`: `console` か `vga`。                                                                                                                                                                      |
 | `instance-console-reset`               | コンソール・バッファーがリセットされた。                                                                                                                |                                                                                                                                                                                                   |
 | `instance-console-retrieved`           | コンソール・ログがダウンロードされた。                                                                                                                  |                                                                                                                                                                                                   |
 | `instance-created`                     | 新しいインスタンスが作成された。                                                                                                                        |                                                                                                                                                                                                   |
@@ -147,15 +147,15 @@ type: lifecycle
 | `storage-pool-created`                 | 新しいストレージプールが作成された。                                                                                                                    | `target`: クラスタメンバー名。                                                                                                                                                                    |
 | `storage-pool-deleted`                 | ストレージプールが削除された。                                                                                                                          |                                                                                                                                                                                                   |
 | `storage-pool-updated`                 | ストレージプールの設定が変更された。                                                                                                                    | `target`: クラスタメンバー名。                                                                                                                                                                    |
-| `storage-volume-backup-created`        | ストレージボリュームの新しいバックアップが作成された。                                                                                                  | `type`: container, virtual-machine, image, custom のいずれか。                                                                                                                                    |
+| `storage-volume-backup-created`        | ストレージボリュームの新しいバックアップが作成された。                                                                                                  | `type`: `container`, `virtual-machine`, `image`, `custom` のいずれか。                                                                                                                            |
 | `storage-volume-backup-deleted`        | ストレージボリュームのバックアップが削除された。                                                                                                        |                                                                                                                                                                                                   |
 | `storage-volume-backup-renamed`        | ストレージボリュームのバックアップがリネームされた。                                                                                                    | `old_name`: 以前の名前。                                                                                                                                                                          |
 | `storage-volume-backup-retrieved`      | ストレージボリュームのバックアップがダウンロードされた。                                                                                                |                                                                                                                                                                                                   |
-| `storage-volume-created`               | 新しいストレージボリュームが作成された。                                                                                                                | `type`: container, virtual-machine, image, custom のいずれか。                                                                                                                                    |
+| `storage-volume-created`               | 新しいストレージボリュームが作成された。                                                                                                                | `type`: `container`, `virtual-machine`, `image`, `custom` のいずれか。                                                                                                                                    |
 | `storage-volume-deleted`               | ストレージボリュームが削除された。                                                                                                                      |                                                                                                                                                                                                   |
 | `storage-volume-renamed`               | ストレージボリュームがリネームされた。                                                                                                                  | `old_name`: 以前の名前。                                                                                                                                                                          |
 | `storage-volume-restored`              | ストレージボリュームがスナップショットから復元された。                                                                                                  | `snapshot`: 復元されたスナップショット名。                                                                                                                                                        |
-| `storage-volume-snapshot-created`      | 新しいストレージボリュームスナップショットが作成された。                                                                                                | `type`: container, virtual-machine, image, custom のいずれか。                                                                                                                                    |
+| `storage-volume-snapshot-created`      | 新しいストレージボリュームスナップショットが作成された。                                                                                                | `type`: `container`, `virtual-machine`, `image`, `custom` のいずれか。                                                                                                                                    |
 | `storage-volume-snapshot-deleted`      | ストレージボリュームのスナップショットが削除された。                                                                                                    |                                                                                                                                                                                                   |
 | `storage-volume-snapshot-renamed`      | ストレージボリュームのスナップショットがリネームされた。                                                                                                | `old_name`: 以前の名前。                                                                                                                                                                          |
 | `storage-volume-snapshot-updated`      | ストレージボリュームのスナップショットの設定が変更された。                                                                                              |                                                                                                                                                                                                   |

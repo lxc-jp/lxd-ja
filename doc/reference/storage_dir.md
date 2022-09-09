@@ -22,20 +22,20 @@ LXD の `dir` ドライバは完全に機能し、他のドライバと同じ機
 `dir` ドライバを使うストレージプールとこれらのプール内のストレージボリュームには以下の設定オプションが利用できます。
 
 ## ストレージプール設定
-キー              | 型     | デフォルト値 | 説明
-:--               | :---   | :------      | :----------
-rsync.bwlimit     | string | 0 (no limit) | ストレージエンティティの転送に rsync を使う必要があるときにソケット I/O に指定する上限を設定
-rsync.compression | bool   | true         | ストレージブールのマイグレーションの際に圧縮を使うかどうか
-source            | string | -            | ブロックデバイスかループファイルかファイルシステムエントリのパス
+キー                | 型     | デフォルト値 | 説明
+:--                 | :---   | :------      | :----------
+`rsync.bwlimit`     | string | `0` (no limit) | ストレージエンティティの転送に rsync を使う必要があるときにソケット I/O に指定する上限を設定
+`rsync.compression` | bool   | `true`         | ストレージブールのマイグレーションの際に圧縮を使うかどうか
+`source`            | string | -            | ブロックデバイスかループファイルかファイルシステムエントリのパス
 
 {{volume_configuration}}
 
 ## ストレージボリューム設定
-キー               | 型     | 条件               | デフォルト値                               | 説明
-:--                | :---   | :--------          | :------                                    | :----------
-security.shifted   | bool   | custom volume      | same as volume.security.shifted or false   | {{enable_ID_shifting}}
-security.unmapped  | bool   | custom volume      | same as volume.security.unmapped or false  | ボリュームの ID マッピングを無効にする
-size               | string | appropriate driver | same as volume.size                        | ストレージボリュームのサイズ/クォータ
-snapshots.expiry   | string | custom volume      | same as volume.snapshots.expiry            | {{snapshot_expiry_format}}
-snapshots.pattern  | string | custom volume      | same as volume.snapshots.pattern or snap%d | {{snapshot_pattern_format}}
-snapshots.schedule | string | custom volume      | same as volume.snapshots.schedule          | {{snapshot_schedule_format}}
+キー                 | 型     | 条件               | デフォルト値                                 | 説明
+:--                  | :---   | :--------          | :------                                      | :----------
+`security.shifted`   | bool   | custom volume      | `volume.security.shifted` と同じか `false`   | {{enable_ID_shifting}}
+`security.unmapped`  | bool   | custom volume      | `volume.security.unmapped` と同じか `false`  | ボリュームの ID マッピングを無効にする
+`size`               | string | appropriate driver | `volume.size` と同じ                         | ストレージボリュームのサイズ/クォータ
+`snapshots.expiry`   | string | custom volume      | `volume.snapshots.expiry` と同じ             | {{snapshot_expiry_format}}
+`snapshots.pattern`  | string | custom volume      | `volume.snapshots.pattern` と同じか `snap%d` | {{snapshot_pattern_format}}
+`snapshots.schedule` | string | custom volume      | `volume.snapshots.schedule` と同じ           | {{snapshot_schedule_format}}

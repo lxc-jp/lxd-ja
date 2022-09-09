@@ -1,6 +1,9 @@
 (storage-cephfs)=
 # CephFS - `cephfs`
 
+```{youtube} https://youtube.com/watch?v=kVLGbvRU98A
+```
+
 % Include content from [storage_ceph.md](storage_ceph.md)
 ```{include} storage_ceph.md
     :start-after: <!-- Include start Ceph intro -->
@@ -25,7 +28,7 @@
 ```{note}
 `cephfs` ドライバはコンテントタイプ `filesystem` のカスタムストレージボリュームにのみ使用できます。
 
-他のストレージボリュームには {ref}`storage-ceph` ドライバを使用してください。
+他のストレージボリュームには {ref}`Ceph <storage-ceph>` ドライバを使用してください。
 そのドライバはコンテントタイプ `filesystem` のカスタムストレージボリュームにも使用できますが、 Ceph RBD イメージを使って実装しています。
 ```
 
@@ -35,7 +38,7 @@
     :end-before: <!-- Include end Ceph driver cluster -->
 ```
 
-使用したい CephFS ファイルシステムは事前に作成する必要があり {ref}`source <storage-cephfs-pool-config>` オプションで指定する必要があります。
+使用したい CephFS ファイルシステムは事前に作成する必要があり [`source`](storage-cephfs-pool-config) オプションで指定する必要があります。
 
 % Include content from [storage_ceph.md](storage_ceph.md)
 ```{include} storage_ceph.md
@@ -57,23 +60,23 @@ LXD の `cephfs` ドライバはサーバ側でスナップショットが有効
 
 (storage-cephfs-pool-config)=
 ## ストレージプール設定
-キー                   | 型     | デフォルト値 | 説明
-:--                    | :---   | :------      | :----------
-cephfs.cluster\_name   | string | ceph         | CephFS ファイルシステムを含む Ceph クラスタの名前
-cephfs.fscache         | bool   | false        | カーネルの fscache と cachefilesd を使用するか
-cephfs.path            | string | /            | CephFS をマウントするベースのパス
-cephfs.user.name       | string | admin        | 使用する Ceph のユーザー
-source                 | string | -            | 使用する既存の CephFS ファイルシステムかファイルシステムパス
-volatile.pool.pristine | string | true         | 作成時に CephFS ファイルシステムが空だったか
+キー                     | 型     | デフォルト値 | 説明
+:--                      | :---   | :------      | :----------
+`cephfs.cluster_name`    | string | `ceph`       | CephFS ファイルシステムを含む Ceph クラスタの名前
+`cephfs.fscache`         | bool   | `false`      | カーネルの `fscache` と `cachefilesd` を使用するか
+`cephfs.path`            | string | `/`          | CephFS をマウントするベースのパス
+`cephfs.user.name`       | string | `admin`      | 使用する Ceph のユーザー
+`source`                 | string | -            | 使用する既存の CephFS ファイルシステムかファイルシステムパス
+`volatile.pool.pristine` | string | `true`       | 作成時に CephFS ファイルシステムが空だったか
 
 {{volume_configuration}}
 
 ## ストレージボリューム設定
-キー               | 型     | 条件               | デフォルト値                             | 説明
-:--                | :---   | :--------          | :------                                  | :----------
-security.shifted   | bool   | custom volume      | volume.security.shifted と同じか false   | {{enable_ID_shifting}}
-security.unmapped  | bool   | custom volume      | volume.security.unmapped と同じか false  | ボリュームの ID マッピングを無効にする
-size               | string | appropriate driver | volume.size と同じ                       | ストレージボリュームのサイズ/クォータ
-snapshots.expiry   | string | custom volume      | volume.snapshots.expiry と同じ           | {{snapshot_expiry_format}}
-snapshots.pattern  | string | custom volume      | volume.snapshots.pattern と同じか snap%d | {{snapshot_pattern_format}}
-snapshots.schedule | string | custom volume      | volume.snapshots.schedule と同じ         | {{snapshot_schedule_format}}
+キー                 | 型     | 条件               | デフォルト値                                 | 説明
+:--                  | :---   | :--------          | :------                                      | :----------
+`security.shifted`   | bool   | custom volume      | `volume.security.shifted` と同じか `false`   | {{enable_ID_shifting}}
+`security.unmapped`  | bool   | custom volume      | `volume.security.unmapped` と同じか `false`  | ボリュームの ID マッピングを無効にする
+`size`               | string | appropriate driver | `volume.size` と同じ                         | ストレージボリュームのサイズ/クォータ
+`snapshots.expiry`   | string | custom volume      | `volume.snapshots.expiry` と同じ             | {{snapshot_expiry_format}}
+`snapshots.pattern`  | string | custom volume      | `volume.snapshots.pattern` と同じか `snap%d` | {{snapshot_pattern_format}}
+`snapshots.schedule` | string | custom volume      | `volume.snapshots.schedule` と同じ           | {{snapshot_schedule_format}}

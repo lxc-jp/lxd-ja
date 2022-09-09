@@ -34,10 +34,10 @@ LXD は 3 つの異なるソースからのイメージのインポートをサ�
 
 CLI の視点では、これは以下の一般的なアクションによって実行されます。
 
- - lxc launch ubuntu:22.04 u1
- - lxc launch images:centos/8 c1
- - lxc launch my-server:SHA256 a1
- - lxc image copy images:gentoo local: --copy-aliases --auto-update
+    lxc launch ubuntu:22.04 u1
+    lxc launch images:centos/8 c1
+    lxc launch my-server:SHA256 a1
+    lxc image copy images:gentoo local: --copy-aliases --auto-update
 
 上記の `ubuntu` と `images` のケースではリモートは simplestreams を読み取り専用のサーバプロトコルとして使用し、イメージの複数のエイリアスの 1 つによりイメージを選択します。
 
@@ -48,11 +48,11 @@ CLI の視点では、これは以下の一般的なアクションによって�
 
 そのような状況ではイメージファイルは他のシステムで以下のコマンドを使ってダウンロードできます。
 
- - lxc image export ubuntu:22.04
+    lxc image export ubuntu:22.04
 
 その後ターゲットのシステムにイメージを転送してローカルイメージストアーに手動でインポートします。
 
- - lxc image import META ROOTFS --alias ubuntu-22.04
+    lxc image import META ROOTFS --alias ubuntu-22.04
 
 `lxc image import` は統合イメージ (単一ファイル) と分割イメージ (2つのファイル) の両方をサポートします。
 上の例では後者を使用しています。
@@ -63,7 +63,7 @@ CLI の視点では、これは以下の一般的なアクションによって�
 ただし、この方法にはいくつか制限があります。
 
  - 統合ファイル（単一ファイル）のみがサポートされます
- - リモートサーバが追加の http ヘッダーを返す必要があります
+ - リモートサーバが追加の HTTP ヘッダーを返す必要があります
 
 LXD はサーバに問い合わせをする際に以下のヘッダーを設定します。
 
@@ -78,14 +78,14 @@ LXD はサーバに問い合わせをする際に以下のヘッダーを設定�
 
 クライアント側では以下のように使用できます。
 
-`lxc image import URL --alias some-name`
+    lxc image import URL --alias some-name
 
 ### インスタンスやスナップショットを新しいイメージとして公開する
 インスタンスやスナップショットの 1 つを新しいイメージに変換できます。
 これは `lxc publish` で CLI 上で実行できます。
 
 これを行う際には、たいていの場合公開する前にインスタンスのメタデータやテンプレートを `lxc config metadata` と `lxc config template` コマンドを使って整理するのが良いでしょう。
-さらにホストの SSH キーや dbus/systemd の machine-id などインスタンスに固有な状態も削除するのが良いでしょう。
+さらにホストの SSH キーや `dbus/systemd machine-id` などインスタンスに固有な状態も削除するのが良いでしょう。
 
 インスタンスから tarball を生成した後圧縮する必要があるので、公開のプロセスはかなり時間がかかるかもしれません。
 この操作は特に I/O と CPU の負荷が高いので、公開操作は LXD により 1 つずつ順に実行されます。
@@ -134,16 +134,16 @@ LXD はイメージを最新に維持できます。デフォルトではエイ�
 イメージに関連付けされたプロファイルは `lxc launch` の `--profile` と `--no-profiles` オプションを使ってインスタンス起動時にオーバーライドできます。
 
 ## 特別なイメージプロパティ
-プレフィックス***requirements***で始まるイメージプロパティ(例：requirements.XYZ)は、
+プレフィックス***requirements***で始まるイメージプロパティ(例：`requirements.XYZ`)は、
 LXDがホストシステムと当該イメージで生成されるインスタンスの互換性を判断するために使用されます。
 これらの互換性がない場合にはLXDはそのインスタンスを起動しません。
 
 現在のところ、以下の要件がサポートされています。
 
-キー                    | タイプ | デフォルト | 説明
-:--                     | :---   | :------    | :----------
-requirements.secureboot | string | -          | "false" に設定すると、イメージがセキュアブートで起動しないことを示します。
-requirements.cgroup     | string | -          | "v1" "に設定されている場合、ホストでCGroupV1が実行されている必要があることを示します。
+キー                      | タイプ | 既定値  | 説明
+:--                       | :---   | :------ | :----------
+`requirements.secureboot` | string | -       | `false` に設定すると、イメージがセキュアブートで起動しないことを示します。
+`requirements.cgroup`     | string | -       | `v1` に設定されている場合、ホストで`CGroupV1`が実行されている必要があることを示します。
 
 ## イメージの形式
 LXD は現状 2 つの LXD に特有なイメージの形式をサポートします。
@@ -183,16 +183,16 @@ tarball は圧縮できます。そして次のものを含みます。
 結合したものの SHA-256 です。
 
 ### サポートされている圧縮形式
-LXD は広範な tarball の圧縮アルゴリズムをサポートしますが、互換性のために gzip か xz が望ましいです。
+LXD は広範な tarball の圧縮アルゴリズムをサポートしますが、互換性のために `gzip` か `xz` が望ましいです。
 
-分離されたイメージではコンテナの場合は rootfs ファイルはさらに squashfs 形式でフォーマットすることもできます。
-仮想マシンでは `rootfs.img` ファイルは常に qcow2 であり、オプションで qcow2 のネイティブ圧縮を使って圧縮することもできます。
+分離されたイメージではコンテナの場合は rootfs ファイルはさらに SquashFS 形式でフォーマットすることもできます。
+仮想マシンでは `rootfs.img` ファイルは常に `qcow2` であり、オプションで `qcow2` のネイティブ圧縮を使って圧縮することもできます。
 
 ### 中身
 コンテナでは rootfs のディレクトリ (あるいは tarball) は完全なファイルシステムのツリーを含み、それが `/` になります。
 VM ではこれは代わりに `rootfs.img` ファイルでメインのディスクデバイスになります。
 
-テンプレートのディレクトリはコンテナ内で使用される pongo2 形式のテンプレート・ファイルを含みます。
+テンプレートのディレクトリはコンテナ内で使用される Pongo2 形式のテンプレート・ファイルを含みます。
 
 `metadata.yaml` はイメージを (現状は) LXD で稼働されるために必要な情報を
 含んでおり、これは以下のものを含みます。
@@ -236,12 +236,12 @@ templates:
 テンプレートは常に以下のコンテキストを受け取ります。
 
  - `trigger`: テンプレートを呼び出したイベントの名前 (string)
- - `path`: テンプレート出力先のファイルのパス (string)
+ - `path`: テンプレートを使うファイルのパス (string)
  - `container`: インスタンスのプロパティ (name, architecture, privileged そして ephemeral) の key/value の map (map[string]string) (廃止予定。代わりに `instance` を使用してください)
  - `instance`: インスタンスのプロパティ (name, architecture, privileged そして ephemeral) の key/value の map (map[string]string)
  - `config`: インスタンスの設定の key/value の map (map[string]string)
  - `devices`: インスタンスに割り当てられたデバイスの key/value の map (map[string]map[string]string)
- - `properties`: metadata.yaml に指定されたテンプレートのプロパティの key/value の map (map[string]string)
+ - `properties`: `metadata.yaml` に指定されたテンプレートのプロパティの key/value の map (map[string]string)
 
 `create_only` キーを設定すると LXD が存在しないファイルだけを生成し、
 既存のファイルを上書きしないようにできます。
@@ -250,6 +250,6 @@ templates:
 生成対象とすべきではないです。そうしてしまうとインスタンスの通常の操作で
 上書きされてしまうでしょう。
 
-利便性のため、以下の関数が pongo のテンプレートで利用可能となっています。
+利便性のため、以下の関数が Pongo2 のテンプレートで利用可能となっています。
 
  - `config_get("user.foo", "bar")` => `user.foo` の値か、未設定の場合は `"bar"` を返します。

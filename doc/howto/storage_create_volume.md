@@ -1,5 +1,4 @@
-(storage-add-volume)=
-# カスタムストレージボリュームを追加するには
+# カスタムストレージボリュームを作成するには
 
 インスタンスを作成する際に、 LXD はインスタンスのルートディスクとして使用するストレージボリュームを自動的に作成します。
 
@@ -15,7 +14,7 @@
 
     lxc storage volume create <pool_name> <volume_name> [configuration_options...]
 
-各ドライバーで利用可能なストレージボリューム設定オプションについては {ref}`storage-drivers` ドキュメントを参照してください。
+各ドライバで利用可能なストレージボリューム設定オプションについては {ref}`storage-drivers` ドキュメントを参照してください。
 
 デフォルトではカスタムストレージボリュームは `filesystem` {ref}`コンテントタイプ <storage-content-types>` を使用します。
 `block` コンテントタイプのカスタムストレージボリュームを作成するには `--type` フラグを追加してください。
@@ -27,7 +26,7 @@
     lxc storage volume create <pool_name> <volume_name> --target=<cluster_member> [configuration_options...]
 
 ```{note}
-ほとんどのストレージドライバーではカスタムストレージボリュームはクラスター間で同期されず作成されたメンバー上にのみ存在します。
+ほとんどのストレージドライバではカスタムストレージボリュームはクラスター間で同期されず作成されたメンバー上にのみ存在します。
 この挙動は Ceph ベースのストレージプール (`ceph` and `cephfs`) では異なり、ボリュームはどのクラスターメンバーでも利用可能です。
 ```
 
@@ -59,7 +58,7 @@
 ## I/O 制限値の設定
 
 ストレージボリュームをインスタンスに {ref}`ディスクデバイス <instance_device_type_disk>` としてアタッチする際に、 I/O 制限値を設定できます。
-そのためには `limits.read`, `limits.write`, `limits.max` に対応する制限値を (IOp/s か MB/s で) 設定します。
+そのためには `limits.read`, `limits.write`, `limits.max` に対応する制限値を設定します。
 詳細な情報は {ref}`instance_device_type_disk` リファレンスを参照してください。
 
 制限値は Linux の `blkio` cgroup コントローラー経由で適用されます。これによりディスクのレベルで I/O を制限することができます (しかしそれより細かい単位では制限できません)。
