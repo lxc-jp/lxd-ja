@@ -1,8 +1,12 @@
-# About storage pools and storage volumes
+# About storage pools, volumes and buckets
 
 LXD stores its data in storage pools, divided into storage volumes of different content types (like images or instances).
 You could think of a storage pool as the disk that is used to store data, while storage volumes are different partitions on this disk that are used for specific purposes.
 
+In addition to storage volumes, there are storage buckets, which use the [Amazon {abbr}`S3 (Simple Storage Service)`](https://docs.aws.amazon.com/AmazonS3/latest/API/Welcome.html) protocol.
+Like storage volumes, storage buckets are part of a storage pool.
+
+(storage-pools)=
 ## Storage pools
 
 During initialization, LXD prompts you to create a first storage pool.
@@ -18,6 +22,11 @@ The following storage drivers are supported:
 - [Ceph RBD - `ceph`](storage-ceph)
 - [CephFS - `cephfs`](storage-cephfs)
 - [Ceph Object - `cephobject`](storage-cephobject)
+
+See the following how-to guides for additional information:
+
+- {ref}`howto-storage-pools`
+- {ref}`howto-storage-create-instance`
 
 (storage-location)=
 ### Data storage location
@@ -40,11 +49,13 @@ In most cases, it is also the easiest to manage.
 This option is supported for the `dir` driver, the `btrfs` driver (if the host is Btrfs and you point LXD to a dedicated sub-volume) and the `zfs` driver (if the host is ZFS and you point LXD to a dedicated dataset on your zpool).
 
 #### Dedicated disk or partition
+
 Having LXD use an empty partition on your main disk or a full dedicated disk keeps its storage completely independent from the host.
 
 This option is supported  for the `btrfs` driver, the `lvm` driver and the `zfs` driver.
 
 #### Loop disk
+
 LXD can create a loop file on your main drive and have the selected storage driver use that.
 This method is functionally similar to using a disk or partition, but it uses a large file on your main drive instead.
 This means that every write must go through the storage driver and your main drive's file system, which leads to decreased performance.
@@ -56,6 +67,7 @@ They will grow up to the configured limit, but deleting instances or images will
 You can increase their size though; see {ref}`storage-resize-pool`.
 
 #### Remote storage
+
 The `ceph`, `cephfs` and `cephobject` drivers store the data in a completely independent Ceph storage cluster that must be set up separately.
 
 (storage-default-pool)=
@@ -86,8 +98,17 @@ In the default profile, this pool is set to the storage pool that was created du
 (storage-volumes)=
 ## Storage volumes
 
+```{youtube} https://www.youtube.com/watch?v=dvQ111pbqtk
+```
+
 When you create an instance, LXD automatically creates the required storage volumes for it.
 You can create additional storage volumes.
+
+See the following how-to guides for additional information:
+
+- {ref}`howto-storage-volumes`
+- {ref}`howto-storage-move-volume`
+- {ref}`howto-storage-backup-volume`
 
 (storage-volume-types)=
 ### Storage volume types
@@ -111,6 +132,8 @@ Storage volumes can be of the following types:
 `custom`
 : You can add one or more custom storage volumes to hold data that you want to store separately from your instances.
   Custom storage volumes can be shared between instances, and they are retained until you delete them.
+
+  You can also use custom storage volumes to hold your backups or images.
 
   You must specify the storage pool for the custom volume when you create it.
 
@@ -137,6 +160,16 @@ Each storage volume uses one of the following content types:
 
 Storage buckets provide object storage functionality via the S3 protocol.
 
-Each storage bucket is accessed directly by applications using its own URL.
+They can be used in a way that is similar to custom storage volumes.
+However, unlike storage volumes, storage buckets are not attached to an instance.
+Instead, applications can access a storage bucket directly using its URL.
 
-Each storage bucket is assigned one or more access keys which are used by the applications to access it.
+Each storage bucket is assigned one or more access keys, which the applications must use to access it.
+
+Storage buckets can be located on local storage (with `dir`, `btrfs`, `lvm` or `zfs` pools) or on remote storage (with `cephobject` pools).
+
+To enable storage buckets for local storage pool drivers and allow applications to access the buckets via the S3 protocol, you must configure the `core.storage_buckets_address` server setting (see {ref}`server`).
+
+See the following how-to guide for additional information:
+
+- {ref}`howto-storage-buckets`

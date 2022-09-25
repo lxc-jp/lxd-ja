@@ -1,18 +1,20 @@
 (server)=
 # Server configuration
+
 The server configuration is a simple set of key and values.
 
 The key/value configuration is namespaced with the following namespaces
 currently supported:
 
- - `backups` (backups configuration)
- - `candid` (External user authentication through Candid)
- - `cluster` (cluster configuration)
- - `core` (core daemon configuration)
- - `images` (image configuration)
- - `instances` (instance configuration)
- - `maas` (MAAS integration)
- - `rbac` (Role Based Access Control through external Candid + Canonical RBAC)
+- `backups` (backups configuration)
+- `candid` (External user authentication through Candid)
+- `cluster` (cluster configuration)
+- `core` (core daemon configuration)
+- `images` (image configuration)
+- `instances` (instance configuration)
+- `maas` (MAAS integration)
+- `rbac` (Role Based Access Control through external Candid + Canonical RBAC)
+- `loki` (External log aggregation system)
 
 ```{rst-class} break-col-4 min-width-4-8
 ```
@@ -35,7 +37,7 @@ Key                                 | Type      | Scope     | Default           
 `core.debug_address`                | string    | local     | -                                 | Address to bind the pprof debug server to (HTTP)
 `core.dns_address`                  | string    | local     | -                                 | Address to bind the authoritative DNS server to (DNS)
 `core.https_address`                | string    | local     | -                                 | Address to bind for the remote API (HTTPS)
-`core.https_allowed_credentials`    | bool      | global    | -                                 | Whether to set Access-Control-Allow-Credentials HTTP header value to "true"
+`core.https_allowed_credentials`    | bool      | global    | -                                 | Whether to set Access-Control-Allow-Credentials HTTP header value to `true`
 `core.https_allowed_headers`        | string    | global    | -                                 | Access-Control-Allow-Headers HTTP header value
 `core.https_allowed_methods`        | string    | global    | -                                 | Access-Control-Allow-Methods HTTP header value
 `core.https_allowed_origin`         | string    | global    | -                                 | Access-Control-Allow-Origin HTTP header value
@@ -44,8 +46,9 @@ Key                                 | Type      | Scope     | Default           
 `core.metrics_authentication`       | bool      | global    | `true`                            | Whether to enforce authentication on the metrics endpoint
 `core.proxy_https`                  | string    | global    | -                                 | HTTPS proxy to use, if any (falls back to `HTTPS_PROXY` environment variable)
 `core.proxy_http`                   | string    | global    | -                                 | HTTP proxy to use, if any (falls back to `HTTP_PROXY` environment variable)
-`core.proxy_ignore_hosts`           | string    | global    | -                                 | Hosts which don't need the proxy for use (similar format to `NO_PROXY`, e.g. 1.2.3.4,1.2.3.5, falls back to NO_PROXY environment variable)
+`core.proxy_ignore_hosts`           | string    | global    | -                                 | Hosts which don't need the proxy for use (similar format to `NO_PROXY`, e.g. 1.2.3.4,1.2.3.5, falls back to `NO_PROXY` environment variable)
 `core.shutdown_timeout`             | integer   | global    | `5`                               | Number of minutes to wait for running operations to complete before LXD server shut down
+`core.storage_buckets_address`      | string    | local     | -                                 | Address to bind the storage object server to (HTTPS)
 `core.trust_ca_certificates`        | bool      | global    | -                                 | Whether to automatically trust clients signed by the CA
 `core.trust_password`               | string    | global    | -                                 | Password to be provided by clients to set up a trust
 `images.auto_update_cached`         | bool      | global    | `true`                            | Whether to automatically update any image that LXD caches
@@ -54,6 +57,13 @@ Key                                 | Type      | Scope     | Default           
 `images.default_architecture`       | string    | -         | -                                 | Default architecture which should be used in mixed architecture cluster
 `images.remote_cache_expiry`        | integer   | global    | `10`                              | Number of days after which an unused cached remote image will be flushed
 `instances.nic.host_name`           | string    | global    | `random`                          | If it is set to `random` then use the random host interface names but if it's set to mac, then generate a name in the form `lxd<mac_address>`(MAC without leading 2 digits).
+`loki.api.ca_cert`                  | string    | global    | -                                 | The CA certificate for the Loki server
+`loki.api.url`                      | string    | global    | -                                 | The URL to the Loki server
+`loki.auth.password`                | string    | global    | -                                 | The password used for authentication
+`loki.auth.username`                | string    | global    | -                                 | The username used for authentication
+`loki.labels`                       | string    | global    | -                                 | Comma-separated list of values which should be used as labels for a Loki log entry
+`loki.loglevel`                     | string    | global    | -                                 | Minimum log level to send to Loki server
+`loki.types`                        | string    | global    | -                                 | Type of events to send to Loki server (`lifecycle` and/or `logging`)
 `maas.api.key`                      | string    | global    | -                                 | API key to manage MAAS
 `maas.api.url`                      | string    | global    | -                                 | URL of the MAAS server
 `maas.machine`                      | string    | local     | host name                         | Name of this LXD host in MAAS
@@ -81,6 +91,7 @@ with a `local` scope must be set on a per member basis using the
 `--target` option of the command line tool.
 
 ## Exposing LXD to the network
+
 By default, LXD can only be used by local users through a Unix socket.
 
 To expose LXD to the network, you'll need to set `core.https_address`.
@@ -95,6 +106,7 @@ time by providing the configured password.
 More details about authentication can be found [here](security.md).
 
 ## External authentication
+
 LXD when accessed over the network can be configured to use external
 authentication through [Candid](https://github.com/canonical/candid).
 

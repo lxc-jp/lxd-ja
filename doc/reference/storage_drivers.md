@@ -18,6 +18,7 @@ storage_ceph
 storage_cephfs
 storage_cephobject
 ```
+
 See the corresponding pages for driver-specific information and configuration options.
 
 (storage-drivers-features)=
@@ -39,7 +40,7 @@ Storage driver usable inside a container    | yes       | yes   | no    | no   |
 Restore from older snapshots (not latest)   | yes       | yes   | yes   | no   | yes      | yes    | n/a
 Storage quotas                              | yes<sup>{ref}`* <storage-dir-quotas>`</sup>| yes   | yes   | yes  | yes  | yes    | yes
 Available on `lxd init`                     | yes       | yes   | yes   | yes  | yes      | no     | no
-Object storage                              | no        | no    | no    | no   | no       | no     | yes
+Object storage                              | yes       | yes   | yes   | yes  | no       | no     | yes
 
 (storage-optimized-image-storage)=
 ### Optimized image storage

@@ -17,6 +17,15 @@ By default, it also performs NAT for the bridge.
 
 See {ref}`network-bridge-firewall` for instructions on how to configure your firewall to work with LXD bridge networks.
 
+<!-- Include start MAC identifier note -->
+
+```{note}
+Static DHCP assignments depend on the client using its MAC address as the DHCP identifier.
+This method prevents conflicting leases when copying an instance, and thus makes statically assigned leases work properly.
+```
+
+<!-- Include end MAC identifier note -->
+
 ## IPv6 prefix size
 
 If you're using IPv6 for your bridge network, you should use a prefix size of 64.
@@ -31,17 +40,17 @@ If you must create a smaller subnet, use static allocation or another standalone
 
 The following configuration key namespaces are currently supported for the `bridge` network type:
 
- - `bgp` (BGP peer configuration)
- - `bridge` (L2 interface configuration)
- - `dns` (DNS server and resolution configuration)
- - `fan` (configuration specific to the Ubuntu FAN overlay)
- - `ipv4` (L3 IPv4 configuration)
- - `ipv6` (L3 IPv6 configuration)
- - `maas` (MAAS network identification)
- - `security` (network ACL configuration)
- - `raw` (raw configuration file content)
- - `tunnel` (cross-host tunneling configuration)
- - `user` (free-form key/value for user metadata)
+- `bgp` (BGP peer configuration)
+- `bridge` (L2 interface configuration)
+- `dns` (DNS server and resolution configuration)
+- `fan` (configuration specific to the Ubuntu FAN overlay)
+- `ipv4` (L3 IPv4 configuration)
+- `ipv6` (L3 IPv6 configuration)
+- `maas` (MAAS network identification)
+- `security` (network ACL configuration)
+- `raw` (raw configuration file content)
+- `tunnel` (cross-host tunneling configuration)
+- `user` (free-form key/value for user metadata)
 
 ```{note}
 {{note_ip_addresses_CIDR}}
@@ -123,7 +132,6 @@ The following features are supported for the `bridge` network type:
 - {ref}`network-zones`
 - {ref}`network-bgp`
 - [How to integrate with `systemd-resolved`](network-bridge-resolved)
-
 
 ```{toctree}
 :maxdepth: 1

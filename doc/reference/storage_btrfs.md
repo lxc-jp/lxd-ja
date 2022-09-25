@@ -1,6 +1,9 @@
 (storage-btrfs)=
 # Btrfs - `btrfs`
 
+```{youtube} https://www.youtube.com/watch?v=2r5FYuusxNc
+```
+
 {abbr}`Btrfs (B-tree file system)` is a local file system based on the {abbr}`COW (copy-on-write)` principle.
 COW means that data is stored to a different block after it has been modified instead of overwriting the existing data, reducing the risk of data corruption.
 Unlike other file systems, Btrfs is extent-based, which means that it stores data in contiguous areas of memory.
@@ -19,6 +22,10 @@ Snapshots can be read-write or read-only.
 
 The `btrfs` driver in LXD uses a subvolume per instance, image and snapshot.
 When creating a new object (for example, launching a new instance), it creates a Btrfs snapshot.
+
+Btrfs doesn't natively support storing block devices.
+Therefore, when using Btrfs for VMs, LXD creates a big file on disk to store the VM.
+This approach is not very efficient and might cause issues when creating snapshots.
 
 Btrfs can be used as a storage backend inside a container in a nested LXD environment.
 In this case, the parent container itself must use Btrfs.
@@ -54,6 +61,7 @@ The following configuration options are available for storage pools that use the
 
 (storage-btrfs-pool-config)=
 ### Storage pool configuration
+
 Key                             | Type      | Default                    | Description
 :--                             | :---      | :------                    | :----------
 `btrfs.mount_options`           | string    | `user_subvol_rm_allowed`   | Mount options for block devices
@@ -62,11 +70,20 @@ Key                             | Type      | Default                    | Descr
 {{volume_configuration}}
 
 ### Storage volume configuration
+
 Key                     | Type      | Condition                 | Default                                       | Description
 :--                     | :---      | :--------                 | :------                                       | :----------
 `security.shifted`      | bool      | custom volume             | same as `volume.security.shifted` or `false`  | {{enable_ID_shifting}}
 `security.unmapped`     | bool      | custom volume             | same as `volume.security.unmapped` or `false` | Disable ID mapping for the volume
 `size`                  | string    | appropriate driver        | same as `volume.size`                         | Size/quota of the storage volume
-`snapshots.expiry`      | string    | custom volume             | same as `volume.snapshots.expiry `            | {{snapshot_expiry_format}}
+`snapshots.expiry`      | string    | custom volume             | same as `volume.snapshots.expiry`             | {{snapshot_expiry_format}}
 `snapshots.pattern`     | string    | custom volume             | same as `volume.snapshots.pattern` or `snap%d`| {{snapshot_pattern_format}}
 `snapshots.schedule`    | string    | custom volume             | same as `volume.snapshots.schedule`           | {{snapshot_schedule_format}}
+
+### Storage bucket configuration
+
+To enable storage buckets for local storage pool drivers and allow applications to access the buckets via the S3 protocol, you must configure the `core.storage_buckets_address` server setting (see {ref}`server`).
+
+Key                     | Type      | Condition                 | Default                                        | Description
+:--                     | :---      | :--------                 | :------                                        | :----------
+`size`                  | string    | appropriate driver        | same as `volume.size`                          | Size/quota of the storage bucket

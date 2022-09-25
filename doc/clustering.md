@@ -77,6 +77,7 @@ if you have a join token. Then pick an address of an existing node in the cluste
 gets printed matches the cluster certificate of the existing members.
 
 ### Per-server configuration
+
 As mentioned previously, LXD cluster members are generally assumed to be identical systems.
 
 However to accommodate things like slightly different disk ordering or
@@ -90,10 +91,10 @@ storage or networks.
 
 Those typically cover:
 
- - Source device for a storage pool (leaving empty would create a loop)
- - Name for a ZFS zpool (defaults to the name of the LXD pool)
- - External interfaces for a bridged network (empty would add none)
- - Name of the parent network device for managed `physical` or `macvlan` networks (must be set)
+- Source device for a storage pool (leaving empty would create a loop)
+- Name for a ZFS zpool (defaults to the name of the LXD pool)
+- External interfaces for a bridged network (empty would add none)
+- Name of the parent network device for managed `physical` or `macvlan` networks (must be set)
 
 It's possible to lookup the questions ahead of time (useful for scripting) by querying the `/1.0/cluster` API endpoint.
 This can be done through `lxc query /1.0/cluster` or through other API clients.
@@ -142,7 +143,7 @@ Now create a bootstrap file for another node. You only need to fill in the
 node.
 
 Be sure to include the address and certificate of the target bootstrap node. To
-create a YAML-compatible entry for the ``cluster_certificate`` key you can use a
+create a YAML-compatible entry for the `cluster_certificate` key you can use a
 command like `sed ':a;N;$!ba;s/\n/\n\n/g' /var/lib/lxd/cluster.crt` (or
 `sed ':a;N;$!ba;s/\n/\n\n/g' /var/snap/lxd/common/lxd/cluster.crt` for snap users), which you
 have to run on the bootstrap node. `cluster_certificate_path` key (which should
@@ -176,10 +177,10 @@ opyQ1VRpAg2sV2C4W8irbNqeUsTeZZxhLqp4vNOXXBBrSqUCdPu1JXADV0kavg1l
 
 When joining a cluster using a cluster join token, the following fields can be omitted:
 
- - `server_name`
- - `cluster_address`
- - `cluster_certificate`
- - `cluster_password`
+- `server_name`
+- `cluster_address`
+- `cluster_certificate`
+- `cluster_password`
 
 And instead the full token be passed through the `cluster_token` field.
 
@@ -484,7 +485,6 @@ of the image being locally available.
 
 The special value of "-1" may be used to have the image copied on all nodes.
 
-
 You can disable the image replication in the cluster by setting the count down to 1:
 
 ```bash
@@ -521,7 +521,7 @@ and the storage will be instantiated on all nodes. If you didn't
 define it on a particular node, or a node is down, an error will be
 returned.
 
-You can pass to this final ``storage create`` command any configuration key
+You can pass to this final `storage create` command any configuration key
 which is not node-specific (see above).
 
 ## Storage volumes
@@ -578,7 +578,7 @@ lxc network create my-network
 The network will be instantiated on all nodes. If you didn't define it on a particular node, or a node is down,
 an error will be returned.
 
-You can pass to this final ``network create`` command any configuration key which is not node-specific (see above).
+You can pass to this final `network create` command any configuration key which is not node-specific (see above).
 
 ## Separate REST API and clustering networks
 
@@ -611,6 +611,7 @@ address of the joining node with the ```server_address``` field. If you use
 preseed, the YAML payload would be exactly like the one above.
 
 ## Updating the cluster certificate
+
 In a LXD cluster, all servers respond with the same shared certificate. This
 is usually a standard self-signed certificate with an expiry set to 10 years.
 
@@ -633,6 +634,7 @@ With cluster groups, it's possible to target specific groups instead of individu
 This is done by using the `@` prefix when using `--target`.
 
 An example:
+
 ```bash
 lxc launch ubuntu:22.04 cluster:ubuntu --target=@gpu
 ```

@@ -4,6 +4,7 @@ relatedlinks: https://www.youtube.com/watch?v=6O0q3rSWr8A
 
 (projects)=
 # Project configuration
+
 LXD supports projects as a way to split your LXD server.
 Each project holds its own set of instances and may also have its own images and profiles.
 
@@ -16,9 +17,9 @@ existing projects do not get new features enabled.
 The key/value configuration is namespaced with the following namespaces
 currently supported:
 
- - `features` (What part of the project feature set is in use)
- - `limits` (Resource limits applied on containers and VMs belonging to the project)
- - `user` (free form key/value for user metadata)
+- `features` (What part of the project feature set is in use)
+- `limits` (Resource limits applied on containers and VMs belonging to the project)
+- `user` (free form key/value for user metadata)
 
 Key                                  | Type      | Condition             | Default                   | Description
 :--                                  | :--       | :--                   | :--                       | :--
@@ -46,14 +47,14 @@ Key                                  | Type      | Condition             | Defau
 `restricted.cluster.groups`          | string    | -                     | -                         | Prevents targeting cluster groups other than the provided ones.
 `restricted.cluster.target`          | string    | -                     | `block`                   | Prevents direct targeting of cluster members when creating or moving instances.
 `restricted.containers.lowlevel`     | string    | -                     | `block`                   | Prevents use of low-level container options like `raw.lxc`, `raw.idmap`, `volatile` etc.
-`restricted.containers.nesting`      | string    | -                     | `block`                   | Prevents setting security.nesting=true.
-`restricted.containers.privilege`    | string    | -                     | `unpriviliged`            | If `unpriviliged`, prevents setting security.privileged=true. If `isolated`, prevents setting security.privileged=true and also security.idmap.isolated=true. If `allow`, no restriction apply.
+`restricted.containers.nesting`      | string    | -                     | `block`                   | Prevents setting `security.nesting=true`.
+`restricted.containers.privilege`    | string    | -                     | `unpriviliged`            | If `unpriviliged`, prevents setting `security.privileged=true`. If `isolated`, prevents setting `security.privileged=true` and also `security.idmap.isolated=true`. If `allow`, no restriction apply.
 `restricted.containers.interception` | string    | -                     | `block`                   | Prevents use for system call interception options. When set to `allow` usually safe interception options will be allowed (file system mounting will remain blocked).
 `restricted.devices.disk`            | string    | -                     | `managed`                 | If `block` prevent use of disk devices except the root one. If `managed` allow use of disk devices only if `pool=` is set. If `allow`, no restrictions apply.
 `restricted.devices.disk.paths`      | string    | -                     | -                         | If `restricted.devices.disk` is set to `allow`, this sets a comma-separated list of path prefixes that restrict the `source` setting on `disk` devices. If empty then all paths are allowed.
 `restricted.devices.gpu`             | string    | -                     | `block`                   | Prevents use of devices of type `gpu`
 `restricted.devices.infiniband`      | string    | -                     | `block`                   | Prevents use of devices of type `infiniband`
-`restricted.devices.nic`             | string    | -                     | `managed`                 | If `block` prevent use of all network devices. If `managed` allow use of network devices only if `network=` is set. If `allow`, no restrictions apply.
+`restricted.devices.nic`             | string    | -                     | `managed`                 | If `block` prevent use of all network devices. If `managed` allow use of network devices only if `network=` is set. If `allow`, no restrictions apply. This also controls access to networks.
 `restricted.devices.pci`             | string    | -                     | `block`                   | Prevents use of devices of type `pci`
 `restricted.devices.proxy`           | string    | -                     | `block`                   | Prevents use of devices of type `proxy`
 `restricted.devices.unix-block`      | string    | -                     | `block`                   | Prevents use of devices of type `unix-block`
@@ -62,6 +63,7 @@ Key                                  | Type      | Condition             | Defau
 `restricted.devices.usb`             | string    | -                     | `block`                   | Prevents use of devices of type `usb`
 `restricted.idmap.uid`               | string    | -                     | -                         | Specifies the allowed host UID ranges allowed in the instance `raw.idmap` setting.
 `restricted.idmap.gid`               | string    | -                     | -                         | Specifies the allowed host GID ranges allowed in the instance `raw.idmap` setting.
+`restricted.networks.access`         | string    | -                     | -                         | Comma-delimited list of network names that are allowed for use in this project. If not set, all networks are accessible (depending on the `restricted.devices.nic` setting).
 `restricted.networks.subnets`        | string    | -                     | `block`                   | Comma-delimited list of network subnets from the uplink networks (in the form `<uplink>:<subnet>`) that are allocated for use in this project
 `restricted.networks.uplinks`        | string    | -                     | `block`                   | Comma-delimited list of network names that can be used as uplink for networks in this project
 `restricted.networks.zones`          | string    | -                     | `block`                   | Comma-delimited list of network zones that can be used (or something under them) in this project

@@ -1,6 +1,9 @@
 (storage-lvm)=
 # LVM - `lvm`
 
+```{youtube} https://www.youtube.com/watch?v=AqLl2eMZE6U
+```
+
 {abbr}`LVM (Logical Volume Manager)` is a storage management framework rather than a file system.
 It is used to manage physical storage devices, allowing you to create a number of logical storage volumes that use and virtualize the underlying physical storage devices.
 
@@ -21,7 +24,8 @@ Another type is a *volume snapshot*, which captures a specific state of a logica
 The `lvm` driver in LXD uses logical volumes for images, and volume snapshots for instances and snapshots.
 
 LXD assumes that it has full control over the volume group.
-Therefore, you should never maintain any file system entities that are not owned by LXD in an LVM volume group, because LXD might delete them.
+Therefore, you should not maintain any file system entities that are not owned by LXD in an LVM volume group, because LXD might delete them.
+However, if you need to reuse an existing volume group (for example, because your setup has only one volume group), you can do so by setting the [`lvm.vg.force_reuse`](storage-lvm-pool-config) configuration.
 
 By default, LVM storage pools use an LVM thin pool and create logical volumes for all LXD storage entities (images, instances and custom volumes) in there.
 This behavior can be changed by setting [`lvm.use_thinpool`](storage-lvm-pool-config) to `false` when you create the pool.
@@ -39,6 +43,7 @@ The following configuration options are available for storage pools that use the
 
 (storage-lvm-pool-config)=
 ### Storage pool configuration
+
 Key                           | Type                          | Default                                 | Description
 :--                           | :---                          | :------                                 | :----------
 `lvm.thinpool_name`           | string                        | `LXDThinPool`                           | Thin pool where volumes are created
@@ -55,6 +60,7 @@ Key                           | Type                          | Default         
 
 (storage-lvm-vol-config)=
 ### Storage volume configuration
+
 Key                     | Type      | Condition                 | Default                                        | Description
 :--                     | :---      | :--------                 | :------                                        | :----------
 `block.filesystem`      | string    | block based driver        | same as `volume.block.filesystem`              | {{block_filesystem}}
@@ -67,3 +73,11 @@ Key                     | Type      | Condition                 | Default       
 `snapshots.expiry`      | string    | custom volume             | same as `volume.snapshots.expiry`              | {{snapshot_expiry_format}}
 `snapshots.pattern`     | string    | custom volume             | same as `volume.snapshots.pattern` or `snap%d` | {{snapshot_pattern_format}}
 `snapshots.schedule`    | string    | custom volume             | same as `volume.snapshots.schedule`            | {{snapshot_schedule_format}}
+
+### Storage bucket configuration
+
+To enable storage buckets for local storage pool drivers and allow applications to access the buckets via the S3 protocol, you must configure the `core.storage_buckets_address` server setting (see {ref}`server`).
+
+Key                     | Type      | Condition                 | Default                                        | Description
+:--                     | :---      | :--------                 | :------                                        | :----------
+`size`                  | string    | appropriate driver        | same as `volume.size`                          | Size/quota of the storage bucket

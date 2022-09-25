@@ -1,4 +1,10 @@
+---
+relatedlinks: https://linuxcontainers.org/, https://ubuntu.com/lxd, https://ubuntu.com/blog/open-source-for-beginners-dev-environment-with-lxd
+---
+
 [![LXD](../.sphinx/_static/download/containers.png)](https://linuxcontainers.org/lxd)
+
+# LXD
 
 % Include content from [../README.md](../README.md)
 ```{include} ../README.md
@@ -13,6 +19,7 @@
     :start-after: <!-- Include start security -->
     :end-before: <!-- Include end security -->
 ```
+
 See [Security](security.md) for detailed information.
 
 ````{important}

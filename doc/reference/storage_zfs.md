@@ -20,13 +20,12 @@ ZFS creates logical units based on physical storage devices.
 These logical units are called *ZFS pools* or *zpools*.
 Each zpool is then divided into a number of *{spellexception}`datasets`*.
 These {spellexception}`datasets` can be of different types:
+
 - A *{spellexception}`ZFS filesystem`* can be seen as a partition or a mounted file system.
 - A *ZFS volume* represents a block device.
 - A *ZFS snapshot* captures a specific state of either a {spellexception}`ZFS filesystem` or a ZFS volume.
   ZFS snapshots are read-only.
 - A *ZFS clone* is a writable copy of a ZFS snapshot.
-
-
 
 ## `zfs` driver in LXD
 
@@ -95,6 +94,7 @@ The following configuration options are available for storage pools that use the
 
 (storage-zfs-pool-config)=
 ### Storage pool configuration
+
 Key                           | Type                          | Default                                 | Description
 :--                           | :---                          | :------                                 | :----------
 `size`                        | string                        | auto (20% of free disk space, >= 5 GiB and <= 30 GiB) | Size of the storage pool when creating loop-based pools (in bytes, suffixes supported)
@@ -107,6 +107,7 @@ Key                           | Type                          | Default         
 
 (storage-zfs-vol-config)=
 ### Storage volume configuration
+
 Key                     | Type      | Condition                 | Default                                        | Description
 :--                     | :---      | :--------                 | :------                                        | :----------
 `security.shifted`      | bool      | custom volume             | same as `volume.security.shifted` or `false`   | {{enable_ID_shifting}}
@@ -119,3 +120,11 @@ Key                     | Type      | Condition                 | Default       
 `zfs.remove_snapshots`  | bool      | ZFS driver                | same as `volume.zfs.remove_snapshots` or `false` | Remove snapshots as needed
 `zfs.use_refquota`      | bool      | ZFS driver                | same as `volume.zfs.use_refquota` or `false`   | Use `refquota` instead of `quota` for space
 `zfs.reserve_space`     | bool      | ZFS driver                | same as `volume.zfs.reserve_space` or `false`  | Use `reservation`/`refreservation` along with `quota`/`refquota`
+
+### Storage bucket configuration
+
+To enable storage buckets for local storage pool drivers and allow applications to access the buckets via the S3 protocol, you must configure the `core.storage_buckets_address` server setting (see {ref}`server`).
+
+Key                     | Type      | Condition                 | Default                                        | Description
+:--                     | :---      | :--------                 | :------                                        | :----------
+`size`                  | string    | appropriate driver        | same as `volume.size`                          | Size/quota of the storage bucket

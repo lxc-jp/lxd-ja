@@ -19,6 +19,7 @@ Never use unsupported LXD versions in a production environment.
     :start-after: <!-- Include start supported versions -->
     :end-before: <!-- Include end supported versions -->
 ```
+
 ## Access to the LXD daemon
 
 LXD is a daemon that can be accessed locally over a Unix socket or, if configured, remotely over a {abbr}`TLS (Transport Layer Security)` socket.
@@ -67,6 +68,16 @@ Note, however, that those aren't root safe, and a user with root access in such 
 More details on container security and the kernel features we use can be found on the
 [LXC security page](https://linuxcontainers.org/lxc/security/).
 
+### Container name leakage
+
+The default server configuration makes it easy to list all cgroups on a system and, by extension, all running containers.
+
+You can prevent this name leakage by blocking access to `/sys/kernel/slab` and `/proc/sched_debug` before you start any containers.
+To do so, run the following commands:
+
+    chmod 400 /proc/sched_debug
+    chmod 700 /sys/kernel/slab/
+
 ## Network security
 
 Make sure to configure your network interfaces to be secure.
@@ -112,7 +123,7 @@ lxc config device override <instance> <NIC> security.mac_filtering=true
 Used together, these features can prevent an instance connected to a bridge from spoofing MAC and IP addresses.
 These options are implemented using either `xtables` (`iptables`, `ip6tables` and `ebtables`) or `nftables`, depending on what is available on the host.
 
-It's worth noting that those options effectively prevent nested containers from using the parent network with a different MAC address (i.e using bridged or macvlan NICs).
+It's worth noting that those options effectively prevent nested containers from using the parent network with a different MAC address (i.e using bridged or `macvlan` NICs).
 
 The IP filtering features block ARP and NDP advertisements that contain a spoofed IP, as well as blocking any packets that contain a spoofed source address.
 

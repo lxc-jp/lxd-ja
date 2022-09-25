@@ -5,45 +5,49 @@ discourse: 8355
 # Instance configuration
 
 ## Instances
+
 ### Properties
+
 The following are direct instance properties and can't be part of a profile:
 
- - `name`
- - `architecture`
+- `name`
+- `architecture`
 
 Name is the instance name and can only be changed by renaming the instance.
 
 Valid instance names must:
 
- - Be between 1 and 63 characters long
- - Be made up exclusively of letters, numbers and dashes from the ASCII table
- - Not start with a digit or a dash
- - Not end with a dash
+- Be between 1 and 63 characters long
+- Be made up exclusively of letters, numbers and dashes from the ASCII table
+- Not start with a digit or a dash
+- Not end with a dash
 
 This requirement is so that the instance name may properly be used in
 DNS records, on the file system, in various security profiles as well as
 the host name of the instance itself.
 
 ### Key/value configuration
+
 The key/value configuration is namespaced with the following namespaces
 currently supported:
 
- - `boot` (boot related options, timing, dependencies, ...)
- - `cloud-init` (cloud-init configuration)
- - `environment` (environment variables)
- - `image` (copy of the image properties at time of creation)
- - `limits` (resource limits)
- - `nvidia` (NVIDIA and CUDA configuration)
- - `raw` (raw instance configuration overrides)
- - `security` (security policies)
- - `user` (storage for user properties, searchable)
- - `volatile` (used internally by LXD to store internal data specific to an instance)
+- `boot` (boot related options, timing, dependencies, ...)
+- `cloud-init` (cloud-init configuration)
+- `environment` (environment variables)
+- `image` (copy of the image properties at time of creation)
+- `limits` (resource limits)
+- `nvidia` (NVIDIA and CUDA configuration)
+- `raw` (raw instance configuration overrides)
+- `security` (security policies)
+- `user` (storage for user properties, searchable)
+- `volatile` (used internally by LXD to store internal data specific to an instance)
 
 The currently supported keys are:
 
 ```{rst-class} dec-font-size break-col-1 min-width-1-15
 ```
 
+(instance-configuration)=
 Key                                             | Type      | Default           | Live update   | Condition                 | Description
 :--                                             | :---      | :------           | :----------   | :----------               | :----------
 `agent.nic_config`                              | bool      | `false`           | n/a           | virtual machine           | Set the name and MTU of the default network interfaces to be the same as the instance devices (this is automatic for containers).
@@ -109,8 +113,8 @@ Key                                             | Type      | Default           
 `security.syscalls.intercept.mknod`             | bool      | `false`           | no            | container                 | Handles the `mknod` and `mknodat` system calls (allows creation of a limited subset of char/block devices)
 `security.syscalls.intercept.mount`             | bool      | `false`           | no            | container                 | Handles the `mount` system call
 `security.syscalls.intercept.mount.allowed`     | string    | -                 | yes           | container                 | Specify a comma-separated list of file systems that are safe to mount for processes inside the instance
-`security.syscalls.intercept.mount.fuse`        | string    | -                 | yes           | container                 | Whether to redirect mounts of a given file system to their fuse implementation (e.g. `ext4=fuse2fs`)
-`security.syscalls.intercept.mount.shift`       | bool      | `false`           | yes           | container                 | Whether to mount shiftfs on top of file systems handled through mount syscall interception
+`security.syscalls.intercept.mount.fuse`        | string    | -                 | yes           | container                 | Whether to redirect mounts of a given file system to their FUSE implementation (e.g. `ext4=fuse2fs`)
+`security.syscalls.intercept.mount.shift`       | bool      | `false`           | yes           | container                 | Whether to mount `shiftfs` on top of file systems handled through mount syscall interception
 `security.syscalls.intercept.sched_setscheduler`| bool      | `false`           | no            | container                 | Handles the `sched_setscheduler` system call (allows increasing process priority)
 `security.syscalls.intercept.setxattr`          | bool      | `false`           | no            | container                 | Handles the `setxattr` system call (allows setting a limited subset of restricted extended attributes)
 `security.syscalls.intercept.sysinfo`           | bool      | `false`           | no            | container                 | Handles the `sysinfo` system call (to get cgroup-based resource usage information)
@@ -172,6 +176,7 @@ itself uses, setting those may very well break LXD in non-obvious ways
 and should whenever possible be avoided.
 
 #### CPU limits
+
 The CPU limits are implemented through a mix of the `cpuset` and `cpu` cgroup controllers.
 
 `limits.cpu` results in CPU pinning through the `cpuset` controller.
@@ -203,6 +208,7 @@ scheduler priority score when a number of instances sharing a set of
 CPUs have the same percentage of CPU assigned to them.
 
 #### VM CPU topology
+
 LXD virtual machines default to having just one vCPU allocated which
 shows up as matching the host CPU vendor and type but has a single core
 and no threads.
@@ -235,22 +241,23 @@ across NUMA nodes.
 
 (devices)=
 ## Devices configuration
+
 LXD will always provide the instance with the basic devices which are required
 for a standard POSIX system to work. These aren't visible in instance or
 profile configuration and may not be overridden.
 
 Those include:
 
- - `/dev/null` (character device)
- - `/dev/zero` (character device)
- - `/dev/full` (character device)
- - `/dev/console` (character device)
- - `/dev/tty` (character device)
- - `/dev/random` (character device)
- - `/dev/urandom` (character device)
- - `/dev/net/tun` (character device)
- - `/dev/fuse` (character device)
- - `lo` (network interface)
+- `/dev/null` (character device)
+- `/dev/zero` (character device)
+- `/dev/full` (character device)
+- `/dev/console` (character device)
+- `/dev/tty` (character device)
+- `/dev/random` (character device)
+- `/dev/urandom` (character device)
+- `/dev/net/tun` (character device)
+- `/dev/fuse` (character device)
+- `lo` (network interface)
 
 Anything else has to be defined in the instance configuration or in one of its
 profiles. The default profile will typically contain a network interface to
@@ -280,6 +287,7 @@ lxc profile device add <profile> <name> <type> [key=value]...
 ```
 
 ### Device types
+
 LXD supports the following device types:
 
 ID (database)   | Name                                 | Condition     | Description
@@ -310,6 +318,7 @@ It can be added in a profile being applied after the profile it originated from 
 
 (instance_device_type_nic)=
 #### Type: `nic`
+
 LXD supports several different kinds of network devices (referred to as Network Interface Controller or NIC).
 
 When adding a network device to an instance, there are two ways to specify the type of device you want to add;
@@ -324,26 +333,26 @@ Some of the NICs properties are inherited from the network rather than being cus
 
 These are detailed in the "Managed" column in the NIC specific sections below.
 
-##### NICs Available:
+##### NICs Available
 
 See the settings for the NIC below for details about which properties are available.
 
 The following NICs can be specified using the `nictype` or `network` properties:
 
- - [`bridged`](#nic-bridged): Uses an existing bridge on the host and creates a virtual device pair to connect the host bridge to the instance.
- - [`macvlan`](#nic-macvlan): Sets up a new network device based on an existing one but using a different MAC address.
- - [`sriov`](#nic-sriov): Passes a virtual function of an SR-IOV enabled physical network device into the instance.
+- [`bridged`](#nic-bridged): Uses an existing bridge on the host and creates a virtual device pair to connect the host bridge to the instance.
+- [`macvlan`](#nic-macvlan): Sets up a new network device based on an existing one but using a different MAC address.
+- [`sriov`](#nic-sriov): Passes a virtual function of an SR-IOV enabled physical network device into the instance.
 
 The following NICs can be specified using only the `network` property:
 
- - [`ovn`](#nic-ovn): Uses an existing OVN network and creates a virtual device pair to connect the instance to it.
+- [`ovn`](#nic-ovn): Uses an existing OVN network and creates a virtual device pair to connect the instance to it.
 
 The following NICs can be specified using only the `nictype` property:
 
- - [`physical`](#nic-physical): Straight physical device pass-through from the host. The targeted device will vanish from the host and appear in the instance.
- - [`ipvlan`](#nic-ipvlan): Sets up a new network device based on an existing one using the same MAC address but a different IP.
- - [`p2p`](#nic-p2p): Creates a virtual device pair, putting one side in the instance and leaving the other side on the host.
- - [`routed`](#nic-routed): Creates a virtual device pair to connect the host to the instance and sets up static routes and proxy ARP/NDP entries to allow the instance to join the network of a designated parent interface.
+- [`physical`](#nic-physical): Straight physical device pass-through from the host. The targeted device will vanish from the host and appear in the instance.
+- [`ipvlan`](#nic-ipvlan): Sets up a new network device based on an existing one using the same MAC address but a different IP.
+- [`p2p`](#nic-p2p): Creates a virtual device pair, putting one side in the instance and leaving the other side on the host.
+- [`routed`](#nic-routed): Creates a virtual device pair to connect the host to the instance and sets up static routes and proxy ARP/NDP entries to allow the instance to join the network of a designated parent interface.
 
 (instance_device_type_nic_bridged)=
 ##### `nic`: `bridged`
@@ -366,7 +375,7 @@ Key                      | Type    | Default           | Required | Managed | De
 `host_name`              | string  | randomly assigned | no       | no      | The name of the interface inside the host
 `limits.ingress`         | string  | -                 | no       | no      | I/O limit in bit/s for incoming traffic (various suffixes supported, see {ref}`instances-limit-units`)
 `limits.egress`          | string  | -                 | no       | no      | I/O limit in bit/s for outgoing traffic (various suffixes supported, see {ref}`instances-limit-units`)
-`limits.max`             | string  | -                 | no       | no      | Same as modifying both limits.ingress and limits.egress
+`limits.max`             | string  | -                 | no       | no      | Same as modifying both `limits.ingress` and `limits.egress`
 `ipv4.address`           | string  | -                 | no       | no      | An IPv4 address to assign to the instance through DHCP (Can be `none` to restrict all IPv4 traffic when `security.ipv4_filtering` is set)
 `ipv6.address`           | string  | -                 | no       | no      | An IPv6 address to assign to the instance through DHCP (Can be `none` to restrict all IPv6 traffic when `security.ipv6_filtering` is set)
 `ipv4.routes`            | string  | -                 | no       | no      | Comma-delimited list of IPv4 static routes to add on host to NIC
@@ -580,7 +589,7 @@ Key                     | Type    | Default           | Required | Description
 `host_name`             | string  | randomly assigned | no       | The name of the interface inside the host
 `limits.ingress`        | string  | -                 | no       | I/O limit in bit/s for incoming traffic (various suffixes supported, see {ref}`instances-limit-units`)
 `limits.egress`         | string  | -                 | no       | I/O limit in bit/s for outgoing traffic (various suffixes supported, see {ref}`instances-limit-units`)
-`limits.max`            | string  | -                 | no       | Same as modifying both limits.ingress and limits.egress
+`limits.max`            | string  | -                 | no       | Same as modifying both `limits.ingress` and `limits.egress`
 `ipv4.routes`           | string  | -                 | no       | Comma-delimited list of IPv4 static routes to add on host to NIC
 `ipv6.routes`           | string  | -                 | no       | Comma-delimited list of IPv6 static routes to add on host to NIC
 `boot.priority`         | integer | -                 | no       | Boot priority for VMs (higher boots first)
@@ -650,7 +659,7 @@ Key                     | Type    | Default           | Required | Description
 `hwaddr`                | string  | randomly assigned | no       | The MAC address of the new interface
 `limits.ingress`        | string  | -                 | no       | I/O limit in bit/s for incoming traffic (various suffixes supported, see {ref}`instances-limit-units`)
 `limits.egress`         | string  | -                 | no       | I/O limit in bit/s for outgoing traffic (various suffixes supported, see {ref}`instances-limit-units`)
-`limits.max`            | string  | -                 | no       | Same as modifying both limits.ingress and limits.egress
+`limits.max`            | string  | -                 | no       | Same as modifying both `limits.ingress` and `limits.egress`
 `ipv4.address`          | string  | -                 | no       | Comma-delimited list of IPv4 static addresses to add to the instance
 `ipv4.routes`           | string  | -                 | no       | Comma-delimited list of IPv4 static routes to add on host to NIC (without L2 ARP/NDP proxy)
 `ipv4.gateway`          | string  | `auto`            | no       | Whether to add an automatic default IPv4 gateway, can be `auto` or `none`
@@ -673,14 +682,15 @@ The `bridged`, `macvlan` and `ipvlan` interface types can be used to connect to 
 `macvlan` effectively lets you fork your physical NIC, getting a second interface that's then used by the instance.
 This saves you from creating a bridge device and virtual Ethernet device pairs and usually offers better performance than a bridge.
 
-The downside to this is that macvlan devices while able to communicate between themselves and to the outside, aren't able to talk to their parent device.
-This means that you can't use macvlan if you ever need your instances to talk to the host itself.
+The downside to this is that `macvlan` devices while able to communicate between themselves and to the outside, aren't able to talk to their parent device.
+This means that you can't use `macvlan` if you ever need your instances to talk to the host itself.
 
-In such case, a bridge is preferable. A bridge will also let you use mac filtering and I/O limits which cannot be applied to a macvlan device.
+In such case, a `bridge` device is preferable. A bridge will also let you use MAC filtering and I/O limits which cannot be applied to a macvlan device.
 
 `ipvlan` is similar to `macvlan`, with the difference being that the forked device has IPs statically assigned to it and inherits the parent's MAC address on the network.
 
 ##### SR-IOV
+
 The `sriov` interface type supports SR-IOV enabled network devices.
 These devices associate a set of virtual functions (VFs) with the single physical function (PF) of the network device.
 PFs are standard PCIe functions. VFs on the other hand are very lightweight PCIe functions that are optimized for data movement.
@@ -700,8 +710,8 @@ lxc config device add <instance> <device-name> nic nictype=sriov parent=<sriov-e
 To tell LXD to use a specific unused VF add the `host_name` property and pass
 it the name of the enabled VF.
 
-
 ##### MAAS integration
+
 If you're using MAAS to manage the physical network under your LXD host
 and want to attach your instances directly to a MAAS managed network,
 LXD can be configured to interact with MAAS so that it can track your
@@ -719,12 +729,12 @@ those will be registered as static assignments in MAAS too.
 
 #### Type: `infiniband`
 
-Supported instance types: container
+Supported instance types: container, VM
 
 LXD supports two different kind of network types for InfiniBand devices:
 
- - `physical`: Straight physical device pass-through from the host. The targeted device will vanish from the host and appear in the instance.
- - `sriov`: Passes a virtual function of an SR-IOV enabled physical network device into the instance.
+- `physical`: Straight physical device pass-through from the host. The targeted device will vanish from the host and appear in the instance.
+- `sriov`: Passes a virtual function of an SR-IOV enabled physical network device into the instance.
 
 Different network interface types have different additional properties, the current list is:
 
@@ -743,6 +753,7 @@ lxc config device add <instance> <device-name> infiniband nictype=physical paren
 ```
 
 ##### SR-IOV with InfiniBand devices
+
 InfiniBand devices do support SR-IOV but in contrast to other SR-IOV enabled
 devices InfiniBand does not support dynamic device creation in SR-IOV mode.
 This means users need to pre-configure the number of virtual functions by
@@ -768,23 +779,28 @@ They can also be created by {ref}`attaching a storage volume to an instance <sto
 LXD supports the following additional source types:
 
 - Ceph RBD: Mount from existing Ceph RBD device that is externally managed. LXD can use Ceph to manage an internal file system for the instance, but in the event that a user has a previously existing Ceph RBD that they would like use for this instance, they can use this command.
-Example command
-```
-lxc config device add <instance> ceph-rbd1 disk source=ceph:<my_pool>/<my-volume> ceph.user_name=<username> ceph.cluster_name=<username> path=/ceph
-```
+
+  Example command:
+
+  ```
+  lxc config device add <instance> ceph-rbd1 disk source=ceph:<my_pool>/<my-volume> ceph.user_name=<username> ceph.cluster_name=<username> path=/ceph
+  ```
+
 - CephFS: Mount from existing CephFS device that is externally managed. LXD can use Ceph to manage an internal file system for the instance, but in the event that a user has a previously existing Ceph file system that they would like use for this instance, they can use this command.
-Example command.
-```
-lxc config device add <instance> ceph-fs1 disk source=cephfs:<my-fs>/<some-path> ceph.user_name=<username> ceph.cluster_name=<username> path=/cephfs
-```
+
+  Example command:
+
+  ```
+  lxc config device add <instance> ceph-fs1 disk source=cephfs:<my-fs>/<some-path> ceph.user_name=<username> ceph.cluster_name=<username> path=/cephfs
+  ```
+
 - VM cloud-init: Generate a cloud-init configuration ISO from the `user.vendor-data`, `user.user-data` and `user.meta-data` configuration keys and attach to the VM so that cloud-init running inside the VM guest will detect the drive on boot and apply the configuration. Only applicable to virtual-machine instances.
-Example command.
-```
-lxc config device add <instance> config disk source=cloud-init:config
-```
 
-Currently only the root disk (path=/) and `config` drive (`source=cloud-init:config`) are supported with virtual machines.
+  Example command:
 
+  ```
+  lxc config device add <instance> config disk source=cloud-init:config
+  ```
 
 The following properties exist:
 
@@ -792,12 +808,12 @@ Key                 | Type      | Default   | Required  | Description
 :--                 | :--       | :--       | :--       | :--
 `limits.read`       | string    | -         | no        | I/O limit in byte/s (various suffixes supported, see {ref}`instances-limit-units`) or in IOPS (must be suffixed with `iops`) - see also {ref}`storage-configure-IO`
 `limits.write`      | string    | -         | no        | I/O limit in byte/s (various suffixes supported, see {ref}`instances-limit-units`) or in IOPS (must be suffixed with `iops`) - see also {ref}`storage-configure-IO`
-`limits.max`        | string    | -         | no        | Same as modifying both limits.read and limits.write
+`limits.max`        | string    | -         | no        | Same as modifying both `limits.read` and `limits.write`
 `path`              | string    | -         | yes       | Path inside the instance where the disk will be mounted (only for containers).
 `source`            | string    | -         | yes       | Path on the host, either to a file/directory or to a block device
 `required`          | bool      | `true`    | no        | Controls whether to fail if the source doesn't exist
 `readonly`          | bool      | `false`   | no        | Controls whether to make the mount read-only
-`size`              | string    | -         | no        | Disk size in bytes (various suffixes supported, see {ref}`instances-limit-units`). This is only supported for the rootfs (/).
+`size`              | string    | -         | no        | Disk size in bytes (various suffixes supported, see {ref}`instances-limit-units`). This is only supported for the `rootfs` (`/`).
 `size.state`        | string    | -         | no        | Same as size above but applies to the file-system volume used for saving runtime state in virtual machines.
 `recursive`         | bool      | `false`   | no        | Whether or not to recursively mount the source path
 `pool`              | string    | -         | no        | The storage pool the disk device belongs to. This is only applicable for storage volumes managed by LXD
@@ -864,7 +880,7 @@ Key         | Type      | Default           | Required  | Description
 `uid`       | int       | `0`               | no        | UID of the device owner in the instance
 `gid`       | int       | `0`               | no        | GID of the device owner in the instance
 `mode`      | int       | `0660`            | no        | Mode of the device in the instance
-`required`  | bool      | `false`           | no        | Whether or not this device is required to start the instance. (The default is false, and all devices can be hotplugged)
+`required`  | bool      | `false`           | no        | Whether or not this device is required to start the instance. (The default is `false`, and all devices can be hotplugged)
 
 #### Type: `gpu`
 
@@ -878,14 +894,14 @@ instance.
 Container devices may match multiple GPUs at once. However, for virtual machines a device can only match a single GPU.
 ```
 
-##### GPUs available:
+##### GPUs available
 
 The following GPUs can be specified using the `gputype` property:
 
- - [`physical`](#gpu-physical) Passes through an entire GPU. This is the default if `gputype` is unspecified.
- - [`mdev`](#gpu-mdev) Creates and passes through a virtual GPU into the instance.
- - [`mig`](#gpu-mig) Creates and passes through a MIG (Multi-Instance GPU) device into the instance.
- - [`sriov`](#gpu-sriov) Passes a virtual function of an SR-IOV enabled GPU into the instance.
+- [`physical`](#gpu-physical) Passes through an entire GPU. This is the default if `gputype` is unspecified.
+- [`mdev`](#gpu-mdev) Creates and passes through a virtual GPU into the instance.
+- [`mig`](#gpu-mig) Creates and passes through a MIG (Multi-Instance GPU) device into the instance.
+- [`sriov`](#gpu-sriov) Passes a virtual function of an SR-IOV enabled GPU into the instance.
 
 ##### `gpu`: `physical`
 
@@ -937,7 +953,7 @@ Key         | Type      | Default           | Required  | Description
 `pci`       | string    | -                 | no        | The PCI address of the GPU device
 `mig.ci`    | int       | -                 | no        | Existing MIG compute instance ID
 `mig.gi`    | int       | -                 | no        | Existing MIG GPU instance ID
-`mig.uuid`  | string    | -                 | no        | Existing MIG device UUID ("MIG-" prefix can be omitted)
+`mig.uuid`  | string    | -                 | no        | Existing MIG device UUID (`MIG-` prefix can be omitted)
 
 Note: Either `mig.uuid` (NVIDIA drivers 470+) or both `mig.ci` and `mig.gi` (old NVIDIA drivers) must be set.
 
@@ -966,15 +982,16 @@ addresses to an address inside the instance or to do the reverse and
 have an address in the instance connect through the host.
 
 The supported connection types are:
-* `tcp <-> tcp`
-* `udp <-> udp`
-* `unix <-> unix`
-* `tcp <-> unix`
-* `unix <-> tcp`
-* `udp <-> tcp`
-* `tcp <-> udp`
-* `udp <-> unix`
-* `unix <-> udp`
+
+- `tcp <-> tcp`
+- `udp <-> udp`
+- `unix <-> unix`
+- `tcp <-> unix`
+- `unix <-> tcp`
+- `udp <-> tcp`
+- `tcp <-> udp`
+- `udp <-> unix`
+- `unix <-> udp`
 
 The proxy device also supports a `nat` mode where packets are forwarded using NAT rather than being proxied through
 a separate connection. This has benefit that the client address is maintained without the need for the target
@@ -992,8 +1009,8 @@ In order to define a static IPv6 address, the parent managed network needs to ha
 
 In NAT mode the supported connection types are:
 
-* `tcp <-> tcp`
-* `udp <-> udp`
+- `tcp <-> tcp`
+- `udp <-> udp`
 
 When defining IPv6 addresses use square bracket notation, e.g.
 
@@ -1041,8 +1058,7 @@ Key         | Type      | Default           | Required  | Description
 `uid`       | int       | `0`               | no        | UID of the device owner in the instance
 `gid`       | int       | `0`               | no        | GID of the device owner in the instance
 `mode`      | int       | `0660`            | no        | Mode of the device in the instance
-`required`  | bool      | `false`           | no        | Whether or not this device is required to start the instance. (The default is false, and all devices can be hotplugged)
-
+`required`  | bool      | `false`           | no        | Whether or not this device is required to start the instance. (The default is `false`, and all devices can be hotplugged)
 
 #### Type: `tpm`
 
@@ -1070,6 +1086,7 @@ Key                 | Type      | Default   | Required  | Description
 
 (instances-limit-units)=
 ### Units for storage and network limits
+
 Any value representing bytes or bits can make use of a number of useful
 suffixes to make it easier to understand what a particular limit is.
 
@@ -1078,51 +1095,52 @@ mostly making sense for storage limits.
 
 The full list of bit suffixes currently supported is:
 
- - bit (1)
- - kbit (1000)
- - Mbit (1000^2)
- - Gbit (1000^3)
- - Tbit (1000^4)
- - Pbit (1000^5)
- - Ebit (1000^6)
- - Kibit (1024)
- - Mibit (1024^2)
- - Gibit (1024^3)
- - Tibit (1024^4)
- - Pibit (1024^5)
- - Eibit (1024^6)
+- bit (1)
+- kbit (1000)
+- Mbit (1000^2)
+- Gbit (1000^3)
+- Tbit (1000^4)
+- Pbit (1000^5)
+- Ebit (1000^6)
+- Kibit (1024)
+- Mibit (1024^2)
+- Gibit (1024^3)
+- Tibit (1024^4)
+- Pibit (1024^5)
+- Eibit (1024^6)
 
 The full list of byte suffixes currently supported is:
 
- - B or bytes (1)
- - kB (1000)
- - MB (1000^2)
- - GB (1000^3)
- - TB (1000^4)
- - PB (1000^5)
- - EB (1000^6)
- - KiB (1024)
- - MiB (1024^2)
- - GiB (1024^3)
- - TiB (1024^4)
- - PiB (1024^5)
- - EiB (1024^6)
+- B or bytes (1)
+- kB (1000)
+- MB (1000^2)
+- GB (1000^3)
+- TB (1000^4)
+- PB (1000^5)
+- EB (1000^6)
+- KiB (1024)
+- MiB (1024^2)
+- GiB (1024^3)
+- TiB (1024^4)
+- PiB (1024^5)
+- EiB (1024^6)
 
 ### Instance types
+
 LXD supports simple instance types. Those are represented as a string
 which can be passed at instance creation time.
 
 The syntax allows the three following forms:
 
- - `<instance type>`
- - `<cloud>:<instance type>`
- - `c<CPU>-m<RAM in GB>`
+- `<instance type>`
+- `<cloud>:<instance type>`
+- `c<CPU>-m<RAM in GB>`
 
 For example, those 3 are equivalent:
 
- - `t2.micro`
- - `aws:t2.micro`
- - `c1-m1`
+- `t2.micro`
+- `aws:t2.micro`
+- `c1-m1`
 
 On the command line, this is passed like this:
 
@@ -1135,6 +1153,7 @@ The list of supported clouds and instance types can be found here:
   [`https://github.com/dustinkirkland/instance-type`](https://github.com/dustinkirkland/instance-type)
 
 ### Huge page limits via `limits.hugepages.[size]`
+
 LXD allows to limit the number of huge pages available to a container through
 the `limits.hugepage.[size]` key. Limiting huge pages is done through the
 `hugetlb` cgroup controller. This means the host system needs to expose the
@@ -1144,15 +1163,16 @@ Note that architectures often expose multiple huge-page sizes. In addition,
 architectures may expose different huge-page sizes than other architectures.
 
 Limiting huge pages is especially useful when LXD is configured to intercept the
-mount syscall for the `hugetlbfs` file system in unprivileged containers. When
-LXD intercepts a `hugetlbfs` mount  syscall, it will mount the `hugetlbfs`
-file system for a container with correct `uid` and `gid` values as mount
+`mount` syscall for the `hugetlbfs` file system in unprivileged containers. When
+LXD intercepts a `hugetlbfs` `mount`  syscall, it will mount the `hugetlbfs`
+file system for a container with correct `uid` and `gid` values as `mount`
 options. This makes it possible to use huge pages from unprivileged containers.
 However, it is recommended to limit the number of huge pages available to the
 container through `limits.hugepages.[size]` to stop the container from being
 able to exhaust the huge pages available to the host.
 
 ### Resource limits via `limits.kernel.[limit name]`
+
 LXD exposes a generic namespaced key `limits.kernel.*` which can be used to set
 resource limits for a given instance. It is generic in the sense that LXD will
 not perform any validation on the resource that is specified following the
@@ -1189,32 +1209,32 @@ configured limitation will be inherited from the process starting up the
 instance. Note that this inheritance is not enforced by LXD but by the kernel.
 
 ### Snapshot scheduling and configuration
+
 LXD supports scheduled snapshots which can be created at most once every minute.
 There are three configuration options:
--  `snapshots.schedule` takes a shortened cron expression:
-`<minute> <hour> <day-of-month> <month> <day-of-week>`. If this is empty
-(default), no snapshots will be created.
--  `snapshots.schedule.stopped` controls whether to automatically snapshot stopped
-instances.  It defaults to `false`.
--  `snapshots.pattern` takes a Pongo2 template string to format the snapshot name.
-To name snapshots with time stamps, the Pongo2 context variable `creation_date`
-can be used.  Be aware that you should format the date
-(e.g. use `{{ creation_date|date:"2006-01-02_15-04-05" }}`) in your template
-string to avoid forbidden characters in the snapshot name.  Another way to avoid
-name collisions is to use the placeholder `%d`. If a snapshot with the same name
-(excluding the placeholder) already exists, all existing snapshot names will be
-taken into account to find the highest number at the placeholders position. This
-number will be incremented by one for the new name. The starting number if no
-snapshot exists will be `0`. The default behavior of `snapshots.pattern` is
-equivalent to a format string of `snap%d`.
+
+- `snapshots.schedule` takes a shortened cron expression: `<minute> <hour> <day-of-month> <month> <day-of-week>`.
+  If this is empty (default), no snapshots will be created.
+- `snapshots.schedule.stopped` controls whether to automatically snapshot stopped instances.
+  It defaults to `false`.
+- `snapshots.pattern` takes a Pongo2 template string to format the snapshot name.
+  To name snapshots with time stamps, the Pongo2 context variable `creation_date` can be used.
+  Be aware that you should format the date (e.g. use `{{ creation_date|date:"2006-01-02_15-04-05" }}`) in your template string to avoid forbidden characters in the snapshot name.
+  Another way to avoid name collisions is to use the placeholder `%d`.
+  If a snapshot with the same name (excluding the placeholder) already exists, all existing snapshot names will be taken into account to find the highest number at the placeholders position.
+  This number will be incremented by one for the new name. The starting number if no snapshot exists will be `0`.
+  The default behavior of `snapshots.pattern` is equivalent to a format string of `snap%d`.
 
 Example of using Pongo2 syntax to format snapshot names with timestamps:
+
 ```bash
 lxc config set INSTANCE snapshots.pattern "{{ creation_date|date:'2006-01-02_15-04-05' }}"
 ```
+
 This results in snapshots named `{date/time of creation}` down to the precision of a second.
 
 ### Overriding QEMU configuration
+
 For VM instances, LXD configures QEMU via a somewhat undocumented configuration
 file format passed to QEMU with the `-readconfig` command-line option, with
 each instance having a configuration file generated before boot. The generated
