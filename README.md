@@ -1,12 +1,21 @@
 [![LXD](https://linuxcontainers.org/static/img/containers.png)](https://linuxcontainers.org/ja/lxd/)
 
-<!-- Include start LXD intro -->
 # LXD
-LXDは、次世代のシステムコンテナおよび仮想マシンマネージャです。
-コンテナや仮想マシンの中で動作する完全なLinuxシステムに統一されたユーザーエクスペリエンスを提供します。
 
-LXDはイメージベースで、[多くのLinuxディストリビューション](https://images.linuxcontainers.org)に対応しています。
-そして、非常にパワフルでありながら、非常にシンプルなREST APIを中心に構築されています。
+<!-- Include start LXD intro -->
+
+LXDは、次世代のシステムコンテナおよび仮想マシンマネージャです。
+
+コンテナや仮想マシンの中で動作する完全なLinuxシステムに統一されたユーザーエクスペリエンスを提供します。
+LXD は [数多くの Linuxディストリビューション](https://images.linuxcontainers.org) のイメージを提供しており、非常にパワフルでありながら、それでいてシンプルなREST APIを中心に構築されています。
+LXD は単一のマシン上の単一のインスタンスからデータセンターのフルラック内のクラスタまでスケールし、開発とプロダクションの両方のワークロードに適しています。
+
+LXD を使えば小さなプライベートクラウドのように感じられるシステムを簡単にセットアップできます。
+あなたのマシン資源を最適に利用しながら、あらゆるワークロードを効率よく実行できます。
+
+さまざまな環境をコンテナ化したい場合や仮想マシンを稼働させたい場合、あるいは一般にあなたのインフラを費用効率よく稼働および管理したい場合には LXD を使うのを検討するのがお勧めです。
+
+## 使い始めるには
 
 LXDとは何か、何ができるのか、より良いアイデアを得るためには、[オンラインで試す](https://linuxcontainers.org/ja/lxd/try-it/)ことができます!
 また、ローカルで動作させたい場合は、[LXDを使い始めるには](https://linuxcontainers.org/ja/lxd/getting-started-cli/)をご覧ください。
@@ -30,6 +39,7 @@ Goドキュメント     | Godoc              | [![GoDoc](https://godoc.org/gith
 <!-- Include start installing -->
 
 ## パッケージからのLXDのインストール
+
 LXDのデーモンはLinuxでしか動作しませんが、クライアントツール(`lxc`)はほとんどのプラットフォームで利用可能です。
 
 OS      | フォーマット                                      |コマンド

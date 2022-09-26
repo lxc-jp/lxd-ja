@@ -19,10 +19,13 @@ LXD から LXD へインスタンスをマイグレートする
 : LXC を使っていて全てまたは一部の LXC コンテナを同じマシン上の LXD に移動したい場合、 `lxc-to-lxd` ツールが使えます。
   このツールは LXC 設定を解析し、既存の LXC コンテナのデータと設定を新しい LXD コンテナにコピーします。
 
+  詳細は {ref}`migrate-from-lxc` を参照してくだい。
+
 ```{toctree}
 :maxdepth: 1
 :hidden:
 
 インスタンスの移動 <howto/move_instances>
 既存のマシンのインポート <howto/import_machines_to_instances>
+LXCからのマイグレート <howto/migrate_from_lxc>
 ```

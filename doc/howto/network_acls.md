@@ -82,14 +82,13 @@ lxc network acl rule remove <ACL_name> <direction> [properties...]
 
 LXD は以下のように `action` プロパティに基づいてルールの順番を自動的に決めます。
 
- - `drop`
- - `reject`
- - `allow`
- - 上記の全てにマッチしなかったトラフィックに対する自動のデフォルトアクション (デフォルトでは `reject`、{ref}`network-acls-defaults` 参照)。
+- `drop`
+- `reject`
+- `allow`
+- 上記の全てにマッチしなかったトラフィックに対する自動のデフォルトアクション (デフォルトでは `reject`、{ref}`network-acls-defaults` 参照)。
 
 これは NIC に複数の ACL を適用する際、組み合わせたルールの順番を指定する必要がないことを意味します。
 ACL 内のあるルールがマッチすれば、そのルールが採用され、他のルールは考慮されません。
-
 
 ### ルールのプロパティ
 

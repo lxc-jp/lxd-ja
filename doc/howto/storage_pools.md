@@ -1,5 +1,14 @@
+---
+discourse: 1333
+---
+
+(howto-storage-pools)=
+# ストレージプールを管理するには
+
+{ref}`storage-pools` を作成、設定、表示、リサイズするための手順については以下のセクションを参照してください。
+
 (storage-create-pool)=
-# ストレージプールを作成するには
+## ストレージプールを作成する
 
 LXD は初期化中にストレージプールを作成します。
 同じドライバあるいは別のドライバを使用して、後からさらにストレージプールを追加できます。
@@ -12,7 +21,7 @@ LXD は初期化中にストレージプールを作成します。
 
 それぞれのドライバで利用可能な設定オプションの一覧は {ref}`storage-drivers` ドキュメントを参照してください。
 
-## 例
+### 例
 
 それぞれのストレージドライバでストレージプールを作成する例は以下を参照してください。
 
@@ -134,11 +143,13 @@ CephFS ドライバを使用する際は、事前に CephFS ファイルシス�
 Ceph Object ドライバを使用する場合、事前に稼働中の Ceph Object Gateway [`radosgw`](https://docs.ceph.com/en/latest/radosgw/) の URL を用意しておく必要があります。
 ```
 
-    lxc storage create s3 cephobject cephobject.radosgsw.endpoint=http://<radosgw URL>
+既存の Ceph Object Gateway `https://www.example.com/radosgw` を使用して `pool1` を作成する。
+
+    lxc storage create pool1 cephobject cephobject.radosgw.endpoint=https://www.example.com/radosgw
 ````
 `````
 
-## クラスター内にストレージプールを作成する
+### クラスター内にストレージプールを作成する
 
 LXD クラスターを稼働していてストレージプールを追加したい場合、それぞれのクラスターメンバー内にストレージを別々に作る必要があります。
 この理由は、設定、例えばストレージのロケーションやプールのサイズがクラスターメンバー間で異なるかもしれないからです。
@@ -159,5 +170,128 @@ LXD クラスターを稼働していてストレージプールを追加した�
 ほとんどのストレージドライバでは、ストレージプールは各クラスターメンバー上にローカルに存在します。
 これは 1 つのメンバー上のストレージプール内にストレージボリュームを作成しても、別のクラスターメンバー上では利用可能にはならないことを意味します。
 
-この挙動は Ceph ベースのストレージプール (`ceph` and `cephfs`) では異なります。これらではストレージプールは 1 つの中央のロケーション上に存在し、全てのクラスターメンバーが同じストレージボリュームを持つ同じストレージプールにアクセスします。
+この挙動は Ceph ベースのストレージプール (`ceph`、 `cephfs`、 `cephobject`) では異なります。これらではストレージプールは 1 つの中央のロケーション上に存在し、全てのクラスターメンバーが同じストレージボリュームを持つ同じストレージプールにアクセスします。
 ```
+
+## ストレージプールを設定する
+
+各ストレージドライバで利用可能な設定オプションについては {ref}`storage-drivers` ドキュメントを参照してください。
+
+(`source` のような) ストレージプールの一般的なキーはトップレベルです。
+ドライバ固有のキーはドライバ名で名前空間が分けられています。
+
+ストレージプールに設定オプションを設定するには以下のコマンドを使用します。
+
+    lxc storage set <pool_name> <key> <value>
+
+例えば、 `dir` ストレージプールでストレージプールのマイグレーション中に圧縮をオフにするには以下のコマンドを使用します。
+
+    lxc storage set my-dir-pool rsync.compression false
+
+ストレージプールの設定を編集するには以下のコマンドを使用します。
+
+    lxc storage edit <pool_name>
+
+## ストレージプールを表示する
+
+全ての利用可能なストレージプールの一覧を表示し設定を確認できます。
+
+以下のコマンドで全ての利用可能なストレージプールを一覧表示できます。
+
+    lxc storage list
+
+出力結果の表には (訳注: LXD の) 初期化時に作成した (通常 `default` や `local` と呼ばれる) ストレージプールとあなたが追加したあらゆるストレージプールが含まれます。
+
+特定のプールに関する詳細情報を表示するには、以下のコマンドを使用します。
+
+    lxc storage show <pool_name>
+
+(storage-resize-pool)=
+## ストレージプールをリサイズする
+
+ストレージがもっと必要な場合、ストレージプールのサイズを拡大できます。
+
+ストレージプールのサイズを拡大するには以下の一般的なステップに従います。
+
+1. ディスク上のストレージのサイズを拡大する。
+1. サイズの変更をファイルシステムに知らせる。
+
+ストレージドライバごとの固有のコマンドは以下を参照してください。
+
+````{tabs}
+
+```{group-tab} Btrfs
+
+ループバックの Btrfs プールを 5 ギガバイト拡大するには以下のコマンドを入力します。
+
+    sudo truncate -s +5G <LXD_lib_dir>/disks/<pool_name>.img
+    sudo losetup -c <loop_device>
+    sudo btrfs filesystem resize max <LXD_lib_dir>/storage-pools/<pool_name>/
+
+以下の変数を置き換えてください。
+
+`<LXD_lib_dir>`
+: snap を使用している場合 `/var/snap/lxd/common/mntns/var/snap/lxd/common/lxd/` またはそれ以外の場合 `/var/lib/lxd/`。
+
+`<pool_name>`
+: ストレージプールの名前 (例えば `my-pool`)。
+
+`<loop_device>`
+: ストレージプールイメージに関連付けられているマウントされたループデバイス (例 `/dev/loop8`)。
+  ループデバイスを見つけるには `losetup -j <LXD_lib_dir>/disks/<pool_name>.img` と入力します。
+　`losetup -l` を使ってマウントされた全てのループデバイスのを一覧表示することもできます。
+```
+```{group-tab} LVM
+
+ループバックの LVM プールを 5 ギガバイト拡大するには以下のコマンドを入力します。
+
+    sudo truncate -s +5G <LXD_lib_dir>/disks/<pool_name>.img
+    sudo losetup -c <loop_device>
+    sudo pvresize <loop_device>
+
+LVM thin pool を使っている場合は、次にプール内の `LXDThinPool`論理ボリュームを拡大する必要があります (thin pool を使っていない場合はこのステップをスキップします)。
+
+    sudo lvextend <pool_name>/LXDThinPool -l+100%FREE
+
+以下の変数を置き換えてください。
+
+`<LXD_lib_dir>`
+: snap を使用している場合 `/var/snap/lxd/common/lxd/` またはそれ以外の場合 `/var/lib/lxd/`。
+
+`<pool_name>`
+: ストレージプールの名前 (例えば `my-pool`)。
+
+`<loop_device>`
+: ストレージプールイメージに関連付けられているマウントされたループデバイス (例 `/dev/loop8`)。
+  ループデバイスを見つけるには `losetup -j <LXD_lib_dir>/disks/<pool_name>.img` と入力します。
+　`losetup -l` を使ってマウントされた全てのループデバイスのを一覧表示することもできます。
+
+プールが期待通りリサイズされたかは以下のコマンドで確認できます。
+
+    sudo pvs <loop_device> # 物理ボリュームのサイズを確認
+    sudo vgs <pool_name> # ボリュームグループのサイズを確認
+    sudo lvs <pool_name>/LXDThinPool # thin pool のみ: thin-pool 論理ボリュームのサイズを確認
+```
+```{group-tab} ZFS
+
+ループバックの ZFS プールを 5 ギガバイト拡大するには以下のコマンドを入力します。
+
+    sudo truncate -s +5G <LXD_lib_dir>/disks/<pool_name>.img
+    sudo zpool set autoexpand=on <pool_name>
+    sudo zpool online -e <pool_name> <device_ID>
+    sudo zpool set autoexpand=off <pool_name>
+
+以下の変数を置き換えてください。
+
+`<LXD_lib_dir>`
+: snap を使用している場合 `/var/snap/lxd/common/lxd/` またはそれ以外の場合 `/var/lib/lxd/`。
+
+`<pool_name>`
+: ストレージプールの名前 (例えば `my-pool`)。
+
+`<device_ID>`
+: ZFS デバイスの ID。
+  ID を見つけるには `sudo zpool status -vg <pool_name>` を入力します。
+```
+
+````

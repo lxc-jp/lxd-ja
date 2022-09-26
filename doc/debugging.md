@@ -30,7 +30,6 @@ lxd --debug --group lxd
 
 上記の `--group lxd` は非特権ユーザーにアクセス権限を与えるために必要です。
 
-
 ## ローカルソケット経由でのREST API
 
 サーバサイドでLXDとやりとりするのに最も簡単な方法はローカルソケットを
@@ -49,7 +48,6 @@ curl --unix-socket /var/snap/lxd/common/lxd/unix.socket lxd/1.0 | jq .
 ```
 
 利用可能なAPIについては [RESTful API](rest-api.md) をご参照ください。
-
 
 ## HTTPS経由でのREST API
 

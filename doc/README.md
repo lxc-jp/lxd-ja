@@ -1,6 +1,6 @@
 # LXD ドキュメント
 
-LXDの日本語ドキュメントは、https://lxd-ja.readthedocs.io/ja/latest/ で閲覧できます。
+LXDの日本語ドキュメントは、 <https://lxd-ja.readthedocs.io/ja/latest/> (原文のドキュメントは <https://linuxcontainers.org/lxd/docs/latest/>) で閲覧できます。
 
 GitHubでもドキュメントの基本的なレンダリングを提供していますが、includeやクリッカブルリンクなどの重要な機能が欠落しています。そのため、[公開ドキュメント](https://lxd-ja.readthedocs.io/ja/latest/)を読むことをお勧めします。
 
@@ -14,4 +14,4 @@ GitHubでもドキュメントの基本的なレンダリングを提供して�
 
 ドキュメントをビルドするには、リポジトリのルートフォルダから `make doc` を実行します。このコマンドは必要なツールをインストールして、出力を `doc/html/` フォルダにレンダリングします。変更されたファイルのみを対象にドキュメントを更新するには（ツールを再インストールすることなく）、`make doc-incremental`を実行します。
 
-ビルド後、`make doc-serve`を実行して、http://localhost:8001、レンダリングされたドキュメントを見ることができます。
+ビルド後、`make doc-serve`を実行して、<http://localhost:8001>、レンダリングされたドキュメントを見ることができます。

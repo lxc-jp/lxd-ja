@@ -40,9 +40,9 @@ Amazon S3 RESTful API の大きなサブセットと互換性を持つオブジ�
 ```
 
 事前に `radosgw` 環境をセットアップし、 HTTP/HTTPS エンドポイント URL が LXD サーバからアクセス可能なことを確認してください。
-Ceph クラスタをどのようにセットアップするかの情報については [Manual Deployment](https://docs.ceph.com/en/latest/install/manual-deployment/) を、そして `radosgw` 環境をどのようにセットアップするかについては [`radosgw`](https://docs.ceph.com/en/latest/radosgw/) を参照してください。
+Ceph クラスタをどのようにセットアップするかの情報については [Manual Deployment](https://docs.ceph.com/en/latest/install/manual-deployment/) を、そして `radosgw` 環境をどのようにセットアップするかについては [Ceph Object Gateway](https://docs.ceph.com/en/latest/radosgw/) を参照してください。
 
-`radosgw` URL はプールの作成時に [`cephobject.radosgsw.endpoint`](storage-cephobject-pool-config) オプションを使って指定できます。
+`radosgw` URL はプールの作成時に [`cephobject.radosgw.endpoint`](storage-cephobject-pool-config) オプションを使って指定できます。
 また LXD はバケットの管理に `radosgw-admin` コマンドを使用しています。ですのでこのコマンドが LXD サーバ上で利用可能で操作可能である必要があります。
 
 % Include content from [storage_ceph.md](storage_ceph.md)
@@ -63,16 +63,18 @@ Ceph クラスタをどのようにセットアップするかの情報につい
 
 (storage-cephobject-pool-config)=
 ### ストレージプール設定
-キー                                     | 型     | デフォルト値 | 説明
-:--                                      | :---   | :------      | :----------
-`cephobject.bucket.name_prefix`          | string | -            | Ceph 内のバケット名に追加する接頭辞
-`cephobject.cluster_name`                | string | `ceph`       | 使用する Ceph クラスタ
-`cephobject.radosgsw.endpoint`           | string | -            | `radosgw` ゲートウェイプロセスのURL
-`cephobject.radosgsw.endpoint_cert_file` | string | -            | エンドポイント通信に使用する TLS クライアント証明書を含むファイルへのパス
-`cephobject.user.name`                   | string | `admin`      | 使用する Ceph ユーザ
-`volatile.pool.pristine`                 | string | `true`       | 作成時に `radosgw` `lxd-admin` ユーザが存在したかどうか
+
+キー                                    | 型     | デフォルト値 | 説明
+:--                                     | :---   | :------      | :----------
+`cephobject.bucket.name_prefix`         | string | -            | Ceph 内のバケット名に追加する接頭辞
+`cephobject.cluster_name`               | string | `ceph`       | 使用する Ceph クラスタ
+`cephobject.radosgw.endpoint`           | string | -            | `radosgw` ゲートウェイプロセスのURL
+`cephobject.radosgw.endpoint_cert_file` | string | -            | エンドポイント通信に使用する TLS クライアント証明書を含むファイルへのパス
+`cephobject.user.name`                  | string | `admin`      | 使用する Ceph ユーザ
+`volatile.pool.pristine`                | string | `true`       | 作成時に `radosgw` `lxd-admin` ユーザが存在したかどうか
 
 ### ストレージバケット設定
+
 キー   | 型     | デフォルト値 | 説明
 :--    | :---   | :------      | :----------
 `size` | string | -            | ストレージバケットのクォータ

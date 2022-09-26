@@ -44,12 +44,12 @@ LXD は全てのインスタンス、ネットワークゲートウェイ、ダ�
 例えば、 `dig @<DNS_server_IP> -p 1053 axfr lxd.example.net` と実行すると以下のように出力されます。
 
 ```bash
-lxd.example.net.              3600  IN	SOA	lxd.example.net. hostmaster.lxd.example.net. 1648118965 120 60 86400 30
+lxd.example.net.              3600  IN  SOA lxd.example.net. hostmaster.lxd.example.net. 1648118965 120 60 86400 30
 default-my-ovn.uplink.lxd.example.net. 300 IN A 192.0.2.100
-my-instance.lxd.example.net.  300   IN	A	192.0.2.76
-my-uplink.gw.lxd.example.net. 300   IN	A	192.0.2.1
-foo.lxd.example.net.          300	IN	A	8.8.8.8
-lxd.example.net.              3600	IN	SOA	lxd.example.net. hostmaster.lxd.example.net. 1648118965 120 60 86400 30
+my-instance.lxd.example.net.  300   IN  A   192.0.2.76
+my-uplink.gw.lxd.example.net. 300   IN  A   192.0.2.1
+foo.lxd.example.net.          300   IN  A   8.8.8.8
+lxd.example.net.              3600  IN  SOA lxd.example.net. hostmaster.lxd.example.net. 1648118965 120 60 86400 30
 ```
 
 `192.0.2.0/24` を使用するネットワークに `2.0.192.in-addr.arpa` の IPv4 逆引き DNS レコードのゾーンを設定すると、例えば `192.0.2.100` に対する逆引き DNS レコードを生成します。

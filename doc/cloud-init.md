@@ -91,6 +91,7 @@ cloud-init は `user-data` (と `vendor-data`) セクションをパッケージ
 * `/var/lib/cloud/instance/user-data.txt`
 
 #### インスタンス作成時にパッケージをアップグレードする
+
 インスタンス用のレポジトリからパッケージのアップグレードをトリガーするには `package_upgrade` キーを使用します。
 
 ```yaml
@@ -101,6 +102,7 @@ config:
 ```
 
 #### インスタンス作成時にパッケージをインストールする
+
 インスタンスをセットアップするときに特定のパッケージをインストールするには `packages` キーを使用しパッケージ名をリストで指定します。
 
 ```yaml
@@ -113,6 +115,7 @@ config:
 ```
 
 #### インスタンス作成時にタイムゾーンを設定する
+
 インスタンスのタイムゾーンを設定するには `timezone` キーを使用します。
 
 ```yaml
@@ -123,6 +126,7 @@ config:
 ```
 
 #### コマンドを実行する
+
 (マーカーファイルを書き込むなど) コマンドを実行するには `runcmd` キーを使用しコマンドをリストで指定します。
 
 ```yaml
@@ -134,6 +138,7 @@ config:
 ```
 
 #### ユーザーアカウントを追加する
+
 ユーザーアカウントを追加するには `user` キーを使用します。デフォルトユーザとどのキーがサポートされるかについての詳細は [ドキュメント](https://cloudinit.readthedocs.io/en/latest/topics/examples.html#including-users-and-groups) を参照してください。
 
 ```yaml
@@ -146,7 +151,7 @@ config:
 
 ### カスタムネットワーク設定
 
-cloud-init は、`network-config` データを使い、Ubuntu リリースに応じて
+`cloud-init` は、`network-config` データを使い、Ubuntu リリースに応じて
 `ifupdown` もしくは `netplan` のどちらかを使って、システム上の関連する設定
 を行います。
 

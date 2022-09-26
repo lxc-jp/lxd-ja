@@ -12,13 +12,13 @@
 
 物理ネットワークでは現在以下の設定キーネームスペースがサポートされています。
 
- - `bgp` (BGP ピア設定)
- - `dns` (DNS サーバと名前解決の設定)
- - `ipv4` (L3 IPv4 設定)
- - `ipv6` (L3 IPv6 設定)
- - `maas` (MAAS ネットワーク識別)
- - `ovn` (OVN 設定)
- - `user` (key/value の自由形式のユーザメタデータ)
+- `bgp` (BGP ピア設定)
+- `dns` (DNS サーバと名前解決の設定)
+- `ipv4` (L3 IPv4 設定)
+- `ipv6` (L3 IPv6 設定)
+- `maas` (MAAS ネットワーク識別)
+- `ovn` (OVN 設定)
+- `user` (key/value の自由形式のユーザメタデータ)
 
 ```{note}
 {{note_ip_addresses_CIDR}}

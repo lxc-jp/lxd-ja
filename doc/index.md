@@ -1,4 +1,10 @@
+---
+relatedlinks: https://linuxcontainers.org/, https://ubuntu.com/lxd, https://ubuntu.com/blog/open-source-for-beginners-dev-environment-with-lxd
+---
+
 [![LXD](../doc/_static/download/containers.png)](https://linuxcontainers.org/lxd)
+
+# LXD
 
 % Include content from [../README.md](../README.md)
 ```{include} ../README.md
@@ -14,7 +20,7 @@
     :end-before: <!-- Include end security -->
 ```
 
-詳細は[](security.md)をご覧ください。
+詳細は[セキュリティ](security.md)をご覧ください。
 
 ````{important}
 % Include content from [../README.md](../README.md)

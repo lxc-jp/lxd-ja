@@ -3,17 +3,25 @@ discourse: 12281,11735
 relatedlinks: https://grafana.com/grafana/dashboards/15726
 ---
 
+(instance-metrics)=
 # インスタンスメトリクス
 
 ```{youtube} https://www.youtube.com/watch?v=EthK-8hm_fY
 ```
 
-LXD は全ての実行中のインスタンスについてのメトリクスを提供します。これは CPU、メモリー、ネットワーク、ディスク、プロセスの使用量を含み、Prometheus で読み取って Grafana でグラフを表示するのに使うことを想定しています。
+<!-- Include start metrics intro -->
+LXD は全ての実行中のインスタンスについてのメトリクスを収集します。
+これは CPU、メモリー、ネットワーク、ディスク、プロセスの使用量を含みます。
+Prometheus で読み取って Grafana でグラフを表示するのに使うことを想定しています。
+<!-- Include end metrics intro -->
+
 クラスタ環境では、 LXD はアクセスされているサーバ上で稼働中のインスタンスの値だけを返します。各クラスタメンバーから別々にデータを取得する想定です。
+
 インスタンスメトリクスは `/1.0/metrics` エンドポイントを呼ぶと更新されます。
 メトリクスは複数のスクレイパーに対応するため 8 秒キャッシュします。メトリクスの取得は比較的重い処理ですので、影響が大きすぎるようならデフォルトの間隔より長い間隔でスクレイピングすることを検討してください。
 
 ## メトリクス用証明書の作成
+
 `1.0/metrics` エンドポイントは他の証明書に加えて `metrics` タイプの証明書を受け付けるという点で特別なエンドポイントです。
 このタイプの証明書はメトリクス専用で、インスタンスや他の LXD のオブジェクトの操作には使用できません。
 
@@ -32,6 +40,7 @@ lxc config trust add metrics.crt --type=metrics
 ```
 
 ## Prometheus にターゲットを追加
+
 Prometheus が LXD からメトリクスを取得するためには、 LXD をターゲットに追加する必要があります。
 
 まず、 LXD にネットワーク越しにアクセスできるように `core.https_address` を設定しているかを確認してください。
@@ -59,7 +68,6 @@ cp /var/snap/lxd/common/lxd/server.crt /etc/prometheus/tls
 # これらのファイルを Prometheus が読めるようにする（通常 Prometheus は "prometheus" ユーザーで稼働しています）
 chown -R prometheus:prometheus /etc/prometheus/tls
 ```
-
 
 最後に、 LXD をターゲットに追加する必要があります。
 これは `/etc/prometheus/prometheus.yaml` を編集する必要があります。
@@ -183,3 +191,45 @@ scrape_configs:
       key_file: 'tls/metrics.key'
       server_name: 'saturn'
 ```
+
+## 提供されるメトリクス
+
+以下のメトリクスが提供されます。
+
+* `lxd_cpu_seconds_total{cpu="<cpu>", mode="<mode>"}`
+* `lxd_disk_read_bytes_total{device="<dev>"}`
+* `lxd_disk_reads_completed_total{device="<dev>"}`
+* `lxd_disk_written_bytes_total{device="<dev>"}`
+* `lxd_disk_writes_completed_total{device="<dev>"}`
+* `lxd_filesystem_avail_bytes{device="<dev>",fstype="<type>"}`
+* `lxd_filesystem_free_bytes{device="<dev>",fstype="<type>"}`
+* `lxd_filesystem_size_bytes{device="<dev>",fstype="<type>"}`
+* `lxd_memory_Active_anon_bytes`
+* `lxd_memory_Active_bytes`
+* `lxd_memory_Active_file_bytes`
+* `lxd_memory_Cached_bytes`
+* `lxd_memory_Dirty_bytes`
+* `lxd_memory_HugepagesFree_bytes`
+* `lxd_memory_HugepagesTotal_bytes`
+* `lxd_memory_Inactive_anon_bytes`
+* `lxd_memory_Inactive_bytes`
+* `lxd_memory_Inactive_file_bytes`
+* `lxd_memory_Mapped_bytes`
+* `lxd_memory_MemAvailable_bytes`
+* `lxd_memory_MemFree_bytes`
+* `lxd_memory_MemTotal_bytes`
+* `lxd_memory_OOM_kills_total`
+* `lxd_memory_RSS_bytes`
+* `lxd_memory_Shmem_bytes`
+* `lxd_memory_Swap_bytes`
+* `lxd_memory_Unevictable_bytes`
+* `lxd_memory_Writeback_bytes`
+* `lxd_network_receive_bytes_total{device="<dev>"}`
+* `lxd_network_receive_drop_total{device="<dev>"}`
+* `lxd_network_receive_errs_total{device="<dev>"}`
+* `lxd_network_receive_packets_total{device="<dev>"}`
+* `lxd_network_transmit_bytes_total{device="<dev>"}`
+* `lxd_network_transmit_drop_total{device="<dev>"}`
+* `lxd_network_transmit_errs_total{device="<dev>"}`
+* `lxd_network_transmit_packets_total{device="<dev>"}`
+* `lxd_procs_total`

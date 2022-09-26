@@ -1,6 +1,9 @@
 (storage-dir)=
 # ディレクトリ - `dir`
 
+```{youtube} https://www.youtube.com/watch?v=imWkPM9GjCY
+```
+
 ディレクトリストレージドライバは基本的なバックエンドで通常のファイルとディレクトリ構造にデータを保管します。
 このドライバは素早くセットアップできディスク上のファイルを直接見ることができるので、テストには便利かもしれません。
 しかし、 LXD の操作はこのドライバ用には {ref}`最適化されていません <storage-drivers-features>`。
@@ -22,6 +25,7 @@ LXD の `dir` ドライバは完全に機能し、他のドライバと同じ機
 `dir` ドライバを使うストレージプールとこれらのプール内のストレージボリュームには以下の設定オプションが利用できます。
 
 ## ストレージプール設定
+
 キー                | 型     | デフォルト値 | 説明
 :--                 | :---   | :------      | :----------
 `rsync.bwlimit`     | string | `0` (no limit) | ストレージエンティティの転送に rsync を使う必要があるときにソケット I/O に指定する上限を設定
@@ -31,11 +35,19 @@ LXD の `dir` ドライバは完全に機能し、他のドライバと同じ機
 {{volume_configuration}}
 
 ## ストレージボリューム設定
+
 キー                 | 型     | 条件               | デフォルト値                                 | 説明
 :--                  | :---   | :--------          | :------                                      | :----------
-`security.shifted`   | bool   | custom volume      | `volume.security.shifted` と同じか `false`   | {{enable_ID_shifting}}
-`security.unmapped`  | bool   | custom volume      | `volume.security.unmapped` と同じか `false`  | ボリュームの ID マッピングを無効にする
-`size`               | string | appropriate driver | `volume.size` と同じ                         | ストレージボリュームのサイズ/クォータ
-`snapshots.expiry`   | string | custom volume      | `volume.snapshots.expiry` と同じ             | {{snapshot_expiry_format}}
-`snapshots.pattern`  | string | custom volume      | `volume.snapshots.pattern` と同じか `snap%d` | {{snapshot_pattern_format}}
-`snapshots.schedule` | string | custom volume      | `volume.snapshots.schedule` と同じ           | {{snapshot_schedule_format}}
+`security.shifted`   | bool   | カスタムボリューム | `volume.security.shifted` と同じか `false`   | {{enable_ID_shifting}}
+`security.unmapped`  | bool   | カスタムボリューム | `volume.security.unmapped` と同じか `false`  | ボリュームの ID マッピングを無効にする
+`size`               | string | 適切なドライバ     | `volume.size` と同じ                         | ストレージボリュームのサイズ/クォータ
+`snapshots.expiry`   | string | カスタムボリューム | `volume.snapshots.expiry` と同じ             | {{snapshot_expiry_format}}
+`snapshots.pattern`  | string | カスタムボリューム | `volume.snapshots.pattern` と同じか `snap%d` | {{snapshot_pattern_format}}
+`snapshots.schedule` | string | カスタムボリューム | `volume.snapshots.schedule` と同じ           | {{snapshot_schedule_format}}
+
+### ストレージバケット設定
+
+ローカルのストレージプールドライバでストレージバケットを有効にし、 S3 プロトコル経由でアプリケーションがバケットにアクセスできるようにするには `core.storage_buckets_address` サーバ設定 ({ref}`server` 参照) を調整する必要があります。
+
+ストレージバケットは `dir` プール用の設定はありません。
+他のストレージプールドライバとは異なり、 `dir` ドライバは `size` 設定によるバケットクォータのサポートはありません。

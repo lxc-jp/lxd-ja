@@ -1,16 +1,21 @@
 # イベント
 
-## はじめに
+## イントロダクション
+
 イベントとは LXD 上で発生したアクションに関するメッセージです。 `/1.0/events` の API エンドポイントを直接使うか `lxc monitor` コマンドを使うことでウェブソケットに接続しログとライフサイクルメッセージがストリーム出力されます。
 
 ## イベント種別
+
 LXD は現在 3 つのイベント種別をサポートします。
+
 - `logging`: サーバのログレベルに関係なく全てのログメッセージを表示します。
 - `operation`: 作成から完了までの（状態と進捗メタデータの更新を含む）全ての実行中のオペレーションを表示します。
 - `lifecycle`: LXD 上で発生する特定のアクションの監査証跡を表示します。
 
 ## イベント構造
+
 ### 例:
+
 ```yaml
 location: cluster_name
 metadata:
@@ -22,17 +27,20 @@ metadata:
 timestamp: "2021-03-14T00:00:00Z"
 type: lifecycle
 ```
+
 - `location`: クラスタメンバー名（クラスタであれば）。
 - `timestamp`: RFC3339 形式のイベント発生時刻。
 - `type`: イベント種別（`logging`, `operation`, `lifecycle` のいずれか）。
 - `metadata`: 特定のイベント種別に関する情報。
 
 ### logging イベントの構造
+
 - `message`: ログメッセージ。
 - `level`: ログのログレベル。
 - `context`: イベントに含まれる追加情報。
 
 ### operation イベントの構造
+
 - `id`: オペレーションの UUID
 - `class`: オペレーション種別（`task`, `token`, `websocket` のいずれか）。
 - `description`: オペレーションの説明。
@@ -47,6 +55,7 @@ type: lifecycle
 - `location`: クラスタメンバー名（クラスタであれば）。
 
 ### ライフサイクルイベントの構造
+
 - `action`: 発生したライフサイクルアクション。
 - `requestor`: 誰がリクエストを作成したかの情報（該当するものがあれば）。
 - `source`: アクションの対象のパス。
@@ -103,6 +112,7 @@ type: lifecycle
 | `instance-metadata-template-retrieved` | インスタンスのイメージテンプレートファイルがダウンロードされた。                                                                                        | `path`: ファイルの相対パス。                                                                                                                                                                      |
 | `instance-metadata-updated`            | インスタンスのイメージメタデータが変更された。                                                                                                          |                                                                                                                                                                                                   |
 | `instance-paused`                      | インスタンスが休止状態にされた。                                                                                                                        |                                                                                                                                                                                                   |
+| `instance-ready`                       | インスタンスが準備完了になった。                                                                                                                        |                                                                                                                                                                                                   |
 | `instance-renamed`                     | インスタンスがリネームされた。                                                                                                                          | `old_name`: 以前の名前。                                                                                                                                                                          |
 | `instance-restarted`                   | インスタンスが再起動された。                                                                                                                            |                                                                                                                                                                                                   |
 | `instance-restored`                    | インスタンスがスナップショットから復元された。                                                                                                          | `snapshot`: 復元されたスナップショット名。                                                                                                                                                        |
@@ -151,11 +161,11 @@ type: lifecycle
 | `storage-volume-backup-deleted`        | ストレージボリュームのバックアップが削除された。                                                                                                        |                                                                                                                                                                                                   |
 | `storage-volume-backup-renamed`        | ストレージボリュームのバックアップがリネームされた。                                                                                                    | `old_name`: 以前の名前。                                                                                                                                                                          |
 | `storage-volume-backup-retrieved`      | ストレージボリュームのバックアップがダウンロードされた。                                                                                                |                                                                                                                                                                                                   |
-| `storage-volume-created`               | 新しいストレージボリュームが作成された。                                                                                                                | `type`: `container`, `virtual-machine`, `image`, `custom` のいずれか。                                                                                                                                    |
+| `storage-volume-created`               | 新しいストレージボリュームが作成された。                                                                                                                | `type`: `container`, `virtual-machine`, `image`, `custom` のいずれか。                                                                                                                            |
 | `storage-volume-deleted`               | ストレージボリュームが削除された。                                                                                                                      |                                                                                                                                                                                                   |
 | `storage-volume-renamed`               | ストレージボリュームがリネームされた。                                                                                                                  | `old_name`: 以前の名前。                                                                                                                                                                          |
 | `storage-volume-restored`              | ストレージボリュームがスナップショットから復元された。                                                                                                  | `snapshot`: 復元されたスナップショット名。                                                                                                                                                        |
-| `storage-volume-snapshot-created`      | 新しいストレージボリュームスナップショットが作成された。                                                                                                | `type`: `container`, `virtual-machine`, `image`, `custom` のいずれか。                                                                                                                                    |
+| `storage-volume-snapshot-created`      | 新しいストレージボリュームスナップショットが作成された。                                                                                                | `type`: `container`, `virtual-machine`, `image`, `custom` のいずれか。                                                                                                                            |
 | `storage-volume-snapshot-deleted`      | ストレージボリュームのスナップショットが削除された。                                                                                                    |                                                                                                                                                                                                   |
 | `storage-volume-snapshot-renamed`      | ストレージボリュームのスナップショットがリネームされた。                                                                                                | `old_name`: 以前の名前。                                                                                                                                                                          |
 | `storage-volume-snapshot-updated`      | ストレージボリュームのスナップショットの設定が変更された。                                                                                              |                                                                                                                                                                                                   |

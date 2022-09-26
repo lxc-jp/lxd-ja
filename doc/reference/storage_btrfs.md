@@ -1,6 +1,9 @@
 (storage-btrfs)=
 # Btrfs - `btrfs`
 
+```{youtube} https://www.youtube.com/watch?v=2r5FYuusxNc
+```
+
 {abbr}`Btrfs (B-tree file system)` は {abbr}`COW (copy-on-write)` 原則に基づいたローカルファイルシステムです。
 COW はデータが修正された後に既存のデータを上書きするのではなく別のブロックに保管され、データ破壊のリスクが低くなることを意味します。
 他のファイルシステムと異なり、Btrfs はエクステントベースです。これはデータを連続したメモリ領域に保管することを意味します。
@@ -11,14 +14,18 @@ Btrfs を使うにはマシンに `btrfs-progs` がインストールされて�
 
 ## 用語
 
-Btrfs ファイルシステムは *サブボリューム* を持つことができます。これはファイルシステムのメインツリーの名前をつけられたバイナリサブツリーでそれ自身の独立したファイルとディレクトリ階層を持ちます。
-*Btrfs スナップショット*　は特殊なタイプのサブボリュームで別のサブボリュームの特定の状態をキャプチャーします。
+Btrfs ファイルシステムは*サブボリューム*を持つことができます。これはファイルシステムのメインツリーの名前をつけられたバイナリサブツリーでそれ自身の独立したファイルとディレクトリ階層を持ちます。
+*Btrfs スナップショット*は特殊なタイプのサブボリュームで別のサブボリュームの特定の状態をキャプチャーします。
 スナップショットは読み書き可または読み取り専用にできます。
 
 ## LXD の `btrfs` ドライバ
 
 LXD の `btrfs` ドライバはインスタンス、イメージ、スナップショットごとにサブボリュームを使用します。
 新しいオブジェクトを作成する際 (例えば、新しいインスタンスを起動する)、 Btrfs スナップショットを作成します。
+
+Btrfs はブロックデバイスの保管をネイティブにはサポートしていません。
+このため、仮想マシンに Btrfs を使用する場合、 LXD は仮想マシンを格納するディスク上に巨大なファイルを作成します。
+このアプローチはあまり効率的ではなく、スナップショット作成時に問題を引き起こすかもしれません。
 
 Btrfs はネストした LXD 環境内のコンテナ内部でストレージバックエンドとして使用できます。
 この場合、親のコンテナ自体は Btrfs を使う必要があります。
@@ -54,6 +61,7 @@ Btrfs qgroups は階層的ですが、新しいサブボリュームは親のサ
 
 (storage-btrfs-pool-config)=
 ## ストレージプール設定
+
 キー                  | 型     | デフォルト値                                                | 説明
 :--                   | :---   | :--------                                                   | :----------
 `btrfs.mount_options` | string | `user_subvol_rm_allowed`                                    | ブロックデバイスのマウントオプション
@@ -62,11 +70,20 @@ Btrfs qgroups は階層的ですが、新しいサブボリュームは親のサ
 {{volume_configuration}}
 
 ### ストレージボリューム設定
+
 キー                 | 型     | 条件               | デフォルト値                                 | 説明
 :--                  | :---   | :--------          | :------                                      | :----------
-`security.shifted`   | bool   | custom volume      | `volume.security.shifted` と同じか `false`   | {{enable_ID_shifting}}
-`security.unmapped`  | bool   | custom volume      | `volume.security.unmapped` と同じか `false`  | ボリュームへの id マッピングを無効にする
-`size`               | string | appropriate driver | `volume.size` と同じ                         | ストレージボリュームのサイズ/クォータ
-`snapshots.expiry`   | string | custom volume      | `volume.snapshots.expiry` と同じ             | {{snapshot_expiry_format}}
-`snapshots.pattern`  | string | custom volume      | `volume.snapshots.pattern` と同じか `snap%d` | {{snapshot_pattern_format}}
-`snapshots.schedule` | string | custom volume      | `volume.snapshots.schedule` と同じ           | {{snapshot_schedule_format}}
+`security.shifted`   | bool   | カスタムボリューム | `volume.security.shifted` と同じか `false`   | {{enable_ID_shifting}}
+`security.unmapped`  | bool   | カスタムボリューム | `volume.security.unmapped` と同じか `false`  | ボリュームへの id マッピングを無効にする
+`size`               | string | 適切なドライバ     | `volume.size` と同じ                         | ストレージボリュームのサイズ/クォータ
+`snapshots.expiry`   | string | カスタムボリューム | `volume.snapshots.expiry` と同じ             | {{snapshot_expiry_format}}
+`snapshots.pattern`  | string | カスタムボリューム | `volume.snapshots.pattern` と同じか `snap%d` | {{snapshot_pattern_format}}
+`snapshots.schedule` | string | カスタムボリューム | `volume.snapshots.schedule` と同じ           | {{snapshot_schedule_format}}
+
+### ストレージバケット設定
+
+ローカルのストレージプールドライバでストレージバケットを有効にし、 S3 プロトコル経由でアプリケーションがバケットにアクセスできるようにするには `core.storage_buckets_address` サーバ設定 ({ref}`server` 参照) を調整する必要があります。
+
+キー   | 型     | 条件           | デフォルト値         | 説明
+:--    | :---   | :--------      | :------              | :----------
+`size` | string | 適切なドライバ | `volume.size` と同じ | ストレージバケットのサイズ/クォータ
