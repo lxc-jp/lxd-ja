@@ -26,6 +26,11 @@ table.docutils td, table.docutils th, table.docutils td:last-child, table.docuti
     border-left: none;
 }
 
+/* center align table cells with ":-:" */
+td.text-center {
+    text-align: center;
+}
+
 /** No rounded corners **/
 
 .admonition, code.literal, .sphinx-tabs-tab, .sphinx-tabs-panel, .highlight {
@@ -102,9 +107,6 @@ table.min-width-1-15 td.text-left:first-child {
 table.min-width-4-8 td.text-left:nth-child(4) {
     min-width: 8em;
 }
-table.min-width-5-6 td.text-left:nth-child(5) {
-    min-width: 6em;
-}
 
 /** Underline for abbreviations **/
 
@@ -118,71 +120,51 @@ abbr[title] {
     display: block;
 }
 
-/** Links to YouTube videos **/
-
-p.youtube_link {
-    float: right;
-    border: 1px #cdcdcd solid;
-    margin-left: 5px;
-    margin-bottom: 5px;
-    padding-bottom: 5px;
+/** Version switcher */
+button.version_select {
+  color: var(--color-foreground-primary);
+  background-color: var(--color-toc-background);
+  padding: 5px 10px;
+  border: none;
 }
 
-p.youtube_link a {
-    text-align: center;
+.version_select:hover, .version_select:focus {
+    background-color: var(--color-sidebar-item-background--hover);
 }
 
-p.youtube_link span.play_icon {
-    color: #E95420;
-    font-size: 2em;
+.version_dropdown {
+  position: relative;
+  display: inline-block;
+  text-align: right;
+  font-size: var(--sidebar-item-font-size);
 }
 
-p.youtube_link span.play_icon::after {
-    content: "\a"
+.available_versions {
+  display: none;
+  position: absolute;
+  right: 0px;
+  background-color: var(--color-toc-background);
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 11;
 }
 
-p.youtube_link span {
-    display: block;
-    font-size: small;
-    max-width: 70px;
+.available_versions a {
+  color: var(--color-foreground-primary);
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
 }
 
-/** Related links **/
+.available_versions a:hover {background-color: var(--color-sidebar-item-background--current)}
 
-.relatedlinks-title {
-    color: var(--color-toc-title-text);
-    font-size: var(--toc-title-font-size);
-    padding-left: var(--toc-spacing-horizontal);
-    text-transform: uppercase;
+.show {display:block;}
+
+/** Fix for nested numbered list - the nested list is lettered **/
+ol.arabic ol.arabic {
+  list-style: lower-alpha;
 }
 
-.relatedlinks {
-    font-size: var(--font-size--small--2);
-    padding-left: calc(var(--toc-spacing-horizontal) - var(--toc-item-spacing-horizontal));
-    padding-bottom: 1em;
-}
-
-.relatedlinks ul {
-    list-style-type: none;
-    margin-bottom: 0;
-    margin-top: 0;
-    padding-left: var(--toc-item-spacing-horizontal);
-}
-
-.relatedlinks li {
-    padding-top: var(--toc-item-spacing-vertical);
-}
-
-.relatedlinks a {
-    overflow-wrap: anywhere;
-    text-decoration: none;
-}
-
-.relatedlinks a::before {
-    content: url("data:image/svg+xml;charset=utf-8,%3Csvg width='12' height='12' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' stroke-width='1.5' stroke='%23607D8B' fill='none' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M0 0h24v24H0z' stroke='none'/%3E%3Cpath d='M11 7H6a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-5M10 14 20 4M15 4h5v5'/%3E%3C/svg%3E");
-    margin-right: 0.25rem;
-}
-
-.relatedlinks-title-container {
-    padding-top: 2em;
+/** Make expandable sections look like links **/
+details summary {
+    color: var(--color-link);
 }
