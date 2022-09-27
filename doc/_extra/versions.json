@@ -1,0 +1,14 @@
+[
+    {
+        "version": "latest",
+        "id": "latest"
+    },
+    {
+        "version": "5.0.x",
+        "id": "5.0"
+    },
+    {
+        "version": "4.0.x",
+        "id": "4.0"
+    }
+]
