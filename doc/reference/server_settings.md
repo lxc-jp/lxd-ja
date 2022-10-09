@@ -31,9 +31,9 @@ snap ユーザーの場合はこれらの制限は自動的に上げられます
 パラメータ                          | 値        | デフォルト | 説明
 :-----                              | :---      | :---       | :---
 `fs.aio-max-nr`                     | `524288`  | `65536`    | これは並行に実行される非同期 I/O 操作の最大数です。 AIO サブシステムを使うワークロードが大量にある場合（例: MySQL ）、これを増やす必要があるかもしれません
-`fs.inotify.max_queued_events`      | `1048576` | `16384`    | これは対応する `inotify` のインスタンスにキューイングされるイベント数の上限を指定します ([`ionotify`](https://man7.org/linux/man-pages/man7/inotify.7.html) 参照)
-`fs.inotify.max_user_instances`     | `1048576` | `128`      | これは実ユーザー ID ごとに作成可能な `inotify` のインスタンス数の上限を指定します ([`ionotify`](https://man7.org/linux/man-pages/man7/inotify.7.html) 参照)
-`fs.inotify.max_user_watches`       | `1048576` | `8192`     | これは実ユーザー ID ごとに作成可能な watch 数の上限を指定します ([`ionotify`](https://man7.org/linux/man-pages/man7/inotify.7.html) 参照)
+`fs.inotify.max_queued_events`      | `1048576` | `16384`    | これは対応する `inotify` のインスタンスにキューイングされるイベント数の上限を指定します ([`inotify`](https://man7.org/linux/man-pages/man7/inotify.7.html) 参照)
+`fs.inotify.max_user_instances`     | `1048576` | `128`      | これは実ユーザー ID ごとに作成可能な `inotify` のインスタンス数の上限を指定します ([`inotify`](https://man7.org/linux/man-pages/man7/inotify.7.html) 参照)
+`fs.inotify.max_user_watches`       | `1048576` | `8192`     | これは実ユーザー ID ごとに作成可能な watch 数の上限を指定します ([`inotify`](https://man7.org/linux/man-pages/man7/inotify.7.html) 参照)
 `kernel.dmesg_restrict`             | `1`       | `0`        | この設定を有効にするとコンテナがカーネルのリングバッファー内のメッセージにアクセスするのを拒否します。この設定はホスト・システム上の非 root ユーザーへのアクセスも拒否することに注意してください
 `kernel.keys.maxbytes`              | `2000000` | `20000`    | 非 root ユーザーが使用できる key ring の最大サイズ
 `kernel.keys.maxkeys`               | `2000`    | `200`      | 非 root ユーザーが使用できるキーの最大数で、コンテナ数より大きくなければなりません
