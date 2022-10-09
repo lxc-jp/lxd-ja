@@ -60,6 +60,7 @@ LXD の `cephfs` ドライバはサーバ側でスナップショットが有効
 
 (storage-cephfs-pool-config)=
 ## ストレージプール設定
+
 キー                     | 型     | デフォルト値 | 説明
 :--                      | :---   | :------      | :----------
 `cephfs.cluster_name`    | string | `ceph`       | CephFS ファイルシステムを含む Ceph クラスタの名前
@@ -72,11 +73,12 @@ LXD の `cephfs` ドライバはサーバ側でスナップショットが有効
 {{volume_configuration}}
 
 ## ストレージボリューム設定
+
 キー                 | 型     | 条件               | デフォルト値                                 | 説明
 :--                  | :---   | :--------          | :------                                      | :----------
-`security.shifted`   | bool   | custom volume      | `volume.security.shifted` と同じか `false`   | {{enable_ID_shifting}}
-`security.unmapped`  | bool   | custom volume      | `volume.security.unmapped` と同じか `false`  | ボリュームの ID マッピングを無効にする
-`size`               | string | appropriate driver | `volume.size` と同じ                         | ストレージボリュームのサイズ/クォータ
-`snapshots.expiry`   | string | custom volume      | `volume.snapshots.expiry` と同じ             | {{snapshot_expiry_format}}
-`snapshots.pattern`  | string | custom volume      | `volume.snapshots.pattern` と同じか `snap%d` | {{snapshot_pattern_format}}
-`snapshots.schedule` | string | custom volume      | `volume.snapshots.schedule` と同じ           | {{snapshot_schedule_format}}
+`security.shifted`   | bool   | カスタムボリューム | `volume.security.shifted` と同じか `false`   | {{enable_ID_shifting}}
+`security.unmapped`  | bool   | カスタムボリューム | `volume.security.unmapped` と同じか `false`  | ボリュームの ID マッピングを無効にする
+`size`               | string | 適切なドライバ     | `volume.size` と同じ                         | ストレージボリュームのサイズ/クォータ
+`snapshots.expiry`   | string | カスタムボリューム | `volume.snapshots.expiry` と同じ             | {{snapshot_expiry_format}}
+`snapshots.pattern`  | string | カスタムボリューム | `volume.snapshots.pattern` と同じか `snap%d` | {{snapshot_pattern_format}}
+`snapshots.schedule` | string | カスタムボリューム | `volume.snapshots.schedule` と同じ           | {{snapshot_schedule_format}}

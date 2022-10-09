@@ -15,8 +15,8 @@ macvlan は仮想的な {abbr}`LAN (Local Area Network)` で同じネットワ�
 
 `macvlan` ネットワークタイプでは現在以下の設定キーネームスペースがサポートされています。
 
- - `maas` (MAAS ネットワーク識別)
- - `user` (key/value の自由形式のユーザメタデータ)
+- `maas` (MAAS ネットワーク識別)
+- `user` (key/value の自由形式のユーザメタデータ)
 
 ```{note}
 {{note_ip_addresses_CIDR}}

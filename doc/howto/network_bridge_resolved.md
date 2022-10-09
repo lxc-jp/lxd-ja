@@ -76,6 +76,8 @@ After=sys-subsystem-net-devices-<network_bridge>.device
 Type=oneshot
 ExecStart=/usr/bin/resolvectl dns <network_bridge> <dns_address>
 ExecStart=/usr/bin/resolvectl domain <network_bridge> <dns_domain>
+ExecStopPost=/usr/bin/resolvectl revert <network_bridge>
+RemainAfterExit=yes
 
 [Install]
 WantedBy=sys-subsystem-net-devices-<network_bridge>.device
@@ -104,7 +106,7 @@ WantedBy=sys-subsystem-net-devices-<network_bridge>.device
    Main PID: 9434 (code=exited, status=0/SUCCESS)
 ```
 
-`resolved` に設定が反映されたか確認するには、 `sudo resolvectl status <network_bridge>` を実行します。
+`resolved` に設定が反映されたか確認するには、 `resolvectl status <network_bridge>` を実行します。
 
 ```
 Link 6 (lxdbr0)

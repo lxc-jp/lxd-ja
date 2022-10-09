@@ -4,6 +4,7 @@ relatedlinks: https://www.youtube.com/watch?v=6O0q3rSWr8A
 
 (projects)=
 # プロジェクト設定
+
 LXD は LXD サーバを分割する方法としてプロジェクトをサポートしています。
 それぞれのプロジェクトは独自のインスタンスのセットを保持し、さらに独自のイメージとプロファイルも持ちます。
 
@@ -17,9 +18,9 @@ LXD は LXD サーバを分割する方法としてプロジェクトをサポ�
 key/value 設定は現在サポートされている以下のネームスペースによって
 名前空間が分けられています。
 
- - `features` プロジェクトのフィーチャーセットのどの部分が使用中か
- - `limits` プロジェクトに属するコンテナと VM に適用されるリソース制限
- - `user` ユーザーメタデータに対する自由形式の key/value
+- `features` プロジェクトのフィーチャーセットのどの部分が使用中か
+- `limits` プロジェクトに属するコンテナと VM に適用されるリソース制限
+- `user` ユーザーメタデータに対する自由形式の key/value
 
 キー                                   | 型      | 条件 | デフォルト値   | 説明
 :--                                    | :--     | :--  | :--            | :--
@@ -54,7 +55,7 @@ key/value 設定は現在サポートされている以下のネームスペー�
 `restricted.devices.disk.paths`        | string  | -    | -              | `restricted.devices.disk` が `allow` に設定された場合これは `disk` デバイスに設定される `source` 設定を制限するパスのプリフィクスのカンマ区切りを設定する。空の場合は全てのパスが許可される。
 `restricted.devices.gpu`               | string  | -    | `block`        | `block` と設定すると `gpu` タイプのデバイスの使用を防ぐ
 `restricted.devices.infiniband`        | string  | -    | `block`        | `block` と設定すると `infiniband` タイプのデバイスの使用を防ぐ
-`restricted.devices.nic`               | string  | -    | `managed`      | `block` と設定すると全てのネットワークデバイスの使用を防ぐ。`managed` と設定すると `network=` が設定されているときだけネットワークデバイスの使用を許可する。`allow` と設定すると制限なし。
+`restricted.devices.nic`               | string  | -    | `managed`      | `block` と設定すると全てのネットワークデバイスの使用を防ぐ。`managed` と設定すると `network=` が設定されているときだけネットワークデバイスの使用を許可する。`allow` と設定すると制限なし。これはネットワークへのアクセスも制御する。
 `restricted.devices.pci`               | string  | -    | `block`        | `pci` タイプのデバイスの使用を防ぐ
 `restricted.devices.proxy`             | string  | -    | `block`        | `proxy` タイプのデバイスの使用を防ぐ
 `restricted.devices.unix-block`        | string  | -    | `block`        | `block` と設定すると `unix-block` タイプのデバイスの使用を防ぐ
@@ -63,6 +64,7 @@ key/value 設定は現在サポートされている以下のネームスペー�
 `restricted.devices.usb`               | string  | -    | `block`        | `block` と設定すると `usb` タイプのデバイスの使用を防ぐ
 `restricted.idmap.uid`                 | string  | -    | -              | インスタンスの `raw.idmap` 設定で使用可能なホストの UID の範囲を指定
 `restricted.idmap.gid`                 | string  | -    | -              | インスタンスの `raw.idmap` 設定で使用可能なホストの GID の範囲を指定
+`restricted.networks.access`           | string  | -    | -              | このプロジェクト内で使用が許可されるネットワーク名のカンマ区切りリスト。未設定の場合は全てのネットワークがアクセス可能 (`restricted.devices.nic` 設定に依存)。
 `restricted.networks.subnets`          | string  | -    | `block`        | このプロジェクトで使用するために割り当てられるアップリンクネットワークのネットワークサブネット（`<uplink>:<subnet>` 形式）のカンマ区切りリスト
 `restricted.networks.uplinks`          | string  | -    | `block`        | このプロジェクト内のネットワークでアップリンクとして使用可能なネットワークのカンマ区切りリスト
 `restricted.networks.zones`            | string  | -    | `block`        | このプロジェクト内の使用可能なネットワークゾーン（またはそれらの下のサブゾーン） のカンマ区切りリスト

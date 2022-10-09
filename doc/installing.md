@@ -15,6 +15,7 @@ LXD をインストールする最も簡単な方法は提供されているパ�
 
 (installing_from_source)=
 ## LXD のソースからのインストール
+
 LXD の開発には `liblxc` の最新バージョン（4.0.0 以上が必要）を使用することをおすすめします。
 さらに LXD が動作するためには Golang 1.18 以上が必要です。
 Ubuntu では次のようにインストールできます:
@@ -24,7 +25,7 @@ sudo apt update
 sudo apt install acl attr autoconf automake dnsmasq-base git golang libacl1-dev libcap-dev liblxc1 liblxc-dev libsqlite3-dev libtool libudev-dev liblz4-dev libuv1-dev make pkg-config rsync squashfs-tools tar tcl xz-utils ebtables
 ```
 
-デフォルトのストレージドライバである `directory` ドライバに加えて、LXD ではいくつかのストレージドライバが使えます。
+デフォルトのストレージドライバである `dir` ドライバに加えて、LXD ではいくつかのストレージドライバが使えます。
 これらのツールをインストールすると、initramfs への追加が行われ、ホストのブートが少しだけ遅くなるかもしれませんが、特定のドライバを使いたい場合には必要です:
 
 ```bash
@@ -39,6 +40,7 @@ sudo apt install curl gettext jq sqlite3 socat bind9-dnsutils
 ```
 
 ### ソースからの最新版のビルド
+
 この方法は LXD の最新版をビルドしたい開発者や Linux ディストリビューションで提供されない LXD の特定のリリースをビルドするためのものです。 Linux ディストリビューションへ統合するためのソースからのビルドはここでは説明しません。それは将来、別のドキュメントで取り扱うかもしれません。
 
 ```bash
@@ -90,6 +92,7 @@ export LD_LIBRARY_PATH="$(go env GOPATH)/deps/dqlite/.libs/:$(go env GOPATH)/dep
 これで `lxd` と `lxc` コマンドの実行ファイルが利用可能になり LXD をセットアップするのに使用できます。 `LD_LIBRARY_PATH` 環境変数のおかげで実行ファイルは `$(go env GOPATH)/deps` にビルドされた依存ライブラリーを自動的に見つけて使用します。
 
 ### マシンセットアップ
+
 LXD が非特権コンテナを作成できるように、root ユーザーに対する sub{u,g}id の設定が必要です:
 
 ```bash
@@ -104,4 +107,17 @@ sudo -E PATH=${PATH} LD_LIBRARY_PATH=${LD_LIBRARY_PATH} $(go env GOPATH)/bin/lxd
 
 ```{note}
 `newuidmap/newgidmap`ツールがシステムに存在し、`/etc/subuid`、`/etc/subgid`が存在する場合は、rootユーザーに少なくとも10MのUID/GIDの連続した範囲を許可するように設定する必要があります。
+```
+
+## LXD のアップグレード
+
+LXD を新しいバージョンにアップグレードした後、 LXD はデータベースを新しいスキーマにアップデートする必要があるかもしれません。
+このアップデートは LXD のアップグレードの後のデーモン起動時に自動的に実行されます。
+アップデート前のデータベースのバックアップはアクティブなデータベースと同じ場所 (例えば snap の場合は `/var/snap/lxd/common/lxd/database`) に保存されます。
+
+```{important}
+スキーマのアップデート後は、古いバージョンの LXD はデータベースを無効とみなすかもしれません。
+これはつまり LXD をダウングレードしてもあなたの LXD の環境は利用不可能と言われるかもしれないということです。
+
+このようなダウングレードが必要な場合は、ダウングレードを行う前にデータベースのバックアップをリストアしてください。
 ```

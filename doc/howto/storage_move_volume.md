@@ -2,6 +2,7 @@
 discourse: 10877
 ---
 
+(howto-storage-move-volume)=
 # ストレージボリュームを移動やコピーするには
 
 カスタムストレージボリュームはあるストレージプールから別のストレージプールに {ref}`コピー <storage-copy-volume>` や {ref}`移動 <storage-move-volume>` したり、同じストレージプール内でコピーやリネームできます。

@@ -19,6 +19,7 @@
     :start-after: <!-- Include start supported versions -->
     :end-before: <!-- Include end supported versions -->
 ```
+
 ## LXDデーモンへのアクセス
 
 LXDはUnixソケットを介してローカルにアクセスできるデーモンで、設定されていれば{abbr}`TLS(Transport Layer Security)`ソケットを介してリモートにアクセスすることもできます。
@@ -67,6 +68,16 @@ LXDはまた、*特権* (*privileged*) コンテナを実行することがで�
 コンテナのセキュリティと私たちが使っているカーネルの機能についてのより詳細な情報は
 [LXCセキュリティページ](https://linuxcontainers.org/ja/lxc/security/)にあります。
 
+### コンテナ名の漏洩
+
+デフォルトの設定ではシステム上の全ての cgroup と、さらに転じて、全ての実行中のコンテナを一覧表示することが簡単にできてしまいます。
+
+コンテナを開始する前に `/sys/kernel/slab` と `/proc/sched_debug` へのアクセスをブロックすることでコンテナ名の漏洩を防げます。
+このためには以下のコマンドを実行してください。
+
+    chmod 400 /proc/sched_debug
+    chmod 700 /sys/kernel/slab/
+
 ## ネットワークセキュリティ
 
 ネットワークインターフェースは必ず安全に設定してください。
@@ -112,7 +123,7 @@ lxc config device override <instance> <NIC> security.mac_filtering=true
 これらの機能を併用することで、ブリッジに接続されているインスタンスがMACアドレスやIPアドレスを詐称することを防ぐことができます。
 これらのオプションは、ホスト上で利用可能なものに応じて、`xtables`（`iptables`、`ip6tables`、`ebtables`）または`nftables`を使用して実装されます。
 
-これらのオプションは、ネストされたコンテナが異なるMACアドレスを持つ親ネットワークを使用すること（ブリッジされたNICや`macvlan` NICを使用すること）を効果的に防止することができます。
+これらのオプションは、ネストされたコンテナが異なるMACアドレスを持つ親ネットワークを使用すること（ブリッジされたNICや`macvlan` NICを使用すること）を効果的に防止することができるのは注目に値します。
 
 IPフィルタリング機能は、スプーフィングされたIPを含むARPおよびNDPアドバタイジングをブロックし、スプーフィングされたソースアドレスを含むすべてのパケットをブロックします。
 

@@ -5,42 +5,46 @@ discourse: 8355
 # インスタンスの設定
 
 ## インスタンス
+
 ### プロパティ
+
 次のプロパティは、インスタンスに直接結びつくプロパティであり、プロファイルの一部ではありません:
 
- - `name`
- - `architecture`
+- `name`
+- `architecture`
 
 `name` はインスタンス名であり、インスタンスのリネームでのみ変更できます。
 
 有効なインスタンス名は次の条件を満たさなければなりません:
 
- - 1 ～ 63 文字
- - ASCII テーブルの文字、数字、ダッシュのみから構成される
- - 1 文字目は数字、ダッシュではない
- - 最後の文字はダッシュではない
+- 1 ～ 63 文字
+- ASCII テーブルの文字、数字、ダッシュのみから構成される
+- 1 文字目は数字、ダッシュではない
+- 最後の文字はダッシュではない
 
 この要件は、インスタンス名が DNS レコードとして、ファイルシステム上で、色々なセキュリティプロファイル、そしてインスタンス自身のホスト名として適切に使えるように定められています。
 
 ### Key/value 形式の設定
+
 key/value 形式の設定は、名前空間構造を取っており、現在は次のような名前空間があります:
 
- - `boot` (ブートに関連したオプション、タイミング、依存性、…)
- - `cloud-init` (cloud-init の設定)
- - `environment` (環境変数)
- - `image` (作成時のイメージプロパティのコピー)
- - `limits` (リソース制限)
- - `nvidia` (NVIDIA と CUDA の設定)
- - `raw` (生のインスタンス設定を上書きする)
- - `security` (セキュリティポリシー)
- - `user` (ユーザーの指定するプロパティを保持。検索可能)
- - `volatile` (インスタンス固有の内部データを格納するために LXD が内部的に使用する設定)
+- `boot` (ブートに関連したオプション、タイミング、依存性、…)
+- `cloud-init` (cloud-init の設定)
+- `environment` (環境変数)
+- `image` (作成時のイメージプロパティのコピー)
+- `limits` (リソース制限)
+- `nvidia` (NVIDIA と CUDA の設定)
+- `raw` (生のインスタンス設定を上書きする)
+- `security` (セキュリティポリシー)
+- `user` (ユーザーの指定するプロパティを保持。検索可能)
+- `volatile` (インスタンス固有の内部データを格納するために LXD が内部的に使用する設定)
 
 現在設定できる項目は次のものです:
 
 ```{rst-class} dec-font-size break-col-1 min-width-1-15 min-width-5-6
 ```
 
+(instance-configuration)=
 キー                                             | 型      | デフォルト値      | ライブアップデート | 条件           | 説明
 :--                                              | :---    | :------           | :----------        | :----------    | :----------
 `agent.nic_config`                               | bool    | `false`           | n/a                | 仮想マシン     | デフォルトのネットワークインタフェースの名前と MTU をインスタンスデバイスと同じにするかどうか(これはコンテナでは自動でそうなります)
@@ -166,6 +170,7 @@ lxc config set <instance> <key> <value>
 生（raw）の設定は、LXD が使うバックエンドの機能に直接アクセスできます。これを設定することは、自明ではない方法で LXD を破壊する可能性がありますので、可能な限り避ける必要があります。
 
 #### CPU 制限
+
 CPU 制限は cgroup コントローラの `cpuset` と `cpu` を組み合わせて実装しています。
 
 `limits.cpu` は `cpuset` コントローラを使って、使う CPU を固定（ピンニング）します。
@@ -185,6 +190,7 @@ CPU 制限は cgroup コントローラの `cpuset` と `cpu` を組み合わせ
 `limits.cpu.priority` は、CPU の組を共有するいくつかのインスタンスに割り当てられた CPU の割合が同じ場合に、スケジューラの優先度スコアを計算するために使われます。
 
 #### VM CPU トポロジー
+
 LXD の仮想マシンはデフォルトでは vCPU を 1 つだけ割り当てて、それは
 ホストの CPU のベンダーとタイプにマッチしたものとして表示されますが
 シングルコアでスレッドはありません。
@@ -209,20 +215,21 @@ NUMA レイアウトも同様に複製され、このシナリオではゲスト
 ソケット、コア、スレッドについて適切に判断し、 NUMA トポロジーも考慮できるからです。
 
 ## デバイス設定
+
 LXD は、標準の POSIX システムが動作するのに必要な基本的なデバイスを常にインスタンスに提供します。これらはインスタンスやプロファイルの設定では見えず、上書きもできません。
 
 このデバイスには次のようなデバイスが含まれます:
 
- - `/dev/null` (キャラクターデバイス)
- - `/dev/zero` (キャラクターデバイス)
- - `/dev/full` (キャラクターデバイス)
- - `/dev/console` (キャラクターデバイス)
- - `/dev/tty` (キャラクターデバイス)
- - `/dev/random` (キャラクターデバイス)
- - `/dev/urandom` (キャラクターデバイス)
- - `/dev/net/tun` (キャラクターデバイス)
- - `/dev/fuse` (キャラクターデバイス)
- - `lo` (ネットワークインターフェース)
+- `/dev/null` (キャラクターデバイス)
+- `/dev/zero` (キャラクターデバイス)
+- `/dev/full` (キャラクターデバイス)
+- `/dev/console` (キャラクターデバイス)
+- `/dev/tty` (キャラクターデバイス)
+- `/dev/random` (キャラクターデバイス)
+- `/dev/urandom` (キャラクターデバイス)
+- `/dev/net/tun` (キャラクターデバイス)
+- `/dev/fuse` (キャラクターデバイス)
+- `lo` (ネットワークインターフェース)
 
 これ以外に関しては、インスタンスの設定もしくはインスタンスで使われるいずれかのプロファイルで定義する必要があります。デフォルトのプロファイルには、インスタンス内で `eth0` になるネットワークインターフェースが通常は含まれます。
 
@@ -246,6 +253,7 @@ lxc profile device add <profile> <name> <type> [key=value]...
 
 (devices)=
 ### デバイスタイプ
+
 LXD では次のデバイスタイプが使えます:
 
 ID (データベース) | 名前                                 | 条件       | 説明
@@ -276,6 +284,7 @@ none タイプのデバイスはプロパティを一切持たず、インスタ
 
 (instance_device_type_nic)=
 #### タイプ: `nic`
+
 LXD では、様々な種類のネットワークデバイス（ネットワークインターフェースコントローラーや NIC と呼びます）が使えます:
 
 インスタンスにネットワークデバイスを追加する際には、追加したいデバイスのタイプを選択するのに 2 つの方法があります。
@@ -295,21 +304,20 @@ NIC ごとにどのプロパティが設定可能かの詳細については下�
 
 次の NIC は `nictype` か `network` プロパティを使って選択できます。
 
- - [`bridged`](#nic-bridged): ホスト上に存在するブリッジを使います。ホストのブリッジとインスタンスを接続する仮想デバイスペアを作成します。
- - [`macvlan`](#nic-macvlan): 既存のネットワークデバイスをベースに MAC が異なる新しいネットワークデバイスを作成します。
- - [`sriov`](#nic-sriov): SR-IOV が有効な物理ネットワークデバイスの仮想ファンクション（virtual function）をインスタンスに与えます。
+- [`bridged`](#nic-bridged): ホスト上に存在するブリッジを使います。ホストのブリッジとインスタンスを接続する仮想デバイスペアを作成します。
+- [`macvlan`](#nic-macvlan): 既存のネットワークデバイスをベースに MAC が異なる新しいネットワークデバイスを作成します。
+- [`sriov`](#nic-sriov): SR-IOV が有効な物理ネットワークデバイスの仮想ファンクション（virtual function）をインスタンスに与えます。
 
 次の NIC は `network` プロパティのみを使って選択できます。
 
- - [`ovn`](#nic-ovn): 既存の OVN ネットワークを使用し、インスタンスが接続する仮想デバイスペアを作成します。
+- [`ovn`](#nic-ovn): 既存の OVN ネットワークを使用し、インスタンスが接続する仮想デバイスペアを作成します。
 
-次の NIC は `nictype` プロパティのみを使って選択できます。
+ の NIC は `nictype` プロパティのみを使って選択できます。
 
- - [`physical`](#nic-physical): ホストの物理デバイスを直接使います。対象のデバイスはホスト上では見えなくなり、インスタンス内に出現します。
- - [`ipvlan`](#nic-ipvlan): 既存のネットワークデバイスをベースに MAC アドレスは同じですが IP アドレスが異なる新しいネットワークデバイスを作成します。
- - [`p2p`](#nic-p2p): 仮想デバイスペアを作成し、片方をインスタンス内に置き、残りの片方をホスト上に残します。
- - [`routed`](#nic-routed): 仮想デバイスペアを作成し、ホストからインスタンスに繋いで静的ルートをセットアップし ARP/NDP エントリーをプロキシします。これにより指定された親インタフェースのネットワークに
-インスタンスが参加できるようになります。
+- [`physical`](#nic-physical): ホストの物理デバイスを直接使います。対象のデバイスはホスト上では見えなくなり、インスタンス内に出現します。
+- [`ipvlan`](#nic-ipvlan): 既存のネットワークデバイスをベースに MAC アドレスは同じですが IP アドレスが異なる新しいネットワークデバイスを作成します。
+- [`p2p`](#nic-p2p): 仮想デバイスペアを作成し、片方をインスタンス内に置き、残りの片方をホスト上に残します。
+- [`routed`](#nic-routed): 仮想デバイスペアを作成し、ホストからインスタンスに繋いで静的ルートをセットアップし ARP/NDP エントリーをプロキシします。これにより指定された親インタフェースのネットワークにインスタンスが参加できるようになります。
 
 (instance_device_type_nic_bridged)=
 ##### `nic`: `bridged`
@@ -631,18 +639,20 @@ net.ipv6.conf.<parent>.proxy_ndp=1
 `vlan`                | integer | -                  | no   | アタッチ先の VLAN ID
 `gvrp`                | bool    | `false`            | no   | GARP VLAN Registration Protocol を使って VLAN を登録する
 
-##### ブリッジ、`macvlan`、`ipvlan` を使った物理ネットワークへの接続
+##### `bridge`、`macvlan`、`ipvlan` を使った物理ネットワークへの接続
+
 `bridged`、`macvlan`、`ipvlan` インターフェースタイプのいずれも、既存の物理ネットワークへ接続できます。
 
 `macvlan` は、物理 NIC を効率的に分岐できます。つまり、物理 NIC からインスタンスで使える第 2 のインターフェースを取得できます。`macvlan` を使うことで、ブリッジデバイスと `veth` ペアの作成を減らせますし、通常はブリッジよりも良いパフォーマンスが得られます。
 
 `macvlan` の欠点は、`macvlan` は外部との間で通信はできますが、自身の親デバイスとは通信できないことです。つまりインスタンスとホストが通信する必要がある場合は `macvlan` は使えません。
 
-そのような場合は、ブリッジを選ぶのが良いでしょう。`macvlan` では使えない MAC フィルタリングと I/O 制限も使えます。
+そのような場合は、 `bridge` デバイスを選ぶのが良いでしょう。`macvlan` では使えない MAC フィルタリングと I/O 制限も使えます。
 
 `ipvlan` は `macvlan` と同様ですが、フォークされたデバイスが静的に割り当てられた IP アドレスを持ち、ネットワーク上の親の MAC アドレスを受け継ぐ点が異なります。
 
 ##### SR-IOV
+
 `sriov` インターフェースタイプで、SR-IOV が有効になったネットワークデバイスを使えます。このデバイスは、複数の仮想ファンクション（Virtual Functions: VFs）をネットワークデバイスの単一の物理ファンクション（Physical Function: PF）に関連付けます。
 PF は標準の PCIe ファンクションです。一方、VFs は非常に軽量な PCIe ファンクションで、データの移動に最適化されています。
 VFs は PF のプロパティを変更できないように、制限された設定機能のみを持っています。
@@ -661,6 +671,7 @@ lxc config device add <instance> <device-name> nic nictype=sriov parent=<sriov-e
 特定の未使用な VF を使うように LXD に指示するには、`host_name` プロパティを追加し、有効な VF 名を設定します。
 
 ##### MAAS を使った統合管理
+
 もし、LXD ホストが接続されている物理ネットワークを MAAS を使って管理している場合で、インスタンスを直接 MAAS が管理するネットワークに接続したい場合は、MAAS とやりとりをしてインスタンスをトラッキングするように LXD を設定できます。
 
 そのためには、デーモンに対して、`maas.api.url` と `maas.api.key` を設定しなければなりません。
@@ -672,12 +683,12 @@ lxc config device add <instance> <device-name> nic nictype=sriov parent=<sriov-e
 
 #### タイプ: `infiniband`
 
-サポートされるインスタンスタイプ: コンテナ
+サポートされるインスタンスタイプ: コンテナ、VM
 
 LXD では、InfiniBand デバイスに対する 2 種類の異なったネットワークタイプが使えます:
 
- - `physical`: ホストの物理デバイスをパススルーで直接使います。対象のデバイスはホスト上では見えなくなり、インスタンス内に出現します
- - `sriov`: SR-IOV が有効な物理ネットワークデバイスの仮想ファンクション（virtual function）をインスタンスに与えます
+- `physical`: ホストの物理デバイスをパススルーで直接使います。対象のデバイスはホスト上では見えなくなり、インスタンス内に出現します
+- `sriov`: SR-IOV が有効な物理ネットワークデバイスの仮想ファンクション（virtual function）をインスタンスに与えます
 
 ネットワークインターフェースの種類が異なると追加のプロパティが異なります。現時点のリストは次の通りです:
 
@@ -696,6 +707,7 @@ lxc config device add <instance> <device-name> infiniband nictype=physical paren
 ```
 
 ##### InfiniBand デバイスでの SR-IOV
+
 InfiniBand デバイスは SR-IOV をサポートしますが、他の SR-IOV と違って、SR-IOV モードでの動的なデバイスの作成はできません。
 つまり、カーネルモジュール側で事前に仮想ファンクション（virtual functions）の数を設定する必要があるということです。
 
@@ -717,22 +729,27 @@ lxc config device add <instance> <device-name> infiniband nictype=sriov parent=<
 LXD では以下の追加のソースタイプをサポートします。
 
 - Ceph RBD: 外部で管理されている既存の Ceph RBD デバイスからマウントします。 LXD は Ceph をインスタンスの内部のファイルシステムを管理するのに使用できます。ユーザーが事前に既存の Ceph RBD を持っておりそれをインスタンスに使いたい場合はこのコマンドを使用できます。
-コマンド例
-```
-lxc config device add <instance> ceph-rbd1 disk source=ceph:<my_pool>/<my-volume> ceph.user_name=<username> ceph.cluster_name=<username> path=/ceph
-```
-- CephFS: 外部で管理されている既存の Ceph FS からマウントします。 LXD は Ceph をインスタンスの内部のファイルシステムを管理するのに使用できます。ユーザーが事前に既存の Ceph ファイルシステムを持っておりそれをインスタンスに使いたい場合はこのコマンドを使用できます。
-コマンド例
-```
-lxc config device add <instance> ceph-fs1 disk source=cephfs:<my-fs>/<some-path> ceph.user_name=<username> ceph.cluster_name=<username> path=/cephfs
-```
-- VM cloud-init: `user.vendor-data`, `user.user-data` と `user.meta-data` 設定キーから cloud-init 設定の ISO イメージを生成し VM にアタッチできるようにします。この ISO イメージは VM 内で動作する cloud-init が起動時にドライバを検出し設定を適用します。仮想マシンのインスタンスでのみ利用可能です。
-コマンド例
-```
-lxc config device add <instance> config disk source=cloud-init:config
-```
 
-現状では仮想マシンではルートディスク (`path=/`) と `config` ドライブ (`source=cloud-init:config`) のみがサポートされます。
+  コマンド例
+  
+  ```
+  lxc config device add <instance> ceph-rbd1 disk source=ceph:<my_pool>/<my-volume> ceph.user_name=<username> ceph.cluster_name=<username> path=/ceph
+  ```
+
+- CephFS: 外部で管理されている既存の Ceph FS からマウントします。 LXD は Ceph をインスタンスの内部のファイルシステムを管理するのに使用できます。ユーザーが事前に既存の Ceph ファイルシステムを持っておりそれをインスタンスに使いたい場合はこのコマンドを使用できます。
+
+  コマンド例
+  
+  ```
+  lxc config device add <instance> ceph-fs1 disk source=cephfs:<my-fs>/<some-path> ceph.user_name=<username> ceph.cluster_name=<username> path=/cephfs
+  ```
+
+- VM cloud-init: `user.vendor-data`, `user.user-data` と `user.meta-data` 設定キーから cloud-init 設定の ISO イメージを生成し VM にアタッチできるようにします。この ISO イメージは VM 内で動作する cloud-init が起動時にドライバを検出し設定を適用します。仮想マシンのインスタンスでのみ利用可能です。
+
+  コマンド例
+  ```
+  lxc config device add <instance> config disk source=cloud-init:config
+  ```
 
 次に挙げるプロパティがあります:
 
@@ -826,10 +843,10 @@ GPU デバイスエントリーは、シンプルにリクエストのあった 
 
 以下の GPU が `gputype` プロパティを使って指定できます。
 
- - [`physical`](#gpu-physical) GPU 全体をパススルーします。 `gputype` が指定されない場合これがデフォルトです。
- - [`mdev`](#gpu-mdev) 仮想 GPU を作成しインスタンスにパススルーします。
- - [`mig`](#gpu-mig) MIG (Multi-Instance GPU) を作成しインスタンスにパススルーします。
- - [`sriov`](#gpu-sriov) SR-IOV を有効にした GPU の仮想ファンクション（virtual function）をインスタンスに与えます。
+- [`physical`](#gpu-physical) GPU 全体をパススルーします。 `gputype` が指定されない場合これがデフォルトです。
+- [`mdev`](#gpu-mdev) 仮想 GPU を作成しインスタンスにパススルーします。
+- [`mig`](#gpu-mig) MIG (Multi-Instance GPU) を作成しインスタンスにパススルーします。
+- [`sriov`](#gpu-sriov) SR-IOV を有効にした GPU の仮想ファンクション（virtual function）をインスタンスに与えます。
 
 ##### `gpu`: `physical`
 
@@ -909,15 +926,16 @@ SR-IOV が有効な GPU の仮想ファンクション（virtual function）を�
 このデバイスを使って、ホストのアドレスの一つに到達したトラフィックをインスタンス内のアドレスに転送したり、その逆を行ったりして、ホストを通してインスタンス内にアドレスを持てます。
 
 利用できる接続タイプは次の通りです:
-* `tcp <-> tcp`
-* `udp <-> udp`
-* `unix <-> unix`
-* `tcp <-> unix`
-* `unix <-> tcp`
-* `udp <-> tcp`
-* `tcp <-> udp`
-* `udp <-> unix`
-* `unix <-> udp`
+
+- `tcp <-> tcp`
+- `udp <-> udp`
+- `unix <-> unix`
+- `tcp <-> unix`
+- `unix <-> tcp`
+- `udp <-> tcp`
+- `tcp <-> udp`
+- `udp <-> unix`
+- `unix <-> udp`
 
 プロキシデバイスは `nat` モードもサポートします。
 `nat` モードではパケットは別の接続を通してプロキシされるのではなく NAT を使ってフォワードされます。
@@ -933,8 +951,8 @@ lxc config device set <instance> <nic> ipv4.address=<ipv4.address> ipv6.address=
 
 NAT モードでサポートされる接続のタイプは以下の通りです。
 
-* `tcp <-> tcp`
-* `udp <-> udp`
+- `tcp <-> tcp`
+- `udp <-> udp`
 
 IPv6 アドレスを設定する場合は以下のような角括弧の記法を使います。
 
@@ -1008,56 +1026,58 @@ PCI デバイスエントリーは生の PCI デバイスをホストから仮�
 
 (instances-limit-units)=
 ### ストレージとネットワーク制限の単位
+
 バイト数とビット数を表す値は全ていくつかの有用な単位を使用し特定の制限がどういう値かをより理解しやすいようにできます。
 
 10進と2進 (kibi) の単位の両方がサポートされており、後者は主にストレージの制限に有用です。
 
 現在サポートされているビットの単位の完全なリストは以下の通りです。
 
- - bit (1)
- - kbit (1000)
- - Mbit (1000^2)
- - Gbit (1000^3)
- - Tbit (1000^4)
- - Pbit (1000^5)
- - Ebit (1000^6)
- - Kibit (1024)
- - Mibit (1024^2)
- - Gibit (1024^3)
- - Tibit (1024^4)
- - Pibit (1024^5)
- - Eibit (1024^6)
+- bit (1)
+- kbit (1000)
+- Mbit (1000^2)
+- Gbit (1000^3)
+- Tbit (1000^4)
+- Pbit (1000^5)
+- Ebit (1000^6)
+- Kibit (1024)
+- Mibit (1024^2)
+- Gibit (1024^3)
+- Tibit (1024^4)
+- Pibit (1024^5)
+- Eibit (1024^6)
 
 現在サポートされているバイトの単位の完全なリストは以下の通りです。
 
- - B または bytes (1)
- - kB (1000)
- - MB (1000^2)
- - GB (1000^3)
- - TB (1000^4)
- - PB (1000^5)
- - EB (1000^6)
- - KiB (1024)
- - MiB (1024^2)
- - GiB (1024^3)
- - TiB (1024^4)
- - PiB (1024^5)
- - EiB (1024^6)
+- B または bytes (1)
+- kB (1000)
+- MB (1000^2)
+- GB (1000^3)
+- TB (1000^4)
+- PB (1000^5)
+- EB (1000^6)
+- KiB (1024)
+- MiB (1024^2)
+- GiB (1024^3)
+- TiB (1024^4)
+- PiB (1024^5)
+- EiB (1024^6)
 
 ### インスタンスタイプ
+
 LXD ではシンプルなインスタンスタイプが使えます。これは、インスタンスの作成時に指定できる文字列で表されます。
 
 3 つの指定方法があります:
 
- - `<instance type>`
- - `<cloud>:<instance type>`
- - `c<CPU>-m<RAM in GB>`
+- `<instance type>`
+- `<cloud>:<instance type>`
+- `c<CPU>-m<RAM in GB>`
 
 例えば、次の 3 つは同じです:
 
- - `t2.micro`
- - `aws:t2.micro`
- - `c1-m1`
+- `t2.micro`
+- `aws:t2.micro`
+- `c1-m1`
 
 コマンドラインでは、インスタンスタイプは次のように指定します:
 
@@ -1070,6 +1090,7 @@ lxc launch ubuntu:22.04 my-instance -t t2.micro
   [`https://github.com/dustinkirkland/instance-type`](https://github.com/dustinkirkland/instance-type)
 
 ### `limits.hugepages.[size]` を使った huge page の制限
+
 LXD では `limits.hugepage.[size]` キーを使ってコンテナが利用できる huge page の数を制限できます。
 huge page の制限は `hugetlb` cgroup コントローラーを使って行われます。
 これはつまりこれらの制限を適用するためにホストシステムが `hugetlb` コントローラーを legacy あるいは unified cgroup の階層に公開する必要があることを意味します。
@@ -1082,6 +1103,7 @@ LXD が `hugetlbfs` `mount` システムコールをインターセプトする�
 しかし、ホストで利用可能な huge page をコンテナが使い切ってしまうのを防ぐため、 `limits.hugepages.[size]` を使ってコンテナが利用可能な huge page の数を制限することを推奨します。
 
 ### `limits.kernel.[limit name]` を使ったリソース制限
+
 LXD では、指定したインスタンスのリソース制限を設定するのに、 `limits.kernel.*` という名前空間のキーが使えます。
 LXD は `limits.kernel.*` のあとに指定されるキーのリソースについての妥当性の確認は一切行ないません。
 LXD は、使用中のカーネルで、指定したリソースがすべてが使えるのかどうかを知ることができません。
@@ -1111,29 +1133,34 @@ LXD は単純に `limits.kernel.*` の後に指定されるリソースキーと
 明示的に設定されないリソースは、インスタンスを起動したプロセスから継承されます。この継承は LXD でなく、カーネルによって強制されます。
 
 ### スナップショットの定期実行と設定
+
 LXD は 1 分毎に最大 1 回作成可能なスナップショットの定期実行をサポートします。
 3 つの設定項目があります。
+
 - `snapshots.schedule` には短縮された cron 書式: `<分> <時> <日> <月> <曜日>` を指定します。
-これが空 (デフォルト) の場合はスナップショットは作成されません。
-- `snapshots.schedule.stopped` は停止したインスタンスのスナップショットを自動的に作成するか
-どうかを制御します。デフォルトは `false` です。
+  これが空 (デフォルト) の場合はスナップショットは作成されません。
+- `snapshots.schedule.stopped` は停止したインスタンスのスナップショットを自動的に作成するかどうかを制御します。
+  デフォルトは `false` です。
 - `snapshots.pattern` は Pongo2 のテンプレート文字列を指定し、 Pongo2 のコンテキストには
-`creation_date` 変数を含みます。スナップショットの名前に禁止された文字が含まれないように
-日付をフォーマットする (例: `{{ creation_date|date:"2006-01-02_15-04-05" }}`) べきで
-あることに注意してください。名前の衝突を防ぐ別の方法はプレースホルダ `%d` を使うことです。
-(プレースホルダを除いて) 同じ名前のスナップショットが既に存在する場合、
-既存の全てのスナップショットの名前を考慮に入れてプレースホルダの最大の番号を見つけます。
-新しい名前にはこの番号を 1 増やしたものになります。スナップショットが存在しない場合の
-開始番号は `0` になります。 `snapshots.pattern` のデフォルトの挙動は `snap%d` の
-フォーマット文字列と同じです。
+  `creation_date` 変数を含みます。スナップショットの名前に禁止された文字が含まれないように
+  日付をフォーマットする (例: `{{ creation_date|date:"2006-01-02_15-04-05" }}`) べきで
+  あることに注意してください。名前の衝突を防ぐ別の方法はプレースホルダ `%d` を使うことです。
+  (プレースホルダを除いて) 同じ名前のスナップショットが既に存在する場合、
+  既存の全てのスナップショットの名前を考慮に入れてプレースホルダの最大の番号を見つけます。
+  新しい名前にはこの番号を 1 増やしたものになります。スナップショットが存在しない場合の
+  開始番号は `0` になります。 `snapshots.pattern` のデフォルトの挙動は `snap%d` の
+  フォーマット文字列と同じです。
 
 Pongo2 の文法を使ってスナップショット名にタイムスタンプを含める例:
+
 ```bash
 lxc config set INSTANCE snapshots.pattern "{{ creation_date|date:'2006-01-02_15-04-05' }}"
 ```
+
 これにより作成日時 `{date/time of creation}` を秒の精度まで含んだスナップショット名になります。
 
 ### QEMU 設定をオーバーライドする
+
 仮想マシンのインスタンスでは LXD は `-readconfig` コマンドラインオプションを
 指定して QEMU に渡されるドキュメント化されていない設定ファイル形式を通じて QEMU を設定します。
 各インスタンスは起動前に生成された設定ファイルを持ちます。

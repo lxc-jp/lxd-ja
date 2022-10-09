@@ -4,14 +4,14 @@
 key/value 設定は現在サポートされている以下のネームスペースによって
 名前空間が分けられています。
 
- - `backups` (バックアップ設定)
- - `candid` (Candid を使った外部のユーザー認証)
- - `cluster` (クラスタ設定)
- - `core` (コア・デーモン設定)
- - `images` (イメージ設定)
- - `instances` (インスタンス設定)
- - `maas` (MAAS 統合)
- - `rbac` (外部の Candid と Canonical の RBAC を使ったロールベースのアクセス制御)
+- `backups` (バックアップ設定)
+- `candid` (Candid を使った外部のユーザー認証)
+- `cluster` (クラスタ設定)
+- `core` (コア・デーモン設定)
+- `images` (イメージ設定)
+- `instances` (インスタンス設定)
+- `maas` (MAAS 統合)
+- `rbac` (外部の Candid と Canonical の RBAC を使ったロールベースのアクセス制御)
 
 ```{rst-class} break-col-4 min-width-4-8
 ```
@@ -45,6 +45,7 @@ key/value 設定は現在サポートされている以下のネームスペー�
 `core.proxy_http`                   | string  | global   | -                                 | HTTP プロキシを使用する場合はその URL (未指定の場合は `HTTP_PROXY` 環境変数を参照)
 `core.proxy_ignore_hosts`           | string  | global   | -                                 | プロキシが不要なホスト (`NO_PROXY` と同様な形式、例えば 1.2.3.4,1.2.3.5, を指定。未指定の場合は `NO_PROXY` 環境変数を参照)
 `core.shutdown_timeout`             | integer | global   | `5`                               | LXD サーバがシャットダウンを完了するまでに待つ時間を分で指定
+`core.storage_buckets_address`      | string  | local    | -                                 | ストレージオブジェクトサーバをバインドする先の (HTTPS) アドレス
 `core.trust_ca_certificates`        | bool    | global   | -                                 | CA に署名されたクライアント証明書を自動的に信頼するかどうか
 `core.trust_password`               | string  | global   | -                                 | 信頼を確立するためにクライアントに要求するパスワード
 `images.auto_update_cached`         | bool    | global   | `true`                            | LXD がキャッシュしているイメージを自動的に更新するかどうか
@@ -53,6 +54,13 @@ key/value 設定は現在サポートされている以下のネームスペー�
 `images.default_architecture`       | string  | -        | -                                 | アーキテクチャーが混在するクラスタ内で使用するデフォルトのアーキテクチャー
 `images.remote_cache_expiry`        | integer | global   | `10`                              | キャッシュされたが未使用のイメージを破棄するまでの日数
 `instances.nic.host_name`           | string  | global   | `random`                          | `random` に設定するとランダムなホストインタフェース名を使用し、`mac` に設定すると `lxd<mac_address>` の形式 (先頭2桁を除いた MAC アドレス) で名前を生成
+`loki.api.ca_cert`                  | string  | global   | -                                 | Loki サーバの CA 証明書
+`loki.api.url`                      | string  | global   | -                                 | Loki サーバの URL
+`loki.auth.password`                | string  | global   | -                                 | 認証に使用するパスワード
+`loki.auth.username`                | string  | global   | -                                 | 認証に使用するユーザ名
+`loki.labels`                       | string  | global   | -                                 | Loki ログエントリにラベルとして使用する値のカンマ区切りリスト
+`loki.loglevel`                     | string  | global   | -                                 | Loki サーバに送信する最低のログレベル
+`loki.types`                        | string  | global   | -                                 | Loki サーバに送信するイベント種別
 `maas.api.key`                      | string  | global   | -                                 | MAAS を管理するための API キー
 `maas.api.url`                      | string  | global   | -                                 | MAAS サーバの URL
 `maas.machine`                      | string  | local    | ホスト名                          | この LXD ホストの MAAS での名前
@@ -77,6 +85,7 @@ lxc config set <key> <value>
 クラスタの一部として動作するときは、上記の表でスコープが `global` のキーは全てのクラスタメンバーに即座に反映されます。スコープが `local` のキーはコマンドラインツールの `--target` オプションを使ってメンバーごとに設定する必要があります。
 
 ## LXD をネットワーク上に公開する
+
 デフォルトでは LXD は Unix ソケット経由でローカルのユーザーのみが使用できます。
 
 LXD をネットワーク上に公開するには `core.https_address` を設定する必要があります。
@@ -88,6 +97,7 @@ LXD をネットワーク上に公開するには `core.https_address` を設定
 認証についての詳細は [セキュリティ](security.md) を参照してください。
 
 ## 外部認証
+
 ネットワーク経由で LXD にアクセスする場合は [Candid](https://github.com/canonical/candid) による外部認証を使うように設定できます。
 
 上記の `candid.*` 設定キーをデプロイ済みの Candid に対応する値に設定することでユーザーはウェブブラウザーで認証し LXD に信頼されることができます。

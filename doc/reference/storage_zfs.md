@@ -20,6 +20,7 @@ ZFS は物理ストレージデバイスに基づいた論理ユニットを作�
 これらの論理ユニットは *ZFS pools* または *zpools* と呼ばれます。
 さらにそれぞれの zpool は複数の *`データセット`* に分割されます。
 これらの`データセット`は以下の異なるタイプがあります。
+
 - *ZFS ファイルシステム* はパーティションまたはマウントされたファイルシステムとして扱えます。
 - *ZFS ボリューム* はブロックデバイスを表します。
 - *ZFS スナップショット* は ZFS ファイルシステムまたは ZFS ボリュームの特定の状態をキャプチャーします。
@@ -93,6 +94,7 @@ ZFS は `quota` と `refquota` という 2 種類の異なるクォータのプ�
 
 (storage-zfs-pool-config)=
 ## ストレージプール設定
+
 キー             | 型     | デフォルト値                                              | 説明
 :--              | :---   | :------                                                   | :----------
 `size`           | string | 自動 (空きディスクスペースの 20%, >= 5 GiB and <= 30 GiB) | ループベースのプールを作成する際のストレージプールのサイズ (バイト単位、接尾辞のサポートあり)
@@ -105,15 +107,24 @@ ZFS は `quota` と `refquota` という 2 種類の異なるクォータのプ�
 
 (storage-zfs-vol-config)=
 ## ストレージボリューム設定
+
 キー                   | 型     | 条件               | デフォルト値                                   | 説明
 :--                    | :---   | :--------          | :------                                        | :----------
-`security.shifted`     | bool   | custom volume      | `volume.security.shifted` と同じか `false`     | {{enable_ID_shifting}}
-`security.unmapped`    | bool   | custom volume      | `volume.security.unmapped` と同じか `false`    | ボリュームの ID マッピングを無効にする
-`size`                 | string | appropriate driver | `volume.size` と同じ                           | ストレージボリュームのサイズ/クォータ
-`snapshots.expiry`     | string | custom volume      | `volume.snapshots.expiry` と同じ               | {{snapshot_expiry_format}}
-`snapshots.pattern`    | string | custom volume      | `volume.snapshots.pattern` と同じか `snap%d`   | {{snapshot_pattern_format}}
-`snapshots.schedule`   | string | custom volume      | `snapshots.schedule` と同じ                    | {{snapshot_schedule_format}}
-`zfs.blocksize`        | string | ZFS driver         | `volume.zfs.blocksize` と同じ                  | ZFSブロックのサイズを512～16MiBの範囲で指定します（2の累乗でなければなりません）。ブロックボリュームでは、より大きな値が設定されていても、最大値の128KiBが使用されます。
-`zfs.remove_snapshots` | bool   | ZFS driver         | `volume.zfs.remove_snapshots` と同じか `false` | 必要に応じてスナップショットを削除するかどうか
-`zfs.use_refquota`     | bool   | ZFS driver         | `volume.zfs.use_refquota` と同じか `false`     | 領域の `quota` の代わりに `refquota` を使うかどうか
+`security.shifted`     | bool   | カスタムボリューム | `volume.security.shifted` と同じか `false`     | {{enable_ID_shifting}}
+`security.unmapped`    | bool   | カスタムボリューム | `volume.security.unmapped` と同じか `false`    | ボリュームの ID マッピングを無効にする
+`size`                 | string | 適切なドライバ     | `volume.size` と同じ                           | ストレージボリュームのサイズ/クォータ
+`snapshots.expiry`     | string | カスタムボリューム | `volume.snapshots.expiry` と同じ               | {{snapshot_expiry_format}}
+`snapshots.pattern`    | string | カスタムボリューム | `volume.snapshots.pattern` と同じか `snap%d`   | {{snapshot_pattern_format}}
+`snapshots.schedule`   | string | カスタムボリューム | `snapshots.schedule` と同じ                    | {{snapshot_schedule_format}}
+`zfs.blocksize`        | string | ZFSドライバ        | `volume.zfs.blocksize` と同じ                  | ZFSブロックのサイズを512～16MiBの範囲で指定します（2の累乗でなければなりません）。ブロックボリュームでは、より大きな値が設定されていても、最大値の128KiBが使用されます。
+`zfs.remove_snapshots` | bool   | ZFSドライバ        | `volume.zfs.remove_snapshots` と同じか `false` | 必要に応じてスナップショットを削除するかどうか
+`zfs.use_refquota`     | bool   | ZFSドライバ        | `volume.zfs.use_refquota` と同じか `false`     | 領域の `quota` の代わりに `refquota` を使うかどうか
 `zfs.reserve_space`    | bool   | ZFS driver         | `volume.zfs.reserve_space` と同じか `false`    | `qouta`/`refquota` に加えて `reservation`/`refreservation` も使用するかどうか
+
+### ストレージバケット設定
+
+ローカルのストレージプールドライバでストレージバケットを有効にし、 S3 プロトコル経由でアプリケーションがバケットにアクセスできるようにするには `core.storage_buckets_address` サーバ設定 ({ref}`server` 参照) を調整する必要があります。
+
+キー   | 型     | 条件           | デフォルト値         | 説明
+:--    | :---   | :--------      | :------              | :----------
+`size` | string | 適切なドライバ | `volume.size` と同じ | ストレージバケットのサイズ/クォータ

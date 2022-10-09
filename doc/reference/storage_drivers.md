@@ -23,23 +23,24 @@ storage_cephobject
 
 (storage-drivers-features)=
 ## 機能比較
+
 可能であれば、各システムの高度な機能を使って、LXD は操作を最適化しようとします。
 
-機能                                               | ディレクトリ                                 | Btrfs | LVM  | ZFS  | Ceph RBD | CephFS | Ceph Object
-:---                                               | :---                                         | :---  | :--- | :--- | :---     | :---   | :---
-{ref}`storage-optimized-image-storage`             | no                                           | yes   | yes  | yes  | yes      | n/a    | n/a
-最適化されたインスタンスの作成                     | no                                           | yes   | yes  | yes  | yes      | n/a    | n/a
-最適化されたスナップショットの作成                 | no                                           | yes   | yes  | yes  | yes      | yes    | n/a
-最適化されたイメージの転送                         | no                                           | yes   | no   | yes  | yes      | n/a    | n/a
-{ref}`storage-optimized-instance-transfer`         | no                                           | yes   | no   | yes  | yes      | n/a    | n/a
-コピーオンライト                                   | no                                           | yes   | yes  | yes  | yes      | yes    | n/a
-ブロックデバイスベース                             | no                                           | no    | yes  | no   | yes      | no     | n/a
-インスタントクローン                               | no                                           | yes   | yes  | yes  | yes      | yes    | n/a
-コンテナ内でストレージドライバの使用               | yes                                          | yes   | no   | no   | no       | n/a    | n/a
-古い（最新ではない）スナップショットからのリストア | yes                                          | yes   | yes  | no   | yes      | yes    | n/a
-ストレージクオータ                                 | yes<sup>{ref}`* <storage-dir-quotas>`</sup>] | yes   | yes  | yes  | yes      | yes    | yes
-`lxd init` で利用可能                              | yes                                          | yes   | yes  | yes  | yes      | no     | no
-オブジェクトストレージ                             | no                                           | no    | no   | no   | no       | no     | yes
+機能                                               | ディレクトリ                                | Btrfs | LVM  | ZFS  | Ceph RBD | CephFS | Ceph Object
+:---                                               | :---                                        | :---  | :--- | :--- | :---     | :---   | :---
+{ref}`storage-optimized-image-storage`             | no                                          | yes   | yes  | yes  | yes      | n/a    | n/a
+最適化されたインスタンスの作成                     | no                                          | yes   | yes  | yes  | yes      | n/a    | n/a
+最適化されたスナップショットの作成                 | no                                          | yes   | yes  | yes  | yes      | yes    | n/a
+最適化されたイメージの転送                         | no                                          | yes   | no   | yes  | yes      | n/a    | n/a
+{ref}`storage-optimized-instance-transfer`         | no                                          | yes   | no   | yes  | yes      | n/a    | n/a
+コピーオンライト                                   | no                                          | yes   | yes  | yes  | yes      | yes    | n/a
+ブロックデバイスベース                             | no                                          | no    | yes  | no   | yes      | no     | n/a
+インスタントクローン                               | no                                          | yes   | yes  | yes  | yes      | yes    | n/a
+コンテナ内でストレージドライバの使用               | yes                                         | yes   | no   | no   | no       | n/a    | n/a
+古い（最新ではない）スナップショットからのリストア | yes                                         | yes   | yes  | no   | yes      | yes    | n/a
+ストレージクオータ                                 | yes<sup>{ref}`* <storage-dir-quotas>`</sup> | yes   | yes  | yes  | yes      | yes    | yes
+`lxd init` で利用可能                              | yes                                         | yes   | yes  | yes  | yes      | no     | no
+オブジェクトストレージ                             | yes                                         | yes   | yes  | yes  | no       | no     | yes
 
 (storage-optimized-image-storage)=
 ### 最適化されたイメージストレージ
