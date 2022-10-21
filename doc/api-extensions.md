@@ -3,7 +3,7 @@
 The changes below were introduced to the LXD API after the 1.0 API was finalized.
 
 They are all backward compatible and can be detected by client tools by
-looking at the `api_extensions` field in `GET /1.0/`.
+looking at the `api_extensions` field in `GET /1.0`.
 
 ## `storage_zfs_remove_snapshots`
 
@@ -896,7 +896,7 @@ decide to trigger various actions.
 ## `lxc_features`
 
 This introduces the `lxc_features` section output from the `lxc info` command
-via the `GET /1.0/` route. It outputs the result of checks for key features being present in the
+via the `GET /1.0` route. It outputs the result of checks for key features being present in the
 underlying LXC library.
 
 ## `container_nic_ipvlan`
@@ -922,21 +922,21 @@ This introduces container IP filtering (`security.ipv4_filtering` and `security.
 Rework the resources API at `/1.0/resources`, especially:
 
 * CPU
-  * Fix reporting to track sockets, cores and threads
-  * Track NUMA node per core
-  * Track base and turbo frequency per socket
-  * Track current frequency per core
-  * Add CPU cache information
-  * Export the CPU architecture
-  * Show online/offline status of threads
+   * Fix reporting to track sockets, cores and threads
+   * Track NUMA node per core
+   * Track base and turbo frequency per socket
+   * Track current frequency per core
+   * Add CPU cache information
+   * Export the CPU architecture
+   * Show online/offline status of threads
 * Memory
-  * Add huge-pages tracking
-  * Track memory consumption per NUMA node too
+   * Add huge-pages tracking
+   * Track memory consumption per NUMA node too
 * GPU
-  * Split DRM information to separate struct
-  * Export device names and nodes in DRM struct
-  * Export device name and node in NVIDIA struct
-  * Add SR-IOV VF tracking
+   * Split DRM information to separate struct
+   * Export device names and nodes in DRM struct
+   * Export device name and node in NVIDIA struct
+   * Add SR-IOV VF tracking
 
 ## `container_exec_user_group_cwd`
 
@@ -2064,3 +2064,37 @@ It adds the following global configuration keys:
 * `loki.labels`: Comma-separated list of values which are to be used as labels for Loki events.
 * `loki.loglevel`: Minimum log level for events sent to the Loki server.
 * `loki.types`: Types of events which are to be sent to the Loki server (`lifecycle` and/or `logging`).
+
+## `acme`
+
+This adds ACME support, which allows [Let's Encrypt](https://letsencrypt.org/) or other ACME services to issue certificates.
+
+It adds the following global configuration keys:
+
+* `acme.domain`: The domain for which the certificate should be issued.
+* `acme.email`: The email address used for the account of the ACME service.
+* `acme.ca_url`: The directory URL of the ACME service, defaults to `https://acme-v02.api.letsencrypt.org/directory`.
+
+It also adds the following endpoint, which is required for the HTTP-01 challenge:
+
+* `/.well-known/acme-challenge/<token>`
+
+## `internal_metrics`
+
+This adds internal metrics to the list of metrics.
+These include:
+
+* Total running operations
+* Total active warnings
+* Daemon uptime in seconds
+* Go memory stats
+* Number of goroutines
+
+## `cluster_join_token_expiry`
+
+This adds an expiry to cluster join tokens which defaults to 3 hours, but can be changed by setting the `cluster.join_token_expiry` configuration key.
+
+## `remote_token_expiry`
+
+This adds an expiry to remote add join tokens.
+It can be set in the `core.remote_token_expiry` configuration key, and default to no expiry.
