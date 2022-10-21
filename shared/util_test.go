@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"crypto/rand"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"os"
 	"path/filepath"
 	"testing"
@@ -42,7 +42,7 @@ func TestUrlsJoin(t *testing.T) {
 
 func TestFileCopy(t *testing.T) {
 	helloWorld := []byte("hello world\n")
-	source, err := ioutil.TempFile("", "")
+	source, err := os.CreateTemp("", "")
 	if err != nil {
 		t.Error(err)
 		return
@@ -59,7 +59,7 @@ func TestFileCopy(t *testing.T) {
 
 	_ = source.Close()
 
-	dest, err := ioutil.TempFile("", "")
+	dest, err := os.CreateTemp("", "")
 	defer func() { _ = os.Remove(dest.Name()) }()
 	if err != nil {
 		t.Error(err)
@@ -80,7 +80,7 @@ func TestFileCopy(t *testing.T) {
 		return
 	}
 
-	content, err := ioutil.ReadAll(dest2)
+	content, err := io.ReadAll(dest2)
 	if err != nil {
 		t.Error(err)
 		return
@@ -93,7 +93,7 @@ func TestFileCopy(t *testing.T) {
 }
 
 func TestDirCopy(t *testing.T) {
-	dir, err := ioutil.TempDir("", "lxd-shared-util-")
+	dir, err := os.MkdirTemp("", "lxd-shared-util-")
 	require.NoError(t, err)
 	defer func() { _ = os.RemoveAll(dir) }()
 
@@ -112,8 +112,8 @@ func TestDirCopy(t *testing.T) {
 	require.NoError(t, os.Mkdir(source, 0755))
 	require.NoError(t, os.Mkdir(filepath.Join(source, dir1), 0755))
 	require.NoError(t, os.Mkdir(filepath.Join(source, dir2), 0755))
-	require.NoError(t, ioutil.WriteFile(filepath.Join(source, file1), content1, 0755))
-	require.NoError(t, ioutil.WriteFile(filepath.Join(source, file2), content2, 0755))
+	require.NoError(t, os.WriteFile(filepath.Join(source, file1), content1, 0755))
+	require.NoError(t, os.WriteFile(filepath.Join(source, file2), content2, 0755))
 
 	require.NoError(t, DirCopy(source, dest))
 
@@ -121,11 +121,11 @@ func TestDirCopy(t *testing.T) {
 		assert.True(t, PathExists(filepath.Join(dest, path)))
 	}
 
-	bytes, err := ioutil.ReadFile(filepath.Join(dest, file1))
+	bytes, err := os.ReadFile(filepath.Join(dest, file1))
 	require.NoError(t, err)
 	assert.Equal(t, content1, bytes)
 
-	bytes, err = ioutil.ReadFile(filepath.Join(dest, file2))
+	bytes, err = os.ReadFile(filepath.Join(dest, file2))
 	require.NoError(t, err)
 	assert.Equal(t, content2, bytes)
 }
@@ -170,28 +170,28 @@ func TestReaderToChannel(t *testing.T) {
 	}
 }
 
-func TestGetSnapshotExpiry(t *testing.T) {
+func TestGetExpiry(t *testing.T) {
 	refDate := time.Date(2000, time.January, 1, 0, 0, 0, 0, time.UTC)
-	expiryDate, err := GetSnapshotExpiry(refDate, "1M 2H 3d 4w 5m 6y")
+	expiryDate, err := GetExpiry(refDate, "1M 2H 3d 4w 5m 6y")
 	expectedDate := time.Date(2006, time.July, 2, 2, 1, 0, 0, time.UTC)
 	require.NoError(t, err)
 	require.Equal(t, expectedDate, expiryDate)
 
 	refDate = time.Date(2000, time.January, 1, 0, 0, 0, 0, time.UTC)
-	expiryDate, err = GetSnapshotExpiry(refDate, "1M 2H 3d 4y")
-	expectedDate = time.Date(2004, time.January, 4, 2, 1, 0, 0, time.UTC)
+	expiryDate, err = GetExpiry(refDate, "5S 1M 2H 3d 4y")
+	expectedDate = time.Date(2004, time.January, 4, 2, 1, 5, 0, time.UTC)
 	require.NoError(t, err)
 	require.Equal(t, expectedDate, expiryDate)
 
-	expiryDate, err = GetSnapshotExpiry(refDate, "0M 0H 0d 0w 0m 0y")
+	expiryDate, err = GetExpiry(refDate, "0M 0H 0d 0w 0m 0y")
 	require.NoError(t, err)
 	require.Equal(t, expiryDate, expiryDate)
 
-	expiryDate, err = GetSnapshotExpiry(refDate, "")
+	expiryDate, err = GetExpiry(refDate, "")
 	require.NoError(t, err)
 	require.Equal(t, time.Time{}, expiryDate)
 
-	expiryDate, err = GetSnapshotExpiry(refDate, "1z")
+	expiryDate, err = GetExpiry(refDate, "1z")
 	require.Error(t, err)
 	require.Equal(t, time.Time{}, expiryDate)
 }

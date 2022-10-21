@@ -83,9 +83,9 @@ var InstanceConfigKeysAny = map[string]func(value string) error{
 	"boot.stop.priority":         validate.Optional(validate.IsInt64),
 	"boot.host_shutdown_timeout": validate.Optional(validate.IsInt64),
 
-	"cloud-init.network-config": validate.Optional(validate.IsAny),
-	"cloud-init.user-data":      validate.Optional(validate.IsAny),
-	"cloud-init.vendor-data":    validate.Optional(validate.IsAny),
+	"cloud-init.network-config": validate.Optional(validate.IsYAML),
+	"cloud-init.user-data":      validate.Optional(validate.IsCloudInitUserData),
+	"cloud-init.vendor-data":    validate.Optional(validate.IsCloudInitUserData),
 
 	"cluster.evacuate": validate.Optional(validate.IsOneOf("auto", "migrate", "live-migrate", "stop")),
 
@@ -155,7 +155,7 @@ var InstanceConfigKeysAny = map[string]func(value string) error{
 	"snapshots.pattern":          validate.IsAny,
 	"snapshots.expiry": func(value string) error {
 		// Validate expression
-		_, err := GetSnapshotExpiry(time.Time{}, value)
+		_, err := GetExpiry(time.Time{}, value)
 		return err
 	},
 
