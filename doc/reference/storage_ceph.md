@@ -5,7 +5,7 @@
 ```
 
 <!-- Include start Ceph intro -->
-[Ceph](https://ceph.io/) はオープンソースのストレージプラットフォームで、データを {abbr}`RADOS (Reliable Autonomic Distributed Object Store)` に基づいたストレージクラスタ内に保管します。
+[Ceph](https://ceph.io/en/) はオープンソースのストレージプラットフォームで、データを {abbr}`RADOS (Reliable Autonomic Distributed Object Store)` に基づいたストレージクラスタ内に保管します。
 非常にスケーラブルで、単一障害点がない分散システムであり非常に信頼性が高いです。
 
 Ceph はブロックストレージ用とファイルシステム用に異なるコンポーネントを提供します。

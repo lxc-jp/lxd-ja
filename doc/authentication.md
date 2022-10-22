@@ -191,3 +191,117 @@ Candidベースの認証と組み合わせることで、{abbr}`RBAC (Role Based
 信頼されている他のクライアントや、ローカルのサーバー管理者が、サーバー上のクライアントの信頼エントリを削除すると、そのクライアントに対するサーバーの信頼関係は失効します。
 
 この場合、サーバーは引き続き同じ証明書を使用しますが、すべての API 呼び出しは、クライアントが信頼されていないことを示すエラーである 403 コードを返します。
+
+(authentication-server-certificate)=
+## TLS サーバ証明書
+
+LXD は {abbr}`ACME (Automatic Certificate Management Environment)` サービス (例えば [Let's Encrypt](https://letsencrypt.org/)) を使ったサーバ証明書の発行をサポートします。
+
+この機能を有効にするには以下の {ref}`server` 設定をしてください。
+
+- `acme.domain`: 証明書を発行するドメイン。
+- `acme.email`: ACME サービスのアカウントに使用する email アドレス。
+- `acme.agree_tos`: ACME サービスの利用規約に同意するためには `true` に設定する必要あり。
+- `acme.ca_url`: ACME サービスのディレクトリ URL。デフォルトでは LXD は "Let's Encrypt" を使用。
+
+この機能を利用するには、 LXD は 80 番ポートを開放する必要があります。
+これは [HAProxy](http://www.haproxy.org/) のようなリバースプロキシを使用することで実現できます。
+
+以下は `lxd.example.net` をドメインとして使用する HAProxy の最小限の設定です。
+証明書が発行された後、 LXD は`https://lxd.example.net/` でアクセスできます。
+
+```
+# Global configuration
+global
+  log /dev/log local0
+  chroot /var/lib/haproxy
+  stats socket /run/haproxy/admin.sock mode 660 level admin
+  stats timeout 30s
+  user haproxy
+  group haproxy
+  daemon
+  ssl-default-bind-options ssl-min-ver TLSv1.2
+  tune.ssl.default-dh-param 2048
+  maxconn 100000
+
+# Default settings
+defaults
+  mode tcp
+  timeout connect 5s
+  timeout client 30s
+  timeout client-fin 30s
+  timeout server 120s
+  timeout tunnel 6h
+  timeout http-request 5s
+  maxconn 80000
+
+# Default backend - Return HTTP 301 (TLS upgrade)
+backend http-301
+  mode http
+  redirect scheme https code 301
+
+# Default backend - Return HTTP 403
+backend http-403
+  mode http
+  http-request deny deny_status 403
+
+# HTTP dispatcher
+frontend http-dispatcher
+  bind :80
+  mode http
+
+  # Backend selection
+  tcp-request inspect-delay 5s
+
+  # Dispatch
+  default_backend http-403
+  use_backend http-301 if { hdr(host) -i lxd.example.net }
+
+# SNI dispatcher
+frontend sni-dispatcher
+  bind :443
+  mode tcp
+
+  # Backend selection
+  tcp-request inspect-delay 5s
+
+  # require TLS
+  tcp-request content reject unless { req.ssl_hello_type 1 }
+
+  # Dispatch
+  default_backend http-403
+  use_backend lxd-nodes if { req.ssl_sni -i lxd.example.net }
+
+# LXD nodes
+backend lxd-nodes
+  mode tcp
+
+  option tcp-check
+
+  # Multiple servers should be listed when running a cluster
+  server lxd-node01 1.2.3.4:8443 check
+  server lxd-node02 1.2.3.5:8443 check
+  server lxd-node03 1.2.3.6:8443 check
+```
+
+## 失敗のシナリオ
+
+以下のシナリオでは認証は失敗します。
+
+### サーバ証明書が変更された場合
+
+サーバ証明書は以下の場合に変更されるかも知れません。
+
+- サーバが完全に再インストールされたため新しい証明書に変わった。
+- 接続がインターセプトされた ({abbr}`MITM (Machine in the middle)`)。
+
+このような場合、このリモートの設定内のフィンガープリントと証明書のフィンガープリントが一致しないため、クライアントはサーバへの接続を拒否します。
+
+この場合サーバ管理者に連絡して証明書が実際に変更されたのかを確認するのはユーザ次第です。
+実際に変更されたのであれば、証明書を新しいものに置き換えるか、リモートを削除して追加し直すことができます。
+
+### サーバとの信頼関係が取り消された場合
+
+別の信頼されたクライアントまたはローカルのサーバ管理者がサーバ上で対象のクライアントの信頼エントリを削除した場合、そのクライアントに対するサーバの信頼関係は取り消されます。
+
+この場合、サーバは引き続き同じ証明書を使用していますが、全ての API 呼び出しは対象のクライアントが信頼されていないことを示す 403 のステータスコードを返します。

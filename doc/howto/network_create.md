@@ -44,6 +44,7 @@ lxc network create <name> --type=<network_type> [configuration_options...]
 
 `--type` 引数を指定しない場合、デフォルトのタイプ `bridge` が使用されます。
 
+(network-create-cluster)=
 ### クラスタ内にネットワークを作成する
 
 LXD クラスタを実行していてネットワークを作成したい場合、各クラスタメンバに別々にネットワークを作成する必要があります。

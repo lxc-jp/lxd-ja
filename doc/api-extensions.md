@@ -1,6 +1,6 @@
 # API 拡張
 
-それらの変更は全て後方互換であり、 `GET /1.0/` の `api_extensions` を
+それらの変更は全て後方互換であり、 `GET /1.0` の `api_extensions` を
 見ることでクライアントツールにより検出可能です。
 
 ## `storage_zfs_remove_snapshots`
@@ -908,7 +908,7 @@ RBAC (role based access control; ロールベースのアクセス制御) のサ
 
 ## `lxc_features`
 
-これは `GET /1.0/` ルート経由で `lxc info` コマンドの出力に `lxc_features`
+これは `GET /1.0` ルート経由で `lxc info` コマンドの出力に `lxc_features`
 セクションを導入します。配下の LXC ライブラリーに存在するキー・フィーチャーに
 対するチェックの結果を出力します。
 
@@ -936,21 +936,21 @@ CephFS ではなく Ceph (RBD) 上に構築する必要があります。
 `/1.0/resources` のリソース API を見直しました。主な変更は以下の通りです。
 
 * CPU
-  * ソケット、コア、スレッドのトラッキングのレポートを修正しました
-  * コア毎の NUMA ノードのトラッキング
-  * ソケット毎のベースとターボの周波数のトラッキング
-  * コア毎の現在の周波数のトラッキング
-  * CPU のキャッシュ情報の追加
-  * CPU アーキテクチャをエクスポート
-  * スレッドのオンライン／オフライン状態を表示
+   * ソケット、コア、スレッドのトラッキングのレポートを修正しました
+   * コア毎の NUMA ノードのトラッキング
+   * ソケット毎のベースとターボの周波数のトラッキング
+   * コア毎の現在の周波数のトラッキング
+   * CPU のキャッシュ情報の追加
+   * CPU アーキテクチャをエクスポート
+   * スレッドのオンライン／オフライン状態を表示
 * メモリ
-  * HugePages のトラッキングを追加
-  * NUMA ノード毎でもメモリ消費を追跡
+   * HugePages のトラッキングを追加
+   * NUMA ノード毎でもメモリ消費を追跡
 * GPU
-  * DRM 情報を別の構造体に分離
-  * DRM 構造体内にデバイスの名前とノードを公開
-  * NVIDIA 構造体内にデバイスの名前とノードを公開
-  * SR-IOV VF のトラッキングを追加
+   * DRM 情報を別の構造体に分離
+   * DRM 構造体内にデバイスの名前とノードを公開
+   * NVIDIA 構造体内にデバイスの名前とノードを公開
+   * SR-IOV VF のトラッキングを追加
 
 ## `container_exec_user_group_cwd`
 
@@ -2034,3 +2034,37 @@ storage bucket API を追加します。ストレージプールのために S3 
 * `loki.labels`: Loki イベントのラベルに使用されるカンマ区切りリストの値。
 * `loki.loglevel`: Loki サーバに送るイベントの最低のログレベル。
 * `loki.types`: Loki サーバに送られるイベントのタイプ (`lifecycle` および/または `logging`)。
+
+## `acme`
+
+ACME サポートを追加します。これにより [Let's Encrypt](https://letsencrypt.org/) や他の ACME サービスを使って証明書を発行できます。
+
+以下のグローバルの設定キーを追加します。
+
+* `acme.domain`: 証明書を発行するドメイン。
+* `acme.email`: ACME サービスのアカウントに使用する email アドレス。
+* `acme.ca_url`: ACME サービスのディレクトリ URL、デフォルトは `https://acme-v02.api.letsencrypt.org/directory`。
+
+また以下のエンドポイントを追加します。これは HTTP-01 チャレンジで必要です。
+
+* `/.well-known/acme-challenge/<token>`
+
+## `internal_metrics`
+
+これはメトリクスのリストに内部メトリクスを追加します。
+以下を含みます。
+
+* 実行したオペレーションの総数
+* アクティブな警告の総数
+* デーモンの uptime (秒数)
+* Go のメモリ統計
+* goroutine の数
+
+## `cluster_join_token_expiry`
+
+クラスタジョイントークンに有効期限を追加します。デフォルトは3時間ですが、`cluster.join_token_expiry` 設定キーで変更できます。
+
+## `remote_token_expiry`
+
+リモートの追加ジョイントークンに有効期限を追加します。
+`core.remote_token_expiry` 設定キーで変更できます。デフォルトは無期限です。
