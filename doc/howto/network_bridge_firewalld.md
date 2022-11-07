@@ -74,17 +74,19 @@ LXD のファイアウォールルールをどのように無効化し、 `firew
 ### UFW でブリッジにルールを追加する
 
 UFW で認識不能なトラフィックを全てドロップするルールを入れていると、 LXD ブリッジへとブリッジからのトラフィックをブロックしてしまいます。
-この場合ブリッジへとブリッジからのトラフィックを許可するルールを追加する必要があります。
+この場合ブリッジへとブリッジからのトラフィックを許可し、さらにブリッジへフォワードされるトラフィックを許可するルールを追加する必要があります。
 
 そのためには次のコマンドを実行します。
 
     sudo ufw allow in on <network_bridge>
     sudo ufw route allow in on <network_bridge>
+    sudo ufw route allow out on <network_bridge>
 
 例えば
 
     sudo ufw allow in on lxdbr0
     sudo ufw route allow in on lxdbr0
+    sudo ufw route allow out on lxdbr0
 
 % Repeat warning from above
 ```{include} network_bridge_firewalld.md

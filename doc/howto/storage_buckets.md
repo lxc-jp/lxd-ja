@@ -1,6 +1,9 @@
 (howto-storage-buckets)=
 # ストレージバケットとキーを管理するには
 
+```{youtube} https://www.youtube.com/watch?v=T1EeXPrjkEY
+```
+
 {ref}`storage-buckets` を作成、設定、表示、リサイズするための手順およびストレージバケットキーを管理する方法については以下のセクションを参照してください。
 
 ## ストレージバケットを管理する

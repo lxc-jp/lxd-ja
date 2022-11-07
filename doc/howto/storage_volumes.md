@@ -1,6 +1,9 @@
 (howto-storage-volumes)=
 # ストレージボリュームを管理するには
 
+```{youtube} https://www.youtube.com/watch?v=dvQ111pbqtk
+```
+
 {ref}`storage-volumes` を作成、設定、表示、リサイズするための手順については以下のセクションを参照してください。
 
 ## カスタムストレージボリュームを作成する

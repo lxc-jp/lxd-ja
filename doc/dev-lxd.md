@@ -47,13 +47,13 @@ HTTP であり、 LXD プロトコルのローカル版に非常に似ていま�
 ### API の構造
 
 * `/`
-  * `/1.0`
-    * `/1.0/config`
-      * `/1.0/config/{key}`
-    * `/1.0/devices`
-    * `/1.0/events`
-    * `/1.0/images/{fingerprint}/export`
-    * `/1.0/meta-data`
+   * `/1.0`
+      * `/1.0/config`
+         * `/1.0/config/{key}`
+      * `/1.0/devices`
+      * `/1.0/events`
+      * `/1.0/images/{fingerprint}/export`
+      * `/1.0/meta-data`
 
 ### API の詳細
 

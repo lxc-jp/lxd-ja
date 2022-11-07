@@ -3,14 +3,14 @@ discourse: 12281,11735
 relatedlinks: https://grafana.com/grafana/dashboards/15726
 ---
 
-(instance-metrics)=
-# インスタンスメトリクス
+(metrics)=
+# メトリクス
 
 ```{youtube} https://www.youtube.com/watch?v=EthK-8hm_fY
 ```
 
 <!-- Include start metrics intro -->
-LXD は全ての実行中のインスタンスについてのメトリクスを収集します。
+LXD は全ての実行中のインスタンスについてのメトリクスといくつかの内部メトリクスを収集します。
 これは CPU、メモリー、ネットワーク、ディスク、プロセスの使用量を含みます。
 Prometheus で読み取って Grafana でグラフを表示するのに使うことを想定しています。
 <!-- Include end metrics intro -->
@@ -192,10 +192,11 @@ scrape_configs:
       server_name: 'saturn'
 ```
 
-## 提供されるメトリクス
+## 提供されるインスタンスメトリクス
 
-以下のメトリクスが提供されます。
+以下のインスタンスメトリクスが提供されます。
 
+* `lxd_cpu_effective_total`
 * `lxd_cpu_seconds_total{cpu="<cpu>", mode="<mode>"}`
 * `lxd_disk_read_bytes_total{device="<dev>"}`
 * `lxd_disk_reads_completed_total{device="<dev>"}`
@@ -233,3 +234,34 @@ scrape_configs:
 * `lxd_network_transmit_errs_total{device="<dev>"}`
 * `lxd_network_transmit_packets_total{device="<dev>"}`
 * `lxd_procs_total`
+
+## 提供される内部メトリクス
+
+以下の内部メトリクスが提供されます。
+
+* `lxd_go_alloc_bytes_total`
+* `lxd_go_alloc_bytes`
+* `lxd_go_buck_hash_sys_bytes`
+* `lxd_go_frees_total`
+* `lxd_go_gc_sys_bytes`
+* `lxd_go_goroutines`
+* `lxd_go_heap_alloc_bytes`
+* `lxd_go_heap_idle_bytes`
+* `lxd_go_heap_inuse_bytes`
+* `lxd_go_heap_objects`
+* `lxd_go_heap_released_bytes`
+* `lxd_go_heap_sys_bytes`
+* `lxd_go_lookups_total`
+* `lxd_go_mallocs_total`
+* `lxd_go_mcache_inuse_bytes`
+* `lxd_go_mcache_sys_bytes`
+* `lxd_go_mspan_inuse_bytes`
+* `lxd_go_mspan_sys_bytes`
+* `lxd_go_next_gc_bytes`
+* `lxd_go_other_sys_bytes`
+* `lxd_go_stack_inuse_bytes`
+* `lxd_go_stack_sys_bytes`
+* `lxd_go_sys_bytes`
+* `lxd_operations_total`
+* `lxd_uptime_seconds`
+* `lxd_warnings_total`

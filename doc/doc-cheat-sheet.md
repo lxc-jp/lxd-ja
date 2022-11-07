@@ -238,7 +238,7 @@ URL をテキストとして表示し、リンクされないようにするに�
   - ターゲットを参照して、タイトルを指定します。
 * - ``[`option name\](a_random_target)``
   - [`option name`](a_random_target)
-  - [`option name`](https://) (リンク切れ)
+  - [`option name`](a_random_target) (リンク切れ)
   - リンクテキストをマークアプする必要がある場合は Markdown の文法を使ってください。
 ```
 

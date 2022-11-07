@@ -1,3 +1,7 @@
+---
+relatedlinks: https://www.youtube.com/watch?v=pqV0Z1qwbkg
+---
+
 % Include content from [../CONTRIBUTING.md](../CONTRIBUTING.md)
 ```{include} ../CONTRIBUTING.md
     :end-before: <!-- Include end contributing -->
@@ -39,6 +43,6 @@ git push myfork [name_of_your_new_branch]
 - 永続データは `LXD_DIR` ディレクトリに保管されます。これは `lxd init` で作成されます。 `LXD_DIR` のデフォルトは `/var/lib/lxd` か snap ユーザーは `/var/snap/lxd/common/lxd` です。
 - 開発中はバージョン衝突を避けるため LXD のあなたの fork 用に `LXD_DIR` の値を変更すると良いでしょう。
 - あなたのソースからコンパイルされる実行ファイルはデフォルトでは `$(go env GOPATH)/bin` に生成されます。
-  - あなたの変更をテストするときはこれらの実行ファイル（インストール済みかもしれないグローバルの `lxd` ではなく）を明示的に起動する必要があります。
-  - これらの実行ファイルを適切なオプションを指定してもっと便利に呼び出せるように `~/.bashrc` にエイリアスを作るという選択も良いでしょう。
+   - あなたの変更をテストするときはこれらの実行ファイル（インストール済みかもしれないグローバルの `lxd` ではなく）を明示的に起動する必要があります。
+   - これらの実行ファイルを適切なオプションを指定してもっと便利に呼び出せるように `~/.bashrc` にエイリアスを作るという選択も良いでしょう。
 - 既存のインストール済み LXD のデーモンを実行するための `systemd` サービスが設定されている場合はバージョン衝突を避けるためにサービスを無効にすると良いでしょう。
