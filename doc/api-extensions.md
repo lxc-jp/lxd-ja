@@ -42,7 +42,7 @@ A number of new syscalls related container configuration keys were introduced.
 * `security.syscalls.blacklist` <!-- wokeignore:rule=blacklist -->
 * `security.syscalls.whitelist` <!-- wokeignore:rule=whitelist -->
 
-See [Instance configuration](instances.md) for how to use them.
+See [Instance configuration](instance-config) for how to use them.
 
 ## `auth_pki`
 
@@ -2098,3 +2098,14 @@ This adds an expiry to cluster join tokens which defaults to 3 hours, but can be
 
 This adds an expiry to remote add join tokens.
 It can be set in the `core.remote_token_expiry` configuration key, and default to no expiry.
+
+## `storage_volumes_created_at`
+
+This change adds support for storing the creation date and time of storage volumes and their snapshots.
+
+This adds the `CreatedAt` field to the `StorageVolume` and `StorageVolumeSnapshot` API types.
+
+## `cpu_hotplug`
+
+This adds CPU hotplugging for VMs.
+Hotplugging is disabled when using CPU pinning, because this would require hotplugging NUMA devices as well, which is not possible.
