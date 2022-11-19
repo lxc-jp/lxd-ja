@@ -29,7 +29,7 @@ discourse: 10877
 (storage-move-volume)=
 ## カスタムストレージボリュームを移動またはリネームする
 
-カスタムストレージボリュームを移動またはリネームする前に、それを利用している全てのインスタンスを [停止](https://linuxcontainers.org/lxd/getting-started-cli/#start-and-stop-an-instance) する必要があります。
+カスタムストレージボリュームを移動またはリネームする前に、それを利用している全てのインスタンスを {ref}`停止 <instances-manage-stop>` する必要があります。
 
 ストレージボリュームを移動またはリネームするには以下のコマンドを使用します。
 

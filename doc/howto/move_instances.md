@@ -45,7 +45,7 @@
 そのためには、以下の設定を確認してください。
 
 * インスタンスの [`migration.stateful`](instance-configuration) を `true` に設定する。
-* 仮想マシンのルートディスクデバイスの [`size.state`](instance_device_type_disk) を少なくとも仮想マシンの [`limits.memory`](instance-configuration) 設定のサイズに設定する。
+* 仮想マシンのルートディスクデバイスの [`size.state`](devices-disk) を少なくとも仮想マシンの [`limits.memory`](instance-configuration) 設定のサイズに設定する。
 
 (live-migration-containers)=
 ### コンテナのライブマイグレーション
