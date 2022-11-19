@@ -44,7 +44,7 @@ lxc config device add <instance> <name> <type> [key=value]...
 lxc profile device add <profile> <name> <type> [key=value]...
 ```
 
-(devices)=
+(device-types)=
 ## デバイスタイプ
 
 LXD では次のデバイスタイプが使えます:
