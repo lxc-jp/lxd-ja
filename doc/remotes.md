@@ -26,9 +26,9 @@ Static リモートは
 
 ### Global (システムごと)
 
-デフォルトでは global の設定ファイルは `/etc/lxc/config.yml`、 または snap の場合は `/var/snap/lxd/common/global-conf/`、または `LXD_GLOBAL_CONF` 環境変数が定義されていればそのパスが使用されます。
+デフォルトでは global の設定ファイルは `/etc/lxd/config.yml`、 または snap の場合は `/var/snap/lxd/common/global-conf/`、または `LXD_GLOBAL_CONF` 環境変数が定義されていればそのパスが使用されます。
 この設定ファイルを手動で編集して global リモートを追加できます。
-これらのリモートの証明書は `servercerts` ディレクトリ (例: `/etc/lxc/servercerts/`) に置き、リモートの名前にマッチ (例: `foo.crt`) させます。
+これらのリモートの証明書は `servercerts` ディレクトリ (例: `/etc/lxd/servercerts/`) に置き、リモートの名前にマッチ (例: `foo.crt`) させます。
 
 設定例を以下に示します。
 

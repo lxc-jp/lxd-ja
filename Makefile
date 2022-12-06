@@ -132,7 +132,7 @@ doc-incremental:
 
 .PHONY: doc-serve
 doc-serve:
-	cd doc/html; python3 -m http.server 8001
+	cd doc/html; python3 -m http.server --bind 0.0.0.0 8001
 
 .PHONY: debug
 debug:

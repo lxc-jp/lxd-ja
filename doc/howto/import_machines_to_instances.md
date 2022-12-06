@@ -5,6 +5,9 @@ discourse: 14345
 (import-machines-to-instances)=
 # 物理または仮想マシンを LXD インスタンスにインポートするには
 
+```{youtube} https://www.youtube.com/watch?v=F9GALjHtnUU
+```
+
 LXD は既存のディスクやイメージに基づく LXD インスタンスを作成するツール (`lxd-migrate`) を提供しています。
 
 このツールは Linux マシン上で実行できます。

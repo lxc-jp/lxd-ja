@@ -43,7 +43,7 @@ ZFS でスナップショットの復元が出来るのは最新のスナップ�
 * `security.syscalls.blacklist` <!-- wokeignore:rule=blacklist -->
 * `security.syscalls.whitelist` <!-- wokeignore:rule=whitelist -->
 
-使い方は [インスタンスの設定](instances.md) を参照してください。
+使い方は [インスタンスの設定](instance-config) を参照してください。
 
 ## `auth_pki`
 
@@ -2068,3 +2068,14 @@ ACME サポートを追加します。これにより [Let's Encrypt](https://le
 
 リモートの追加ジョイントークンに有効期限を追加します。
 `core.remote_token_expiry` 設定キーで変更できます。デフォルトは無期限です。
+
+## `storage_volumes_created_at`
+
+この変更によりストレージボリュームとそのスナップショットの作成日時を保管するようになります。
+
+これは `StorageVolume` と `StorageVolumeSnapshot` API タイプに `CreatedAt` フィールドを追加します。
+
+## `cpu_hotplug`
+
+これは VM に CPU ホットプラグを追加します。
+CPU ピンニング使用時はホットプラグは無効になります。CPU ピンニングには NUMA デバイスのホットプラグも必要ですが、これはできないためです。

@@ -53,7 +53,7 @@ key/value 設定は現在サポートされている以下のネームスペー�
 `core.proxy_https`                  | string  | global   | -                                                | HTTPS プロキシを使用する場合はその URL (未指定の場合は `HTTPS_PROXY` 環境変数を参照)
 `core.proxy_http`                   | string  | global   | -                                                | HTTP プロキシを使用する場合はその URL (未指定の場合は `HTTP_PROXY` 環境変数を参照)
 `core.proxy_ignore_hosts`           | string  | global   | -                                                | プロキシが不要なホスト (`NO_PROXY` と同様な形式、例えば 1.2.3.4,1.2.3.5, を指定。未指定の場合は `NO_PROXY` 環境変数を参照)
-`core.remote_token_expiry`          | string  | global   | -                                                | リモート追加トークンの有効期限
+`core.remote_token_expiry`          | string  | global   | -                                                | リモート追加トークンの有効期限 (デフォルトは有効期限なし)
 `core.shutdown_timeout`             | integer | global   | `5`                                              | LXD サーバがシャットダウンを完了するまでに待つ時間を分で指定
 `core.storage_buckets_address`      | string  | local    | -                                                | ストレージオブジェクトサーバをバインドする先の (HTTPS) アドレス
 `core.trust_ca_certificates`        | bool    | global   | -                                                | CA に署名されたクライアント証明書を自動的に信頼するかどうか

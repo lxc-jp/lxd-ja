@@ -84,7 +84,7 @@ HTTP であり、 LXD プロトコルのローカル版に非常に似ていま�
 ```json
 {
     "api_version": "1.0",
-    "location": "none",
+    "location": "foo.example.com",
     "instance_type": "container",
     "state": "Started",
 }

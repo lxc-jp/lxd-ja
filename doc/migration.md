@@ -1,6 +1,9 @@
 (migration)=
 # マイグレーション
 
+```{youtube} https://www.youtube.com/watch?v=F9GALjHtnUU
+```
+
 LXD は異なる状況でインスタンスをマイグレートするためのツールと機能を提供します。
 
 サーバ間で既存の LXD インスタンスをマイグレートする

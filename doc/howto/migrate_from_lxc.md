@@ -1,6 +1,9 @@
 (migrate-from-lxc)=
 # LXC から LXD にコンテナをマイグレートするには
 
+```{youtube} https://www.youtube.com/watch?v=F9GALjHtnUU
+```
+
 LXD は LXC のコンテナを LXD サーバにインポートするためのツール (`lxc-to-lxd`) を提供しています。
 LXC コンテナは LXD サーバと同じマシン上に存在する必要があります。
 

@@ -5,6 +5,9 @@ relatedlinks: https://www.youtube.com/watch?v=6O0q3rSWr8A
 (projects)=
 # プロジェクト設定
 
+```{youtube} https://www.youtube.com/watch?v=cUHkgg6TovM
+```
+
 LXD は LXD サーバを分割する方法としてプロジェクトをサポートしています。
 それぞれのプロジェクトは独自のインスタンスのセットを保持し、さらに独自のイメージとプロファイルも持ちます。
 

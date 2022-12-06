@@ -1,5 +1,8 @@
 # セキュリティ
 
+```{youtube} https://www.youtube.com/watch?v=cOOzKdYHkus
+```
+
 % Include content from [../README.md](../README.md)
 ```{include} ../README.md
     :start-after: <!-- Include start security -->
@@ -60,7 +63,7 @@ LXDコンテナはセキュリティのために幅広い機能を使うこと�
 
 デフォルトでは、コンテナは *非特権* (*unprivileged*) であり、ユーザーネームスペース内で動作することを意味し、コンテナ内のユーザーの能力を、コンテナが所有するデバイスに対する制限された権限を持つホスト上の通常のユーザーに制限します。
 
-コンテナ間のデータ共有が必要ない場合は、`security.idmap.isolated`（{doc}`instances`参照）を有効にすることで、各コンテナに対して重複しないUID/GIDマップを使用し、他のコンテナに対する潜在的な{abbr}`DoS（サービス拒否）`攻撃を防ぐことができます。
+コンテナ間のデータ共有が必要ない場合は、`security.idmap.isolated`（{ref}`instance-options`参照）を有効にすることで、各コンテナに対して重複しないUID/GIDマップを使用し、他のコンテナに対する潜在的な{abbr}`DoS（サービス拒否）`攻撃を防ぐことができます。
 
 LXDはまた、*特権* (*privileged*) コンテナを実行することができます。
 そのようなコンテナの中でルートアクセスを持つユーザは、閉じ込められた状態から逃れる方法を見つけるだけでなく、ホストをDoSすることができるでしょう。

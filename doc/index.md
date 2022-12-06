@@ -52,6 +52,7 @@ LXD プロジェクトは [Canonical Ltd](https://www.canonical.com) にスポ�
 self
 getting_started
 configuration
+instances
 images
 storage
 networks
