@@ -27,8 +27,8 @@ macvlan は仮想的な {abbr}`LAN (Local Area Network)` で同じネットワ�
 キー               | 型      | 条件          | デフォルト | 説明
 :--                | :--     | :--           | :--        | :--
 `gvrp`             | bool    | -             | `false`    | GARP VLAN Registration Protocol を使って VLAN を登録する
-`mtu`              | integer | -             | -          | 作成するインターフェースの MTU
-`parent`           | string  | -             | -          | `macvlan` NIC を作成する親のインターフェース
+`mtu`              | integer | -             | -          | 作成するインタフェースの MTU
+`parent`           | string  | -             | -          | `macvlan` NIC を作成する親のインタフェース
 `vlan`             | integer | -             | -          | アタッチする先の VLAN ID
 `maas.subnet.ipv4` | string  | IPv4 アドレス | -          | インスタンスを登録する MAAS IPv4 サブネット（NIC の `network` プロパティを使用する場合）
 `maas.subnet.ipv6` | string  | IPv6 アドレス | -          | インスタンスを登録する MAAS IPv6 サブネット（NIC の `network` プロパティを使用する場合）

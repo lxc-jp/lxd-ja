@@ -1,7 +1,7 @@
 (devices-nic)=
 # タイプ: `nic`
 
-LXD では、様々な種類のネットワークデバイス（ネットワークインターフェースコントローラーや NIC と呼びます）が使えます:
+LXD では、様々な種類のネットワークデバイス（ネットワークインタフェースコントローラーや NIC と呼びます）が使えます:
 
 インスタンスにネットワークデバイスを追加する際には、追加したいデバイスのタイプを選択するのに 2 つの方法があります。
 `nictype` プロパティを指定するか `network` プロパティを使うかです。
@@ -136,7 +136,7 @@ SR-IOV を有効にした物理ネットワークデバイスの仮想ファン�
 `acceleration`                         | string  | `none`             | no   | no   | ハードウェアオフローディングを有効にする。 `none` か `sriov` (下記の SR-IOV ハードウェアアクセラレーション参照)
 `name`                                 | string  | カーネルが割り当て | no   | no   | インスタンス内部でのインタフェース名
 `host_name`                            | string  | ランダムに割り当て | no   | no   | ホスト内部でのインタフェース名
-`hwaddr`                               | string  | ランダムに割り当て | no   | no   | 新しいインターフェースの MAC アドレス
+`hwaddr`                               | string  | ランダムに割り当て | no   | no   | 新しいインタフェースの MAC アドレス
 `ipv4.address`                         | string  | -                  | no   | no   | DHCP でインスタンスに割り当てる IPv4 アドレス
 `ipv6.address`                         | string  | -                  | no   | no   | DHCP でインスタンスに割り当てる IPv6 アドレス
 `ipv4.routes`                          | string  | -                  | no   | no   | ホスト上で NIC に追加する IPv4 静的ルートのカンマ区切りリスト
@@ -324,8 +324,8 @@ net.ipv6.conf.all.proxy_ndp=1
 net.ipv6.conf.<parent>.proxy_ndp=1
 ```
 
-それぞれの NIC デバイスに複数の IP アドレスを追加できます。しかし複数の `routed` NIC インターフェースを使うほうが望ましいかもしれません。
-その場合はデフォルトゲ－トウェイの衝突を避けるため、後続のインターフェースで `ipv4.gateway` と `ipv6.gateway` の値を `none` に設定するべきです。
+それぞれの NIC デバイスに複数の IP アドレスを追加できます。しかし複数の `routed` NIC インタフェースを使うほうが望ましいかもしれません。
+その場合はデフォルトゲ－トウェイの衝突を避けるため、後続のインタフェースで `ipv4.gateway` と `ipv6.gateway` の値を `none` に設定するべきです。
 さらにこれらの後続のインタフェースには `ipv4.host_address` と `ipv6.host_address` を用いて異なるホスト側のアドレスを設定することが有用かもしれません。
 
 デバイス設定プロパティ
@@ -334,7 +334,7 @@ net.ipv6.conf.<parent>.proxy_ndp=1
 :--                   | :--     | :--                | :--  | :--
 `parent`              | string  | -                  | no   | インスタンスが参加するホストデバイス名
 `name`                | string  | カーネルが割り当て | no   | インスタンス内でのインタフェース名
-`host_name`           | string  | ランダムに割り当て | no   | ホスト内でのインターフェース名
+`host_name`           | string  | ランダムに割り当て | no   | ホスト内でのインタフェース名
 `mtu`                 | integer | 親の MTU           | no   | 新しいインタフェースの MTU
 `hwaddr`              | string  | ランダムに割り当て | no   | 新しいインタフェースの MAC アドレス
 `limits.ingress`      | string  | -                  | no   | 内向きトラフィックに対する bit/s での I/O 制限（さまざまな単位をサポート、 {ref}`instances-limit-units` 参照）
@@ -343,13 +343,13 @@ net.ipv6.conf.<parent>.proxy_ndp=1
 `ipv4.routes`         | string  | -                  | no   | ホスト上で NIC に追加する IPv4 静的ルートのカンマ区切りリスト（L2 ARP/NDP プロキシを除く）
 `ipv4.address`        | string  | -                  | no   | インスタンスに追加する IPv4 静的アドレスのカンマ区切りリスト
 `ipv4.gateway`        | string  | `auto`             | no   | 自動的に IPv4 のデフォルトゲートウェイを追加するかどうか（ `auto` か `none` を指定可能）
-`ipv4.host_address`   | string  | `169.254.0.1`      | no   | ホスト側の veth インターフェースに追加する IPv4 アドレス
+`ipv4.host_address`   | string  | `169.254.0.1`      | no   | ホスト側の veth インタフェースに追加する IPv4 アドレス
 `ipv4.host_table`     | integer | -                  | no   | （メインのルーティングテーブルに加えて） IPv4 の静的ルートを追加する先のルーティングテーブル ID
 `ipv4.neighbor_probe` | bool    | `true`             | no   | IP アドレスが利用可能か知るために親のネットワークを調べるかどうか
 `ipv6.address`        | string  | -                  | no   | インスタンスに追加する IPv6 静的アドレスのカンマ区切りリスト
 `ipv6.routes`         | string  | -                  | no   | ホスト上で NIC に追加する IPv6 静的ルートのカンマ区切りリスト（L2 ARP/NDP プロキシを除く）
 `ipv6.gateway`        | string  | `auto`             | no   | 自動的に IPv6 のデフォルトゲートウェイを追加するかどうか（ `auto` か `none` を指定可能）
-`ipv6.host_address`   | string  | `fe80::1`          | no   | ホスト側の veth インターフェースに追加する IPv6 アドレス
+`ipv6.host_address`   | string  | `fe80::1`          | no   | ホスト側の veth インタフェースに追加する IPv6 アドレス
 `ipv6.host_table`     | integer | -                  | no   | （メインのルーティングテーブルに加えて） IPv6 の静的ルートを追加する先のルーティングテーブル ID
 `ipv6.neighbor_probe` | bool    | `true`             | no   | IP アドレスが利用可能か知るために親のネットワークを調べるかどうか
 `vlan`                | integer | -                  | no   | アタッチ先の VLAN ID
@@ -357,9 +357,9 @@ net.ipv6.conf.<parent>.proxy_ndp=1
 
 ## `bridge`、`macvlan`、`ipvlan` を使った物理ネットワークへの接続
 
-`bridged`、`macvlan`、`ipvlan` インターフェースタイプのいずれも、既存の物理ネットワークへ接続できます。
+`bridged`、`macvlan`、`ipvlan` インタフェースタイプのいずれも、既存の物理ネットワークへ接続できます。
 
-`macvlan` は、物理 NIC を効率的に分岐できます。つまり、物理 NIC からインスタンスで使える第 2 のインターフェースを取得できます。`macvlan` を使うことで、ブリッジデバイスと `veth` ペアの作成を減らせますし、通常はブリッジよりも良いパフォーマンスが得られます。
+`macvlan` は、物理 NIC を効率的に分岐できます。つまり、物理 NIC からインスタンスで使える第 2 のインタフェースを取得できます。`macvlan` を使うことで、ブリッジデバイスと `veth` ペアの作成を減らせますし、通常はブリッジよりも良いパフォーマンスが得られます。
 
 `macvlan` の欠点は、`macvlan` は外部との間で通信はできますが、自身の親デバイスとは通信できないことです。つまりインスタンスとホストが通信する必要がある場合は `macvlan` は使えません。
 
@@ -369,11 +369,11 @@ net.ipv6.conf.<parent>.proxy_ndp=1
 
 ## SR-IOV
 
-`sriov` インターフェースタイプで、SR-IOV が有効になったネットワークデバイスを使えます。このデバイスは、複数の仮想ファンクション（Virtual Functions: VFs）をネットワークデバイスの単一の物理ファンクション（Physical Function: PF）に関連付けます。
+`sriov` インタフェースタイプで、SR-IOV が有効になったネットワークデバイスを使えます。このデバイスは、複数の仮想ファンクション（Virtual Functions: VFs）をネットワークデバイスの単一の物理ファンクション（Physical Function: PF）に関連付けます。
 PF は標準の PCIe ファンクションです。一方、VFs は非常に軽量な PCIe ファンクションで、データの移動に最適化されています。
 VFs は PF のプロパティを変更できないように、制限された設定機能のみを持っています。
 VFs は通常の PCIe デバイスとしてシステム上に現れるので、通常の物理デバイスと同様にインスタンスに与えることができます。
-`sriov` インターフェースタイプは、システム上の SR-IOV が有効になったネットワークデバイス名が、`parent` プロパティに設定されることを想定しています。
+`sriov` インタフェースタイプは、システム上の SR-IOV が有効になったネットワークデバイス名が、`parent` プロパティに設定されることを想定しています。
 すると LXD は、システム上で使用可能な VFs があるかどうかをチェックします。デフォルトでは、LXD は検索で最初に見つかった使われていない VF を割り当てます。
 有効になった VF が存在しないか、現時点で有効な VFs がすべて使われている場合は、サポートされている VF 数の最大値まで有効化し、最初の使用可能な VF をつかいます。
 もしすべての使用可能な VF が使われているか、カーネルもしくはカードが VF 数を増加させられない場合は、LXD はエラーを返します。
