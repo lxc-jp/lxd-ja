@@ -1,56 +1,62 @@
 (devices-disk)=
 # タイプ: `disk`
 
-サポートされるインスタンスタイプ: コンテナ, VM
+```{note}
+`disk` デバイスタイプはコンテナとVMの両方でサポートされます。
+コンテナとVMの両方でホットプラグをサポートします。
+```
 
-ディスクエントリーは基本的にインスタンス内のマウントポイントです。ホスト上の既存ファイルやディレクトリのバインドマウントでも構いませんし、ソースがブロックデバイスであるなら、通常のマウントでも構いません。
+ディスクデバイスはインスタンスに追加のストレージを提供します。
+コンテナにとっては、それらはインスタンス内の実質的なマウントポイントです (ホスト上の既存のファイルまたはディレクトリのバインドマウントとしてか、あるいは、ソースがブロックデバイスの場合は通常のマウントのマウントポイント)。
+仮想マシンは `9p` または `virtiofs` (使用可能な場合) を通してホスト側のマウントまたはディレクトリを共有するか、あるいはブロックベースのディスクに対する VirtIO ディスクとして共有します。
 
-これらは {ref}`ストレージボリュームをインスタンスにアタッチする <storage-attach-volume>` ことでも作成できます。
+ディスクデバイスは {ref}`ストレージボリュームをインスタンスにアタッチする <storage-attach-volume>` ことでも作成できます。
 
 LXD では以下の追加のソースタイプをサポートします。
 
-- Ceph RBD: 外部で管理されている既存の Ceph RBD デバイスからマウントします。 LXD は Ceph をインスタンスの内部のファイルシステムを管理するのに使用できます。ユーザーが事前に既存の Ceph RBD を持っておりそれをインスタンスに使いたい場合はこのコマンドを使用できます。
+Ceph RBD
+: 外部で管理されている既存の Ceph RBD デバイスをマウントします。 
 
-  コマンド例
+  LXD は Ceph をインスタンスの内部のファイルシステムを管理するのに使用できますが、ユーザーが既存の Ceph RBD を持っておりそれをインスタンスに使いたい場合は以下のコマンドを使用できます。
 
-  ```
-  lxc config device add <instance> ceph-rbd1 disk source=ceph:<my_pool>/<my-volume> ceph.user_name=<username> ceph.cluster_name=<username> path=/ceph
-  ```
+      lxc config device add <instance_name> <device_name> disk source=ceph:<pool_name>/<volume_name> ceph.user_name=<user_name> ceph.cluster_name=<cluster_name> path=<path_in_instance>
 
-- CephFS: 外部で管理されている既存の Ceph FS からマウントします。 LXD は Ceph をインスタンスの内部のファイルシステムを管理するのに使用できます。ユーザーが事前に既存の Ceph ファイルシステムを持っておりそれをインスタンスに使いたい場合はこのコマンドを使用できます。
+CephFS
+: 外部で管理されている既存の Ceph FS をマウントします。
 
-  コマンド例
+  LXD は Ceph をインスタンスの内部のファイルシステムを管理するのに使用できますが、ユーザーが既存の Ceph ファイルシステムを持っておりそれをインスタンスに使いたい場合は以下のコマンドを使用できます。
 
-  ```
-  lxc config device add <instance> ceph-fs1 disk source=cephfs:<my-fs>/<some-path> ceph.user_name=<username> ceph.cluster_name=<username> path=/cephfs
-  ```
+      lxc config device add <instance_name> <device_name> disk source=cephfs:<fs_name>/<path> ceph.user_name=<user_name> ceph.cluster_name=<cluster_name> path=<path_in_instance>
 
-- VM cloud-init: `user.vendor-data`, `user.user-data` と `user.meta-data` 設定キーから cloud-init 設定の ISO イメージを生成し VM にアタッチできるようにします。この ISO イメージは VM 内で動作する cloud-init が起動時にドライバを検出し設定を適用します。仮想マシンのインスタンスでのみ利用可能です。
+VM cloud-init
+: `cloud-init.vendor-data`、`cloud-init.user-data`、`user.meta-data`設定キー({ref}`instance-options`参照)から`cloud-init`設定の ISO イメージを生成し、起動時にVMがドライブを検出し設定を適用します。
 
-  コマンド例
+  このソースタイプは仮想マシンのインスタンスでのみ利用可能です。
 
-  ```
-  lxc config device add <instance> config disk source=cloud-init:config
-  ```
+  そのようなデバイスを追加するには、以下のコマンドを使用します。
 
-次に挙げるプロパティがあります:
+      lxc config device add <instance_name> <device_name> disk source=cloud-init:config
+
+## デバイスオプション
+
+`disk` デバイスには以下のデバイスオプションがあります。
 
 キー                | 型      | デフォルト値 | 必須 | 説明
 :--                 | :--     | :--          | :--  | :--
-`limits.read`       | string  | -            | no   | byte/s（さまざまな単位が使用可能、 {ref}`instances-limit-units` 参照）もしくは IOPS（あとに `iops` と付けなければなりません）で指定する読み込みの I/O 制限値 - {ref}`storage-configure-IO` も参照
-`limits.write`      | string  | -            | no   | byte/s（さまざまな単位が使用可能、 {ref}`instances-limit-units` 参照）もしくは IOPS（あとに `iops` と付けなければなりません）で指定する書き込みの I/O 制限値 - {ref}`storage-configure-IO` も参照
-`limits.max`        | string  | -            | no   | `limits.read` と `limits.write` の両方を同じ値に変更する
-`path`              | string  | -            | yes  | ディスクをマウントするインスタンス内のパス
-`source`            | string  | -            | yes  | ファイル・ディレクトリ、もしくはブロックデバイスのホスト上のパス
-`required`          | bool    | `true`       | no   | ソースが存在しないときに失敗とするかどうかを制御する
-`readonly`          | bool    | `false`      | no   | マウントを読み込み専用とするかどうかを制御する
-`size`              | string  | -            | no   | byte（さまざまな単位が使用可能、 {ref}`instances-limit-units` 参照）で指定するディスクサイズ。`rootfs` (`/`) でのみサポートされます
-`size.state`        | string  | -            | no   | 上の size と同じですが仮想マシン内のランタイム状態を保存するために使われるファイルシステムボリュームに適用されます
-`recursive`         | bool    | `false`      | no   | ソースパスを再帰的にマウントするかどうか
-`pool`              | string  | -            | no   | ディスクデバイスが属するストレージプール。LXD が管理するストレージボリュームにのみ適用されます
-`propagation`       | string  | -            | no   | バインドマウントをインスタンスとホストでどのように共有するかを管理する（デフォルトである `private`, `shared`, `slave`, `unbindable`,  `rshared`, `rslave`, `runbindable`,  `rprivate` のいずれか。詳しくは Linux kernel の文書 [shared subtree](https://www.kernel.org/doc/Documentation/filesystems/sharedsubtree.txt) をご覧ください） <!-- wokeignore:rule=slave -->
-`shift`             | bool    | `false`      | no   | ソースの UID/GID をインスタンスにマッチするように変換させるためにオーバーレイの shift を設定するか（コンテナのみ）
-`raw.mount.options` | string  | -            | no   | ファイルシステム固有のマウントオプション
-`ceph.user_name`    | string  | `admin`      | no   | ソースが Ceph か CephFS の場合に適切にマウントするためにユーザーが Ceph `user_name` を指定しなければなりません
-`ceph.cluster_name` | string  | `ceph`       | no   | ソースが Ceph か CephFS の場合に適切にマウントするためにユーザーが Ceph `cluster_name` を指定しなければなりません
 `boot.priority`     | integer | -            | no   | VM のブート優先度 (高いほうが先にブート)
+`ceph.cluster_name` | string  | `ceph`       | no   | Ceph クラスタのクラスタ名 (Ceph か CephFS のソースには必須)
+`ceph.user_name`    | string  | `admin`      | no   | Ceph クラスタのユーザ名 (Ceph か CephFS のソースには必須)
+`limits.max`        | string  | -            | no   | 読み取りと書き込み両方のbyte/sかIOPSによるI/O制限 (`limits.read`と`limits.write`の両方を設定するのと同じ)
+`limits.read`       | string  | -            | no   | byte/s(さまざまな単位が使用可能、{ref}`instances-limit-units`参照)もしくはIOPS(あとに`iops`と付けなければなりません)で指定する読み込みのI/O制限値 - {ref}`storage-configure-IO` も参照
+`limits.write`      | string  | -            | no   | byte/s(さまざまな単位が使用可能、{ref}`instances-limit-units`参照)もしくはIOPS(あとに`iops`と付けなければなりません)で指定する書き込みのI/O制限値 - {ref}`storage-configure-IO` も参照
+`path`              | string  | -            | yes  | ディスクをマウントするインスタンス内のパス(コンテナのみ)
+`pool`              | string  | -            | no   | ディスクデバイスが属するストレージプール(LXD が管理するストレージボリュームにのみ適用可能)
+`propagation`       | string  | -            | no   | バインドマウントをインスタンスとホストでどのように共有するかを管理する(`private` (デフォルト), `shared`, `slave`, `unbindable`,  `rshared`, `rslave`, `runbindable`,  `rprivate` のいずれか。完全な説明は Linux Kernel の文書 [shared subtree](https://www.kernel.org/doc/Documentation/filesystems/sharedsubtree.txt) をご覧ください) <!-- wokeignore:rule=slave -->
+`raw.mount.options` | string  | -            | no   | ファイルシステム固有のマウントオプション
+`readonly`          | bool    | `false`      | no   | マウントを読み込み専用とするかどうかを制御
+`recursive`         | bool    | `false`      | no   | ソースパスを再帰的にマウントするかどうかを制御
+`required`          | bool    | `true`       | no   | ソースが存在しないときに失敗とするかどうかを制御
+`shift`             | bool    | `false`      | no   | ソースの UID/GID をインスタンスにマッチするように変換させるためにオーバーレイの shift を設定するか(コンテナのみ)
+`size`              | string  | -            | no   | byte(さまざまな単位が使用可能、 {ref}`instances-limit-units` 参照)で指定するディスクサイズ。`rootfs` (`/`) でのみサポートされます
+`size.state`        | string  | -            | no   | 上の `size` と同じですが、仮想マシン内のランタイム状態を保存するために使われるファイルシステムボリュームに適用されます
+`source`            | string  | -            | yes  | ファイル・ディレクトリ、もしくはブロックデバイスのホスト上のパス

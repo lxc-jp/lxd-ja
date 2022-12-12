@@ -1,3 +1,4 @@
+(security)=
 # セキュリティ
 
 ```{youtube} https://www.youtube.com/watch?v=cOOzKdYHkus
@@ -48,13 +49,13 @@ root ユーザーと `lxd` グループのすべてのメンバーがローカ�
 ### リモート API へのアクセス
 
 デフォルトでは、デーモンへのアクセスはローカルでのみ可能です。
-`core.https_address`という設定オプション（{doc}`server`参照）を設定することで、同じAPIを{abbr}`TLS (Transport Layer Security)`ソケットでネットワーク上に公開することができます。
+`core.https_address`という設定オプション({doc}`server`参照)を設定することで、同じAPIを{abbr}`TLS (Transport Layer Security)`ソケットでネットワーク上に公開することができます。
 リモートクライアントは、LXDに接続して、公開用にマークされたイメージにアクセスできます。
 
 リモートクライアントがAPIにアクセスできるように、信頼できるクライアントとして認証する方法がいくつかあります。
 詳細は{doc}`authentication`を参照してください。
 
-本番環境では、`core.https_address`に、（ホスト上の任意のアドレスではなく）サーバーが利用可能な単一のアドレスを設定する必要があります。
+本番環境では、`core.https_address`に、(ホスト上の任意のアドレスではなく)サーバーが利用可能な単一のアドレスを設定する必要があります。
 さらに、許可されたホスト/サブネットからのみLXDポートへのアクセスを許可するファイアウォールルールを設定する必要があります。
 
 ## コンテナのセキュリティ
@@ -63,7 +64,7 @@ LXDコンテナはセキュリティのために幅広い機能を使うこと�
 
 デフォルトでは、コンテナは *非特権* (*unprivileged*) であり、ユーザーネームスペース内で動作することを意味し、コンテナ内のユーザーの能力を、コンテナが所有するデバイスに対する制限された権限を持つホスト上の通常のユーザーに制限します。
 
-コンテナ間のデータ共有が必要ない場合は、`security.idmap.isolated`（{ref}`instance-options`参照）を有効にすることで、各コンテナに対して重複しないUID/GIDマップを使用し、他のコンテナに対する潜在的な{abbr}`DoS（サービス拒否）`攻撃を防ぐことができます。
+コンテナ間のデータ共有が必要ない場合は、`security.idmap.isolated`({ref}`instance-options-security`参照)を有効にすることで、各コンテナに対して重複しないUID/GIDマップを使用し、他のコンテナに対する潜在的な{abbr}`DoS(サービス拒否)`攻撃を防ぐことができます。
 
 LXDはまた、*特権* (*privileged*) コンテナを実行することができます。
 そのようなコンテナの中でルートアクセスを持つユーザは、閉じ込められた状態から逃れる方法を見つけるだけでなく、ホストをDoSすることができるでしょう。
@@ -104,7 +105,7 @@ DHCPv4を使用しているインスタンスには、IPv4アドレスが割り�
 このデフォルト構成では、DNS名を偽装することはできませんが、インスタンスはイーサネットブリッジに接続されており、希望するレイヤー2トラフィックを送信することができます。これは、信頼されていないインスタンスがブリッジ上でMACまたはIPの偽装を効果的に行うことができることを意味します。
 
 デフォルトの設定では、ブリッジに接続されたインスタンスがブリッジに(潜在的に悪意のある)IPv6ルータ広告を送信することで、LXDホストのIPv6ルーティングテーブルを修正することも可能です。
-これは、`lxdbr0`インターフェイスが`/proc/sys/net/ipv6/conf/lxdbr0/accept_ra`を`2`に設定して作成されているためで、`forwarding`が有効であるにもかかわらず、LXDホストがルーター広告を受け入れることを意味しています（詳細は[`/proc/sys/net/ipv4/*` Variables](https://www.kernel.org/doc/Documentation/networking/ip-sysctl.txt)を参照してください）。
+これは、`lxdbr0`インターフェイスが`/proc/sys/net/ipv6/conf/lxdbr0/accept_ra`を`2`に設定して作成されているためで、`forwarding`が有効であるにもかかわらず、LXDホストがルーター広告を受け入れることを意味しています(詳細は[`/proc/sys/net/ipv4/*` Variables](https://www.kernel.org/doc/Documentation/networking/ip-sysctl.txt)を参照してください)。
 
 しかし、LXDはいくつかのブリッジ型{abbr}`NIC(Network interface controller)`セキュリティ機能を提供しており、インスタンスがネットワーク上に送信することを許可されるトラフィックの種類を制御するために使用することができます。
 これらのNIC設定は、インスタンスが使用しているプロファイルに追加する必要がありますが、以下のように個々のインスタンスに追加することもできます。
@@ -114,8 +115,8 @@ DHCPv4を使用しているインスタンスには、IPv4アドレスが割り�
 キー                      | タイプ | デフォルト | 必須 | 説明
 :--                       | :--    | :--        | :--  | :--
 `security.mac_filtering`  | bool   | `false`    | no   | インスタンスが他のインスタンスの MAC アドレスを詐称することを防ぐ。
-`security.ipv4_filtering` | bool   | `false`    | no   | インスタンスが他のインスタンスの IPv4 アドレスになりすますことを防ぎます（`mac_filtering` を有効にします）。
-`security.ipv6_filtering` | bool   | `false`    | no   | インスタンスが他のインスタンスの IPv6 アドレスになりすますことを防ぎます（`mac_filtering` を有効にします）。
+`security.ipv4_filtering` | bool   | `false`    | no   | インスタンスが他のインスタンスの IPv4 アドレスになりすますことを防ぎます(`mac_filtering` を有効にします)。
+`security.ipv6_filtering` | bool   | `false`    | no   | インスタンスが他のインスタンスの IPv6 アドレスになりすますことを防ぎます(`mac_filtering` を有効にします)。
 
 プロファイルで設定されたデフォルトのブリッジ型NICの設定は、インスタンスごとに以下の方法で上書きすることができます。
 
@@ -124,13 +125,13 @@ lxc config device override <instance> <NIC> security.mac_filtering=true
 ```
 
 これらの機能を併用することで、ブリッジに接続されているインスタンスがMACアドレスやIPアドレスを詐称することを防ぐことができます。
-これらのオプションは、ホスト上で利用可能なものに応じて、`xtables`（`iptables`、`ip6tables`、`ebtables`）または`nftables`を使用して実装されます。
+これらのオプションは、ホスト上で利用可能なものに応じて、`xtables`(`iptables`、`ip6tables`、`ebtables`)または`nftables`を使用して実装されます。
 
-これらのオプションは、ネストされたコンテナが異なるMACアドレスを持つ親ネットワークを使用すること（ブリッジされたNICや`macvlan` NICを使用すること）を効果的に防止することができるのは注目に値します。
+これらのオプションは、ネストされたコンテナが異なるMACアドレスを持つ親ネットワークを使用すること(ブリッジされたNICや`macvlan` NICを使用すること)を効果的に防止することができるのは注目に値します。
 
 IPフィルタリング機能は、スプーフィングされたIPを含むARPおよびNDPアドバタイジングをブロックし、スプーフィングされたソースアドレスを含むすべてのパケットをブロックします。
 
-`security.ipv4_filtering`または`security.ipv6_filtering`が有効で、インスタンスにIPアドレスが割り当てられない場合（`ipvX.address=none`またはブリッジでDHCPサービスが有効になっていないため）、そのプロトコルのすべてのIPトラフィックがインスタンスからブロックされます。
+`security.ipv4_filtering`または`security.ipv6_filtering`が有効で、インスタンスにIPアドレスが割り当てられない場合(`ipvX.address=none`またはブリッジでDHCPサービスが有効になっていないため)、そのプロトコルのすべてのIPトラフィックがインスタンスからブロックされます。
 
 `security.ipv6_filtering` が有効な場合、IPv6 のルータ広告がインスタンスからブロックされます。
 

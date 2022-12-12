@@ -13,7 +13,7 @@ LXD ではこの機能は `/dev/lxd/sock` というノードを通して実装�
 マルチスレッドで動いているので複数のクライアントが同時に接続できます。
 
 ```{note}
-インスタンスのソケットへのアクセスを許可するには [`security.devlxd`](instance-configuration) を `true` (これがデフォルトです) に設定する必要があります。
+インスタンスのソケットへのアクセスを許可するには [`security.devlxd`](instance-options-security) を `true` (これがデフォルトです) に設定する必要があります。
 ```
 
 ## 実装詳細

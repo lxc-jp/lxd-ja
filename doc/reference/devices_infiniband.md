@@ -1,36 +1,38 @@
 (devices-infiniband)=
 # タイプ: `infiniband`
 
-サポートされるインスタンスタイプ: コンテナ、VM
-
-LXD では、InfiniBand デバイスに対する 2 種類の異なったネットワークタイプが使えます:
-
-- `physical`: ホストの物理デバイスをパススルーで直接使います。対象のデバイスはホスト上では見えなくなり、インスタンス内に出現します
-- `sriov`: SR-IOV が有効な物理ネットワークデバイスの仮想ファンクション（virtual function）をインスタンスに与えます
-
-ネットワークインタフェースの種類が異なると追加のプロパティが異なります。現時点のリストは次の通りです:
-
-キー      | 型      | デフォルト値       | 必須 | 使用される種別      | 説明
-:--       | :--     | :--                | :--  | :--                 | :--
-`nictype` | string  | -                  | yes  | 全て                | デバイスタイプ。`physical` か `sriov` のいずれか
-`name`    | string  | カーネルが割り当て | no   | 全て                | インスタンス内部でのインタフェース名
-`hwaddr`  | string  | ランダムに割り当て | no   | 全て                | 新しいインタフェースの MAC アドレス。 20 バイト全てを指定するか短い 8 バイト (この場合親デバイスの最後の 8 バイトだけを変更) のどちらかを設定可能
-`mtu`     | integer | 親の MTU           | no   | 全て                | 新しいインタフェースの MTU
-`parent`  | string  | -                  | yes  | `physical`, `sriov` | ホスト上のデバイス、ブリッジの名前
-
-`physical` な `infiniband` デバイスを作成するには次のように実行します:
-
-```
-lxc config device add <instance> <device-name> infiniband nictype=physical parent=<device>
+```{note}
+`infiniband`デバイスタイプはコンテナとVMの両方でサポートされます。
+ホットプラグはコンテナのみでサポートし、VMではサポートしません。
 ```
 
-## InfiniBand デバイスでの SR-IOV
+LXDでは、InfiniBandデバイスに対する2種類の異なったネットワークタイプが使えます。
 
-InfiniBand デバイスは SR-IOV をサポートしますが、他の SR-IOV と違って、SR-IOV モードでの動的なデバイスの作成はできません。
-つまり、カーネルモジュール側で事前に仮想ファンクション（virtual functions）の数を設定する必要があるということです。
+- `physical`: ホストの物理デバイスをインスタンスにパススルーします。
+  対象のデバイスはホスト上では見えなくなり、インスタンス内に出現します。
+- `sriov`: SR-IOVが有効な物理ネットワークデバイスの仮想ファンクション(virtual function)をインスタンスにパススルーします。
 
-`sriov` の `infiniband` でデバイスを作るには次のように実行します:
+  ```{note}
+  InfiniBandデバイスはSR-IOVをサポートしますが、他のSR-IOVが有効なデバイスと異なり、InfiniBandはSR-IOVモードの動的なデバイスの作成をサポートしません。
+  このため、対応するカーネルモジュールを設定することで仮想ファンクションの数を事前に設定する必要があります。
+  ```
 
-```
-lxc config device add <instance> <device-name> infiniband nictype=sriov parent=<sriov-enabled-device>
-```
+`physical`な`infiniband`デバイスを作成するには、以下のコマンドを使用します。
+
+    lxc config device add <instance_name> <device_name> infiniband nictype=physical parent=<device>
+
+`sriov`の`infiniband`デバイスを作成するには、以下のコマンドを使用します。
+
+    lxc config device add <instance_name> <device_name> infiniband nictype=sriov parent=<sriov_enabled_device>
+
+## デバイスオプション
+
+`infiniband`デバイスには以下のデバイスオプションがあります。
+
+キー      | 型      | デフォルト値       | 必須 | 説明
+:--       | :--     | :--                | :--  | :--
+`hwaddr`  | string  | ランダムに割り当て | no   | 新しいインタフェースのMACアドレス。20バイト全てを指定するか短い8バイト(この場合親デバイスの最後の8バイトだけを変更)のどちらかを設定可能
+`mtu`     | integer | 親の MTU           | no   | 新しいインタフェースのMTU
+`name`    | string  | カーネルが割り当て | no   | インスタンス内部でのインタフェース名
+`nictype` | string  | -                  | yes  | デバイスタイプ(`physical`か`sriov`のいずれか)
+`parent`  | string  | -                  | yes  | ホスト上のデバイスまたはブリッジの名前

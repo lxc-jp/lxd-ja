@@ -48,7 +48,7 @@ LXDはインスタンス内のデータを読まない、あるいはその中�
 以下の2つの方法でexecセッションに環境変数を渡せます。
 
 インスタンスオプションとして環境変数を渡す
-: インスタンス内で`ENVVAR`環境変数を`VALUE`に設定するには、`environment.ENVVAR` {ref}`インスタンスオプション <instance-options>`を設定します。
+: インスタンス内で`ENVVAR`環境変数を`VALUE`に設定するには、`environment.ENVVAR` {ref}`インスタンスオプション <instance-options-misc>`を設定します。
 
       lxc config set <instance_name> environment.ENVVAR=VALUE
 

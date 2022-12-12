@@ -101,6 +101,6 @@ UFW で認識不能なトラフィックを全てドロップするルールを�
 詳細は [Docker on a router](https://docs.docker.com/network/iptables/#docker-on-a-router) を参照してください。
 
 この問題を回避するもっとも簡単な方法は LXD を動かすシステムから Docker をアンインストールすることです。
-その選択肢がない場合、以下のコマンドを実行してネットワークブリッジから外部ネットワークインタフェースへのトラフィックを明示的に許可します。
+その選択肢がない場合、以下のコマンドを実行してネットワークブリッジから外部ネットワークインタフェースへのトラフィックと戻りのトラフィックを明示的に許可します。
 
-    iptables -I DOCKER-USER -i <network_bridge> -o <external_interface> -j ACCEPT
+    iptables -I DOCKER-USER -o <network_bridge> -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT

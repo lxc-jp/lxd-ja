@@ -21,17 +21,27 @@ discourse: 12033,13128
 また例えば外部への SMTP サービスをホストする際にも重要です。
 インスタンスに正しい正引きと逆引きの DNS エントリがないと、送信されたメールが潜在的なスパムと判定されてしまうかもしれません。
 
-各ネットワークは下記の最大3つに関連します。
+各ネットワークは異なるゾーンに関連します。
 
- - 正引き DNS レコード
- - IPv4 逆引き DNS レコード
- - IPv6 逆引き DNS レコード
+- 正引き DNS レコード - カンマ区切りの複数のゾーン (プロジェクトごとに最大1つ)
+- IPv4 逆引き DNS レコード - 単一のゾーン
+- IPv6 逆引き DNS レコード - 単一のゾーン
 
 LXD は全てのインスタンス、ネットワークゲートウェイ、ダウンストリーム (下流)
 のネットワークポートの全てに対して正引きと逆引きのレコードを自動で管理し、
 オペレータのプロダクションの DNS サーバへのゾーン転送のためのこれらのゾーンを提供します。
 
+## プロジェクトビュー
+
+プロジェクトには  `features.networks.zones` 機能があります。デフォルトでは無効です。
+これは新しいネットワークゾーンがどのプロジェクト内に作成されるかを制御します。
+この機能を有効にすると新しいゾーンはプロジェクト内に作成されますが、無効の場合はデフォルトプロジェクト内に作成されます。
+
+これにより、複数のプロジェクトがデフォルトプロジェクト(すなわち`features.networks=false`と設定されたプロジェクト)内のネットワークを共有できるようになり、共有されたネットワークに対してプロジェクト志向の(プロジェクト内のインスタンスのアドレスのみを含むような)「ビュー」を提供するプロジェクト固有のDNSゾーンを持てるようになります。
+
 ## 生成されるレコード
+
+### 正引きレコード
 
 例えば、あなたのネットワークで `lxd.example.net` の正引き DNS レコードのゾーンを設定した場合、
 以下の DNS 名を解決するレコードを生成します。
@@ -39,20 +49,38 @@ LXD は全てのインスタンス、ネットワークゲートウェイ、ダ�
 - ネットワーク内の全てのインスタンスに対して: `<instance_name>.lxd.example.net`
 - ネットワークゲートウェイに対して: `<network_name>.gw.lxd.example.net`
 - ダウンストリームネットワークポートに対して (ダウンストリーム OVN ネットワークを持つアップリンクのネットワーク上に設定されれうネットワークゾーンに対して): `<project_name>-<downstream_network_name>.uplink.lxd.example.net`
+- ゾーンに手動で追加されたレコード
 
 ゾーン設定に対して生成されたレコードは `dig` コマンドで確認できます。
 例えば、 `dig @<DNS_server_IP> -p 1053 axfr lxd.example.net` と実行すると以下のように出力されます。
 
 ```bash
-lxd.example.net.              3600  IN  SOA lxd.example.net. hostmaster.lxd.example.net. 1648118965 120 60 86400 30
-default-my-ovn.uplink.lxd.example.net. 300 IN A 192.0.2.100
-my-instance.lxd.example.net.  300   IN  A   192.0.2.76
-my-uplink.gw.lxd.example.net. 300   IN  A   192.0.2.1
-foo.lxd.example.net.          300   IN  A   8.8.8.8
-lxd.example.net.              3600  IN  SOA lxd.example.net. hostmaster.lxd.example.net. 1648118965 120 60 86400 30
+lxd.example.net.                        3600 IN SOA  lxd.example.net. ns1.lxd.example.net. 1669736788 120 60 86400 30
+lxd.example.net.                        300  IN NS   ns1.lxd.example.net.
+lxdtest.gw.lxd.example.net.             300  IN A    192.0.2.1
+lxdtest.gw.lxd.example.net.             300  IN AAAA fd42:4131:a53c:7211::1
+default-ovntest.uplink.lxd.example.net. 300  IN A    192.0.2.20
+default-ovntest.uplink.lxd.example.net. 300  IN AAAA fd42:4131:a53c:7211:216:3eff:fe4e:b794
+c1.lxd.example.net.                     300  IN AAAA fd42:4131:a53c:7211:216:3eff:fe19:6ede
+c1.lxd.example.net.                     300  IN A    192.0.2.125
+manualtest.lxd.example.net.             300  IN A    8.8.8.8
+lxd.example.net.                        3600 IN SOA  lxd.example.net. ns1.lxd.example.net. 1669736788 120 60 86400 30
 ```
 
-`192.0.2.0/24` を使用するネットワークに `2.0.192.in-addr.arpa` の IPv4 逆引き DNS レコードのゾーンを設定すると、例えば `192.0.2.100` に対する逆引き DNS レコードを生成します。
+### 逆引きレコード
+
+`192.0.2.0/24` を使用するネットワークに `2.0.192.in-addr.arpa` の IPv4 逆引き DNS レコードのゾーンを設定すると、正引きゾーンの1つを経由してネットワークを参照する全てのプロジェクトからのアドレスの逆引き `PTR` DNSレコードを生成します。
+
+例えば `dig @<DNS_server_IP> -p 1053 axfr 2.0.192.in-addr.arpa`　を実行すると以下のような出力が得られるかもしれません。
+
+```bash
+2.0.192.in-addr.arpa.                  3600 IN SOA  2.0.192.in-addr.arpa. ns1.2.0.192.in-addr.arpa. 1669736828 120 60 86400 30
+2.0.192.in-addr.arpa.                  300  IN NS   ns1.2.0.192.in-addr.arpa.
+1.2.0.192.in-addr.arpa.                300  IN PTR  lxdtest.gw.lxd.example.net.
+20.2.0.192.in-addr.arpa.               300  IN PTR  default-ovntest.uplink.lxd.example.net.
+125.2.0.192.in-addr.arpa.              300  IN PTR  c1.lxd.example.net.
+2.0.192.in-addr.arpa.                  3600 IN SOA  2.0.192.in-addr.arpa. ns1.2.0.192.in-addr.arpa. 1669736828 120 60 86400 30
+```
 
 ## 組み込みの DNS サーバを有効にする
 

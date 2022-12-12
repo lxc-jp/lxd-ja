@@ -4,87 +4,114 @@
 ```{youtube} https://www.youtube.com/watch?v=T0aV2LsMpoA
 ```
 
-GPU デバイスエントリーは、シンプルにリクエストのあった GPU デバイスをインスタンスに出現させます。
+GPUデバイスは、指定のGPUデバイスをインスタンス内に出現させます。
 
 ```{note}
-コンテナデバイスは、同時に複数のGPUとマッチングさせることができます。しかし、仮想マシンの場合、デバイスは1つのGPUにしかマッチしません。
+コンテナでは、`gpu` デバイスは同時に複数のGPUにマッチングさせることができます。
+VMでは、各デバイスは1つのGPUにしかマッチできません。
 ```
 
-## 利用可能な GPU
+以下のタイプの GPU が `gputype` デバイスオプションを使って追加できます。
 
-以下の GPU が `gputype` プロパティを使って指定できます。
+- [`physical`](#gpu-physical) (コンテナとVM): GPU全体をインスタンスにパススルーします。 
+  `gputype` が指定されない場合これがデフォルトです。
+- [`mdev`](#gpu-mdev) (VMのみ): 仮想GPUを作成しインスタンスにパススルーします。
+- [`mig`](#gpu-mig) (コンテナのみ): MIG(Multi-Instance GPU)を作成しインスタンスにパススルーします。
+- [`sriov`](#gpu-sriov) (VMのみ): SR-IOVを有効にしたGPUの仮想ファンクション(virtual function)をインスタンスに与えます。
 
-- [`physical`](#gpu-physical) GPU 全体をパススルーします。 `gputype` が指定されない場合これがデフォルトです。
-- [`mdev`](#gpu-mdev) 仮想 GPU を作成しインスタンスにパススルーします。
-- [`mig`](#gpu-mig) MIG (Multi-Instance GPU) を作成しインスタンスにパススルーします。
-- [`sriov`](#gpu-sriov) SR-IOV を有効にした GPU の仮想ファンクション（virtual function）をインスタンスに与えます。
+利用可能なデバイスオプションはGPUタイプごとに異なり、以下のセクションの表に一覧表示されます。
 
-## `gpu`: `physical`
+(gpu-physical)=
+## `gputype`: `physical`
 
-サポートされるインスタンスタイプ: コンテナ, VM
+```{note}
+`physical` GPUタイプはコンテナとVMの両方でサポートされます。
+ホットプラグはコンテナのみでサポートし、VMではサポートしません。
+```
 
-GPU 全体をパススルーします。
+`physical` GPUデバイスはGPU全体をインスタンスにパススルーします。
 
-次に挙げるプロパティがあります:
+### デバイスオプション
 
-キー        | 型     | デフォルト値 | 必須 | 説明
-:--         | :--    | :--          | :--  | :--
-`vendorid`  | string | -            | no   | GPU デバイスのベンダー ID
-`productid` | string | -            | no   | GPU デバイスのプロダクト ID
-`id`        | string | -            | no   | GPU デバイスのカード ID
-`pci`       | string | -            | no   | GPU デバイスの PCI アドレス
-`uid`       | int    | `0`          | no   | インスタンス（コンテナのみ）内のデバイス所有者の UID
-`gid`       | int    | `0`          | no   | インスタンス（コンテナのみ）内のデバイス所有者の GID
-`mode`      | int    | `0660`       | no   | インスタンス（コンテナのみ）内のデバイスのモード
+`physical` タイプのデバイスには以下のデバイスオプションがあります。
 
-## `gpu`: `mdev`
+キー        | 型     | デフォルト値 | 説明
+:--         | :--    | :--          | :--
+`gid`       | int    | `0`          | インスタンス(コンテナのみ)内のデバイス所有者のGID
+`id`        | string | -            | GPUデバイスのカードID
+`mode`      | int    | `0660`       | インスタンス(コンテナのみ)内のデバイスのモード
+`pci`       | string | -            | GPUデバイスのPCIアドレス
+`productid` | string | -            | GPUデバイスのプロダクトID
+`uid`       | int    | `0`          | インスタンス(コンテナのみ)内のデバイス所有者のUID
+`vendorid`  | string | -            | GPUデバイスのベンダーID
 
-サポートされるインスタンスタイプ: VM
+(gpu-mdev)=
+## `gputype`: `mdev`
 
-仮想 GPU を作成しインスタンスにパススルーします。利用可能な mdev プロファイルの一覧は `lxc info --resources` を実行すると確認できます。
+```{note}
+`mdev` GPUタイプはVMでのみサポートされます。
+ホットプラグはサポートしていません。
+```
 
-次に挙げるプロパティがあります:
+`mdev` GPUデバイスは仮想 GPU を作成しインスタンスにパススルーします。
+利用可能な`mdev`プロファイルの一覧は `lxc info --resources` を実行すると確認できます。
 
-キー        | 型     | デフォルト値 | 必須 | 説明
-:--         | :--    | :--          | :--  | :--
-`vendorid`  | string | -            | no   | GPU デバイスのベンダー ID
-`productid` | string | -            | no   | GPU デバイスのプロダクト ID
-`id`        | string | -            | no   | GPU デバイスのカード ID
-`pci`       | string | -            | no   | GPU デバイスの PCI アドレス
-`mdev`      | string | -            | yes  | 使用する `mdev` プロファイル（例: `i915-GVTg_V5_4`）
+### デバイスオプション
 
-## `gpu`: `mig`
+`mdev` タイプのデバイスには以下のデバイスオプションがあります。
 
-サポートされるインスタンスタイプ: コンテナ
+キー        | 型     | デフォルト値 | 説明
+:--         | :--    | :--          | :--
+`id`        | string | -            | GPUデバイスのカードID
+`mdev`      | string | -            | 使用する`mdev`プロファイル(必須 - 例:`i915-GVTg_V5_4`)
+`pci`       | string | -            | GPUデバイスのPCIアドレス
+`productid` | string | -            | GPUデバイスのプロダクトID
+`vendorid`  | string | -            | GPUデバイスのベンダーID
 
-MIG コンピュートインスタンスを作成しパススルーします。
+(gpu-mig)=
+## `gputype`: `mig`
+
+```{note}
+`mig` GPUタイプはコンテナでのみサポートされます。
+ホットプラグはサポートしていません。
+```
+
+`mig` GPUデバイスはMIGコンピュートインスタンスを作成しインスタンスにパススルーします。
 現状これは NVIDIA MIG を事前に作成しておく必要があります。
 
-次に挙げるプロパティがあります:
+### デバイスオプション
 
-キー                | 型      | デフォルト値 | 必須 | 説明
-:--         | :--       | :--               | :--       | :--
-`vendorid`    | string    | -                 | no        | GPU デバイスのベンダー ID
-`productid`   | string    | -                 | no        | GPU デバイスのプロダクト ID
-`id`          | string    | -                 | no        | GPU デバイスのカード ID
-`pci`         | string    | -                 | no        | GPU デバイスの PCI アドレス
-`mig.ci`      | int       | -                 | no        | 既存の MIG コンピュートインスタンス ID
-`mig.gi`      | int       | -                 | no        | 既存の MIG GPU インスタンス ID
-`mig.uuid`    | string    | -                 | no        | 既存の MIG デバイス UUID (`MIG-` 接頭辞は省略可)
+`mig` タイプのデバイスには以下のデバイスオプションがあります。
 
-注意: `mig.uuid` (NVIDIA drivers 470+) か、 `mig.ci` と  `mig.gi` (古い NVIDIA ドライバ) の両方を設定する必要があります。
+キー        | 型     | デフォルト値 | 説明
+:--         | :--    | :--          | :--
+`id`        | string | -            | GPUデバイスのカードID
+`mig.ci`    | int    | -            | 既存のMIGコンピュートインスタンスID
+`mig.gi`    | int    | -            | 既存のMIG GPUインスタンスID
+`mig.uuid`  | string | -            | 既存のMIGデバイスUUID(`MIG-`接頭辞は省略可)
+`pci`       | string | -            | GPUデバイスのPCIアドレス
+`productid` | string | -            | GPUデバイスのプロダクトID
+`vendorid`  | string | -            | GPUデバイスのベンダーID
 
-## `gpu`: `sriov`
+`mig.uuid`(NVIDIA drivers 470+)か、`mig.ci`と`mig.gi`(古いNVIDIAドライバ)の両方を設定する必要があります。
 
-サポートされるインスタンスタイプ: VM
+(gpu-sriov)=
+## `gputype`: `sriov`
 
-SR-IOV が有効な GPU の仮想ファンクション（virtual function）をインスタンスに与えます。
+```{note}
+`sriov` GPUタイプはVMでのみサポートされます。
+ホットプラグはサポートしていません。
+```
 
-次に挙げるプロパティがあります:
+`sriov` GPUデバイスはSR-IOVが有効なGPUの仮想ファンクション(virtual function)をインスタンスにパススルーします。
 
-キー        | 型     | デフォルト値 | 必須 | 説明
-:--         | :--    | :--          | :--  | :--
-`vendorid`  | string | -            | no   | GPU デバイスのベンダー ID
-`productid` | string | -            | no   | GPU デバイスのプロダクト ID
-`id`        | string | -            | no   | GPU デバイスのカード ID
-`pci`       | string | -            | no   | GPU デバイスの PCI アドレス
+### デバイスオプション
+
+`sriov`タイプのデバイスには以下のデバイスオプションがあります。
+
+キー        | 型     | デフォルト値 | 説明
+:--         | :--    | :--          | :--
+`id`        | string | -            | GPUデバイスのカードID
+`pci`       | string | -            | 親GPUデバイスのPCIアドレス
+`productid` | string | -            | 親GPUデバイスのプロダクトID
+`vendorid`  | string | -            | 親GPUデバイスのベンダーID

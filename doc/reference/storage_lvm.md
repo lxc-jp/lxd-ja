@@ -71,8 +71,10 @@ LXD はボリュームグループを完全制御できると想定していま�
 `security.unmapped`   | bool   | カスタムボリューム     | `volume.security.unmapped` と同じか `false`  | ボリュームへの ID マッピングを無効にする
 `size`                | string | 適切なドライバ         | `volume.size` と同じ                         | ストレージボリュームのサイズ/クォータ
 `snapshots.expiry`    | string | カスタムボリューム     | `volume.snapshots.expiry` と同じ             | {{snapshot_expiry_format}}
-`snapshots.pattern`   | string | カスタムボリューム     | `volume.snapshots.pattern` と同じか `snap%d` | {{snapshot_pattern_format}}
+`snapshots.pattern`   | string | カスタムボリューム     | `volume.snapshots.pattern` と同じか `snap%d` | {{snapshot_pattern_format}} [^*]
 `snapshots.schedule`  | string | カスタムボリューム     | `volume.snapshots.schedule` と同じ           | {{snapshot_schedule_format}}
+
+[^*]: {{snapshot_pattern_detail}}
 
 ### ストレージバケット設定
 

@@ -35,6 +35,7 @@
 
     lxc profile create <profile_name>
 
+(profiles-edit)=
 ## プロファイルを編集する
 
 プロファイルの特定の設定オプションを設定するか、あるいはYAML形式でプロファイル全体を編集できます。
@@ -47,7 +48,7 @@
     lxc profile set <profile_name> <option_key>=<option_value> <option_key>=<option_value> ...
 
 プロファイルのインスタンスデバイスを追加と変更するには、`lxc profile device add`コマンドを使います。
-プロファイル名、デバイス名、デバイスタイプと({ref}`デバイスタイプ <device-types>`ごとの)必要に応じてデバイスオプションを指定します。
+プロファイル名、デバイス名、デバイスタイプと({ref}`デバイスタイプ <devices>`ごとの)必要に応じてデバイスオプションを指定します。
 
     lxc profile device add <instance_name> <device_name> <device_type> <device_option_key>=<device_option_value> <device_option_key>=<device_option_value> ...
 

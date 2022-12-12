@@ -53,7 +53,7 @@ remotes:
 local レベルのリモートは CLI (`lxc`) で次のように管理します。
 `lxc remote [command]`
 
-デフォルトでは local の設定ファイルは `~/.config/lxc/config.yml` に置かれます。
+デフォルトでは local の設定ファイルは `~/.config/lxc/config.yml`、あるいは snap 版では `~/snap/lxd/common/config/config.yml` に置かれます。
 `LXD_CONF` 環境変数でパスを変更できます。
 ユーザーはシステムのリモートを (例: `lxc remote name` や `lxc remote set-url` を実行することで) オーバーライドすることができます。
 その場合リモートの設定は関連する証明書と共にコピーされます。
