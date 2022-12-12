@@ -66,7 +66,7 @@ To do so, use the `lxc cluster evacuate` command.
 This command migrates all instances on the given server, moving them to other cluster members.
 The evacuated cluster member is then transitioned to an "evacuated" state, which prevents the creation of any instances on it.
 
-You can control how each instance is moved through the [`cluster.evacuate`](instance-configuration) instance configuration key.
+You can control how each instance is moved through the [`cluster.evacuate`](instance-options-misc) instance configuration key.
 Instances are shut down cleanly, respecting the `boot.host_shutdown_timeout` configuration key.
 
 When the evacuated server is available again, use the `lxc cluster restore` command to move the server back into a normal running state.
@@ -109,10 +109,9 @@ Also note that if you are using the snap, upgrades might happen automatically, s
 ```
 
 To upgrade a single member, simply upgrade the LXD package on the host and restart the LXD daemon.
-For example, if you are using the snap:
+For example, if you are using the snap then refresh to the latest version and cohort in the current channel (also reloads LXD):
 
-    sudo snap refresh lxd
-    sudo snap restart --reload lxd.daemon
+    sudo snap refresh lxd --cohort="+"
 
 If the new version of the daemon has database schema or API changes, the upgraded member might transition into a "blocked" state.
 In this case, the member does not serve any LXD API requests (which means that `lxc` commands don't work on that member anymore), but any running instances will continue to run.
