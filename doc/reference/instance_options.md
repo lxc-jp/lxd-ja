@@ -163,7 +163,7 @@ LXDが`hugetlbfs` `mount`システムコールをインターセプトするとL
 これにより非特権コンテナからもhuge pageが利用可能となります。
 しかし、ホストで利用可能なhuge pageをコンテナが使い切ってしまうのを防ぐため、`limits.hugepages.[size]`を使ってコンテナが利用可能なhuge pageの数を制限することを推奨します。
 
-huge pageの制限は`hugetlb` cgroupコントローラによって実行されます。これはこれらの制限を適用するために、ホストシステムが`hugetlb`コントローラをレガシーあるいは統一されたcgroup階層に公開する必要があることを意味します。
+huge pageの制限は`hugetlb` cgroupコントローラによって実行されます。これはこれらの制限を適用するために、ホストシステムが`hugetlb`コントローラをレガシーあるいはcgroupの単一階層構造(訳注:cgroup v2)に公開する必要があることを意味します。
 
 (instance-options-limits-kernel)=
 ### カーネルリソース制限
@@ -369,7 +369,7 @@ value = "0"
 `security.syscalls.deny_compat`                  | bool    | `false`      | no                 | コンテナ       | `x86_64`では、`compat_*`システムコールのブロックを有効にするかどうかを制御(他のアーキテクチャでは何もしません)
 `security.syscalls.deny_default`                 | bool    | `true`       | no                 | コンテナ       | デフォルトのシステムコールの拒否を有効にするかどうかを制御
 `security.syscalls.intercept.bpf`                | bool    | `false`      | no                 | コンテナ       | `bpf`システムコールを処理するかどうかを制御
-`security.syscalls.intercept.bpf.devices`        | bool    | `false`      | no                 | コンテナ       | 統合された階層内のdevice cgroup用の`bpf`プログラムのロードを許可するかどうかを制御
+`security.syscalls.intercept.bpf.devices`        | bool    | `false`      | no                 | コンテナ       | cgroupの単一階層構造(訳注:cgroup v2)内のdevice cgroup用の`bpf`プログラムのロードを許可するかどうかを制御
 `security.syscalls.intercept.mknod`              | bool    | `false`      | no                 | コンテナ       | `mknod`と`mknodat`システムコールを処理するかどうかを制御(限定されたサブセットのキャラクタ／ブロックデバイスの作成を許可する)
 `security.syscalls.intercept.mount`              | bool    | `false`      | no                 | コンテナ       | `mount`システムコールを処理するかどうかを制御
 `security.syscalls.intercept.mount.allowed`      | string  | -            | yes                | コンテナ       | インスタンス内のプロセスが安全にマウントできるファイルシステムのカンマ区切りリスト
