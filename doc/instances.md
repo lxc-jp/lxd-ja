@@ -8,10 +8,10 @@ explanation/instances.md
 インスタンスの作成 <howto/instances_create.md>
 インスタンスの管理 <howto/instances_manage.md>
 インスタンスの設定 <howto/instances_configure.md>
+スナップショットの作成 <howto/instances_snapshots.md>
 プロファイルの使用 <profiles.md>
 コマンドの実行 <instance-exec.md>
 コンソールへのアクセス <howto/instances_console.md>
 ファイルへのアクセス <howto/instances_access_files.md>
 explanation/instance_config.md
-explanation/devices.md
 ```

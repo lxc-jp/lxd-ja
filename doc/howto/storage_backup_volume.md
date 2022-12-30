@@ -37,10 +37,12 @@
 
     lxc storage volume snapshot <pool_name> <volume_name> [<snapshot_name>]
 
+<!-- Include start create snapshot options -->
 既存のスナップショットを置き換えるにはスナップショット名に `--reuse` フラグを追加します。
 
-ストレージボリュームに `snapshots.expiry` 設定オプションが設定されていない限り、デフォルトではスナップショットは永遠に保持されます。
+`snapshots.expiry` 設定オプションが設定されていない限り、デフォルトではスナップショットは永遠に保持されます。
 特定のスナップショットをこの期限が切れても維持するには `--no-expiry` フラグを使用します。
+<!-- Include end create snapshot options -->
 
 (storage-edit-snapshots)=
 ### スナップショットを閲覧、編集、削除する

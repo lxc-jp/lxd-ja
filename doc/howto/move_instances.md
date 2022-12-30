@@ -44,8 +44,8 @@
 ライブマイグレーションを可能にするには、ステートフルマイグレーションのサポートを有効にする必要があります。
 そのためには、以下の設定を確認してください。
 
-* インスタンスの [`migration.stateful`](instance-configuration) を `true` に設定する。
-* 仮想マシンのルートディスクデバイスの [`size.state`](devices-disk) を少なくとも仮想マシンの [`limits.memory`](instance-configuration) 設定のサイズに設定する。
+* インスタンスの [`migration.stateful`](instance-options-migration) を `true` に設定する。
+* 仮想マシンのルートディスクデバイスの [`size.state`](devices-disk) を少なくとも仮想マシンの [`limits.memory`](instance-options-limits) 設定のサイズに設定する。
 
 (live-migration-containers)=
 ### コンテナのライブマイグレーション
@@ -62,8 +62,8 @@ snap をお使いの場合、以下のコマンドを使用して CRIU を有効
 
 それ以外の場合、両方のシステムに CRIU がインストールされていることを確認してください。
 
-コンテナのメモリ転送を最適化するには [`migration.incremental.memory`](instance-configuration) プロパティを `true` に設定して CRIU の事前コピー機能を使用してください。
+コンテナのメモリ転送を最適化するには [`migration.incremental.memory`](instance-options-migration) プロパティを `true` に設定して CRIU の事前コピー機能を使用してください。
 この設定では LXD はコンテナの一連のメモリダンプを実行するよう CRIU に指示します。
 それぞれのダンプの後、 LXD はメモリダンプを指定されたリモートに送信します。
 理想的なシナリオでは、各メモリダンプを前のメモリダンプとの差分にまで減らし、それによりすでに同期されたメモリの割合を増やします。
-同期されたメモリの割合が [`migration.incremental.memory.goal`](instance-configuration) で設定した閾値と等しいか超えた場合、あるいは [`migration.incremental.memory.iterations`](instance-configuration) で指定された許容される繰り返し回数の最大値に達した場合、 LXD は CRIU に最終的なメモリダンプを実行し、転送するように要求します。
+同期されたメモリの割合が [`migration.incremental.memory.goal`](instance-options-migration) で設定した閾値と等しいか超えた場合、あるいは [`migration.incremental.memory.iterations`](instance-options-migration) で指定された許容される繰り返し回数の最大値に達した場合、 LXD は CRIU に最終的なメモリダンプを実行し、転送するように要求します。

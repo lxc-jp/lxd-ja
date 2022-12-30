@@ -5,12 +5,15 @@ discourse: 8355
 (devices-proxy)=
 # タイプ: `proxy`
 
-サポートされるインスタンスタイプ: コンテナ（`nat` と 非 `nat` モード）、 VM （`nat` モードのみ）
+```{note}
+`proxy`デバイスタイプはコンテナ(NATと非NATモード)とVM(NATモードのみ)でサポートされます。
+コンテナとVMの両方でホットプラグをサポートします。
+```
 
 プロキシデバイスにより、ホストとインスタンス間のネットワーク接続を転送できます。
-このデバイスを使って、ホストのアドレスの一つに到達したトラフィックをインスタンス内のアドレスに転送したり、その逆を行ったりして、ホストを通してインスタンス内にアドレスを持てます。
+この方法で、ホストのアドレスの一つに到達したトラフィックをインスタンス内のアドレスに転送したり、その逆でインスタンス内にアドレスを持ちホストを通して接続することができます。
 
-利用できる接続タイプは次の通りです:
+利用できる接続タイプは次の通りです。
 
 - `tcp <-> tcp`
 - `udp <-> udp`
@@ -22,47 +25,54 @@ discourse: 8355
 - `udp <-> unix`
 - `unix <-> udp`
 
-プロキシデバイスは `nat` モードもサポートします。
-`nat` モードではパケットは別の接続を通してプロキシされるのではなく NAT を使ってフォワードされます。
-これはターゲットの送り先が `PROXY` プロトコル（非 NAT モードでプロキシデバイスを使う場合はこれはクライアントアドレスを渡す唯一の方法です）をサポートする必要なく、クライアントのアドレスを維持できるという利点があります。
+`proxy`デバイスを追加するには、以下のコマンドを使用します。
 
-プロキシデバイスを `nat=true` に設定する際は、以下のようにターゲットのインスタンスが NIC デバイス上に静的 IP を持つよう LXD で設定する必要があります。
+    lxc config device add <instance_name> <device_name> proxy listen=<type>:<addr>:<port>[-<port>][,<port>] connect=<type>:<addr>:<port> bind=<host/instance_name>
 
-```
-lxc config device set <instance> <nic> ipv4.address=<ipv4.address> ipv6.address=<ipv6.address>
-```
+## NATモード
 
-静的な IPv6 アドレスを設定するためには、親のマネージドネットワークは `ipv6.dhcp.stateful` を有効にする必要があります。
+プロキシデバイスはNATモード(`nat=true`)もサポートします。NATモードではパケットは別の接続を通してプロキシされるのではなくNATを使ってフォワードされます。
+これはターゲットの送り先がHAProxyのPROXYプロトコル(非NATモードでプロキシデバイスを使う場合はこれはクライアントアドレスを渡す唯一の方法です)をサポートする必要なく、クライアントのアドレスを維持できるという利点があります。
 
-NAT モードでサポートされる接続のタイプは以下の通りです。
+NATモードでサポートされる接続のタイプは以下の通りです。
 
 - `tcp <-> tcp`
 - `udp <-> udp`
 
-IPv6 アドレスを設定する場合は以下のような角括弧の記法を使います。
+プロキシデバイスを`nat=true`に設定する際は、以下のようにターゲットのインスタンスがNICデバイス上に静的IPを持つようにする必要があります。
 
+## IPアドレスを指定する
+
+インスタンスNICに静的IPを設定するには、以下のコマンドを使用します。
+
+    lxc config device set <instance_name> <nic_name> ipv4.address=<ipv4_address> ipv6.address=<ipv6_address>
+
+静的なIPv6アドレスを設定するためには、親のマネージドネットワークは`ipv6.dhcp.stateful`を有効にする必要があります。
+
+IPv6 アドレスを設定する場合は以下のような角括弧の記法を使います。例えば以下のようにします。
+
+    connect=tcp:[2001:db8::1]:80
+
+connectのアドレスをワイルドカード(IPv4では0.0.0.0、IPv6では[::]にします)に設定することで、接続アドレスをインスタンスのIPアドレスになるように指定できます。
+
+```{note}
+listenのアドレスも非NATモードではワイルドカードのアドレスが使用できます。
+しかし、NATモードを使う際はLXDホスト上のIPアドレスを指定する必要があります。
 ```
-connect=tcp:[2001:db8::1]:80
-```
 
-connect のアドレスをワイルドカード (IPv4 では `0.0.0.0` 、 IPv6 では `[::]` にします）に設定することで、インスタンスの IP アドレスを指定できます。
+## デバイスオプション
 
-listen のアドレスも非 NAT モードではワイルドカードのアドレスが使用できます。
-しかし `nat` モードを使う際は LXD ホスト上の IP アドレスを指定する必要があります。
+`proxy` デバイスには以下のデバイスオプションがあります。
 
 キー             | 型     | デフォルト値 | 必須 | 説明
 :--              | :--    | :--          | :--  | :--
-`listen`         | string | -            | yes  | バインドし、接続を待ち受けるアドレスとポート (`<type>:<addr>:<port>[-<port>][,<port>]`)
-`connect`        | string | -            | yes  | 接続するアドレスとポート (`<type>:<addr>:<port>[-<port>][,<port>]`)
-`bind`           | string | `host`       | no   | どちら側にバインドするか (`host`/`instance`)
-`uid`            | int    | `0`          | no   | listen する Unix ソケットの所有者の UID
-`gid`            | int    | `0`          | no   | listen する Unix ソケットの所有者の GID
-`mode`           | int    | `0644`       | no   | listen する Unix ソケットのモード
-`nat`            | bool   | `false`      | no   | NAT 経由でプロキシを最適化するかどうか（インスタンスの NIC が静的 IP を持つ必要あり）
+`bind`           | string | `host`       | no   | どちら側にバインドするか(`host`/`instance`)
+`connect`        | string | -            | yes  | 接続するアドレスとポート(`<type>:<addr>:<port>[-<port>][,<port>]`)
+`gid`            | int    | `0`          | no   | listenするUnixソケットの所有者のGID
+`listen`         | string | -            | yes  | バインドし、接続を待ち受けるアドレスとポート(`<type>:<addr>:<port>[-<port>][,<port>]`)
+`mode`           | int    | `0644`       | no   | listenするUnixソケットのモード
+`nat`            | bool   | `false`      | no   | NAT経由でプロキシを最適化するかどうか(インスタンスのNICが静的IPを持つ必要あり)
 `proxy_protocol` | bool   | `false`      | no   | 送信者情報を送信するのに HAProxy の PROXY プロトコルを使用するかどうか
-`security.uid`   | int    | `0`          | no   | 特権を落とす UID
-`security.gid`   | int    | `0`          | no   | 特権を落とす GID
-
-```
-lxc config device add <instance> <device-name> proxy listen=<type>:<addr>:<port>[-<port>][,<port>] connect=<type>:<addr>:<port> bind=<host/instance>
-```
+`security.gid`   | int    | `0`          | no   | 特権を落とすGID
+`security.uid`   | int    | `0`          | no   | 特権を落とすUID
+`uid`            | int    | `0`          | no   | listenするUnixソケットの所有者のUID

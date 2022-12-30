@@ -74,5 +74,5 @@
 
        lxc alias add delete "delete -i"
 
-- 特定のインスタンスが削除されることを防ぐためには、そのインスタンスの [`security.protection.delete`](instance-options) を `true` に設定します。
+- 特定のインスタンスが削除されることを防ぐためには、そのインスタンスの [`security.protection.delete`](instance-options-security) を `true` に設定します。
   手順は {ref}`instances-configure` を参照してください。

@@ -6,7 +6,7 @@ discourse: 13223
 # ネットワーク ACL を設定するには
 
 ```{note}
-ネットワーク ACL は {ref}`OVN NIC タイプ <instance_device_type_nic_ovn>`、{ref}`network-ovn` と {ref}`network-bridge` (いくつか制限あり、{ref}`network-acls-bridge-limitations` 参照) で利用できます。
+ネットワーク ACL は {ref}`OVN NIC タイプ <nic-ovn>`、{ref}`network-ovn` と {ref}`network-bridge` (いくつか制限あり、{ref}`network-acls-bridge-limitations` 参照) で利用できます。
 ```
 
 ```{youtube} https://www.youtube.com/watch?v=mu34G0cX6Io
@@ -111,7 +111,7 @@ ACL ルールには次のプロパティがあります。
 ### ルール内でセレクタを使う
 
 ```{note}
-この機能は {ref}`OVN NIC タイプ <instance_device_type_nic_ovn>` と {ref}`network-ovn` でのみサポートされます。
+この機能は {ref}`OVN NIC タイプ <nic-ovn>` と {ref}`network-ovn` でのみサポートされます。
 ```
 
 (ingress ルールの) `source` フィールドと (egress ルールの) `destination` フィールドは CIDR や IP の範囲の代わりにセレクタの使用をサポートします。
