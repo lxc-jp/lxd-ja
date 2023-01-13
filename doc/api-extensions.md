@@ -641,7 +641,7 @@ connections to Unix sockets too.
 
 This adds a new `core.debug_address` configuration option to start a debugging HTTP server.
 
-That server currently includes a pprof API and replaces the old
+That server currently includes a `pprof` API and replaces the old
 `cpu-profile`, `memory-profile` and `print-goroutines` debug options.
 
 ## `proxy_haproxy_protocol`
@@ -2129,3 +2129,7 @@ projects that are referencing that network via one of their forward zones.
 
 Existing projects that have `features.networks=true` will have `features.networks.zones=true` set automatically,
 but new projects will need to specify this explicitly.
+
+## `instance_nic_txqueuelength`
+
+Adds a `txqueuelen` key to control the `txqueuelen` parameter of the NIC device.
