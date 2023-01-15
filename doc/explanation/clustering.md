@@ -1,3 +1,7 @@
+---
+discourse: 15871
+---
+
 (exp-clustering)=
 # クラスタリングについて
 
@@ -9,6 +13,10 @@
 LXD クラスタは `lxc` クライアントまたは REST API を使って管理できます。
 
 この機能は [`clustering`](api-extensions.md#clustering) API 拡張の一部として導入され、 LXD 3.0 以降で利用可能です。
+
+```{tip}
+ベーシックなLXDクラスタを素早くセットアップしたい場合、[MicroCloud](https://discuss.linuxcontainers.org/t/introducing-microcloud/15871)をチェックしてみてください。
+```
 
 (clustering-members)=
 ## クラスタメンバー

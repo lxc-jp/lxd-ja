@@ -63,6 +63,31 @@ lxc network create UPLINK --type=physical parent=br0 --target=vm03
 lxc network create UPLINK --type=physical
 ```
 
+(network-attach)=
+## インスタンスにネットワークをアタッチする
+
+マネージドネットワークを作成後、それをインスタンスに{ref}`NICデバイス <devices-nic>`としてアタッチできます。
+
+そのためには、以下のコマンドを使います。
+
+    lxc network attach <network_name> <instance_name> [<device_name>] [<interface_name>]
+
+デバイス名とインタフェース名は省略可能ですが、少なくともデバイス名は指定することをお勧めします。
+指定しない場合、LXDはネットワーク名をデバイス名として使用しますが、紛らわしく問題を起こすかもしれません。
+例えば、LXDイメージは`eth0`インタフェースにIP自動設定を行いますが、インタフェースの名前が違うと機能しません。
+
+例えば、`my-network`というネットワークを`my-instance`というインタンスに`eth0`デバイスとしてアタッチするには、以下のコマンドを入力します。
+
+    lxc network attach my-network my-instance eth0
+
+`lxc network attach`コマンドはインスタンスにNICデバイスを追加するショートカットです。
+別の方法として、通常通りネットワーク設定でNICデバイスを追加できます。
+
+    lxc config device add <instance_name> <device_name> nic network=<network_name>
+
+この方法を使う場合、必要に応じてネットワークのデフォルト設定をオーバーライドするように追加の設定をコマンドに追加できます。
+全ての利用可能なデバイスオプションについては{ref}`NICデバイス <devices-nic>`を参照してください。
+
 ## ネットワークを設定する
 
 既存のネットワークを設定するには、 `lxc network set` と `lxc network unset` コマンド (単一の設定項目を設定する場合) または `lxc network edit` コマンド (設定全体を編集する場合) のどちらかを使います。

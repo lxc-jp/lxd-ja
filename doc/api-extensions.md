@@ -654,8 +654,8 @@ proxy デバイスに `security.uid` と `security.gid` を追加します。こ
 これはデバッグ用の HTTP サーバを起動するために、新たに `core.debug_address`
 オプションを追加します。
 
-このサーバは現在 pprof API を含んでおり、従来の `cpu-profile`, `memory-profile`
-と `print-goroutines` デバッグオプションを置き換えるものです。
+このサーバは現在`pprof` APIを含んでおり、従来の`cpu-profile`, `memory-profile`
+と`print-goroutines`デバッグオプションを置き換えるものです。
 
 ## `proxy_haproxy_protocol`
 
@@ -2094,3 +2094,7 @@ CPU ピンニング使用時はホットプラグは無効になります。CPU 
 しかし結果として生成されるゾーンの内容は、正引きゾーンの1つを経由してネットワークを参照する全てのプロジェクトからのアドレスをカバーするような`PTR`レコードを含むようになりました。
 
 `features.networks=true`の設定を持つ既存のプロジェクトは自動的に`features.networks.zones=true`が設定されますが、新規のプロジェクトは明示的に設定する必要があります。
+
+## `instance_nic_txqueuelength`
+
+NICデバイスの`txqueuelen`パラメータを制御する`txqueuelen`キーを追加します。

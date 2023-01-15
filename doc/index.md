@@ -51,13 +51,13 @@ LXD プロジェクトは [Canonical Ltd](https://www.canonical.com) にスポ�
 
 self
 getting_started
-configuration
+security
 instances
 images
 storage
 networks
-operation
 clustering
+operation
 restapi_landing
 internals
 external_resources

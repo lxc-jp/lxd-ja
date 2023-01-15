@@ -29,11 +29,11 @@
 
         lxc config device add <instance_name> eth0 nic nictype=bridged parent=br0
 - {doc}`マネージドネットワークを作成 </howto/network_create>` し、それをインスタンスにネットワークデバイスとして追加する。
-  この方法では LXD は設定されるネットワークについての全ての必要な情報を持っているのでデバイスへの追加する際はネットワーク名するだけで良いです。
+  この方法では LXD は設定されるネットワークについての全ての必要な情報を持っていますので、デバイスとしてインスタンスに直接アタッチできます。
 
-        lxc config device add <インスタンス名> <デバイス名> nic network=<ネットワーク名>
+        lxc network attach <network_name> <instance_name> <device_name>
 
-  必要であれば、ネットワークのデフォルト設定をオーバーライドする追加の設定をコマンドに追加できます。
+  詳細は{ref}`network-attach`を参照してください。
 
 (managed-networks)=
 ## マネージドネットワーク

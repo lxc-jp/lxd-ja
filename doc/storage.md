@@ -2,6 +2,7 @@
 discourse: 7735
 ---
 
+(storage)=
 # ストレージ
 
 ```{toctree}
