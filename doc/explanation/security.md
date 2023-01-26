@@ -67,7 +67,7 @@ LXDコンテナはセキュリティのために幅広い機能を使うこと�
 コンテナ間のデータ共有が必要ない場合は、`security.idmap.isolated`({ref}`instance-options-security`参照)を有効にすることで、各コンテナに対して重複しないUID/GIDマップを使用し、他のコンテナに対する潜在的な{abbr}`DoS(サービス拒否)`攻撃を防ぐことができます。
 
 LXDはまた、*特権* (*privileged*) コンテナを実行することができます。
-そのようなコンテナの中でルートアクセスを持つユーザは、閉じ込められた状態から逃れる方法を見つけるだけでなく、ホストをDoSすることができるでしょう。
+しかし、これは(訳注:コンテナ内だけで)安全にroot権限を使えるわけではなく、そのようなコンテナの中でルートアクセスを持つユーザは、閉じ込められた状態から逃れる方法を見つけるだけでなく、ホストをDoSすることができてしまう点に注意してください。
 
 コンテナのセキュリティと私たちが使っているカーネルの機能についてのより詳細な情報は
 [LXCセキュリティページ](https://linuxcontainers.org/ja/lxc/security/)にあります。
@@ -131,7 +131,7 @@ lxc config device override <instance> <NIC> security.mac_filtering=true
 
 IPフィルタリング機能は、スプーフィングされたIPを含むARPおよびNDPアドバタイジングをブロックし、スプーフィングされたソースアドレスを含むすべてのパケットをブロックします。
 
-`security.ipv4_filtering`または`security.ipv6_filtering`が有効で、インスタンスにIPアドレスが割り当てられない場合(`ipvX.address=none`またはブリッジでDHCPサービスが有効になっていないため)、そのプロトコルのすべてのIPトラフィックがインスタンスからブロックされます。
+`security.ipv4_filtering`または`security.ipv6_filtering`が有効で、(`ipvX.address=none`またはブリッジでDHCPサービスが有効になっていないため)インスタンスにIPアドレスが割り当てられない場合、そのプロトコルのすべてのIPトラフィックがインスタンスからブロックされます。
 
 `security.ipv6_filtering` が有効な場合、IPv6 のルータ広告がインスタンスからブロックされます。
 
