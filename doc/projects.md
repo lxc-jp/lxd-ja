@@ -3,7 +3,7 @@ relatedlinks: https://www.youtube.com/watch?v=6O0q3rSWr8A
 ---
 
 (projects)=
-# プロジェクト設定
+# プロジェクト
 
 ```{youtube} https://www.youtube.com/watch?v=cUHkgg6TovM
 ```

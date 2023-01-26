@@ -1,3 +1,7 @@
+---
+discourse: 15871
+---
+
 (cluster-form)=
 # クラスタを形成するには
 
@@ -8,6 +12,9 @@ LXD クラスタを形成するときはブートストラップサーバから�
 詳細は {ref}`clustering-members` を参照してください。
 
 LXD クラスタを形成するために初期化プロセス中に設定をインタラクティブに指定することもできますし、完全な設定を含むプリシードファイルを使うこともできます。
+
+素早く自動的にベーシックなLXDクラスタをセットアップするにはMicroCloudが使えます。
+ただし、このプロジェクトはまだ初期段階なことに注意してください。
 
 ## クラスタをインタラクティブに設定する
 
@@ -104,7 +111,7 @@ Would you like a YAML "lxd init" preseed to be printed? (yes/no) [default=no]:
 
        lxc cluster add <new_member_name>
 
-   このコマンドは一回限りのジョイントークンを返します。
+   このコマンドは設定時に有効な([`cluster.join_token_expiry`](server)参照)一回限りのジョイントークンを返します。
    `lxd init` のプロンプトでジョイントークンを求められたときにこのトークンを入力してください。
 
    ジョイントークンは既存のオンラインメンバーのアドレス、一回限りのシークレットとクラスタ証明書のフィンガープリントを含みます。
@@ -361,3 +368,22 @@ opyQ1VRpAg2sV2C4W8irbNqeUsTeZZxhLqp4vNOXXBBrSqUCdPu1JXADV0kavg1l
 
 ````
 `````
+
+## MicroCloudを使う
+
+```{youtube} https://www.youtube.com/watch?v=ZSZoLnp-Ip0
+```
+
+LXDクラスタを手動でセットアップする代わりに、[MicroCloud](https://snapcraft.io/microcloud)を使ってすぐに使えるLXDクラスタとCephストレージの環境を作ることができます。
+
+これに必要なsnapパッケージをインストールするには、以下のコマンドを実行します。
+
+    snap install lxd microceph microcloud
+
+次に以下のコマンドでブートストラッププロセスを開始します。
+
+    microcloud init
+
+初期化の行程中に、MicroCloudは他のサーバを検出、クラスタをセットアップし、Cephに追加するディスクを尋ねるプロンプトを表示します。
+
+初期化が完了したら、CephとLXDクラスタの両方が作られ、LXD自体はネットワークとクラスタ内で使用するのに適したストレージが設定された状態になります。

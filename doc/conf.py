@@ -21,7 +21,8 @@ extensions = [
     "sphinxext.opengraph",
     "youtube-links",
     "related-links",
-    "custom-rst-roles"
+    "custom-rst-roles",
+    "sphinxcontrib.jquery"
 ]
 
 myst_enable_extensions = [
@@ -164,5 +165,6 @@ redirects = {
     "production-setup/index": "../explanation/performance_tuning/index.html",
     "containers/index": "../explanation/instances",
     "virtual-machines/index": "../explanation/instances",
-
+    "preseed/index": "../howto/initialize/index.html#initialize-preseed",
+    "configuration/index": "../server"
 }

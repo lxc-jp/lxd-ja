@@ -10,9 +10,9 @@ relatedlinks: "[Linux&#32;コンテナ&#32;-&#32;LXD&#32;-&#32;LXDを使い始�
 :maxdepth: 1
 
 requirements
-installing
+LXDのインストール <installing>
+LXDの初期化 <howto/initialize>
 faq
-security
 contributing
 support
 ```

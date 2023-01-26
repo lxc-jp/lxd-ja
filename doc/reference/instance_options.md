@@ -35,7 +35,7 @@ key/value 形式の設定は、名前空間で分けられています。
 `cluster.evacuate`     | string | `auto`       | no                 | -           | インスタンス待避時に何をするか(`auto`, `migrate`, `live-migrate`, `stop`)
 `environment.*`        | string | -            | yes (exec)         | -           | インスタンス実行時に設定されるkey/value形式の環境変数
 `linux.kernel_modules` | string | -            | yes                | コンテナ    | インスタンスを起動する前にロードするカーネルモジュールのカンマ区切りのリスト
-`linux.sysctl.*`       | string | -            | no                 | コンテナ    | `sysctl`設定の変更を許可するかどうかを制御
+`linux.sysctl.*`       | string | -            | no                 | コンテナ    | コンテナ内の対応する`sysctl`設定を上書きする値
 `user.*`               | string | -            | no                 | -           | 自由形式のユーザー定義のkey/valueの設定の組(検索に使えます)
 
 (instance-options-boot)=

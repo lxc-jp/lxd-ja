@@ -15,9 +15,9 @@ LXD は次のインスタンスまたはプロファイル設定キーを使用�
 * `cloud-init.user-data`
 * `cloud-init.network-config`
 
-しかし、 cloud-init を使おうとする前に、これから使おうとするイメージ・ソース
-をどれにするかをまず決めてください。というのも、全てのイメージに
-`cloud-init` パッケージがインストールされているわけではないからです。
+詳細な情報は[`cloud-init` インスタンスオプション](instance-options-cloud-init)と`cloud-init`ドキュメント内の[LXDデータソース](https://cloudinit.readthedocs.io/en/latest/reference/datasources/lxd.html)を参照してください。
+
+`cloud-init`を使おうとする前に、これから使おうとするイメージ・ソースをどれにするかをまず決めてください。
 
 `ubuntu` と `ubuntu-daily` の remote にあるイメージは全て cloud-init が有効です。
 `images` remote のイメージで `cloud-init` が有効なイメージがあるものは `/cloud` という接尾辞がつきます（例: `images:ubuntu/22.04/cloud`）。
@@ -32,6 +32,17 @@ LXD は次のインスタンスまたはプロファイル設定キーを使用�
 LXD のインスタンスではインスタンスの設定よりもプロファイル内の `vendor-data` を使うべきです。
 
 `cloud-config` の例は [cloud-init のドキュメント](https://cloudinit.readthedocs.io/en/latest/topics/examples.html) にあります。
+
+```{note}
+`cloud-init.user-data`と`cloud-init.vendor-data`の両方が指定された場合、`cloud-init`は2つの設定をマージします。
+
+しかし、両方の設定で同じキーを使った場合、マージは不可能になるかもしれません。
+この場合、指定されたデータをどのようにマージするべきかを`clout-init`に指定してください。
+手順は`clou-init`ドキュメントの[Merging User-Data Sections](https://cloudinit.readthedocs.io/en/latest/reference/merging.html)を参照してください。
+```
+
+[`cloud-init`ドキュメント](https://cloudinit.readthedocs.io/en/latest/topics/examples.html)内に
+`cloud-config`の例があります。
 
 ## cloud-init と連携する
 

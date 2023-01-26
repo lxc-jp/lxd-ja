@@ -86,7 +86,7 @@ lxd.example.net.                        3600 IN SOA  lxd.example.net. ns1.lxd.ex
 
 ネットワークゾーンを使用するには、組み込みの DNS サーバを有効にする必要があります。
 
-そのためには、 LXD サーバのローカルアドレスに `core.dns_address` 設定オプション ({ref}`server` 参照) を設定してください。
+そのためには、 LXD サーバのローカルアドレスに `core.dns_address` 設定オプション({ref}`server-options-core`参照)を設定してください。
 
 これは DNS サーバがリッスンするアドレスです。
 LXD クラスタの場合、アドレスは各クラスタメンバーによって異なるかもしれないことに注意してください。
