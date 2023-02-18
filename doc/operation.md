@@ -9,4 +9,5 @@ remotes
 explanation/performance_tuning
 バックアップ <backup>
 migration
+architectures
 ```

@@ -134,14 +134,15 @@ key/value設定は名前空間が分けられています。
 ```{rst-class} break-col-4 min-width-4-8
 ```
 
-キー                                | 型      | スコープ | デフォルト値                                     | 説明
-:--                                 | :---    | :----    | :------                                          | :----------
-`backups.compression_algorithm`     | string  | global   | `gzip`                                           | 新規のイメージに用いる圧縮アルゴリズム (`bzip2`, `gzip`, `lzma`, `xz`, `none` のいずれか)
-`instances.nic.host_name`           | string  | global   | `random`                                         | `random`に設定するとランダムなホストインタフェース名を使用し、`mac`に設定すると`lxd<mac_address>`の形式(先頭2桁を除いたMACアドレス)で名前を生成
-`maas.api.key`                      | string  | global   | -                                                | MAASを管理するためのAPIキー
-`maas.api.url`                      | string  | global   | -                                                | MAASサーバのURL
-`maas.machine`                      | string  | local    | ホスト名                                         | このLXDホストのMAASでの名前
-`network.ovn.integration_bridge`    | string  | global   | `br-int`                                         | OVNネットワークに使用するOVN統合ブリッジ
-`network.ovn.northbound_connection` | string  | global   | `unix:/var/run/ovn/ovnnb_db.sock`                | OVN northbound データベース接続文字列
-`storage.backups_volume`            | string  | local    | -                                                | バックアップのtarballを保管するのに使用するボリューム(`POOL/VOLUME`形式で指定)
-`storage.images_volume`             | string  | local    | -                                                | イメージのtarballを保管するのに使用するボリューム(`POOL/VOLUME`形式で指定)
+キー                                | 型     | スコープ | デフォルト値                      | 説明
+:--                                 | :---   | :----    | :------                           | :----------
+`backups.compression_algorithm`     | string | global   | `gzip`                            | 新規のイメージに用いる圧縮アルゴリズム (`bzip2`, `gzip`, `lzma`, `xz`, `none` のいずれか)
+`instances.nic.host_name`           | string | global   | `random`                          | `random`に設定するとランダムなホストインタフェース名を使用し、`mac`に設定すると`lxd<mac_address>`の形式(先頭2桁を除いたMACアドレス)で名前を生成
+`instances.placement.scriptlet`     | string | global   | -                                 | カスタムの自動インスタンス配置ロジック用の{ref}`clustering-instance-placement-scriptlet`を格納
+`maas.api.key`                      | string | global   | -                                 | MAASを管理するためのAPIキー
+`maas.api.url`                      | string | global   | -                                 | MAASサーバのURL
+`maas.machine`                      | string | local    | ホスト名                          | このLXDホストのMAASでの名前
+`network.ovn.integration_bridge`    | string | global   | `br-int`                          | OVNネットワークに使用するOVN統合ブリッジ
+`network.ovn.northbound_connection` | string | global   | `unix:/var/run/ovn/ovnnb_db.sock` | OVN northbound データベース接続文字列
+`storage.backups_volume`            | string | local    | -                                 | バックアップのtarballを保管するのに使用するボリューム(`POOL/VOLUME`形式で指定)
+`storage.images_volume`             | string | local    | -                                 | イメージのtarballを保管するのに使用するボリューム(`POOL/VOLUME`形式で指定)

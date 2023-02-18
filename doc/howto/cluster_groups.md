@@ -5,6 +5,9 @@ discourse: 12716
 (howto-cluster-groups)=
 # クラスタグループをセットアップするには
 
+```{youtube} https://www.youtube.com/watch?v=t_3YJo_xItM
+```
+
 クラスタメンバーは {ref}`cluster-groups` にアサインできます。
 デフォルトでは、全てのクラスタメンバーは `default` グループに属しています。
 
@@ -25,7 +28,7 @@ discourse: 12716
 ```{note}
 クラスタグループにインスタンスをターゲットできるようにするには [`scheduler.instance`](cluster-member-config) は `all` (デフォルト) または `group` に設定する必要があります。
 
-詳細は {ref}`clustering-assignment` を参照してください。
+詳細は{ref}`clustering-instance-placement`を参照してください。
 ```
 
 クラスタグループのメンバー上でインスタンスを起動するには、{ref}`cluster-target-instance` の指示に従ってください。ただし `--target` フラグではグループ名の前に `@` をつけて指定してください。

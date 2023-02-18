@@ -91,6 +91,7 @@ LXDはさまざまな異なるタイプのネットワークデバイス(*NICタ
 `name`                    | string  | カーネルが割り当て | no   | インスタンス内でのインタフェースの名前
 `network`                 | string  | -                  | no   | (`nictype`を直接設定する代わりに)デバイスをリンクする先の管理されたネットワーク
 `parent`                  | string  | -                  | yes  | ホストデバイスの名前(`nictype`を直接設定する場合は必須)
+`queue.tx.length`         | integer | -                  | no   | NICの送信キューの長さ
 `security.ipv4_filtering` | bool    | `false`            | no   | インスタンスが他のインスタンスのIPv4アドレスになりすますのを防ぐ(これを設定すると`mac_filtering`も有効になります)
 `security.ipv6_filtering` | bool    | `false`            | no   | インスタンスが他のインスタンスのIPv6アドレスになりすますのを防ぐ(これを設定すると`mac_filtering`も有効になります)
 `security.mac_filtering`  | bool    | `false`            | no   | インスタンスが他のインスタンスのMACアドレスになりすますのを防ぐ
@@ -249,17 +250,18 @@ SR-IOVハードウェアアクセラレーション
 
 `physical`タイプのNICデバイスには以下のデバイスオプションがあります。
 
-キー               | 型      | デフォルト値       | 説明
-:--                | :--     | :--                | :--
-`boot.priority`    | integer | -                  | VMのブート優先度(高いほうが先にブート)
-`gvrp`             | bool    | `false`            | GARP VLAN Registration Protocolを使ってVLANを登録する
-`hwaddr`           | string  | ランダムに割り当て | 新しいインタフェースのMACアドレス
-`maas.subnet.ipv4` | string  | -                  | インスタンスを登録するMAAS IPv4サブネット
-`maas.subnet.ipv6` | string  | -                  | インスタンスを登録するMAAS IPv6サブネット
-`mtu`              | integer | 親の MTU           | 新しいインタフェースのMTU
-`name`             | string  | カーネルが割り当て | インスタンス内部でのインタフェース名
-`parent`           | string  | -                  | ホストデバイスの名前(必須)
-`vlan`             | integer | -                  | アタッチ先のVLAN ID
+キー               | 型      | デフォルト値       | 管理    | 説明
+:--                | :--     | :--                | :--     | :--
+`boot.priority`    | integer | -                  | no      | VMのブート優先度(高いほうが先にブート)
+`gvrp`             | bool    | `false`            | no      | GARP VLAN Registration Protocolを使ってVLANを登録する
+`hwaddr`           | string  | ランダムに割り当て | no      | 新しいインタフェースのMACアドレス
+`maas.subnet.ipv4` | string  | -                  | no      | インスタンスを登録するMAAS IPv4サブネット
+`maas.subnet.ipv6` | string  | -                  | no      | インスタンスを登録するMAAS IPv6サブネット
+`mtu`              | integer | 親の MTU           | no      | 新しいインタフェースのMTU
+`name`             | string  | カーネルが割り当て | no      | インスタンス内部でのインタフェース名
+`network`          | string  | -                  | no      | デバイスのリンク先(`nictype`を直接指定する代わりに)の管理ネットワーク
+`parent`           | string  | -                  | yes     | ホストデバイスの名前(必須)
+`vlan`             | integer | -                  | no      | アタッチ先のVLAN ID
 
 (nic-ipvlan)=
 ### `nictype`: `ipvlan`
@@ -309,6 +311,7 @@ DNS
 `mode`            | string  | `l3s`                    | IPVLANのモード(`l2`か`l3s`のいずれか)
 `mtu`             | integer | 親の MTU                 | 新しいインタフェースのMTU
 `name`            | string  | カーネルが割り当て       | インスタンス内部でのインタフェース名
+`queue.tx.length` | integer | -                        | NICの送信キューの長さ
 `parent`          | string  | -                        | ホストデバイスの名前(必須)
 `vlan`            | integer | -                        | アタッチ先のVLAN ID
 
@@ -428,6 +431,7 @@ DNS
 `mtu`                 | integer | 親の MTU           | 新しいインタフェースのMTU
 `name`                | string  | カーネルが割り当て | インスタンス内でのインタフェース名
 `parent`              | string  | -                  | インスタンスが参加するホストデバイス名
+`queue.tx.length`     | integer | -                  | NICの送信キューの長さ
 `vlan`                | integer | -                  | アタッチ先の VLAN ID
 
 ## `bridge`、`macvlan`、`ipvlan`を使った物理ネットワークへの接続

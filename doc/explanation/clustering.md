@@ -131,8 +131,8 @@ LXD のクラスタではクラスタグループにメンバーを追加でき�
 
 詳細は {ref}`howto-cluster-groups` と {ref}`cluster-target-instance` を参照してください。
 
-(clustering-assignment)=
-## インスタンスの自動割り当て
+(clustering-instance-placement)=
+## インスタンスの自動配置
 
 クラスタのセットアップでは各インスタンスはクラスタメンバーの 1 つの上で稼働します。
 インスタンスを起動する際、特定のクラスタメンバー、クラスターグループをターゲットにするか、あるいは LXD に自動的にどれかのクラスタメンバーに割り当てさせることもできます。
@@ -156,3 +156,63 @@ LXD のクラスタではクラスタグループにメンバーを追加でき�
 
    - インスタンスがこのクラスタメンバー上で稼働するようにターゲットされた。
    - インスタンスがこのクラスタメンバーが所属するクラスタグループのメンバー上で稼働するようにターゲットされ、かつクラスタメンバーがそのクラスタグループの他のメンバーと比べてインスタンス数が最小である。
+
+(clustering-instance-placement-scriptlet)=
+### インスタンス配置スクリプトレット
+
+LXDでは埋め込まれたスクリプト(スクリプトレット)を使って自動的なインスタンス配置を制御するカスタムロジックを使用できます。
+これにより組み込みのインスタンス配置機能に比べてより柔軟に制御できます。
+
+インスタンス配置スクリプトレットは[Starlark言語](https://github.com/bazelbuild/starlark) (Pythonのサブセット)で記述する必要があります。
+スクリプトレットはLXDがインスタンスをどこに配置するか知る必要がある際に毎回実行されます。
+スクリプトレットには配置されるインスタンスについての情報がインスタンスをホスト可能なクラスタメンバ候補の情報とともに渡されます。
+スクリプトレットからクラスタメンバ候補の状態と利用可能なハードウェアリソースについての情報を要求することもできます。
+
+インスタンス配置スクリプトレットは`instance_placement`関数を以下のシグネチャで実装する必要があります。
+
+   `instance_placement(request, candidate_members)`:
+
+- `request`は[`scriptlet.InstancePlacement`](https://pkg.go.dev/github.com/lxc/lxd/shared/api/scriptlet/#InstancePlacement)の展開された表現を含むオブジェクトです。これは`project`と`reason`フィールドを含みます。`reason`は`new`, `evacuation`, `relocation`のいずれかです。
+- `candidate_members`は[`api.ClusterMember`](https://pkg.go.dev/github.com/lxc/lxd/shared/api#ClusterMember)エントリを表すクラスタメンバオブジェクトの`list`です。
+
+例:
+
+```python
+def instance_placement(request, candidate_members):
+    # 情報ログ出力の例。これはLXDのログに出力されます。
+    log_info("instance placement started: ", request)
+
+    # インスタンスのリクエストに基づいてロジックを適用する例。
+    if request.name == "foo":
+        # エラーログ出力の例。これはLXDのログに出力されます。
+        log_error("Invalid name supplied: ", request.name)
+
+        return "Invalid name" # インスタンス配置を拒否するエラーを返す。
+
+    # 提供された第1候補のサーバにインスタンスを配置する。
+    set_target(candidate_members[0].server_name)
+
+    return # インスタンス配置を進めるために空を返す。
+```
+
+スクリプトレットはLXDに適用するためには`instances.placement.scriptlet`グローバル設定に設定する必要があります。
+
+例えばスクリプトレットが`instance_placement.star`というファイルに保存されている場合、LXDには以下のように適用できます。
+
+    cat instance_placement.star | lxc config set instances.placement.scriptlet=-
+
+LXDに現在適用されているスクリプトレットを見るには`lxc config get instances.placement.scriptlet`コマンドを使用してください。
+
+スクリプトレットでは(Starlarkで提供される関数に加えて)以下の関数が利用できます。
+
+- `log_info(*messages)`: infoレベルでLXDのログにログエントリを追加します。`messages`は1つ以上のメッセージの引数です。
+- `log_warn(*messages)`: warnレベルでLXDのログにログエントリを追加します。`messages`は1つ以上のメッセージの引数です。
+- `log_error(*messages)`: errorレベルでLXDのログにログエントリを追加します。`messages`は1つ以上のメッセージの引数です。
+- `set_cluster_member_target(member_name)`: インスタンスが作成されるべきクラスタメンバを設定します。`member_name`はインスタンスが作成されるべきクラスタメンバーの名前です。この関数が呼ばれなければ、LXDは組み込みのインスタンス配置ロジックを使用します。
+- `get_cluster_member_state(member_name)`: クラスタメンバーの状態を取得します。[`api.ClusterMemberState`](https://pkg.go.dev/github.com/lxc/lxd/shared/api#ClusterMemberState)の形式でクラスタメンバーの状態を含むオブジェクトを返します。`member_name`は状態を取得する対象のクラスタメンバーの名前です。
+- `get_cluster_member_resources(member_name)`: クラスタメンバーのリソースについての情報を取得します。[`api.Resources`](https://pkg.go.dev/github.com/lxc/lxd/shared/api#Resources)の形式でリソースについての情報を含むオブジェクトを返します。`member_name`はリソース情報を取得する対象のクラスタメンバーの名前です。
+- `get_instance_resources()`: インスタンスが必要とするリソースについての情報を取得します。 [`scriptlet.InstanceResources`](https://pkg.go.dev/github.com/lxc/lxd/shared/api/scriptlet/#InstanceResources)の形式でリソース情報を含むオブジェクトを返します。
+
+```{note}
+オブジェクト内のフィールド名は対応するGoの型のJSONフィールド名と同じです。
+```
