@@ -2133,3 +2133,13 @@ but new projects will need to specify this explicitly.
 ## `instance_nic_txqueuelength`
 
 Adds a `txqueuelen` key to control the `txqueuelen` parameter of the NIC device.
+
+## `cluster_member_state`
+
+Adds `GET /1.0/cluster/members/<member>/state` API endpoint and associated `ClusterMemberState` API response type.
+
+## `instances_placement_scriptlet`
+
+Adds support for a Starlark scriptlet to be provided to LXD to allow customized logic that controls placement of new instances in a cluster.
+
+The Starlark scriptlet is provided to LXD via the new global configuration option `instances.placement.scriptlet`.
