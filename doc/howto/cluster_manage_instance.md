@@ -17,7 +17,7 @@
 インスタンスを特定のクラスタメンバーあるいは特定の {ref}`クラスタグループ <howto-cluster-groups>` 上で実行できます。
 
 ターゲットを指定しなかった場合、インスタンスはクラスタメンバーに自動的に割り当てられます。
-詳細 {ref}`clustering-assignment` を参照してください。
+詳細は{ref}`clustering-instance-placement`を参照してください。
 
 ## インスタンスの配置を確認する
 

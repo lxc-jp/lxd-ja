@@ -23,7 +23,7 @@ Prometheus で読み取って Grafana でグラフを表示するのに使うこ
 ## メトリクス用証明書の作成
 
 `1.0/metrics` エンドポイントは他の証明書に加えて `metrics` タイプの証明書を受け付けるという点で特別なエンドポイントです。
-このタイプの証明書はメトリクス専用で、インスタンスや他の LXD のオブジェクトの操作には使用できません。
+このタイプの証明書はメトリクス専用で、インスタンスや他のLXDのエンティティの操作には使用できません。
 
 新しい証明書は以下のように作成します（この手順はメトリクス用の証明書に限ったものではありません）。
 
@@ -105,59 +105,34 @@ Subject Alternative Name (SAN) リストが `targets` リストのホスト名�
 
 ```yaml
 scrape_configs:
-  # abydos, langara, orilla は最初に abydos からブートストラップした
-  # 単一クラスタで、このため 3 ノードで `ca_file` と `server_name` を
-  # 共有しています。
+  # abydos, langara, orilla は最初にabydosからブートストラップした単一クラスタで
+  # (ここでは`hdc`と呼びます)、このため3ノードで`ca_file`と`server_name`を共有しています。
+  # `ca_file`はLXDクラスタの各メンバ上に存在する`/var/snap/lxd/common/lxd/cluster.crt`
+  # ファイルに対応しています。
   #
-  # 注意: 2 つのパラメータが提供されています。
-  #   `project`: `default` プロジェクトを使用しないか複数のプロジェクトを
-  #              使用する場合に必要。
-  #   `target`: 収集対象の個別のクラスタメンバー。
-  #             指定しない場合ローカルで動いているインスタンスのみレポートされます。
-  - job_name: "lxd-abydos"
+  # 注意: `project`パラメータは`default`プロジェクトを使用しないか複数のプロジェクトを
+  #       使用する場合に提供されます。
+  #
+  # 注意: クラスタの各メンバーはローカルで稼働するインスタンスのメトリクスだけを提供します。
+  #       これが`lxd-hdc`クラスタが3つのターゲットを一覧表示している理由です。
+  - job_name: "lxd-hdc"
     metrics_path: '/1.0/metrics'
     params:
       project: ['jdoe']
-      target: ['abydos']
     scheme: 'https'
     static_configs:
-      - targets: ['abydos.hosts.example.net:8444']
+      - targets:
+        - 'abydos.hosts.example.net:8444'
+        - 'langara.hosts.example.net:8444'
+        - 'orilla.hosts.example.net:8444'
     tls_config:
       ca_file: 'tls/abydos.crt'
       cert_file: 'tls/metrics.crt'
       key_file: 'tls/metrics.key'
       server_name: 'abydos'
 
-  - job_name: "lxd-langara"
-    metrics_path: '/1.0/metrics'
-    params:
-      project: ['jdoe']
-      target: ['langara']
-    scheme: 'https'
-    static_configs:
-      - targets: ['langara.hosts.example.net:8444']
-    tls_config:
-      ca_file: 'tls/abydos.crt'
-      cert_file: 'tls/metrics.crt'
-      key_file: 'tls/metrics.key'
-      server_name: 'abydos'
-
-  - job_name: "lxd-orilla"
-    metrics_path: '/1.0/metrics'
-    params:
-      project: ['jdoe']
-      target: ['orilla']
-    scheme: 'https'
-    static_configs:
-      - targets: ['orilla.hosts.example.net:8444']
-    tls_config:
-      ca_file: 'tls/abydos.crt'
-      cert_file: 'tls/metrics.crt'
-      key_file: 'tls/metrics.key'
-      server_name: 'abydos'
-
-  # jupiter, mars, saturn は 3 つのスタンドアロンの LXD サーバです。
-  # 注意: これらでは `default` プロジェクトのみが使用されているため、プロジェクトの設定は省略しています。
+  # jupiter, mars, saturn は3つのスタンドアロンの LXD サーバです。
+  # 注意: これらでは`default`プロジェクトのみが使用されているため、プロジェクトの設定は省略しています。
   - job_name: "lxd-jupiter"
     metrics_path: '/1.0/metrics'
     scheme: 'https'

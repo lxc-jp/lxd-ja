@@ -24,6 +24,10 @@ discourse: 11330
 
     lxc cluster show <member_name>
 
+クラスタメンバーの状態と使用状況を見るには、以下のコマンドを実行します。
+
+    lxc cluster info <member_name>
+
 ## クラスタを設定するには
 
 クラスタを設定するには、`lxc config` を使用します。

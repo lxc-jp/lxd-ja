@@ -2098,3 +2098,13 @@ CPU ピンニング使用時はホットプラグは無効になります。CPU 
 ## `instance_nic_txqueuelength`
 
 NICデバイスの`txqueuelen`パラメータを制御する`txqueuelen`キーを追加します。
+
+## `cluster_member_state`
+
+`GET /1.0/cluster/members/<member>/state` APIエンドポイントとそれに関連する`ClusterMemberState` APIレスポンスタイプを追加します。
+
+## `instances_placement_scriptlet`
+
+StarlarkスクリプトレットをLXDに提供し、クラスタ内の新規インスタンスの配置を制御するカスタムロジックを使えるようにします。
+
+Starlarkスクリプトレットは新しいグローバル設定オプション`instances.placement.scriptlet`によりLXDに提供されます。
