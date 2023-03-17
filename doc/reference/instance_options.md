@@ -67,7 +67,6 @@ Key                                             | Type      | Default           
 `cloud-init.network-config`                     | string    | `DHCP on eth0`    | no            | if supported by image     | Network configuration for `cloud-init` (content is used as seed value)
 `cloud-init.user-data`                          | string    | `#cloud-config`   | no            | if supported by image     | User data for `cloud-init` (content is used as seed value)
 `cloud-init.vendor-data`                        | string    | `#cloud-config`   | no            | if supported by image     | Vendor data for `cloud-init` (content is used as seed value)
-`user.meta-data`                                | string    | -                 | no            | if supported by image     | Legacy meta-data for `cloud-init` (content is appended to seed value)
 `user.network-config`                           | string    | `DHCP on eth0`    | no            | if supported by image     | Legacy version of `cloud-init.network-config`
 `user.user-data`                                | string    | `#cloud-config`   | no            | if supported by image     | Legacy version of `cloud-init.user-data`
 `user.vendor-data`                              | string    | `#cloud-config`   | no            | if supported by image     | Legacy version of `cloud-init.vendor-data`
@@ -421,6 +420,7 @@ Key                                         | Type      | Description
 `volatile.last_state.power`                 | string    | Instance state as of last host shutdown
 `volatile.vsock_id`                         | string    | Instance `vsock` ID used as of last start
 `volatile.uuid`                             | string    | Instance UUID (globally unique across all servers and projects)
+`volatile.uuid.generation`                             | string    | Instance generation UUID that will change whenever the instance's place in time moves backwards (globally unique across all servers and projects)
 `volatile.<name>.apply_quota`               | string    | Disk quota to be applied the next time the instance starts
 `volatile.<name>.ceph_rbd`                  | string    | RBD device path for Ceph disk devices
 `volatile.<name>.host_name`                 | string    | Network device name on the host
