@@ -4,107 +4,139 @@ relatedlinks: https://cloudinit.readthedocs.org/
 ---
 
 (cloud-init)=
-# cloud-init
+# `cloud-init`を使用するには
 
 ```{youtube} https://www.youtube.com/watch?v=8OCG15TAldI
 ```
 
-LXD は次のインスタンスまたはプロファイル設定キーを使用して [cloud-init](https://launchpad.net/cloud-init) をサポートします。
+[`cloud-init`](https://cloud-init.io/)はLinuxディストリビューションのインスタンスの自動的な初期化とカスタマイズのためのツールです。
 
-* `cloud-init.vendor-data`
-* `cloud-init.user-data`
-* `cloud-init.network-config`
+インスタンスに`cloud-init`設定を追加することで、インスタンスの最初の起動時に`cloud-init`に特定のアクションを実行させることができます。
+可能なアクションには、例えば以下のようなものがあります：
 
-詳細な情報は[`cloud-init` インスタンスオプション](instance-options-cloud-init)と`cloud-init`ドキュメント内の[LXDデータソース](https://cloudinit.readthedocs.io/en/latest/reference/datasources/lxd.html)を参照してください。
+* パッケージの更新とインストール
+* 特定の設定の適用
+* ユーザーの追加
+* サービスの有効化
+* コマンドやスクリプトの実行
+* VMのファイルシステムをディスクのサイズに自動的に拡張する
 
-`cloud-init`を使おうとする前に、これから使おうとするイメージ・ソースをどれにするかをまず決めてください。
-
-`ubuntu` と `ubuntu-daily` の remote にあるイメージは全て cloud-init が有効です。
-`images` remote のイメージで `cloud-init` が有効なイメージがあるものは `/cloud` という接尾辞がつきます（例: `images:ubuntu/22.04/cloud`）。
-
-`vendor-data` と `user-data` は同じルールに従いますが、以下の制約があります。
-
-* ユーザーは vendor data に対して究極のコントロールが可能です。実行を無効化したりマルチパートの入力の特定のパートの処理を無効化できます。
-* デフォルトでは初回ブート時のみ実行されます。
-* vendor data はユーザーにより無効化できます。インスタンスの実行に vendor data の使用が必須な場合は vendor data を使うべきではありません。
-* ユーザーが指定した `cloud-config` は vendor data の `cloud-config` の上にマージされます。
-
-LXD のインスタンスではインスタンスの設定よりもプロファイル内の `vendor-data` を使うべきです。
-
-`cloud-config` の例は [cloud-init のドキュメント](https://cloudinit.readthedocs.io/en/latest/topics/examples.html) にあります。
+詳細な情報は{ref}`cloud-init:index`を参照してください。
 
 ```{note}
-`cloud-init.user-data`と`cloud-init.vendor-data`の両方が指定された場合、`cloud-init`は2つの設定をマージします。
+`cloud-init`アクションはインスタンスの最初の起動時に一度だけ実行されます。
+インスタンスの再起動ではアクションは再実行されません。
+```
 
+## イメージ内の`cloud-init`サポート
+
+`cloud-init`を使用するには、`cloud-init`がインストールされたイメージをベースにインスタンスを作る必要があります。
+
+* `ubuntu`および`ubuntu-daily` {ref}`イメージサーバ <remote-image-servers>`からのすべてのイメージは`cloud-init`をサポートしています。
+* [`images`リモート](https://images.linuxcontainers.org/)からのイメージには`cloud-init`が有効化されたバリアントがあり、通常デフォルトバリアントよりもサイズが大きくなります。
+クラウドバリアントは`/cloud`接尾辞を使用します。例えば、`images:ubuntu/22.04/cloud`。
+
+## 設定オプション
+
+LXDは、`cloud-init`の設定に対して`cloud-init.*`と`user.*`の2つの異なる設定オプションセットをサポートしています。
+どちらのセットを使用する必要があるかは、使用するイメージの`cloud-init`サポートによって異なります。
+一般的には、新しいイメージは`cloud-init.*`設定オプションをサポートし、古いイメージは`user.*`をサポートしていますが、例外も存在する可能性があります。
+
+以下の設定オプションがサポートされています。
+
+* `cloud-init.vendor-data`または`user.vendor-data` ({ref}`cloud-init:vendordata`を参照)
+* `cloud-init.user-data`または`user.user-data` ({ref}`cloud-init:user_data_formats`を参照)
+* `cloud-init.network-config`または`user.network-config` ({ref}`cloud-init:network_config`を参照)
+
+設定オプションの詳細については、[`cloud-init`インスタンスオプション](instance-options-cloud-init)と、`cloud-init`ドキュメント内の{ref}`LXDデータソース <cloud-init:datasource_lxd>`を参照してください。
+
+### ベンダーデータとユーザーデータ
+
+`vendor-data`と`user-data`の両方が、`cloud-init`に{ref}`クラウド構成データ <explanation/format:cloud config data>`を提供するために使用されます。
+
+主な考え方は、`vendor-data`は一般的なデフォルト構成に使用され、`user-data`はインスタンス固有の構成に使用されることです。
+これは、プロファイルで`vendor-data`を指定し、インスタンス構成で`user-data`を指定する必要があることを意味します。
+LXDはこの方法を強制しませんが、プロファイルとインスタンス構成の両方で`vendor-data`と`user-data`を使用することができます。
+
+インスタンスに対して`vendor-data`と`user-data`の両方が提供される場合、`cloud-init`は2つの構成をマージします。
 しかし、両方の設定で同じキーを使った場合、マージは不可能になるかもしれません。
 この場合、指定されたデータをどのようにマージするべきかを`clout-init`に指定してください。
-手順は`clou-init`ドキュメントの[Merging User-Data Sections](https://cloudinit.readthedocs.io/en/latest/reference/merging.html)を参照してください。
-```
+{ref}`cloud-init:merging_user_data`を参照して手順を確認してください。
 
-[`cloud-init`ドキュメント](https://cloudinit.readthedocs.io/en/latest/topics/examples.html)内に
-`cloud-config`の例があります。
+## `cloud-init`の設定方法
 
-## cloud-init と連携する
+インスタンスの`cloud-init`を設定するには、対応する設定オプションをインスタンスが使用する{ref}`プロファイル <profiles>`または{ref}`インスタンス構成 <instances-configure>`に直接追加します。
 
-安全にテストする方法としては、デフォルトプロファイルからコピーした新しいプロファイルを使います。
+インスタンスに直接`cloud-init`を設定する場合、`cloud-init`はインスタンスの最初の起動時にのみ実行されることに注意してください。
+つまり、インスタンスを起動する前に`cloud-init`を設定する必要があります。
+これを行うには、`lxc launch`の代わりに`lxc init`でインスタンスを作成し、設定が完了した後に起動します。
 
-    lxc profile copy default test
+### `cloud-init`設定のYAMLフォーマット
 
-次に新しい `test` プロファイルを編集します。まず `EDITOR` 環境変数を設定しておくと良いでしょう。
+`cloud-init`のオプションでは、YAMLの[literalスタイルフォーマット](https://yaml.org/spec/1.2.2/#812-literal-style)が必要です。
+パイプ記号(`|`)を使用して、パイプの後にインデントされたテキスト全体を、改行とインデントを保持したまま`cloud-init`に単一の文字列として渡すことを示します。
 
-    lxc profile edit test
+`vendor-data`および`user-data`のオプションは通常、`#cloud-config`で始まります。
 
-新しい LXD のインストールでは、設定ファイルは以下の例のような内容になっているはずです。
-
-```yaml
-config: {}
-description: Default LXD profile
-devices:
-  eth0:
-    name: eth0
-    network: lxdbr0
-    type: nic
-  root:
-    path: /
-    pool: default
-    type: disk
-```
-
-`cloud-init` 設定を記述し終わったら、 `lxc launch` を `--profile <profilename>` 付きで使用してプロファイルをインスタンスに適用します。
-
-### 設定に cloud-init のキーを追加する
-
-`cloud-init` キーは特殊な文法を必要とします。パイプ記号 (`|`) を使って、パイプの後のインデント付きのテキスト全体を `cloud-init` に単一の文字列として渡すことを指示します。この際改行とインデントは保持されます。これは YAML で使用される [リテラルスタイルフォーマット](https://yaml.org/spec/1.2.2/#812-literal-style) です。
+例：
 
 ```yaml
 config:
   cloud-init.user-data: |
+    #cloud-config
+    package_upgrade: true
+    packages:
+      - package1
+      - package2
 ```
 
-```yaml
-config:
-  cloud-init.vendor-data: |
+```{tip}
+構文が正しいかどうかを確認する方法については、{ref}`cloud-init:reference/faq:how can i debug my user data?`を参照してください。
 ```
 
-```yaml
-config:
-  cloud-init.network-config: |
+## `cloud-init`のステータスを確認する方法
+
+`cloud-init`はインスタンスの最初の起動時に自動的に実行されます。
+設定されたアクションによっては、完了するまでに時間がかかる場合があります。
+
+`cloud-init`のステータスを確認するには、インスタンスにログインして以下のコマンドを入力します。
+
+    cloud-init status
+
+結果が`status: running`の場合、`cloud-init`はまだ実行中です。結果が`status: done`の場合、完了しています。
+
+また、`--wait`フラグを使用して、`cloud-init`が完了したときにのみ通知を受け取ることができます：
+
+```{terminal}
+:input: cloud-init status --wait
+:user: root
+:host: instance
+
+.....................................
+status: done
 ```
 
-### カスタム user-data 設定
+## ユーザーデータやベンダーデータを指定する方法
 
-cloud-init は `user-data` (と `vendor-data`) セクションをパッケージのアップグレード、パッケージのインストールや任意のコマンド実行のようなことに使用します。
+`user-data`と`vendor-data`の設定は、例えば、パッケージのアップグレードやインストール、ユーザーの追加、コマンドの実行などに使用することができます。
 
-`cloud-init.user-data` キーは最初の行で [データフォーマット](https://cloudinit.readthedocs.io/en/latest/topics/format.html) のどのタイプを `cloud-init` に渡すのかを指示します。パッケージのアップグレードやユーザのセットアップには `#cloud-config` のデータフォーマットを使用します。
+提供される値は、最初の行で`cloud-init`に渡される{ref}`ユーザーデータ形式 <cloud-init:user_data_formats>`のタイプを示す必要があります。
+パッケージのアップグレードやユーザーの設定などのアクティビティには、`#cloud-config`が使用するデータ形式です。
 
-この結果インスタンスの rootfs には以下のファイルが作られます。
+構成データは、インスタンスのルートファイルシステム内の以下のファイルに保存されます：
 
 * `/var/lib/cloud/instance/cloud-config.txt`
 * `/var/lib/cloud/instance/user-data.txt`
 
-#### インスタンス作成時にパッケージをアップグレードする
+### 例
 
-インスタンス用のレポジトリからパッケージのアップグレードをトリガーするには `package_upgrade` キーを使用します。
+以下のセクションでは、さまざまな例のユースケースに対するユーザーデータ（またはベンダーデータ）の設定を参照してください。
+
+より高度な{ref}`例 <cloud-init:yaml_examples>`は、`cloud-init`ドキュメントで見つけることができます。
+
+#### パッケージのアップグレード
+
+インスタンスが作成された直後に、インスタンスのリポジトリからパッケージをアップグレードするためには、`package_upgrade`キーを使用します：
 
 ```yaml
 config:
@@ -113,9 +145,9 @@ config:
     package_upgrade: true
 ```
 
-#### インスタンス作成時にパッケージをインストールする
+#### パッケージのインストール
 
-インスタンスをセットアップするときに特定のパッケージをインストールするには `packages` キーを使用しパッケージ名をリストで指定します。
+インスタンスのセットアップ時に特定のパッケージをインストールするには、`packages`キーを使用し、パッケージ名をリストとして指定します：
 
 ```yaml
 config:
@@ -126,9 +158,9 @@ config:
       - openssh-server
 ```
 
-#### インスタンス作成時にタイムゾーンを設定する
+#### タイムゾーンの設定
 
-インスタンスのタイムゾーンを設定するには `timezone` キーを使用します。
+インスタンス作成時にインスタンスのタイムゾーンを設定するには、`timezone`キーを使用します：
 
 ```yaml
 config:
@@ -137,9 +169,9 @@ config:
     timezone: Europe/Rome
 ```
 
-#### コマンドを実行する
+#### コマンドの実行
 
-(マーカーファイルを書き込むなど) コマンドを実行するには `runcmd` キーを使用しコマンドをリストで指定します。
+コマンド（マーカーファイルの書き込みなど）を実行するには、`runcmd`キーを使用し、コマンドをリストとして指定します：
 
 ```yaml
 config:
@@ -149,9 +181,10 @@ config:
       - [touch, /run/cloud.init.ran]
 ```
 
-#### ユーザーアカウントを追加する
+#### ユーザーアカウントの追加
 
-ユーザーアカウントを追加するには `user` キーを使用します。デフォルトユーザとどのキーがサポートされるかについての詳細は [ドキュメント](https://cloudinit.readthedocs.io/en/latest/topics/examples.html#including-users-and-groups) を参照してください。
+ユーザーアカウントを追加するには、`user`キーを使用します。
+デフォルトユーザーやサポートされているキーに関する詳細は、`cloud-init`ドキュメント内の{ref}`cloud-init:reference/examples:including users and groups`の例を参照してください。
 
 ```yaml
 config:
@@ -161,22 +194,22 @@ config:
       - name: documentation_example
 ```
 
-### カスタムネットワーク設定
+## ネットワーク構成データを指定する方法
 
-`cloud-init` は、`network-config` データを使い、Ubuntu リリースに応じて
-`ifupdown` もしくは `netplan` のどちらかを使って、システム上の関連する設定
-を行います。
+デフォルトでは、`cloud-init`はインスタンスの`eth0`インターフェイスにDHCPクライアントを設定します。
+デフォルトの構成を上書きするために、`network-config`オプションを使用して独自のネットワーク構成を定義することができます（これはテンプレートの構造によるものです）。
 
-デフォルトではインスタンスの `eth0` インタフェースで DHCP クライアントを使うように
-なっています。
+その後、`cloud-init`はUbuntuリリースに応じて`ifupdown`か`netplan`を使用して、システム上の関連するネットワーク構成をレンダリングします。
 
-これを変更するためには設定ディクショナリ内の `cloud-init.network-config` キーを
-使ってあなた自身のネットワーク設定を定義する必要があります。その設定が
-デフォルトの設定をオーバーライドするでしょう（これはテンプレートがそのように
-構成されているためです）。
+構成データは、インスタンスのルートファイルシステム内の以下のファイルに保存されます：
 
-例えば、ある特定のネットワーク・インタフェースを静的 IPv4 アドレスを持ち、
-カスタムのネームサーバを使うようにするには、以下のようにします。
+* `/var/lib/cloud/seed/nocloud-net/network-config`
+* `/etc/network/interfaces.d/50-cloud-init.cfg` (`ifupdown`を使用している場合)
+* `/etc/netplan/50-cloud-init.yaml` (`netplan`を使用している場合)
+
+### 例
+
+特定のネットワークインターフェースに静的なIPv4アドレスを設定し、カスタム名前サーバーを使用するための次の設定を使用します：
 
 ```yaml
 config:
@@ -195,9 +228,3 @@ config:
       - type: nameserver
         address: 10.10.10.254
 ```
-
-この結果、インスタンスの rootfs には以下のファイルが作られます。
-
- * `/var/lib/cloud/seed/nocloud-net/network-config`
- * `/etc/network/interfaces.d/50-cloud-init.cfg` (`ifupdown` を使う場合)
- * `/etc/netplan/50-cloud-init.yaml` (`netplan` を使う場合)

@@ -52,9 +52,11 @@ LXD は全てのインスタンス、ネットワークゲートウェイ、ダ�
 - ゾーンに手動で追加されたレコード
 
 ゾーン設定に対して生成されたレコードは `dig` コマンドで確認できます。
-例えば、 `dig @<DNS_server_IP> -p 1053 axfr lxd.example.net` と実行すると以下のように出力されます。
+これは`core.dns_address`が`<DNS_server_IP>:<DNS_server_PORT>`に設定されていることを前提としています。
+例えば、`dig @<DNS_server_IP> -p <DNS_server_PORT> axfr lxd.example.net`と実行すると以下のような出力がでるかもしれません。
 
-```bash
+```{terminal}
+:input: dig @192.0.2.200 -p 1053 axfr lxd.example.net
 lxd.example.net.                        3600 IN SOA  lxd.example.net. ns1.lxd.example.net. 1669736788 120 60 86400 30
 lxd.example.net.                        300  IN NS   ns1.lxd.example.net.
 lxdtest.gw.lxd.example.net.             300  IN A    192.0.2.1
@@ -71,9 +73,11 @@ lxd.example.net.                        3600 IN SOA  lxd.example.net. ns1.lxd.ex
 
 `192.0.2.0/24` を使用するネットワークに `2.0.192.in-addr.arpa` の IPv4 逆引き DNS レコードのゾーンを設定すると、正引きゾーンの1つを経由してネットワークを参照する全てのプロジェクトからのアドレスの逆引き `PTR` DNSレコードを生成します。
 
-例えば `dig @<DNS_server_IP> -p 1053 axfr 2.0.192.in-addr.arpa`　を実行すると以下のような出力が得られるかもしれません。
+例えば `dig @<DNS_server_IP> -p <DNS_server_PORT> axfr 2.0.192.in-addr.arpa` を実行すると以下のような出力が得られるかもしれません。
 
-```bash
+```{terminal}
+:input: dig @192.0.2.200 -p 1053 axfr 2.0.192.in-addr.arpa
+
 2.0.192.in-addr.arpa.                  3600 IN SOA  2.0.192.in-addr.arpa. ns1.2.0.192.in-addr.arpa. 1669736828 120 60 86400 30
 2.0.192.in-addr.arpa.                  300  IN NS   ns1.2.0.192.in-addr.arpa.
 1.2.0.192.in-addr.arpa.                300  IN PTR  lxdtest.gw.lxd.example.net.
@@ -87,7 +91,7 @@ lxd.example.net.                        3600 IN SOA  lxd.example.net. ns1.lxd.ex
 ネットワークゾーンを使用するには、組み込みの DNS サーバを有効にする必要があります。
 
 そのためには、 LXD サーバのローカルアドレスに `core.dns_address` 設定オプション({ref}`server-options-core`参照)を設定してください。
-
+既存のDNSとの衝突を避けるためポート53を使用しないことをお勧めします。
 これは DNS サーバがリッスンするアドレスです。
 LXD クラスタの場合、アドレスは各クラスタメンバーによって異なるかもしれないことに注意してください。
 

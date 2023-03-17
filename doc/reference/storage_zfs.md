@@ -1,3 +1,7 @@
+---
+discourse: 15872
+---
+
 (storage-zfs)=
 # ZFS - `zfs`
 
@@ -117,6 +121,7 @@ ZFS は `quota` と `refquota` という 2 種類の異なるクォータのプ�
 `snapshots.pattern`    | string | カスタムボリューム | `volume.snapshots.pattern` と同じか `snap%d`   | {{snapshot_pattern_format}} [^*]
 `snapshots.schedule`   | string | カスタムボリューム | `snapshots.schedule` と同じ                    | {{snapshot_schedule_format}}
 `zfs.blocksize`        | string | ZFSドライバ        | `volume.zfs.blocksize` と同じ                  | ZFSブロックのサイズを512～16MiBの範囲で指定します（2の累乗でなければなりません）。ブロックボリュームでは、より大きな値が設定されていても、最大値の128KiBが使用されます。
+`zfs.block_mode`       | bool   | ZFS driver         | `volume.zfs.block_mode` と同じ                 | `dataset` よりもフォーマットした `zvol` を使うかどうか
 `zfs.remove_snapshots` | bool   | ZFSドライバ        | `volume.zfs.remove_snapshots` と同じか `false` | 必要に応じてスナップショットを削除するかどうか
 `zfs.use_refquota`     | bool   | ZFSドライバ        | `volume.zfs.use_refquota` と同じか `false`     | 領域の `quota` の代わりに `refquota` を使うかどうか
 `zfs.reserve_space`    | bool   | ZFS driver         | `volume.zfs.reserve_space` と同じか `false`    | `qouta`/`refquota` に加えて `reservation`/`refreservation` も使用するかどうか

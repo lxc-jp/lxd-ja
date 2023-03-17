@@ -1,5 +1,5 @@
 ---
-discourse: 8178
+discourse: 8178, 16551
 relatedlinks: "[LXD のインストール](https://linuxcontainers.org/ja/lxd/getting-started-cli/)"
 ---
 
@@ -69,15 +69,19 @@ cd lxd-4.18
 
 ビルドには最低 2GB の RAM を搭載することを推奨します。
 
-```bash
-make deps
-# `make deps` が出力した export のコマンド列を使って環境変数を設定してください。
-# 例:
+```{terminal}
+:input: make deps
+
+...
+make[1]: Leaving directory '/root/go/deps/dqlite'
+# environment
+
+Please set the following in your environment (possibly ~/.bashrc)
 #  export CGO_CFLAGS="${CGO_CFLAGS} -I$(go env GOPATH)/deps/dqlite/include/ -I$(go env GOPATH)/deps/raft/include/"
 #  export CGO_LDFLAGS="${CGO_LDFLAGS} -L$(go env GOPATH)/deps/dqlite/.libs/ -L$(go env GOPATH)/deps/raft/.libs/"
 #  export LD_LIBRARY_PATH="$(go env GOPATH)/deps/dqlite/.libs/:$(go env GOPATH)/deps/raft/.libs/:${LD_LIBRARY_PATH}"
 #  export CGO_LDFLAGS_ALLOW="(-Wl,-wrap,pthread_create)|(-Wl,-z,now)"
-make
+:input: make
 ```
 
 ### ソースからのビルド結果のインストール

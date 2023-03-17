@@ -2076,7 +2076,6 @@ ACME サポートを追加します。これにより [Let's Encrypt](https://le
 これは `StorageVolume` と `StorageVolumeSnapshot` API タイプに `CreatedAt` フィールドを追加します。
 
 ## `cpu_hotplug`
-
 これは VM に CPU ホットプラグを追加します。
 CPU ピンニング使用時はホットプラグは無効になります。CPU ピンニングには NUMA デバイスのホットプラグも必要ですが、これはできないためです。
 
@@ -2108,3 +2107,25 @@ NICデバイスの`txqueuelen`パラメータを制御する`txqueuelen`キー�
 StarlarkスクリプトレットをLXDに提供し、クラスタ内の新規インスタンスの配置を制御するカスタムロジックを使えるようにします。
 
 Starlarkスクリプトレットは新しいグローバル設定オプション`instances.placement.scriptlet`によりLXDに提供されます。
+
+## `storage_pool_source_wipe`
+ストレージプールに`source.wipe`ブール値を追加し、LXDは要求されたディスクのパーティションヘッダーを消去する必要があることを示します。これにより、既存のファイルシステムがあることによる潜在的な失敗を回避できます。
+
+## `zfs_block_mode`
+
+これにより、ZFSブロック`filesystem`ボリュームを使用して、ZFSの上に異なるファイルシステムを使用することができるようになります。
+
+これにより、ZFSストレージプールに以下の新しい設定オプションが追加されます：
+
+* `volume.zfs.block_mode`
+* `volume.block.mount_options`
+* `volume.block.filesystem`
+
+## `instance_generation_id`
+
+インスタンスの世代IDのサポートが追加されます。VMまたはコンテナの世代IDは、インスタンスの時間内での位置が後方に移動するたびに変更されます。現時点では、世代IDはVMタイプのインスタンスを通じてのみ公開されています。これにより、VMゲストOSは、既に発生した可能性のある状態の複製を回避するために必要な状態を再初期化できます：
+
+* `volatile.uuid.generation`
+
+## `disk_io_cache`
+これは、ディスクデバイスに新しい`io.cache`プロパティを導入し、VMのキャッシング動作を上書きするために使用できます。

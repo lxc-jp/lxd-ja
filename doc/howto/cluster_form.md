@@ -44,7 +44,9 @@ LXD クラスタを形成するために初期化プロセス中に設定をイ�
 <details>
 <summary>ブートストラップ上での <code>lxd init</code> の完全な例を見るには展開してください</summary>
 
-```
+```{terminal}
+:input: lxd init
+
 Would you like to use LXD clustering? (yes/no) [default=no]: yes
 What IP address or DNS name should be used to reach this server? [default=192.0.2.101]:
 Are you joining an existing cluster? (yes/no) [default=no]: no
@@ -140,7 +142,9 @@ Would you like a YAML "lxd init" preseed to be printed? (yes/no) [default=no]:
 
 ````{group-tab} 認証トークン (推奨)
 
-```
+```{terminal}
+:input: sudo lxd init
+
 Would you like to use LXD clustering? (yes/no) [default=no]: yes
 What IP address or DNS name should be used to reach this server? [default=192.0.2.102]:
 Are you joining an existing cluster? (yes/no) [default=no]: yes
@@ -156,7 +160,9 @@ Would you like a YAML "lxd init" preseed to be printed? (yes/no) [default=no]:
 ````
 ````{group-tab} トラストパスワード
 
-```
+```{terminal}
+:input: sudo lxd init
+
 Would you like to use LXD clustering? (yes/no) [default=no]: yes
 What IP address or DNS name should be used to reach this server? [default=192.0.2.102]:
 Are you joining an existing cluster? (yes/no) [default=no]: yes

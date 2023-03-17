@@ -89,7 +89,7 @@ YAML `lxd init` プリシード ({ref}`initialize-preseed`参照)
 ```bash
     cat <<EOF | lxd init --preseed
 config:
-  core.https_address: 192.168.1.1:9999
+  core.https_address: 192.0.2.1:9999
   images.auto_update_interval: 15
 networks:
 - name: lxdbr0
@@ -100,7 +100,7 @@ networks:
 EOF
 ```
 
-このプリシード設定はLXDデーモンを192.168.1.1のアドレスの9999ポートでHTTPS接続をリッスンするようにし、15時間ごとにイメージを自動的に更新し、`lxdbr0`という名前のネットワークブリッジを作成してIPv4アドレスを自動的に割り当てるようにします。
+このプリシード設定はLXDデーモンを192.0.2.1のアドレスの9999ポートでHTTPS接続をリッスンするようにし、15時間ごとにイメージを自動的に更新し、`lxdbr0`という名前のネットワークブリッジを作成してIPv4アドレスを自動的に割り当てるようにします。
 
 ### 既存のLXD環境を再構成する
 
@@ -148,7 +148,7 @@ EOF
 
 # デーモン設定
 config:
-  core.https_address: 192.168.1.1:9999
+  core.https_address: 192.0.2.1:9999
   core.trust_password: sekret
   images.auto_update_interval: 6
 

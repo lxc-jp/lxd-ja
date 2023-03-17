@@ -67,7 +67,6 @@ key/value 形式の設定は、名前空間で分けられています。
 `cloud-init.network-config` | string | `DHCP on eth0`  | no                 | イメージでサポートされている場合 | `cloud-init`のネットワーク設定(設定はシード値として使用)
 `cloud-init.user-data`      | string | `#cloud-config` | no                 | イメージでサポートされている場合 | `cloud-init`のユーザデータ(設定はシード値として使用)
 `cloud-init.vendor-data`    | string | `#cloud-config` | no                 | イメージでサポートされている場合 | `cloud-init`のベンダーデータ(設定はシード値として使用)
-`user.meta-data`            | string | -               | no                 | イメージでサポートされている場合 | `cloud-init`のレガシーなメタデータ(設定はシード値に追加されます)
 `user.network-config`       | string | `DHCP on eth0`  | no                 | イメージでサポートされている場合 | `cloud-init.network-config`のレガシーバージョン
 `user.user-data`            | string | `#cloud-config` | no                 | イメージでサポートされている場合 | `cloud-init.user-data`のレガシーバージョン
 `user.vendor-data`          | string | `#cloud-config` | no                 | イメージでサポートされている場合 | `cloud-init.vendor-data`のレガシーバージョン
@@ -421,6 +420,7 @@ value = "0"
 `volatile.last_state.power`                | string  | 最後にホストがシャットダウンした時点のインスタンスの状態
 `volatile.vsock_id`                        | string  | 最後の起動時に使用されたインスタンスの`vsock` ID
 `volatile.uuid`                            | string  | インスタンスのUUID(全サーバとプロジェクト内でグローバルにユニーク)
+`volatile.uuid.generation`                 | string  | インスタンスの時間の位置が後退するたびに変わるインスタンス世代UUID(全サーバとプロジェクト内でグローバルにユニーク)
 `volatile.<name>.apply_quota`              | string  | 次回のインスタンス起動時に適用されるディスククォータ
 `volatile.<name>.ceph_rbd`                 | string  | CephのディスクデバイスのRBDデバイスパス
 `volatile.<name>.host_name`                | string  | ホスト上のネットワークデバイス名

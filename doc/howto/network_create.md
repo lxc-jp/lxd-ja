@@ -56,12 +56,19 @@ LXD クラスタを実行していてネットワークを作成したい場合�
 
 例えば、以下の一連のコマンドで 3 つのクラスタメンバ上に `UPLINK` という名前の物理ネットワークをセットアップします。
 
-```bash
-lxc network create UPLINK --type=physical parent=br0 --target=vm01
-lxc network create UPLINK --type=physical parent=br0 --target=vm02
-lxc network create UPLINK --type=physical parent=br0 --target=vm03
-lxc network create UPLINK --type=physical
+```{terminal}
+:input: lxc network create UPLINK --type=physical parent=br0 --target=vm01
+
+Network UPLINK pending on member vm01
+:input: lxc network create UPLINK --type=physical parent=br0 --target=vm02
+Network UPLINK pending on member vm02
+:input: lxc network create UPLINK --type=physical parent=br0 --target=vm03
+Network UPLINK pending on member vm03
+:input: lxc network create UPLINK --type=physical
+Network UPLINK created
 ```
+
+{ref}`cluster-config-networks`も参照してください。
 
 (network-attach)=
 ## インスタンスにネットワークをアタッチする

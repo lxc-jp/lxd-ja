@@ -118,8 +118,8 @@ PKIモードを有効にするには、以下の手順を実行します。
 
 1. すべてのマシンに{abbr}`CA（認証局）`の証明書を追加します。
 
-   - クライアントの設定ディレクトリ（`~/.config/lxc`）に`client.ca`ファイルを配置する。
-   - `server.ca`ファイルをサーバの設定ディレクトリ（`/var/lib/lxd`またはsnapユーザの場合は`/var/snap/lxd/common/lxd`）に置く。
+   - クライアントの設定ディレクトリ(`~/.config/lxc`またはSnapユーザーの場合は`~/snap/lxd/common/config`)に`client.ca`ファイルを配置する。
+   - `server.ca`ファイルをサーバの設定ディレクトリ(`/var/lib/lxd`またはSnapユーザーの場合は`/var/snap/lxd/common/lxd`)に置く。
 1. CAから発行された証明書をクライアントとサーバーに配置し、自動生成された証明書を置き換える。
 1. サーバーを再起動します。
 

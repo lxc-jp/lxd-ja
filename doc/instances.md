@@ -14,5 +14,6 @@ cloud-initの使用 <cloud-init>
 コマンドの実行 <instance-exec.md>
 コンソールへのアクセス <howto/instances_console.md>
 ファイルへのアクセス <howto/instances_access_files.md>
+エラーのトラブルシューティング <howto/instances_troubleshoot.md>
 explanation/instance_config.md
 ```
