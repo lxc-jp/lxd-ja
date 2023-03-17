@@ -16,6 +16,7 @@ balancers
 benchmarking
 BGP
 bibi
+BitLocker
 bool
 bootable
 Btrfs
@@ -99,6 +100,7 @@ IOV
 IPs
 IPv
 IPVLAN
+JIT
 jq
 JSON
 kB
@@ -185,6 +187,7 @@ rST
 runtime
 SATA
 scalable
+scriptlet
 SDN
 Seccomp
 SFTP
@@ -202,6 +205,7 @@ SquashFS
 SSDs
 SSL
 stateful
+Starlark
 stderr
 stdin
 stdout
@@ -271,6 +275,7 @@ WebSockets
 XFS
 XHR
 YAML
+YAML's
 Zettabyte
 ZFS
 zpool
