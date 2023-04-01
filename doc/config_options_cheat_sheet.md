@@ -23,11 +23,11 @@ orphan: true
 :type: integer
 :liveupdate: "yes"
 
-インスタンスを停止する前に通過する転送操作の最大回数
+インスタンスを停止する前に通過させる転送操作の最大回数
 ```
 
 ```{config:option} cluster.evacuate instance
-:shortdesc: インスタンスの避難時の対処方法
+:shortdesc: インスタンスの避難時の操作方法
 :default: "`auto`"
 :type: string
 :liveupdate: "no"
@@ -59,11 +59,11 @@ orphan: true
 ```
 
 ```{config:option} instances.placement.scriptlet
-:shortdesc: カスタム自動インスタンス配置ロジック
+:shortdesc: カスタムで設定するインスタンスの自動配置ロジック
 :type: string
 :scope: global
 
-カスタム自動インスタンス配置ロジック用の {ref}`clustering-instance-placement-scriptlet` を格納します
+カスタムで設定するインスタンスの自動配置ロジックの {ref}`clustering-instance-placement-scriptlet` を格納します
 ```
 
 ```{config:option} maas.api.key

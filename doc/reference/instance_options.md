@@ -420,7 +420,7 @@ value = "0"
 `volatile.last_state.power`                | string  | 最後にホストがシャットダウンした時点のインスタンスの状態
 `volatile.vsock_id`                        | string  | 最後の起動時に使用されたインスタンスの`vsock` ID
 `volatile.uuid`                            | string  | インスタンスのUUID(全サーバとプロジェクト内でグローバルにユニーク)
-`volatile.uuid.generation`                 | string  | インスタンスの時間の位置が後退するたびに変わるインスタンス世代UUID(全サーバとプロジェクト内でグローバルにユニーク)
+`volatile.uuid.generation`                 | string  | インスタンスの時間の位置が後退するたびに変わるインスタンス generation UUID (全サーバとプロジェクト内でグローバルにユニーク)
 `volatile.<name>.apply_quota`              | string  | 次回のインスタンス起動時に適用されるディスククォータ
 `volatile.<name>.ceph_rbd`                 | string  | CephのディスクデバイスのRBDデバイスパス
 `volatile.<name>.host_name`                | string  | ホスト上のネットワークデバイス名
