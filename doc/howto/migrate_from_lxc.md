@@ -72,7 +72,9 @@ LXD にインスタンス名としてすでに存在する名前を持つコン�
 このツールは LXC の設定と (1つまたは複数の) コンテナの設定を分析し、可能な限りの範囲で設定をマイグレートします。
 以下のような実行結果が出力されます。
 
-```bash
+```{terminal}
+:input: sudo lxd.lxc-to-lxd --containers lxc1
+
 Parsing LXC configuration
 Checking for unsupported LXC configuration keys
 Checking for existing containers

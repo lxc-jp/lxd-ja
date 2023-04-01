@@ -1,6 +1,10 @@
 (devices-unix-hotplug)=
 # タイプ: `unix-hotplug`
 
+```{youtube} https://www.youtube.com/watch?v=C2e3LD5wLI8
+:title: LXD Unix devices - YouTube
+```
+
 ```{note}
 `unix-hotplug`デバイスタイプはコンテナでサポートされます。
 ホットプラグをサポートします。

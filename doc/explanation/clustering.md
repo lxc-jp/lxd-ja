@@ -1,5 +1,5 @@
 ---
-discourse: 15871
+discourse: 15728
 ---
 
 (exp-clustering)=
@@ -12,7 +12,7 @@ discourse: 15871
 このシナリオでは、クラスタメンバーとそのインスタンスの設定を保持する同じ分散データベースを任意の台数の LXD サーバで共有します。
 LXD クラスタは `lxc` クライアントまたは REST API を使って管理できます。
 
-この機能は [`clustering`](api-extensions.md#clustering) API 拡張の一部として導入され、 LXD 3.0 以降で利用可能です。
+この機能は [`clustering`](../api-extensions.md#clustering) API 拡張の一部として導入され、 LXD 3.0 以降で利用可能です。
 
 ```{tip}
 ベーシックなLXDクラスタを素早くセットアップしたい場合、[MicroCloud](https://discuss.linuxcontainers.org/t/introducing-microcloud/15871)をチェックしてみてください。
@@ -161,19 +161,19 @@ LXD のクラスタではクラスタグループにメンバーを追加でき�
 ### インスタンス配置スクリプトレット
 
 LXDでは埋め込まれたスクリプト(スクリプトレット)を使って自動的なインスタンス配置を制御するカスタムロジックを使用できます。
-これにより組み込みのインスタンス配置機能に比べてより柔軟に制御できます。
+この方法は、組み込みのインスタンス配置機能よりも柔軟性が高いです。
 
 インスタンス配置スクリプトレットは[Starlark言語](https://github.com/bazelbuild/starlark) (Pythonのサブセット)で記述する必要があります。
-スクリプトレットはLXDがインスタンスをどこに配置するか知る必要がある際に毎回実行されます。
-スクリプトレットには配置されるインスタンスについての情報がインスタンスをホスト可能なクラスタメンバ候補の情報とともに渡されます。
+スクリプトレットは、LXDがインスタンスをどこに配置するかを知る必要があるたびに呼び出されます。
+スクリプトレットは、配置されるインスタンスに関する情報と、インスタンスをホストできる候補のクラスターメンバーに関する情報を受け取ります。
 スクリプトレットからクラスタメンバ候補の状態と利用可能なハードウェアリソースについての情報を要求することもできます。
 
 インスタンス配置スクリプトレットは`instance_placement`関数を以下のシグネチャで実装する必要があります。
 
    `instance_placement(request, candidate_members)`:
 
-- `request`は[`scriptlet.InstancePlacement`](https://pkg.go.dev/github.com/lxc/lxd/shared/api/scriptlet/#InstancePlacement)の展開された表現を含むオブジェクトです。これは`project`と`reason`フィールドを含みます。`reason`は`new`, `evacuation`, `relocation`のいずれかです。
-- `candidate_members`は[`api.ClusterMember`](https://pkg.go.dev/github.com/lxc/lxd/shared/api#ClusterMember)エントリを表すクラスタメンバオブジェクトの`list`です。
+- `request`は、[`scriptlet.InstancePlacement`](https://pkg.go.dev/github.com/lxc/lxd/shared/api/scriptlet/#InstancePlacement) の展開された表現を含むオブジェクトです。このリクエストには、`project`および`reason`フィールドが含まれています。`reason`は、`new`、`evacuation`、または`relocation`のいずれかです。
+- `candidate_members`は、[`api.ClusterMember`](https://pkg.go.dev/github.com/lxc/lxd/shared/api#ClusterMember) エントリを表すクラスターメンバーオブジェクトの`list`です。
 
 例:
 
@@ -187,7 +187,7 @@ def instance_placement(request, candidate_members):
         # エラーログ出力の例。これはLXDのログに出力されます。
         log_error("Invalid name supplied: ", request.name)
 
-        return "Invalid name" # インスタンス配置を拒否するエラーを返す。
+        fail("Invalid name") # エラーで終了してインスタンス配置を拒否します。
 
     # 提供された第1候補のサーバにインスタンスを配置する。
     set_target(candidate_members[0].server_name)
@@ -205,9 +205,9 @@ LXDに現在適用されているスクリプトレットを見るには`lxc con
 
 スクリプトレットでは(Starlarkで提供される関数に加えて)以下の関数が利用できます。
 
-- `log_info(*messages)`: infoレベルでLXDのログにログエントリを追加します。`messages`は1つ以上のメッセージの引数です。
-- `log_warn(*messages)`: warnレベルでLXDのログにログエントリを追加します。`messages`は1つ以上のメッセージの引数です。
-- `log_error(*messages)`: errorレベルでLXDのログにログエントリを追加します。`messages`は1つ以上のメッセージの引数です。
+- `log_info(*messages)`: `info`レベルでLXDのログにログエントリを追加します。`messages`は1つ以上のメッセージの引数です。
+- `log_warn(*messages)`: `warn`レベルでLXDのログにログエントリを追加します。`messages`は1つ以上のメッセージの引数です。
+- `log_error(*messages)`: `error`レベルでLXDのログにログエントリを追加します。`messages`は1つ以上のメッセージの引数です。
 - `set_cluster_member_target(member_name)`: インスタンスが作成されるべきクラスタメンバを設定します。`member_name`はインスタンスが作成されるべきクラスタメンバーの名前です。この関数が呼ばれなければ、LXDは組み込みのインスタンス配置ロジックを使用します。
 - `get_cluster_member_state(member_name)`: クラスタメンバーの状態を取得します。[`api.ClusterMemberState`](https://pkg.go.dev/github.com/lxc/lxd/shared/api#ClusterMemberState)の形式でクラスタメンバーの状態を含むオブジェクトを返します。`member_name`は状態を取得する対象のクラスタメンバーの名前です。
 - `get_cluster_member_resources(member_name)`: クラスタメンバーのリソースについての情報を取得します。[`api.Resources`](https://pkg.go.dev/github.com/lxc/lxd/shared/api#Resources)の形式でリソースについての情報を含むオブジェクトを返します。`member_name`はリソース情報を取得する対象のクラスタメンバーの名前です。

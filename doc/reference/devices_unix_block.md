@@ -1,6 +1,10 @@
 (devices-unix-block)=
 # タイプ: `unix-block`
 
+```{youtube} https://www.youtube.com/watch?v=C2e3LD5wLI8
+:title: LXD Unix devices - YouTube
+```
+
 ```{note}
 `unix-block`デバイスタイプはコンテナでサポートされます。
 ホットプラグをサポートします。

@@ -18,7 +18,7 @@ lxc config show
 
 ```bash
 ip addr
-lxc config set core.https_address 192.168.1.15
+lxc config set core.https_address 192.0.2.1
 ```
 
 {ref}`security_remote_access` も参照してください。
@@ -34,7 +34,7 @@ lxc config set core.trust_password SECRET
 
 これでリモートパスワードが設定されるので、 `lxc remote add` 実行時にこのパスワードを使用できます。
 
-あるいはクライアント証明書を `.config/lxc/client.crt` からサーバにコピーして以下のコマンドで追加すれば、パスワードを設定しなくてもサーバにアクセスできます。
+あるいはクライアント証明書を `.config/lxc/client.crt` (`~/.config/lxc/client.crt` またはSnapユーザーの場合は `~/snap/lxd/common/config/client.crt`) からサーバにコピーして以下のコマンドで追加すれば、パスワードを設定しなくてもサーバにアクセスできます。
 
 ```bash
 lxc config trust add client.crt
@@ -80,58 +80,16 @@ lxc config set <container> linux.kernel_modules <modules>
 
 コンテナ内に `/.dockerenv` ファイルを作成するとネストした環境内で実行しているために発生するエラーを Docker が無視するようにできるという報告もあります。
 
-## コンテナの起動に関する問題
+### `lxc`はどこに設定を保存していますか？
 
-もしコンテナが起動しない場合や、期待通りの動きをしない場合に最初にすべきことは、コンテナが生成したコンソールログを見ることです。
-これには `lxc console --show-log CONTAINERNAME` コマンドを使います。
+`lxc`コマンドは、設定を`~/.config/lxc`に保存します。Snapユーザーの場合は、`~/snap/lxd/common/config`に保存されます。
 
-次の例では、`systemd` が起動しない RHEL 7 システムを調べています。
+そのディレクトリにはさまざまな設定ファイルが格納されており、その中には以下のものがあります：
 
-    # lxc console --show-log systemd
-    Console log:
-
-    Failed to insert module 'autofs4'
-    Failed to insert module 'unix'
-    Failed to mount sysfs at /sys: Operation not permitted
-    Failed to mount proc at /proc: Operation not permitted
-    [!!!!!!] Failed to mount API filesystems, freezing.
-
-ここでのエラーは、`/sys` と `/proc` がマウントできないというエラーです。これは非特権コンテナでは正しい動きです。
-しかし、LXD は可能であれば自動的にこれらのファイルシステムをマウントします。
-
-[コンテナの要件](container-environment.md) では、コンテナには`/sbin/init`が存在するだけでなく、空の`/dev`、`/proc`、`/sys`ディレクトリが存在していなければならないと定められています。
-もしこれらのディレクトリが存在しなければ、LXD はこれらをマウントできません。そして、`systemd`がこれらをマウントしようとします。
-非特権コンテナでは、`systemd`はこれを行う権限はなく、フリーズしてしまいます。
-
-何かが変更される前に環境を見ることはできます。`raw.lxc` 設定パラメーターを使って、明示的にコンテナ内の init システムを変更できます。
-これは Linux カーネルコマンドラインに `init=/bin/bash` を設定するのと同じです。
-
-    lxc config set systemd raw.lxc 'lxc.init.cmd = /bin/bash'
-
-次のようになります:
-
-    root@lxc-01:~# lxc config set systemd raw.lxc 'lxc.init.cmd = /bin/bash'
-    root@lxc-01:~# lxc start systemd
-    root@lxc-01:~# lxc console --show-log systemd
-
-    Console log:
-
-    [root@systemd /]#
-    root@lxc-01:~#
-
-コンテナが起動しましたので、期待通りにコンテナ内で動いていないことを確認できます。
-
-    root@lxc-01:~# lxc exec systemd bash
-    [root@systemd ~]# ls
-    [root@systemd ~]# mount
-    mount: failed to read mtab: No such file or directory
-    [root@systemd ~]# cd /
-    [root@systemd /]# ls /proc/
-    sys
-    [root@systemd /]# exit
-
-LXD は自動修復を試みますので、起動時に作成されたディレクトリもあります。コンテナをシャットダウンして再起動すると問題は解決されます。
-しかし問題の根源は依然として存在しています。**テンプレートに必要なファイルが含まれていないという問題です**。
+- `client.crt`：クライアント証明書（オンデマンドで生成）
+- `client.key`：クライアントキー（オンデマンドで生成）
+- `config.yml`：設定ファイル（`remotes`、`aliases`などの情報）
+- `servercerts/`：`remotes`に属するサーバー証明書が格納されているディレクトリ
 
 ## ネットワークの問題
 

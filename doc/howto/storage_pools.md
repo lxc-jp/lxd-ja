@@ -161,11 +161,19 @@ LXD クラスターを稼働していてストレージプールを追加した�
 
 例えば、以下の一連のコマンドは 3 つのクラスターメンバー上で異なるロケーションと異なるサイズで `my-pool` という名前のストレージプールをセットアップします。
 
-    lxc storage create my-pool zfs source=/dev/sdX size=10GB --target=vm01
-    lxc storage create my-pool zfs source=/dev/sdX size=15GB --target=vm02
-    lxc storage create my-pool zfs source=/dev/sdY size=10GB --target=vm03
-    lxc storage create my-pool zfs
+```{terminal}
+:input: lxc storage create my-pool zfs source=/dev/sdX size=10GB --target=vm01
 
+Storage pool my-pool pending on member vm01
+:input: lxc storage create my-pool zfs source=/dev/sdX size=15GB --target=vm02
+Storage pool my-pool pending on member vm02
+:input: lxc storage create my-pool zfs source=/dev/sdY size=10GB --target=vm03
+Storage pool my-pool pending on member vm03
+:input: lxc storage create my-pool zfs
+Storage pool my-pool created
+```
+
+{ref}`cluster-config-storage`も参照してください。
 
 ```{note}
 ほとんどのストレージドライバでは、ストレージプールは各クラスターメンバー上にローカルに存在します。

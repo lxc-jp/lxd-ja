@@ -97,7 +97,9 @@ WantedBy=sys-subsystem-net-devices-<network_bridge>.device
 
 以下のような出力になるはずです。
 
-```
+```{terminal}
+:input: sudo systemctl status lxd-dns-lxdbr0.service
+
 ● lxd-dns-lxdbr0.service - LXD per-link DNS configuration for lxdbr0
      Loaded: loaded (/etc/systemd/system/lxd-dns-lxdbr0.service; enabled; vendor preset: enabled)
      Active: inactive (dead) since Mon 2021-06-14 17:03:12 BST; 1min 2s ago
@@ -108,7 +110,9 @@ WantedBy=sys-subsystem-net-devices-<network_bridge>.device
 
 `resolved` に設定が反映されたか確認するには、 `resolvectl status <network_bridge>` を実行します。
 
-```
+```{terminal}
+:input: resolvectl status lxdbr0
+
 Link 6 (lxdbr0)
       Current Scopes: DNS
 DefaultRoute setting: no

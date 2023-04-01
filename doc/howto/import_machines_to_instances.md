@@ -61,7 +61,9 @@ LXD は既存のディスクやイメージに基づく LXD インスタンス�
    <details>
    <summary>展開して出力の例を見る</summary>
 
-   ```
+   ```{terminal}
+   :input: ./bin.linux.lxd-migrate
+
    Please provide LXD server URL: https://192.0.2.7:8443
    Certificate fingerprint: xxxxxxxxxxxxxxxxx
    ok (y/n)? y

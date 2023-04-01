@@ -1,5 +1,5 @@
 # デバッグ
-インスタンスの問題をデバッグする際の情報については、[FAQ](faq.md) を参照してください。
+インスタンスの問題をデバッグする際の情報については、{ref}`instances-troubleshoot`を参照してください。
 
 ## `lxc` と `lxd` のデバッグ
 
@@ -17,18 +17,6 @@
 ### `lxc monitor`
 
 このコマンドはメッセージがリモートのサーバに現れるのをモニターします。
-
-### `lxd --debug`
-
-`lxd` サーバを停止して `--debug` フラグでフォアグラウンドで実行することで
-たくさんの（願わくは）有用な情報が出力されます。
-
-```bash
-systemctl stop lxd lxd.socket
-lxd --debug --group lxd
-```
-
-上記の `--group lxd` は非特権ユーザーにアクセス権限を与えるために必要です。
 
 ## ローカルソケット経由でのREST API
 
@@ -51,18 +39,18 @@ curl --unix-socket /var/snap/lxd/common/lxd/unix.socket lxd/1.0 | jq .
 
 ## HTTPS経由でのREST API
 
-[LXDへのHTTPS接続](security.md)には有効なクライアント証明書が
-必要です。証明書は初回に `lxc remote add` を実行したときに
-`~/.config/lxc/client.crt` に生成されます。この証明書は
-認証と暗号化のために接続ツールに渡す必要があります。
+[LXDへのHTTPS接続](security.md)には、有効な
+クライアント証明書が必要で、最初の`lxc remote add`で生成されます。この
+証明書は、認証と暗号化のための接続ツールに渡す必要があります。
 
-証明書の中身に興味がある場合は以下のコマンドで確認できます。
+必要に応じて、`openssl`を使って証明書（`~/.config/lxc/client.crt`
+またはSnapユーザーの場合 `~/snap/lxd/common/config/client.crt`）を調べることができます：
 
 ```bash
-openssl x509 -in client.crt -purpose
+openssl x509 -text -noout -in client.crt
 ```
 
-コマンドの出力の中に以下の情報を読み取ることが出来るはずです。
+表示される行の中に以下のようなものがあるはずです：
 
     Certificate purposes:
     SSL client : Yes
@@ -71,7 +59,10 @@ openssl x509 -in client.crt -purpose
 ### コマンドラインツールを使う
 
 ```bash
-wget --no-check-certificate https://127.0.0.1:8443/1.0 --certificate=$HOME/.config/lxc/client.crt --private-key=$HOME/.config/lxc/client.key -O - -q
+wget --no-check-certificate --certificate=$HOME/.config/lxc/client.crt --private-key=$HOME/.config/lxc/client.key -qO - https://127.0.0.1:8443/1.0
+
+# または snap ユーザーの場合
+wget --no-check-certificate --certificate=$HOME/snap/lxd/common/config/client.crt --private-key=$HOME/snap/lxd/common/config/client.key -qO - https://127.0.0.1:8443/1.0
 ```
 
 ### ブラウザを使う
