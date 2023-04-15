@@ -1,6 +1,10 @@
 (devices-infiniband)=
 # タイプ: `infiniband`
 
+```{youtube} https://www.youtube.com/watch?v=SDewhlRSOuM
+:title: LXD InfiniBand devices - YouTube
+```
+
 ```{note}
 `infiniband`デバイスタイプはコンテナとVMの両方でサポートされます。
 ホットプラグはコンテナのみでサポートし、VMではサポートしません。

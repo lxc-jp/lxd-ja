@@ -30,8 +30,11 @@ LXDデーモンとのリモート通信は、HTTPS上のJSONを使って行わ�
 
 ### 通信プロトコル
 
-通信プロトコルは TLS1.2 以上に対応しています。
+通信プロトコルは TLS1.3 以上に対応しています。
 すべての通信には完全な前方秘匿を使用し、暗号は強力な楕円曲線（ECDHE-RSA や ECDHE-ECDSA など）に限定してください。
+
+`LXD_INSECURE_TLS`環境変数をクライアントとサーバの両方で設定することによりLXDが TLS 1.2 を受け入れるようにすることはできます。
+しかし、これはサポートされる構成ではなく、時代遅れな企業プロキシを使うために強制される場合にのみ使用すべきです。
 
 生成される鍵は最低でも4096ビットのRSA、できれば384ビットのECDSAが望ましいです。
 署名を使用する場合は、SHA-2署名のみを信頼すべきです。
@@ -155,7 +158,7 @@ Candidベースの認証を設定する方法については、チュートリ�
 ```{youtube} https://www.youtube.com/watch?v=VE60AbJHT6E
 ```
 
-LXDはCanonicalのRBACサービスとの連携をサポートしています。
+LXDはCanonicalのRBACサービスとの連携をサポートしています。RBACは[Ubuntu Pro](https://ubuntu.com/pro)サブスクリプションに含まれています。
 Candidベースの認証と組み合わせることで、{abbr}`RBAC (Role Based Access Control)`は、APIクライアントがLXD上でできることを制限するために使うことができます。
 
 このような設定では、認証はCandidを通して行われ、RBACサービスはユーザー/グループの関係に役割を維持します。
@@ -173,7 +176,7 @@ Candidベースの認証と組み合わせることで、{abbr}`RBAC (Role Based
 ```{important}
 制限のないプロジェクトでは、`auditor`と`user`のロールだけが、ホストへのルートアクセスを任せられないユーザーに適しています。
 
-また、{ref}`制限付きプロジェクト <projects-restrictions>` では、適切に設定されていれば、`operator` ロールも安全に使用することができます。
+また、{ref}`制限付きプロジェクト <project-restrictions>` では、適切に設定されていれば、`operator` ロールも安全に使用することができます。
 ```
 
 LXDサーバでRBACを有効にするには[`rbac.*`](server-options-candid-rbac)サーバオプションを設定してください。これは`candid.*`オプションのスーパーセットで、LXDをRBACサービスに統合できます。

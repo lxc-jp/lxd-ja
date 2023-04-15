@@ -210,13 +210,21 @@ SR-IOVハードウェアアクセラレーション
       ip link set enp9s0f0np0 up
       ```
 
+VDPAハードウェアアクセラレーション
+: `acceleration=vdpa`を使用するには互換性のあるVDPA物理NICが必要です。
+  セットアップ手順はSR-IOVハードウェアアクセラレーションと同様ですが、さらに`vhost_vdpa`モジュールをセットアップし、利用可能なVDPA管理デバイスがあることを確認する必要があります:
+
+  ```
+  modprobe vhost_vdpa && vdpa mgmtdev show
+  ```
+
 #### デバイスオプション
 
 `sriov` タイプのNICデバイスには以下のデバイスオプションがあります。
 
 キー                                   | 型      | デフォルト値       | 管理 | 説明
 :--                                    | :--     | :--                | :--  | :--
-`acceleration`                         | string  | `none`             | no   | ハードウェアオフローディングを有効にする(`none`か`sriov`、{ref}`devices-nic-hw-acceleration`参照)
+`acceleration`                         | string  | `none`             | no   | ハードウェアオフローディングを有効にする(`none`か`sriov`か`vdpa`、{ref}`devices-nic-hw-acceleration`参照)
 `boot.priority`                        | integer | -                  | no   | VMのブート優先度(高いほうが先にブート)
 `host_name`                            | string  | ランダムに割り当て | no   | ホスト内部でのインタフェース名
 `hwaddr`                               | string  | ランダムに割り当て | no   | 新しいインタフェースのMACアドレス
@@ -227,12 +235,14 @@ SR-IOVハードウェアアクセラレーション
 `ipv6.routes`                          | string  | -                  | no   | NICへルーティングするIPv6静的ルートのカンマ区切りリスト
 `ipv6.routes.external`                 | string  | -                  | no   | NICへのルーティングとアップリンクネットワークでの公開に使用するIPv6静的ルートのカンマ区切りリスト
 `name`                                 | string  | カーネルが割り当て | no   | インスタンス内部でのインタフェース名
+`nested`                               | string  | -                  | no   | このNICをどの親NICの下にネストするか(`vlan`も参照)
 `network`                              | string  | -                  | yes  | デバイスの接続先の管理されたネットワーク(必須)
 `security.acls`                        | string  | -                  | no   | 適用するネットワークACLのカンマ区切りリスト
 `security.acls.default.egress.action`  | string  | `reject`           | no   | どのACLルールにもマッチしない外向きトラフィックに使うアクション
 `security.acls.default.egress.logged`  | bool    | `false`            | no   | どのACLルールにもマッチしない外向きトラフィックをログ出力するかどうか
 `security.acls.default.ingress.action` | string  | `reject`           | no   | どのACLルールにもマッチしない内向きトラフィックに使うアクション
 `security.acls.default.ingress.logged` | bool    | `false`            | no   | どのACLルールにもマッチしない内向きトラフィックをログ出力するかどうか
+`vlan`                                 | integer | -                  | no   | ネスティングを使用する際に使用する VLAN ID (`nested`も参照)
 
 (nic-physical)=
 ### `nictype`: `physical`

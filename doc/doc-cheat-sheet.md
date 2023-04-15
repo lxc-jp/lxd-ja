@@ -47,12 +47,16 @@ myst:
 
 * - 入力
   - 出力
+* - `` {guilabel}`UI要素` ``
+  - {guilabel}`UI要素`
+* - `` `コード` ``
+  - `コード`
+* - `` {command}`コマンド` ``
+  - {command}`コマンド`
 * - `*Italic*`
   - **イタリック*
 * - `**Bold**` (太字)
   - **ボールド**
-* - `` `code` ``
-  - `code` (コードネーム)
 
 ```
 
@@ -649,3 +653,124 @@ rSTには詳細セクションのサポートはありませんが、HTMLを挿�
 * - ``{term}`example term` ``
   - {term}`example term`
 `````
+
+## さらに便利なマークアップ
+
+`````{list-table}
+   :header-rows: 1
+
+* - Input
+  - Output
+* - ````
+
+    ```{versionadded} X.Y
+    ```
+
+    ````
+
+  - ```{versionadded} X.Y
+    ```
+
+* - `` {abbr}`API (Application Programming Interface)` ``
+  - {abbr}`API (Application Programming Interface)`
+
+`````
+
+## カスタムの拡張
+
+このドキュメントではいくつかのカスタム拡張を使っています。
+
+### 関連リンク
+
+ページの先頭に以下のフィールドを追加することでサイドバーに関連するウェブサイトへのリンクを追加できます。
+
+    relatedlinks: https://github.com/canonical/lxd-sphinx-extensions, [RTFM](https://www.google.com)
+
+タイトルをオーバーライドするには、マークダウン文法を使います。空白は無視されることに注意してください。タイトル内に空白が必要な場合、`&#32;`に置き換えてください。メタデータの値が`[`で始まる場合にSphinxが文句を言う場合は値をクォートで囲んでください。
+
+Discourseのトピックへのリンクを追加するには、頁の先頭に以下のフィールドを追加してください(`12345`はDiscourseのトピックIDです):
+
+    discourse: 12345
+
+### YouTubeのリンク
+
+YouTube動画へのリンクを追加するには、以下のように指定します:
+
+`````{list-table}
+   :header-rows: 1
+
+* - Input
+  - Output
+* - ````
+
+    ```{youtube} https://www.youtube.com/watch?v=iMLiK1fX4I0
+    :title: Demo
+    ```
+
+    ````
+
+  - ```{youtube} https://www.youtube.com/watch?v=iMLiK1fX4I0
+    :title: Demo
+    ```
+
+`````
+
+動画のタイトルは自動で抽出され、リンクにホバーした際に表示されます。
+タイトルをオーバーライドするには`:title:`オプションを追加してください。
+
+### スペルの例外
+
+スペルの慣習に沿わないけれど、とあるコンテキストでは正しい単語を使う必要がある場合、`{spellexception}`で囲むことでスペルチェッカーから免除できます。
+
+```{list-table}
+   :header-rows: 1
+
+* - Input
+  - Output
+* - `` {spellexception}`PurposelyWrong` ``
+  - {spellexception}`PurposelyWrong`
+
+```
+
+### ターミナル出力
+
+コマンドと出力のターミナルの表示を示すには、以下のようにします:
+
+`````{list-table}
+   :header-rows: 1
+
+* - Input
+  - Output
+* - ````
+
+    ```{terminal}
+    :input: command number one
+    :user: root
+    :host: vm
+
+    output line one
+    output line two
+    :input: another command
+    more output
+    ```
+
+    ````
+
+  - ```{terminal}
+    :input: command number one
+    :user: root
+    :host: vm
+
+    output line one
+    output line two
+    :input: another command
+    more output
+    ```
+
+`````
+
+入力は`:input:`オプションで指定します(あるいはメインの内容の一部で`:input:`という接頭辞を付けます)。
+出力はメインの内容で指定します。
+
+プロンプト(デフォルトでは`user@host:~$`)をオーバーライドする場合、`:user:`や`:host:`を指定します。
+長い行をラップする代わりにターミナルを水平スクロールすうには`:scroll:`を追加します。

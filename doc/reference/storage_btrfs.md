@@ -62,10 +62,13 @@ Btrfs qgroups は階層的ですが、新しいサブボリュームは親のサ
 (storage-btrfs-pool-config)=
 ## ストレージプール設定
 
-キー                  | 型     | デフォルト値                                                | 説明
-:--                   | :---   | :--------                                                   | :----------
-`btrfs.mount_options` | string | `user_subvol_rm_allowed`                                    | ブロックデバイスのマウントオプション
-`size`                | string | 自動 (空きディスクスペースの 20%, >= 5 GiB and <= 30 GiB)   | ループベースのプールを作成する際のストレージプールのサイズ (バイト単位、接尾辞のサポートあり)
+キー                  | 型     | デフォルト値                                              | 説明
+:--                   | :---   | :--------                                                 | :----------
+`btrfs.mount_options` | string | `user_subvol_rm_allowed`                                  | ブロックデバイスのマウントオプション
+`size`                | string | 自動 (空きディスクスペースの 20%, >= 5 GiB and <= 30 GiB) | ループベースのプールを作成する際のストレージプールのサイズ (バイト単位、接尾辞のサポートあり、増やすとストレージプールのサイズを拡大)
+`source`              | string | -                                                         | 既存のブロックデバイス、ループファイル、あるいはBtrfsサブボリュームのパス
+`source.wipe`         | bool   | `false`                                                   | ストレージプールを作成する前に`source`で指定されたブロックデバイスの中身を消去する
+
 
 {{volume_configuration}}
 

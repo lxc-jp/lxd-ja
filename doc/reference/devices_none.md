@@ -1,6 +1,9 @@
 (devices-none)=
 # タイプ: `none`
 
+```{youtube} https://www.youtube.com/watch?v=6NCLnd5_guQ
+```
+
 ```{note}
 `none`デバイスタイプはコンテナとVMの両方でサポートされます。
 ```

@@ -84,6 +84,14 @@ key/value設定は名前空間が分けられています。
 `rbac.api.key`                      | string  | global   | -                                                | RBACサーバの公開鍵(HTTPのみ有効なサーバで必要)
 `rbac.api.url`                      | string  | global   | -                                                | 外部のRBACサーバのURL
 
+(server-options-oidc)=
+## OpenID Connect 設定
+キー             | 型     | スコープ | デフォルト値 | 説明
+:--              | :---   | :----    | :------      | :----------
+`oidc.client.id` | string | global   | -            | OpenID Connect クライアント ID
+`oidc.issuer`    | string | global   | -            | プロバイダの OpenID Connect Discovery URL
+`oidc.audience`  | string | global   | -            | アプリケーションに期待される audience value (プロバイダによっては必須)
+
 (server-options-cluster)=
 ## クラスタ設定
 
@@ -136,7 +144,7 @@ key/value設定は名前空間が分けられています。
 
 キー                                | 型     | スコープ | デフォルト値                      | 説明
 :--                                 | :---   | :----    | :------                           | :----------
-`backups.compression_algorithm`     | string | global   | `gzip`                            | 新規のイメージに用いる圧縮アルゴリズム (`bzip2`, `gzip`, `lzma`, `xz`, `none` のいずれか)
+`backups.compression_algorithm`     | string | global   | `gzip`                            | バックアップに用いる圧縮アルゴリズム (`bzip2`, `gzip`, `lzma`, `xz`, `none` のいずれか)
 `instances.nic.host_name`           | string | global   | `random`                          | `random`に設定するとランダムなホストインタフェース名を使用し、`mac`に設定すると`lxd<mac_address>`の形式(先頭2桁を除いたMACアドレス)で名前を生成
 `instances.placement.scriptlet`     | string | global   | -                                 | カスタムの自動インスタンス配置ロジック用の{ref}`clustering-instance-placement-scriptlet`を格納
 `maas.api.key`                      | string | global   | -                                 | MAASを管理するためのAPIキー
