@@ -363,6 +363,10 @@ value = "0"
 `security.protection.shift`                      | bool    | `false`      | yes                | コンテナ       | インスタンスのファイルシステムが起動時に UID/GID がシフト(再マッピング)されるのを防ぐ
 `security.agent.metrics`                         | bool    | `true`       | no                 | 仮想マシン     | 状態の情報とメトリクスを`lxd-agent`に問い合わせるかどうかを制御
 `security.secureboot`                            | bool    | `true`       | no                 | 仮想マシン     | UEFIセキュアブートがデフォルトのMicrosoftのキーで有効になるかを制御
+`security.sev`                                   | bool    | `false`      | no                 | 仮想マシン     | AMD SEV (Secure Encrypted Virtualization)をこのVMで有効にするかを制御
+`security.sev.policy.es`                         | bool    | `false`      | no                 | 仮想マシン     | AMD SEV-ES (SEV Encrypted State)をこのVMで有効にするかを制御
+`security.sev.session.dh`                        | string  | `true`       | no                 | 仮想マシン     | ゲストオーナーの`base64`エンコードされたDiffie-Hellmanキー
+`security.sev.session.data`                      | string  | `true`       | no                 | 仮想マシン     | ゲストオーナーの`base64`エンコードされたsession blob
 `security.syscalls.allow`                        | string  | -            | no                 | コンテナ       | `\n`区切りのシステムコールの許可リスト(`security.syscalls.deny*`を使う場合は使用不可)
 `security.syscalls.deny`                         | string  | -            | no                 | コンテナ       | `\n`区切りのシステムコールの拒否リスト
 `security.syscalls.deny_compat`                  | bool    | `false`      | no                 | コンテナ       | `x86_64`では、`compat_*`システムコールのブロックを有効にするかどうかを制御(他のアーキテクチャでは何もしません)
@@ -428,6 +432,7 @@ value = "0"
 `volatile.<name>.last_state.created`       | string  | 物理デバイスのネットワークデバイスが作られたかどうか(`true`または`false`)
 `volatile.<name>.last_state.mtu`           | string  | 物理デバイスをインスタンスに移動したときに使われていたネットワークデバイスの元のMTU
 `volatile.<name>.last_state.hwaddr`        | string  | 物理デバイスをインスタンスに移動したときに使われていたネットワークデバイスの元のMAC
+`volatile.<name>.last_state.vdpa.name`     | string  | VDPAデバイスファイルディスクリプタをインスタンスに移動させる際に使用されるVDPAデバイス名
 `volatile.<name>.last_state.vf.id`         | string  | SR-IOVの仮想ファンクション(VF)をインスタンスに移動したときに使われていたVFのID
 `volatile.<name>.last_state.vf.hwaddr`     | string  | SR-IOVの仮想ファンクション(VF)をインスタンスに移動したときに使われていたVFのMAC
 `volatile.<name>.last_state.vf.vlan`       | string  | SR-IOVの仮想ファンクション(VF)をインスタンスに移動したときに使われていたVFの元のVLAN

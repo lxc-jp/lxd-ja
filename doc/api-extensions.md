@@ -2129,3 +2129,52 @@ Starlarkスクリプトレットは新しいグローバル設定オプション
 
 ## `disk_io_cache`
 これは、ディスクデバイスに新しい`io.cache`プロパティを導入し、VMのキャッシング動作を上書きするために使用できます。
+
+## `amd_sev`
+AMD SEV (Secure Encrypted Virtualization)のサポートを追加します。ゲストVMのメモリを暗号化するのに使用できます。
+
+これはSEV暗号化に以下の新しい設定オプションを追加します。
+
+* `security.sev` : (bool) このVMでSEVを有効化するか
+* `security.sev.policy.es` : (bool) このVMでSEV-ESを有効化するか
+* `security.sev.session.dh` : (string) ゲストオーナーの`base64`エンコードされたDiffie-Hellmanキー
+* `security.sev.session.data` : (string) ゲストオーナーの`base64`エンコードされた session blob
+
+## `storage_pool_loop_resize`
+これはループファイルをバックエンドとするストレージプールを、プールの`size`設定を変更することでサイズを拡大できるようにします。
+
+## `migration_vm_live`
+これはVMでQEMUからQEMUへのライブマイグレーションを(Cephを含む)共有されたストレージと共有されないストレージプールの両方で実行するサポートを追加します。
+
+これはさらにマイグレーションの `CRIUType` `protobuf` フィールドに `3` という `CRIUType_VM_QEMU` の値を追加します。
+
+## `ovn_nic_nesting`
+これは同じインスタンスの `ovn` NIC を別の `ovn` NIC 内にネストするサポートを追加します。
+これはOVNロジカルスイッチポートをVLANタグを使用する別の OVN NIC の内側にトンネルできるようにします。
+
+この機能は`nested`プロパティを使って親のNIC名を指定し、`vlan`プロパティでトンネルに使用する VLAN ID を指定することで設定できます。
+
+## `oidc`
+
+OpenID Connect (OIDC)認証のサポートを追加します。
+
+これは以下の設定キーを追加します:
+
+* `oidc.issuer`
+* `oidc.client.id`
+* `oidc.audience`
+
+## `network_ovn_l3only`
+これは `ovn` ネットワークを "layer 3 only" モードに設定する能力を追加します。
+このモードは `ipv4.l3only` と `ipv6.l3only` 設定オプションを使うことで IPv4 または IPv6 のレベルで有効化できます。
+
+このモードを有効にすると、ネットワークは以下のように変更されます:
+
+* 仮想ルータの内部ポートアドレスが単一ホストのネットマスクで設定されます (例 IPv4 では /32 あるいは IPv6 では /128)。
+* アクティブなインスタンスの NIC アドレスへの静的ルートが仮想ルータに追加されます。
+* アクティブでないアドレス向けのパケットがアップリンクのネットワークからエスケープされるのを防ぐために、内部のサブネット全体への破棄ルートが仮想ルータに追加されます。
+* 255.255.255.255 のネットマスクがインスタンス設定で使用されるように DHCPv4 サーバが設定されます。
+
+## `ovn_nic_acceleration_vdpa`
+
+これは `ovn_nic_acceleration` API拡張をアップデートします。OVN NICの`acceleration`設定キーが Virtual Data Path Acceleration (VDPA) をサポートするための `vdpa` という値を受け付けられるようになります。

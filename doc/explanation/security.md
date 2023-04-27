@@ -24,6 +24,7 @@
     :end-before: <!-- Include end supported versions -->
 ```
 
+(security-daemon-access)=
 ## LXDデーモンへのアクセス
 
 LXDはUnixソケットを介してローカルにアクセスできるデーモンで、設定されていれば{abbr}`TLS(Transport Layer Security)`ソケットを介してリモートにアクセスすることもできます。
