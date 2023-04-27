@@ -242,7 +242,7 @@ VDPAハードウェアアクセラレーション
 `security.acls.default.egress.logged`  | bool    | `false`            | no   | どのACLルールにもマッチしない外向きトラフィックをログ出力するかどうか
 `security.acls.default.ingress.action` | string  | `reject`           | no   | どのACLルールにもマッチしない内向きトラフィックに使うアクション
 `security.acls.default.ingress.logged` | bool    | `false`            | no   | どのACLルールにもマッチしない内向きトラフィックをログ出力するかどうか
-`vlan`                                 | integer | -                  | no   | ネスティングを使用する際に使用する VLAN ID (`nested`も参照)
+`vlan`                                 | integer | -                  | no   | ネストする際に使用する VLAN ID (`nested`も参照)
 
 (nic-physical)=
 ### `nictype`: `physical`
