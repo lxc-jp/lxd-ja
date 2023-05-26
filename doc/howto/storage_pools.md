@@ -215,6 +215,10 @@ To show detailed information about a specific pool, use the following command:
 
     lxc storage show <pool_name>
 
+To see usage information for a specific pool, run the following command:
+
+    lxc storage info <pool_name>
+
 (storage-resize-pool)=
 ## Resize a storage pool
 
@@ -222,4 +226,5 @@ If you need more storage, you can increase the size of your storage pool by chan
 
     lxc storage set <pool_name> size=<new_size>
 
-This will only work for loop file backed storage pools which are managed by LXD.
+This will only work for loop-backed storage pools that are managed by LXD.
+You can only grow the pool (increase its size), not shrink it.

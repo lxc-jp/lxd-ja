@@ -50,7 +50,22 @@ If you configure a zone with forward DNS records for `lxd.example.net` for your 
 - Manual records added to the zone.
 
 You can check the records that are generated with your zone setup with the `dig` command.
-This assumes that `core.dns_address` was set to `<DNS_server_IP>:<DNS_server_PORT>`.
+
+This assumes that `core.dns_address` was set to `<DNS_server_IP>:<DNS_server_PORT>`. (Setting that configuration
+option causes the backend to immediately start serving on that address.)
+
+In order for the `dig` request to be allowed for a given zone, you must set the
+`peers.NAME.address` configuration option for that zone. `NAME` can be anything random. The value must match the
+IP address where your `dig` is calling from. You must leave `peers.NAME.key` for that same random `NAME` unset.
+
+For example: `lxc network zone set lxd.example.net peers.whatever.address=192.0.2.1`.
+
+```{note}
+It is not enough for the address to be of the same machine that `dig` is calling from; it needs to
+match as a string with what the DNS server in `lxd` thinks is the exact remote address. `dig` binds to
+`0.0.0.0`, therefore the address you need is most likely the same that you provided to `core.dns_address`.
+```
+
 For example, running `dig @<DNS_server_IP> -p <DNS_server_PORT> axfr lxd.example.net` might give the following output:
 
 ```{terminal}
@@ -146,6 +161,12 @@ Key                 | Type       | Required | Default | Description
 `dns.nameservers`   | string set | no       | -       | Comma-separated list of DNS server FQDNs (for NS records)
 `network.nat`       | bool       | no       | `true`  | Whether to generate records for NAT-ed subnets
 `user.*`            | *          | no       | -       | User-provided free-form key/value pairs
+
+```{note}
+When generating the TSIG key using `tsig-keygen`, the key name must follow the format `<zone_name>_<peer_name>.`.
+For example, if your zone name is `lxd.example.net` and the peer name is `bind9`, then the key name must be `lxd.example.net_bind9.`.
+If this format is not followed, zone transfer might fail.
+```
 
 ## Add a network zone to a network
 
