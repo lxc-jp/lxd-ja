@@ -12,6 +12,7 @@ relatedlinks: "[Linux&#32;コンテナ&#32;-&#32;LXD&#32;-&#32;LXDを使い始�
 requirements
 LXDのインストール <installing>
 LXDの初期化 <howto/initialize>
+UIにアクセスする <howto/access_ui>
 faq
 contributing
 support

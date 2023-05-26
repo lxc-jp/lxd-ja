@@ -12,6 +12,7 @@ LXDデーモンとのリモート通信は、HTTPS上のJSONを使って行わ�
 以下の認証方法がサポートされています。
 
 - {ref}`authentication-tls-certs`
+- {ref}`authentication-openid`
 - {ref}`authentication-candid`
 - {ref}`authentication-rbac`
 
@@ -132,6 +133,23 @@ PKIモードを有効にするには、以下の手順を実行します。
 サーバ証明書が有効でCAによって署名されていれば、ユーザに証明書を求めるプロンプトを出さずに接続を続行します。
 
 生成された証明書は自動的には信頼されないことに注意してください。そのため、{ref}`authentication-trusted-clients`で説明している方法のいずれかで、サーバーに追加する必要があります。
+
+(authentication-openid)=
+## OpenID Connect認証
+
+LXDは[OpenID Connect](https://openid.net/connect/)を使用して、OIDC（OpenID Connect）アイデンティティプロバイダーを通じてユーザーを認証することをサポートしています。
+
+```{note}
+OpenID Connect認証は現在開発中です。
+LXD 5.13から、OpenID Connectを通じた認証がサポートされていますが、まだユーザーロールの取り扱いはありません。
+設定されたOIDCアイデンティティプロバイダーを通じて認証するすべてのユーザーは、LXDへのフルアクセスを得ます。
+```
+
+LXDをOIDC認証を使用するように設定するには、[`oidc.*`](server-options-oidc)サーバー設定オプションを設定します。
+
+OIDC認証で設定されたLXDサーバーを指すリモートを追加するには、`lxc remote add <remote_name> <remote_address>`を実行します。
+その後、ウェブブラウザで認証を求められ、LXDが使用するデバイスコードを確認する必要があります。
+LXDクライアントはその後、アクセストークンとリフレッシュトークンを取得し保存し、それらをLXDとのすべてのインタラクションに提供します。
 
 (authentication-candid)=
 ## Candidベースの認証

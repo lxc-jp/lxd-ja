@@ -16,10 +16,16 @@ discourse: 12716
 
     lxc cluster group create gpu
 
-クラスタメンバーを特定のグループに割り当てるには、`lxc cluster group assign` コマンドを使用します。
-例えば以下のようにします。
+クラスタメンバーを1つまたは複数のグループに割り当てるには、`lxc cluster group assign`コマンドを使用します。
+このコマンドは、指定したクラスタメンバーを現在所属しているすべてのクラスタグループから削除し、その後、指定したグループまたはグループに追加します。
+
+たとえば、`server1`を`gpu`グループのみに割り当てるには、次のコマンドを使用します:
 
     lxc cluster group assign server1 gpu
+
+`server1`を`gpu`グループに割り当てるとともに、`default`グループにも保持させるためには、以下のコマンドを使用します：
+
+    lxc cluster group assign server1 default,gpu
 
 ## クラスタグループメンバー上でインスタンスを起動する
 

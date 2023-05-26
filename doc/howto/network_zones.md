@@ -52,7 +52,16 @@ LXD は全てのインスタンス、ネットワークゲートウェイ、ダ�
 - ゾーンに手動で追加されたレコード
 
 ゾーン設定に対して生成されたレコードは `dig` コマンドで確認できます。
-これは`core.dns_address`が`<DNS_server_IP>:<DNS_server_PORT>`に設定されていることを前提としています。
+これは`core.dns_address`が`<DNS_server_IP>:<DNS_server_PORT>`に設定されていることを前提としています。（その設定オプションを設定すると、バックエンドはすぐにそのアドレスでサービスを開始します。）
+
+特定のゾーンに対して`dig`リクエストが許可されるようにするためには、そのゾーンの`peers.NAME.address`設定オプションを設定する必要があります。`NAME`はランダムなもので構いません。値は、`dig`が呼び出し元のIPアドレスと一致しなければなりません。同じランダムな`NAME`の`peers.NAME.key`は未設定のままにしておく必要があります。
+
+例: `lxc network zone set lxd.example.net peers.whatever.address=192.0.2.1`
+
+```{note}
+`dig`が呼び出し元の同じマシンのアドレスであるだけでは十分ではありません。それは、`lxd`内のDNSサーバーが正確なリモートアドレスと考えるものと文字列で一致する必要があります。`dig`は`0.0.0.0`にバインドするため、必要なアドレスはおそらく、あなたが`core.dns_address`に提供したものと同じです。
+```
+
 例えば、`dig @<DNS_server_IP> -p <DNS_server_PORT> axfr lxd.example.net`と実行すると以下のような出力がでるかもしれません。
 
 ```{terminal}
@@ -150,6 +159,10 @@ lxc network zone edit <network_zone>
 `dns.nameservers`    | string set | no   | -            | (NS レコード用の) DNS サーバの FQDN のカンマ区切りリスト
 `network.nat`        | bool       | no   | `true`       | NAT されたサブネットのレコードを生成するかどうか
 `user.*`             | *          | no   | -            | ユーザー提供の自由形式のキー・バリューペア
+
+```{note}
+`tsig-keygen`を使用してTSIGキーを生成するとき、キー名は`<zone_name>_<peer_name>.`というフォーマットに従わなければなりません。たとえば、ゾーン名が`lxd.example.net`でピア名が`bind9`の場合、キー名は`lxd.example.net_bind9.`でなければなりません。この形式に従わない場合、ゾーン転送が失敗する可能性があります。
+```
 
 ## ネットワークにネットワークゾーンを追加する
 

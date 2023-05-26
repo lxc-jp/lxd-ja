@@ -215,6 +215,10 @@ Storage pool my-pool created
 
     lxc storage show <pool_name>
 
+特定のプールに関する使用量を表示するには、以下のコマンドを使用します。
+
+    lxc storage info <pool_name>
+
 (storage-resize-pool)=
 ## ストレージプールをリサイズする
 
@@ -223,3 +227,4 @@ Storage pool my-pool created
     lxc storage set <pool_name> size=<new_size>
 
 これはループファイルをバックエンドとしLXDで管理されているストレージプールでのみ機能します。
+プールは拡張（サイズを増やす）のみが可能で、縮小はできません。

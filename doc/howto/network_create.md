@@ -87,6 +87,8 @@ Network UPLINK created
 
     lxc network attach my-network my-instance eth0
 
+### NICデバイスを追加する
+
 `lxc network attach`コマンドはインスタンスにNICデバイスを追加するショートカットです。
 別の方法として、通常通りネットワーク設定でNICデバイスを追加できます。
 

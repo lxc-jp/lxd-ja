@@ -94,13 +94,60 @@ UFW で認識不能なトラフィックを全てドロップするルールを�
     :end-before: <!-- Include end warning -->
 ```
 
-## LXD と Docker の問題を回避する
+(network-lxd-docker)=
+## LXD と Docker の接続の問題を回避する
 
 同じホストで LXD と Docker を動かすと接続の問題を引き起こします。
-この問題のよくある理由は Docker は FOWARD のポリシーを `drop` に設定するので、それが LXD がトラフィックをフォワードすることを妨げインスタンスのネットワーク接続を失わせるということです。
+この問題のよくある理由は Docker はグローバルのFOWARDのポリシーを `drop` に設定するので、それが LXD がトラフィックをフォワードすることを妨げインスタンスのネットワーク接続を失わせるということです。
 詳細は [Docker on a router](https://docs.docker.com/network/iptables/#docker-on-a-router) を参照してください。
 
-この問題を回避するもっとも簡単な方法は LXD を動かすシステムから Docker をアンインストールすることです。
-その選択肢がない場合、以下のコマンドを実行してネットワークブリッジから外部ネットワークインタフェースへのトラフィックと戻りのトラフィックを明示的に許可します。
+この問題を回避するためのさまざまな方法があります：
 
-    iptables -I DOCKER-USER -o <network_bridge> -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+Dockerをアンインストールする
+: このような問題を防ぐ最も簡単な方法は、LXDを実行しているシステムからDockerをアンインストールしてシステムを再起動することです。
+  代わりに、LXDのコンテナや仮想マシンの中でDockerを実行できます。
+
+  詳細情報については、[LXDのコンテナの中でDockerを実行する](https://www.youtube.com/watch?v=_fCSSEyiGro)を参照してください。
+
+IPv4の転送を有効にする
+: Dockerをアンインストールすることができない場合、Dockerサービスが開始する前にIPv4転送を有効にすることで、DockerがグローバルFORWARDポリシーを変更するのを防ぐことができます。
+  LXDブリッジネットワークは通常、この設定を有効にします。
+  ただし、LXDがDockerの後に起動すると、Dockerは既にグローバルFORWARDポリシーを変更している可能性があります。
+
+  ```{warning}
+  IPv4の転送を有効にすると、Dockerのコンテナポートがローカルネットワーク上の任意のマシンからアクセス可能になる可能性があります。
+  環境によりますが、これは望ましくない場合があります。
+  詳細については、[ローカルネットワークのコンテナアクセス問題](https://github.com/moby/moby/issues/14041)を参照してください。
+  ```
+
+  Dockerが開始する前にIPv4転送を有効にするためには、次の`sysctl`設定が有効になっていることを確認します：
+
+      net.ipv4.conf.all.forwarding=1
+
+  ```{important}
+  この設定はホストの再起動時にも保持されるようにする必要があります。
+
+  これを行う一つの方法は、次のコマンドを使用して`/etc/sysctl.d/`ディレクトリにファイルを追加することです：
+
+      echo "net.ipv4.conf.all.forwarding=1" > /etc/sysctl.d/99-forwarding.conf
+      systemctl restart systemd-sysctl
+
+  ```
+
+外向きネットワークトラフィックフローを許可する
+: Dockerのコンテナポートがローカルネットワーク上の任意のマシンからアクセス可能になる可能性を避けたい場合、Dockerが提供するより複雑なソリューションを適用できます。
+
+  次のコマンドを使用して、LXD管理ブリッジインターフェースからの外向きネットワークトラフィックフローを明示的に許可します：
+
+      iptables -I DOCKER-USER -i <network_bridge> -j ACCEPT
+      iptables -I DOCKER-USER -o <network_bridge> -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+
+  例えば、LXD管理ブリッジが`lxdbr0`と呼ばれている場合、次のコマンドを使用して外向きトラフィックのフローを許可できます：
+
+      iptables -I DOCKER-USER -i lxdbr0 -j ACCEPT
+      iptables -I DOCKER-USER -o lxdbr0 -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+
+  ```{important}
+  これらのファイアウォールルールは、ホストの再起動時にも保持されるようにする必要があります。
+  これを行う方法はLinuxディストリビューションによります。
+  ```

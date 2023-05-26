@@ -2178,3 +2178,18 @@ OpenID Connect (OIDC)認証のサポートを追加します。
 ## `ovn_nic_acceleration_vdpa`
 
 これは `ovn_nic_acceleration` API拡張をアップデートします。OVN NICの`acceleration`設定キーが Virtual Data Path Acceleration (VDPA) をサポートするための `vdpa` という値を受け付けられるようになります。
+
+## `cluster_healing`
+
+これにより、オフラインのクラスターメンバーを自動的に避難させるクラスターヒーリングが追加されます。
+
+次の新しい設定キーが追加されます：
+
+* `cluster.healing_threshold`
+
+この設定キーは整数を取り、0（デフォルト）に設定することで無効化できます。設定された場合、その値はオフラインのクラスターメンバーが避難させられる閾値を表します。もし値が`cluster.offline_threshold`よりも低い場合、その値が代わりに使用されます。
+
+オフラインのクラスターメンバーが避難させられると、リモートバックアップされたインスタンスのみが移行されます。ローカルインスタンスは、クラスターメンバーがオフラインになった際にそれらを移行する方法がないため、無視されます。
+
+## `instances_state_total`
+この拡張は、インスタンスの状態APIの一部である`InstanceStateDisk`と`InstanceStateMemory`に新しい`total`フィールドを追加します。

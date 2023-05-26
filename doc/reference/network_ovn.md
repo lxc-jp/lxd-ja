@@ -43,33 +43,33 @@ OVNネットワークをセットアップする基本的な手順について�
 
 `ovn` ネットワークタイプには以下の設定オプションがあります。
 
-キー                                   | 型      | 条件               | デフォルト         | 説明
-:--                                    | :--     | :--                | :--                | :--
-`network`                              | string  | -                  | -                  | 外部ネットワークへのアクセスに使うアップリンクのネットワーク
-`bridge.hwaddr`                        | string  | -                  | -                  | ブリッジのMACアドレス
-`bridge.mtu`                           | integer | -                  | `1442`             | ブリッジのMTU(デフォルトではホストからホストへのGeneveトンネルを許可します)
-`dns.domain`                           | string  | -                  | `lxd`              | DHCPのクライアントに広告しDNSの名前解決に使用するドメイン
-`dns.search`                           | string  | -                  | -                  | 完全なドメインサーチのカンマ区切りリスト(デフォルトは`dns.domain`の値)
-`dns.zone.forward`                     | string  | -                  | -                  | 正引きDNSレコード用のDNSゾーン名のカンマ区切りリスト
-`dns.zone.reverse.ipv4`                | string  | -                  | -                  | IPv4逆引きDNSレコード用のDNSゾーン名
-`dns.zone.reverse.ipv6`                | string  | -                  | -                  | IPv6逆引きDNSレコード用のDNSゾーン名
-`ipv4.address`                         | string  | 標準モード         | `auto`(作成時のみ) | ブリッジのIPv4アドレス(CIDR形式)。IPv4をオフにするには`none`、新しいランダムな未使用のサブネットを生成するには`auto`を指定。
-`ipv4.dhcp`                            | bool    | IPv4アドレス       | `true`             | DHCPを使ってアドレスを割り当てるかどうか
-`ipv4.l3only`                          | bool    | IPv4 address       | `false`            | layer 3 only モード を有効にするかどうか
-`ipv4.nat`                             | bool    | IPv4アドレス       | `false`            | NATするかどうか(`ipv4.address`が未設定の場合デフォルト値は`true`でランダムな`ipv4.address`が生成されます)
-`ipv4.nat.address`                     | string  | IPv4アドレス       | -                  | ネットワークからの外向きトラフィックに使用されるソースアドレス(アップリンクに`ovn.ingress_mode=routed`が必要)
-`ipv6.address`                         | string  | 標準モード         | `auto`(作成時のみ) | ブリッジのIPv6アドレス(CIDR形式)。IPv6をオフにするには`none`、新しいランダムな未使用のサブネットを生成するには`auto`を指定。
-`ipv6.dhcp`                            | bool    | IPv6アドレス       | `true`             | DHCP上に追加のネットワーク設定を提供するかどうか
-`ipv6.dhcp.stateful`                   | bool    | IPv6 DHCP          | `false`            | DHCPを使ってアドレスを割り当てるかどうか
-`ipv6.l3only`                          | bool    | IPv6 DHCP stateful | `false`            | layer 3 only モード を有効にするかどうか
-`ipv6.nat`                             | bool    | IPv6アドレス       | `false`            | NATするかどうか(`ipv6.address`が未設定の場合デフォルト値は`true`でランダムな`ipv6.address`が生成されます)
-`ipv6.nat.address`                     | string  | IPv6アドレス       | -                  | ネットワークからの外向きトラフィックに使用されるソースアドレス(アップリンクに`ovn.ingress_mode=routed`が必要)
-`security.acls`                        | string  | -                  | -                  | このネットワークに接続するNICに適用するネットワークACLのカンマ区切りリスト
-`security.acls.default.egress.action`  | string  | `security.acls`    | `reject`           | どのACLルールにもマッチしない外向きトラフィックに使うアクション
-`security.acls.default.egress.logged`  | bool    | `security.acls`    | `false`            | どのACLルールにもマッチしない外向きトラフィックをログ出力するかどうか
-`security.acls.default.ingress.action` | string  | `security.acls`    | `reject`           | どのACLルールにもマッチしない内向きトラフィックに使うアクション
-`security.acls.default.ingress.logged` | bool    | `security.acls`    | `false`            | どのACLルールにもマッチしない内向きトラフィックをログ出力するかどうか
-`user.*`                               | string  | -                  | -                  | ユーザ指定の自由形式のキー／バリューペア
+キー                                   | 型      | 条件               | デフォルト                                                     | 説明
+:--                                    | :--     | :--                | :--                                                            | :--
+`network`                              | string  | -                  | -                                                              | 外部ネットワークへのアクセスに使うアップリンクのネットワーク
+`bridge.hwaddr`                        | string  | -                  | -                                                              | ブリッジのMACアドレス
+`bridge.mtu`                           | integer | -                  | `1442`                                                         | ブリッジのMTU(デフォルトではホストからホストへのGeneveトンネルを許可します)
+`dns.domain`                           | string  | -                  | `lxd`                                                          | DHCPのクライアントに広告しDNSの名前解決に使用するドメイン
+`dns.search`                           | string  | -                  | -                                                              | 完全なドメインサーチのカンマ区切りリスト(デフォルトは`dns.domain`の値)
+`dns.zone.forward`                     | string  | -                  | -                                                              | 正引きDNSレコード用のDNSゾーン名のカンマ区切りリスト
+`dns.zone.reverse.ipv4`                | string  | -                  | -                                                              | IPv4逆引きDNSレコード用のDNSゾーン名
+`dns.zone.reverse.ipv6`                | string  | -                  | -                                                              | IPv6逆引きDNSレコード用のDNSゾーン名
+`ipv4.address`                         | string  | 標準モード         | - (作成時の初期値: `auto`)                                     | ブリッジのIPv4アドレス(CIDR形式)。IPv4をオフにするには`none`、新しいランダムな未使用のサブネットを生成するには`auto`を指定。
+`ipv4.dhcp`                            | bool    | IPv4アドレス       | `true`                                                         | DHCPを使ってアドレスを割り当てるかどうか
+`ipv4.l3only`                          | bool    | IPv4 address       | `false`                                                        | layer 3 only モード を有効にするかどうか
+`ipv4.nat`                             | bool    | IPv4アドレス       | `false` (`ipv4.address`が`auto`の場合の作成時の初期値: `true`) | NATするかどうか
+`ipv4.nat.address`                     | string  | IPv4アドレス       | -                                                              | ネットワークからの外向きトラフィックに使用されるソースアドレス(アップリンクに`ovn.ingress_mode=routed`が必要)
+`ipv6.address`                         | string  | 標準モード         | - (作成時の初期値: `auto`)                                     | ブリッジのIPv6アドレス(CIDR形式)。IPv6をオフにするには`none`、新しいランダムな未使用のサブネットを生成するには`auto`を指定。
+`ipv6.dhcp`                            | bool    | IPv6アドレス       | `true`                                                         | DHCP上に追加のネットワーク設定を提供するかどうか
+`ipv6.dhcp.stateful`                   | bool    | IPv6 DHCP          | `false`                                                        | DHCPを使ってアドレスを割り当てるかどうか
+`ipv6.l3only`                          | bool    | IPv6 DHCP stateful | `false`                                                        | layer 3 only モード を有効にするかどうか
+`ipv6.nat`                             | bool    | IPv6アドレス       | `false` (`ipv6.address`が`auto`の場合の作成時の初期値: `true`) | NATするかどうか
+`ipv6.nat.address`                     | string  | IPv6アドレス       | -                                                              | ネットワークからの外向きトラフィックに使用されるソースアドレス(アップリンクに`ovn.ingress_mode=routed`が必要)
+`security.acls`                        | string  | -                  | -                                                              | このネットワークに接続するNICに適用するネットワークACLのカンマ区切りリスト
+`security.acls.default.egress.action`  | string  | `security.acls`    | `reject`                                                       | どのACLルールにもマッチしない外向きトラフィックに使うアクション
+`security.acls.default.egress.logged`  | bool    | `security.acls`    | `false`                                                        | どのACLルールにもマッチしない外向きトラフィックをログ出力するかどうか
+`security.acls.default.ingress.action` | string  | `security.acls`    | `reject`                                                       | どのACLルールにもマッチしない内向きトラフィックに使うアクション
+`security.acls.default.ingress.logged` | bool    | `security.acls`    | `false`                                                        | どのACLルールにもマッチしない内向きトラフィックをログ出力するかどうか
+`user.*`                               | string  | -                  | -                                                              | ユーザ指定の自由形式のキー／バリューペア
 
 (network-ovn-features)=
 ## サポートされている機能

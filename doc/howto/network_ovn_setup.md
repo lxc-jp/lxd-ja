@@ -146,7 +146,7 @@ LXD と同様に、 OVN の分散データベースは奇数のメンバーで�
 
      そのため管理されていないブリッジインタフェースまたは使用されていない物理インタフェースを OVN アップリンクで使用される物理ネットワークの親として指定する必要があります。
      以下の手順は手動で作成した管理されていないブリッジを使用する想定です。
-     このブリッジをセットアップする手順は [ネットワークブリッジの設定](https://netplan.io/examples/#configuring-network-bridges) を参照してください。
+     このブリッジをセットアップする手順は [ネットワークブリッジの設定](https://netplan.readthedocs.io/en/stable/examples/#how-to-configure-network-bridges) を参照してください。
 
    ゲートウェイ
    : `ip -4 route show default` と `ip -6 route show default` を実行してください。

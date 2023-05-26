@@ -3,7 +3,7 @@ relatedlinks: https://www.youtube.com/watch?v=QyXOOE_4cm0
 ---
 
 (performance-tuning)=
-# パフォーマンスチューニング
+# パフォーマンスチューニングについて
 
 お使いの LXD 環境を本番稼働に移行する準備が出来たら、システムのパフォーマンスを最適化するためにいくらか時間を取るほうが良いです。
 パフォーマンスに影響を与えるいくつかの視点があります。
@@ -50,12 +50,3 @@ LXD はシステムのパフォーマンスを評価するためにベンチマ�
 これは送信と受信のキューの長さを拡張することで実現できます。
 
 手順については {ref}`network-increase-bandwidth` を参照してください。
-
-```{toctree}
-:maxdepth: 1
-:hidden:
-
-パフォーマンスのベンチマーク <../howto/benchmark_performance>
-帯域幅の拡大 <../howto/network_increase_bandwidth>
-サーバ設定 <../reference/server_settings>
-```

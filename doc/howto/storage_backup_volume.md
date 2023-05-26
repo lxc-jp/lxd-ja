@@ -107,10 +107,10 @@
 
     lxc storage volume export <pool_name> <volume_name> [<file_path>]
 
-ファイルパスを指定しない場合、エクスポートされたファイルは作業ディレクトリに `backup.tar.gz` という名前で保存されます。
+ファイルパスを指定しない場合、エクスポートされたファイルは作業ディレクトリに `<instance name>.<extension>` という名前（たとえば、`my-container.tar.gz`）で保存されます。
 
 ```{warning}
-出力ファイル (`backup.tar.gz` あるいは指定したファイルパス) が既に存在する場合、このコマンドは既存のファイルを警告なしに上書きします。
+出力ファイル (`<instance name>.<extension>`, `<instance name>.backup` あるいは指定したファイルパス) が既に存在する場合、このコマンドは既存のファイルを警告なしに上書きします。
 ```
 
 コマンドに以下のフラグを追加できます。

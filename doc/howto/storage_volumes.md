@@ -62,6 +62,16 @@
     lxc storage volume attach <pool_name> <filesystem_volume_name> <instance_name> <device_name> <location>
     lxc storage volume attach <pool_name> <block_volume_name> <instance_name> <device_name>
 
+#### ボリュームをデバイスとしてアタッチする
+
+`lxc storage volume attach` コマンドは、インスタンスにディスクデバイスを追加するためのショートカットです。
+もしくは、通常の方法でストレージボリュームのディスクデバイスを追加することもできます：
+
+    lxc config device add <instance_name> <device_name> disk pool=<pool_name> source=<volume_name> [path=<location>]
+
+この方法を使用すると、必要に応じてコマンドに更なる設定を追加することができます。
+利用可能なすべてのデバイスオプションについては {ref}`ディスクデバイス <devices-disk>` を参照してください。
+
 (storage-configure-IO)=
 #### I/O 制限値の設定
 

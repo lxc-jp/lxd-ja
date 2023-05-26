@@ -35,15 +35,17 @@ DNS ドメイン
 
   このオプションが設定されていない場合、デフォルトのドメイン名は `lxd` です。
 
-  DNS ドメインを指定する場合、ドメイン名に `~` の接頭辞をつけてください。
-  `~` により `resolved` がこのドメインをルックアップするためだけに対応するネームサーバを使うようになります。
-
-  ご利用のシェルによっては `~` が展開されるのを防ぐために DNS ドメインを引用符で囲む必要があるかもしれません。
-
 `resolved` を設定するには以下のコマンドを使用します。
 
     resolvectl dns <network_bridge> <dns_address>
-    resolvectl domain <network_bridge> <dns_domain>
+    resolvectl domain <network_bridge> ~<dns_domain>
+
+```{note}
+`resolved`でDNSドメインを指定する場合、ドメイン名に `~` の接頭辞をつけてください。
+`~` により `resolved` がこのドメインをルックアップするためだけに対応するネームサーバを使うようになります。
+
+ご利用のシェルによっては `~` が展開されるのを防ぐために DNS ドメインを引用符で囲む必要があるかもしれません。
+```
 
 例えば以下のようにします。
 
@@ -54,7 +56,7 @@ DNS ドメイン
 別の方法として、 `systemd-resolve` コマンドを使用することもできます。
 このコマンドは `systemd` の新しいリリースでは廃止予定となっていますが、後方互換性のため引き続き提供されています。
 
-    systemd-resolve --interface <network_bridge> --set-domain <dns_domain> --set-dns <dns_address>
+    systemd-resolve --interface <network_bridge> --set-domain ~<dns_domain> --set-dns <dns_address>
 ```
 
 `resolved` の設定はブリッジが存在する限り残ります。

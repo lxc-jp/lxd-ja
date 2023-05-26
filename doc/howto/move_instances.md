@@ -1,3 +1,7 @@
+---
+discourse: 16635
+---
+
 (move-instances)=
 # サーバ間で既存の LXD インスタンスを移動するには
 
