@@ -32,7 +32,7 @@ key/value 形式の設定は、名前空間で分けられています。
 キー                   | 型     | デフォルト値 | ライブアップデート | 条件        | 説明
 :--                    | :---   | :------      | :----------        | :---------- | :----------
 `agent.nic_config`     | bool   | `false`      | no                 | 仮想マシン  | デフォルトのネットワークインタフェースの名前とMTUをインスタンスデバイスと同じにするかどうかを制御(これはコンテナでは自動でそうなります)
-`cluster.evacuate`     | string | `auto`       | no                 | -           | インスタンス待避時に何をするか(`auto`, `migrate`, `live-migrate`, `stop`)
+`cluster.evacuate`     | string | `auto`       | no                 | -           | インスタンス退避時に何をするか(`auto`, `migrate`, `live-migrate`, `stop`)
 `environment.*`        | string | -            | yes (exec)         | -           | インスタンス実行時に設定されるkey/value形式の環境変数
 `linux.kernel_modules` | string | -            | yes                | コンテナ    | インスタンスを起動する前にロードするカーネルモジュールのカンマ区切りのリスト
 `linux.sysctl.*`       | string | -            | no                 | コンテナ    | コンテナ内の対応する`sysctl`設定を上書きする値
@@ -122,7 +122,7 @@ CPU制限はcgroupコントローラの`cpuset`と`cpu`を組み合わせて実�
 #### CPUピンニング
 
 `limits.cpu`は`cpuset`コントローラを使って、CPUを固定(ピンニング)します。
-どのCPUをまたはどれぐらいの数のCPUをインスタンスに見えるようにし使えるようにするかを指定できます。
+どのCPUを、またはどれぐらいの数のCPUを、インスタンスから見えるようにし、使えるようにするかを指定できます。
 
 - どのCPUを使うかを指定するには、`limits.cpu`をCPUの組み合わせ(例:`1,2,3`)あるいはCPUの範囲(例:`0-3`)で指定できます。
 
@@ -155,7 +155,7 @@ NUMAレイアウトは同様に複製され、このシナリオでは、ゲス�
 `limits.cpu.allowance`は、時間の制限を与えたときはCFSスケジューラのクォータを、パーセント指定をした場合は全体的なCPUシェアの仕組みを使います。
 
 - 時間制限(例:`20ms/50ms`)はハードリミットです。
-  例えば、コンテナが最大で1つのCPUを使用することを許可する場合は、`limits.cpu.allowance`を`100ms/100ms`のような値に設定します。この値は1つのCPUの時間に相対的なものなので、2つのCPUの時間を制限するには、`100ms/50ms`あるいは`200ms/100ms`のような値を使用します。
+  例えば、コンテナが最大で1つのCPUを使用することを許可する場合は、`limits.cpu.allowance`を`100ms/100ms`のような値に設定します。この値は1つのCPUに相当する時間に対する相対値なので、2つのCPUの時間を制限するには、`100ms/50ms`あるいは`200ms/100ms`のような値を使用します。
 - パーセント指定を使う場合は、制限は負荷状態にある場合のみに適用されるソフトリミットです。
   設定は、同じCPU(もしくはCPUの組)を使う他のインスタンスとの比較で、インスタンスに対するスケジューラの優先度を計算するのに使われます。
   例えば、負荷時のコンテナのCPU使用率を1つのCPUに制限するためには、`limits.cpu.allowance`を`100%`に設定します。
@@ -429,7 +429,7 @@ value = "0"
 `volatile.apply_nvram`                     | string  | 次の起動時に仮想マシンのNVRAMを再生成するかどうか
 `volatile.base_image`                      | string  | インスタンスを作成したイメージのハッシュ(存在する場合)
 `volatile.cloud-init.instance-id`          | string  | `cloud-init`に公開する`instance-id`(UUID)
-`volatile.evacuate.origin`                 | string  | 待避したインスタンスのオリジン(クラスタメンバー)
+`volatile.evacuate.origin`                 | string  | 退避したインスタンスのオリジン(クラスタメンバー)
 `volatile.idmap.base`                      | integer | インスタンスの主idmapの範囲の最初のID
 `volatile.idmap.current`                   | string  | インスタンスで現在使用中のidmap
 `volatile.idmap.next`                      | string  | 次にインスタンスが起動する際に使うidmap

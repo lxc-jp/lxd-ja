@@ -57,7 +57,7 @@ LXDコンテナ内でDockerを実行するためには、コンテナの[`securi
 
     lxc config set <container> security.nesting true
 
-LXDコンテナはカーネルモジュールをロードできないため、Dockerの設定によっては、ホストによって追加のカーネルモジュールをロードする必要があるかもしれません。
+LXDコンテナはカーネルモジュールをロードできないため、Dockerの設定によっては、ホストで追加のカーネルモジュールをロードする必要があるかもしれません。
 コンテナが必要とするカーネルモジュールのカンマ区切りのリストを設定することでこれを行うことができます：
 
     lxc config set <container_name> linux.kernel_modules <modules>
