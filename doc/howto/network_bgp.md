@@ -3,10 +3,10 @@ discourse: 11567
 ---
 
 (network-bgp)=
-# LXD を BGP サーバとして設定するには
+# LXD を BGP サーバーとして設定するには
 
 ```{note}
-BGP サーバ機能は　{ref}`network-bridge` と {ref}`network-physical` で利用できます。
+BGP サーバー機能は　{ref}`network-bridge` と {ref}`network-physical` で利用できます。
 ```
 
 ```{youtube} https://www.youtube.com/watch?v=C9zU-FEqtTw
@@ -14,11 +14,11 @@ BGP サーバ機能は　{ref}`network-bridge` と {ref}`network-physical` で�
 
 {abbr}`BGP (Border Gateway Protocol)` は自律システム間でルーティング情報を交換できるプロトコルです。
 
-外部アドレスを特定の LXD サーバやインスタンスに直接ルーティングしたい場合は、 LXD を BGP サーバとして設定できます。
+外部アドレスを特定の LXD サーバーやインスタンスに直接ルーティングしたい場合は、 LXD を BGP サーバーとして設定できます。
 すると LXD は BGP ピアとして振る舞い、関連するルートとネクストホップを外部のルータ、例えばあなたのネットワークルータに広告します。
 アップストリームの BGP ルータとセッションを自動的に確立し、使用中のアドレスとサブネットを広告します。
 
-BGP サーバ機能は LXD サーバやクラスタが正しいホストへルーティングされる特定のサブネットやアドレスを取得することで内部／外部アドレス空間を直接使用できるようにします。
+BGP サーバー機能は LXD サーバーやクラスタが正しいホストへルーティングされる特定のサブネットやアドレスを取得することで内部／外部アドレス空間を直接使用できるようにします。
 こうすることで、トラフィックを対象のインスタンスにフォワードできます。
 
 ブリッジネットワークについては、以下のアドレスとネットワークが広告されます。
@@ -39,13 +39,13 @@ BGP サーバ機能は LXD サーバやクラスタが正しいホストへル�
 これが必要な場合はアップストリームルータでプリフィクスをフィルタしてください。
 ```
 
-## BGP サーバを設定する
+## BGP サーバーを設定する
 
-LXD を BGP サーバとして設定するには、以下のサーバ設定オプションを全てのクラスタメンバーで設定してください({ref}`server-options-core`参照)。
+LXD を BGP サーバーとして設定するには、以下のサーバー設定オプションを全てのクラスタメンバーで設定してください({ref}`server-options-core`参照)。
 
-- `core.bgp_address` - BGP サーバの IP アドレス
-- `core.bgp_asn` - ローカルサーバの {abbr}`ASN (Autonomous System Number)`
-- `core.bgp_routerid` - BGP サーバのユニークな識別子
+- `core.bgp_address` - BGP サーバーの IP アドレス
+- `core.bgp_asn` - ローカルサーバーの {abbr}`ASN (Autonomous System Number)`
+- `core.bgp_routerid` - BGP サーバーのユニークな識別子
 
 例えば、以下のような値を設定します。
 
@@ -67,12 +67,12 @@ lxc config set core.bgp_routerid=192.0.2.50
 ### OVN ネットワークに BGP ピアを設定する
 
 OVN ネットワークをアップリンクネットワーク (`physical` または `bridge`) と使用する場合、アップリンクネットワークは許可されるサブネット一覧と BGP 設定を持つネットワークです。
-このため、 BGP サーバに接続するのに必要な情報を含むアップリンクネットワーク上に BGP ピアを設定する必要があります。
+このため、 BGP サーバーに接続するのに必要な情報を含むアップリンクネットワーク上に BGP ピアを設定する必要があります。
 
 アップリンクネットワークに対して以下の設定オプションを設定してください。
 
 - `bgp.peers.<name>.address` - ダウンストリームネットワークで使用されるピアアドレス
-- `bgp.peers.<name>.asn` - ローカルサーバの {abbr}`ASN (Autonomous System Number)`
+- `bgp.peers.<name>.asn` - ローカルサーバーの {abbr}`ASN (Autonomous System Number)`
 - `bgp.peers.<name>.password` - ピアセッションに対するオプショナルなパスワード
 - `bgp.peers.<name>.holdtime` - ピアセッションに対する省略可能なホールドタイム (秒で指定)
 

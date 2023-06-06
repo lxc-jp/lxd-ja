@@ -30,7 +30,7 @@ LXDとは何か、何ができるのか、より良いアイデアを得るた�
 タイプ             | サービス           | ステータス
 ---                | ---                | ---
 CI（クライアント） | GitHub             | [![Build Status](https://github.com/lxc/lxd/workflows/Client%20build%20and%20unit%20tests/badge.svg)](https://github.com/lxc/lxd/actions)
-CI（サーバ）       | Jenkins            | [![Build Status](https://jenkins.linuxcontainers.org/job/lxd-github-commit/badge/icon)](https://jenkins.linuxcontainers.org/job/lxd-github-commit/)
+CI（サーバー）       | Jenkins            | [![Build Status](https://jenkins.linuxcontainers.org/job/lxd-github-commit/badge/icon)](https://jenkins.linuxcontainers.org/job/lxd-github-commit/)
 Goドキュメント     | Godoc              | [![GoDoc](https://godoc.org/github.com/lxc/lxd/client?status.svg)](https://godoc.org/github.com/lxc/lxd/client)
 静的解析           | GoReport           | [![Go Report Card](https://goreportcard.com/badge/github.com/lxc/lxd)](https://goreportcard.com/report/github.com/lxc/lxd)
 翻訳               | Weblate            | [![翻訳状況](https://hosted.weblate.org/widgets/linux-containers/-/svg-badge.svg)](https://hosted.weblate.org/projects/linux-containers/lxd/)

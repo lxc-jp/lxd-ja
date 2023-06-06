@@ -29,7 +29,7 @@ discourse: 12033,13128
 
 LXD は全てのインスタンス、ネットワークゲートウェイ、ダウンストリーム (下流)
 のネットワークポートの全てに対して正引きと逆引きのレコードを自動で管理し、
-オペレータのプロダクションの DNS サーバへのゾーン転送のためのこれらのゾーンを提供します。
+オペレータのプロダクションの DNS サーバーへのゾーン転送のためのこれらのゾーンを提供します。
 
 ## プロジェクトビュー
 
@@ -95,20 +95,20 @@ lxd.example.net.                        3600 IN SOA  lxd.example.net. ns1.lxd.ex
 2.0.192.in-addr.arpa.                  3600 IN SOA  2.0.192.in-addr.arpa. ns1.2.0.192.in-addr.arpa. 1669736828 120 60 86400 30
 ```
 
-## 組み込みの DNS サーバを有効にする
+## 組み込みの DNS サーバーを有効にする
 
-ネットワークゾーンを使用するには、組み込みの DNS サーバを有効にする必要があります。
+ネットワークゾーンを使用するには、組み込みの DNS サーバーを有効にする必要があります。
 
-そのためには、 LXD サーバのローカルアドレスに `core.dns_address` 設定オプション({ref}`server-options-core`参照)を設定してください。
+そのためには、 LXD サーバーのローカルアドレスに `core.dns_address` 設定オプション({ref}`server-options-core`参照)を設定してください。
 既存のDNSとの衝突を避けるためポート53を使用しないことをお勧めします。
-これは DNS サーバがリッスンするアドレスです。
+これは DNS サーバーがリッスンするアドレスです。
 LXD クラスタの場合、アドレスは各クラスタメンバーによって異なるかもしれないことに注意してください。
 
 ```{note}
-組み込みの DNS サーバは AXFR 経由でのゾーン転送のみをサポートしており、
+組み込みの DNS サーバーは AXFR 経由でのゾーン転送のみをサポートしており、
 DNS レコードへの直接の問い合わせはできません。
-つまりこの機能は外部の DNS サーバ (`bind9`, `nsd`, ...) の使用を前提としています。
-外部の DNS サーバが LXD からの全体のゾーンを転送し、有効期限を過ぎたら更新し、
+つまりこの機能は外部の DNS サーバー (`bind9`, `nsd`, ...) の使用を前提としています。
+外部の DNS サーバーが LXD からの全体のゾーンを転送し、有効期限を過ぎたら更新し、
 DNS 問い合わせに対する管理権限を持つ応答 (authoritative answers) を提供します。
 
 ゾーン転送の認証はゾーン毎に設定され、各ゾーンでピアごとに IP アドレスと TSIG キーを設定して、
@@ -154,9 +154,9 @@ lxc network zone edit <network_zone>
 
 キー                 | 型         | 必須 | デフォルト値 | 説明
 :--                  | :--        | :--  | -            | :--
-`peers.NAME.address` | string     | no   | -            | DNS サーバの IP アドレス
-`peers.NAME.key`     | string     | no   | -            | サーバの TSIG キー
-`dns.nameservers`    | string set | no   | -            | (NS レコード用の) DNS サーバの FQDN のカンマ区切りリスト
+`peers.NAME.address` | string     | no   | -            | DNS サーバーの IP アドレス
+`peers.NAME.key`     | string     | no   | -            | サーバーの TSIG キー
+`dns.nameservers`    | string set | no   | -            | (NS レコード用の) DNS サーバーの FQDN のカンマ区切りリスト
 `network.nat`        | bool       | no   | `true`       | NAT されたサブネットのレコードを生成するかどうか
 `user.*`             | *          | no   | -            | ユーザー提供の自由形式のキー・バリューペア
 
@@ -219,7 +219,7 @@ lxc network zone record entry add <network_zone> <record_name> <type> <value> [-
 
 このコマンドはレコードに指定した型と値を持つ DNS エントリを追加します。
 
-例えば、デュアルスタックのウェブサーバを作成するには以下のような 2 つのエントリを持つレコードを追加します。
+例えば、デュアルスタックのウェブサーバーを作成するには以下のような 2 つのエントリを持つレコードを追加します。
 
 ```bash
 lxc network zone record entry add <network_zone> <record_name> A 1.2.3.4

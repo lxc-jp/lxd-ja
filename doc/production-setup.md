@@ -8,6 +8,6 @@ explanation/performance_tuning
 メトリクス監視 <metrics>
 ネットワーク帯域の拡大 <howto/network_increase_bandwidth>
 バックアップ <backup>
-サーバ設定 <reference/server_settings>
+サーバー設定 <reference/server_settings>
 reference/provided_metrics
 ```

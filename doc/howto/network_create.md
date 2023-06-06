@@ -102,7 +102,7 @@ Network UPLINK created
 既存のネットワークを設定するには、 `lxc network set` と `lxc network unset` コマンド (単一の設定項目を設定する場合) または `lxc network edit` コマンド (設定全体を編集する場合) のどちらかを使います。
 特定のクラスタメンバーの設定を変更するには、 `--target` フラグを追加してください。
 
-例えば、以下のコマンドは物理ネットワークの DNS サーバを設定します。
+例えば、以下のコマンドは物理ネットワークの DNS サーバーを設定します。
 
 ```bash
 lxc network set UPLINK dns.nameservers=8.8.8.8

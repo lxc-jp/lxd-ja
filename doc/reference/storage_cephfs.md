@@ -56,7 +56,7 @@ discourse: 15457
     :end-before: <!-- Include end Ceph driver control -->
 ```
 
-LXD の `cephfs` ドライバはサーバ側でスナップショットが有効な場合はスナップショットをサポートします。
+LXD の `cephfs` ドライバはサーバー側でスナップショットが有効な場合はスナップショットをサポートします。
 
 ## 設定オプション
 

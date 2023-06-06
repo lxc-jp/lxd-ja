@@ -42,7 +42,7 @@ LXDブリッジネットワークでファイアウォールを設定するた�
 
 - `bgp` (BGPピア設定)
 - `bridge` (L2インタフェースの設定)
-- `dns` (DNSサーバと名前解決の設定)
+- `dns` (DNSサーバーと名前解決の設定)
 - `fan` (Ubuntu FAN overlayに特有な設定)
 - `ipv4` (L3 IPv4設定)
 - `ipv6` (L3 IPv6設定)
@@ -60,12 +60,12 @@ LXDブリッジネットワークでファイアウォールを設定するた�
 
 キー                                   | 型      | 条件                  | デフォルト                                                     | 説明
 :--                                    | :--     | :--                   | :--                                                            | :--
-`bgp.peers.NAME.address`               | string  | BGPサーバ             | -                                                              | ピアのアドレス(IPv4かIPv6)
-`bgp.peers.NAME.asn`                   | integer | BGPサーバ             | -                                                              | ピアのAS番号
-`bgp.peers.NAME.password`              | string  | BGPサーバ             | - (パスワード無し)                                             | ピアのセッションパスワード(省略可能)
-`bgp.peers.NAME.holdtime`              | integer | BGPサーバ             | `180`                                                          | ピアセッションホールドタイム(秒で指定、省略可能)
-`bgp.ipv4.nexthop`                     | string  | BGPサーバ             | ローカルアドレス                                               | 広告されたプリフィクスのnext-hopをオーバーライド
-`bgp.ipv6.nexthop`                     | string  | BGPサーバ             | ローカルアドレス                                               | 広告されたプリフィクスのnext-hopをオーバーライド
+`bgp.peers.NAME.address`               | string  | BGPサーバー           | -                                                              | ピアのアドレス(IPv4かIPv6)
+`bgp.peers.NAME.asn`                   | integer | BGPサーバー           | -                                                              | ピアのAS番号
+`bgp.peers.NAME.password`              | string  | BGPサーバー           | - (パスワード無し)                                             | ピアのセッションパスワード(省略可能)
+`bgp.peers.NAME.holdtime`              | integer | BGPサーバー           | `180`                                                          | ピアセッションホールドタイム(秒で指定、省略可能)
+`bgp.ipv4.nexthop`                     | string  | BGPサーバー           | ローカルアドレス                                               | 広告されたプリフィクスのnext-hopをオーバーライド
+`bgp.ipv6.nexthop`                     | string  | BGPサーバー           | ローカルアドレス                                               | 広告されたプリフィクスのnext-hopをオーバーライド
 `bridge.driver`                        | string  | -                     | `native`                                                       | ブリッジのドライバ(`native`か`openvswitch`)
 `bridge.external_interfaces`           | string  | -                     | -                                                              | ブリッジに含める未設定のネットワークインタフェースのカンマ区切りリスト
 `bridge.hwaddr`                        | string  | -                     | -                                                              | ブリッジのMACアドレス

@@ -4,5 +4,5 @@
 :maxdepth: 1
 
 プロジェクトレポジトリ <https://github.com/lxc/lxd>
-イメージサーバ <https://images.linuxcontainers.org>
+イメージサーバー <https://images.linuxcontainers.org>
 ```

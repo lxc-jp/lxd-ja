@@ -16,7 +16,7 @@ Prometheus で読み取って Grafana でグラフを表示するのに使うこ
 利用可能なメトリクスの一覧は{ref}`provided-metrics`を参照してください。
 <!-- Include end metrics intro -->
 
-クラスタ環境では、 LXD はアクセスされているサーバ上で稼働中のインスタンスの値だけを返します。ですので、各クラスタメンバーから別々にデータを取得する必要があります。。
+クラスタ環境では、 LXD はアクセスされているサーバー上で稼働中のインスタンスの値だけを返します。ですので、各クラスタメンバーから別々にデータを取得する必要があります。。
 
 インスタンスメトリクスは `/1.0/metrics` エンドポイントを呼ぶと更新されます。
 複数のスクレイパーに対応するためメトリクスは 8 秒キャッシュします。メトリクスの取得は比較的重い処理ですので、影響が大きすぎるようならデフォルトの間隔より長い間隔でスクレイピングすることを検討してください。
@@ -60,7 +60,7 @@ lxd_disk_read_bytes_total{device="loop3",name="vm",project="default",type="virtu
 
 `/1.0/metrics` APIエンドポイントを公開するには、利用可能にするアドレスを設定する必要があります。
 
-そのためには、[`core.metrics_address`](server-options-core)サーバ設定オプションか[`core.https_address`](server-options-core)サーバ設定オプションのいずれかを設定できます。
+そのためには、[`core.metrics_address`](server-options-core)サーバー設定オプションか[`core.https_address`](server-options-core)サーバー設定オプションのいずれかを設定できます。
 `core.metrics_address`オプションはメトリクスのみを公開し、`core.https_address`は完全なAPIを公開します。
 ですので、完全なAPIとメトリクスのAPIで別のアドレスを使いたい場合、あるいはメトリクスのAPIのみ公開し完全なAPIは公開したくない場合は`core.metrics_address`オプションを設定するのが良いです。
 
@@ -95,10 +95,10 @@ lxd_disk_read_bytes_total{device="loop3",name="vm",project="default",type="virtu
 
 ## メトリクス用証明書をPrometheusで利用可能にする
 
-PrometheusをLXDサーバと別のマシンで稼働させる場合、必要な証明書をPrometheusのマシンにコピーする必要があります。
+PrometheusをLXDサーバーと別のマシンで稼働させる場合、必要な証明書をPrometheusのマシンにコピーする必要があります。
 
 - 作成したメトリクス用証明書(`metrics.crt`)と鍵(`metrics.key`) 
-- `/var/snap/lxd/common/lxd/` (snapを使用している場合)あるいは`/var/lib/lxd/` (それ以外)に置かれているLXDサーバ証明書(`server.crt`)
+- `/var/snap/lxd/common/lxd/` (snapを使用している場合)あるいは`/var/lib/lxd/` (それ以外)に置かれているLXDサーバー証明書(`server.crt`)
 
 これらのファイルをPrometheusにアクセスできる`tls`ディレクトリ、例えば、`/var/snap/prometheus/common/tls`(snapを使用している場合)あるいは`/etc/prometheus/tls` (それ以外)にコピーしてください。
 次の例のコマンドを参照してください:
@@ -110,7 +110,7 @@ mkdir /var/snap/prometheus/common/tls
 # 新規に作成された証明書と鍵を tls ディレクトリーにコピー
 cp metrics.crt metrics.key /var/snap/prometheus/common/tls/
 
-# LXD サーバ証明書を tls ディレクトリーにコピー
+# LXD サーバー証明書を tls ディレクトリーにコピー
 cp /var/snap/lxd/common/lxd/server.crt /var/snap/prometheus/common/tls/
 ```
 
@@ -160,7 +160,7 @@ LXD証明書が`targets`リスト内で使用するのと同じホスト名を�
 Subject Alternative Name (SAN) リストが `targets` リスト(`foo.example.com`)のホスト名を含んでいないので、 `server_name` ディレクティブを使用して比較に使用する名前を上書きする必要があります。
 ````
 
-以下は複数の LXD サーバのメトリックを収集するために複数のジョブを使用する `prometheus.yaml` の設定例です。
+以下は複数の LXD サーバーのメトリックを収集するために複数のジョブを使用する `prometheus.yaml` の設定例です。
 
 ```yaml
 scrape_configs:
@@ -190,7 +190,7 @@ scrape_configs:
       key_file: 'tls/metrics.key'
       server_name: 'abydos'
 
-  # jupiter, mars, saturn は3つのスタンドアロンの LXD サーバです。
+  # jupiter, mars, saturn は3つのスタンドアロンの LXD サーバーです。
   # 注意: これらでは`default`プロジェクトのみが使用されているため、プロジェクトの設定は省略しています。
   - job_name: "lxd-jupiter"
     metrics_path: '/1.0/metrics'
