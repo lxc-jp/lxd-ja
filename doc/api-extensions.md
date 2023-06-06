@@ -1891,7 +1891,7 @@ LXDが使用するCPU時間をミリ秒ではなく秒単位で出力するよ�
 
 ## `event_hub`
 
-これは `event-hub` というクラスタメンバの役割と `ServerEventMode` 環境フィールドを追加します。
+これは `event-hub` というクラスタメンバーの役割と `ServerEventMode` 環境フィールドを追加します。
 
 ## `agent_nic_config`
 

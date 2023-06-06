@@ -41,7 +41,7 @@ BGP サーバ機能は LXD サーバやクラスタが正しいホストへル�
 
 ## BGP サーバを設定する
 
-LXD を BGP サーバとして設定するには、以下のサーバ設定オプションを全てのクラスタメンバで設定してください({ref}`server-options-core`参照)。
+LXD を BGP サーバとして設定するには、以下のサーバ設定オプションを全てのクラスタメンバーで設定してください({ref}`server-options-core`参照)。
 
 - `core.bgp_address` - BGP サーバの IP アドレス
 - `core.bgp_asn` - ローカルサーバの {abbr}`ASN (Autonomous System Number)`

@@ -118,7 +118,7 @@ LXD クラスタメンバーは一般的に同一のシステムと想定され�
 
 障害耐性とイメージがローカルで利用できる確率を改善するためこの数を増やすことができます。
 そのためには、 [`cluster.images_minimal_replica`](server) 設定を変更してください。
-すべてのクラスタメンバにイメージをコピーするには `-1` という特別な値を使用できます。
+すべてのクラスタメンバーにイメージをコピーするには `-1` という特別な値を使用できます。
 
 (cluster-groups)=
 ## クラスタグループ
@@ -166,7 +166,7 @@ LXDでは埋め込まれたスクリプト(スクリプトレット)を使って
 インスタンス配置スクリプトレットは[Starlark言語](https://github.com/bazelbuild/starlark) (Pythonのサブセット)で記述する必要があります。
 スクリプトレットは、LXDがインスタンスをどこに配置するかを知る必要があるたびに呼び出されます。
 スクリプトレットは、配置されるインスタンスに関する情報と、インスタンスをホストできる候補のクラスタメンバーに関する情報を受け取ります。
-スクリプトレットからクラスタメンバ候補の状態と利用可能なハードウェアリソースについての情報を要求することもできます。
+スクリプトレットからクラスタメンバー候補の状態と利用可能なハードウェアリソースについての情報を要求することもできます。
 
 インスタンス配置スクリプトレットは`instance_placement`関数を以下のシグネチャで実装する必要があります。
 
@@ -208,7 +208,7 @@ LXDに現在適用されているスクリプトレットを見るには`lxc con
 - `log_info(*messages)`: `info`レベルでLXDのログにログエントリを追加します。`messages`は1つ以上のメッセージの引数です。
 - `log_warn(*messages)`: `warn`レベルでLXDのログにログエントリを追加します。`messages`は1つ以上のメッセージの引数です。
 - `log_error(*messages)`: `error`レベルでLXDのログにログエントリを追加します。`messages`は1つ以上のメッセージの引数です。
-- `set_cluster_member_target(member_name)`: インスタンスが作成されるべきクラスタメンバを設定します。`member_name`はインスタンスが作成されるべきクラスタメンバーの名前です。この関数が呼ばれなければ、LXDは組み込みのインスタンス配置ロジックを使用します。
+- `set_cluster_member_target(member_name)`: インスタンスが作成されるべきクラスタメンバーを設定します。`member_name`はインスタンスが作成されるべきクラスタメンバーの名前です。この関数が呼ばれなければ、LXDは組み込みのインスタンス配置ロジックを使用します。
 - `get_cluster_member_state(member_name)`: クラスタメンバーの状態を取得します。[`api.ClusterMemberState`](https://pkg.go.dev/github.com/lxc/lxd/shared/api#ClusterMemberState)の形式でクラスタメンバーの状態を含むオブジェクトを返します。`member_name`は状態を取得する対象のクラスタメンバーの名前です。
 - `get_cluster_member_resources(member_name)`: クラスタメンバーのリソースについての情報を取得します。[`api.Resources`](https://pkg.go.dev/github.com/lxc/lxd/shared/api#Resources)の形式でリソースについての情報を含むオブジェクトを返します。`member_name`はリソース情報を取得する対象のクラスタメンバーの名前です。
 - `get_instance_resources()`: インスタンスが必要とするリソースについての情報を取得します。 [`scriptlet.InstanceResources`](https://pkg.go.dev/github.com/lxc/lxd/shared/api/scriptlet/#InstanceResources)の形式でリソース情報を含むオブジェクトを返します。

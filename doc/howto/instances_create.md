@@ -66,7 +66,7 @@ YAML ファイルの必要な文法を見るには既存のインスタンス設
 
     lxc launch images:ubuntu/22.04 ubuntu-limited --config limits.cpu=1 --config limits.memory=192MiB
 
-### 指定のクラスタメンバ上で仮想マシンを起動する
+### 指定のクラスタメンバー上で仮想マシンを起動する
 
 クラスタメンバー `server2` 上で仮想マシンを起動するには、以下のコマンドを入力します。
 

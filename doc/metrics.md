@@ -166,7 +166,7 @@ Subject Alternative Name (SAN) リストが `targets` リスト(`foo.example.com
 scrape_configs:
   # abydos, langara, orilla は最初にabydosからブートストラップした単一クラスタで
   # (ここでは`hdc`と呼びます)、このため3ノードで`ca_file`と`server_name`を共有しています。
-  # `ca_file`はLXDクラスタの各メンバ上に存在する`/var/snap/lxd/common/lxd/cluster.crt`
+  # `ca_file`はLXDクラスタの各メンバー上に存在する`/var/snap/lxd/common/lxd/cluster.crt`
   # ファイルに対応しています。
   #
   # 注意: `project`パラメータは`default`プロジェクトを使用しないか複数のプロジェクトを
