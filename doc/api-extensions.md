@@ -1769,7 +1769,7 @@ OVN NIC に `acceleration` 設定キーを追加し、ハードウェアオフ�
 
 ## `database_leader`
 
-クラスタ・リーダーに設定される `database-leader` ロールを追加します。
+クラスタリーダーに設定される `database-leader` ロールを追加します。
 
 ## `instance_all_projects`
 
@@ -1777,7 +1777,7 @@ OVN NIC に `acceleration` 設定キーを追加し、ハードウェアオフ�
 
 ## `clustering_groups`
 
-クラスタ・メンバーのグループ化のサポートを追加します。
+クラスタメンバーのグループ化のサポートを追加します。
 
 これは以下の新しいエンドポイントを追加します。
 
