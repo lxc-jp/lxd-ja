@@ -31,7 +31,7 @@ key/value設定は名前空間が分けられています。
 
 キー                             | 型      | スコープ | デフォルト値 | 説明
 :--                              | :---    | :----    | :------      | :----------
-`cluster.healing_threshold`      | integer | global   | `0`          | オフラインのクラスターメンバーを退避させるまでの秒数 (無効にするには`0`を設定)
+`cluster.healing_threshold`      | integer | global   | `0`          | オフラインのクラスタメンバーを退避させるまでの秒数 (無効にするには`0`を設定)
 `core.bgp_address`               | string  | local    | -            | BGPサーバをバインドさせるアドレス(BGP)
 `core.bgp_asn`                   | string  | global   | -            | ローカルサーバに使用するBGPのAS番号 (Autonomous System Number)
 `core.bgp_routerid`              | string  | local    |              | このBGPサーバのユニークなID(IPv4アドレス形式)

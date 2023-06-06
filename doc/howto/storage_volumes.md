@@ -29,13 +29,13 @@
 
     lxc storage volume create <pool_name> <volume_name> --type=block [configuration_options...]
 
-クラスターメンバー上にカスタムストレージボリュームを追加するには `--target` フラグを追加してください。
+クラスタメンバー上にカスタムストレージボリュームを追加するには `--target` フラグを追加してください。
 
     lxc storage volume create <pool_name> <volume_name> --target=<cluster_member> [configuration_options...]
 
 ```{note}
-ほとんどのストレージドライバではカスタムストレージボリュームはクラスター間で同期されず作成されたメンバー上にのみ存在します。
-この挙動は Ceph ベースのストレージプール (`ceph` and `cephfs`) では異なり、ボリュームはどのクラスターメンバーでも利用可能です。
+ほとんどのストレージドライバではカスタムストレージボリュームはクラスタ間で同期されず作成されたメンバー上にのみ存在します。
+この挙動は Ceph ベースのストレージプール (`ceph` and `cephfs`) では異なり、ボリュームはどのクラスタメンバーでも利用可能です。
 ```
 
 (storage-attach-volume)=

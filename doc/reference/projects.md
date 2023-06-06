@@ -94,8 +94,8 @@
 :--                                    | :--    | :--            | :--
 `restricted`                           | bool   | `false`        | セキュリティに敏感な機能へのアクセスをブロックするかどうか - `restricted.*` キーが有効になるためには、この設定を有効にする必要があります（必要に応じて一時的に無効にできるように、関連するキーをクリアせずに有効にする）
 `restricted.backups`                   | string | `block`        | インスタンスやボリュームのバックアップを作成できないようにする
-`restricted.cluster.groups`            | string | -              | 与えられたもの以外のクラスターグループをターゲットにすることを防ぐ
-`restricted.cluster.target`            | string | `block`        | インスタンスの作成や移動時にクラスターメンバーを直接ターゲットにすることを防ぐ
+`restricted.cluster.groups`            | string | -              | 与えられたもの以外のクラスタグループをターゲットにすることを防ぐ
+`restricted.cluster.target`            | string | `block`        | インスタンスの作成や移動時にクラスタメンバーを直接ターゲットにすることを防ぐ
 `restricted.containers.lowlevel`       | string | `block`        | `raw.lxc`、`raw.idmap`、`volatile` などの低レベルなコンテナオプションを使用できないようにする
 `restricted.containers.nesting`        | string | `block`        | `security.nesting=true` を設定できないようにする
 `restricted.containers.privilege`      | string | `unprivileged` | 特権コンテナの設定を制限する（`unprivileged` は `security.privileged=true` を設定できないようにする、`isolated` は `security.privileged=true` と `security.idmap.isolated=true` の設定を制限する、`allow` は制限がない）
