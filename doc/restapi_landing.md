@@ -12,5 +12,4 @@ api
 API 拡張 <api-extensions>
 インスタンス API <dev-lxd>
 イベント API <events>
-メトリクス API <metrics>
 ```

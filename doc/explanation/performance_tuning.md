@@ -3,7 +3,7 @@ relatedlinks: https://www.youtube.com/watch?v=QyXOOE_4cm0
 ---
 
 (performance-tuning)=
-# パフォーマンスチューニング
+# パフォーマンスチューニングについて
 
 お使いの LXD 環境を本番稼働に移行する準備が出来たら、システムのパフォーマンスを最適化するためにいくらか時間を取るほうが良いです。
 パフォーマンスに影響を与えるいくつかの視点があります。
@@ -30,7 +30,7 @@ LXD はシステムのパフォーマンスを評価するためにベンチマ�
 
 メトリクス収集についての詳細な情報は {ref}`metrics` を参照してください。
 
-## サーバ設定をチューニングする
+## サーバー設定をチューニングする
 
 ほとんどの Linux ディストリビューションのデフォルトのカーネル設定は大量のコンテナや仮想マシンを稼働させるのに最適化されていません。
 ですので、デフォルトの設定で引き起こされる制限にひっかかるのを避けるため、関連する設定を確認、変更するほうが良いです。
@@ -42,7 +42,7 @@ LXD はシステムのパフォーマンスを評価するためにベンチマ�
 * `failed to open stream: Too many open files in...`
 * `neighbour: ndisc_cache: neighbor table overflow!`
 
-関連するサーバ設定と提案される値の一覧は {ref}`server-settings` を参照してください。
+関連するサーバー設定と提案される値の一覧は {ref}`server-settings` を参照してください。
 
 ## ネットワーク帯域幅をチューニングする
 
@@ -50,12 +50,3 @@ LXD はシステムのパフォーマンスを評価するためにベンチマ�
 これは送信と受信のキューの長さを拡張することで実現できます。
 
 手順については {ref}`network-increase-bandwidth` を参照してください。
-
-```{toctree}
-:maxdepth: 1
-:hidden:
-
-パフォーマンスのベンチマーク <../howto/benchmark_performance>
-帯域幅の拡大 <../howto/network_increase_bandwidth>
-サーバ設定 <../reference/server_settings>
-```

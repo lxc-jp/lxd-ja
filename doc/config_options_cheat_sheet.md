@@ -27,12 +27,12 @@ orphan: true
 ```
 
 ```{config:option} cluster.evacuate instance
-:shortdesc: インスタンスの避難時の操作方法
+:shortdesc: インスタンスの退避時の操作方法
 :default: "`auto`"
 :type: string
 :liveupdate: "no"
 
-インスタンスの避難時に行う操作を制御します（`auto`、`migrate`、`live-migrate`、または`stop`）
+インスタンスの退避時に行う操作を制御します（`auto`、`migrate`、`live-migrate`、または`stop`）
 ```
 
 これらは、第二引数として `instance` スコープを指定する必要があります。

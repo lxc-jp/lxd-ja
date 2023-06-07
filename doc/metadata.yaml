@@ -52,7 +52,7 @@ navigation:
         - title: プロジェクト
           location: projects.md
 
-        - title: サーバ
+        - title: サーバー
           location: server.md
 
         - title: ストレージプール
@@ -138,6 +138,6 @@ navigation:
           location: https://github.com/lxc/lxd
           external: true
 
-        - title: イメージサーバ
+        - title: イメージサーバー
           location: https://images.linuxcontainers.org
           external: true

@@ -49,7 +49,7 @@ ZFS でスナップショットの復元が出来るのは最新のスナップ�
 
 これは PKI 認証モードのサポートを指示します。
 
-このモードではクライアントとサーバは同じ PKI によって発行された証明書を使わなければなりません。
+このモードではクライアントとサーバーは同じ PKI によって発行された証明書を使わなければなりません。
 
 詳細は [セキュリティ](security.md) を参照してください。
 
@@ -98,7 +98,7 @@ LXD API を全てのウェブブラウザで (SPA 経由で) 使用するには�
 
 Firefox や Safari などいくつかのブラウザは
 `Access-Control-Allow-Credentials: true` ヘッダがないレスポンスを受け入れる
-ことができません。サーバがこのヘッダ付きのレスポンスを返すことを保証するには
+ことができません。サーバーがこのヘッダ付きのレスポンスを返すことを保証するには
 `core.https_allowed_credentials=true` と設定してください。
 
 ## `image_compression_algorithm`
@@ -106,7 +106,7 @@ Firefox や Safari などいくつかのブラウザは
 この変更はイメージを作成する時 (`POST /1.0/images`) に `compression_algorithm`
 というプロパティのサポートを追加します。
 
-このプロパティを設定するとサーバのデフォルト値 (`images.compression_algorithm`) をオーバーライドします。
+このプロパティを設定するとサーバーのデフォルト値 (`images.compression_algorithm`) をオーバーライドします。
 
 ## `directory_manipulation`
 
@@ -119,7 +119,7 @@ LXD API 経由でディレクトリを作成したり一覧したりでき、フ
 
 ## `storage_zfs_use_refquota`
 
-この拡張により新しいサーバプロパティ `storage.zfs_use_refquota` が追加されます。
+この拡張により新しいサーバープロパティ `storage.zfs_use_refquota` が追加されます。
 これはコンテナにサイズ制限を設定する際に `quota` の代わりに `refquota` を設定する
 ように LXD に指示します。また LXD はディスク使用量を調べる際に `used` の代わりに
 `usedbydataset` を使うようになります。
@@ -156,9 +156,9 @@ LXD のネットワーク管理 API 。
 
 ## `container_push`
 
-コンテナが push モードで作成される時、クライアントは作成元と作成先のサーバ間の
-プロキシとして機能します。作成先のサーバが NAT やファイアウォールの後ろにいて
-作成元のサーバと直接通信できず pull モードで作成できないときにこれは便利です。
+コンテナが push モードで作成される時、クライアントは作成元と作成先のサーバー間の
+プロキシとして機能します。作成先のサーバーが NAT やファイアウォールの後ろにいて
+作成元のサーバーと直接通信できず pull モードで作成できないときにこれは便利です。
 
 ## `container_exec_recording`
 
@@ -489,7 +489,7 @@ OSD ストレージプールを再利用するようになります。
 ## `network_leases`
 
 `/1.0/networks/NAME/leases` API エンドポイントを追加します。 LXD が管理する
-DHCP サーバが稼働するブリッジ上のリースデータベースに問い合わせできるように
+DHCP サーバーが稼働するブリッジ上のリースデータベースに問い合わせできるように
 なります。
 
 ## `unix_device_hotplug`
@@ -651,10 +651,10 @@ proxy デバイスに `security.uid` と `security.gid` を追加します。こ
 
 ## `pprof_http`
 
-これはデバッグ用の HTTP サーバを起動するために、新たに `core.debug_address`
+これはデバッグ用の HTTP サーバーを起動するために、新たに `core.debug_address`
 オプションを追加します。
 
-このサーバは現在`pprof` APIを含んでおり、従来の`cpu-profile`, `memory-profile`
+このサーバーは現在`pprof` APIを含んでおり、従来の`cpu-profile`, `memory-profile`
 と`print-goroutines`デバッグオプションを置き換えるものです。
 
 ## `proxy_haproxy_protocol`
@@ -750,7 +750,7 @@ idmap のトラッキングとボリューム上のリマッピングを防ぎ�
 
 ## `candid_config_key`
 
-新たに `candid.api.key` オプションが使えるようになります。これにより、エンドポイントが期待する公開鍵を設定でき、HTTP のみの Candid サーバを安全に利用できます。
+新たに `candid.api.key` オプションが使えるようになります。これにより、エンドポイントが期待する公開鍵を設定でき、HTTP のみの Candid サーバーを安全に利用できます。
 
 ## `network_vxlan_ttl`
 
@@ -787,14 +787,14 @@ idmap のトラッキングとボリューム上のリマッピングを防ぎ�
 
 ## `clustering_server_address`
 
-これはサーバのネットワークアドレスを REST API のクライアントネットワーク
+これはサーバーのネットワークアドレスを REST API のクライアントネットワーク
 アドレスと異なる値に設定することのサポートを追加します。クライアントは
-新しい `cluster.https_address` 設定キーを初期のサーバのアドレスを指定するために
-に設定できます。新しいサーバが参加する際、クライアントは参加するサーバの
-`core.https_address` 設定キーを参加するサーバがリッスンすべきアドレスに設定でき、
-`PUT /1.0/cluster` API の `server_address` キーを参加するサーバが
+新しい `cluster.https_address` 設定キーを初期のサーバーのアドレスを指定するために
+に設定できます。新しいサーバーが参加する際、クライアントは参加するサーバーの
+`core.https_address` 設定キーを参加するサーバーがリッスンすべきアドレスに設定でき、
+`PUT /1.0/cluster` API の `server_address` キーを参加するサーバーが
 クラスタリングトラフィックに使用すべきアドレスに設定できます (`server_address`
-の値は自動的に参加するサーバの `cluster.https_address` 設定キーに
+の値は自動的に参加するサーバーの `cluster.https_address` 設定キーに
 コピーされます)。
 
 ## `clustering_image_replication`
@@ -839,7 +839,7 @@ idmap のトラッキングとボリューム上のリマッピングを防ぎ�
 
 ## `resources_gpu`
 
-サーバリソースに新規にGPU構造を追加し、システム上で利用可能な全てのGPUを一覧表示します。
+サーバーリソースに新規にGPU構造を追加し、システム上で利用可能な全てのGPUを一覧表示します。
 
 ## `resources_numa`
 
@@ -847,7 +847,7 @@ idmap のトラッキングとボリューム上のリマッピングを防ぎ�
 
 ## `kernel_features`
 
-サーバの環境からオプショナルなカーネル機能の使用可否状態を取得します。
+サーバーの環境からオプショナルなカーネル機能の使用可否状態を取得します。
 
 ## `id_map_current`
 
@@ -1612,7 +1612,7 @@ LXD の警告 API です。
 
 ## `server_trusted_proxy`
 
-`core.https_trusted_proxy` のサポートを追加します。 この設定は、LXD が HAProxy スタイルの connection ヘッダーをパースし、そのような（HAProxy などのリバースプロキシサーバが LXD の前面に存在するような）接続の場合でヘッダーが存在する場合は、プロキシサーバが（ヘッダーで）提供するリクエストの（実際のクライアントの）ソースアドレスへ（LXDが）ソースアドレスを書き換え（て、LXDの管理するクラスタにリクエストを送出し）ます。（LXDのログにもオリジナルのアドレスを記録します）
+`core.https_trusted_proxy` のサポートを追加します。 この設定は、LXD が HAProxy スタイルの connection ヘッダーをパースし、そのような（HAProxy などのリバースプロキシサーバーが LXD の前面に存在するような）接続の場合でヘッダーが存在する場合は、プロキシサーバーが（ヘッダーで）提供するリクエストの（実際のクライアントの）ソースアドレスへ（LXDが）ソースアドレスを書き換え（て、LXDの管理するクラスタにリクエストを送出し）ます。（LXDのログにもオリジナルのアドレスを記録します）
 
 ## `clustering_update_cert`
 
@@ -1624,11 +1624,11 @@ LXD の警告 API です。
 
 ## `server_instance_driver_operational`
 
-これは `/1.0` エンドポイントの `driver` の出力をサーバ上で実際にサポートされ利用可能であるドライバのみを含めるように修正します（LXD に含まれるがサーバ上では利用不可なドライバも含めるのとは違って）。
+これは `/1.0` エンドポイントの `driver` の出力をサーバー上で実際にサポートされ利用可能であるドライバのみを含めるように修正します（LXD に含まれるがサーバー上では利用不可なドライバも含めるのとは違って）。
 
 ## `server_supported_storage_drivers`
 
-これはサーバの環境情報にサポートされているストレージドライバの情報を追加します。
+これはサーバーの環境情報にサポートされているストレージドライバの情報を追加します。
 
 ## `event_lifecycle_requestor_address`
 
@@ -1640,9 +1640,9 @@ lifecycle requestor に address のフィールドを追加します。
 
 ## `clustering_evacuation`
 
-クラスタメンバーを待避と復元するための `POST /1.0/cluster/members/<name>/state` エンドポイントを追加します。
+クラスタメンバーを退避と復元するための `POST /1.0/cluster/members/<name>/state` エンドポイントを追加します。
 また設定キー `cluster.evacuate` と `volatile.evacuate.origin` も追加します。
-これらはそれぞれ待避の方法 (`auto`, `stop` or `migrate`) と移動したインスタンスのオリジンを設定します。
+これらはそれぞれ退避の方法 (`auto`, `stop` or `migrate`) と移動したインスタンスのオリジンを設定します。
 
 ## `network_ovn_nat_address`
 
@@ -1712,9 +1712,9 @@ lifecycle requestor に address のフィールドを追加します。
 
 ## `network_dns`
 
-組み込みの DNS サーバとゾーン API を追加し、 LXD インスタンスに DNS レコードを提供します。
+組み込みの DNS サーバーとゾーン API を追加し、 LXD インスタンスに DNS レコードを提供します。
 
-以下のサーバ設定キーが追加されます。
+以下のサーバー設定キーが追加されます。
 
 * `core.dns_address`
 
@@ -1769,7 +1769,7 @@ OVN NIC に `acceleration` 設定キーを追加し、ハードウェアオフ�
 
 ## `database_leader`
 
-クラスタ・リーダーに設定される `database-leader` ロールを追加します。
+クラスタリーダーに設定される `database-leader` ロールを追加します。
 
 ## `instance_all_projects`
 
@@ -1777,7 +1777,7 @@ OVN NIC に `acceleration` 設定キーを追加し、ハードウェアオフ�
 
 ## `clustering_groups`
 
-クラスタ・メンバーのグループ化のサポートを追加します。
+クラスタメンバーのグループ化のサポートを追加します。
 
 これは以下の新しいエンドポイントを追加します。
 
@@ -1818,7 +1818,7 @@ NVIDIA `470+` ドライバ (例. `MIG-74c6a31a-fde5-5c61-973b-70e12346c202`) で
 ## `clustering_evacuation_live`
 
 `cluster.evacuate` への設定値 `live-migrate` を追加します。
-これはクラスタ待避の際にインスタンスのライブマイグレーションを強制します。
+これはクラスタ退避の際にインスタンスのライブマイグレーションを強制します。
 
 ## `instance_allow_inconsistent_copy`
 
@@ -1891,7 +1891,7 @@ LXDが使用するCPU時間をミリ秒ではなく秒単位で出力するよ�
 
 ## `event_hub`
 
-これは `event-hub` というクラスタメンバの役割と `ServerEventMode` 環境フィールドを追加します。
+これは `event-hub` というクラスタメンバーの役割と `ServerEventMode` 環境フィールドを追加します。
 
 ## `agent_nic_config`
 
@@ -1903,7 +1903,7 @@ LXDが使用するCPU時間をミリ秒ではなく秒単位で出力するよ�
 
 ## `metrics_authentication`
 
-`core.metrics_authentication` というサーバ設定オプションを追加し `/1.0/metrics` のエンドポイントをクライアント認証無しでアクセスすることを可能にします。
+`core.metrics_authentication` というサーバー設定オプションを追加し `/1.0/metrics` のエンドポイントをクライアント認証無しでアクセスすることを可能にします。
 
 ## `images_target_project`
 
@@ -1937,7 +1937,7 @@ LXDが使用するCPU時間をミリ秒ではなく秒単位で出力するよ�
 
 ## `instances_nic_host_name`
 
-`instances.nic.host_name` サーバ設定キーを追加します。これは `random` か `mac` を指定できます。
+`instances.nic.host_name` サーバー設定キーを追加します。これは `random` か `mac` を指定できます。
 指定しない場合のデフォルト値は `random` です。
 `random` に設定するとランダムなホストインタフェース名を使用します。
 `mac` に設定すると `lxd1122334455` の形式で名前を生成します。
@@ -1975,7 +1975,7 @@ CephFS プール上の `fscache`/`cachefilesd` をサポートするための `c
 
 ## `vsock_api`
 
-これは双方向の vsock インタフェースを導入し、 lxd-agent と LXD サーバがよりよく連携できるようにします。
+これは双方向の vsock インタフェースを導入し、 lxd-agent と LXD サーバーがよりよく連携できるようにします。
 
 ## `instance_ready_state`
 
@@ -2024,16 +2024,16 @@ storage bucket API を追加します。ストレージプールのために S3 
 
 ## `loki`
 
-これはライフサイクルとロギングのイベントを Loki サーバに送れるようにします。
+これはライフサイクルとロギングのイベントを Loki サーバーに送れるようにします。
 
 以下のグローバル設定キーを追加します。
 
-* `loki.api.ca_cert`: イベントを Loki サーバに送る際に使用する CA 証明書。
-* `loki.api.url`: Loki サーバのURL。
+* `loki.api.ca_cert`: イベントを Loki サーバーに送る際に使用する CA 証明書。
+* `loki.api.url`: Loki サーバーのURL。
 * `loki.auth.username` と `loki.auth.password`: Loki が BASIC 二症を有効にしたリバースプロキシの背後にいる場合に使用。
 * `loki.labels`: Loki イベントのラベルに使用されるカンマ区切りリストの値。
-* `loki.loglevel`: Loki サーバに送るイベントの最低のログレベル。
-* `loki.types`: Loki サーバに送られるイベントのタイプ (`lifecycle` および/または `logging`)。
+* `loki.loglevel`: Loki サーバーに送るイベントの最低のログレベル。
+* `loki.types`: Loki サーバーに送られるイベントのタイプ (`lifecycle` および/または `logging`)。
 
 ## `acme`
 
@@ -2173,8 +2173,23 @@ OpenID Connect (OIDC)認証のサポートを追加します。
 * 仮想ルータの内部ポートアドレスが単一ホストのネットマスクで設定されます (例 IPv4 では /32 あるいは IPv6 では /128)。
 * アクティブなインスタンスの NIC アドレスへの静的ルートが仮想ルータに追加されます。
 * アクティブでないアドレス向けのパケットがアップリンクのネットワークからエスケープされるのを防ぐために、内部のサブネット全体への破棄ルートが仮想ルータに追加されます。
-* 255.255.255.255 のネットマスクがインスタンス設定で使用されるように DHCPv4 サーバが設定されます。
+* 255.255.255.255 のネットマスクがインスタンス設定で使用されるように DHCPv4 サーバーが設定されます。
 
 ## `ovn_nic_acceleration_vdpa`
 
 これは `ovn_nic_acceleration` API拡張をアップデートします。OVN NICの`acceleration`設定キーが Virtual Data Path Acceleration (VDPA) をサポートするための `vdpa` という値を受け付けられるようになります。
+
+## `cluster_healing`
+
+これにより、オフラインのクラスタメンバーを自動的に退避させるクラスタヒーリングが追加されます。
+
+次の新しい設定キーが追加されます：
+
+* `cluster.healing_threshold`
+
+この設定キーは整数を取り、0（デフォルト）に設定することで無効化できます。設定された場合、その値はオフラインのクラスタメンバーが退避させられる閾値を表します。もし値が`cluster.offline_threshold`よりも低い場合、その値が代わりに使用されます。
+
+オフラインのクラスタメンバーが退避させられると、リモートバックアップされたインスタンスのみが移行されます。ローカルインスタンスは、クラスタメンバーがオフラインになった際にそれらを移行する方法がないため、無視されます。
+
+## `instances_state_total`
+この拡張は、インスタンスの状態APIの一部である`InstanceStateDisk`と`InstanceStateMemory`に新しい`total`フィールドを追加します。

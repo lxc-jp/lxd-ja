@@ -25,7 +25,7 @@ relatedlinks: https://github.com/canonical/dqlite
 
 ## データベースエンジン
 
-LXD はクラスタリングをサポートし、クラスタの全てのメンバは同じデータベースの
+LXD はクラスタリングをサポートし、クラスタの全てのメンバーは同じデータベースの
 状態を共有する必要があるため、データベースエンジンは SQLite の
 [分散対応バージョン](https://github.com/canonical/dqlite) をベースにしています。
 それは外部のデータベースのプロセスを必要とせずに、 レプリケーション、
@@ -41,7 +41,7 @@ LXD はクラスタリングをサポートし、クラスタの全てのメン�
 (例 `/var/lib/lxd/database/global` か snap ユーザーは `/var/snap/lxd/common/lxd/database/global` )
 の `./database/global` サブディレクトリの下に格納されます。
 
-クラスタの各メンバもそのメンバ固有の何らかのデータを保持する必要があるため、
+クラスタの各メンバーもそのメンバー固有の何らかのデータを保持する必要があるため、
 LXD は単なる SQLite のデータベース (「ローカル」データベース」も使用します。
 これは `./database/local.db` に置かれます。
 

@@ -13,7 +13,7 @@
 物理ネットワークでは現在以下の設定キーネームスペースがサポートされています。
 
 - `bgp` (BGP ピア設定)
-- `dns` (DNS サーバと名前解決の設定)
+- `dns` (DNS サーバーと名前解決の設定)
 - `ipv4` (L3 IPv4 設定)
 - `ipv6` (L3 IPv6 設定)
 - `maas` (MAAS ネットワーク識別)
@@ -36,7 +36,7 @@
 `bgp.peers.NAME.asn`      | integer | BGP server    | -                  | `ovn` ダウンストリームネットワークで使用する AS 番号
 `bgp.peers.NAME.password` | string  | BGP server    | - (パスワード無し) | `ovn` ダウンストリームネットワークで使用するピアのセッションパスワード（省略可能）
 `bgp.peers.NAME.holdtime` | integer | BGP server    | `180`              | ピアセッションホールドタイム (秒で指定、省略可能)
-`dns.nameservers`         | string  | 標準モード    | -                  | 物理 (`physical`) ネットワークの DNS サーバ IP のリスト
+`dns.nameservers`         | string  | 標準モード    | -                  | 物理 (`physical`) ネットワークの DNS サーバー IP のリスト
 `ipv4.gateway`            | string  | 標準モード    | -                  | ゲートウェイとネットワークの IPv4 アドレス（CIDR表記）
 `ipv4.ovn.ranges`         | string  | -             | -                  | 子供の OVN ネットワークルーターに使用する IPv4 アドレスの範囲（開始-終了 形式) のカンマ区切りリスト
 `ipv4.routes`             | string  | IPv4 アドレス | -                  | 子供の OVN ネットワークの `ipv4.routes.external` 設定で利用可能な追加の IPv4 CIDR サブネットのカンマ区切りリスト

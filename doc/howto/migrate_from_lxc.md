@@ -4,8 +4,8 @@
 ```{youtube} https://www.youtube.com/watch?v=F9GALjHtnUU
 ```
 
-LXD は LXC のコンテナを LXD サーバにインポートするためのツール (`lxc-to-lxd`) を提供しています。
-LXC コンテナは LXD サーバと同じマシン上に存在する必要があります。
+LXD は LXC のコンテナを LXD サーバーにインポートするためのツール (`lxc-to-lxd`) を提供しています。
+LXC コンテナは LXD サーバーと同じマシン上に存在する必要があります。
 
 このツールは LXC コンテナを分析し、データと設定の両方を新しい LXD コンテナにマイグレートします。
 

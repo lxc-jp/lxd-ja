@@ -29,13 +29,13 @@
 
     lxc storage volume create <pool_name> <volume_name> --type=block [configuration_options...]
 
-クラスターメンバー上にカスタムストレージボリュームを追加するには `--target` フラグを追加してください。
+クラスタメンバー上にカスタムストレージボリュームを追加するには `--target` フラグを追加してください。
 
     lxc storage volume create <pool_name> <volume_name> --target=<cluster_member> [configuration_options...]
 
 ```{note}
-ほとんどのストレージドライバではカスタムストレージボリュームはクラスター間で同期されず作成されたメンバー上にのみ存在します。
-この挙動は Ceph ベースのストレージプール (`ceph` and `cephfs`) では異なり、ボリュームはどのクラスターメンバーでも利用可能です。
+ほとんどのストレージドライバではカスタムストレージボリュームはクラスタ間で同期されず作成されたメンバー上にのみ存在します。
+この挙動は Ceph ベースのストレージプール (`ceph` and `cephfs`) では異なり、ボリュームはどのクラスタメンバーでも利用可能です。
 ```
 
 (storage-attach-volume)=
@@ -61,6 +61,16 @@
 
     lxc storage volume attach <pool_name> <filesystem_volume_name> <instance_name> <device_name> <location>
     lxc storage volume attach <pool_name> <block_volume_name> <instance_name> <device_name>
+
+#### ボリュームをデバイスとしてアタッチする
+
+`lxc storage volume attach` コマンドは、インスタンスにディスクデバイスを追加するためのショートカットです。
+もしくは、通常の方法でストレージボリュームのディスクデバイスを追加することもできます：
+
+    lxc config device add <instance_name> <device_name> disk pool=<pool_name> source=<volume_name> [path=<location>]
+
+この方法を使用すると、必要に応じてコマンドに更なる設定を追加することができます。
+利用可能なすべてのデバイスオプションについては {ref}`ディスクデバイス <devices-disk>` を参照してください。
 
 (storage-configure-IO)=
 #### I/O 制限値の設定
@@ -88,7 +98,7 @@
 
 カスタムボリュームをディスクデバイスとしてインスタンスにアタッチする代わりに、{ref}`バックアップ <backups>` あるいは {ref}`イメージ <about-images>` を格納する特別な種類のボリュームとして使うこともできます。
 
-このためには、対応する{ref}`サーバ設定 <server-options-misc>`を設定する必要があります。
+このためには、対応する{ref}`サーバー設定 <server-options-misc>`を設定する必要があります。
 
 - バックアップ tarball を保管するためにカスタムボリュームを使用する。
 
