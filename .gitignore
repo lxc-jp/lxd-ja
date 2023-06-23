@@ -30,6 +30,11 @@ doc/.sphinx/.wordlist.dic
 doc/.sphinx/_static/swagger-ui
 doc/.sphinx/_static/download
 
+# Sphinx for lxd-ja
+doc/.sphinx/venv/
+doc/_extensions/__pycache__/
+doc/warnings.txt
+
 # For Atom ctags
 .tags
 .tags1
