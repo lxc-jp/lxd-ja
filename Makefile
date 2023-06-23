@@ -9,7 +9,7 @@ HASH := \#
 TAG_SQLITE3=$(shell printf "$(HASH)include <dqlite.h>\nvoid main(){dqlite_node_id n = 1;}" | $(CC) ${CGO_CFLAGS} -o /dev/null -xc - >/dev/null 2>&1 && echo "libsqlite3")
 GOPATH ?= $(shell go env GOPATH)
 CGO_LDFLAGS_ALLOW ?= (-Wl,-wrap,pthread_create)|(-Wl,-z,now)
-SPHINXENV=.sphinx/venv/bin/activate
+SPHINXENV=doc/.sphinx/venv/bin/activate
 
 ifneq "$(wildcard vendor)" ""
 	RAFT_PATH=$(CURDIR)/vendor/raft
@@ -49,6 +49,12 @@ lxd-agent:
 lxd-migrate:
 	CGO_ENABLED=0 go install -v -tags netgo ./lxd-migrate
 	@echo "LXD-MIGRATE built successfully"
+
+.PHONY: lxd-doc
+lxd-doc:
+	@go version > /dev/null 2>&1 || { echo "go is not installed for lxd-doc installation."; exit 1; }
+	cd lxd/config/generate && CGO_ENABLED=0 go build -o $(GOPATH)/bin/lxd-doc
+	@echo "LXD-DOC built successfully"
 
 .PHONY: deps
 deps:
@@ -108,31 +114,41 @@ update-schema:
 .PHONY: update-api
 update-api:
 ifeq "$(LXD_OFFLINE)" ""
-	(cd / ; GO111MODULE=on go get -v -x github.com/go-swagger/go-swagger/cmd/swagger)
+	(cd / ; go install -v -x github.com/go-swagger/go-swagger/cmd/swagger@latest)
 endif
 	swagger generate spec -o doc/rest-api.yaml -w ./lxd -m
 
-.PHONY: doc
-doc:
+.PHONY: doc-setup
+doc-setup:
 	@echo "Setting up documentation build environment"
-	python3 -m venv .sphinx/venv
-	. $(SPHINXENV) ; pip install --upgrade -r .sphinx/requirements.txt
-	mkdir -p .sphinx/deps/ .sphinx/themes/
-	#git -C .sphinx/deps/swagger-ui pull || git clone --depth 1 https://github.com/swagger-api/swagger-ui.git .sphinx/deps/swagger-ui
-	#mkdir -p .sphinx/_static/swagger-ui
-	#ln -sf ../../deps/swagger-ui/dist/swagger-ui-bundle.js ../../deps/swagger-ui/dist/swagger-ui-standalone-preset.js ../../deps/swagger-ui/dist/swagger-ui.css .sphinx/_static/swagger-ui/
-	#wget -N -P .sphinx/_static/download https://linuxcontainers.org/static/img/favicon.ico https://linuxcontainers.org/static/img/containers.png https://linuxcontainers.org/static/img/containers.small.png
+	python3 -m venv doc/.sphinx/venv
+	. $(SPHINXENV) ; pip install --upgrade -r doc/.sphinx/requirements.txt
 	rm -Rf doc/html
-	make doc-incremental
+
+.PHONY: doc
+doc: lxd-doc doc-setup doc-incremental
 
 .PHONY: doc-incremental
 doc-incremental:
 	@echo "Build the documentation"
-	. $(SPHINXENV) ; sphinx-build -c doc/ -b dirhtml doc/ doc/html/ -w doc/warnings.txt
+	$(GOPATH)/bin/lxd-doc ./lxd -y ./doc/config_options.yaml -t ./doc/config_options.txt
+	. $(SPHINXENV) ; sphinx-build -c doc/ -b dirhtml doc/ doc/html/ -w doc/.sphinx/warnings.txt
 
 .PHONY: doc-serve
 doc-serve:
-	cd doc/html; python3 -m http.server --bind 0.0.0.0 8001
+	cd doc/html; python3 -m http.server 8001
+
+.PHONY: doc-spellcheck
+doc-spellcheck: doc
+	. $(SPHINXENV) ; python3 -m pyspelling -c doc/.sphinx/.spellcheck.yaml
+
+.PHONY: doc-linkcheck
+doc-linkcheck: doc-setup
+	. $(SPHINXENV) ; sphinx-build -c doc/ -b linkcheck doc/ doc/html/
+
+.PHONY: doc-lint
+doc-lint:
+	doc/.sphinx/.markdownlint/doc-lint.sh
 
 .PHONY: debug
 debug:
@@ -172,9 +188,9 @@ endif
 .PHONY: check
 check: default
 ifeq "$(LXD_OFFLINE)" ""
-	(cd / ; go get -v -x github.com/rogpeppe/godeps)
-	(cd / ; go get -v -x github.com/tsenart/deadcode)
-	(cd / ; go get -v -x golang.org/x/lint/golint)
+	(cd / ; go install -v -x github.com/rogpeppe/godeps@latest)
+	(cd / ; go install -v -x github.com/tsenart/deadcode@latest)
+	(cd / ; go install -v -x golang.org/x/lint/golint@latest)
 endif
 	CGO_LDFLAGS_ALLOW="$(CGO_LDFLAGS_ALLOW)" go test -v -tags "$(TAG_SQLITE3)" $(DEBUG) ./...
 	cd test && ./main.sh
@@ -219,15 +235,15 @@ po/%.po: po/$(DOMAIN).pot
 
 .PHONY: update-po
 update-po:
+	set -eu; \
 	for lang in $(LINGUAS); do\
-	    msgmerge -U $$lang.po po/$(DOMAIN).pot; \
-	    rm -f $$lang.po~; \
+	    msgmerge --backup=none -U $$lang.po po/$(DOMAIN).pot; \
 	done
 
 .PHONY: update-pot
 update-pot:
 ifeq "$(LXD_OFFLINE)" ""
-	(cd / ; go get -v -x github.com/snapcore/snapd/i18n/xgettext-go)
+	(cd / ; go install -v -x github.com/snapcore/snapd/i18n/xgettext-go@2.57.1)
 endif
 	xgettext-go -o po/$(DOMAIN).pot --add-comments-tag=TRANSLATORS: --sort-output --package-name=$(DOMAIN) --msgid-bugs-address=lxc-devel@lists.linuxcontainers.org --keyword=i18n.G --keyword-plural=i18n.NG lxc/*.go lxc/*/*.go
 
@@ -236,8 +252,26 @@ build-mo: $(MOFILES)
 
 .PHONY: static-analysis
 static-analysis:
-	(cd test; sh -c ". suites/static_analysis.sh; test_static_analysis")
+ifeq ($(shell command -v golangci-lint 2> /dev/null),)
+	go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.46.2
+endif
+ifeq ($(shell command -v shellcheck 2> /dev/null),)
+	echo "Please install shellcheck"
+	exit 1
+endif
+ifneq "$(shell shellcheck --version | grep version: | cut -d ' ' -f2)" "0.8.0"
+	@echo "WARN: shellcheck version is not 0.8.0"
+endif
+ifeq ($(shell command -v flake8 2> /dev/null),)
+	echo "Please install flake8"
+	exit 1
+endif
+	golangci-lint run --timeout 5m
+	flake8 test/deps/import-busybox
+	shellcheck --shell sh test/*.sh test/includes/*.sh test/suites/*.sh test/backends/*.sh test/lint/*.sh
+	shellcheck test/extras/*.sh
+	run-parts --exit-on-error --regex '.sh' test/lint
 
 .PHONY: tags
 tags: *.go lxd/*.go shared/*.go lxc/*.go
-	find . | grep \.go | grep -v git | grep -v .swp | grep -v vagrant | xargs gotags > tags
+	find . -type f -name '*.go' | xargs gotags > tags

@@ -1,0 +1,21 @@
+[91m/home/hnakamur/ghq/github.com/lxc-jp/lxd-ja/doc/index.md:5: WARNING: image file not readable: ../doc/_static/download/containers.png[39;49;00m
+/home/hnakamur/ghq/github.com/lxc-jp/lxd-ja/doc/reference/devices_unix_char.md:35: CRITICAL: Directive "include"; option "start-after": text not found "Hotplugging".
+[91m/home/hnakamur/ghq/github.com/lxc-jp/lxd-ja/doc/doc-cheat-sheet.md:191: WARNING: 'myst' cross-reference target not found: 'インデクス' [myst.xref_missing][39;49;00m
+[91m/home/hnakamur/ghq/github.com/lxc-jp/lxd-ja/doc/doc-cheat-sheet.md:195: WARNING: 'myst' cross-reference target not found: 'インデクス' [myst.xref_missing][39;49;00m
+[91m/home/hnakamur/ghq/github.com/lxc-jp/lxd-ja/doc/doc-cheat-sheet.md:262: WARNING: 'myst' cross-reference target not found: 'referencing-a-section' [myst.xref_missing][39;49;00m
+[91m/home/hnakamur/ghq/github.com/lxc-jp/lxd-ja/doc/doc-cheat-sheet.md:266: WARNING: 'myst' cross-reference target not found: 'referencing-a-section' [myst.xref_missing][39;49;00m
+[91m/home/hnakamur/ghq/github.com/lxc-jp/lxd-ja/doc/doc-cheat-sheet.md:267: WARNING: 'myst' cross-reference target not found: 'referencing-a-section' [myst.xref_missing][39;49;00m
+[91m/home/hnakamur/ghq/github.com/lxc-jp/lxd-ja/doc/explanation/security.md:52: WARNING: unknown document: 'server'[39;49;00m
+[91m/home/hnakamur/ghq/github.com/lxc-jp/lxd-ja/doc/explanation/security.md:56: WARNING: unknown document: 'authentication'[39;49;00m
+[91m/home/hnakamur/ghq/github.com/lxc-jp/lxd-ja/doc/reference/devices.md:: WARNING: 'myst' cross-reference target not found: 'type-none' [myst.xref_missing][39;49;00m
+[91m/home/hnakamur/ghq/github.com/lxc-jp/lxd-ja/doc/reference/devices.md:: WARNING: 'myst' cross-reference target not found: 'type-nic' [myst.xref_missing][39;49;00m
+[91m/home/hnakamur/ghq/github.com/lxc-jp/lxd-ja/doc/reference/devices.md:: WARNING: 'myst' cross-reference target not found: 'type-disk' [myst.xref_missing][39;49;00m
+[91m/home/hnakamur/ghq/github.com/lxc-jp/lxd-ja/doc/reference/devices.md:: WARNING: 'myst' cross-reference target not found: 'type-unix-char' [myst.xref_missing][39;49;00m
+[91m/home/hnakamur/ghq/github.com/lxc-jp/lxd-ja/doc/reference/devices.md:: WARNING: 'myst' cross-reference target not found: 'type-unix-block' [myst.xref_missing][39;49;00m
+[91m/home/hnakamur/ghq/github.com/lxc-jp/lxd-ja/doc/reference/devices.md:: WARNING: 'myst' cross-reference target not found: 'type-usb' [myst.xref_missing][39;49;00m
+[91m/home/hnakamur/ghq/github.com/lxc-jp/lxd-ja/doc/reference/devices.md:: WARNING: 'myst' cross-reference target not found: 'type-gpu' [myst.xref_missing][39;49;00m
+[91m/home/hnakamur/ghq/github.com/lxc-jp/lxd-ja/doc/reference/devices.md:: WARNING: 'myst' cross-reference target not found: 'type-infiniband' [myst.xref_missing][39;49;00m
+[91m/home/hnakamur/ghq/github.com/lxc-jp/lxd-ja/doc/reference/devices.md:: WARNING: 'myst' cross-reference target not found: 'type-proxy' [myst.xref_missing][39;49;00m
+[91m/home/hnakamur/ghq/github.com/lxc-jp/lxd-ja/doc/reference/devices.md:: WARNING: 'myst' cross-reference target not found: 'type-unix-hotplug' [myst.xref_missing][39;49;00m
+[91m/home/hnakamur/ghq/github.com/lxc-jp/lxd-ja/doc/reference/devices.md:: WARNING: 'myst' cross-reference target not found: 'type-tpm' [myst.xref_missing][39;49;00m
+[91m/home/hnakamur/ghq/github.com/lxc-jp/lxd-ja/doc/reference/devices.md:: WARNING: 'myst' cross-reference target not found: 'type-pci' [myst.xref_missing][39;49;00m

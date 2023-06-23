@@ -9,10 +9,10 @@
  */
 
 // Link to the versions.json file on the master branch.
-var versionURL = "/ja/latest/versions.json";
+var versionURL = "https://linuxcontainers.org/lxd/docs/master/versions.json";
 
 // URL prefix that is common for the different documentation sets.
-var URLprefix = "https://lxd-ja.readthedocs.io/ja/"
+var URLprefix = "https://linuxcontainers.org/lxd/docs/"
 
 
 
