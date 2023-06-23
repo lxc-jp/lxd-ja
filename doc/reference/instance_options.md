@@ -88,6 +88,7 @@ Key                                             | Type      | Default           
 :--                                             | :---      | :------           | :----------   | :----------               | :----------
 `limits.cpu`                                    | string    | for VMs: 1 CPU    | yes           | -                         | Number or range of CPUs to expose to the instance; see {ref}`instance-options-limits-cpu`
 `limits.cpu.allowance`                          | string    | `100%`            | yes           | container                 | Controls how much of the CPU can be used: either a percentage (`50%`) for a soft limit or a chunk of time (`25ms/100ms`) for a hard limit; see {ref}`instance-options-limits-cpu-container`
+`limits.cpu.nodes`                              | string    | -                 | yes           | -                         | List of comma-separated NUMA node IDs or range to place the instance CPUs on; see {ref}`instance-options-limits-cpu-container`
 `limits.cpu.priority`                           | integer   | `10` (maximum)    | yes           | container                 | CPU scheduling priority compared to other instances sharing the same CPUs when overcommitting resources (integer between 0 and 10); see {ref}`instance-options-limits-cpu-container`
 `limits.disk.priority`                          | integer   | `5` (medium)      | yes           | -                         | Controls how much priority to give to the instance's I/O requests when under load (integer between 0 and 10)
 `limits.hugepages.64KB`                         | string    | -                 | yes           | container                 | Fixed value in bytes (various suffixes supported, see {ref}`instances-limit-units`) to limit number of 64 KB huge pages; see {ref}`instance-options-limits-hugepages`
@@ -130,7 +131,14 @@ You can specify either which CPUs or how many CPUs are visible and available to 
 - If you specify a number (for example, `4`) of CPUs, LXD will do dynamic load-balancing of all instances that aren't pinned to specific CPUs, trying to spread the load on the machine.
   Instances are re-balanced every time an instance starts or stops, as well as whenever a CPU is added to the system.
 
+##### CPU limits for virtual machines
+
 ```{note}
+LXD supports live-updating the `limits.cpu` option.
+However, for virtual machines, this only means that the respective CPUs are hotplugged.
+Depending on the guest operating system, you might need to either restart the instance or complete some manual actions to bring the new CPUs online.
+```
+
 LXD virtual machines default to having just one vCPU allocated, which shows up as matching the host CPU vendor and type, but has a single core and no threads.
 
 When `limits.cpu` is set to a single integer, LXD allocates multiple vCPUs and exposes them to the guest as full cores.
@@ -147,7 +155,6 @@ The NUMA layout is similarly replicated and in this scenario, the guest would mo
 In such an environment with multiple NUMA nodes, the memory is similarly divided across NUMA nodes and be pinned accordingly on the host and then exposed to the guest.
 
 All this allows for very high performance operations in the guest as the guest scheduler can properly reason about sockets, cores and threads as well as consider NUMA topology when sharing memory or moving processes across NUMA nodes.
-```
 
 (instance-options-limits-cpu-container)=
 #### Allowance and priority (container only)
@@ -160,6 +167,10 @@ All this allows for very high performance operations in the guest as the guest s
 - When using a percentage value, the limit is a soft limit that is applied only when under load.
   It is used to calculate the scheduler priority for the instance, relative to any other instance that is using the same CPU or CPUs.
   For example, to limit the CPU usage of the container to one CPU when under load, set `limits.cpu.allowance` to `100%`.
+
+`limits.cpu.nodes` can be used to restrict the CPUs that the instance can use to a specific set of NUMA nodes:
+
+- To specify which NUMA nodes to use, set `limits.cpu.nodes` to either a set of NUMA node IDs (for example, `0,1`) or a NUMA node ranges (for example, `0-1,2-4`).
 
 `limits.cpu.priority` is another factor that is used to compute the scheduler priority score when a number of instances sharing a set of CPUs have the same percentage of CPU assigned to them.
 
@@ -366,6 +377,7 @@ The following instance options control the {ref}`security` policies of the insta
 
 Key                                             | Type      | Default           | Live update   | Condition                 | Description
 :--                                             | :---      | :------           | :----------   | :----------               | :----------
+`security.csm`                                  | bool      | `false`           | no            | virtual machine           | Controls whether to use a firmware that supports UEFI-incompatible operating systems
 `security.devlxd`                               | bool      | `true`            | no            | -                         | Controls the presence of `/dev/lxd` in the instance
 `security.devlxd.images`                        | bool      | `false`           | no            | container                 | Controls the availability of the `/1.0/images` API over `devlxd`
 `security.idmap.base`                           | integer   | -                 | no            | unprivileged container    | The base host ID to use for the allocation (overrides auto-detection)

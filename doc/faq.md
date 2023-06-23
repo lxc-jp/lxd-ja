@@ -80,4 +80,22 @@ Various configuration files are stored in that directory, for example:
 Many switches do not allow MAC address changes, and will either drop traffic with an incorrect MAC or disable the port totally.
 If you can ping a LXD instance from the host, but are not able to ping it from a different host, this could be the cause.
 
-The way to diagnose this problem is to run a `tcpdump` on the uplink (`eth1` in the example from the previous question), and you will see either ``ARP Who has `xx.xx.xx.xx` tell `yy.yy.yy.yy` ``, with you sending responses but them not getting acknowledged, or ICMP packets going in and out successfully, but never being received by the other host.
+The way to diagnose this problem is to run a `tcpdump` on the uplink and you will see either ``ARP Who has `xx.xx.xx.xx` tell `yy.yy.yy.yy` ``, with you sending responses but them not getting acknowledged, or ICMP packets going in and out successfully, but never being received by the other host.
+
+(faq-monitor)=
+## How can I monitor what LXD is doing?
+
+To see detailed information about what LXD is doing and what processes it is running, use the `lxc monitor` command.
+
+For example, to show a human-readable output of all types of messages, enter the following command:
+
+    lxc monitor --pretty
+
+See `lxc monitor --help` for all options, and {doc}`debugging` for more information.
+
+## Why does LXD stall when creating an instance?
+
+Check if your storage pool is out of space (by running `lxc storage info <pool_name>`).
+In that case, LXD cannot finish unpacking the image, and the instance that you're trying to create shows up as stopped.
+
+To get more insight into what is happening, run `lxc monitor` (see {ref}`faq-monitor`), and check `sudo dmesg` for any I/O errors.
