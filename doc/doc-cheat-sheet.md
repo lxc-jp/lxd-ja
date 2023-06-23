@@ -17,7 +17,7 @@ myst:
 
 ## 見出し
 
-``{list-table}.
+```{list-table}
    :header-rows: 1
 
 * - 入力
@@ -42,7 +42,7 @@ myst:
 
 ## インラインフォーマット
 
-``{list-table}.
+```{list-table}
    :header-rows: 1
 
 * - 入力
@@ -74,7 +74,7 @@ myst:
 バックティックの後にコード言語を指定して、特定のレキサーを強制することもできますが、多くの場合、デフォルトのレキサーで十分に機能します。
 
 
-``{list-table}.
+```{list-table}
    :header-rows: 1
 
 * - 入力
@@ -114,7 +114,7 @@ myst:
 
 コードブロックにバックティックを含めるには、周囲のバックティックの数を増やします。
 
-``{list-table}.
+```{list-table}
    :header-rows: 1
 
 * - 入力
@@ -145,7 +145,7 @@ myst:
 
 外部リンクの場合、URLのみを使用し、リンクテキストを上書きしたい場合はMarkdownの構文を使用します。
 
-``{list-table}.
+```{list-table}
    :header-rows: 1
 
 * - 入力
@@ -158,7 +158,7 @@ myst:
 
 URL をテキストとして表示し、リンクされないようにするには、`<span></span>` を追加します。
 
-``{list-table}.
+```{list-table}
    :header-rows: 1
 
 * - 入力
@@ -176,7 +176,7 @@ URL をテキストとして表示し、リンクされないようにするに�
 
 ドキュメントのページを参照するには、MyST 構文を使ってリンクテキストを自動的に抽出します。リンクテキストを上書きする場合は、Markdownの構文を使用します。
 
-``{list-table}.
+```{list-table}
    :header-rows: 1
 
 * - 入力
@@ -187,13 +187,13 @@ URL をテキストとして表示し、リンクされないようにするに�
   - {doc}`index`
   - {doc}<span></span>`index`
   - 望ましいのは
-* - `[](インデクス)`
-  - [](インデクス)
+* - `[](index)`
+  - [](index)
   -
   - 使用しないでください。
-* - `[LXDドキュメント](インデクス)`
-  - [LXDドキュメント](インデクス)
-  - LXDドキュメンテーション](index)
+* - `[LXDドキュメント](index)`
+  - [LXDドキュメント](index)
+  - [LXDドキュメント](index)
   - リンクテキストをオーバーライドするときに好ましい。
 * - `` {doc}`LXD documentation <index>` ``
   - {doc}`LXDドキュメント <index>`
@@ -221,16 +221,16 @@ URL をテキストとして表示し、リンクされないようにするに�
 ドキュメント内の任意の場所にターゲットを追加することができます。ただし、対象となる要素に見出しやタイトルがない場合は、リンクテキストを指定する必要があります。
 
 (a_random_target)=
-```{list-table}.
+```{list-table}
    :header-rows: 1
 
 * - 入力
   - 出力
   - GitHubでの出力
   - 説明
-* - `(ターゲット_ID)=`
+* - `(target_ID)=`
   -
-  - (target_ID\)=
+  - \(target_ID\)=
   - ターゲットである ``target_ID`` を追加します。
 * - `` {ref}`a_section_target` `` を追加します。
   - a_section_target` {ref}`a_section_target`
@@ -251,20 +251,20 @@ URL をテキストとして表示し、リンクされないようにするに�
 自動生成されたアンカーを使用するには、Markdownの構文を使用する必要があります。
 同じファイル内でリンクする場合は、ファイル名を省略できます。
 
-``{list-table}.
+```{list-table}
    :header-rows: 1
 
 * - 入力
   - 出力
   - GitHubでの出力
   - 説明
-* - `[](#referencing-a-section)`
-  - [](#referencing-a-section)
+* - `[](#セクションの参照)`
+  - [](#セクションの参照)
   -
   - 使用しないでください。
-* - `[リンクテキスト](#referencing-a-section)`
-  - [リンクテキスト](#referencing-a-section)
-  - [リンクテキスト](#referencing-a-section)
+* - `[リンクテキスト](#セクションの参照)`
+  - [リンクテキスト](#セクションの参照)
+  - [リンクテキスト](#セクションの参照)
   - リンクテキストをオーバーライドする場合に好ましい。
 ```
 
@@ -275,7 +275,7 @@ URL をテキストとして表示し、リンクされないようにするに�
 これは、親ページの[`toctree`](https://www.sphinx-doc.org/en/master/usage/restructuredtext/directives.html#directive-toctree)ディレクティブで実現します。 <!-- wokeignore:rule=master -->
 
 ````
-``{toctree}
+```{toctree}
 :hidden:
 
 サブページ1
@@ -296,7 +296,7 @@ orphan: true
 
 ## リスト
 
-``{list-table}.
+```{list-table}
    :header-rows: 1
 
 * - 入力
@@ -342,7 +342,7 @@ orphan: true
 
 ### 定義リスト
 
-``{list-table}.
+```{list-table}
    :header-rows: 1
 
 * - 入力
@@ -367,7 +367,7 @@ orphan: true
 
 どちらのマークアップも以下のような出力になります。
 
-``{list-table}.
+```{list-table}
    :header-rows: 1
 
 * - ヘッダ1
@@ -497,7 +497,6 @@ orphan: true
 
   ````
   ---
-  orphan: true
   myst:
     substitutions:
       reuse_key: "これは **インクルードされた** テキストです"
@@ -541,7 +540,7 @@ orphan: true
 
     % Include parts of the content from file [../README.md](../README.md)
     ```{include} ../README.md
-       :start-after: Installing LXD from packages
+       :start-after: パッケージからのLXDのインストール
        :end-before: <!-- Include end installing -->
     ```
 
@@ -550,7 +549,7 @@ orphan: true
   -
     % Include parts of the content from file [../README.md](../README.md)
     ```{include} ../README.md
-       :start-after: Installing LXD from packages
+       :start-after: パッケージからのLXDのインストール
        :end-before: <!-- Include end installing -->
     ```
 

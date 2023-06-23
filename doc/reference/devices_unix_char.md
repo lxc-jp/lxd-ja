@@ -33,5 +33,5 @@ Unixキャラクタデバイスは、指定したキャラクタデバイスを�
 
 % Include content from [devices_unix_block.md](device_unix_block.md)
 ```{include} devices_unix_block.md
-    :start-after: Hotplugging
+    :start-after: ホットプラグ
 ```

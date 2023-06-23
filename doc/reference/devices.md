@@ -10,18 +10,18 @@ LXD では次のデバイスタイプが使えます。
 
 | ID (データベース)   | 名前                                  | 条件         | 説明                               |
 | :------------------ | :------------------------------------ | :----------- | :--------------------------------- |
-| 0                   | [`none`](#type-none)                  | -            | 継承ブロッカー                     |
-| 1                   | [`nic`](#type-nic)                    | -            | ネットワークインタフェース         |
-| 2                   | [`disk`](#type-disk)                  | -            | インスタンス内のマウントポイント   |
-| 3                   | [`unix-char`](#type-unix-char)        | コンテナ     | Unix キャラクタデバイス            |
-| 4                   | [`unix-block`](#type-unix-block)      | コンテナ     | Unix ブロックデバイス              |
-| 5                   | [`usb`](#type-usb)                    | -            | USB デバイス                       |
-| 6                   | [`gpu`](#type-gpu)                    | -            | GPU デバイス                       |
-| 7                   | [`infiniband`](#type-infiniband)      | コンテナ     | インフィニバンドデバイス           |
-| 8                   | [`proxy`](#type-proxy)                | コンテナ     | プロキシデバイス                   |
-| 9                   | [`unix-hotplug`](#type-unix-hotplug)  | コンテナ     | Unix ホットプラグデバイス          |
-| 10                  | [`tpm`](#type-tpm)                    | -            | TPM デバイス                       |
-| 11                  | [`pci`](#type-pci)                    | 仮想マシン   | PCI デバイス                       |
+| 0                   | [`none`](devices-none)                  | -            | 継承ブロッカー                     |
+| 1                   | [`nic`](devices-nic)                    | -            | ネットワークインタフェース         |
+| 2                   | [`disk`](devices-disk)                  | -            | インスタンス内のマウントポイント   |
+| 3                   | [`unix-char`](devices-unix-char)        | コンテナ     | Unix キャラクタデバイス            |
+| 4                   | [`unix-block`](devices-unix-block)      | コンテナ     | Unix ブロックデバイス              |
+| 5                   | [`usb`](devices-usb)                    | -            | USB デバイス                       |
+| 6                   | [`gpu`](devices-gpu)                    | -            | GPU デバイス                       |
+| 7                   | [`infiniband`](devices-infiniband)      | コンテナ     | インフィニバンドデバイス           |
+| 8                   | [`proxy`](devices-proxy)                | コンテナ     | プロキシデバイス                   |
+| 9                   | [`unix-hotplug`](devices-unix-hotplug)  | コンテナ     | Unix ホットプラグデバイス          |
+| 10                  | [`tpm`](devices-tpm)                    | -            | TPM デバイス                       |
+| 11                  | [`pci`](devices-pci)                    | 仮想マシン   | PCI デバイス                       |
 
 各インスタンスには一組の {ref}`standard-devices` が付属します。
 
