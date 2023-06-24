@@ -51,6 +51,7 @@ LXD プロジェクトは [Canonical Ltd](https://www.canonical.com) にスポ�
 
 self
 getting_started
+サーバーとクライアント <operation>
 security
 instances
 images
@@ -59,7 +60,7 @@ networks
 projects
 clustering
 production-setup
-operation
+migration
 restapi_landing
 internals
 external_resources

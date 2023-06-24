@@ -1,59 +1,83 @@
-# リモート
+# リモートサーバーを追加するには
 
-## イントロダクション
+リモートサーバーはLXDコマンドラインクライアント内の概念です。
+デフォルトでは、コマンドラインクライアントはローカルのLXDデーモンとやりとりしますが、他のサーバーやクラスタを追加できます。
 
-リモートは LXD のコマンドラインクライアント内の概念でありさまざまな LXD サーバーやクラスタを参照するのに使用します。
-リモートは実質的には特定の LXD サーバーをサーバーにログインしたり認証するのに必要な認証情報も含めて指定する URL を指す名前です。
-LXD には次の 4 種類のリモートがあります。
+リモートサーバーの用途の1つはローカルサーバーでインスタンスを作成するのに使えるイメージを配布することです。
+詳細は{ref}`remote-image-servers`を参照してください。
 
-- Static
-- Default
-- Global (システムごと)
-- Local (ユーザーごと)
+完全なLXDサーバーをお使いのクライアントにリモートサーバーとして追加することもできます。
+この場合、ローカルのデーモンと同様にリモートサーバーとやりとりできます。
+例えば、リモートサーバー上のインスタンスを管理したりサーバー設定を更新できます。
 
-### Static
+## 認証
 
-Static リモートは
-- `local` (default)
-- `ubuntu`
-- `ubuntu-daily`
+LXDサーバーをリモートサーバーとして追加できるようにするには、サーバーのAPIが公開されている必要があります。
+それはつまり、[`core.https_address`](server-options-core)サーバー設定オプションが設定されている必要があることを意味します。
 
-これらはハードコードされておりユーザーが変更できません。
+サーバーを追加する際は、{ref}`authentication`の方法で認証する必要があります。
 
-### Default
+詳細は{ref}`server-expose`を参照してください。
 
-初回の使用時に自動的に追加されます。
+## 追加されたリモートを一覧表示する
 
-### Global (システムごと)
+% Include parts of the content from file [howto/images_remote.md](howto/images_remote.md)
+```{include} howto/images_remote.md
+   :start-after: <!-- Include start list remotes -->
+   :end-before: <!-- Include end list remotes -->
+```
 
-デフォルトでは global の設定ファイルは `/etc/lxd/config.yml`、 または snap の場合は `/var/snap/lxd/common/global-conf/`、または `LXD_GLOBAL_CONF` 環境変数が定義されていればそのパスが使用されます。
-この設定ファイルを手動で編集して global リモートを追加できます。
-これらのリモートの証明書は `servercerts` ディレクトリ (例: `/etc/lxd/servercerts/`) に置き、リモートの名前にマッチ (例: `foo.crt`) させます。
+## リモートのLXDサーバーを追加する
 
-設定例を以下に示します。
+% Include parts of the content from file [howto/images_remote.md](howto/images_remote.md)
+```{include} howto/images_remote.md
+   :start-after: <!-- Include start add remotes -->
+   :end-before: <!-- Include end add remotes -->
+```
+
+## デフォルトのリモートを選択する
+
+LXDコマンドラインクライアントは`local`リモート、つまりローカルのLXDデーモン、に接続する用に初期設定されています。
+
+別のリモートをデフォルトのリモートとして選択するには、以下のように入力します。
+
+    lxc remote switch <remote_name>
+
+どのサーバーがデフォルトのリモートとして設定されているか確認するには、以下のように入力します。
+
+    lxc remote get-default
+
+## グローバルのリモートを設定する
+
+グローバルなシステム毎の設定としてリモートを設定できます。
+これらのリモートは、設定を追加したLXDサーバーの全てのユーザーで利用できます。
+
+ユーザーはこれらのシステムで設定されたリモートを(例えば`lxc remote rename`または`lxc remote set-url`を実行することで)オーバーライドできます。
+その結果、リモートと対応する証明書がユーザー設定にコピーされます。
+
+グローバルリモートを設定するには、以下のいずれかのディレクトリに置かれた`config.yml`ファイルを編集します。
+
+- (定義されていれば)`LXD_GLOBAL_CONF`で指定されるディレクトリ
+- `/var/snap/lxd/common/global-conf/` (snapをお使いの場合)
+- `/etc/lxd/` (snap以外の場合)
+
+リモートへの接続用の証明書は同じ場所の`servercerts`ディレクトリ(例えば、`/etc/lxd/servercerts/`)に保管する必要があります。
+証明書はリモート名に対応する(例えば、`foo.crt`)必要があります。
+
+以下の設定例を参照してください。
 
 ```
 remotes:
   foo:
-    addr: https://10.0.2.4:8443
+    addr: https://192.0.2.4:8443
     auth_type: tls
     project: default
     protocol: lxd
     public: false
   bar:
-    addr: https://10.0.2.5:8443
+    addr: https://192.0.2.5:8443
     auth_type: tls
     project: default
     protocol: lxd
     public: false
 ```
-
-### Local (ユーザーごと)
-
-local レベルのリモートは CLI (`lxc`) で次のように管理します。
-`lxc remote [command]`
-
-デフォルトでは local の設定ファイルは `~/.config/lxc/config.yml`、あるいは snap 版では `~/snap/lxd/common/config/config.yml` に置かれます。
-`LXD_CONF` 環境変数でパスを変更できます。
-ユーザーはシステムのリモートを (例: `lxc remote name` や `lxc remote set-url` を実行することで) オーバーライドすることができます。
-その場合リモートの設定は関連する証明書と共にコピーされます。

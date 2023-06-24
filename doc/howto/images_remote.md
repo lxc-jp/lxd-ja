@@ -6,6 +6,7 @@
 
 ## 設定されたリモートを一覧表示する
 
+<!-- Include start list remotes -->
 設定された全てのリモートサーバーを見るには、以下のコマンドを入力します。
 
     lxc remote list
@@ -13,6 +14,7 @@
 [simple streams形式](https://git.launchpad.net/simplestreams/tree/)を使用するリモートサーバーは純粋なイメージサーバーです。
 `lxd`形式を使用するサーバーはLXDサーバーであり、イメージサーバーだけとして稼働しているか、通常のLXDサーバーとして稼働するのに加えて追加のイメージを提供しているかのどちらかです。
 詳細は{ref}`remote-image-server-types`を参照してください。
+<!-- Include end list remotes -->
 
 ## リモート上の利用可能なイメージを一覧表示する
 
@@ -37,18 +39,20 @@ URLはHTTPSでなければなりません。
 
 ### リモートのLXDサーバーを追加する
 
+<!-- Include start add remotes -->
 LXDサーバーをリモートして追加するには、以下のコマンドを入力します。
 
     lxc remote add <remote_name> <IP|FQDN|URL> [flags]
 
 認証方法によっては固有のフラグが必要です(例えば、Candid認証では`lxc remote add <remote_name> <IP|FQDN|URL> --auth-type=candid`を使います)。
-詳細は{ref}`authentication`を参照してください。
+詳細は{ref}`server-authenticate`と{ref}`authentication`を参照してください。
 
 例えば、IPアドレスを指定してリモートを追加するには以下のコマンドを入力します。
 
     lxc remote add my-remote 192.0.2.10
 
 リモートサーバーのフィンガープリントを確認するプロンプトが表示され、リモートで使用している認証方法によってパスワードまたはトークンの入力を求められます。
+<!-- Include end add remotes -->
 
 ## イメージを参照する
 

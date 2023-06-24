@@ -57,9 +57,9 @@ voter のメンバーがオフラインになると stand-by メンバーが自�
 | `event-hub`           | no            | 内部 LXD イベントへの交換ポイント (hub) (最低 2 つは必要) |
 | `ovn-chassis`         | no            | OVN ネットワークのアップリンクゲートウェイの候補 |
 
-voter メンバーのデフォルトの数 ([`cluster.max_voters`](server)) は 3 です。
-stand-by メンバーのデフォルトの数 ([`cluster.max_standby`](server)) は 2 です。
-この設定では、クラスタを稼働したまま一度に最大で 1 つの voter メンバーの電源を切ることができます。
+voterメンバーのデフォルトの数([`cluster.max_voters`](server-options-cluster))は3です。
+stand-byメンバーのデフォルトの数([`cluster.max_standby`](server-options-cluster))は2です。
+この設定では、クラスタを稼働したまま一度に最大で1つのvoterメンバーの電源を切ることができます。
 
 詳細は {ref}`cluster-manage` を参照してください。
 
@@ -75,11 +75,13 @@ stand-by メンバーのデフォルトの数 ([`cluster.max_standby`](server)) 
 
 サーバーを再びオンラインに復旧できないあるいはしたくない場合、[クラスタからメンバーを削除](cluster-manage-delete-members) できます。
 
-応答しないメンバーをオフラインと判断する秒数は [`cluster.offline_threshold`](server) 設定で調整できます。
-デフォルト値は 20 秒です。
-最小値は 10 秒です。
+応答しないメンバーをオフラインと判断する秒数は[`cluster.offline_threshold`](server-options-cluster)設定で調整できます。
+デフォルト値は20秒です。
+最小値は10秒です。
 
-詳細は {ref}`cluster-recover` を参照してください。
+オフラインのメンバーからインスタンスを自動的に{ref}`退避 <cluster-evacuate>`するには、[`cluster.healing_threshold`](server-options-cluster)設定をゼロでない値に設定してください。
+
+詳細は{ref}`cluster-recover`を参照してください。
 
 #### failure domain
 
@@ -117,8 +119,8 @@ LXD クラスタメンバーは一般的に同一のシステムと想定され�
 通常これはクラスタ内で最大 3 つのコピーを持つことを意味します。
 
 障害耐性とイメージがローカルで利用できる確率を改善するためこの数を増やすことができます。
-そのためには、 [`cluster.images_minimal_replica`](server) 設定を変更してください。
-すべてのクラスタメンバーにイメージをコピーするには `-1` という特別な値を使用できます。
+そのためには、[`cluster.images_minimal_replica`](server-options-cluster)設定を変更してください。
+すべてのクラスタメンバーにイメージをコピーするには`-1`という特別な値を使用できます。
 
 (cluster-groups)=
 ## クラスタグループ

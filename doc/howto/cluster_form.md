@@ -113,7 +113,7 @@ Would you like a YAML "lxd init" preseed to be printed? (yes/no) [default=no]:
 
        lxc cluster add <new_member_name>
 
-   このコマンドは設定時に有効な([`cluster.join_token_expiry`](server)参照)一回限りのジョイントークンを返します。
+   このコマンドは設定時に有効な([`cluster.join_token_expiry`](server-options-cluster)参照)一回限りのジョイントークンを返します。
    `lxd init` のプロンプトでジョイントークンを求められたときにこのトークンを入力してください。
 
    ジョイントークンは既存のオンラインメンバーのアドレス、一回限りのシークレットとクラスタ証明書のフィンガープリントを含みます。

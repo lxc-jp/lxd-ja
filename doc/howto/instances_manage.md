@@ -76,3 +76,22 @@
 
 - 特定のインスタンスが削除されることを防ぐためには、そのインスタンスの [`security.protection.delete`](instance-options-security) を `true` に設定します。
   手順は {ref}`instances-configure` を参照してください。
+
+## インスタンスを再構築する
+
+インスタンスのrootディスクを一掃して再初期化したいがインスタンスの設定は維持したい場合、インスタンスを再構築できます。
+
+再構築はスナップショットが1つも存在しないインスタンスでのみ可能です。
+
+再構築の前にインスタンスを停止します。
+そして、以下のコマンドのいずれかを入力します。
+
+- 別のイメージでインスタンスを再構築する。
+
+        lxc rebuild <image_name> <instance_name>
+
+- 空のルートディスクでインスタンスを再構築する。
+
+        lxc rebuild <instance_name> --empty
+
+`rebuild`コマンドについてのより詳細な情報は`lxc rebuild --help`を参照してください。

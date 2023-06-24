@@ -1,9 +1,9 @@
 # LXDウェブUIへのアクセス方法
 
-```{important}
-現在、LXDウェブUIはLXDスナップの`latest/edge`チャンネルにのみ含まれています。
+```{note}
+LXD 5.14から、LXDウェブUIはLXDのsnapパッケージに同梱され利用できるようになりました。
 
-製品環境でエッジバージョンのLXDを実行することは決してしないでください。
+ソースコードは[LXD-UIのGitHubレポジトリ](https://github.com/canonical/lxd-ui)を参照してください。
 ```
 
 ![LXDウェブUIのインスタンスのグラフィカルコンソール](../images/ui_console.png)
@@ -15,6 +15,11 @@ LXDウェブUIは、LXDサーバーとインスタンスを管理するための
 現在、初期段階にありまだ全機能を提供していませんが、最終的にはLXDコマンドラインクライアントの代替となるでしょう。
 
 以下の手順を完了してLXDウェブUIにアクセスします：
+
+1. snapパッケージ内でUIを有効にします。
+
+       snap set lxd ui.enable=true
+       snap restart --reload lxd
 
 1. LXDサーバーが{ref}`ネットワークに公開されている <server-expose>`ことを確認します。
    サーバーは{ref}`初期化 <initialize>`中に公開させることができるか、それ以降にサーバー設定オプションの[`core.https_address`](server-options-core)を設定することで公開させることができます。
