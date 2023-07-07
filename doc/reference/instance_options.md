@@ -376,7 +376,7 @@ value = "0"
 
 キー                                             | 型      | デフォルト値 | ライブアップデート | 条件           | 説明
 :--                                              | :---    | :------      | :----------        | :----------    | :----------
-`security.csm`                                   | bool    | `false`      | no                 | 仮想マシン     | UEFI互換のオペレーティングシステムをサポートするファームウェアを使うかどうかを制御
+`security.csm`                                   | bool    | `false`      | no                 | 仮想マシン     | UEFI非互換のオペレーティングシステムをサポートするファームウェアを使うかどうかを制御
 `security.devlxd`                                | bool    | `true`       | no                 | -              | インスタンス内の`/dev/lxd`の存在を制御
 `security.devlxd.images`                         | bool    | `false`      | no                 | コンテナ       | `devlxd`経由の`/1.0/images`の利用可否を制御
 `security.idmap.base`                            | integer | -            | no                 | 非特権コンテナ | 割り当てに使うホストIDの開始値(自動検出を上書きします)
