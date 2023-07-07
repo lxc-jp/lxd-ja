@@ -38,7 +38,7 @@ VMでは、各デバイスは1つのGPUにしかマッチできません。
 キー        | 型     | デフォルト値 | 説明
 :--         | :--    | :--          | :--
 `gid`       | int    | `0`          | インスタンス(コンテナのみ)内のデバイス所有者のGID
-`id`        | string | -            | GPUデバイスのカードID
+`id`        | string | -            | GPUデバイスのDRMカードID
 `mode`      | int    | `0660`       | インスタンス(コンテナのみ)内のデバイスのモード
 `pci`       | string | -            | GPUデバイスのPCIアドレス
 `productid` | string | -            | GPUデバイスのプロダクトID
@@ -62,7 +62,7 @@ VMでは、各デバイスは1つのGPUにしかマッチできません。
 
 キー        | 型     | デフォルト値 | 説明
 :--         | :--    | :--          | :--
-`id`        | string | -            | GPUデバイスのカードID
+`id`        | string | -            | GPUデバイスのDRMカードID
 `mdev`      | string | -            | 使用する`mdev`プロファイル(必須 - 例:`i915-GVTg_V5_4`)
 `pci`       | string | -            | GPUデバイスのPCIアドレス
 `productid` | string | -            | GPUデバイスのプロダクトID
@@ -85,7 +85,7 @@ VMでは、各デバイスは1つのGPUにしかマッチできません。
 
 キー        | 型     | デフォルト値 | 説明
 :--         | :--    | :--          | :--
-`id`        | string | -            | GPUデバイスのカードID
+`id`        | string | -            | GPUデバイスのDRMカードID
 `mig.ci`    | int    | -            | 既存のMIGコンピュートインスタンスID
 `mig.gi`    | int    | -            | 既存のMIG GPUインスタンスID
 `mig.uuid`  | string | -            | 既存のMIGデバイスUUID(`MIG-`接頭辞は省略可)
@@ -111,7 +111,7 @@ VMでは、各デバイスは1つのGPUにしかマッチできません。
 
 キー        | 型     | デフォルト値 | 説明
 :--         | :--    | :--          | :--
-`id`        | string | -            | GPUデバイスのカードID
+`id`        | string | -            | GPUデバイスのDRMカードID
 `pci`       | string | -            | 親GPUデバイスのPCIアドレス
 `productid` | string | -            | 親GPUデバイスのプロダクトID
 `vendorid`  | string | -            | 親GPUデバイスのベンダーID

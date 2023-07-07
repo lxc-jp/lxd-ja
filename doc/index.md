@@ -2,7 +2,7 @@
 relatedlinks: https://linuxcontainers.org/, https://ubuntu.com/lxd, https://ubuntu.com/blog/open-source-for-beginners-dev-environment-with-lxd
 ---
 
-[![LXD](../doc/_static/download/containers.png)](https://linuxcontainers.org/lxd)
+[![LXD](./.sphinx/_static/download/containers.png)](https://linuxcontainers.org/lxd)
 
 # LXD
 
@@ -51,6 +51,7 @@ LXD プロジェクトは [Canonical Ltd](https://www.canonical.com) にスポ�
 
 self
 getting_started
+サーバーとクライアント <operation>
 security
 instances
 images
@@ -59,7 +60,7 @@ networks
 projects
 clustering
 production-setup
-operation
+migration
 restapi_landing
 internals
 external_resources

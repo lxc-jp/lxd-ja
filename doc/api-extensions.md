@@ -2193,3 +2193,25 @@ OpenID Connect (OIDC)認証のサポートを追加します。
 
 ## `instances_state_total`
 この拡張は、インスタンスの状態APIの一部である`InstanceStateDisk`と`InstanceStateMemory`に新しい`total`フィールドを追加します。
+
+## `auth_user`
+メインAPIエンドポイントに現在のユーザーの詳細情報を追加します。
+
+以下の項目を追加します。
+
+* `auth_user_name`
+* `auth_user_method`
+
+## `security_csm`
+`CSM` (Compatibility Support Module)の使用を制御する`security.csm`設定キーを追加し、レガシーなオペレーティングシステムをLXD VM内で稼働できるようにします。
+
+## `instances_rebuild`
+この拡張はインスタンスを同じイメージ、別のイメージ、あるいは空のイメージで再構築できるようにします。
+`POST /1.0/instances/<name>/rebuild?project=<project>` APIエンドポイントと`lxc rebuild` CLIコマンドを新しく追加します。
+
+## `numa_cpu_placement`
+これはCPUの組を指定のNUMAノードの組内に配置できるようにします。
+
+以下の設定キーを追加します。
+
+* `limits.cpu.nodes` : (string) (`limits.cpu`の動的な値により選ばれた)CPUを配置するNUMAノードIDまたはNUMAノードIDの範囲のカンマ区切りリスト。

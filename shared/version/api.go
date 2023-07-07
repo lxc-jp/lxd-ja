@@ -372,6 +372,10 @@ var APIExtensions = []string{
 	"ovn_nic_acceleration_vdpa",
 	"cluster_healing",
 	"instances_state_total",
+	"auth_user",
+	"security_csm",
+	"instances_rebuild",
+	"numa_cpu_placement",
 }
 
 // APIExtensionsCount returns the number of available API extensions.

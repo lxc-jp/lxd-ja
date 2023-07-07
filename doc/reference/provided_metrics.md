@@ -16,7 +16,7 @@ LXDは、数々のインスタンスメトリクスと内部メトリクスを�
 * - `lxd_cpu_effective_total`
   - 使用可能なCPUの総数
 * - `lxd_cpu_seconds_total{cpu="<cpu>", mode="<mode>"}`
-  - 使用されたCPU時間の合計（秒単位）
+  - 使用されたCPU時間の合計(秒単位)
 * - `lxd_disk_read_bytes_total{device="<dev>"}`
   - 読み出されたバイト数合計
 * - `lxd_disk_reads_completed_total{device="<dev>"}`
@@ -26,17 +26,17 @@ LXDは、数々のインスタンスメトリクスと内部メトリクスを�
 * - `lxd_disk_writes_completed_total{device="<dev>"}`
   - 完了した書き込み回数合計
 * - `lxd_filesystem_avail_bytes{device="<dev>",fstype="<type>"}`
-  - 利用可能な領域（バイト単位）
+  - 利用可能な領域(バイト単位)
 * - `lxd_filesystem_free_bytes{device="<dev>",fstype="<type>"}`
-  - 空き領域（バイト単位）
+  - 空き領域(バイト単位)
 * - `lxd_filesystem_size_bytes{device="<dev>",fstype="<type>"}`
-  - ファイルシステムのサイズ（バイト単位）
+  - ファイルシステムのサイズ(バイト単位)
 * - `lxd_memory_Active_anon_bytes`
   - アクティブLRUリスト上のアノニマスメモリの量
 * - `lxd_memory_Active_bytes`
   - アクティブLRUリスト上のメモリの量
 * - `lxd_memory_Active_file_bytes`
-  - アクティブLRUリスト上のディスク同期して解放できる（file-backed）メモリの量
+  - アクティブLRUリスト上のディスク同期して解放できる(file-backed)メモリの量
 * - `lxd_memory_Cached_bytes`
   - キャッシュメモリの量
 * - `lxd_memory_Dirty_bytes`
@@ -50,7 +50,7 @@ LXDは、数々のインスタンスメトリクスと内部メトリクスを�
 * - `lxd_memory_Inactive_bytes`
   - 非アクティブLRUリスト上のメモリの量
 * - `lxd_memory_Inactive_file_bytes`
-  - 非アクティブLRUリスト上のディスク同期して解放できる（file-backed）メモリの量
+  - 非アクティブLRUリスト上のディスク同期して解放できる(file-backed)メモリの量
 * - `lxd_memory_Mapped_bytes`
   - マップされたメモリの量
 * - `lxd_memory_MemAvailable_bytes`
@@ -64,7 +64,7 @@ LXDは、数々のインスタンスメトリクスと内部メトリクスを�
 * - `lxd_memory_RSS_bytes`
   - アノニマスとswapキャッシュメモリの量
 * - `lxd_memory_Shmem_bytes`
-  - スワップアウトして解放できる（swap-backed）キャッシュされたファイルシステムデータの量
+  - スワップアウトして解放できる(swap-backed)キャッシュされたファイルシステムデータの量
 * - `lxd_memory_Swap_bytes`
   - 使用中のスワップメモリの量
 * - `lxd_memory_Unevictable_bytes`
@@ -101,7 +101,7 @@ LXDは、数々のインスタンスメトリクスと内部メトリクスを�
 * - メトリック
   - 説明
 * - `lxd_go_alloc_bytes_total`
-  - 割り当てられた（その後の解放された分も含む）バイト数累計
+  - 割り当てられた(その後の解放された分も含む)バイト数累計
 * - `lxd_go_alloc_bytes`
   - 割り当てられ使用中のバイト数
 * - `lxd_go_buck_hash_sys_bytes`
@@ -149,7 +149,7 @@ LXDは、数々のインスタンスメトリクスと内部メトリクスを�
 * - `lxd_operations_total`
   - 実行中の処理の数
 * - `lxd_uptime_seconds`
-  - デーモンのuptime（秒単位）
+  - デーモンのuptime(秒単位)
 * - `lxd_warnings_total`
   - アクティブな警告の数
 ```

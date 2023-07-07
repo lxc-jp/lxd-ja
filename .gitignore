@@ -14,19 +14,26 @@ lxd-agent/lxd-agent
 lxd-benchmark/lxd-benchmark
 lxd-migrate/lxd-migrate
 lxd-user/lxd-user
-test/deps/devlxd-client
+test/devlxd-client/devlxd-client
 test/macaroon-identity/macaroon-identity
+test/syscall/sysinfo/sysinfo
 
 # Sphinx
 doc/html/
-.sphinx/deps/
-doc/themes/
-.sphinx/venv/
-doc/warnings.txt
-.sphinx/warnings.txt
-.sphinx/_static/swagger-ui
-.sphinx/_static/download
+doc/config_options.txt
+doc/config_options.yaml
+doc/.sphinx/deps/
+doc/.sphinx/themes/
+doc/.sphinx/venv/
+doc/.sphinx/warnings.txt
+doc/.sphinx/.wordlist.dic
+doc/.sphinx/_static/swagger-ui
+doc/.sphinx/_static/download
+
+# Sphinx for lxd-ja
+doc/.sphinx/venv/
 doc/_extensions/__pycache__/
+doc/warnings.txt
 
 # For Atom ctags
 .tags
