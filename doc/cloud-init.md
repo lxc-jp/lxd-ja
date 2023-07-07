@@ -91,7 +91,7 @@ config:
 ```
 
 ```{tip}
-構文が正しいかどうかを確認する方法については、{ref}`cloud-init:reference/faq:how can i debug my user data?`を参照してください。
+構文が正しいかどうかを確認する方法については、{doc}`cloud-init:howto/debug_user_data`を参照してください。
 ```
 
 ## `cloud-init`のステータスを確認する方法
